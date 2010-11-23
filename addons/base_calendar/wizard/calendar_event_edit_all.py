@@ -69,7 +69,7 @@ class calendar_event_edit_all(osv.osv_memory):
         @param ids: List of calendar event edit all’s IDs
         @return: dictionary {}
         """
-        if not context:
+        if context is None:
             context = {}
 
         context_id = context and context.get('active_id', False) or False

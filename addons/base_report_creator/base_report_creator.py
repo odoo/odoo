@@ -363,7 +363,6 @@ class report_creator(osv.osv):
         @return: Dictionary of sql query.
         """
         result = {}
-        if not context: context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             fields = []
             groupby = []
@@ -452,7 +451,7 @@ class report_creator(osv.osv):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for base creator report form
         """
-        if not context:
+        if context is None:
             context = {}
 
         rep = self.browse(cr, uid, ids, context=context)
@@ -487,7 +486,6 @@ class report_creator(osv.osv):
         @return: True if display field which are  stored in database.
                      or false if display field which are not store in dtabase.
         """
-        if not context: context = {}
         this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             for fld in obj.field_ids:
@@ -509,7 +507,6 @@ class report_creator(osv.osv):
         @return: True if model colume type is in integer or float.
                      or false model colume type is not in integer or float.
         """
-        if not context: context = {}
         aggregate_columns = ('integer', 'float')
         apply_functions = ('sum', 'min', 'max', 'avg', 'count')
         this_objs = self.browse(cr, uid, ids, context=context)
@@ -525,7 +522,6 @@ class report_creator(osv.osv):
 
     def _calander_view_error(self, cr, uid, ids, context=None):
         required_types = []
-        if not context: context = {}
         this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             if obj.view_type1 == 'calendar' or obj.view_type2 == 'calendar' or obj.view_type3 == 'calendar':

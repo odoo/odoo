@@ -44,8 +44,6 @@ class procurement_compute_all(osv.osv_memory):
         @param context: A standard dictionary
         """
         proc_obj = self.pool.get('procurement.order')
-        if not context:
-            context = {}
         for proc in self.browse(cr, uid, ids, context=context):
             proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
                     context=context)
@@ -59,8 +57,6 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        if not context:
-            context = {}
         threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}

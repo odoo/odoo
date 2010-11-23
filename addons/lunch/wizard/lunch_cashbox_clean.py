@@ -36,7 +36,7 @@ class lunch_cashbox_clean(osv.osv_memory):
          @return:Dictionary {}.
          """
          #TOFIX: use orm methods
-         if not context:
+         if context is None:
             context = {}
          data = context and context.get('active_ids', []) or []
          cashmove_ref = self.pool.get('lunch.cashmove')

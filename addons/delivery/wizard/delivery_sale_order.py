@@ -47,8 +47,6 @@ class make_delivery(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """
-        if not context:
-            context = {}        
         res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('sale.order')
         for order in order_obj.browse(cr, uid, context.get('active_ids', []), context=context):
@@ -60,7 +58,7 @@ class make_delivery(osv.osv_memory):
         return res
     
     def view_init(self, cr , uid , fields, context=None):
-         if not context:
+         if context is None:
             context = {}
          order_obj = self.pool.get('sale.order')
          for order in order_obj.browse(cr, uid, context.get('active_ids', []), context=context):     
@@ -81,7 +79,7 @@ class make_delivery(osv.osv_memory):
              @return:  
         
         """
-        if not context:
+        if context is None:
             context = {}
         rec_ids = context and context.get('active_ids',[])
         order_obj = self.pool.get('sale.order')

@@ -31,8 +31,6 @@ class product_product(osv.osv):
         @param product_id: product id            
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """
-        if not context:
-            context = {}           
         product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
         res = super(product_product,self).get_product_accounts(cr, uid, product_id, context=context)
         stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
@@ -62,7 +60,7 @@ class product_product(osv.osv):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')

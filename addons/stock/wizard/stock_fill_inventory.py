@@ -57,8 +57,8 @@ class stock_fill_inventory(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if context==None:
-            context={}        
+        if context is None:
+            context = {}        
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')

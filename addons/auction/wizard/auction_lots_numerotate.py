@@ -48,7 +48,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if not context: context = {}
+        if context is None: context = {}
         res = super(auction_lots_numerotate_per_lot, self).default_get(cr, uid, fields, context=context)
         active_id = context.get('active_id',False)
         active_model = context.get('active_model')
@@ -91,6 +91,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
         }
     
     def numerotate(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         datas = self.read(cr, uid, ids[0], ['bord_vnd_id','lot_num','obj_num'])
@@ -133,6 +134,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
         return lots_datas[0]
     
     def test_exist(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         data_obj = self.pool.get('ir.model.data')

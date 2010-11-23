@@ -30,7 +30,7 @@ class delivery_carrier(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        if not context:
+        if context is None:
             context = {}
         order_id = context.get('order_id',False)
         if not order_id:
@@ -42,7 +42,7 @@ class delivery_carrier(osv.osv):
         return res
     def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
-        if not context:
+        if context is None:
             context = {}
         sale_obj=self.pool.get('sale.order')
         grid_obj=self.pool.get('delivery.grid')
@@ -70,8 +70,6 @@ class delivery_carrier(osv.osv):
         'active': lambda *args:1
     }
     def grid_get(self, cr, uid, ids, contact_id, context=None):
-        if not context:
-            context = {}
         contact = self.pool.get('res.partner.address').browse(cr, uid, [contact_id], context=context)[0]
         for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
@@ -114,8 +112,6 @@ class delivery_grid(osv.osv):
         total = 0
         weight = 0
         volume = 0
-        if not context:
-            context = {}
         for line in order.order_line:
             if not line.product_id:
                 continue

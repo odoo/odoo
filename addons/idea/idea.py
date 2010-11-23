@@ -121,8 +121,6 @@ class idea_idea(osv.osv):
         @param ids: List of vote read’s IDs """
 
         res = {}
-        if not context:
-            context = {}
         for id in ids:
             res[id] = '-1'
         vote_obj = self.pool.get('idea.vote')
@@ -248,8 +246,6 @@ class idea_idea(osv.osv):
 
         @return: Returns True on success, False otherwise
         """
-        if not context:
-            context = {}
         state = self.browse(cr, user, ids[0], context=context).state
 
         if vals.get('my_vote', False):

@@ -72,8 +72,6 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     @return: Computed message (unicode) or u""
     """
     pool = pooler.get_pool(cursor.dbname)
-    if not context:
-        context = {}
     if message is None:
         message = {}
     #Returns the computed expression
@@ -274,7 +272,7 @@ This is useful for CRM leads for example"),
 
     def create_action(self, cr, uid, ids, context=None):
         vals = {}
-        if not context:
+        if context is None:
             context = {}
         template_obj = self.browse(cr, uid, ids, context=context)[0]
         src_obj = template_obj.object_name.model
@@ -304,8 +302,6 @@ This is useful for CRM leads for example"),
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for template in self.browse(cr, uid, ids, context=context):
             try:
                 if template.ref_ir_act_window:

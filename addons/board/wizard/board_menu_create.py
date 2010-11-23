@@ -55,7 +55,7 @@ class board_menu_create(osv.osv_memory):
         @param ids: List of Board Menu Create's IDs
         @return: Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
 
         context_id = context and context.get('active_id', False) or False

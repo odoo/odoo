@@ -70,24 +70,18 @@ class project_phase(osv.osv):
          return True
 
     def _check_dates(self, cr, uid, ids, context=None):
-         if not context:
-            context = {}
          for phase in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
              if phase['date_start'] and phase['date_end'] and phase['date_start'] > phase['date_end']:
                  return False
          return True
 
     def _check_constraint_start(self, cr, uid, ids, context=None):
-         if not context:
-            context = {}
          phase = self.read(cr, uid, ids[0], ['date_start', 'constraint_date_start'], context=context)
          if phase['date_start'] and phase['constraint_date_start'] and phase['date_start'] < phase['constraint_date_start']:
              return False
          return True
 
     def _check_constraint_end(self, cr, uid, ids, context=None):
-         if not context:
-            context = {}
          phase = self.read(cr, uid, ids[0], ['date_end', 'constraint_date_end'], context=context)
          if phase['date_end'] and phase['constraint_date_end'] and phase['date_end'] > phase['constraint_date_end']:
              return False
@@ -102,8 +96,6 @@ class project_phase(osv.osv):
         res = {}
         if not ids:
             return res
-        if not context:
-            context = {}
         for phase in self.browse(cr, uid, ids, context=context):
             tot = 0.0
             for task in phase.task_ids:
@@ -145,8 +137,6 @@ class project_phase(osv.osv):
 
     def onchange_project(self, cr, uid, ids, project, context=None):
         result = {}
-        if not context:
-            context = {}
         result['date_start'] = False
         project_obj = self.pool.get('project.project')
         if project:
@@ -156,8 +146,6 @@ class project_phase(osv.osv):
 
     def onchange_days(self, cr, uid, ids, project, context=None):
         result = {}
-        if not context:
-            context = {}
         for id in ids:
             project_id = self.browse(cr, uid, id, context=context)
             newdate = datetime.strptime(project_id.date_start, '%Y-%m-%d') + relativedelta(days=project_id.duration or 0.0)
@@ -410,8 +398,6 @@ class project_resource_allocation(osv.osv):
 
     def get_name(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         for allocation in self.browse(cr, uid, ids, context=context):
             name = allocation.phase_id.name
             name += ' (%s%%)' %(allocation.useability)

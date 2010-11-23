@@ -29,7 +29,6 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
-        if not context: context = {}
         def recursive_computation(account_id, res):
             account = self.browse(cr, uid, account_id)
             for son in account.child_ids:
@@ -93,7 +92,6 @@ class account_analytic_account(osv.osv):
         if not ids:
             return []
         res = []
-        if not context: context = {}
         for account in self.browse(cr, uid, ids, context=context):
             data = []
             acc = account
@@ -139,7 +137,6 @@ class account_analytic_account(osv.osv):
     }
 
     def _default_company(self, cr, uid, context=None):
-        if not context: context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -166,7 +163,6 @@ class account_analytic_account(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        if not context: context = {}
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
@@ -187,7 +183,7 @@ class account_analytic_account(osv.osv):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
+        if context is None:
             context={}
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:

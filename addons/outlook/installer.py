@@ -30,8 +30,6 @@ class outlook_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     def default_get(self, cr, uid, fields, context=None):
-        if not context:
-            context = {}
         data = super(outlook_installer, self).default_get(cr, uid, fields, context=context)
         data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
         file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-addin.exe'), 'r')

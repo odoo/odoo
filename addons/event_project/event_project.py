@@ -24,8 +24,6 @@ from osv import fields, osv
 class one2many_mod_task(fields.one2many):
     
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
         if not values:
                 values = {}
         res = {}

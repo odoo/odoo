@@ -33,7 +33,7 @@ class invoice_directly(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
         pick_obj = self.pool.get('stock.picking')

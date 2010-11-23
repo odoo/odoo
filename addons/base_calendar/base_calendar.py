@@ -106,7 +106,6 @@ def _links_get(self, cr, uid, context=None):
     @param context: A standard dictionary for contextual values
     @return: list of dictionary which contain object and name and id.
     """
-    if not context: context = {}
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -234,7 +233,6 @@ class calendar_attendee(osv.osv):
         """
         name = name[0]
         result = {}
-        if not context: context = {}
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
             result[id] = {}
@@ -301,7 +299,6 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: list of dictionary which contain object and name and id.
         """
-        if not context: context = {}
         obj = self.pool.get('res.request.link')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -315,7 +312,6 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: list of dictionary which contain code and name and id.
         """
-        if not context: context = {}
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
@@ -1595,7 +1591,6 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        if not context: context = {}
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
             if isinstance(event_id, (int, long)):
@@ -1700,7 +1695,6 @@ class calendar_todo(osv.osv):
         """
 
         res = {}
-        if not context: context = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = event.date_start
         return res

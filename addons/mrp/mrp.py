@@ -132,7 +132,7 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of values
         """
         result = {}
-        if not context:
+        if context is None:
             context = {}
         bom_obj = self.pool.get('mrp.bom')
         bom_id = context and context.get('active_id', False) or False
@@ -164,8 +164,6 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of values
         """
         res = dict(map(lambda x: (x,''), ids))
-        if not context:
-            context = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
@@ -223,8 +221,6 @@ class mrp_bom(osv.osv):
 
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
-        if not context:
-            context = {}
         while len(ids):
             cr.execute('select distinct bom_id from mrp_bom where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
@@ -370,8 +366,6 @@ class mrp_production(osv.osv):
         @return: Dictionary of values.
         """
         result = {}
-        if not context:
-            context = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = {
                 'hour_total': 0.0,
@@ -389,8 +383,6 @@ class mrp_production(osv.osv):
         @return: Dictionary of values.
         """
         result = {}
-        if not context:
-            context = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned
         return result
@@ -402,8 +394,6 @@ class mrp_production(osv.osv):
         @return: Dictionary of values.
         """
         result = {}
-        if not context:
-            context = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned[:10]
         return result
@@ -460,8 +450,6 @@ class mrp_production(osv.osv):
     _order = 'priority desc, date_planned asc';
     
     def _check_qty(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
             if order.product_qty <= 0:
@@ -519,8 +507,6 @@ class mrp_production(osv.osv):
                 'bom_id': False,
                 'routing_id': False
             }}
-        if not context:
-            context = {}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         bom_id = bom_obj._bom_find(cr, uid, product.id, product.uom_id and product.uom_id.id, [])
@@ -544,8 +530,6 @@ class mrp_production(osv.osv):
             return {'value': {
                 'routing_id': False
             }}
-        if not context:
-            context = {}
         bom_pool = self.pool.get('mrp.bom')
         bom_point = bom_pool.browse(cr, uid, bom_id, context=context)
         routing_id = bom_point.routing_id.id or False
@@ -657,7 +641,7 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)

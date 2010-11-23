@@ -26,8 +26,6 @@ from osv import fields
 import time
 
 def _launch_wizard(self, cr, uid, data, context=None):
-    if not context:
-        context = {}
     address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
     m= address_obj.browse(cr, uid, data['id'], context=context)
     url=''

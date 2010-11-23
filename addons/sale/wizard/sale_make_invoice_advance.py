@@ -51,7 +51,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         obj_sale = self.pool.get('sale.order')
         obj_lines = self.pool.get('account.invoice.line')
         inv_obj = self.pool.get('account.invoice')
-        if not context:
+        if context is None:
             context = {}
 
         for sale_adv_obj in self.browse(cr, uid, ids, context=context):

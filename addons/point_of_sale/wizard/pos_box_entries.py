@@ -61,8 +61,6 @@ class pos_box_entries(osv.osv_memory):
              @param context: A standard dictionary
              @return :Return of operation of product
         """
-        if not context:
-            context = {}
         product_obj = self.pool.get('product.product')
         ids = product_obj.search(cr, uid, [('income_pdt', '=', True)], context=context)
         res = product_obj.read(cr, uid, ids, ['id', 'name'], context=context)
@@ -97,8 +95,6 @@ class pos_box_entries(osv.osv_memory):
         res_obj = self.pool.get('res.users')
         product_obj = self.pool.get('product.product')
         bank_statement = self.pool.get('account.bank.statement.line')
-        if not context:
-            context = {}
         for data in  self.read(cr, uid, ids, context=context):
             vals = {}
             curr_company = res_obj.browse(cr, uid, uid, context=context).company_id.id

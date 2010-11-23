@@ -34,7 +34,7 @@ class stock_split_into(osv.osv_memory):
     }
 
     def split(self, cr, uid, data, context=None):
-        if not context:
+        if context is None:
             context = {}
         rec_id = context and context.get('active_ids', False)
         move_obj = self.pool.get('stock.move')

@@ -48,14 +48,10 @@ class stock_period(osv.osv):
     }
     
     def button_open(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         self.write(cr, uid, ids, {'state': 'open'})
         return True
     
     def button_close(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         self.write(cr, uid, ids, {'state': 'close'})
         return True
 
@@ -196,8 +192,6 @@ class stock_sale_forecast(osv.osv):
     def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        if not context:
-            context = {}
         product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
@@ -208,8 +202,6 @@ class stock_sale_forecast(osv.osv):
     def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        if not context:
-            context = {}
         product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
@@ -310,7 +302,7 @@ class stock_planning(osv.osv):
     _name = "stock.planning"
 
     def _get_in_out(self, cr, uid, val, date_start, date_stop, direction, done, context=None):
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
         mapping = {'in': {
@@ -356,8 +348,6 @@ class stock_planning(osv.osv):
 
     def _to_planning_uom(self, cr, uid, val, qtys, context=None):
         res_qty = 0
-        if not context:
-            context = {}
         if qtys:
             uom_obj = self.pool.get('product.uom')
             for qty, prod_uom in qtys:
@@ -370,8 +360,6 @@ class stock_planning(osv.osv):
 
     def _get_forecast(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         for val in self.browse(cr, uid, ids, context=context):
             res[val.id] = {}
             valid_part = val.confirmed_forecasts_only and " AND state = 'validated'" or ""
@@ -394,7 +382,7 @@ class stock_planning(osv.osv):
         return res
 
     def _get_stock_start(self, cr, uid, val, date, context=None):
-        if not context:
+        if context is None:
             context = {}
         context['from_date'] = None
         context['to_date'] = date
@@ -409,8 +397,6 @@ class stock_planning(osv.osv):
 
     def _get_past_future(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         for val in self.browse(cr, uid, ids, context=context):
             if val.period_id.date_stop < time.strftime('%Y-%m-%d'):
                 res[val.id] = 'Past'
@@ -420,8 +406,6 @@ class stock_planning(osv.osv):
 
     def _get_op(self, cr, uid, ids, field_names, arg, context=None):  # op = OrderPoint
         res = {}
-        if not context:
-            context = {}
         for val in self.browse(cr, uid, ids, context=context):
             res[val.id]={}
             cr.execute("SELECT product_min_qty, product_max_qty, product_uom  \
@@ -537,8 +521,6 @@ class stock_planning(osv.osv):
     def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        if not context:
-            context = {}
         product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
@@ -615,8 +597,6 @@ class stock_planning(osv.osv):
     def _qty_to_standard(self, cr, uid, val, context=None):
         uos = False
         uos_qty = 0.0
-        if not context:
-            context = {}
         if val.product_uom.category_id.id == val.product_id.uom_id.category_id.id:
             uom_qty = val.incoming_left
             uom = val.product_uom.id

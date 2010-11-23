@@ -39,7 +39,6 @@ class base_report_sxw(osv.osv_memory):
 
 
     def get_report(self, cr, uid, ids, context=None):
-        if not context: context = {}
         data = self.read(cr,uid,ids)[0]
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_sxw')
@@ -75,12 +74,11 @@ class base_report_file_sxw(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-        if not context: context = {}
         res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
         report_id1 = self.pool.get('base.report.sxw').search(cr,uid,[])
         data=self.pool.get('base.report.sxw').read(cr,uid,report_id1)[0]
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
-        if not context:
+        if context is None:
             context={}
         if 'report_id' in fields:
             res['report_id'] = data['report_id']
@@ -96,7 +94,6 @@ class base_report_file_sxw(osv.osv_memory):
     def upload_report(self, cr, uid, ids, context=None):
         from base_report_designer import  openerp_sxw2rml
         import StringIO
-        if not context: context = {}
         data=self.read(cr,uid,ids)[0]
         sxwval = StringIO.StringIO(base64.decodestring(data['file_sxw_upload']))
         fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/openerp_sxw2rml')
@@ -137,8 +134,6 @@ class base_report_rml_save(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-        if not context:
-            context = {}
         
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
         report_id = self.pool.get('base.report.sxw').search(cr,uid,[])

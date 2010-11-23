@@ -50,8 +50,6 @@ class stock_sale_forecast_createlines(osv.osv_memory):
         prod_categ_obj = self.pool.get('product.category')
         template_obj = self.pool.get('product.template')
         forecast_lines = []
-        if not context:
-            context = {}
         for f in self.browse(cr, uid, ids, context=context):
             categ_ids =  f.product_categ_id.id and [f.product_categ_id.id] or []
             prod_categ_ids = prod_categ_obj.search(cr, uid, [('parent_id','child_of', categ_ids)])

@@ -75,14 +75,12 @@ class res_partner_bank(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         #overwrite to format the iban number correctly
-        if not context: context = {}
         if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #overwrite to format the iban number correctly
-        if not context: context = {}
         if 'iban' in vals and vals['iban']:
             vals['iban'] = _format_iban(vals['iban'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
@@ -91,7 +89,6 @@ class res_partner_bank(osv.osv):
         '''
         Check the IBAN number
         '''
-        if not context: context = {}
         for bank_acc in self.browse(cr, uid, ids, context=context):
             if not bank_acc.iban:
                 continue
@@ -126,7 +123,6 @@ class res_partner_bank(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         to_check_ids = []
-        if not context: context = {}
         for id in self.browse(cr, uid, ids, context=context):
             if id.state=='iban':
                 res.append((id.id,id.iban))
@@ -137,7 +133,6 @@ class res_partner_bank(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
     #overwrite the search method in order to search not only on bank type == basic account number but also on type == iban
-        if not context: context = {}
         res = super(res_partner_bank,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
         if filter(lambda x:x[0]=='acc_number' ,args):
             #get the value of the search
@@ -156,7 +151,6 @@ class res_partner_bank(osv.osv):
         This function returns the bank account number computed from the iban account number, thanks to the mapping_list dictionary that contains the rules associated to its country.
         '''
         res = {}
-        if not context: context = {}
         mapping_list = {
          #TODO add rules for others countries
             'be': lambda x: x[4:],

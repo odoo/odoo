@@ -50,8 +50,6 @@ class membership_line(osv.osv):
 
     def _get_partners(self, cr, uid, ids, context=None):
         list_membership_line = []
-        if not context:
-            context = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.pool.get('res.partner').browse(cr, uid, ids, context=context):
             if partner.member_lines:
@@ -60,8 +58,6 @@ class membership_line(osv.osv):
 
     def _get_membership_lines(self, cr, uid, ids, context=None):
         list_membership_line = []
-        if not context:
-            context = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for invoice in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
             if invoice.invoice_line:
@@ -103,8 +99,6 @@ class membership_line(osv.osv):
         @param return: Dictionary of state Value
         """
         res = {}
-        if not context:
-            context = {}
         inv_obj = self.pool.get('account.invoice')
         for line in self.browse(cr, uid, ids, context=context):
             cr.execute('''
@@ -185,8 +179,6 @@ class Partner(osv.osv):
     def _get_partner_id(self, cr, uid, ids, context=None):
         member_line_obj = self.pool.get('membership.membership_line')
         res_obj =  self.pool.get('res.partner')
-        if not context:
-            context = {}
         data_inv = member_line_obj.browse(cr, uid, ids, context=context)
         list_partner = []
         for data in data_inv:
@@ -200,8 +192,6 @@ class Partner(osv.osv):
     def _get_invoice_partner(self, cr, uid, ids, context=None):
         inv_obj = self.pool.get('account.invoice')
         res_obj = self.pool.get('res.partner')
-        if not context:
-            context = {}
         data_inv = inv_obj.browse(cr, uid, ids, context=context)
         list_partner = []
         for data in data_inv:
@@ -226,8 +216,6 @@ class Partner(osv.osv):
         for id in ids:
             res[id] = 'none'
         today = time.strftime('%Y-%m-%d')
-        if not context:
-            context = {}
         for id in ids:
             partner_data = self.browse(cr, uid, id, context=context)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
@@ -285,8 +273,6 @@ class Partner(osv.osv):
         name = name[0]
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
-        if not context:
-            context = {}
         for partner in self.browse(cr, uid, ids, context=context):
             if partner.associate_member:
                  partner_id = partner.associate_member.id
@@ -320,8 +306,6 @@ class Partner(osv.osv):
 
     def _get_partners(self, cr, uid, ids, context=None):
         ids2 = ids
-        if not context:
-            context = {}
         while ids2:
             ids2 = self.search(cr, uid, [('associate_member', 'in', ids2)], context=context)
             ids += ids2
@@ -386,8 +370,6 @@ class Partner(osv.osv):
         """Check  Recursive  for Associated Members.
         """
         level = 100
-        if not context:
-            context = {}
         while len(ids):
             cr.execute('SELECT DISTINCT associate_member FROM res_partner WHERE id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
@@ -419,7 +401,7 @@ class Partner(osv.osv):
         invoice_tax_obj = self.pool.get('account.invoice.tax')
         product_id = product_id or datas.get('membership_product_id', False)
         amount = datas.get('amount', 0.0)
-        if not context:
+        if context is None:
             context={}
         invoice_list = []
         if type(ids) in (int, long,):
@@ -478,7 +460,7 @@ class Product(osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         model_obj = self.pool.get('ir.model.data')
-        if not context:
+        if context is None:
             context = {}
 
         if ('product' in context) and (context['product']=='membership_product'):
@@ -531,7 +513,7 @@ class account_invoice_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         """Overrides orm write method
         """
-        if not context:
+        if context is None:
             context={}
         member_line_obj = self.pool.get('membership.membership_line')
         res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
@@ -561,7 +543,7 @@ class account_invoice_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         """Remove Membership Line Record for Account Invoice Line
         """
-        if not context:
+        if context is None:
             context={}
         member_line_obj = self.pool.get('membership.membership_line')
         for id in ids:

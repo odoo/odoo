@@ -200,8 +200,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -219,8 +217,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -291,7 +287,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value for print survey form.
         """
-        if not context:
+        if context is None:
             context = {}
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]

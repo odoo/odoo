@@ -53,7 +53,7 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         if not context.get('portal', False):
             return False
@@ -66,7 +66,7 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         if not context.get('portal', False):
             return False
@@ -136,8 +136,6 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        if not context:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
 
@@ -149,8 +147,6 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
         stage_pool = self.pool.get('crm.case.stage')
         model = self._name
         for case in self.browse(cr, uid, ids, context=context):
@@ -183,8 +179,6 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
         stage_pool = self.pool.get('crm.case.stage')
         model = self._name
         for case in self.browse(cr, uid, ids, context=context):
@@ -384,8 +378,6 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             if not case.section_id.reply_to:
                 raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
@@ -450,7 +442,7 @@ class crm_case(object):
         return self._action(cr, uid, cases, False, context=context)
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         context['state_to'] = state_to
         rule_obj = self.pool.get('base.action.rule')
@@ -469,8 +461,6 @@ class crm_case(object):
         """ Get a list of emails of the people following this thread
         """
         res = {}
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             l=[]
             if case.email_cc:
@@ -587,7 +577,7 @@ class crm_case_section(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of sales team ids
         """
-        if not context:
+        if context is None:
             context = {}
 
         res = []
@@ -661,8 +651,6 @@ def _links_get(self, cr, uid, context=None):
     @param uid: the current user’s ID for security checks,
     @param context: A standard dictionary for contextual values
     """
-    if not context:
-        context = {}
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)

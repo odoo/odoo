@@ -101,11 +101,11 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
-            context = {}
         res = False
         if type(ids) in (int, long,):
             ids = [ids]
+        if context is None:
+            context = {}
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for event in self.browse(cr, uid, ids, context=context):
@@ -141,8 +141,6 @@ class event_event(osv.osv):
         """
         register_pool = self.pool.get('event.registration')
         res = {}
-        if not context:
-            context = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
             for field in fields:
@@ -394,7 +392,7 @@ class event_registration(osv.osv):
         inv_pool = self.pool.get('account.invoice')
         product_pool = self.pool.get('product.product')
         contact_pool = self.pool.get('res.partner.contact')
-        if not context:
+        if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
@@ -450,7 +448,7 @@ class event_registration(osv.osv):
     def do_close(self, cr, uid, ids, context=None):
         """ Close Registration
         """
-        if not context:
+        if context is None:
             context = {}
         invoice_id = context.get('invoice_id', False)
         values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
@@ -467,12 +465,12 @@ class event_registration(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
-            context = {}
         if type(ids) in (int, long,):
             ids = [ids]
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
+        if context is None:
+            context = {}
         for registration in self.browse(cr, uid, ids, context=context):
             total_confirmed = registration.event_id.register_current + registration.nb_register
             if total_confirmed <= registration.event_id.register_max or registration.event_id.register_max == 0:
@@ -500,10 +498,10 @@ class event_registration(osv.osv):
     def button_reg_close(self, cr, uid, ids, context=None):
         """This Function Close Event Registration.
         """
-        if not context:
-            context = {}
         data_pool = self.pool.get('ir.model.data')
         unclosed_ids = []
+        if context is None:
+            context = {}
         for registration in self.browse(cr, uid, ids, context=context):
             if registration.tobe_invoiced and not registration.invoice_id:
                 unclosed_ids.append(registration.id)
@@ -538,8 +536,6 @@ class event_registration(osv.osv):
         """
         Send email to user
         """
-        if not context:
-            context = {}
 
         for regestration in self.browse(cr, uid, ids, context=context):
             src = regestration.event_id.reply_to or False

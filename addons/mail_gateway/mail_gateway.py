@@ -76,8 +76,6 @@ class mailgate_thread(osv.osv):
         """ Get a list of emails of the people following this thread
         """
         res = {}
-        if not context:
-            context = {}
         if isinstance(ids, (str, int, long)):
             ids = [long(ids)]
         for thread in self.browse(cr, uid, ids, context=context):
@@ -190,8 +188,6 @@ class mailgate_message(osv.osv):
         @param context: A standard dictionary
         """
         action_data = False
-        if not context:
-            context = {}
         if ids:
             message_id = ids[0]
             mailgate_data = self.browse(cr, uid, message_id, context=context)
@@ -217,8 +213,6 @@ class mailgate_message(osv.osv):
         @param context: A standard dictionary
         """
         action_data = False
-        if not context:
-            context = {}
         action_pool = self.pool.get('ir.actions.act_window')
         message_pool = self.browse(cr ,uid, ids, context=context)[0]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
@@ -323,8 +317,6 @@ class mailgate_tool(osv.osv_memory):
         """
         if isinstance(res_ids, (int, long)):
             res_ids = [res_ids]
-        if not context:
-            context = {}
 
         msg_pool = self.pool.get('mailgate.message')
         for res_id in res_ids:
@@ -358,8 +350,6 @@ class mailgate_tool(osv.osv_memory):
         @param email_error: Default Email address in case of any Problem
         """
         model_pool = self.pool.get(model)
-        if not context:
-            context = {}
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
@@ -400,7 +390,7 @@ class mailgate_tool(osv.osv_memory):
         if isinstance(message, xmlrpclib.Binary):
             message = str(message.data)
 
-        if not context:
+        if context is None:
             context = {}
 
         if custom_values is None or not isinstance(custom_values, dict):

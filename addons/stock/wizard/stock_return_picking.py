@@ -39,7 +39,7 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary with default values for all field in ``fields``
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
@@ -66,7 +66,7 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view with new columns.
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_return_picking, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) 
@@ -142,7 +142,7 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if not context:
+        if context is None:
             context = {} 
         record_id = context and context.get('active_id', False) or False
         move_obj = self.pool.get('stock.move')

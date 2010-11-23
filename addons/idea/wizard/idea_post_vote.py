@@ -48,7 +48,7 @@ class idea_post_vote(osv.osv_memory):
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         idea_obj = self.pool.get('idea.idea')
 
@@ -149,7 +149,7 @@ class idea_select(osv.osv_memory):
        @param ids: List of load column,
        @return: dictionary of query logs clear message window
        """
-       if not context:
+       if context is None:
             context = {}
        idea_obj = self.browse(cr, uid, ids, context=context)
        for idea in idea_obj:

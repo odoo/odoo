@@ -46,7 +46,7 @@ class change_standard_price(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
-        if not context:
+        if context is None:
             context = {}
         product_pool = self.pool.get('product.product')
         product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
@@ -80,7 +80,7 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return: Dictionary of values
         """
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False), context=context)
         price = product_obj.standard_price
@@ -100,7 +100,7 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')

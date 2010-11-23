@@ -25,8 +25,6 @@ import pooler
 import time
 
 def _open_history_event(self, cr, uid, data, context=None):
-    if not context:
-        context = {} 
     pool = pooler.get_pool(cr.dbname)
     data_obj = pool.get('ir.model.data')
     result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_filter')

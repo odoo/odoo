@@ -49,7 +49,7 @@ class product_margin(osv.osv_memory):
 
             @return:
         """
-        if not context:
+        if context is None:
             context = {}
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')

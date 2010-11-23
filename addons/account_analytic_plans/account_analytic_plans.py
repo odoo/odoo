@@ -28,7 +28,7 @@ from tools.translate import _
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         res = {}
         for id in ids:
@@ -115,7 +115,7 @@ class account_analytic_plan_instance(osv.osv):
         return super(account_analytic_plan_instance, self).copy(cr, uid, id, default, context=context)
 
     def _default_journal(self, cr, uid, context=None):
-        if not context:
+        if context is None:
             context = {}
         journal_obj = self.pool.get('account.journal')
         if context.has_key('journal_id') and context['journal_id']:

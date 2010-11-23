@@ -37,8 +37,6 @@ class project_compute_phases(osv.osv_memory):
     }
 
     def check_selection(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         return self.compute_date(cr, uid, ids, context=context)
 
     

@@ -42,7 +42,7 @@ class auction_pay_sel(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context: context = {}
+        if context is None: context = {}
         lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context=context)
         invoice_obj = self.pool.get('account.invoice')
         for datas in self.read(cr, uid, ids, context=context):

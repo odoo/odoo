@@ -175,8 +175,6 @@ class document_directory(osv.osv):
         """ Return a node object for the given uri.
            This fn merely passes the call to node_context
         """
-        if not context:
-                context = {}
 
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
@@ -186,8 +184,6 @@ class document_directory(osv.osv):
            This function can be overriden by inherited classes ;)
            @param dbro The browse object, if caller already has it
         """
-        if not context:
-            context = {}
         if dbro is None:
             dbro = self.browse(cr, uid, ids, context=context)
 
@@ -237,8 +233,6 @@ class document_directory(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}
-        if not context:
-            context = {}
         name = self.read(cr, uid, [id])[0]['name']
         default.update({'name': name+ " (copy)"})
         return super(document_directory,self).copy(cr, uid, id, default, context=context)

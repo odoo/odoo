@@ -26,7 +26,7 @@ class auction_payer(osv.osv_memory):
     _description = "Auction payer"
     
     def payer(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'is_ok':True, 'state':'paid'})
         return {}
     
@@ -46,7 +46,7 @@ class auction_payer_sel(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction payer sel’s IDs.
         """
-        if not context: context = {}
+        if context is None: context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'paid_vnd':True})
         return {}
     

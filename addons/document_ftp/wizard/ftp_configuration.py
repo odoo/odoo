@@ -39,8 +39,6 @@ class document_ftp_configuration(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         conf = self.browse(cr, uid, ids[0], context=context)
         data_pool = self.pool.get('ir.model.data')
         # Update the action for FTP browse.

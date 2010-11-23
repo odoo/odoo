@@ -38,7 +38,7 @@ class project_scrum_email(osv.osv_memory):
 
         @return : default values of fields.
         """
-        if not context:
+        if context is None:
             context = {}
         meeting_pool = self.pool.get('project.scrum.meeting')
         record_ids = context and context.get('active_ids', []) or []

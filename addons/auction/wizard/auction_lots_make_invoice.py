@@ -50,7 +50,7 @@ class auction_lots_make_invoice(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_lots_make_invoice, self).default_get(cr, uid, fields, context=context)
         lots_obj = self.pool.get('auction.lots') 
@@ -69,7 +69,7 @@ class auction_lots_make_invoice(osv.osv_memory):
         @param ids: List of Auction lots make invoice’s IDs
         @return: dictionary of  account invoice form.
         """
-        if not context:
+        if context is None:
             context={}
         order_obj = self.pool.get('auction.lots')
         mod_obj = self.pool.get('ir.model.data') 

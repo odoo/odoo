@@ -37,7 +37,6 @@ class module(osv.osv):
 
     def _get_graphical_representation(self, cr, uid, model_ids, level=1, context=None):
         obj_model = self.pool.get('ir.model')
-        if not context: context = {}
         if level == 0:
             return tuple()
         relation = []
@@ -100,7 +99,7 @@ class module(osv.osv):
         return obj_ids
 
     def get_relation_graph(self, cr, uid, module_name, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         object_ids = self._get_module_objects(cr, uid, module_name, context=context)
         if not object_ids:
             return {'module_file': False}

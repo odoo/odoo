@@ -145,9 +145,6 @@ class crm_opportunity(osv.osv):
         if not stage_id:
             return {'value':{}}
         
-        if not context:
-            context = {}
-
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
 
         if not stage.on_change:
@@ -171,8 +168,6 @@ class crm_opportunity(osv.osv):
         @return : Dictionary value for created Meeting view
         """
         value = {}
-        if not context:
-            context = {}
         for opp in self.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
 

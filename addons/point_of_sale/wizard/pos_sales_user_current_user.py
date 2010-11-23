@@ -39,7 +39,7 @@ class pos_sales_user_today_current_user(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
-        if not context:
+        if context is None:
             context = {}
 
         datas = {'ids': context.get('active_ids', [])}

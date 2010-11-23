@@ -371,7 +371,7 @@ class hr_evaluation_interview(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value for print survey form.
         """
-        if not context:
+        if context is None:
             context = {}
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]

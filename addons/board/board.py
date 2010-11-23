@@ -38,8 +38,6 @@ class board_board(osv.osv):
         @param ids: List of Board's IDs
         @return: arch of xml view.
         """
-        if not context:
-            context = {}
         board = self.pool.get('board.board').browse(cr, uid, ids, context=context)
         left = []
         right = []
@@ -81,8 +79,6 @@ class board_board(osv.osv):
                      dictionary must be with the form: {‘name_of_the_field’: value, ...}.
         @return: True
         """
-        if not context:
-            context = {}
         result = super(board_board, self).write(cr, uid, ids, vals, context=context)
 
         board = self.pool.get('board.board').browse(cr, uid, ids[0], context=context)
@@ -101,8 +97,6 @@ class board_board(osv.osv):
         @return: id of new created record of board.board.
         """
 
-        if not context:
-            context = {}
 
         if not 'name' in vals:
             return False
@@ -126,8 +120,6 @@ class board_board(osv.osv):
         @return: Dictionary of Fields, arch and toolbar.
         """
 
-        if not context:
-            context = {}
 
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,\

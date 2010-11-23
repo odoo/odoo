@@ -167,8 +167,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
             raise ValueError('signal cannot be False')
-        if not context:
-            context = {}
 
         Workitems = self.pool.get('marketing.campaign.workitem')
         domain = [('object_id.model', '=', record._table._name),
@@ -249,8 +247,6 @@ class marketing_campaign_segment(osv.osv):
     }
 
     def _check_model(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if not obj.ir_filter_id:
                 return True
@@ -302,8 +298,6 @@ class marketing_campaign_segment(osv.osv):
         return True
 
     def process_segment(self, cr, uid, segment_ids=None, context=None):
-        if not context:
-            context = {}
         Workitems = self.pool.get('marketing.campaign.workitem')
         if not segment_ids:
             segment_ids = self.search(cr, uid, [('state', '=', 'running')], context=context)
@@ -466,8 +460,6 @@ class marketing_campaign_activity(osv.osv):
         return res == False and True or res
 
     def process(self, cr, uid, act_id, wi_id, context=None):
-        if not context:
-            context = {}
         activity = self.browse(cr, uid, act_id, context=context)
         method = '_process_wi_%s' % (activity.type,)
         action = getattr(self, method, None)
@@ -504,8 +496,6 @@ class marketing_campaign_transition(osv.osv):
 
     def _delta(self, cr, uid, ids, context=None):
         assert len(ids) == 1
-        if not context:
-            context = {}
         transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
             raise ValueError('Delta is only relevant for timed transiton')
@@ -539,8 +529,6 @@ class marketing_campaign_transition(osv.osv):
         'trigger': 'time',
     }
     def _check_campaign(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
                 return False
@@ -562,8 +550,6 @@ class marketing_campaign_workitem(osv.osv):
 
     def _res_name_get(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '/')
-        if not context:
-            context = {}
         for wi in self.browse(cr, uid, ids, context=context):
             if not wi.res_id:
                 continue
@@ -625,16 +611,12 @@ class marketing_campaign_workitem(osv.osv):
     }
 
     def button_draft(self, cr, uid, workitem_ids, context=None):
-        if not context:
-            context = {}
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
     def button_cancel(self, cr, uid, workitem_ids, context=None):
-        if not context:
-            context = {}
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
                 self.write(cr, uid, [wi.id], {'state':'cancelled'}, context=context)
@@ -644,8 +626,6 @@ class marketing_campaign_workitem(osv.osv):
         if workitem.state != 'todo':
             return
 
-        if not context:
-            context = {}
         activity = workitem.activity_id
         proxy = self.pool.get(workitem.object_id.model)
         object_id = proxy.browse(cr, uid, workitem.res_id, context=context)
@@ -756,8 +736,6 @@ class marketing_campaign_workitem(osv.osv):
 
     def preview(self, cr, uid, ids, context=None):
         res = {}
-        if not context:
-            context = {}
         wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
             data_obj = self.pool.get('ir.model.data')

@@ -41,7 +41,7 @@ class lunch_order_confirm(osv.osv_memory):
         @param ids: List  Lunch Order confirm’s IDs
         @return: Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
         data = context and context.get('active_ids', []) or []
         order_ref = self.pool.get('lunch.order')

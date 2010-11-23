@@ -53,8 +53,6 @@ class crm_lead(crm_case, osv.osv):
         res_obj = self.pool.get('resource.resource')
 
         res = {}
-        if not context:
-            context = {}
         for lead in self.browse(cr, uid, ids, context=context):
             for field in fields:
                 res[lead.id] = {}
@@ -237,7 +235,7 @@ class crm_lead(crm_case, osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Value of action in dict
         """
-        if not context:
+        if context is None:
             context = {}
         context.update({'active_ids': ids})
 
@@ -321,8 +319,6 @@ class crm_lead(crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        if not context:
-            context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject')
@@ -366,8 +362,6 @@ class crm_lead(crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-        if not context:
-            context = {}
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 

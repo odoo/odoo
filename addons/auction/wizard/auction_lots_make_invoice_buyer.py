@@ -45,7 +45,7 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
         lots_obj=self.pool.get('auction.lots')

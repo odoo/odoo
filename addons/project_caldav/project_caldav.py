@@ -57,9 +57,6 @@ class project_task(osv.osv):
         @return: Dictionary value which open Project Task form.
         """
 
-        if not context:
-            context = {}
-
         data_pool = self.pool.get('ir.model.data')
         value = {}
         task_form_id = data_pool.get_object(cr, uid, 'project', 'view_task_form2')
@@ -82,8 +79,6 @@ class project_task(osv.osv):
 
 
     def import_cal(self, cr, uid, data, data_id=None, context=None):
-        if not context:
-            context = {}
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)

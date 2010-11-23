@@ -33,8 +33,6 @@ class document_ftp_browse(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         res = {}
-        if not context:
-            context = {}
         if 'url' in fields:
             user_pool = self.pool.get('res.users')
             current_user = user_pool.browse(cr, uid, uid, context=context)
@@ -52,8 +50,6 @@ class document_ftp_browse(osv.osv_memory):
 
     def browse_ftp(self, cr, uid, ids, context=None):
         data_id = ids and ids[0] or False
-        if not context:
-            context = {}
         data = self.browse(cr, uid, data_id, context=context)
         final_url = data.url
         return {

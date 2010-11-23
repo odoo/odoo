@@ -63,7 +63,7 @@ class product_product(osv.osv):
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
-        if not context:
+        if context is None:
             context = {}
 
         new_price = datas.get('new_price', 0.0)

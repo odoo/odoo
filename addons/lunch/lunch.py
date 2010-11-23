@@ -72,8 +72,6 @@ class lunch_cashbox(osv.osv):
         @param ids: List of create menu’s IDs
         @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context = {}
         cr.execute("SELECT box,sum(amount) from lunch_cashmove where active = 't' group by box")
         amount = dict(cr.fetchall())
         for i in ids:
@@ -126,8 +124,6 @@ class lunch_order(osv.osv):
          @param ids: List of Lunch order’s IDs
          @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context = {}
         res = {}
         for price in self.browse(cr, uid, ids, context=context):
             res[price.id] = price.product.price
@@ -162,8 +158,6 @@ class lunch_order(osv.osv):
         @param ids: List of confirm order’s IDs
         @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context = {}
         cashmove_ref = self.pool.get('lunch.cashmove')
         for order in self.browse(cr, uid, ids, context=context):
             if order.state == 'confirmed':
@@ -185,8 +179,6 @@ class lunch_order(osv.osv):
          @param ids: List of create menu’s IDs
          @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context = {}
         orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
             if not order.cashmove:

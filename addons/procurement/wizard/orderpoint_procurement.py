@@ -47,8 +47,6 @@ class procurement_compute(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        if not context:
-            context = {}
         proc_obj = self.pool.get('procurement.order')
         for proc in self.browse(cr, uid, ids, context=context):
             proc_obj._procure_orderpoint_confirm(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname, context=context)
@@ -63,8 +61,6 @@ class procurement_compute(osv.osv_memory):
         @param ids: List of IDs selected
         @param context: A standard dictionary
         """
-        if not context:
-            context = {}
         threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}

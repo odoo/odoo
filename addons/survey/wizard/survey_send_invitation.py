@@ -60,7 +60,7 @@ class survey_send_invitation(osv.osv_memory):
         return ''.join([choice(chars) for i in range(6)])
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if not context:
+        if context is None:
             context = {}
         data = super(survey_send_invitation, self).default_get(cr, uid, fields_list, context)
         survey_obj = self.pool.get('survey')
@@ -94,7 +94,7 @@ class survey_send_invitation(osv.osv_memory):
 
 
     def action_send(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         record = self.read(cr, uid, ids, [])
         survey_ids =  context.get('active_ids', [])
@@ -224,7 +224,7 @@ class survey_send_invitation_log(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if not context:
+        if context is None:
             context = {}
         data = super(survey_send_invitation_log, self).default_get(cr, uid, fields_list, context)
         data['note'] = context.get('note', '')

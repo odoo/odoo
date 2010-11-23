@@ -52,7 +52,7 @@ class account_cash_statement(osv.osv):
             return True
 
     def _user_allow(self, cr, uid, statement_id, context=None):
-        if not context:
+        if context is None:
             context = {}
         statement = self.browse(cr, uid, statement_id, context=context)
         if (not statement.journal_id.journal_users) and uid == 1: return True

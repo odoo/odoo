@@ -30,8 +30,6 @@ class sale_order_dates(osv.osv):
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        if not context:
-            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for pick in order.picking_ids:
@@ -45,8 +43,6 @@ class sale_order_dates(osv.osv):
     def _get_commitment_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        if not context:
-            context = {}
         for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for line in order.order_line:

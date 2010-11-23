@@ -40,8 +40,6 @@ class crm_installer(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if not context:
-            context = {}
         res = super(crm_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         #Checking sale module is installed or not
         cr.execute("SELECT * from ir_module_module where state='installed' and name = 'sale'")

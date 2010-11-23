@@ -62,8 +62,6 @@ class wiki_group(osv.osv):
         @param ids: List of open wiki group’s IDs
         @return: dictionay of open wiki window on give group id
         """
-        if not context:
-            context = {}
         if type(ids) in (int,long,):
             ids = [ids]
         group_id = False
@@ -140,8 +138,6 @@ class wiki_wiki2(osv.osv):
 
         if (not group_id) or content:
             return {}
-        if not context:
-            context = {}
         grp = self.pool.get('wiki.groups').browse(cr, uid, group_id, context=context)
         section = '0'
         for page in grp.page_ids:
@@ -166,8 +162,6 @@ class wiki_wiki2(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param id: Give wiki page's ID """
 
-        if not context:
-            context = {}
         return super(wiki_wiki2, self).copy_data(cr, uid, id, {'wiki_id': False}, context)
 
     def create_history(self, cr, uid, ids, vals, context=None):

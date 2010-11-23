@@ -39,7 +39,7 @@ class wiki_create_menu(osv.osv_memory):
         @param ids: List of create menu’s IDs
 
         """
-        if not context:
+        if context is None:
             context = {}
         obj_wiki_group = self.pool.get('wiki.groups')
         obj_view = self.pool.get('ir.ui.view')

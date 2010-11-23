@@ -100,7 +100,7 @@ class email_server(osv.osv):
         return True
     
     def button_confirm_login(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
@@ -147,7 +147,7 @@ class email_server(osv.osv):
         return self.fetch_mail(cr, uid, ids, context=context)
 
     def fetch_mail(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         email_tool = self.pool.get('email.server.tools')
         action_pool = self.pool.get('ir.actions.server')
@@ -209,7 +209,7 @@ class mailgate_message(osv.osv):
     _order = 'id desc'
 
     def create(self, cr, uid, values, context=None):
-        if not context:
+        if context is None:
             context={}
         server_id = context.get('server_id',False)
         server_type = context.get('server_type',False)
@@ -221,7 +221,7 @@ class mailgate_message(osv.osv):
         return res
 
     def write(self, cr, uid, ids, values, context=None):
-        if not context:
+        if context is None:
             context={}
         server_id = context.get('server_id',False)
         server_type = context.get('server_type',False)

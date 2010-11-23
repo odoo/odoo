@@ -36,7 +36,7 @@ class stock_inventory_merge(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
-        if not context:
+        if context is None:
             context={}
         res = super(stock_inventory_merge, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if context.get('active_model','') == 'stock.inventory' and len(context['active_ids']) < 2:
@@ -56,7 +56,7 @@ class stock_inventory_merge(osv.osv_memory):
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')
         invent_lines = {}
-        if not context:
+        if context is None:
             context = {}
         for inventory in invent_obj.browse(cr, uid, context['active_ids'], context=context):
             if inventory.state == "done":

@@ -209,8 +209,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         
         @return: SMTP server object or Exception
         """
-        if not context:
-            context = {}
         #Type cast ids to integer
         if type(ids) == list:
             ids = ids[0]
@@ -268,8 +266,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         This method should now wrap smtp_connection
         """
         #This function returns a SMTP server object
-        if not context:
-            context = {}
         logger = netsvc.Logger()
         core_obj = self.browse(cursor, user, id, context=context)
         if core_obj.smtpserver and core_obj.smtpport and core_obj.state == 'approved':

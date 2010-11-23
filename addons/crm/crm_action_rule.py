@@ -51,8 +51,6 @@ this if you want the rule to send an email to the partner."),
     
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
-        if not context:
-            context = {}
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
@@ -74,8 +72,6 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
 
         if hasattr(obj, 'section_id'):
@@ -111,8 +107,6 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-        if not context:
-            context = {}
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         
@@ -150,8 +144,6 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-        if not context:
-            context = {}
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res  + crm.AVAILABLE_STATES
 
@@ -160,8 +152,6 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-        if not context:
-            context = {}
         res = super(base_action_rule, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES
 

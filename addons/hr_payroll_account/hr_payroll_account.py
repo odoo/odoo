@@ -110,8 +110,6 @@ class payroll_register(osv.osv):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
-        if not context:
-            context = {}
         vals = self.browse(cr, uid, ids, context=context)[0]
         emp_ids = emp_pool.search(cr, uid, [])
 

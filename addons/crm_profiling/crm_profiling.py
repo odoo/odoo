@@ -167,8 +167,6 @@ class questionnaire(osv.osv):
             @param data: Get Data
             @param context: A standard dictionary for contextual values """
         
-        if not context:
-            context = {}
         query = """
         select name, id
         from crm_profiling_question
@@ -221,8 +219,6 @@ class partner(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         temp = []
-        if not context:
-            context = {}
         for x in data['form']:
             if x.startswith("quest_form") and data['form'][x] != 0 :
                 temp.append(data['form'][x])
@@ -244,8 +240,6 @@ class partner(osv.osv):
             @param ids: List of crm profiling’s IDs
             @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context={}
         if 'answers_ids' in vals:
             vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
         return super(partner, self).write(cr, uid, ids, vals, context=context)

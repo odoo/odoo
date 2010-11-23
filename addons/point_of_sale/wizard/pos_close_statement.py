@@ -43,8 +43,6 @@ class pos_close_statement(osv.osv_memory):
         j_ids = map(lambda x1: x1[0], cr.fetchall())
         journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
         ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)], context=context)
-        if not context:
-            context = {}
         for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
             if not ids:
                 raise osv.except_osv(_('Message'), _('Cash registers are already closed.'))

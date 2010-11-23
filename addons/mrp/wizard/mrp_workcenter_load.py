@@ -38,7 +38,7 @@ class mrp_workcenter_load(osv.osv_memory):
         @param context: A standard dictionary
         @return : Report
         """
-        if not context:
+        if context is None:
             context = {}
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['time_unit','measure_unit'])

@@ -149,7 +149,7 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         @param calname: Get Calendar name
         @param context: A standard dictionary for contextual values """
 
-    if not context:
+    if context is None:
         context = {}
     pool = pooler.get_pool(cr.dbname)
     field_obj = pool.get('basic.calendar.fields')
@@ -470,7 +470,7 @@ class CalDAV(object):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
@@ -592,7 +592,7 @@ class Calendar(CalDAV, osv.osv):
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         if not domain:
             domain = []
@@ -622,7 +622,7 @@ class Calendar(CalDAV, osv.osv):
         
 
     def get_cal_max_modified(self, cr, uid, ids, parent=None, domain=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         if not domain:
             domain = []
@@ -652,7 +652,7 @@ class Calendar(CalDAV, osv.osv):
             @param vobj: the type of object to export
             @return the ical data.
         """
-        if not context:
+        if context is None:
            context = {}
         ctx_model = context.get('model', None)
         ctx_res_id = context.get('res_id', None)
@@ -684,7 +684,7 @@ class Calendar(CalDAV, osv.osv):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         vals = []
         ical_data = content
@@ -1066,7 +1066,7 @@ class Timezone(CalDAV, osv.osv_memory):
             @param model: Get Model's name
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ctx = context.copy()
         ctx.update({'model': model})
@@ -1125,7 +1125,7 @@ class Alarm(CalDAV, osv.osv_memory):
             @param alarm_id: Get Alarm's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
@@ -1246,7 +1246,7 @@ class Attendee(CalDAV, osv.osv_memory):
             @param attendee_ids: Get Attendee's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         attendee_object = self.pool.get(model)
         ctx = context.copy()

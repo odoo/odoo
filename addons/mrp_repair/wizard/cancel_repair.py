@@ -35,7 +35,7 @@ class repair_cancel(osv.osv_memory):
         @param context: A standard dictionary 
         @return:  
         """
-        if not context:
+        if context is None:
             context = {}
         record_id = context and context.get('active_id', False) or False
         assert record_id, _('Active ID is not Found')
@@ -58,7 +58,7 @@ class repair_cancel(osv.osv_memory):
         @param context: A standard dictionary 
         @return: New arch of view.
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         record_id = context and context.get('active_id', False) or False        

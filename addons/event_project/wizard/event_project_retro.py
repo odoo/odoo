@@ -65,8 +65,6 @@ class event_project(osv.osv_memory):
     }
     
     def create_duplicate(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         event_obj = self.pool.get('event.event')
         project_obj = self.pool.get('project.project')
         event = event_obj.browse(cr, uid, context.get('active_id', False), context=context)

@@ -33,7 +33,7 @@ class showdiff(osv.osv_memory):
         """ @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         """
-        if not context:
+        if context is None:
             context = {}
         history = self.pool.get('wiki.wiki.history')
         ids = context.get('active_ids', [])

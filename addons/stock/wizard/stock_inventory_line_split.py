@@ -39,7 +39,7 @@ class stock_inventory_line_split(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context = {}
         record_id = context and context.get('active_id',False)
         res = {}
@@ -66,8 +66,6 @@ class stock_inventory_line_split(osv.osv_memory):
         ir_sequence_obj = self.pool.get('ir.sequence')
         line_obj = self.pool.get('stock.inventory.line')
         new_line = []        
-        if not context:
-            context = {}
         for data in self.browse(cr, uid, ids, context=context):
             for inv_line in line_obj.browse(cr, uid, line_ids, context=context):
                 line_qty = inv_line.product_qty

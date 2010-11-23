@@ -70,7 +70,7 @@ class stock_move_consume(osv.osv_memory):
         @param context: A standard dictionary
         @return: default values of fields
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -94,7 +94,7 @@ class stock_move_consume(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
@@ -125,7 +125,7 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return: default values of fields
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -155,7 +155,7 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
@@ -181,7 +181,7 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return: Default values of fields
         """
-        if not context:
+        if context is None:
             context = {}
 
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
@@ -215,7 +215,7 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {}
@@ -233,8 +233,6 @@ class split_in_production_lot(osv.osv_memory):
         prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
         new_move = []
-        if not context:
-            context = {}
         for data in self.browse(cr, uid, ids, context=context):
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 move_qty = move.product_qty

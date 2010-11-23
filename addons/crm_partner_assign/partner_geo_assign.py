@@ -71,8 +71,6 @@ class res_partner(osv.osv):
         'partner_weight': lambda *args: 0
     }
     def geo_localize(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.address:
                 continue
@@ -111,8 +109,6 @@ class crm_lead(osv.osv):
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
-        if not context:
-            context = {}
         for part in self.browse(cr, uid, ids, context=context):
             if not part.country_id:
                 continue

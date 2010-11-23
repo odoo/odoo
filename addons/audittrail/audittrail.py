@@ -196,8 +196,6 @@ class audittrail_objects_proxy(osv_pool):
         @param values: Values for field to be converted into textual values
         @return: values: List of textual values for given fields
         """
-        if not context:
-            context = {}
         pool = pooler.get_pool(cr.dbname)
         field_pool = pool.get('ir.model.fields')
         model_pool = pool.get('ir.model')

@@ -42,7 +42,7 @@ class mrp_product_produce(osv.osv_memory):
         @param context: A standard dictionary
         @return: Quantity
         """
-        if not context:
+        if context is None:
             context = {}
         prod = self.pool.get('mrp.production').browse(cr, uid,
                                 context['active_id'], context=context)
@@ -66,7 +66,7 @@ class mrp_product_produce(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         prod_obj = self.pool.get('mrp.production')
         move_ids = context.get('active_ids', [])

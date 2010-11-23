@@ -41,8 +41,6 @@ class messages(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # return messages by current user, for current user or for all users
         # return all messages if current user is administrator  
-        if not context:
-            context = {}
         if uid != 1:
             args.extend(['|',('from_id', 'in', [uid,]),('to_id', 'in', [uid, False])])
         return super(messages, self).search(cr, uid, args, offset, limit,

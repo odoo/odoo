@@ -62,7 +62,7 @@ send an Email to Invited Person')
         @return: Dictionary of {}.
         """
 
-        if not context:
+        if context is None:
             context = {}
 
         model = False

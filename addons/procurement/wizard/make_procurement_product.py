@@ -62,8 +62,6 @@ class make_procurement(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which loads Procurement form view.
         """
-        if not context:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context).login
         wh_obj = self.pool.get('stock.warehouse')
         procurement_obj = self.pool.get('procurement.order')
@@ -111,7 +109,7 @@ class make_procurement(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
-        if not context:
+        if context is None:
             context = {}
         record_id = context and context.get('active_id', False) or False
 

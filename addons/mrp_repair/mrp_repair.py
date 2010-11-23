@@ -42,8 +42,6 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        if not context:
-            context = {}
         cur_obj = self.pool.get('res.currency')
 
         for repair in self.browse(cr, uid, ids, context=context):
@@ -66,8 +64,6 @@ class mrp_repair(osv.osv):
         #return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
-        if not context:
-            context = {}
         for repair in self.browse(cr, uid, ids, context=context):
             val = 0.0
             cur = repair.pricelist_id.currency_id
@@ -89,8 +85,6 @@ class mrp_repair(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        if not context:
-            context = {}
         untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context=context)
         tax = self._amount_tax(cr, uid, ids, field_name, arg, context=context)
         cur_obj = self.pool.get('res.currency')
@@ -102,8 +96,6 @@ class mrp_repair(osv.osv):
     
     def _get_default_address(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         partner_obj = self.pool.get('res.partner')
         for data in self.browse(cr, uid, ids, context=context):
             adr_id = False
@@ -192,8 +184,6 @@ class mrp_repair(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        if not context:
-            context = {}
         default.update({
             'state':'draft',
             'repaired':False,
@@ -344,8 +334,6 @@ class mrp_repair(osv.osv):
         """ Cancels repair order.
         @return: True
         """
-        if not context:
-            context = {}
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
@@ -362,8 +350,6 @@ class mrp_repair(osv.osv):
         """
         res = {}
         invoices_group = {}
-        if not context:
-            context = {}
         inv_line_obj = self.pool.get('account.invoice.line')
         inv_obj = self.pool.get('account.invoice')
         repair_line_obj = self.pool.get('mrp.repair.line')
@@ -523,8 +509,6 @@ class mrp_repair(osv.osv):
         @return: Picking ids.
         """
         res = {}
-        if not context:
-            context = {}
         move_obj = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
         repair_line_obj = self.pool.get('mrp.repair.line')
@@ -648,8 +632,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
-        if not context:
-            context = {}
         cur_obj=self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
@@ -739,8 +721,6 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         @return: Dictionary of values.
         """
         res = {}
-        if not context:
-            context = {}
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0

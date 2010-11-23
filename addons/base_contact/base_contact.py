@@ -36,7 +36,6 @@ class res_partner_contact(osv.osv):
             @fields: Get Fields
             @param context: A standard dictionary for contextual values
             @param arg: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...]. """
-        if not context: context = {}
         res = dict.fromkeys(ids, False)
 
         res_partner_job_obj = self.pool.get('res.partner.job')
@@ -92,7 +91,6 @@ class res_partner_contact(osv.osv):
         if not len(ids):
             return []
         res = []
-        if not context: context = {}
         for contact in self.browse(cr, user, ids, context=context):
             _contact = ""
             if contact.title:
@@ -133,7 +131,7 @@ class res_partner_address(osv.osv):
         if not len(ids):
             return []
         res = []
-        if not context: context = {}
+        if context is None: context = {}
         for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
@@ -238,7 +236,6 @@ class res_partner_job(osv.osv):
             @address_id : ID of the Address selected,
             @param context: A standard dictionary for contextual values
         """
-        if not context: context = {}
         partner_id = False
         if address_id:
             address = self.pool.get('res.partner.address')\

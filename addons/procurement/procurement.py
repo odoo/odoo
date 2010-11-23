@@ -69,8 +69,6 @@ class StockMove(osv.osv):
     
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
-        if not context:
-            context = {}
         default['procurements'] = []
         return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
@@ -132,8 +130,6 @@ class procurement_order(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         procurements = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
-        if not context:
-            context = {}
         for s in procurements:
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
@@ -148,8 +144,6 @@ class procurement_order(osv.osv):
         @param product_id: Changed id of product.
         @return: Dictionary of values.
         """
-        if not context:
-            context = {}
         if product_id:
             w = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {
@@ -169,16 +163,12 @@ class procurement_order(osv.osv):
         """ Checks if move is cancelled or not.
         @return: True or False.
         """
-        if not context:
-            context = {}
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        if not context:
-            context = {}
         return all(procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
 
     #
@@ -213,8 +203,6 @@ class procurement_order(osv.osv):
         """ Finds quantity of product used in procurement.
         @return: Quantity of product.
         """
-        if not context:
-            context = {}
         proc = self.browse(cr, uid, id, context=context)
         result = self._quantity_compute_get(cr, uid, proc, context=context)
         if not result:
@@ -225,15 +213,13 @@ class procurement_order(osv.osv):
         """ Finds UoM of product used in procurement.
         @return: UoM of product.
         """
-        if not context:
-            context = {}
         proc = self.browse(cr, uid, id, context=context)
         result = self._uom_compute_get(cr, uid, proc, context=context)
         if not result:
             result = proc.product_uom.id
         return result
 
-    def check_waiting(self, cr, uid, ids, context=[]):
+    def check_waiting(self, cr, uid, ids, context=None):
         """ Checks state of move.
         @return: True or False
         """
@@ -243,8 +229,6 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=None):
-        if not context:
-            context = {}
         return False
 
     def check_produce_product(self, cr, uid, procurement, context=None):
@@ -252,8 +236,6 @@ class procurement_order(osv.osv):
         @param procurement: Current procurement.
         @return: True or False.
         """
-        if not context:
-            context = {}
         return True
 
     def check_make_to_stock(self, cr, uid, ids, context=None):
@@ -261,8 +243,6 @@ class procurement_order(osv.osv):
         @return: True or False
         """
         ok = True
-        if not context:
-            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.type == 'service':
                 ok = ok and self._check_make_to_stock_service(cr, uid, procurement, context)
@@ -275,8 +255,6 @@ class procurement_order(osv.osv):
         @return: True or Product Id.
         """
         res = True
-        if not context:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
@@ -334,8 +312,6 @@ class procurement_order(osv.osv):
         @return: True
         """
         move_obj = self.pool.get('stock.move')
-        if not context:
-            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
                 raise osv.except_osv(_('Data Insufficient !'), 
@@ -383,8 +359,6 @@ class procurement_order(osv.osv):
         @return: True or move id.
         """
         ok = True
-        if not context:
-            context = {}
         if procurement.move_id:
             id = procurement.move_id.id
             if not (procurement.move_id.state in ('done','assigned','cancel')):
@@ -484,8 +458,6 @@ class procurement_order(osv.osv):
         ''' Runs through scheduler.
         @param use_new_cursor: False or the dbname
         '''
-        if not context:
-            context={}
         self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
@@ -552,8 +524,6 @@ class stock_warehouse_orderpoint(osv.osv):
         @param warehouse_id: Changed id of warehouse.
         @return: Dictionary of values.
         """
-        if not context:
-            context = {}
         if warehouse_id:
             w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
             v = {'location_id': w.lot_stock_id.id}
@@ -565,8 +535,6 @@ class stock_warehouse_orderpoint(osv.osv):
         @param product_id: Changed id of product.
         @return: Dictionary of values.
         """
-        if not context:
-            context = {}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
@@ -576,8 +544,6 @@ class stock_warehouse_orderpoint(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        if not context:
-            context = {}
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })

@@ -35,7 +35,7 @@ class auction_lots_enable(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction lots enable’s IDs.
         """
-        if not context: context = {}
+        if context is None: context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_id',False), {'ach_emp':False})
         return {}
     

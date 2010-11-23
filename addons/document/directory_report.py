@@ -28,8 +28,6 @@ class ir_action_report_xml(osv.osv):
 
     def _model_get(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         model_pool = self.pool.get('ir.model')
         for data in self.read(cr, uid, ids, ['model']):
             model = data.get('model',False)

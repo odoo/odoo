@@ -30,7 +30,6 @@ form_rep = '''<?xml version="1.0"?>
 
 def _get_graph(self, cr, uid, datas, context=None):
     mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
-    if not context: context = {}
     modules = mod_obj.browse(cr, uid, datas['ids'], context=context)
     for module in modules:
         module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)

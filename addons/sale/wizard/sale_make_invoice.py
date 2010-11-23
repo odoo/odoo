@@ -46,7 +46,7 @@ class sale_make_invoice(osv.osv_memory):
         order_obj = self.pool.get('sale.order')
         mod_obj = self.pool.get('ir.model.data')
         newinv = []
-        if not context:
+        if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
         order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_inv = data['invoice_date'])

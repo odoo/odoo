@@ -91,9 +91,6 @@ class crm_meeting(crm_case, osv.osv):
         @return: Dictionary value which open Crm Meeting form.
         """
 
-        if not context:
-            context = {}
-
         data_obj = self.pool.get('ir.model.data')
 
         value = {}
@@ -154,8 +151,6 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         """
        name = name[0]
-       if not context:
-            context = {}
        result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context=context)
 
        for attdata in self.browse(cr, uid, ids, context=context):

@@ -196,8 +196,6 @@ class email_template_mailbox(osv.osv):
         It just changes the folder of the item to "Trash", if it is no in Trash folder yet, 
         or completely deletes it if it is already in Trash.
         """
-        if not context:
-            context = {}
         to_update = []
         to_remove = []
         for mail in self.browse(cr, uid, ids, context=context):

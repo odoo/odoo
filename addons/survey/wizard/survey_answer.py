@@ -479,7 +479,7 @@ class survey_question_wiz(osv.osv_memory):
         @return : Dictionary value for fields list with value.
         """
         value = {}
-        if not context:
+        if context is None:
             context = {}
         for field in fields_list:
             if field.split('_')[0] == 'progress':
@@ -560,6 +560,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : True.
         """
+        if context is None: context = {}
         if context.has_key('active') and context.get('active',False):
             return True
 
@@ -1019,7 +1020,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.Qestion form.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1047,7 +1048,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.page form.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1075,7 +1076,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.page form.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1104,7 +1105,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open next survey.page form, but delete the selected page.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1137,7 +1138,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.question form.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1166,7 +1167,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
         """
-        if not context:
+        if context is None:
             context = {}
         for key,val in context.items():
             if type(key) == type(True):
@@ -1200,7 +1201,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous Answer form.
         """
-        if not context:
+        if context is None:
             context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -1232,7 +1233,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next Answer form.
         """
-        if not context:
+        if context is None:
             context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -1264,7 +1265,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next survey.page form.
         """
-        if not context:
+        if context is None:
             context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
@@ -1291,7 +1292,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous survey.page form.
         """
-        if not context:
+        if context is None:
             context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')

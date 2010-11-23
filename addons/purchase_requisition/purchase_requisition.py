@@ -55,8 +55,6 @@ class purchase_requisition(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        if not context:
-            context = {}
         default.update({
             'state':'draft',
             'purchase_ids':[],
@@ -65,8 +63,6 @@ class purchase_requisition(osv.osv):
         return super(purchase_requisition, self).copy(cr, uid, id, default, context)
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
-        if not context:
-            context = {}
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft','wait'):
@@ -75,20 +71,14 @@ class purchase_requisition(osv.osv):
         return True
 
     def tender_in_progress(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
         return True
 
     def tender_reset(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
     def tender_done(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
@@ -116,8 +106,6 @@ class purchase_requisition_line(osv.osv):
         @return:  Dictionary of changed values
         """
         value = {'product_uom_id': ''}
-        if not context:
-            context = {}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id], context=context)[0]
             value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
@@ -134,8 +122,6 @@ class purchase_order(osv.osv):
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
     def wkf_confirm_order(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj=self.pool.get('procurement.order')
         for po in self.browse(cr, uid, ids, context=context):
@@ -172,8 +158,6 @@ class procurement_order(osv.osv):
     }
     def make_po(self, cr, uid, ids, context=None):
         sequence_obj = self.pool.get('ir.sequence')
-        if not context:
-            context = {}
         res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         for proc_id, po_id in res.items():
             procurement = self.browse(cr, uid, proc_id, context=context)

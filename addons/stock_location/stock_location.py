@@ -107,8 +107,6 @@ class stock_move(osv.osv):
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too')
     }
     def action_cancel(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for m in self.browse(cr, uid, ids, context=context):
             if m.cancel_cascade and m.move_dest_id:
                 self.action_cancel(cr, uid, [m.move_dest_id.id], context=context)
@@ -119,8 +117,6 @@ stock_move()
 class stock_location(osv.osv):
     _inherit = 'stock.location'
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context=None):
-        if not context:
-            context = {}
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:

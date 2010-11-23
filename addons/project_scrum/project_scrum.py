@@ -159,8 +159,6 @@ class project_scrum_product_backlog(osv.osv):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
-            context={}
         if name:
             match = re.match('^S\(([0-9]+)\)$', name)
             if match:

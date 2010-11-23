@@ -41,8 +41,6 @@ class mrp_subproduct(osv.osv):
         @param product_id: Changed product_id
         @return: Dictionary of changed values
         """
-        if not context:
-            context = {}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}

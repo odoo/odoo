@@ -63,7 +63,7 @@ class auction_transfer_unsold_object(osv.osv):
             @param context: A standard dictionary 
             @return: 
             """
-            if not context: context = {}
+            if context is None: context = {}
             bid_line_obj = self.pool.get('auction.bid_line')
             lots_obj = self.pool.get('auction.lots')
             lot_history_obj = self.pool.get('auction.lot.history')

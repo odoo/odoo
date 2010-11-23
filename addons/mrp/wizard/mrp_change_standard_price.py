@@ -42,7 +42,7 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if not context:
+        if context is None:
             context = {}
         res = self.browse(cr, uid, ids, context=context) 
         context.update({'change_parent_price': res[0].change_parent_price})

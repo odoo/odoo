@@ -34,7 +34,7 @@ class purchase_requisition_partner(osv.osv_memory):
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
-        if not context:
+        if context is None:
             context = {}
         res = super(purchase_requisition_partner, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False
@@ -62,7 +62,7 @@ class purchase_requisition_partner(osv.osv_memory):
              @return: {}
 
         """
-        if not context:
+        if context is None:
             context = {}
         record_ids = context and context.get('active_ids', False)
         if record_ids:

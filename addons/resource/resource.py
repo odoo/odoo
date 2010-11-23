@@ -242,8 +242,6 @@ class resource_resource(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if not context:
-            context = {}
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
         return super(resource_resource, self).copy(cr, uid, id, default, context)
@@ -367,8 +365,6 @@ class resource_calendar_leaves(osv.osv):
     }
 
     def check_dates(self, cr, uid, ids, context=None):
-         if not context:
-            context = {}
          leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
          if leave['date_from'] and leave['date_to']:
              if leave['date_from'] > leave['date_to']:
@@ -381,8 +377,6 @@ class resource_calendar_leaves(osv.osv):
 
     def onchange_resource(self,cr, uid, ids, resource, context=None):
         result = {}
-        if not context:
-            context = {}
         if resource:
             resource_pool = self.pool.get('resource.resource')
             result['calendar_id'] = resource_pool.browse(cr, uid, resource, context=context).calendar_id.id

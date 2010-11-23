@@ -65,7 +65,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('mailgate.message')
 
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -162,7 +162,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -263,7 +263,7 @@ class crm_send_new_email(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):

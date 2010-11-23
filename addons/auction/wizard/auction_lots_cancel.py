@@ -40,7 +40,7 @@ class auction_lots_cancel(osv.osv):
             @param context: A standard dictionary
             @return:
             """
-            if not context:
+            if context is None:
                 context={}
             lots_obj = self.pool.get('auction.lots')
             invoice_obj = self.pool.get('account.invoice')

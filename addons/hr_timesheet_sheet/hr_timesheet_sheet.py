@@ -349,8 +349,6 @@ class hr_timesheet_sheet(osv.osv):
     }
 
     def _sheet_date(self, cr, uid, ids, forced_user_id=False, context=None):
-        if not context:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             new_user_id = forced_user_id or sheet.user_id and sheet.user_id.id
             if new_user_id:
@@ -364,8 +362,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def _date_current_check(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.date_current < sheet.date_from or sheet.date_current > sheet.date_to:
                 return False

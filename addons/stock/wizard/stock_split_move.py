@@ -34,7 +34,7 @@ class stock_split_move_line(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """ 
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_split_move_line, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
@@ -101,7 +101,7 @@ class stock_split_move_line(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """ 
-        if not context:
+        if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
         record_id = context and context.get('active_id', False) or False

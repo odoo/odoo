@@ -133,7 +133,7 @@ class hr_contract(osv.osv):
 
     def compute_basic(self, cr, uid, ids, context=None):
         res = {}
-        if not context:
+        if context is None:
             context = {}
         ids += context.get('employee_structure', [])
 
@@ -248,8 +248,6 @@ class hr_contract(osv.osv):
         return False
 
     def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
-        if not context:
-            context = {}
         res = self.compute_basic(cr, uid, ids, context=context)
         vals = {}
         for rs in self.browse(cr, uid, ids, context=context):
@@ -346,8 +344,6 @@ class payroll_register(osv.osv):
         deduction = 0.0
         net = 0.0
         grows = 0.0
-        if not context:
-            context = {}
         for register in self.browse(cr, uid, ids, context=context):
             for slip in register.line_ids:
                 allounce += slip.allounce
@@ -614,8 +610,6 @@ class contrib_register(osv.osv):
     _description = 'Contribution Register'
 
     def _total_contrib(self, cr, uid, ids, field_names, arg, context=None):
-        if not context:
-            context = {}
         line_pool = self.pool.get('hr.contibution.register.line')
 
         res = {}
@@ -782,8 +776,6 @@ class company_contribution(osv.osv):
         return res
 
     def compute(self, cr, uid, id, value, context=None):
-        if not context:
-            context = {}
         contrib = self.browse(cr, uid, id, context=context)
         if contrib.amount_type == 'fix':
             return contrib.contribute_per
@@ -1001,8 +993,6 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
@@ -1437,8 +1427,6 @@ class hr_employee(osv.osv):
 
     def _calculate_salary(self, cr, uid, ids, field_names, arg, context=None):
         vals = {}
-        if not context:
-            context = {}
         slip_line_pool = self.pool.get('hr.payslip.line')
 
         for employee in self.browse(cr, uid, ids, context=context):

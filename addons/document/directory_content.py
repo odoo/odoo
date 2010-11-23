@@ -110,7 +110,7 @@ class document_directory_content(osv.osv):
         return True
     
     def process_read(self, cr, uid, node, context=None):
-        if not context:
+        if context is None:
             context = {}
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)

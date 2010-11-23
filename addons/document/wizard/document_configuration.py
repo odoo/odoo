@@ -33,8 +33,6 @@ class document_configuration(osv.osv_memory):
     
 
     def execute(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         conf_id = ids and ids[0] or False
         conf = self.browse(cr, uid, conf_id, context=context)
         dir_pool = self.pool.get('document.directory')

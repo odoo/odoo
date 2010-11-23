@@ -36,8 +36,6 @@ class sale_order_line(osv.osv):
     def invoice_line_create(self, cr, uid, ids, context=None):
         new_ids = []
         list_seq = []
-        if not context:
-            context = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 new_ids.append(line.id)
@@ -80,8 +78,6 @@ class sale_order_line(osv.osv):
         return {}
 
     def create(self, cr, user, vals, context=None):
-        if not context:
-            context = {}
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
                 vals['name'] = ' '
@@ -92,8 +88,6 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).create(cr, user, vals, context)
 
     def write(self, cr, user, ids, vals, context=None):
-        if not context:
-            context = {}
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
                 vals['name'] = ' '
@@ -102,8 +96,6 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).write(cr, user, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context = {}
         if default is None:
             default = {}
         default['layout_type'] = self.browse(cr, uid, id, context=context).layout_type
@@ -135,8 +127,6 @@ sale_order_line()
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
         if not values:
             values = {}
         res = {}

@@ -30,8 +30,6 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task')
     }
     def check_produce_service(self, cr, uid, procurement, context=None):
-        if not context:
-            context = {}
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):

@@ -66,7 +66,7 @@ class account_coda_import(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         line_obj = self.pool.get('account.move.line')
 
-        if not context:
+        if context is None:
             context = {}
 
         data = self.read(cr, uid, ids)[0]
@@ -321,7 +321,7 @@ class account_coda_import(osv.osv_memory):
         }
 
     def action_open_window(self, cr, uid, data, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         return {

@@ -42,8 +42,6 @@ class audittrail_view_log(osv.osv_memory):
         @param ids: List of audittrail view log’s IDs.
         @return: Dictionary of  audittrail log form on given date range.
         """
-        if not context:
-            context = {}
 
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')

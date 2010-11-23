@@ -25,8 +25,6 @@ from tools.translate import _
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     def check_buy(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             for line in procurement.product_id.flow_pull_ids:
                 if line.location_id==procurement.location_id:
@@ -34,8 +32,6 @@ class procurement_order(osv.osv):
         return super(procurement_order, self).check_buy(cr, uid, ids)
 
     def check_produce(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             for line in procurement.product_id.flow_pull_ids:
                 if line.location_id==procurement.location_id:
@@ -43,8 +39,6 @@ class procurement_order(osv.osv):
         return super(procurement_order, self).check_produce(cr, uid, ids)
 
     def check_move(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             for line in procurement.product_id.flow_pull_ids:
                 if line.location_id==procurement.location_id:
@@ -56,8 +50,6 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')
         wf_service = netsvc.LocalService("workflow")
-        if not context:
-            context = {}
         for proc in proc_obj.browse(cr, uid, ids, context=context):
             line = None
             for line in proc.product_id.flow_pull_ids:

@@ -51,7 +51,7 @@ class stock_partial_move(osv.osv_memory):
         res = super(stock_partial_move, self).view_init(cr, uid, fields_list, context=context)
         move_obj = self.pool.get('stock.move')
     
-        if not context:
+        if context is None:
             context = {}
         for move in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if move.state in ('done', 'cancel'):
@@ -77,7 +77,7 @@ class stock_partial_move(osv.osv_memory):
 
     def __get_active_stock_moves(self, cr, uid, context=None):
         move_obj = self.pool.get('stock.move')
-        if not context:
+        if context is None:
             context = {}
                
         res = []
@@ -151,7 +151,7 @@ class stock_partial_move(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
     
-        if not context:
+        if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
         

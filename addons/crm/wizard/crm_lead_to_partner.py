@@ -135,7 +135,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary value for next form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         view_obj = self.pool.get('ir.ui.view')
@@ -163,7 +163,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
 
         lead_obj = self.pool.get('crm.lead')
@@ -226,7 +226,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary value for created Partner form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         partner_ids = self._create_partner(cr, uid, ids, context=context)

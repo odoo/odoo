@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values        
         '''
-        if not context:
+        if context is None:
             context = {}
 
         try:
@@ -148,7 +148,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         """
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
@@ -200,7 +200,7 @@ class procurement_order(osv.osv):
         @return:  Dictionary of values
         """        
         '''
-        if not context:
+        if context is None:
             context = {}
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()

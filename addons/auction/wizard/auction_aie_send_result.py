@@ -55,7 +55,7 @@ class auction_lots_pay(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if not context: context = {}
+        if context is None: context = {}
         res = super(auction_lots_pay, self).default_get(cr, uid, fields, context=context)
         if 'uname' in fields and context.get('uname',False):
             res['uname'] = context.get('uname')
@@ -98,7 +98,7 @@ class auction_lots_pay(osv.osv_memory):
         return post_multipart('auction-in-europe.com', "/bin/catalog_result.cgi", (('uname',uname),('password',passwd),('did',did)),(('file',catalog),))
     
     def get_dates(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         import httplib
         conn = httplib.HTTPConnection('www.auction-in-europe.com')
         data_obj = self.pool.get('ir.model.data')
@@ -127,7 +127,7 @@ class auction_lots_pay(osv.osv_memory):
         }
     
     def send(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         import pickle
         service = netsvc.LocalService("object_proxy")
         datas = self.read(cr, uid, ids[0],['uname','password','dates'])

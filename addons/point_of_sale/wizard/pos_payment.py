@@ -81,7 +81,7 @@ class pos_make_payment(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
-        if not context:
+        if context is None:
             context = {}
         super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False
@@ -142,7 +142,7 @@ class pos_make_payment(osv.osv_memory):
         if the order is paid print invoice (if wanted) or ticket.
         """
         order_obj = self.pool.get('pos.order')
-        if not context:
+        if context is None:
             context = {}
         active_id = context and context.get('active_id', False)
         order = order_obj.browse(cr, uid, active_id, context=context)
@@ -188,7 +188,7 @@ class pos_make_payment(osv.osv_memory):
         """
           Create  a invoice
         """
-        if not context:
+        if context is None:
             context = {}
         active_ids = [context and context.get('active_id', False)]
         datas = {'ids': active_ids}
@@ -207,7 +207,7 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
-        if not context:
+        if context is None:
             context = {}
         active_id = context.get('active_id', [])
         datas = {'ids' : [active_id]}

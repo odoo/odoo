@@ -35,8 +35,6 @@ class stock_move(osv.osv):
         on the purchase order in case the valuation data was not directly specified during picking
         confirmation.
         """
-        if not context:
-            context = {}
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
         if move.product_id.cost_method != 'average' or not move.price_unit:
             # no average price costing or cost not specified during picking validation, we will 
@@ -120,7 +118,7 @@ class stock_partial_picking(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
-        if not context:
+        if context is None:
             context = {}
         pick_obj = self.pool.get('stock.picking')
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
@@ -146,7 +144,7 @@ class stock_partial_move(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
-        if not context:
+        if context is None:
             context = {}
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
         move_obj = self.pool.get('stock.move')

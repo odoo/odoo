@@ -44,9 +44,9 @@ class pos_return(osv.osv_memory):
 
         res = super(pos_return, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('pos.order')
-        active_ids = context.get('active_ids')
-        if not context:
+        if context is None:
             context={}
+        active_ids = context.get('active_ids')
         for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
                 if 'return%s'%(line.id) in fields:
@@ -64,7 +64,7 @@ class pos_return(osv.osv_memory):
         """
         res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
         order_obj=self.pool.get('pos.order')
-        if not context:
+        if context is None:
             context={}
 
         active_ids=context.get('active_ids')
@@ -89,7 +89,7 @@ class pos_return(osv.osv_memory):
 
         """
         result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
-        if not context:
+        if context is None:
             context={}
         active_model = context.get('active_model')
         if not active_model and active_model != 'pos.order':
@@ -143,7 +143,7 @@ class pos_return(osv.osv_memory):
              @return: Return the add product form again for adding more product
 
         """
-        if not context:
+        if context is None:
             context = {}
         current_rec = self.read(cr, uid, data[0], context=context)
         order_obj =self.pool.get('pos.order')
@@ -174,7 +174,7 @@ class pos_return(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         active_id = context.get('active_id', False)
         order_obj =self.pool.get('pos.order')
@@ -270,7 +270,7 @@ class add_product(osv.osv_memory):
              @param context: A standard dictionary
              @return : Retrun the add product form again for adding more product
         """
-        if not context:
+        if context is None:
             context = {}
 
         active_id=context.get('active_id', False)
@@ -336,6 +336,7 @@ class add_product(osv.osv_memory):
         }
 
     def close_action(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         active_ids=context.get('active_ids', False)
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')

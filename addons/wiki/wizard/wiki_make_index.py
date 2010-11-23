@@ -35,7 +35,7 @@ class wiki_make_index(osv.osv_memory):
         @param ids: list of wiki index’s IDs
 
         """
-        if not context:
+        if context is None:
             context = {}
         data = context and context.get('active_ids', []) or []
 

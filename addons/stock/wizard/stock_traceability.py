@@ -38,7 +38,7 @@ class action_traceability(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary of values
         """
-        if not context:
+        if context is None:
             context = {}
         type1 = context['type'] or 'move_history_ids2'
         field = context['field'] or 'tracking_id'

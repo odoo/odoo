@@ -231,8 +231,6 @@ class project_issue(crm.crm_case, osv.osv):
     }
 
     def _get_project(self, cr, uid, context=None):
-        if not context:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.context_project_id:
             return user.context_project_id.id
@@ -302,8 +300,6 @@ class project_issue(crm.crm_case, osv.osv):
 
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
-        if not context:
-            context = {}
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
         categ_id = False
@@ -314,13 +310,9 @@ class project_issue(crm.crm_case, osv.osv):
         return True
 
     def convert_to_feature(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
 
     def convert_to_bug(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
     def next_type(self, cr, uid, ids, *args):
@@ -386,8 +378,7 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        if not context:
-            context = {}
+        if context is None: context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject') or _('No Title')
@@ -475,8 +466,6 @@ class project_issue(crm.crm_case, osv.osv):
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context={}
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
             default = {}
@@ -496,8 +485,6 @@ class project(osv.osv):
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
-         if not context:
-            context = {}
          project_obj = self.browse(cr, uid, ids[0], context=context)
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:

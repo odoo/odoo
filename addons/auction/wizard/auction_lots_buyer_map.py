@@ -42,7 +42,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if not context: context = {}
+        if context is None: context = {}
         res = super(wiz_auc_lots_buyer_map,self).default_get(cr, uid, fields, context=context)
         auction_lots_obj = self.pool.get('auction.lots')
         lots_ids = auction_lots_obj.search(cr, uid, [('ach_uid', '=', ''), ('ach_login', '!=', '')])
@@ -63,8 +63,6 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: login field from current record. 
         """
-        if not context:
-            context={}
         lots_obj = self.pool.get('auction.lots')
         for rec in lots_obj.browse(cr, uid, ids, context=context):
             if (len(ids)==1) and (not rec.ach_uid and not rec.ach_login):
@@ -82,7 +80,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param ids: List of ids 
          @param context: A standard dictionary 
         """
-        if not context:
+        if context is None:
             context={}
         rec_ids = context and context.get('active_ids',[]) or []
         assert rec_ids, _('Active IDs not Found')
@@ -103,7 +101,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
-        if not context:
+        if context is None:
             context={}
         record_ids = context and context.get('active_ids', []) or []
         res = super(wiz_auc_lots_buyer_map, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)

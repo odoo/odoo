@@ -32,7 +32,7 @@ class account_move_line(osv.osv):
 
     def _unreconciled(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
-        if not context: context = {}
+        if context is None: context = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.debit - line.credit
             if line.reconcile_partial_id:
@@ -51,18 +51,18 @@ account_move_line()
 class account_voucher(osv.osv):
 
     def _get_type(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         return context.get('type', False)
 
     def _get_period(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
         periods = self.pool.get('account.period').find(cr, uid)
         return periods and periods[0] or False
 
     def _get_journal(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_id', False):
             return context.get('journal_id')
@@ -76,7 +76,7 @@ class account_voucher(osv.osv):
         return res and res[0] or False
 
     def _get_tax(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if not journal_id:
@@ -96,7 +96,7 @@ class account_voucher(osv.osv):
         return False
 
     def _get_currency(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         journal_id = context.get('journal_id', False)
         if journal_id:
@@ -107,26 +107,26 @@ class account_voucher(osv.osv):
         return False
 
     def _get_partner(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         return context.get('partner_id', False)
 
     def _get_reference(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         return context.get('reference', False)
 
     def _get_narration(self, cr, uid, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         return context.get('narration', False)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        if not context: context = {}
+        if context is None: context = {}
         return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
-        if not context: context = {}
+        if context is None: context = {}
         if not view_id and context.get('invoice_type', False):
             if context.get('invoice_type', False) in ('out_invoice', 'out_refund'):
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
@@ -224,7 +224,7 @@ class account_voucher(osv.osv):
         position_pool = self.pool.get('account.fiscal.position')
         voucher_line_pool = self.pool.get('account.voucher.line')
         voucher_pool = self.pool.get('account.voucher')
-        if not context: context = {}
+        if context is None: context = {}
 
         for voucher in voucher_pool.browse(cr, uid, ids, context=context):
             voucher_amount = 0.0
@@ -274,7 +274,7 @@ class account_voucher(osv.osv):
         }
         voucher_total = 0.0
         voucher_line_ids = []
-        if not context: context = {}
+        if context is None: context = {}
 
         total = 0.0
         total_tax = 0.0
@@ -333,7 +333,7 @@ class account_voucher(osv.osv):
         default = {
             'value':{},
         }
-        if not context: context = {}
+        if context is None: context = {}
 
         if not partner_id or not journal_id:
             return default
@@ -505,7 +505,7 @@ class account_voucher(osv.osv):
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context=None):
         if not journal_id:
             return False
-        if not context: context = {}
+        if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
         account_id = journal.default_credit_account_id or journal.default_debit_account_id
@@ -535,7 +535,7 @@ class account_voucher(osv.osv):
     def cancel_voucher(self, cr, uid, ids, context=None):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
-        if not context: context = {}
+        if context is None: context = {}
 
         for voucher in self.browse(cr, uid, ids, context=context):
             recs = []
@@ -591,7 +591,7 @@ class account_voucher(osv.osv):
                 terms = term_pool.compute(cr, uid, term_id, amount)
                 return terms
             return False
-        if not context:
+        if context is None:
             context = {}
         move_pool = self.pool.get('account.move')
         move_line_pool = self.pool.get('account.move.line')
@@ -769,7 +769,7 @@ class account_voucher_line(osv.osv):
     def _compute_balance(self, cr, uid, ids, name, args, context=None):
         currency_pool = self.pool.get('res.currency')
         rs_data = {}
-        if not context: context = {}
+        if context is None: context = {}
         for line in self.browse(cr, uid, ids, context=context):
             res = {}
             company_currency = line.voucher_id.journal_id.company_id.currency_id.id
@@ -821,7 +821,7 @@ class account_voucher_line(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         res = {}
-        if not context: context = {}
+        if context is None: context = {}
         move_line_pool = self.pool.get('account.move.line')
         if move_line_id:
             move_line = move_line_pool.browse(cr, user, move_line_id, context=context)
@@ -846,7 +846,7 @@ class account_voucher_line(osv.osv):
 
         @return: Returns a dict that contains default values for fields
         """
-        if not context: context = {}
+        if context is None: context = {}
         journal_id = context.get('journal_id', False)
         partner_id = context.get('partner_id', False)
         journal_pool = self.pool.get('account.journal')
@@ -883,7 +883,7 @@ class account_bank_statement(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         voucher_obj = self.pool.get('account.voucher')
-        if not context: context = {}
+        if context is None: context = {}
         for st in self.browse(cr, uid, ids, context=context):
             voucher_ids = []
             for line in st.line_ids:
@@ -897,7 +897,7 @@ class account_bank_statement(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         move_line_obj = self.pool.get('account.move.line')
         bank_st_line_obj = self.pool.get('account.bank.statement.line')
-        if not context: context = {}
+        if context is None: context = {}
         st_line = bank_st_line_obj.browse(cr, uid, st_line_id, context=context)
         if st_line.voucher_id:
             voucher_obj.write(cr, uid, [st_line.voucher_id.id], {'number': next_number}, context=context)
@@ -923,7 +923,7 @@ class account_bank_statement_line(osv.osv):
             return {}
 
         res = {}
-        if not context: context = {}
+        if context is None: context = {}
 #        company_currency_id = False
         for line in self.browse(cursor, user, ids, context=context):
 #            if not company_currency_id:
@@ -945,7 +945,7 @@ class account_bank_statement_line(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         voucher_obj = self.pool.get('account.voucher')
         statement_line = self.browse(cr, uid, ids, context=context)
         unlink_ids = []

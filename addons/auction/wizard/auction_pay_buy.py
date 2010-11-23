@@ -48,7 +48,7 @@ class auction_pay_buy(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)
         auction_lots_obj= self.pool.get('auction.lots')       
@@ -70,7 +70,7 @@ class auction_pay_buy(osv.osv_memory):
         @param context: A standard dictionary 
         @return: 
         """        
-        if not context: context = {}
+        if context is None: context = {}
         lot_obj = self.pool.get('auction.lots')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         

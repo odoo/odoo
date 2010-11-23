@@ -30,8 +30,6 @@ import tools
 
 class one2many_mod3(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = context
         res = {}
         for obj in obj.browse(cr, user, ids, context=context):
             res[obj.id] = []
@@ -82,8 +80,6 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_planned(self, cr, uid, ids, name, args, context=None):
         result = {}
-        if not context:
-            context = {}
         for plan in self.browse(cr, uid, ids, context=context):
             plan_hrs=0.0
             for p in plan.planning_user_ids:
@@ -95,8 +91,6 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_free(self, cr, uid, ids, name, args, context=None):
         result = {}
-        if not context:
-            context = {}
         for plan in self.browse(cr, uid, ids, context=context):
             total_free = 0.0
             for p in plan.planning_user_ids:
@@ -248,7 +242,7 @@ class project_task(osv.osv):
     }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        if not context:
+        if context is None:
             context = {}
         if not context.get('planning', False):
             return super(project_task,self).search(cr, user, args, offset, limit, order, context)

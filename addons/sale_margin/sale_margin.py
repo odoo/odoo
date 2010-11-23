@@ -36,8 +36,6 @@ class sale_order_line(osv.osv):
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        if not context:
-            context = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = 0
             if line.product_id:
@@ -59,8 +57,6 @@ class sale_order(osv.osv):
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
-        if not context:
-            context = {}
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
             for line in sale.order_line:
@@ -99,16 +95,12 @@ class account_invoice_line(osv.osv):
         'cost_price': fields.float('Cost Price', digits=(16, 2)),
     }
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context = {}
         if vals.get('product_id', False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).write(cr, uid, ids, vals, context)
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
-            context = {}
         if vals.get('product_id',False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']

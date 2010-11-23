@@ -34,7 +34,7 @@ class lunch_order_cancel(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List  Lunch Order Cancel’s IDs
         """
-        if not context:
+        if context is None:
             context = {}
         data = context and context.get('active_ids', []) or []
         return self.pool.get('lunch.order').lunch_order_cancel(cr, uid, data, context)

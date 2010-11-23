@@ -35,7 +35,7 @@ class wiki_wiki_page_open(osv.osv_memory):
         @param ids: List of open wiki page’s IDs
         @return: dictionay of open wiki window on give group id
         """
-        if not context:
+        if context is None:
             context = {}
         group_ids = context.get('active_ids', [])
         for group in self.pool.get('wiki.groups').browse(cr, uid, group_ids, context=context):

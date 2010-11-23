@@ -53,8 +53,6 @@ class process_process(osv.osv):
     }
 
     def search_by_model(self, cr, uid, res_model, context=None):
-        if not context:
-            context = {}
         pool = pooler.get_pool(cr.dbname)
         model_ids = (res_model or None) and pool.get('ir.model').search(cr, uid, [('model', '=', res_model)])
 
@@ -80,8 +78,6 @@ class process_process(osv.osv):
         return result
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context=None):
-        if not context:
-            context = {}
 
         pool = pooler.get_pool(cr.dbname)
 
@@ -256,9 +252,6 @@ class process_process(osv.osv):
         if not default:
             default = {}
         
-        if not context:
-            context = {}
-
         pool = pooler.get_pool(cr.dbname)
         process = pool.get('process.process').browse(cr, uid, [id], context=context)[0]
 
@@ -319,8 +312,6 @@ class process_node(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        if not context:
-            context = {}
         default.update({
             'transition_in': [],
             'transition_out': []
@@ -379,9 +370,6 @@ class process_transition_action(osv.osv):
         if not default:
             default = {}
             
-        if not context:
-            context = {}
-
         state = self.pool.get('process.transition.action').browse(cr, uid, [id], context=context)[0].state
         if state:
             default['state'] = state

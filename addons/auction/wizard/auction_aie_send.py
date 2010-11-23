@@ -60,7 +60,7 @@ class auction_lots_send_aie(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if not context: context = {}
+        if context is None: context = {}
         res = super(auction_lots_send_aie, self).default_get(cr, uid, fields, context=context)
         if 'uname' in fields and context.get('uname',False):
             res['uname'] = context.get('uname')
@@ -149,7 +149,7 @@ class auction_lots_send_aie(osv.osv_memory):
                 self._photo_bin_send(uname, passwd, ref, did, fname, bin)
     
     def get_dates(self, cr, uid, ids, context=None):
-        if not context: context = {}
+        if context is None: context = {}
         import httplib
         data_obj = self.pool.get('ir.model.data')
         conn = httplib.HTTPConnection('www.auction-in-europe.com')
@@ -177,7 +177,6 @@ class auction_lots_send_aie(osv.osv_memory):
         }
     
     def _send(self, cr, uid, ids, context=None):
-        if not context: context = {}
         import pickle, thread, sql_db
         cr.execute('select name,aie_categ from auction_lot_category')
         vals = dict(cr.fetchall())
@@ -215,7 +214,6 @@ class auction_lots_send_aie(osv.osv_memory):
         return {}
     
     def send_pdf(self, cr, uid, ids, context=None):
-        if not context: context = {}
         threaded_calculation = threading.Thread(target=self._send, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}

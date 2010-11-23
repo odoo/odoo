@@ -55,8 +55,6 @@ class mrp_production_workcenter_line(osv.osv):
         @return: Dictionary of values.
         """
         res={}
-        if not context:
-            context = {}
         for op in self.browse(cr, uid, ids, context=context):
             if op.date_start:
                 res[op.id] = op.date_start[:10]
@@ -68,8 +66,6 @@ class mrp_production_workcenter_line(osv.osv):
         """ Finds ending date.
         @return: Dictionary of values.
         """
-        if not context:
-            context = {}
         ops = self.browse(cr, uid, ids, context=context)
         date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
 
@@ -147,8 +143,6 @@ class mrp_production_workcenter_line(osv.osv):
         return
 
     def write(self, cr, uid, ids, vals, context=None, update=True):
-        if not context:
-            context = {}
         result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
         prod_obj = self.pool.get('mrp.production')
         if vals.get('date_planned', False) and update:
@@ -224,8 +218,6 @@ class mrp_production(osv.osv):
         @return: Dictionary of values
         """
         result = {}
-        if not context:
-            context = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned
             for line in prod.workcenter_lines:
@@ -267,7 +259,7 @@ class mrp_production(osv.osv):
         @return: Calculated date
         """
         dt_end = datetime.now()
-        if not context:
+        if context is None:
             context = {}
         for po in self.browse(cr, uid, ids, context=context):
             dt_end = datetime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
@@ -308,8 +300,6 @@ class mrp_production(osv.osv):
         """ Calculates start date for stock moves finding interval from resource calendar.
         @return: True 
         """
-        if not context:
-            context = {}
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
@@ -338,8 +328,6 @@ class mrp_production(osv.osv):
         """ Calculates start date for stock moves.
         @return: True 
         """
-        if not context:
-            context = {}
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
@@ -358,8 +346,6 @@ class mrp_production(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None, update=True, mini=True):
         direction = {}
-        if not context:
-            context = {}
         if vals.get('date_start', False):
             for po in self.browse(cr, uid, ids, context=context):
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
@@ -412,8 +398,6 @@ class mrp_operations_operation(osv.osv):
         @return: Dictionary of values
         """
         res={}
-        if not context:
-            context = {}
         operation_obj = self.browse(cr, uid, ids, context=context)
         for operation in operation_obj:
                 res[operation.id] = operation.production_id.date_planned
@@ -498,8 +482,6 @@ class mrp_operations_operation(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context = {}
         oper_objs = self.browse(cr, uid, ids, context=context)[0]
         vals['production_id']=oper_objs.production_id.id
         vals['workcenter_id']=oper_objs.workcenter_id.id
@@ -517,8 +499,6 @@ class mrp_operations_operation(osv.osv):
         return super(mrp_operations_operation, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
-            context = {}
         wf_service = netsvc.LocalService('workflow')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
         code=self.pool.get('mrp_operations.operation.code').browse(cr, uid, code_ids, context=context)[0]

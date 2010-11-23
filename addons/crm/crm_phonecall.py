@@ -157,8 +157,6 @@ class crm_phonecall(crm_case, osv.osv):
         @return : Dictionary value for created Meeting view
         """
         value = {}
-        if not context:
-            context = {}
         for phonecall in self.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
 

@@ -581,7 +581,7 @@ class create_dta_wizard(osv.osv_memory):
         'dta_file':fields.binary('DTA File', readonly=True)
     }
     def create_dta(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         data = {}
         active_ids = context.get('active_ids', [])

@@ -40,8 +40,6 @@ class price_type(osv.osv):
         mf = self.pool.get('ir.model.fields')
         ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
         res = []
-        if not context:
-            context = {}
         for field in mf.browse(cr, uid, ids, context=context):
             res.append((field.name, field.field_description))
         return res
@@ -84,8 +82,6 @@ product_pricelist_type()
 
 class product_pricelist(osv.osv):
     def _pricelist_type_get(self, cr, uid, context=None):
-        if not context:
-            context = {}
         pricelist_type_obj = self.pool.get('product.pricelist.type')
         pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
         pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
@@ -112,8 +108,6 @@ class product_pricelist(osv.osv):
         result= []
         if not all(ids):
             return result
-        if not context:
-            context = {}
         for pl in self.browse(cr, uid, ids, context=context):
             name = pl.name + ' ('+ pl.currency_id.name + ')'
             result.append((pl.id,name))
@@ -298,8 +292,6 @@ class product_pricelist(osv.osv):
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
-        if not context:
-            context = {}
         res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(prod_id, qty, partner)], context=context)
         res = res_multi[prod_id]
         res.update({'item_id': {ids[-1]: ids[-1]}})
@@ -478,8 +470,6 @@ class product_pricelist_version(osv.osv):
         return super(product_pricelist_version, self).copy(cr, uid, id, default, context)
 
     def _check_date(self, cursor, user, ids, context=None):
-        if not context:
-            context = {}
         for pricelist_version in self.browse(cursor, user, ids, context=context):
             if not pricelist_version.active:
                 continue
@@ -510,8 +500,6 @@ product_pricelist_version()
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):
-        if not context:
-            context = {}
         pt = self.pool.get('product.price.type')
         ids = pt.search(cr, uid, [], context=context)
         result = []
@@ -533,8 +521,6 @@ class product_pricelist_item(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj_list in self.browse(cr, uid, ids, context=context):
             if obj_list.base == -1:
                 main_pricelist = obj_list.price_version_id.pricelist_id.id
@@ -579,8 +565,6 @@ class product_pricelist_item(osv.osv):
     def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:
             return {}
-        if not context:
-            context = {}
         prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code','name'])
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}

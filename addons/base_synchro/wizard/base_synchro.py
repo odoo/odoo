@@ -66,8 +66,6 @@ class base_synchro(osv.osv_memory):
     report_write = 0
 
     def synchronize(self, cr, uid, server, object, context=None):
-        if not context:
-            context = {}
         pool = pooler.get_pool(cr.dbname)
         self.meta = {}
         ids = []
@@ -139,8 +137,6 @@ class base_synchro(osv.osv_memory):
         return True
 
     def get_id(self, cr, uid, object_id, id, action, context=None):
-        if not context:
-            context = {}
         pool = pooler.get_pool(cr.dbname)
         line_pool = pool.get('base.synchro.obj.line')
         field_src = (action=='u') and 'local_id' or 'remote_id'
@@ -154,8 +150,6 @@ class base_synchro(osv.osv_memory):
     def relation_transform(self, cr, uid, pool_src, pool_dest, object, id, action, context=None):
         if not id:
             return False
-        if not context:
-            context = {}
         pool = pooler.get_pool(cr.dbname)
         cr.execute('''select o.id from base_synchro_obj o left join ir_model m on (o.model_id =m.id) where
                 m.model=%s and
@@ -189,8 +183,6 @@ class base_synchro(osv.osv_memory):
 
     def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context=None):
         self.meta.setdefault(pool_src, {})
-        if not context:
-            context = {}
         if not object in self.meta[pool_src]:
             self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context=context)
         fields = self.meta[pool_src][object]
@@ -221,8 +213,6 @@ class base_synchro(osv.osv_memory):
 
 
     def upload_download(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
         syn_obj = self.browse(cr, uid, ids, context=context)[0]
         pool = pooler.get_pool(cr.dbname)
@@ -260,8 +250,6 @@ Exceptions:
             return True
 
     def upload_download_multi_thread(self, cr, uid, data, context=None):
-        if not context:
-            context = {}
         threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr, uid, data, context))
         threaded_synchronization.run()
         data_obj = self.pool.get('ir.model.data')

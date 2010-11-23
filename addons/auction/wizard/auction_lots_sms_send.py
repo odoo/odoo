@@ -44,7 +44,7 @@ class auction_lots_sms_send(osv.osv_memory):
             @param context: A standard dictionary 
             @return: number indicating the acknowledgement
         """
-        if not context: context = {}
+        if context is None: context = {}
         lot_obj = self.pool.get('auction.lots')
         partner_obj = self.pool.get('res.partner')
         partner_address_obj = self.pool.get('res.partner.address')

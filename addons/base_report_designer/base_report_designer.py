@@ -46,7 +46,6 @@ class report_xml(osv.osv):
         '''
         Untested function
         '''
-        if not context: context = {}
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO(base64.decodestring(file_sxw))
         if file_type=='sxw':
@@ -61,7 +60,6 @@ class report_xml(osv.osv):
         return True
 
     def report_get(self, cr, uid, report_id, context=None):
-        if not context: context = {}
         report = self.browse(cr, uid, report_id, context=context)
         return {
             'file_type' : report.report_type, 

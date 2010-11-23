@@ -157,7 +157,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     def _create(self, old_create, model, context=None):
-        if not context:
+        if context is None:
             context  = {}
         def make_call_old(cr, uid, vals, context=context):
             new_id = old_create(cr, uid, vals, context=context)
@@ -167,7 +167,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return make_call_old
     
     def _write(self, old_write, model, context=None):
-        if not context:
+        if context is None:
             context  = {}
         def make_call_old(cr, uid, ids, vals, context=context):
             if isinstance(ids, (str, int, long)):
@@ -178,7 +178,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return make_call_old
 
     def _register_hook(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.model_id.model

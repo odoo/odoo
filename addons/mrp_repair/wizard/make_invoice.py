@@ -39,7 +39,7 @@ class make_invoice(osv.osv_memory):
         @param context: A standard dictionary
         @return: Loads the view of new invoice(s).
         """
-        if not context:
+        if context is None:
             context = {}
         inv = self.browse(cr, uid, ids[0], context=context)
         order_obj = self.pool.get('mrp.repair')

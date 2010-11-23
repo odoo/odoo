@@ -30,7 +30,6 @@ class base_report_designer_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     def default_get(self, cr, uid, fields, context=None):
-        if not context: context = {}
         data = super(base_report_designer_installer, self).default_get(cr, uid, fields, context=context)
         plugin_file = open(addons.get_module_resource('base_report_designer','plugin', 'openerp_report_designer.zip'),'rb')
         data['plugin_file'] = base64.encodestring(plugin_file.read())

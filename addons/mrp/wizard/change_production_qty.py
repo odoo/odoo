@@ -39,7 +39,7 @@ class change_production_qty(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context = {}
         res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
         prod_obj = self.pool.get('mrp.production')

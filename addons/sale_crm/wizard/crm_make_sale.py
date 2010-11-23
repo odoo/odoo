@@ -39,7 +39,7 @@ class crm_make_sale(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: default value of partner_id field.
         """
-        if not context:
+        if context is None:
             context = {}
 
         lead_obj = self.pool.get('crm.lead')
@@ -65,7 +65,7 @@ class crm_make_sale(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value of created sale order.
         """
-        if not context:
+        if context is None:
             context = {}
 
         case_obj = self.pool.get('crm.lead')

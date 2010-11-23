@@ -122,7 +122,7 @@ class crm_lead2opportunity(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
+        if context is None:
             context = {}
         lead_obj = self.pool.get('crm.lead')
 
@@ -177,7 +177,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         @return : Dictionary value for created Partner form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         partner_ids = self._create_partner(cr, uid, ids, context=context)
@@ -214,7 +214,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         @return : Dictionary value for Opportunity form
         """
         value = {}
-        if not context:
+        if context is None:
             context = {}
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
@@ -247,7 +247,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
+        if context is None:
             context = {}
         lead_obj = self.pool.get('crm.lead')
 
@@ -282,7 +282,7 @@ class crm_lead2opportunity_action(osv.osv_memory):
         @return : Dictionary value for Opportunity form
         """
         value = {}
-        if not context:
+        if context is None:
             context = {}
         data_obj = self.pool.get('ir.model.data')
         view_id = False

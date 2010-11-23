@@ -182,7 +182,7 @@ class account_account(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if not context:
+        if context is None:
             context = {}
         pos = 0
 
@@ -215,8 +215,6 @@ class account_account(osv.osv):
                 order, context=context, count=count)
 
     def _get_children_and_consol(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         #this function search for all the children and all consolidated children (recursively) of the given account ids
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
         ids3 = []
@@ -310,16 +308,12 @@ class account_account(osv.osv):
             return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
-        if not context:
-            context = {}
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
         return result
 
     def _get_child_ids(self, cr, uid, ids, field_name, arg, context=None):
-        if not context:
-            context = {}
         result = {}
         for record in self.browse(cr, uid, ids, context=context):
             if record.child_parent_ids:
@@ -335,8 +329,6 @@ class account_account(osv.osv):
         return result
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
-        if not context:
-            context = {}
         res={}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
@@ -403,8 +395,6 @@ class account_account(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         obj_self = self.browse(cr, uid, ids[0], context=context)
         p_id = obj_self.parent_id and obj_self.parent_id.id
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
@@ -434,8 +424,6 @@ class account_account(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if not context:
-            context = {}
         args = args[:]
         ids = []
         try:
@@ -499,8 +487,6 @@ class account_account(osv.osv):
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
     def _check_moves(self, cr, uid, ids, method, context=None):
-        if not context:
-            context = {}
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
 
@@ -517,8 +503,6 @@ class account_account(osv.osv):
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
-        if not context:
-            context = {}
         group1 = ['payable', 'receivable', 'other']
         group2 = ['consolidation','view']
         line_obj = self.pool.get('account.move.line')
@@ -535,7 +519,7 @@ class account_account(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         if 'company_id' in vals:
@@ -709,7 +693,7 @@ class account_journal(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if not context:
+        if context is None:
             context = {}
         ids = []
         if context.get('journal_type', False):
@@ -791,8 +775,6 @@ class account_fiscalyear(osv.osv):
         return True
 
     def _check_duration(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         obj_fy = self.browse(cr, uid, ids[0], context=context)
         if obj_fy.date_stop < obj_fy.date_start:
             return False
@@ -839,7 +821,7 @@ class account_fiscalyear(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
-        if not context:
+        if context is None:
             context = {}
         ids = []
         if name:
@@ -871,16 +853,12 @@ class account_period(osv.osv):
     _order = "date_start"
 
     def _check_duration(self,cr,uid,ids,context=None):
-        if not context:
-            context = {}
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
             return False
         return True
 
     def _check_year_limit(self,cr,uid,ids,context=None):
-        if not context:
-            context = {}
         for obj_period in self.browse(cr, uid, ids, context=context):
             if obj_period.special:
                 continue
@@ -903,16 +881,12 @@ class account_period(osv.osv):
     ]
 
     def next(self, cr, uid, period, step, context=None):
-        if not context:
-            context = {}
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
             return ids[step-1]
         return False
 
     def find(self, cr, uid, dt=None, context=None):
-        if not context:
-            context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
@@ -931,8 +905,6 @@ class account_period(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
-        if not context:
-            context = {}
         ids = []
         if name:
             ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
@@ -941,8 +913,6 @@ class account_period(osv.osv):
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context = {}
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
@@ -969,8 +939,6 @@ class account_journal_period(osv.osv):
     _description = "Journal Period"
 
     def _icon_get(self, cr, uid, ids, field_name, arg=None, context=None):
-        if not context:
-            context = {}
         result = {}.fromkeys(ids, 'STOCK_NEW')
         for r in self.read(cr, uid, ids, ['state']):
             result[r['id']] = {
@@ -993,8 +961,6 @@ class account_journal_period(osv.osv):
     }
 
     def _check(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
             res = cr.fetchall()
@@ -1007,8 +973,6 @@ class account_journal_period(osv.osv):
         return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        if not context:
-            context = {}
         period_id=vals.get('period_id',False)
         if period_id:
             period = self.pool.get('account.period').browse(cr, uid, period_id, context=context)
@@ -1068,8 +1032,6 @@ class account_move(osv.osv):
 
         if not args:
           args = []
-        if not context:
-          context = {}
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
@@ -1087,8 +1049,6 @@ class account_move(osv.osv):
             ids = [ids]
         if not ids:
             return []
-        if not context:
-            context = {}
         res = []
         data_move = self.pool.get('account.move').browse(cursor, user, ids, context=context)
         for move in data_move:
@@ -1100,8 +1060,6 @@ class account_move(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        if not context:
-            context = {}
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -1163,7 +1121,6 @@ class account_move(osv.osv):
     }
 
     def _check_centralisation(self, cursor, user, ids, context=None):
-        if not context: context = {}
         for move in self.browse(cursor, user, ids, context=context):
             if move.journal_id.centralisation:
                 move_ids = self.search(cursor, user, [
@@ -1175,7 +1132,6 @@ class account_move(osv.osv):
         return True
 
     def _check_period_journal(self, cursor, user, ids, context=None):
-        if not context: context = {}
         for move in self.browse(cursor, user, ids, context=context):
             for line in move.line_id:
                 if line.period_id.id != move.period_id.id:
@@ -1194,7 +1150,7 @@ class account_move(osv.osv):
     ]
 
     def post(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         invoice = context.get('invoice', False)
         valid_moves = self.validate(cr, uid, ids, context)
@@ -1227,8 +1183,6 @@ class account_move(osv.osv):
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
-        if not context:
-            context = {}
         for move in self.browse(cursor, user, ids, context=context):
             top = None
             for line in move.line_id:
@@ -1253,7 +1207,7 @@ class account_move(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         c = context.copy()
         c['novalidate'] = True
@@ -1317,7 +1271,6 @@ class account_move(osv.osv):
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None, check=True):
-        context = context or {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):
@@ -1335,7 +1288,6 @@ class account_move(osv.osv):
         return result
 
     def _compute_balance(self, cr, uid, id, context=None):
-        context = context or {}
         move = self.browse(cr, uid, [id], context=context)[0]
         amount = 0
         for line in move.line_id:
@@ -1767,7 +1719,7 @@ class account_tax(osv.osv):
         """
         if not args:
             args = []
-        if not context:
+        if context is None:
             context = {}
         ids = []
         if name:

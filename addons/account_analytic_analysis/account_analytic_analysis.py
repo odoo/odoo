@@ -519,7 +519,7 @@ class account_analytic_account_summary_user(osv.osv):
                 ')')
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if not context:
+        if context is None:
             context = {}
         if not ids:
             return []
@@ -695,7 +695,7 @@ class account_analytic_account_summary_month(osv.osv):
                 ')')
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if not context:
+        if context is None:
             context = {}
         if not ids:
             return []

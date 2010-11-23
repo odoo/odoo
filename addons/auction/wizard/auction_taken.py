@@ -42,7 +42,7 @@ class auction_taken(osv.osv_memory):
           @param ids: List of Auction taken’s IDs
           @return: dictionary of lot_ids fields with empty list 
           """
-          if not context:
+          if context is None:
               context={}
           lot_obj = self.pool.get('auction.lots')
           for current in self.browse(cr, uid, ids, context=context):

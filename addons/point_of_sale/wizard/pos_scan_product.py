@@ -37,7 +37,7 @@ class pos_scan_product(osv.osv_memory):
          @param context: A standard dictionary 
          @return : retrun gencod
         """
-        if not context:
+        if context is None:
             context = {}
         data=self.read(cr, uid, ids)[0]
         record_id = context and context.get('active_id',False)

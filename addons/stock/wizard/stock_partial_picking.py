@@ -33,7 +33,7 @@ class stock_partial_picking(osv.osv_memory):
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(stock_partial_picking, self).view_init(cr, uid, fields_list, context=context)
         pick_obj = self.pool.get('stock.picking')
-        if not context:
+        if context is None:
             context={}
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             need_product_cost = (pick.type == 'in')
@@ -157,11 +157,9 @@ class stock_partial_picking(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
-        if not context:
-            context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         pick_obj = self.pool.get('stock.picking')
-        if not context:
+        if context is None:
             context={}
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})

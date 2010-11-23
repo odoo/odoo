@@ -100,8 +100,6 @@ class hr_expense_expense(osv.osv):
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id = False
-        if not context:
-            context = {}
         if employee_id:
             department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id or False
         return {'value':{'department_id':department_id}}
