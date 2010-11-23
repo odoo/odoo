@@ -774,7 +774,7 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
+def trans_load(db_name, filename, lang, strict=False, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
@@ -788,10 +788,12 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
             logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
+    if context is None:
+        context = {}
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')

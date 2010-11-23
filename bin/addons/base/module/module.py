@@ -445,7 +445,7 @@ class module(osv.osv):
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
