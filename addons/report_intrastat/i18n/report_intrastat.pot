@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:56+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:56+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13:05+0000\n"
+"PO-Revision-Date: 2010-11-18 16:13:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,6 +81,11 @@ msgid "Taxes:"
 msgstr ""
 
 #. module: report_intrastat
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "March"
 msgstr ""
@@ -131,8 +136,8 @@ msgid "Base"
 msgstr ""
 
 #. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: report_intrastat
@@ -298,6 +303,11 @@ msgid "Country code"
 msgstr ""
 
 #. module: report_intrastat
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr ""
+
+#. module: report_intrastat
 #: field:report.intrastat,month:0
 msgid "Month"
 msgstr ""
@@ -335,6 +345,11 @@ msgstr ""
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Price"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: report_intrastat
