@@ -21,13 +21,11 @@
 
 
 import sys
-from StringIO import StringIO
 import copy
 import reportlab
 import re
 from reportlab.pdfgen import canvas
 from reportlab import platypus
-import cStringIO
 import utils
 import color
 import os
@@ -37,6 +35,12 @@ import base64
 from reportlab.platypus.doctemplate import ActionFlowable
 from tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
+
+try:
+    from cStringIO import StringIO
+    _hush_pyflakes = [ StringIO ]
+except ImportError:
+    from StringIO import StringIO
 
 encoding = 'utf-8'
 
@@ -223,7 +227,7 @@ class _rml_doc(object):
                 addMapping(name, 1, 0, name)    #bold
                 addMapping(name, 1, 1, name)    #italic and bold
 
-    def setTTFontMapping(self,face, fontname,filename, mode='all'):
+    def setTTFontMapping(self,face, fontname, filename, mode='all'):
         from reportlab.lib.fonts import addMapping
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
@@ -412,7 +416,7 @@ class _rml_canvas(object):
         if not node.get('file') :
             if node.get('name'):
                 image_data = self.images[node.get('name')]
-                s = cStringIO.StringIO(image_data)
+                s = StringIO(image_data)
             else:
                 if self.localcontext:
                     res = utils._regex.findall(node.text)
@@ -423,19 +427,19 @@ class _rml_canvas(object):
                 if node.text:
                     image_data = base64.decodestring(node.text)
                 if image_data:
-                    s = cStringIO.StringIO(image_data)
+                    s = StringIO(image_data)
                 else:
                     return False
         else:
             if node.get('file') in self.images:
-                s = cStringIO.StringIO(self.images[node.get('file')])
+                s = StringIO(self.images[node.get('file')])
             else:
                 try:
                     u = urllib.urlopen(str(node.get('file')))
-                    s = cStringIO.StringIO(u.read())
+                    s = StringIO(u.read())
                 except Exception:
                     u = file(os.path.join(self.path,str(node.get('file'))), 'rb')
-                    s = cStringIO.StringIO(u.read())
+                    s = StringIO(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 
@@ -738,7 +742,7 @@ class _rml_flowable(object):
                         node.text = newtext
                     image_data = base64.decodestring(node.text)
                 if not image_data: return False
-                image = cStringIO.StringIO(image_data)
+                image = StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
                 return platypus.Image(node.get('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
@@ -916,7 +920,7 @@ def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     except Exception:
         logging.getLogger('report').warning('Cannot set font mapping', exc_info=True)
         pass
-    fp = cStringIO.StringIO()
+    fp = StringIO()
     r.render(fp)
     return fp.getvalue()
 
@@ -937,7 +941,7 @@ def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None
         fp.close()
         return fout
     else:
-        fp = cStringIO.StringIO()
+        fp = StringIO()
         r.render(fp)
         return fp.getvalue()
 
