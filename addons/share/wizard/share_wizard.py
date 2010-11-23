@@ -289,7 +289,9 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         result_obj = self.pool.get('share.wizard.result.line')
         share_root_url = wizard_data.share_root_url
-        format_url = '%(login)s' in share_root_url and '%(password)s' in share_root_url
+        format_url = '%(login)s' in share_root_url\
+                 and '%(password)s' in share_root_url\
+                 and '%(dbname)s' in share_root_url
         existing_passwd_str = _('*usual password*')
         if wizard_data.user_type == 'new':
             for email in wizard_data.new_users.split('\n'):
@@ -297,7 +299,8 @@ class share_create(osv.osv_memory):
                 password = user_obj.read(cr, 1, user_id[0], ['password'])['password']
                 share_url = share_root_url % \
                         {'login': email,
-                         'password': password} if format_url else share_root_url
+                         'password': password,
+                         'dbname': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
                         'login': email,
@@ -308,8 +311,9 @@ class share_create(osv.osv_memory):
             # existing users
             for user in wizard_data.user_ids:
                 share_url = share_root_url % \
-                        {'login': email, 
-                         'password': ''} if format_url else share_root_url
+                        {'login': email,
+                         'password': '',
+                         'dbame': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
                         'login': user.user_id.login,
@@ -394,7 +398,6 @@ class share_create(osv.osv_memory):
         # C.
         all_relations = obj0 + obj1 + obj2 + obj3
         self._link_or_copy_current_user_rules(cr, uid, group_id, all_relations, context=context)
-
         # so far, so good -> populate summary results and return them
         self._create_result_lines(cr, uid, wizard_data, context=context)
 
@@ -426,6 +429,7 @@ class share_create(osv.osv_memory):
                     body += _("You may use the following login and password to get access to this protected area:") + "\n"
                     body += "%s: %s" % (_("Username"), result_line.login) + "\n"
                     body += "%s: %s" % (_("Password"), result_line.password) + "\n"
+                    body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
                 else:
                     body += _("This additional data has been automatically added to your current access.\n")
                     body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login

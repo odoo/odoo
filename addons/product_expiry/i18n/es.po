@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:27+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 19:28+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
@@ -60,9 +60,19 @@ msgid "Product Life Time"
 msgstr "Tiempo de vida producto"
 
 #. module: product_expiry
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: product_expiry
 #: field:product.product,use_time:0
 msgid "Product Use Time"
 msgstr "Tiempo de uso producto"
+
+#. module: product_expiry
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: product_expiry
 #: help:stock.production.lot,alert_date:0
@@ -126,6 +136,11 @@ msgstr "LTR"
 #: view:stock.production.lot:0
 msgid "Dates"
 msgstr "Fechas"
+
+#. module: product_expiry
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "¡El ratio de conversión para una unidad de medida no puede ser 0!"
 
 #. module: product_expiry
 #: constraint:product.template:0
@@ -205,6 +220,11 @@ msgstr "Fecha en la que el producto debería ser eliminado."
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
 msgstr "Tiempo de alerta producto"
+
+#. module: product_expiry
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Product alert time"
 #~ msgstr "Fecha alerta producto"
