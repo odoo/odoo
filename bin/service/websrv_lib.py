@@ -266,8 +266,8 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
             try:
                 self.sec_realms[auth_provider.realm].checkRequest(fore,path)
             except AuthRequiredExc,ae:
-                if self.request_version != 'HTTP/1.1':
-                    self.log_error("Cannot require auth at %s",self.request_version)
+                if self.request_version != 'HTTP/1.1' and ('Darwin/9.' not in fore.headers.get('User-Agent', '')):
+                    self.log_error("Cannot require auth at %s", self.request_version)
                     self.send_error(403)
                     return
                 self._get_ignore_body(fore) # consume any body that came, not loose sync with input
