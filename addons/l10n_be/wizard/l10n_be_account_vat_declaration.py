@@ -50,7 +50,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
     }
 
     def create_xml(self, cr, uid, ids, context=None):
-        obj_fyear = self.pool.get('account.fiscalyear')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_acc_period = self.pool.get('account.period')
         obj_user = self.pool.get('res.users')
