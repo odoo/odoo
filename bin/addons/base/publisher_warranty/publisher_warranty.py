@@ -161,7 +161,8 @@ class publisher_warranty_contract(osv.osv):
             
             self.pool.get('res.log').create(cr, uid,
                     {
-                        'name': repr(result["message"]),
+                        'name': result["message"] if isinstance(result["message"], str) or \
+                            isinstance(result["message"], unicode) else repr(result["message"]),
                         'res_model': "Maintenance Notifications",
                         "read": True,
                         "broadcast": True,
