@@ -21,6 +21,7 @@
 
 
 import logging
+import urlparse
 from service.websrv_lib import FixSendError, HTTPHandler, HttpOptions
 from service.http_server import HttpLogHandler
 
@@ -53,8 +54,25 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             self.send_error(404, "File not found")
             return None
 
+        addr, port = self.server.server_name, self.server.server_port
+        try:
+            addr, port = self.request.getsockname()
+        except Exception, e:
+            self.log_error("Cannot calculate own address:" , e)
+        
+        if self.headers.has_key('Host'):
+            uparts = list(urlparse.urlparse("http://%s:%d"% (addr,port)))
+            uparts[1] = self.headers['Host']
+            baseuri = urlparse.urlunparse(uparts)
+        else:
+            baseuri = "http://%s:%d"% (addr, port )
+
+
+        location = baseuri + self.redirect_paths[self.path]
+        # relative uri: location = self.redirect_paths[self.path]
+
         self.send_response(301)
-        self.send_header("Location", self.redirect_paths[self.path])
+        self.send_header("Location", location)
         self.send_header("Content-Length", 0)
         self.end_headers()
         # Do we need a Cache-content: header here?
