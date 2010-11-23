@@ -136,14 +136,24 @@ class HTTPDir:
             return self.path
         return False
 
-class noconnection:
+class noconnection(object):
     """ a class to use instead of the real connection
     """
+    def __init__(self, realsocket=None):
+        self.__hidden_socket = realsocket
+
     def makefile(self, mode, bufsize):
         return None
 
     def close(self):
         pass
+
+    def getsockname(self):
+        """ We need to return info about the real socket that is used for the request
+        """
+        if not self.__hidden_socket:
+            raise AttributeError("No-connection class cannot tell real socket")
+        return self.__hidden_socket.getsockname()
 
 class dummyconn:
     def shutdown(self, tru):
@@ -396,7 +406,7 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                 npath = '/' + npath
 
             if not self.in_handlers.has_key(p):
-                self.in_handlers[p] = vdir.handler(noconnection(),self.client_address,self.server)
+                self.in_handlers[p] = vdir.handler(noconnection(self.request),self.client_address,self.server)
                 if vdir.auth_provider:
                     vdir.auth_provider.setupAuth(self, self.in_handlers[p])
             hnd = self.in_handlers[p]
