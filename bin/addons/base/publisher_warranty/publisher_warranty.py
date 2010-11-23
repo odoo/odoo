@@ -161,7 +161,7 @@ class publisher_warranty_contract(osv.osv):
             
             self.pool.get('res.log').create(cr, uid,
                     {
-                        'name': result["message"],
+                        'name': repr(result["message"]),
                         'res_model': "Maintenance Notifications",
                         "read": True,
                         "broadcast": True,
@@ -187,8 +187,19 @@ class publisher_warranty_contract(osv.osv):
                                         , order="create_date desc", limit=1)
         if not ids:
             return False
-        to_return = self.pool.get('res.log').browse(cr, uid, ids[0]).name
-        return to_return
+        message_r = self.pool.get('res.log').browse(cr, uid, ids[0]).name
+        try:
+            message = safe_eval(message_r)
+        except:
+            return message_r # for compatibility with manually entered messages
+        
+        user = self.pool.get("res.users").browse(cr, uid, uid)
+        lang = user.context_lang
+        
+        if lang in message[1]:
+            return message[1][lang]
+    
+        return message[0]
 
     _columns = {
         'name' : fields.char('Contract Name', size=384, required=True),
