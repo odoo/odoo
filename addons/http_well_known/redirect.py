@@ -50,8 +50,11 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             self.end_headers()
             return None
         
-        if self.path not in self.redirect_paths:
+        redir_path = self._find_redirect()
+        if redir_path is False:
             self.send_error(404, "File not found")
+            return None
+        elif redir_path is None:
             return None
 
         server_proto = getattr(self.server, 'proto', 'http').lower()
@@ -69,7 +72,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             baseuri = "%s://%s:%d"% (server_proto, addr, port )
 
 
-        location = baseuri + self.redirect_paths[self.path]
+        location = baseuri + redir_path
         # relative uri: location = self.redirect_paths[self.path]
 
         self.send_response(301)
@@ -77,12 +80,29 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
         self.send_header("Content-Length", 0)
         self.end_headers()
         # Do we need a Cache-content: header here?
-        self._logger.debug("redirecting %s to %s", self.path, self.redirect_paths[self.path])
+        self._logger.debug("redirecting %s to %s", self.path, redir_path)
         return None
 
     def do_PROPFIND(self):
+        self._get_ignore_body()
         return self.do_HEAD()
 
+    def _find_redirect(self):
+        """ Locate self.path among the redirects we can handle
+        @return The new path, False for 404 or None for already sent error
+        """
+        return self.redirect_paths.get(self.path, False)
+
+    def _get_ignore_body(self):
+        if not self.headers.has_key("content-length"):
+            return
+        max_chunk_size = 10*1024*1024
+        size_remaining = int(self.headers["content-length"])
+        got = ''
+        while size_remaining:
+            chunk_size = min(size_remaining, max_chunk_size)
+            got = self.rfile.read(chunk_size)
+            size_remaining -= len(got)
 
 #eof
 
