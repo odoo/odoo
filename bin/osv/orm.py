@@ -4222,7 +4222,8 @@ class orm(orm_template):
     def check_recursion(self, cr, uid, ids, parent=None):
         warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
                         self._name, DeprecationWarning, stacklevel=3)
-        assert ' ' not in (parent or '')
+        assert parent is None or parent in self._columns or parent in self._inherit_fields,\
+                    "The 'parent' parameter passed to check_recursion() must be None or a valid field name"
         return self._check_recursion(cr, uid, ids, parent)
 
     def _check_recursion(self, cr, uid, ids, parent=None):
