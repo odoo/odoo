@@ -46,7 +46,7 @@ class groups(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
     ]
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': _('%s (copy)')%group_name})
         return super(groups, self).copy(cr, uid, id, default, context)
@@ -83,14 +83,14 @@ class groups(osv.osv):
 
 groups()
 
-def _lang_get(self, cr, uid, context={}):
+def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context)
+    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
     res = [(r['code'], r['name']) for r in res]
     return res
 
-def _tz_get(self,cr,uid, context={}):
+def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
 
 class users(osv.osv):
@@ -373,7 +373,7 @@ class users(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids)
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
         if default is None:
             default = {}
@@ -395,10 +395,10 @@ class users(osv.osv):
                 result[k[8:]] = res or False
         return result
 
-    def action_get(self, cr, uid, context={}):
+    def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
-        return dataobj.browse(cr, uid, data_id, context).res_id
+        return dataobj.browse(cr, uid, data_id, context=context).res_id
 
 
     def login(self, db, login, password):
@@ -408,12 +408,19 @@ class users(osv.osv):
         cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
         res = cr.fetchone()
         result = False
-        if res:
-            cr.execute("update res_users set date=%s where id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
-            cr.commit()
-            result = res[0]
-        cr.close()
-        return result
+        try:
+            cr.execute('SELECT id FROM res_users WHERE login=%s AND password=%s AND active',
+                    (tools.ustr(login), tools.ustr(password)))
+            res = cr.fetchone()
+            if res:
+                cr.execute("UPDATE res_users SET date=%s WHERE id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
+                cr.commit()
+                return res[0]
+            else:
+                return False
+        finally:
+            cr.close()
+
     def check_super(self, passwd):
         if passwd == tools.config['admin_passwd']:
             return True
@@ -427,29 +434,34 @@ class users(osv.osv):
         if (cached_pass is not None) and cached_pass == passwd:
             return True
         cr = pooler.get_db(db).cursor()
-        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
-        res = cr.fetchone()[0]
-        cr.close()
-        if not bool(res):
-            raise security.ExceptionNoTb('AccessDenied')
-        if res:
-            if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
-                ulist[uid] = passwd
-            else:
-                self._uid_cache[db] = {uid:passwd}
-        return bool(res)
+        try:
+            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s', 
+                        (int(uid), passwd, True))
+            res = cr.fetchone()[0]
+            if not bool(res):
+                raise security.ExceptionNoTb('AccessDenied')
+            if res:
+                if self._uid_cache.has_key(db):
+                    ulist = self._uid_cache[db]
+                    ulist[uid] = passwd
+                else:
+                    self._uid_cache[db] = {uid:passwd}
+            return bool(res)
+        finally:
+            cr.close()
 
     def access(self, db, uid, passwd, sec_level, ids):
         if not passwd:
             return False
         cr = pooler.get_db(db).cursor()
-        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
-        res = cr.fetchone()
-        cr.close()
-        if not res:
-            raise security.ExceptionNoTb('Bad username or password')
-        return res[0]
+        try:
+            cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
+            res = cr.fetchone()
+            if not res:
+                raise security.ExceptionNoTb('Bad username or password')
+            return res[0]
+        finally:
+            cr.close()
 
 users()
 
