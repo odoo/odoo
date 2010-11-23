@@ -857,7 +857,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if not isinstance(model_obj, osv.osv.osv_memory):
+                if model_obj and not isinstance(model_obj, osv.osv.osv_memory):
                     logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
@@ -873,6 +873,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 obj = pool.get(model)
                 if obj:
                     obj._check_removed_columns(cr, log=True)
+                else:
+                    logger.warning("Model %s is referenced but not present in the orm pool!", model)
 
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
