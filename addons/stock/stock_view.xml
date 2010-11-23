@@ -144,14 +144,15 @@
                              </field>
                     </page>
                     </notebook>
-                    <field name="state"/>
-                    <group col="4" colspan="2">
+                    <group col="2" colspan="2">
+                     <field name="state"/>
+                    </group>
+                    <group col="2" colspan="2">
                         <button name="action_cancel_inventary" states="draft" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Validate Inventory" type="object" icon="gtk-apply"/>
                         <button name="action_done" states="confirm" string="Confirm Inventory" type="object" icon="gtk-jump-to"/>
                         <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                     </group>
-
                 </form>
             </field>
         </record>
