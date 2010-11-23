@@ -3206,9 +3206,11 @@ class orm(orm_template):
         for r in res:
             for key in r:
                 r[key] = r[key] or False
-                if details and key in ('write_uid', 'create_uid'):
-                    if r[key]:
+                if details and key in ('write_uid', 'create_uid') and r[key]:
+                    try:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+                    except Exception:
+                        pass # Leave the numeric uid there
             r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
             del r['name'], r['module']
         if uniq:
