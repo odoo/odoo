@@ -270,7 +270,7 @@
   <story>
   	<pto>
   	<pto_header>
-  		<blockTable colWidths="40.0,56.0,110.0,70.0,70.0,105.0,56.0,70.0,70.0,70.0,70.0" style="Table7">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+  		<blockTable colWidths="40.0,50.0,105.0,67.0,65.0,130.0,50.0,70.0,65.0,75.0,70.0" style="Table7">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
 	      <tr>
 	        <td>
 	          <para style="terp_tblheader_Details">Date</para>
@@ -441,7 +441,7 @@
     <para style="terp_default_8">
        <font color="white"> </font>
     </para>
-    <blockTable colWidths="40.0,55.0,105.0,70.0,65.0,110.0,55.0,70.0,70.0,77.0,70.0" style="Table7">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+    <blockTable colWidths="40.0,50.0,105.0,67.0,65.0,130.0,50.0,70.0,65.0,75.0,70.0" style="Table7">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -480,7 +480,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(get_children_accounts(a), 'o') ]]</para>
-      <blockTable rowHeights="0.55cm" colWidths="501.0,70.0,70.0,77.0,70.0" style="Table8">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+      <blockTable rowHeights="0.55cm" colWidths="508.0,70.0,65.0,75.0,70.0" style="Table8">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
         <tr>
           <td>
             <para style="terp_default_Bold_9"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para>
@@ -501,7 +501,7 @@
       </blockTable>
       <section>
         <para style="terp_default_8">[[ repeatIn(lines(o), 'line') ]]</para>
-        <blockTable rowHeights="0.55cm" colWidths="40.0,55.0,105.0,70.0,65.0,110.0,55.0,70.0,70.0,77.0,70.0" style="Table9">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+        <blockTable rowHeights="0.55cm" colWidths="40.0,50.0,105.0,67.0,65.0,130.0,50.0,70.0,65.0,75.0,70.0" style="Table9">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
           <tr>
             <td>
               <para style="terp_default_8">[[ formatLang(line['ldate'],date=True) ]]</para>
