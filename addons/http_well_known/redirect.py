@@ -54,6 +54,7 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             self.send_error(404, "File not found")
             return None
 
+        server_proto = getattr(self.server, 'proto', 'http').lower()
         addr, port = self.server.server_name, self.server.server_port
         try:
             addr, port = self.request.getsockname()
@@ -61,11 +62,11 @@ class RedirectHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler
             self.log_error("Cannot calculate own address:" , e)
         
         if self.headers.has_key('Host'):
-            uparts = list(urlparse.urlparse("http://%s:%d"% (addr,port)))
+            uparts = list(urlparse.urlparse("%s://%s:%d"% (server_proto, addr,port)))
             uparts[1] = self.headers['Host']
             baseuri = urlparse.urlunparse(uparts)
         else:
-            baseuri = "http://%s:%d"% (addr, port )
+            baseuri = "%s://%s:%d"% (server_proto, addr, port )
 
 
         location = baseuri + self.redirect_paths[self.path]
