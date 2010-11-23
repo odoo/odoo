@@ -470,10 +470,10 @@ class module(osv.osv):
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
                 # like "en".
-                if (not os.path.exists(f)) and '_' in iso_lang:
+                if (not f) and '_' in iso_lang:
                     f = addons.get_module_resource(mod.name, 'i18n', iso_lang.split('_')[0] + '.po')
                     iso_lang = iso_lang.split('_')[0]
-                if os.path.exists(f):
+                if f:
                     logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
                     tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
                 else:
