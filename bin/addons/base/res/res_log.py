@@ -32,12 +32,14 @@ class res_log(osv.osv):
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
         'create_date': fields.datetime('Created Date', readonly=True),
-        'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client")
+        'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client"),
+        'broadcast': fields.boolean('Broadcast', help="For security, tells if all users should have right to read this log."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
         'context': "{}",
-        'read': False
+        'read': False,
+        'broadcast': False,
     }
     _order='create_date desc'
 

@@ -31,7 +31,6 @@ from tools.safe_eval import safe_eval
 import pooler
 from tools.config import config
 import release
-import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -165,6 +164,7 @@ class publisher_warranty_contract(osv.osv):
                         'name': result["message"],
                         'res_model': "Maintenance Notifications",
                         "read": True,
+                        "broadcast": True,
                     },
                     context=context
             )
@@ -178,6 +178,11 @@ class publisher_warranty_contract(osv.osv):
         return True
     
     def get_last_user_message(self, cr, uid, context={}):
+        """
+        Get the message to be written in the web client.
+        @return: An html message, can be False instead.
+        @rtype: string
+        """
         ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "Maintenance Notifications")]
                                         , order="create_date desc", limit=1)
         if not ids:
