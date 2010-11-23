@@ -486,7 +486,10 @@ class _rml_canvas(object):
 
     def setFont(self, node):
         fname = node.get('name')
-        return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
+        try:
+            return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
+        except KeyError, e:
+            raise KeyError('Font "%s" is not registered in the engine' % fname)
 
     def render(self, node):
         tags = {
