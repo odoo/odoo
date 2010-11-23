@@ -752,6 +752,7 @@ class pos_order(osv.osv):
                     'period_id': period,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
+                    'partner_id': order.partner_id and order.partner_id.id or False
                 }, context=context)
 
                 # For each remaining tax with a code, whe create a move line
@@ -817,6 +818,7 @@ class pos_order(osv.osv):
                     or 0.0,
                 'journal_id': order.sale_journal.id,
                 'period_id': period,
+                'partner_id': order.partner_id and order.partner_id.id or False
             }, context=context))
 
 

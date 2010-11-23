@@ -178,7 +178,7 @@ class hr_contract(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if not calculate:
                     continue
@@ -193,7 +193,7 @@ class hr_contract(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -283,7 +283,7 @@ class hr_contract(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -857,7 +857,7 @@ class hr_payslip(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -1149,7 +1149,7 @@ class hr_payslip(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if not calculate:
                     continue
@@ -1164,7 +1164,7 @@ class hr_payslip(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':

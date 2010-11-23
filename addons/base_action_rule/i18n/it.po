@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:43+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -122,6 +122,15 @@ msgstr ""
 "partner"
 
 #. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Condizioni sul Modello Partner"
@@ -152,6 +161,11 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Speciali parole chiave da utilizzare nel Corpo"
 
 #. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere unico!"
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Stato"
@@ -160,6 +174,11 @@ msgstr "Stato"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr "ID Email della persona a cui le mail vanno spedite"
+
+#. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -391,6 +410,11 @@ msgstr "%(object_description)s = Descrizione oggetto"
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Azioni E-mail"
+
+#. module: base_action_rule
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #. module: base_action_rule
 #: view:base.action.rule:0

@@ -364,15 +364,15 @@ class hr_holidays(osv.osv):
             leave_asked = record.number_of_days_temp
             if record.holiday_type == 'employee' and record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
-                    leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                    leaves_rest = obj_hr_holiday_status.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.employee_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for employee %s while there are too few remaining leave days.') % (record.employee_id.name))
                 nb = -(record.number_of_days_temp)
             elif record.holiday_type == 'category' and record.type == 'remove':
                 if record.category_id and not record.holiday_status_id.limit:
                     leaves_rest = obj_hr_holiday_status.get_days_cat( cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.category_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for category %s while there are too few remaining leave days.') % (record.category_id.name))
                 nb = -(record.number_of_days_temp)
             else:
                 nb = record.number_of_days_temp
