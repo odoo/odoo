@@ -154,7 +154,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         res = self.cr.dictfetchall()
         sum = 0.0
         if self.initial_balance:
-                sum = self.init_bal_sum
+            sum = self.init_bal_sum
         for r in res:
             sum += r['debit'] - r['credit']
             r['progress'] = sum

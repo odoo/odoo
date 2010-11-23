@@ -638,7 +638,6 @@ class account_voucher(osv.osv):
                 'date': inv.date,
                 'date_maturity': inv.date_due
             }
-
             if (debit == 0.0 or credit == 0.0 or debit+credit > 0) and (debit > 0.0 or credit > 0.0):
                 master_line = move_line_pool.create(cr, uid, move_line)
 
