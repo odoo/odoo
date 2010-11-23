@@ -72,7 +72,7 @@ def FindCustomFonts():
             continue
         for d in dirpath:
             if os.path.exists(os.path.join(d, fname)):
-                print "found font %s in %s" % (fname, d)
+                # print "found font %s in %s" % (fname, d)
                 __foundFonts.append(fname)
                 break
                 
@@ -87,9 +87,9 @@ def SetCustomFonts(rmldoc):
         This function is called once per report, so it should
         avoid system-wide processing (cache it, instead).
     """
+    global __foundFonts
     if not len(__foundFonts):
         FindCustomFonts()
-    global __foundFonts
     for name, font, fname, mode in CustomTTFonts:
         if fname in __foundFonts:
             rmldoc.setTTFontMapping(name, font, fname, mode)
