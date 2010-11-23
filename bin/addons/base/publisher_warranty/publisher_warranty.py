@@ -159,16 +159,17 @@ class publisher_warranty_contract(osv.osv):
                     "interval_number": result["interval_number"],
                 })
             
-            self.pool.get('res.log').create(cr, uid,
-                    {
-                        'name': result["message"] if isinstance(result["message"], str) or \
-                            isinstance(result["message"], unicode) else repr(result["message"]),
-                        'res_model': "Maintenance Notifications",
-                        "read": True,
-                        "broadcast": True,
-                    },
-                    context=context
-            )
+            for message in result["messages"]:
+                self.pool.get('res.log').create(cr, uid,
+                        {
+                            'name': message if isinstance(message, str) or \
+                                isinstance(message, unicode) else message[0],
+                            'res_model': "publisher_warranty.contract",
+                            "read": True,
+                            "user_id": False,
+                        },
+                        context=context
+                )
         except:
             _logger.debug("Exception while interpreting the result of a ping", exc_info=1)
             if cron_mode:
@@ -184,23 +185,13 @@ class publisher_warranty_contract(osv.osv):
         @return: An html message, can be False instead.
         @rtype: string
         """
-        ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "Maintenance Notifications")]
+        ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "publisher_warranty.contract")]
                                         , order="create_date desc", limit=1)
         if not ids:
             return False
-        message_r = self.pool.get('res.log').browse(cr, uid, ids[0]).name
-        try:
-            message = safe_eval(message_r)
-        except:
-            return message_r # for compatibility with manually entered messages
-        
-        user = self.pool.get("res.users").browse(cr, uid, uid)
-        lang = user.context_lang
-        
-        if lang in message[1]:
-            return message[1][lang]
+        message = self.pool.get('res.log').browse(cr, uid, ids[0]).name
     
-        return message[0]
+        return message
 
     _columns = {
         'name' : fields.char('Contract Name', size=384, required=True),

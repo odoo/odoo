@@ -20,26 +20,23 @@
 ##############################################################################
 
 from osv import fields, osv
-import tools
 
 class res_log(osv.osv):
     _name = 'res.log'
     _columns = {
         'name': fields.char('Message', size=128, help='The logging message.', required=True),
-        'user_id': fields.many2one('res.users','User', required=True),
+        'user_id': fields.many2one('res.users','User'),
         'res_model': fields.char('Object', size=128),
         'context': fields.char('Context', size=250),
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
         'create_date': fields.datetime('Created Date', readonly=True),
         'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client"),
-        'broadcast': fields.boolean('Broadcast', help="For security, tells if all users should have right to read this log."),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
         'context': "{}",
         'read': False,
-        'broadcast': False,
     }
     _order='create_date desc'
 
