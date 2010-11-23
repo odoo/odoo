@@ -160,13 +160,12 @@
                             </group>
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Costing Information"/>
-                            <field name="product_id" on_change="on_change_product_cost(product_id)"/>
                             <field name="costs_hour"/>
                             <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                             <field name="costs_cycle"/>
                             <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
-                            <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
-                            <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
+                            <field name="costs_journal_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="costs_general_account_id" groups="analytic.group_analytic_accounting"/>
                             </group>
                             <separator colspan="4" string="Description"/>
                             <field colspan="4" name="note" nolabel="1"/>
@@ -584,8 +583,8 @@
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1" widget="selection"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)" widget="selection"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
@@ -594,7 +593,7 @@
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM" widget="selection"/>
-                                    <field name="location_id"  string="Source Loc." widget="selection"/>
+                                    <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -613,7 +612,7 @@
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -648,11 +647,11 @@
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM" widget="selection"/>
-                                    <field name="location_id"  string="Source Loc." widget="selection"/>
+                                    <field name="location_id"  string="Source Loc." />
                                     <field name="state" invisible="1"/>
-                                    <button name="%(stock.action_partial_move)d"
-                                        string="Partial"
-                                        type="action" states="confirmed,assigned"
+                                    <button name="%(stock.action_partial_move)d" 
+                                        string="Partial" 
+                                        type="action" states="confirmed,assigned" 
                                         icon="gtk-justify-fill"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
@@ -927,9 +926,9 @@
         <menuitem action="mrp_workcenter_action" id="menu_view_resource_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
-
+        
         <!-- Planning -->
-
+        
         <menuitem id="menu_mrp_planning" name="Planning"
 		        parent="base.menu_mrp_root" sequence="2"
 		        groups="base.group_extended"/>

@@ -1904,12 +1904,6 @@ class stock_move(osv.osv):
         acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
-        if acc_dest == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account on defined on this product and Variant account on category of this product is same.'))
-
-        if acc_src == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account on defined on this product and Variant account on category of this product is same.'))
-
         if not acc_src:
             raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
@@ -2422,11 +2416,6 @@ class stock_inventory(osv.osv):
         return self.pool.get('stock.move').create(cr, uid, move_vals)
 
     def action_done(self, cr, uid, ids, context=None):
-        """ Finished the inventory
-        @return: True
-        """
-        if context is None:
-            context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
@@ -2434,7 +2423,7 @@ class stock_inventory(osv.osv):
         return True
 
     def action_confirm(self, cr, uid, ids, context=None):
-        """ Confirm the inventory and writes its finished date
+        """ Finishes the inventory and writes its finished date
         @return: True
         """
         if context is None:
@@ -2445,7 +2434,7 @@ class stock_inventory(osv.osv):
         product_context = dict(context, compute_child=False)
 
         location_obj = self.pool.get('stock.location')
-        for inv in self.browse(cr, uid, ids, context=context):
+        for inv in self.browse(cr, uid, ids):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id

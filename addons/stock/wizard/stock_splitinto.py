@@ -79,8 +79,9 @@ class stock_split_into(osv.osv_memory):
                     current_move = move_obj.copy(cr, uid, move.id, default_val)
                     new_move.append(current_move)
 
-            if inventory_id:
-                inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, new_move[0])]}, context=context)
+        if inventory_id and new_move:
+            for m_id in new_move:
+                inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, m_id)]}, context=context)
 
         return {}
 stock_split_into()

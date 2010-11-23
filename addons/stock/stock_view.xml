@@ -100,7 +100,7 @@
                                 <field name="prod_lot_id" groups="base.group_extended"/>
                                 <button name="%(stock.action_view_stock_inventory_line_split)d"
                                     string="Split inventory lines" groups="base.group_extended"
-                                    type="action" icon="terp-stock_effects-object-colorize" states="draft"/>
+                                    type="action" icon="terp-stock_effects-object-colorize" states="draft,confirm"/>
                                 <field name="state" invisible="True"/>
                             </tree>
                             <form string="Products ">
@@ -1370,8 +1370,8 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
-                        <field name="product_uos" groups="product.product_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos" colspan="4"/>
+                        <field name="product_uos" groups="product.group_uos" colspan="4"/>
                     </group>
 
                     <group colspan="2" col="2">
