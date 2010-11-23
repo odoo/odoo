@@ -53,11 +53,23 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
+        'product_id': fields.many2one('product.product','Product'),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
         'resource_type': 'material',
      }
+
+    def on_change_product_cost(self, cr, uid, ids, product_id, context=None):
+        if context is None:
+            context = {}
+        res = {'value':{}}
+
+        if product_id:
+            cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            res = {'value' : {'costs_hour' :cost.standard_price }}
+        return res
+
 mrp_workcenter()
 
 
@@ -737,7 +749,10 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'code': wc.code
+                        'ref': wc.code,
+                        'product_id': wc.product_id.id,
+                        'unit_amount': wc.costs_hour * wc.time_cycle,
+                        'product_uom_id': wc.product_id.uom_id.id
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -750,7 +765,10 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'code': wc.code,
+                        'ref': wc.code,
+                        'product_id': wc.product_id.id,
+                        'unit_amount': wc.costs_hour * wc.time_cycle,
+                        'product_uom_id': wc.product_id.uom_id.id
                     } )
         return amount
 

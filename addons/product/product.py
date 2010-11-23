@@ -327,7 +327,8 @@ class product_template(osv.osv):
         return True
 
     _constraints = [
-        (_check_uos, 'Error: UOS must be in a different category than the UOM', ['uos_id']),
+         # As Per do changes given by lp bug : 543979
+#        (_check_uos, 'Error: UOS must be in a different category than the UOM', ['uos_id']),
         (_check_uom, 'Error: The default UOM and the purchase UOM must be in the same category.', ['uom_id']),
     ]
 
