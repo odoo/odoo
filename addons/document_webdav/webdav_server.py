@@ -471,8 +471,37 @@ def init_well_known():
         if http_server.reg_http_service(HTTPDir('/.well-known', RedirectHTTPHandler)):
             logging.getLogger("web-services").info("Registered HTTP redirect handler at /.well-known" )
 
-
 init_well_known()
+
+class PrincipalsRedirect(RedirectHTTPHandler):
+    redirect_paths = {}
+    
+    def _find_redirect(self):
+        for b, r in self.redirect_paths.items():
+            if self.path.startswith(b):
+                return r + self.path[len(b):]
+        return False
+
+def init_principals_redirect():
+    """ Some devices like the iPhone will look under /principals/users/xxx for 
+    the user's properties. In OpenERP we _cannot_ have a stray /principals/...
+    working path, since we have a database path and the /webdav/ component. So,
+    the best solution is to redirect the url with 301. Luckily, it does work in
+    the device. The trick is that we need to hard-code the database to use, either
+    the one centrally defined in the config, or a "forced" one in the webdav
+    section.
+    """
+    dbname = config.get_misc('webdav', 'principal_dbname', False)
+    if (not dbname) and not config.get_misc('webdav', 'no_principals_redirect', False):
+        dbname = config.get('db_name', False)
+    if dbname:
+        PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
+        reg_http_service(HTTPDir('/principals', PrincipalsRedirect))
+        logging.getLogger("web-services").info(
+                "Registered HTTP redirect handler for /principals to the %s db.",
+                dbname)
+
+init_principals_redirect()
 
 #eof
 
