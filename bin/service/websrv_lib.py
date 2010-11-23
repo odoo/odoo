@@ -191,6 +191,12 @@ class HttpOptions:
 
         self.send_response(200)
         self.send_header("Content-Length", 0)
+        if 'Microsoft' in self.headers.get('User-Agent', ''):
+            self.send_header('MS-Author-Via', 'DAV') 
+            # Microsoft's webdav lib ass-umes that the server would
+            # be a FrontPage(tm) one, unless we send a non-standard
+            # header that we are not an elephant.
+            # http://www.ibm.com/developerworks/rational/library/2089.html
 
         for key, value in opts.items():
             if isinstance(value, basestring):
