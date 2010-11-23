@@ -67,7 +67,7 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
     _send_traceback_header = False
     i = 0
 
-    def __init__(self, addr, requestHandler,
+    def __init__(self, addr, requestHandler, proto='http',
                  logRequests=True, allow_none=False, encoding=None, bind_and_activate=True):
         self.logRequests = logRequests
 
@@ -75,6 +75,7 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
         HTTPServer.__init__(self, addr, requestHandler)
         
         self.numThreads = 0
+        self.proto = proto
         self.__threadno = 0
 
         # [Bug #1222790] If possible, set close-on-exec flag; if a
@@ -143,7 +144,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
         self.__interface = interface
 
         try:
-            self.server = ThreadedHTTPServer((interface, port), handler)
+            self.server = ThreadedHTTPServer((interface, port), handler, proto=self._RealProto)
             self.server.vdirs = []
             self.server.logRequests = True
             self.server.timeout = self._busywait_timeout
@@ -178,7 +179,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
     def stats(self):
         res = "%sd: " % self._RealProto + ((self.running and "running") or  "stopped")
         if self.server:
-	    res += ", %d threads" % (self.server.numThreads,)
+            res += ", %d threads" % (self.server.numThreads,)
         return res
 
     def append_svc(self, service):
