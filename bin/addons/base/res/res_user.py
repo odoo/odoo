@@ -315,9 +315,9 @@ class users(osv.osv):
         return result
 
     _defaults = {
-        'password' : lambda *a : '',
-        'context_lang': lambda *args: 'en_US',
-        'active' : lambda *a: True,
+        'password' : '',
+        'context_lang': 'en_US',
+        'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
@@ -405,16 +405,12 @@ class users(osv.osv):
         if not password:
             return False
         cr = pooler.get_db(db).cursor()
-        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
-        res = cr.fetchone()
-        result = False
         try:
-            cr.execute('SELECT id FROM res_users WHERE login=%s AND password=%s AND active',
+            cr.execute('UPDATE res_users SET date=now() WHERE login=%s AND password=%s AND active RETURNING id',
                     (tools.ustr(login), tools.ustr(password)))
             res = cr.fetchone()
+            cr.commit()
             if res:
-                cr.execute("UPDATE res_users SET date=%s WHERE id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
-                cr.commit()
                 return res[0]
             else:
                 return False
