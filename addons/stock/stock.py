@@ -586,8 +586,8 @@ class stock_picking(osv.osv):
             group by
                 picking_id""",(tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
-                res[pick]['min_date'] = dt1
-                res[pick]['max_date'] = dt2
+            res[pick]['min_date'] = dt1
+            res[pick]['max_date'] = dt2
         return res
 
     def create(self, cr, user, vals, context=None):
