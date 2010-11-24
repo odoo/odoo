@@ -35,7 +35,7 @@ class res_widget_user(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users','User', select=1),
-        'widget_id': fields.many2one('res.widget','Widget',required=1),
+        'widget_id': fields.many2one('res.widget','Widget',required=True),
     }
 res_widget_user()
 
