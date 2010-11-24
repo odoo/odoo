@@ -48,7 +48,6 @@ module named account_voucher.
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
-        'account_wizard.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
