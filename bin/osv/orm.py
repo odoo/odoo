@@ -2242,7 +2242,7 @@ class orm(orm_template):
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
-        group_by = groupby
+        group_count = group_by = groupby
         if groupby:
             if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
@@ -2272,7 +2272,9 @@ class orm(orm_template):
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-        cr.execute('SELECT min(%s.id) AS id,' % self._table + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
+            group_count = '_'
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS  %s_count, ' % (self._table, self._table, group_count) + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
