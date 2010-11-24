@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:49+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:49+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:56+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,11 @@ msgstr ""
 #. module: project_caldav
 #: field:project.task,base_calendar_url:0
 msgid "Caldav URL"
+msgstr ""
+
+#. module: project_caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
 msgstr ""
 
 #. module: project_caldav
@@ -168,6 +173,11 @@ msgid "Sun"
 msgstr ""
 
 #. module: project_caldav
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr ""
@@ -185,6 +195,11 @@ msgstr ""
 #. module: project_caldav
 #: selection:project.task,freq:0
 msgid "Weeks"
+msgstr ""
+
+#. module: project_caldav
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: project_caldav
@@ -245,6 +260,12 @@ msgstr ""
 #. module: project_caldav
 #: selection:project.task,byday:0
 msgid "First"
+msgstr ""
+
+#. module: project_caldav
+#: code:addons/project_caldav/project_caldav.py:0
+#, python-format
+msgid "Tasks"
 msgstr ""
 
 #. module: project_caldav
@@ -395,6 +416,11 @@ msgstr ""
 #. module: project_caldav
 #: view:project.task:0
 msgid "of"
+msgstr ""
+
+#. module: project_caldav
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: project_caldav

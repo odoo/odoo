@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 13:30+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 07:40+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -219,6 +219,11 @@ msgid "PCE"
 msgstr "шт."
 
 #. module: product
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#. module: product
 #: view:product.template:0
 msgid "Miscelleanous"
 msgstr "Разное"
@@ -365,16 +370,6 @@ msgid "Quantity by Package"
 msgstr "Количество по пакету"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"Could not resolve product category, ' \\n                                    "
-"'you have defined cyclic categories ' \\n                                    "
-"'of products!"
-msgstr ""
-"Не удается определить категорию ТМЦ, '\\n' вы зациклили категории ' \\n 'ТМЦ!"
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,state:0
@@ -410,6 +405,11 @@ msgstr "Количество-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "ИТ компоненты"
+
+#. module: product
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Название группы должно быть уникальным !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -519,6 +519,14 @@ msgstr "Время работы"
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr "Металлические зажимы"
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"No active version for the selected pricelist !\n"
+"Please create or activate one."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -689,6 +697,11 @@ msgstr "Поставщики"
 #: view:product.product:0
 msgid "To Purchase"
 msgstr "Для закупки"
+
+#. module: product
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Материнская плата ASUStek A7N8X"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -935,6 +948,16 @@ msgstr ""
 "закупку."
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A pricelist contains rules to be evaluated in order to compute the purchase "
+"or sale price for all the partners assigned to a pricelist. Pricelists have "
+"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
+"version has several rules. Example: the customer price of this category of "
+"product will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
 msgstr "Складируемая продукция"
@@ -963,6 +986,15 @@ msgstr "Единица поставки"
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
 msgstr "Информация партнера"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. They can be raw "
+"materials, stockable products, consumables or services. The Product form "
+"contains a detailed information of your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -997,6 +1029,11 @@ msgid "Price List Items"
 msgstr "Элементы каталога"
 
 #. module: product
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr "Закладка для этого меню уже существует !"
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Больший чем ед. изм. ссылки"
@@ -1022,9 +1059,12 @@ msgid "Price Surcharge"
 msgstr "Надбавка к цене"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Материнская плата ASUStek A7N8X"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate to be used between the several Unit of "
+"Measure within the same category."
+msgstr ""
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1043,16 +1083,6 @@ msgstr "Логистические единицы"
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Название"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"' \\n                                'Please create or activate one."
-msgstr ""
-"Нет активной версии для выбранного каталога!\n"
-"' \\n 'Пожалуйста, создайте или активируйте каталог."
 
 #. module: product
 #: view:product.product:0
@@ -1215,6 +1245,11 @@ msgid "Partners"
 msgstr "Партнеры"
 
 #. module: product
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Название модуля должно быть уникальным !"
+
+#. module: product
 #: help:product.template,sale_delay:0
 msgid ""
 "This is the average delay in days between the confirmation of the customer "
@@ -1223,6 +1258,15 @@ msgid ""
 msgstr ""
 "Это средняя задержка в днях между подтверждением заказа и доставкой готовой "
 "продукции. Это срок, который вы обещаете вашему партнеру."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measures are in the same category, they can "
+"be converted within each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1307,6 +1351,14 @@ msgstr "Стеллаж"
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
 msgstr "Единицы измерения при закупке"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click on "
+"a category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1424,6 +1476,12 @@ msgid "Variant Price Margin"
 msgstr "Маржа цены варианта"
 
 #. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
+"Коэффициент преобразования для единиц измерения не может быть нулевым !"
+
+#. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
 msgstr "Штрих-код EAN упаковки"
@@ -1472,10 +1530,24 @@ msgid "Unit Price"
 msgstr "Цена за ед."
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains a detailed "
+"information on your  products related to procurement logistics, sales price, "
+"product category, suppliers and so on."
+msgstr ""
+
+#. module: product
 #: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
 msgstr "Вмешательство на месте"
+
+#. module: product
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -1579,6 +1651,11 @@ msgstr "Единица измерения по умолчанию"
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
 msgstr "Среднеразмерный ATX корпус"
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "Штрих-код"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1833,6 +1910,13 @@ msgid "Box"
 msgstr "Коробка"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
 msgid "Rear Panel SHE200"
 msgstr "Задняя панель SHE200"
@@ -2049,6 +2133,11 @@ msgid "RAM on demand"
 msgstr "ОЗУ по требованию"
 
 #. module: product
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "Свойства продажи"
@@ -2090,8 +2179,11 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"Could not resolve product category, you have defined cyclic categories of "
+"products!"
 msgstr ""
 
 #. module: product
@@ -2159,6 +2251,11 @@ msgid "Palletization"
 msgstr "Укладка на паллеты"
 
 #. module: product
+#: sql_constraint:decimal.precision:0
+msgid "Only one value can be defined for each given usage!"
+msgstr ""
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Конец жизненного цикла"
@@ -2216,6 +2313,14 @@ msgstr "Скидка с цены"
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Объём в метрах куб."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. If you need to create new "
+"versions of a pricelist, you can do it and manage them from here. Some "
+"examples of versions: 2010, 2011, Promotion of February 2010, etc."
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
@@ -2345,3 +2450,19 @@ msgstr ""
 
 #~ msgid "Create new Product"
 #~ msgstr "Создать ТМЦ"
+
+#, python-format
+#~ msgid ""
+#~ "Could not resolve product category, ' \\n                                    "
+#~ "'you have defined cyclic categories ' \\n                                    "
+#~ "'of products!"
+#~ msgstr ""
+#~ "Не удается определить категорию ТМЦ, '\\n' вы зациклили категории ' \\n 'ТМЦ!"
+
+#, python-format
+#~ msgid ""
+#~ "No active version for the selected pricelist !\n"
+#~ "' \\n                                'Please create or activate one."
+#~ msgstr ""
+#~ "Нет активной версии для выбранного каталога!\n"
+#~ "' \\n 'Пожалуйста, создайте или активируйте каталог."
