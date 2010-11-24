@@ -252,6 +252,8 @@ class split_in_production_lot(osv.osv_memory):
                     }
                     if quantity_rest > 0:
                         current_move = move_obj.copy(cr, uid, move.id, default_val, context=context)
+                        if inventory_id and current_move:
+                            inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, current_move)]}, context=context)
                         new_move.append(current_move)
 
                     if quantity_rest == 0:
@@ -273,10 +275,6 @@ class split_in_production_lot(osv.osv_memory):
                         update_val['product_uos_qty'] = uos_qty_rest
                         update_val['state'] = move.state
                         move_obj.write(cr, uid, [move.id], update_val)
-
-        if inventory_id and new_move:
-            for m_id in new_move:
-                inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, m_id)]}, context=context)
 
         return new_move
 
