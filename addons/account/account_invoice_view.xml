@@ -149,7 +149,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier Invoice">
                     <group col="8" colspan="4">
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=', 'purchase')]"/>
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" width="50"/>

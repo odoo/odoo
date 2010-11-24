@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,26 +26,26 @@ from tools.translate import _
 
 
 class purchase_line_invoice(osv.osv_memory):
-    
+
     """ To create invoice for purchase order line"""
-    
+
     _name = 'purchase.order.line_invoice'
     _description = 'Purchase Order Line Make Invoice'
-    
+
     def makeInvoices(self, cr, uid, ids, context=None):
-        
-        """ 
+
+        """
              To get Purchase Order line and create Invoice
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
+             @param context: A standard dictionary
              @return : retrun view of Invoice
         """
-        
+
         if context is None:
             context={}
-                            
+
         record_ids =  context.get('active_ids',[])
         if record_ids:
             res = False
@@ -55,28 +55,28 @@ class purchase_line_invoice(osv.osv_memory):
             property_obj=self.pool.get('ir.property')
             account_fiscal_obj=self.pool.get('account.fiscal.position')
             invoice_line_obj=self.pool.get('account.invoice.line')
-            
-            
+            account_jrnl_obj=self.pool.get('account.journal')
+
             def multiple_order_invoice_name(orders):
                 name = "PO";
                 for order in orders:
                     name += "-%d" % order.id
                 return name
-                
+
             def multiple_order_invoice_reference(partner, orders):
                 reference = "P%dPO" % partner.id
-                for order in orders: 
+                for order in orders:
                     reference += "-%d" % order.id
                 return reference
-                
+
             def multiple_order_invoice_notes(orders):
                 notes = ""
                 for order in orders:
                     notes += "%s \n" % order.notes
                 return notes
-                
-                
-                
+
+
+
             def make_invoice_by_partner(partner, orders, lines_ids):
                 """
                     create a new invoice for one supplier
@@ -84,23 +84,24 @@ class purchase_line_invoice(osv.osv_memory):
                     @param orders : The set of orders to add in the invoice
                     @param lines : The list of line's id
                 """
-             
+                journal_id_get = account_jrnl_obj.search(cr,uid,[('type','=','purchase')],context=None)[0]
                 a = partner.property_account_payable.id
                 if partner and partner.property_payment_term.id:
                     pay_term = partner.property_payment_term.id
                 else:
                     pay_term = False
                 inv = {
-                    'name': multiple_order_invoice_name(orders),  
-                    'origin': multiple_order_invoice_name(orders),  
+                    'name': multiple_order_invoice_name(orders),
+                    'origin': multiple_order_invoice_name(orders),
                     'type': 'in_invoice',
+                    'journal_id':journal_id_get,
                     'reference': multiple_order_invoice_reference(partner, orders),
                     'account_id': a,
                     'partner_id': partner.id,
                     'address_invoice_id': orders[0].partner_address_id.id,
                     'address_contact_id': orders[0].partner_address_id.id,
                     'invoice_line': [(6,0,lines_ids)],
-                    'currency_id' : orders[0].pricelist_id.currency_id.id, 
+                    'currency_id' : orders[0].pricelist_id.currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
                     'payment_term': pay_term,
                     'fiscal_position': partner.property_account_position.id
@@ -136,7 +137,7 @@ class purchase_line_invoice(osv.osv_memory):
                         'uos_id': line.product_uom.id,
                         'product_id': line.product_id.id or False,
                         'invoice_line_tax_id': [(6, 0, [x.id for x in line.taxes_id])],
-                        'note': line.notes, 
+                        'note': line.notes,
                         'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
                     })
                     cr.execute('insert into purchase_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
@@ -147,7 +148,7 @@ class purchase_line_invoice(osv.osv_memory):
             for result in invoices.values():
                 il = map(lambda x: x[1], result)
                 orders = list(set(map(lambda x : x[0].order_id, result)))
-               
+
                 res.append(make_invoice_by_partner(orders[0].partner_id, orders, il))
 
         return {
