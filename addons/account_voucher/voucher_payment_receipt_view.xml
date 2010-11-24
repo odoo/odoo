@@ -199,16 +199,18 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="writeoff_acc_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
                                            domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="writeoff_journal_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"/>
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
                                     <field name="comment"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"/>
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="analytic_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
@@ -324,16 +326,18 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="writeoff_acc_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
                                            domain="[('type','=','liquidity')]"/>
                                          <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="writeoff_journal_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"/>
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
                                     <field name="comment"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"/>
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="analytic_id"
-                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>

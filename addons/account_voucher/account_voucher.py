@@ -26,7 +26,6 @@ import netsvc
 from osv import fields
 from osv import osv
 from tools.translate import _
-import decimal_precision as dp
 
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
@@ -141,6 +140,20 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
+        if not ids: return {}
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            debit= credit = 0.0
+            if voucher.line_dr_ids:
+                for line in voucher.line_dr_ids:
+                    debit += line.amount_unreconciled
+            if voucher.line_cr_ids:
+                for line in voucher.line_cr_ids:
+                    credit += line.amount_unreconciled
+            res[voucher.id] = abs(voucher.amount - abs(credit - debit))
+        return res
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _order = "date desc, id desc"
@@ -192,13 +205,14 @@ class account_voucher(osv.osv):
         'pre_line':fields.boolean('Previous Payments ?', required=False),
         'date_due': fields.date('Due Date', readonly=True, states={'draft':[('readonly',False)]}),
         'payment_option':fields.selection([
-                                           ('not_reconcile', 'Without Write-off'),
-                                           ('close_balance', 'With Write-off'),
+                                           ('without_writeoff', 'Without Write-off'),
+                                           ('with_writeoff', 'With Write-off'),
                                            ], 'Payment Option', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_acc_id': fields.many2one('account.account', 'Write-Off account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_journal_id': fields.many2one('account.journal', 'Write-Off journal', readonly=True, states={'draft': [('readonly', False)]}),
         'comment': fields.char('Comment', size=64, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
+        'writeoff_amount': fields.function(_get_writeoff_amount, method=True, string='Writeoff Amount', type='float', readonly=True),
     }
     _defaults = {
         'period_id': _get_period,
@@ -214,7 +228,7 @@ class account_voucher(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
         'tax_id': _get_tax,
-        'payment_option': 'not_reconcile',
+        'payment_option': 'without_writeoff',
         'comment': 'Write-Off',
     }
 
@@ -734,7 +748,7 @@ class account_voucher(osv.osv):
                 move_line_pool.create(cr, uid, move_line)
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
-                    if inv.payment_option == 'close_balance':
+                    if inv.payment_option == 'with_writeoff':
                         writeoff_account_id = inv.writeoff_acc_id.id
                         writeoff_journal_id = inv.writeoff_journal_id.id
                         comment = inv.comment
