@@ -69,11 +69,11 @@ class stock_picking(osv.osv):
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
-            from_uom_id = move_line.product_id.uom_id.id
-            to_uom_id = move_line.product_id.uos_id and move_line.product_id.uos_id.id or False
+            uom_id = move_line.product_id.uom_id.id
+            uos_id = move_line.product_id.uos_id and move_line.product_id.uos_id.id or False
             price = move_line.sale_line_id.price_unit
             coeff = move_line.product_id.uos_coeff
-            if from_uom_id != to_uom_id  and coeff != 0:
+            if uom_id != uos_id  and coeff != 0:
                 price_unit = price / coeff
                 return price_unit
             return move_line.sale_line_id.price_unit
