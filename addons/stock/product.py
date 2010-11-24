@@ -280,8 +280,8 @@ class product_product(osv.osv):
         uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
         if uoms:
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
-        for o in uoms:
-            uoms_o[o.id] = o
+            for o in uoms:
+                uoms_o[o.id] = o
         #TOCHECK: before change uom of product, stock move line are in old uom.
         context.update({'raise-exception': False})
         for amount, prod_id, prod_uom in results:
