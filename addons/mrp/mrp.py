@@ -513,7 +513,7 @@ class mrp_production(osv.osv):
                             (res.id, move.id))
 #                move_ids.append(res.id)
             vals= {'state':'confirmed'}
-            new_moves = [x.id for x in production.move_created_ids]
+            new_moves = [x.id for x in production.move_created_ids if x.state not in ['done','cancel']]
             self.pool.get('stock.move').write(cr, uid, new_moves, vals)
             if not production.date_finnished:
                 self.write(cr, uid, [production.id],

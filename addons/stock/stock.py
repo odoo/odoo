@@ -1342,6 +1342,7 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         track_flag = False
+        move_ids = []
         for move in self.browse(cr, uid, ids):
             if move.move_dest_id.id and (move.state != 'done'):
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
@@ -1359,6 +1360,9 @@ class stock_move(osv.osv):
             #
             # Accounting Entries
             #
+            if move.state in ['done','cancel']:
+                continue
+            move_ids.append(move.id)
             acc_src = None
             acc_dest = None
             if move.location_id.account_id:
@@ -1440,10 +1444,11 @@ class stock_move(osv.osv):
                         'line_id': lines,
                         'ref': ref,
                     })
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+        if move_ids:
+            self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
+            wf_service = netsvc.LocalService("workflow")
+            for id in move_ids:
+                wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
