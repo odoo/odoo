@@ -524,20 +524,15 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
         for record in self.read(cr, uid, ids, ['users'], context=context):
             if record['users']:
                 group_users.extend(record['users'])
-        
+
         if group_users:
-            group_names = []
-            try:
-                for rec in self.pool.get('res.users').read(cr, uid, group_users, ['name'], context=context):
-                    group_names.append(rec['name'])
-                if len(group_names) >=5:
-                    group_names = group_names[:5]
-                    group_names += '...'
-            except Exception:
-                raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            if len(user_names) >= 5:
+                user_names = user_names[:5]
+                user_names += '...'
             raise osv.except_osv(_('Warning !'), 
-                        _('Group(s) cannot be deleted, because user(s) %s participate in them!') % \
-                            ', '.join(group_names))
+                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
+                            ', '.join(user_names))
         return super(groups2, self).unlink(cr, uid, ids, context=context)
 
 groups2()
