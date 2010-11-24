@@ -490,6 +490,19 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
+    def procurement_draft(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        procurement_obj = self.pool.get('procurement.order')
+        for data in self.browse(cr, uid, ids, context=context):
+            procurement_id = []
+            result[data.id] = procurement_id
+
+            procurement_ids = procurement_obj.search(cr, uid , [('state','=','draft'),('product_id','=',data.product_id.id),('location_id','=',data.location_id.id)])
+            result[data.id] = procurement_ids
+        return result
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
@@ -508,6 +521,8 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'procurement_data_id': fields.function(procurement_draft, method=True, type='many2many', relation="procurement.order", \
+                                string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {
         'active': lambda *a: 1,

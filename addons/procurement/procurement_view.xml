@@ -4,7 +4,7 @@
 		<!--
         Procurement
         -->
-		
+
 
         <record id="procurement_tree_view" model="ir.ui.view">
             <field name="name">procurement.order.tree</field>
@@ -145,7 +145,7 @@
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="help">Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sale Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the products configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, or ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message)</field>
         </record>
-        
+
         <record id="procurement_action5" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
@@ -224,6 +224,10 @@
                         <field name="procurement_id" readonly="1"/>
                         <field name="active" />
                     </group>
+                    <group col="4" colspan="4" groups="base.group_extended">
+                        <separator string="Related Procurement Orders" colspan="4" />
+                        <field name="procurement_data_id" colspan="4" nolabel="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -238,11 +242,11 @@
             <field name="help">You can define your minimum stock rules, so that OpenERP will trigger automatically the propositions of manufacturing or purchase orders according to the stock level. Once the virtual stock of a product (=stock on hand minus all confirmed orders and reservations) is bellow the minimum quantity, OpenERP will generate a procurement request in order to fullfil the stock up to the maximum quantity.</field>
         </record>
 
-        <act_window 
+        <act_window
         context="{'search_default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules" 
-        res_model="stock.warehouse.orderpoint" 
+        name="Minimum Stock Rules"
+        res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"/>
 
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
