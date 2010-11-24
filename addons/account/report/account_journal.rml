@@ -183,9 +183,7 @@
   <images/>
   <story>
     <para style="Table Contents">[[ repeatIn(objects, 'o') ]]</para>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
+
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -193,11 +191,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
-
-    <para style="P9">
+       <para style="P9">
       <font color="white"> </font>
     </para>
       <blockTable colWidths="85.0,80.0,80.0,120.0,70.0,100.0" style="Table2">
@@ -246,13 +240,13 @@
      <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="40.0,65.0,50.0,62.0,152.0,60.0,60.0,60.0" style="Table1" repeatRows="1">[[  display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="45.0,65.0,50.0,50.0,100.0,80.0,80.0,80.0" style="Table1" repeatRows="1">[[  display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="P10a">Date</para></td>
         <td><para style="P10">Entry No</para></td>
         <td><para style="P10">A/c No.</para></td>
         <td><para style="P10a">Partner</para></td>
-        <td><para style="P10a">Move/Entry label</para></td>
+        <td><para style="P10a">Move/Entry Label</para></td>
         <td><para style="P10b">Debit</para></td>
         <td><para style="P10b">Credit</para></td>
         <td><para style="P10b">Balance</para></td>
@@ -280,14 +274,13 @@
       </tr>
     </blockTable>
 
-
-    <blockTable colWidths="50.0,65.0,50.0,60.0,69.0,60.0,60.0,60.0,50.0" style="Table1" repeatRows="1">[[ display_currency(data)  or removeParentNode('blockTable') ]]
+    <blockTable colWidths="45.0,55.0,50.0,50.0,65.0,62.5,62.5,80.0,80.0" style="Table1" repeatRows="1">[[ display_currency(data)  or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="P10a">Date</para></td>
         <td><para style="P10">Entry No</para></td>
         <td><para style="P10">A/c No.</para></td>
         <td><para style="P10a">Partner</para></td>
-        <td><para style="P10a">Move/Entry label</para></td>
+        <td><para style="P10a">Move/Entry Label</para></td>
         <td><para style="P10b">Debit</para></td>
         <td><para style="P10b">Credit</para></td>
    		<td><para style="P10b">Balance</para></td>
@@ -314,7 +307,6 @@
         <td><para style="P8">[[ formatLang(line.credit) ]]</para></td>
         <td><para style="P8">[[ formatLang(line.credit - line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
 		<td><para style="P8">[[ line.currency_id  and formatLang(line.amount_currency) or '' ]] [[ line.currency_id.symbol or '']]</para></td>
-
       </tr>
     </blockTable>
   </story>
