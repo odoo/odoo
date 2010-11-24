@@ -166,7 +166,7 @@ class GettextAlias(object):
                         cr = pooler.get_db(dbs[0]).cursor()
                         is_new_cr = True
         return cr, is_new_cr
-    
+
     def _get_lang(self, frame):
         lang = frame.f_locals.get('context', {}).get('lang', False)
         if not lang:
@@ -178,7 +178,7 @@ class GettextAlias(object):
                 c = getattr(s, 'localcontext', {})
                 lang = c.get('lang', False)
         return lang
-    
+
     def __call__(self, source):
         is_new_cr = False
         res = source
@@ -464,6 +464,8 @@ def trans_parse_view(de):
         res.append(de.get('string').encode("utf8"))
     if de.get("sum"):
         res.append(de.get('sum').encode("utf8"))
+    if de.get("confirm"):
+        res.append(de.get('confirm').encode("utf8"))
     for n in de:
         res.extend(trans_parse_view(n))
     return res
