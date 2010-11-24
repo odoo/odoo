@@ -342,7 +342,7 @@
 
         <record id="sales_journal" model="account.journal">
             <field name="name">Sales Journal - (test)</field>
-            <field name="code">SAJ - (test)</field>
+            <field name="code">SAJT</field>
             <field name="type">sale</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
@@ -353,7 +353,7 @@
         </record>
         <record id="refund_sales_journal" model="account.journal">
             <field name="name">Sales Credit Note Journal - (test)</field>
-            <field name="code">SCNJ - (test)</field>
+            <field name="code">SCNT</field>
             <field name="type">sale_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
@@ -366,7 +366,7 @@
 
         <record id="expenses_journal" model="account.journal">
             <field name="name">Expenses Journal - (test)</field>
-            <field name="code">EXJ - (test)</field>
+            <field name="code">EXJT</field>
             <field name="type">purchase</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
@@ -377,7 +377,7 @@
         </record>
         <record id="refund_expenses_journal" model="account.journal">
             <field name="name">Expenses Credit Notes Journal - (test)</field>
-            <field name="code">ECNJ - (test)</field>
+            <field name="code">ECNT</field>
             <field name="type">purchase_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
@@ -390,7 +390,7 @@
 
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank Journal - (test)</field>
-            <field name="code">BNK - (test)</field>
+            <field name="code">BNKT</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_bank_journal"/>
@@ -401,7 +401,7 @@
         </record>
         <record id="check_journal" model="account.journal">
             <field name="name">Checks Journal - (test)</field>
-            <field name="code">CHK - (test)</field>
+            <field name="code">CHKT</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_check_journal"/>
@@ -412,7 +412,7 @@
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash Journal - (test)</field>
-            <field name="code">CSH - (test)</field>
+            <field name="code">CSHT</field>
             <field name="type">cash</field>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_cash_journal"/>
