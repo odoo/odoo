@@ -196,10 +196,27 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                  <field name="date" select="1" on_change="onchange_date(date)"/>
+                                  <field name="currency_id" invisible="True"/>
+                                  <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -304,10 +321,27 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')], 'required':[('payment_option','=','close_balance')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','close_balance')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                    <field name="date" select="1" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" invisible="True"/>
+                                    <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
