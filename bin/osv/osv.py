@@ -62,18 +62,14 @@ class osv_pool(netsvc.Service):
                 if not kwargs:
                     if args and isinstance(args[-1], dict):
                         ctx = args[-1]
-                    else:
-                        ctx = {}
                 elif isinstance(kwargs, dict):
                     ctx = kwargs.get('context', {})
-                else:
-                    ctx = {}
 
                 uid = 1
                 if args and isinstance(args[0], (long, int)):
                     uid = args[0]
 
-                lang = ctx and ctx.get('lang', False)
+                lang = ctx and ctx.get('lang')
                 if not (lang or hasattr(src, '__call__')):
                     return src
 
@@ -105,7 +101,6 @@ class osv_pool(netsvc.Service):
 
                 try:
                     cr = pooler.get_db_only(dbname).cursor()
-                    #return trans_obj._get_source( name=?)
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:
