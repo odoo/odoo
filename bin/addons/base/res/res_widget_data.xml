@@ -38,5 +38,8 @@ new TWTR.Widget({
 }).render().setUser('openerp').start();
 </script>]]> </field>
     </record>
+    <record id="openerp_favorites" model="res.widget.user">
+        <field name="widget_id" ref="openerp_twitter_favorites"/>
+    </record>
   </data>
 </openerp>
