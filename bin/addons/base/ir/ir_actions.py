@@ -610,7 +610,7 @@ class actions_server(osv.osv):
                 body = self.merge_message(cr, uid, action.message, action, context)
 
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
-                    logger.info('Email successfully send to: %s', address)
+                    logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)
 
