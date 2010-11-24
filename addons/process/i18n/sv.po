@@ -6,16 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-22 10:19:32+0000\n"
-"PO-Revision-Date: 2010-11-22 10:19:32+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 20:09+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:00+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
+#: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
@@ -23,8 +25,10 @@ msgstr "Process Node"
 
 #. module: process
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: process
 #: constraint:ir.actions.act_window:0
@@ -32,23 +36,38 @@ msgid "Invalid model name in the action definition."
 msgstr "Invalid model name in the action definition."
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Roles from Workflow"
-msgstr "Roles from Workflow"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Related Menu"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "Help URL"
+
+#. module: process
+#: help:process.process,active:0
+msgid ""
+"If the active field is set to true, it will allow you to hide the process "
+"without removing it."
+msgstr ""
+
+#. module: process
 #: field:process.transition,action_ids:0
 msgid "Buttons"
 msgstr "Buttons"
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Group By..."
+msgstr ""
 
 #. module: process
 #: selection:process.node,kind:0
@@ -57,19 +76,16 @@ msgstr "State"
 
 #. module: process
 #: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Details"
-msgstr "Details"
+msgid "Kind Of Node"
+msgstr ""
 
 #. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "Help URL"
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.model,name:process.model_process_node
 #: model:ir.ui.menu,name:process.menu_process_node_form
 #: view:process.node:0
 #: view:process.process:0
@@ -88,6 +104,11 @@ msgstr "Nodes"
 #: view:process.process:0
 msgid "Conditions"
 msgstr "Conditions"
+
+#. module: process
+#: view:process.transition:0
+msgid "Search Process Transition"
+msgstr ""
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -111,7 +132,9 @@ msgstr "Process Transitions Actions"
 
 #. module: process
 #: field:process.condition,model_id:0
+#: view:process.node:0
 #: field:process.node,model_id:0
+#: view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Object"
@@ -122,9 +145,15 @@ msgid "Source Node"
 msgstr "Source Node"
 
 #. module: process
+#: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "Workflow Transitions"
+
+#. module: process
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: process
 #: field:process.transition.action,action:0
@@ -132,14 +161,13 @@ msgid "Action ID"
 msgstr "Action ID"
 
 #. module: process
+#: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
 msgstr "Process Transition"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
-#: view:process.node:0
-#: view:process.process:0
 msgid "Condition"
 msgstr "Condition"
 
@@ -163,41 +191,28 @@ msgid "Name"
 msgstr "Name"
 
 #. module: process
-#: field:process.transition,role_ids:0
-msgid "Roles"
-msgstr "Roles"
-
-#. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
 msgstr "Starting Transitions"
 
 #. module: process
+#: view:process.node:0
 #: field:process.node,note:0
+#: view:process.process:0
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
 msgstr "Notes"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
 msgstr "Transition"
 
 #. module: process
-#: view:process.node:0
 #: view:process.process:0
-#: view:process.transition:0
-msgid "Roles Required"
-msgstr "Roles Required"
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-msgid "Extra Information"
-msgstr "Extra Information"
+msgid "Search Process"
+msgstr ""
 
 #. module: process
 #: selection:process.node,kind:0
@@ -209,6 +224,21 @@ msgstr "Subflow"
 #: field:process.process,active:0
 msgid "Active"
 msgstr "Active"
+
+#. module: process
+#: view:process.transition:0
+msgid "Associated Groups"
+msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Related Menu"
+
+#. module: process
+#: field:process.node,model_states:0
+msgid "States Expression"
+msgstr "States Expression"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -226,6 +256,17 @@ msgid "Expression"
 msgstr "Expression"
 
 #. module: process
+#: field:process.transition,group_ids:0
+msgid "Required Groups"
+msgstr ""
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Incoming Transitions"
+msgstr ""
+
+#. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
 msgstr "Type"
@@ -236,34 +277,42 @@ msgid "Ending Transitions"
 msgstr "Ending Transitions"
 
 #. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.model,name:process.model_process_process
-#: model:ir.ui.menu,name:process.menu_process_form
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
 msgstr "Process"
 
 #. module: process
-#: model:ir.module.module,shortdesc:process.module_meta_information
-msgid "Enterprise Process"
-msgstr "Enterprise Process"
+#: view:process.node:0
+msgid "Search ProcessNode"
+msgstr ""
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
+msgid "Other Conditions"
+msgstr ""
+
+#. module: process
+#: model:ir.module.module,shortdesc:process.module_meta_information
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Process"
+msgstr "Enterprise Process"
+
+#. module: process
 #: view:process.transition:0
 msgid "Actions"
 msgstr "Actions"
 
 #. module: process
-#: field:process.node,model_states:0
-msgid "States Expression"
-msgstr "States Expression"
+#: view:process.node:0
+#: view:process.process:0
+msgid "Properties"
+msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
-#: model:ir.model,name:process.model_process_transition
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
 msgstr "Process Transitions"
@@ -285,11 +334,6 @@ msgid "Outgoing Transitions"
 msgstr "Outgoing Transitions"
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Processes"
-msgstr "Enterprise Processes"
-
-#. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Transitions"
@@ -300,3 +344,25 @@ msgstr "Transitions"
 msgid "Object Method"
 msgstr "Object Method"
 
+#. module: process
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#~ msgid "Roles from Workflow"
+#~ msgstr "Roles from Workflow"
+
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgid "Roles"
+#~ msgstr "Roles"
+
+#~ msgid "Roles Required"
+#~ msgstr "Roles Required"
+
+#~ msgid "Extra Information"
+#~ msgstr "Extra Information"
+
+#~ msgid "Enterprise Processes"
+#~ msgstr "Enterprise Processes"
