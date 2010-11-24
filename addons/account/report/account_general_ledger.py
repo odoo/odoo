@@ -90,15 +90,13 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         })
         self.context = context
 
-    def _ellipsis(self, orig_str, maxlen=100, ellipsis='...'):
-        maxlen = maxlen - len(ellipsis)
-        if maxlen <= 0:
-            maxlen = 1
-        new_str = orig_str[:maxlen]
-        return new_str
+    def _ellipsis(self, char, size=100, truncation_str='...'):
+        if len(char) <= size:
+            return char
+        return char[:size-len(truncation_str)] + truncation_str
 
     def _strip_name(self, name, maxlen=50):
-        return self._ellipsis(name, maxlen, ' ...')
+        return self._ellipsis(name, maxlen)
 
     def _sum_currency_amount_account(self, account):
         self.cr.execute('SELECT sum(l.amount_currency) AS tot_currency \
