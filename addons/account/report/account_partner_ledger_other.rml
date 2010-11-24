@@ -379,40 +379,40 @@
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]]</para>
-          <blockTable colWidths="58.0,58.0" style="Table7">
+          <blockTable colWidths="58.0,58.0" style="Table7">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
-                <para style="terp_tblheader_General_Centre">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]] Start Date</para>
+                <para style="terp_tblheader_General_Centre">Start Date</para>
               </td>
               <td>
                 <para style="terp_tblheader_General_Centre">End Date</para>
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table9">
+          <blockTable colWidths="58.0,58.0" style="Table9">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
-                <para style="terp_default_Centre_8">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]] [[ formatLang(get_start_date(data),date=True) ]]</para>
+                <para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para>
               </td>
               <td>
                 <para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para>
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table10">
+          <blockTable colWidths="58.0,58.0" style="Table10">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
             <tr>
               <td>
-                <para style="terp_tblheader_General_Centre">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]] Start Period</para>
+                <para style="terp_tblheader_General_Centre">Start Period</para>
               </td>
               <td>
                 <para style="terp_tblheader_General_Centre">End Period</para>
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table11">
+          <blockTable colWidths="58.0,58.0" style="Table11">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
             <tr>
               <td>
-                <para style="terp_default_Centre_8">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]] [[ get_start_period(data) or removeParentNode('para') ]]</para>
+                <para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para>
               </td>
               <td>
                 <para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para>
