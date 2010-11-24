@@ -110,6 +110,7 @@ class stock_location(osv.osv):
         @param field_names: Name of field
         @return: Dictionary of values
         """
+        prod_id = context and context.get('product_id', False)
 
         product_product_obj = self.pool.get('product.product')
 
@@ -125,6 +126,8 @@ class stock_location(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
         currency_obj.round(cr, uid, currency, 300)
         for loc_id, product_ids in products_by_location.items():
+            if prod_id:
+                product_ids = [prod_id]
             c = (context or {}).copy()
             c['location'] = loc_id
             for prod in product_product_obj.browse(cr, uid, product_ids, context=c):
