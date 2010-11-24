@@ -32,7 +32,7 @@ class account_sequence_installer(osv.osv_memory):
     def _get_internal_sequence(self, cr, uid, context):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj.get_object_reference(cr, uid, 'account_sequence', 'internal_sequence_journal')
-        res = result[1] or False
+        res = result and result[1] or False
         return res
             
      
@@ -46,8 +46,7 @@ class account_sequence_installer(osv.osv_memory):
         for line in self.browse(cr, uid, ids):
             for journal in jou_obj.browse(cr, uid, journal_ids):
                 if not journal.internal_sequence:
-                    seq_id = obj_sequence.search(cr, uid, [('name', '=', line.internal_sequence.name)])
-                    for seq in obj_sequence.browse(cr, uid, seq_id):
+                    for seq in obj_sequence.browse(cr, uid, [line.internal_sequence.id]):
                         if seq.id:
                             jou_obj.write(cr, uid, [journal.id], {'internal_sequence': seq.id})
         return res
