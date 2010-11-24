@@ -43,14 +43,15 @@ class res_widget_wizard(osv.osv_memory):
     _name = "res.widget.wizard"
     _description = "Add a widget for User"
     _columns = {
-        'widget_id': fields.many2one("res.widget", 'Widget', required=1),
+        'widget_id': fields.many2many("res.widget", "res_widget_user_rel", "uid", "wid", "Widget"),
     }
     
     def res_widget_add(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         wizard = self.read(cr, uid, ids)[0]
-        self.pool.get('res.widget.user').create(cr, uid, {'user_id':uid, 'widget_id':wizard['widget_id']})
+        for wiz_id in wizard['widget_id']:
+            self.pool.get('res.widget.user').create(cr, uid, {'user_id':uid, 'widget_id':wiz_id})
         return {'type': 'ir.actions.act_window_close'}
 res_widget_wizard()
 
