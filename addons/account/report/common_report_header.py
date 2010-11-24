@@ -20,6 +20,7 @@
 ##############################################################################
 
 import pooler
+from tools.translate import _
 
 class common_report_header(object):
 

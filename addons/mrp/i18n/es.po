@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-19 09:22+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"PO-Revision-Date: 2010-11-22 23:42+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -188,6 +189,10 @@ msgid ""
 "They are attached to bills of materials that will define the required raw "
 "materials."
 msgstr ""
+"Las rutas de producción le permiten crear y gestionar las operaciones de "
+"fabricación que deben realizarse en los centros de producción para fabricar "
+"un producto. Están relacionadas con las listas de materiales que definen las "
+"materias primas necesarias."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -247,6 +252,8 @@ msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
 msgstr ""
+"Define los grupos específicos de propiedad que se pueden asignar a las "
+"propiedades de sus listas de materiales."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -353,7 +360,7 @@ msgstr "Junio"
 #. module: mrp
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr "¡El nombre del grupo debe de ser único!"
+msgstr "¡El nombre del grupo debe ser único!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -1532,7 +1539,7 @@ msgstr "Número venta"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Component Cost of "
-msgstr ""
+msgstr "Coste componente de "
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -1549,7 +1556,7 @@ msgstr "Cambio de precio estándar"
 #. module: mrp
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
-msgstr ""
+msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1585,6 +1592,7 @@ msgstr "Órdenes de producción a iniciar"
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
+"¡No se puede eliminar orden(es) de producción que están en estado %s!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -1663,7 +1671,7 @@ msgstr "UdM del producto"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Obtener para pedido"
+msgstr "Obtener bajo pedido"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
@@ -1949,6 +1957,8 @@ msgid ""
 "This reporting allows you to analyse your manufacturing activities and "
 "performance."
 msgstr ""
+"Estos informes le permiten analizar sus actividad productiva y su "
+"rendimiento."
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -2211,7 +2221,7 @@ msgstr "Producciones"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Work Cost of "
-msgstr ""
+msgstr "Coste trabajo de "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
