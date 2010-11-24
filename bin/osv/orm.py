@@ -394,7 +394,6 @@ class orm_template(object):
                     'res_model': self._name,
                     'secondary': secondary,
                     'res_id': id,
-                    'context': context,
                 },
                 context=context
         )
