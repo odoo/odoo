@@ -76,7 +76,7 @@ class stock_split_into(osv.osv_memory):
                         'state': move.state,
                         'product_uos': move.product_uom.id
                     }
-                    current_move = move_obj.copy(cr, uid, move.id, default_val)
+                    current_move = move_obj.copy(cr, uid, move.id, default_val, context=context)
                     new_move.append(current_move)
 
         if inventory_id and new_move:
