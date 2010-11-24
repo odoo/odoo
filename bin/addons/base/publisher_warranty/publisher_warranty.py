@@ -31,8 +31,17 @@ from tools.safe_eval import safe_eval
 import pooler
 from tools.config import config
 import release
+import datetime
+from tools import misc
 
 _logger = logging.getLogger(__name__)
+
+"""
+Time interval that will be used to determine up to which date we will
+check the logs to see if a message we just received was already logged.
+@type: datetime.timedelta
+"""
+_PREVIOUS_LOG_CHECK = datetime.timedelta(days=365)
 
 class publisher_warranty_contract(osv.osv):
     """
@@ -150,11 +159,18 @@ class publisher_warranty_contract(osv.osv):
                     "state": state,
                 })
             
+            limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
             for message in result["messages"]:
+                content = message if isinstance(message, str) or \
+                                isinstance(message, unicode) else message[0]
+                ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
+                                                          ("create_date", ">=", limit_date),
+                                                          ("name", "=", content)])
+                if ids:
+                    continue
                 self.pool.get('res.log').create(cr, uid,
                         {
-                            'name': message if isinstance(message, str) or \
-                                isinstance(message, unicode) else message[0],
+                            'name': content,
                             'res_model': "publisher_warranty.contract",
                             "read": True,
                             "user_id": False,
