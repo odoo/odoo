@@ -309,7 +309,7 @@
     <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -334,7 +334,7 @@
   <story>
   <pto>
   <pto_header>
-  <blockTable colWidths="50.0,28.0,65.0,61.0,145.0,60.0,60.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+  <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -343,7 +343,7 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Account</para>
@@ -362,7 +362,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="50.0,28.0,65.0,65.0,112.0,53.0,53.0,60.0,53.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+<blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -371,10 +371,10 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Account</para>
+          <para style="terp_tblheader_Details_Centre">Account</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Entry Label</para>
@@ -495,7 +495,7 @@
                    <para style="P5">
             <font color="white"> </font>
           </para>
-    <blockTable colWidths="50.0,28.0,65.0,61.0,145.0,60.0,60.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -504,7 +504,7 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Account</para>
@@ -525,7 +525,7 @@
     </blockTable>
   <section>
   <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
-    <blockTable colWidths="349.0,60.0,60.0,80.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="329.0,70.0,70.0,80.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
 
       <tr>
         <td>
@@ -558,7 +558,7 @@
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="50.0,28.0,65.0,61.0,145.0,60.0,60.0,80.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+      <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
@@ -588,7 +588,7 @@
       </blockTable>
     </section>
     </section>
-    <blockTable colWidths="50.0,28.0,65.0,65.0,112.0,53.0,53.0,60.0,53.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+    <blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -597,10 +597,10 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Account</para>
+          <para style="terp_tblheader_Details_Centre">Account</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Entry Label</para>
@@ -622,8 +622,7 @@
     <para style="P4"/>
     <section>
     <para style="P3">[[ repeatIn(objects, 'p') ]] [[ setLang(p.lang) ]]</para>
-    <blockTable colWidths="320.0,53.0,53.0,60.0,53.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
-
+    <blockTable colWidths="260.0,65.0,65.0,80.0,80.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
@@ -661,7 +660,7 @@
     </blockTable>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="50.0,28.0,65.0,65.0,112.0,53.0,53.0,60.0,53.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3"> [[ formatLang(line['date'],date=True) ]]</para>
@@ -673,7 +672,7 @@
             <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['a_code'] ]]</para>
+            <para style="terp_default_Centre_9">[[ line['a_code'] ]]</para>
           </td>
           <td>
             <para style="P3">[[ (line['ref'] or '') + ' ' + line['name'] ]]</para>
