@@ -638,9 +638,7 @@
           <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="P5">
-            <font color="white"> </font>
-          </para>
+          <para style="terp_default_Right_9">[[ p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
         </td>
       </tr>
         <tr>
@@ -657,7 +655,7 @@
           <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
         </td>
        <td>
-          <para style="terp_default_Right_9">[[ p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
+          <para style="terp_default_Right_9">[[ len(get_currency())==1 and p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
         </td>
         </tr>
     </blockTable>
@@ -690,7 +688,7 @@
             <para style="terp_default_Right_9">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font>[[ (p.property_account_receivable.currency_id and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']] </font></para>
+            <para style="terp_default_Right_9"><font>[[ (len(get_currency())==1 and p.property_account_receivable.currency_id and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']] </font></para>
           </td>
         </tr>
       </blockTable>

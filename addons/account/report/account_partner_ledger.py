@@ -51,6 +51,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
             'get_target_move': self._get_target_move,
+            'get_currency': self._get_currency,
             'sum_currency_amount_account': self._sum_currency_amount_account
         })
 
@@ -161,6 +162,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             r['progress'] = sum
             full_account.append(r)
         return full_account
+
+    def _get_currency(self):
+        self.cr.execute("select distinct currency_id from account_invoice")
+        return self.cr.fetchall()
 
     def _get_intial_balance(self, partner):
         move_state = ['draft','posted']
