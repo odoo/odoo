@@ -74,14 +74,17 @@ class ir_sequence(osv.osv):
 
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
         assert test in ('code','id')
-        cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+'=%s AND active=%s FOR UPDATE NOWAIT', (sequence_id, True))
-        res = cr.dictfetchone()
-        if res:
-            cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
-            if res['number_next']:
-                return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.id
+        seq_id = self.search(cr, uid, [(test,'=',sequence_id),('active','=',True),('company_id','=',company_id)])
+        if not seq_id:
+            seq_id = self.search(cr, uid, [(test,'=',sequence_id),('active','=',True),('company_id','=',False)])
+        if seq_id:
+            sequece_data = self.browse(cr, uid, seq_id[0], context)
+            self.write(cr, uid, sequece_data.id, {'number_next': sequece_data.number_next + sequece_data.number_increment})
+            if sequece_data.number_next:
+                return self._process(sequece_data.prefix) + '%%0%sd' % sequece_data.padding % sequece_data.number_next + self._process(sequece_data.suffix)
             else:
-                return self._process(res['prefix']) + self._process(res['suffix'])
+                return self._process(sequece_data.prefix) + self._process(sequece_data.suffix)
         return False
 
     def get(self, cr, uid, code):
