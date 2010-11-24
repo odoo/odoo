@@ -21,17 +21,16 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-- 
+-
   In order to test the purchase flow,I create a new record where "invoice_method" is From Picking
 -
   I create purchase order for iPod.
-- 
+-
   !record {model: purchase.order, id: purchase_order_po2}:
     company_id: base.main_company
     date_order: '2010-05-11'
     invoice_method: picking
     location_id: stock.stock_location_stock
-    name: PO00008
     order_line:
       - date_planned: '2010-05-13'
         name: iPod
@@ -47,16 +46,16 @@
   Initially purchase order is in the draft state.
 -
   !assert {model: purchase.order, id: purchase_order_po2}:
-    - state == 'draft'  
+    - state == 'draft'
 -
   I confirm the purchase order for iPod.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po2}
--  
+-
  I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po2}:
-    - state == 'approved'  
+    - state == 'approved'
 -
   I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line.
 -
@@ -68,7 +67,7 @@
     assert search_ids, _('Purchase order line is not created!')
 -
   To check that wizard "Create Invoices" gets opened.
-- 
+-
   I create purchase order line invoice entry.
 -
   !record {model: purchase.order.line_invoice, id: purchase_order_line_invoice_0}:
@@ -77,7 +76,7 @@
   I create invoice for products in the purchase order.
 -
   !python {model: purchase.order.line_invoice}: |
-    pur_obj=self.pool.get('purchase.order')  
+    pur_obj=self.pool.get('purchase.order')
     ids = []
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po2"))
     for line in pur_id1.order_line:
@@ -99,21 +98,21 @@
     from tools.translate import _
     pur_id1=self.browse(cr, uid, ref("purchase_order_po2"))
     account_obj = self.pool.get('account.invoice')
-    ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
+    ids = account_obj.search(cr, uid, [('origin', '=', 'PO-'+str(pur_id1.id))])
     assert ids, _('Pending Invoice is not created!')
 -
  I check that the order which was initially in the confirmed state has transit to approved state.
 -
   !assert {model: purchase.order, id: purchase_order_po2}:
-    - state == 'approved' 
+    - state == 'approved'
 -
- I check that date_approve field of Delivery&Invoices gets bind with the date on which it has been approved. 
+ I check that date_approve field of Delivery&Invoices gets bind with the date on which it has been approved.
 -
   !python {model: purchase.order}: |
     pur_id=self.browse(cr, uid, ref("purchase_order_po2"))
     assert(pur_id.date_approve)
 -
- I check that an entry gets created in the stock.picking. 
+ I check that an entry gets created in the stock.picking.
 -
   !python {model: purchase.order}: |
     pur_id=self.browse(cr, uid, ref("purchase_order_po2"))
@@ -130,8 +129,8 @@
     search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
     assert search_id, 'No Incoming Product!'
 -
-  Then I create an invoice from picking by clicking on "Create Invoice" wizard 
-- 
+  Then I create an invoice from picking by clicking on "Create Invoice" wizard
+-
   !python {model: stock.invoice.onshipping}: |
     pur_obj=self.pool.get('purchase.order')
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po2"))

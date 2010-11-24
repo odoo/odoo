@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-19 07:06+0000\n"
-"Last-Translator: The Loeki <the.loeki@gmail.com>\n"
+"PO-Revision-Date: 2010-11-22 08:41+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -165,7 +165,7 @@ msgstr "Referentie"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
-msgstr ""
+msgstr "Fiscaal jaar kiezen "
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -205,12 +205,12 @@ msgstr "Belasting templates"
 #. module: account
 #: view:account.invoice.report:0
 msgid "supplier"
-msgstr ""
+msgstr "leverancier"
 
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "Expenses Credit Notes Journal - (test)"
-msgstr ""
+msgstr "Uitgaven creditnota dagboek - (test)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -224,6 +224,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Geen periode gedefinieerd voor deze datum: %s !\n"
+"Aub een fiscaal jaar maken."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -251,7 +253,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
-msgstr ""
+msgstr "Factuur '%s' is deels betaald: %s%s of %s%s (%s%s resteert)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
@@ -261,7 +263,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr ""
+msgstr "Belgische overzichten"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -272,24 +274,24 @@ msgstr "Er kunnen geen boekingen worden aangepast die zijn afgesloten"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Calculated Balance"
-msgstr ""
+msgstr "Berekend saldo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Handmatige herhaling"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscalyear"
-msgstr ""
+msgstr "Fiscaal jaar sluiten"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr ""
+msgstr "Afschrijven toegestaan"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -305,7 +307,7 @@ msgstr "St."
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
-msgstr ""
+msgstr "Factuurregel bedrijf komt niet overeen met factuur bedrijf."
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -318,6 +320,8 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
+"Installeert gelokaliseerde rekeningschema's die zo dicht mogelijk "
+"overeenkomen met de boekhoudvragen in uw bedrijf en uw land."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:0
@@ -328,6 +332,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
 msgstr ""
+"Kan geen dagboek van soort %s vinden voor dit bedrijf.\n"
+"\n"
+"U kunt er een maken via menu: \n"
+"Configuratie / Financiele administratie / Rekeningen / Dagboeken"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -358,7 +366,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_bank
@@ -502,7 +510,7 @@ msgstr "Dagboek"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr ""
+msgstr "De geselecteerde facturen bevestigen"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
@@ -526,7 +534,7 @@ msgstr ""
 #: help:account.report.general.ledger,chart_account_id:0
 #: help:account.vat.declaration,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr ""
+msgstr "Rekeningschema kiezen"
 
 #. module: account
 #: view:product.product:0
@@ -564,7 +572,7 @@ msgstr "Vervangingstabel belasting"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr ""
+msgstr "account.installer.modules"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -591,12 +599,12 @@ msgstr "Alles"
 #. module: account
 #: field:account.invoice.report,address_invoice_id:0
 msgid "Invoice Address Name"
-msgstr ""
+msgstr "Naam factuuradres"
 
 #. module: account
 #: selection:account.installer,period:0
 msgid "3 Monthly"
-msgstr ""
+msgstr "3 maandelijks"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
@@ -610,7 +618,7 @@ msgstr ""
 #. module: account
 #: view:analytic.entries.report:0
 msgid "   30 Days   "
-msgstr ""
+msgstr "   30 Dagen   "
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -782,7 +790,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Due date Computation"
-msgstr ""
+msgstr "Vervaldatum berekening"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -796,7 +804,7 @@ msgstr "J.C./Verplaats naam"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -808,6 +816,7 @@ msgstr "Dagen"
 msgid ""
 "If checked, the new chart of accounts will not contain this by default."
 msgstr ""
+"Indien aangevinkt, zal het nieuwe rekeningschema dit niet standaard bevatten."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:0
@@ -846,7 +855,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Gem. betaaltermijn"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
@@ -880,7 +889,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Totaal incl. BTW"
 
 #. module: account
 #: view:account.invoice:0
@@ -888,7 +897,7 @@ msgstr ""
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
-msgstr ""
+msgstr "Goedkeuren"
 
 #. module: account
 #: view:account.invoice:0
@@ -910,7 +919,7 @@ msgstr "Consolidatie"
 #: view:account.invoice.report:0
 #: view:account.move.line:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Uitgebreide filters..."
 
 #. module: account
 #: selection:account.journal,type:0
