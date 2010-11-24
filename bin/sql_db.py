@@ -94,7 +94,10 @@ class Cursor(object):
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.__closed = False   # real initialisation value
         self.autocommit(False)
-        self.__caller = frame_codeinfo(currentframe(),2)
+        if self.sql_log:
+            self.__caller = frame_codeinfo(currentframe(),2)
+        else:
+            self.__caller = False
 
     def __del__(self):
         if not self.__closed:
@@ -103,9 +106,12 @@ class Cursor(object):
             # but the database connection is not put back into the connection
             # pool, preventing some operation on the database like dropping it.
             # This can also lead to a server overload.
-            msg = "Cursor not closed explicitly\n"  \
-                  "Cursor was created at %s:%s"
-            self.__logger.warn(msg, *self.__caller)
+            msg = "Cursor not closed explicitly\n"
+            if self.__caller:
+                msg += "Cursor was created at %s:%s" % self.__caller
+            else:
+                msg += "Please enable sql debugging to trace the caller."
+            self.__logger.warn(msg)
             self._close(True)
 
     @check
