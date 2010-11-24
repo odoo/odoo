@@ -18,17 +18,6 @@
                </field>
           </record>
 
-        <record id="view_report_crm_oppor_tree" model="ir.ui.view">
-            <field name="name">crm.lead.report.tree</field>
-            <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Opportunity Analysis">
-                   <field name="stage_id"/>
-                   <field name="planned_revenue"/>
-                </tree>
-            </field>
-        </record>
         <record id="view_report_crm_oppor_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
@@ -110,21 +99,9 @@
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>
                <field name="view_id" ref="view_report_crm_oppor_graph"/>
-            <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
-        		<field name="context">{'group_by_no_leaf':1,'group_by':['stage_id']}</field>
+               <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="context">{'search_default_Stage':1}</field>
           </record>
-          <record id="open_view_report_crm_oppor_graph" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_crm_oppor_graph"/>
-            <field name="act_window_id" ref="act_my_oppor_stage"/>
-	    </record>
-	    <record id="open_view_report_crm_oppor_tree" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_report_crm_oppor_tree"/>
-            <field name="act_window_id" ref="act_my_oppor_stage"/>
-   		</record>
 
           <record model="ir.actions.act_window" id="act_sales_pipeline">
                <field name="res_model">crm.lead.report</field>
