@@ -676,6 +676,7 @@ class sale_order(osv.osv):
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
             proc_ids = []
+            new_moves = []
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
@@ -724,6 +725,8 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
+                    new_moves.append(move_id)
+                   
                 if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
@@ -749,8 +752,9 @@ class sale_order(osv.osv):
                         for pick in order.picking_ids:
                             for moves in pick.move_lines:
                                 if moves.state == 'cancel':
-                                    move_obj.write(cr, uid, [move_id], {'product_qty': moves.product_qty})
-                                    proc_obj.write(cr, uid, [proc_id], {'product_qty': moves.product_qty, 'product_uos_qty': moves.product_qty})
+                                    for move_id in new_moves:
+                                        move_obj.write(cr, uid, [move_id], {'product_qty': moves.product_qty})
+                                        proc_obj.write(cr, uid, [proc_id], {'product_qty': moves.product_qty, 'product_uos_qty': moves.product_qty})
             val = {}
             for proc_id in proc_ids:
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
