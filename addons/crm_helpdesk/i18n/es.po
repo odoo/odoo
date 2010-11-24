@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 18:00+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-23 08:37+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_helpdesk
@@ -60,11 +60,6 @@ msgstr "Compañía"
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
 msgstr "Email del observador"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
-msgstr "Casos"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
@@ -169,7 +164,7 @@ msgstr "Sección"
 #. module: crm_helpdesk
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para arquitectura de la vista"
+msgstr "¡XML no válido para la estructura de la vista!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -178,6 +173,11 @@ msgstr "XML inválido para arquitectura de la vista"
 #: field:crm.helpdesk.report,priority:0
 msgid "Priority"
 msgstr "Prioridad"
+
+#. module: crm_helpdesk
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -540,6 +540,11 @@ msgid "Open"
 msgstr "Abrir"
 
 #. module: crm_helpdesk
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Helpdesk Support Tree"
 msgstr "Árbol de soporte Helpdesk"
@@ -568,7 +573,7 @@ msgstr "Helpdesk"
 #: view:crm.helpdesk:0
 #: field:crm.helpdesk,user_id:0
 msgid "Responsible"
-msgstr "Respnsable"
+msgstr "Responsable"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -586,6 +591,13 @@ msgid "Reply"
 msgstr "Responder"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid ""
+"Create and manage helpdesk categories to better manage and classify your "
+"support request."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr "Descripción"
@@ -596,6 +608,15 @@ msgid "May"
 msgstr "Mayo"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"'Helpdesk and Support' allows you to track your interventions. Select a "
+"customer, add notes and categorize interventions with partners if necessary "
+"and assign a priority level. Depending on your need, you may consider using "
+"the issues system of OpenERP to manage your support activities."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
 msgstr "Probabilidad (%)"
@@ -604,6 +625,14 @@ msgstr "Probabilidad (%)"
 #: field:crm.helpdesk.report,email:0
 msgid "# Emails"
 msgstr "nº de emails"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid ""
+"Have a general overview of all support requests by sorting them with "
+"specific criteria such as the processing time, number of requests answered, "
+"emails sent and costs."
+msgstr ""
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,canal_id:0
@@ -625,6 +654,19 @@ msgid ""
 "       \n"
 "If the case needs to be reviewed then the state is set to 'Pending'."
 msgstr ""
+"El estado se establece a 'Borrador', cuando se crea un caso.                 "
+"                 \n"
+"Si el caso está en progreso el estado se establece a 'Abierto'.              "
+"                    \n"
+"Cuando el caso se cierra, el estado se establece a 'Realizado'.              "
+"                    \n"
+"Si el caso necesita ser revisado entonces el estado se establece a "
+"'Pendiente'."
+
+#. module: crm_helpdesk
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -689,3 +731,6 @@ msgstr "Año"
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Duración"
+
+#~ msgid "Cases"
+#~ msgstr "Casos"

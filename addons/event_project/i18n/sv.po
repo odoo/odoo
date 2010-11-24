@@ -4,17 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-02-03 06:26+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-23 14:29+0000\n"
+"Last-Translator: Daniel Stenlöv (XCLUDE) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: event_project
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Certifikat ID för modulen måste vara unik!"
 
 #. module: event_project
 #: model:ir.model,name:event_project.model_event_project
@@ -24,7 +29,7 @@ msgstr ""
 #. module: event_project
 #: field:event.project,date:0
 msgid "Date End"
-msgstr ""
+msgstr "Slutdatum"
 
 #. module: event_project
 #: view:event.project:0
@@ -41,39 +46,32 @@ msgid ""
 msgstr ""
 
 #. module: event_project
-#: help:event.project,project_id:0
-msgid ""
-"This is Template Project. Project of event is a duplicate of this Template. "
-"After click on  'Create Retro-planning', New Project will be duplicated from "
-"this template project."
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Namnet på modulen måste vara unikt!"
 
 #. module: event_project
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: event_project
 #: view:event.project:0
 #: model:ir.actions.act_window,name:event_project.action_event_project
 msgid "Retro-Planning"
-msgstr ""
+msgstr "Retro-plannering"
 
 #. module: event_project
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: event_project
-#: field:event.event,project_id:0
-msgid "Project"
-msgstr ""
+msgstr "Ogiltig XML för Vy-arkitektur!"
 
 #. module: event_project
 #: field:event.project,project_id:0
 msgid "Template of Project"
-msgstr ""
+msgstr "Projektmall"
 
 #. module: event_project
 #: model:ir.module.module,shortdesc:event_project.module_meta_information
@@ -83,40 +81,54 @@ msgstr ""
 #. module: event_project
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
 
 #. module: event_project
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event_project.act_event_task
 msgid "Tasks"
-msgstr ""
-
-#. module: event_project
-#: field:event.event,task_ids:0
-msgid "Project tasks"
-msgstr ""
+msgstr "Aktiviteter"
 
 #. module: event_project
 #: view:event.project:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: event_project
 #: field:event.project,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Startdatum"
 
 #. module: event_project
 #: view:event.event:0
 msgid "Create Retro-Planning"
+msgstr "Skapa retro-plannering"
+
+#. module: event_project
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
 msgstr ""
 
 #. module: event_project
-#: model:ir.model,name:event_project.model_event_event
-msgid "Event"
-msgstr ""
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Fältstorleken kan inte vara mindre än ett!"
 
 #. module: event_project
 #: view:event.event:0
 msgid "Tasks management"
-msgstr ""
+msgstr "Aktivitetsadministration"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"
+#~ msgstr ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"

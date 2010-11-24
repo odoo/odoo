@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-14 07:56+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 09:47+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
@@ -86,6 +86,11 @@ msgid "Taxes:"
 msgstr "Impuestos:"
 
 #. module: report_intrastat
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "March"
 msgstr "Marzo"
@@ -136,9 +141,9 @@ msgid "Base"
 msgstr "Base"
 
 #. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Este año"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -303,6 +308,11 @@ msgid "Country code"
 msgstr "Código del país"
 
 #. module: report_intrastat
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr "Este año"
+
+#. module: report_intrastat
 #: field:report.intrastat,month:0
 msgid "Month"
 msgstr "Mes"
@@ -341,6 +351,11 @@ msgstr "Total (sin impuestos):"
 #: report:account.invoice.intrastat:0
 msgid "Price"
 msgstr "Precio"
+
+#. module: report_intrastat
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree

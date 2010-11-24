@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-14 07:59+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 09:43+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
@@ -26,15 +26,20 @@ msgstr ""
 "¡El objeto debe empezar con  x_ y no puede contener ningún carácter especial!"
 
 #. module: thunderbird
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: thunderbird
 #: field:thunderbird.installer,plugin_file:0
 #: field:thunderbird.installer,thunderbird:0
 msgid "Thunderbird Plug-in"
 msgstr "Conector Thunderbird"
+
+#. module: thunderbird
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -46,23 +51,14 @@ msgstr ""
 "adjuntos."
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
-msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
-msgstr ""
-"Fichero del conector Thunderbird. Guarde este fichero e instale este "
-"conector en la aplicación Thunderbird."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
 msgid "The documentation file :- how to install Thunderbird Plug-in."
 msgstr "El fichero de documentación: Como instalar el conector Thunderbird."
-
-#. module: thunderbird
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_email_server_tools
@@ -73,6 +69,11 @@ msgstr "Herramientas servidor correo"
 #: view:thunderbird.installer:0
 msgid "_Close"
 msgstr "_Cerrar"
+
+#. module: thunderbird
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: thunderbird
 #: field:thunderbird.installer,pdf_file:0
@@ -103,6 +104,15 @@ msgstr "Conector Thunderbird"
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
 msgid "Thunderbird Interface"
 msgstr "Interfaz Thunderbird"
+
+#. module: thunderbird
+#: help:thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr ""
+"Fichero del conector Thunderbird. Guarde este fichero e instale este "
+"conector en la aplicación Thunderbird."
 
 #. module: thunderbird
 #: constraint:ir.ui.view:0
@@ -150,6 +160,11 @@ msgstr "Saltar"
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
 msgstr "Imagen"
+
+#. module: thunderbird
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Copy To"
 #~ msgstr "Copiar a"
