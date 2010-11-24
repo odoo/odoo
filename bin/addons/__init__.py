@@ -874,7 +874,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if obj:
                     obj._check_removed_columns(cr, log=True)
                 else:
-                    logger.warning("Model %s is referenced but not present in the orm pool!", model)
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
 
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
