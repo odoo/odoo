@@ -4166,6 +4166,8 @@ class orm(orm_template):
                 old_children = sorted(old_record[field_name])
                 new_children = sorted(new_record[field_name])
                 for (old_child, new_child) in zip(old_children, new_children):
+                    if target_obj == self and old_child == old_id:
+                        continue # avoid infinite loop with self-inheritance
                     # recursive copy of translations here
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
