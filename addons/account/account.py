@@ -312,7 +312,7 @@ class account_account(osv.osv):
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
+            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
         return result
 
     def _get_child_ids(self, cr, uid, ids, field_name, arg, context={}):
