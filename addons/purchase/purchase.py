@@ -646,10 +646,7 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
-        if prod.product_tmpl_id.seller_ids:
-            seller_get_id = prod.product_tmpl_id.seller_ids[0].name.id
-        else:
-            seller_get_id = False
+
 
         lang=False
         if partner_id:
@@ -665,12 +662,22 @@ class purchase_order_line(osv.osv):
             date_order = time.strftime('%Y-%m-%d')
         qty = qty or 1.0
         seller_delay = 0
+
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
                 temp_qty = s.qty # supplier _qty assigned to temp
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
+                prod_suppl_name = s.product_name
+                prod_suppl_code = s.product_code
+                if not (prod_suppl_name or prod_suppl_code):
+                    prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
+                elif (not prod_suppl_name) or (not prod_suppl_code):
+                     prod_name= '[' + (prod_suppl_code or prod.default_code or '') + '] '+ (prod_suppl_name or prod.name or '')
+                else:
+                    prod_name= '[' + prod_suppl_code + '] '+ prod_suppl_name
         if price_unit:
             price = price_unit
         else:
@@ -680,15 +687,7 @@ class purchase_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        if seller_get_id == partner_id:
-            prod_suppl_name = self.pool.get('product.product').browse(cr, uid, prod.id).seller_ids[0].product_name
-            prod_suppl_code = self.pool.get('product.product').browse(cr, uid, prod.id).seller_ids[0].product_code
-            if prod_suppl_name == False or prod_suppl_code == False:
-               prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
-            else:
-                prod_name= '[' + prod_suppl_code + '] '+ prod_suppl_name
-        else:
-            prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
+
 
         res = {'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
