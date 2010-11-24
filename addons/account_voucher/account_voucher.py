@@ -752,7 +752,7 @@ class account_voucher(osv.osv):
                         writeoff_account_id = inv.writeoff_acc_id.id
                         writeoff_journal_id = inv.writeoff_journal_id.id
                         comment = inv.comment
-                        self.pool.get('account.move.line').reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
+                        move_line_pool.reconcile(cr, uid, rec_ids, 'manual', writeoff_account_id, writeoff_period_id, writeoff_journal_id, context)
                     else:
                         move_line_pool.reconcile_partial(cr, uid, rec_ids)
 
