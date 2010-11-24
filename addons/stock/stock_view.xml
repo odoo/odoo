@@ -539,7 +539,7 @@
                                     <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
@@ -638,7 +638,7 @@
                                     <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
@@ -831,7 +831,7 @@
                                     <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" />
                                     <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
@@ -1020,7 +1020,7 @@
                                     <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field groups="product.group_uos" name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field groups="base.group_extended" name="date_planned"/>
                                     <newline/>
@@ -1242,6 +1242,7 @@
                     <field colspan="4" name="product_id" select="1"/>
                     <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" select="2"/>
+                    <field name="product_uos_qty" select="2" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)"/>
                     <field name="product_uos" select="2"/>
                     <field colspan="4" name="name" select="2"/>
                     <field name="date"/>
