@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-14 08:07+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-22 19:39+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: subscription
@@ -24,28 +24,17 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: subscription
-#: help:subscription.document,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-"Si el campo activo se desmarca, permite ocultar el documento de suscripción "
-"sin eliminarlo."
-
-#. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Objeto"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
+#: constraint:ir.model:0
 msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Por favor proporcione otro documento origen.\n"
-"¡Éste no existe!"
+"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+"especial!"
 
 #. module: subscription
 #: constraint:ir.actions.act_window:0
@@ -61,16 +50,6 @@ msgstr "Esta semana"
 #: view:subscription.subscription:0
 msgid "Search Subscription"
 msgstr "Buscar suscripción"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
-msgstr ""
-"¡No puede modificar el objeto vinculado al tipo de documento!\n"
-"¡Cree otro documento en su lugar!"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -109,14 +88,6 @@ msgid "Error ! You can not create recursive Menu."
 msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: subscription
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
 msgstr "Semanas"
@@ -125,6 +96,11 @@ msgstr "Semanas"
 #: view:subscription.subscription:0
 msgid "Today"
 msgstr "Hoy"
+
+#. module: subscription
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
@@ -195,6 +171,13 @@ msgid "Number of documents"
 msgstr "Número de documentos"
 
 #. module: subscription
+#: help:subscription.document,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr ""
+
+#. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
@@ -209,6 +192,16 @@ msgstr "Orden de venta"
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Nombre"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"You cannot modify the Object linked to the Document Type!\n"
+"Create another Document instead !"
+msgstr ""
+"¡No puede modificar el objeto vinculado al tipo de documento!\n"
+"¡Cree otro documento en su lugar!"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -285,6 +278,11 @@ msgid "Description or Summary of Subscription"
 msgstr "Descripción o resumen de la suscripción."
 
 #. module: subscription
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
@@ -356,6 +354,16 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist !"
+msgstr ""
+"Por favor proporcione otro documento origen.\n"
+"¡Éste no existe!"
+
+#. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
 msgstr "Valor por defecto"
@@ -365,6 +373,11 @@ msgstr "Valor por defecto"
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
 msgstr "Documentos creados"
+
+#. module: subscription
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Status"
 #~ msgstr "Posición"
@@ -383,3 +396,10 @@ msgstr "Documentos creados"
 
 #~ msgid "Tools"
 #~ msgstr "Herramientas"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the "
+#~ "subscription document without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar el documento de suscripción "
+#~ "sin eliminarlo."
