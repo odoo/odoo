@@ -35,7 +35,7 @@ class survey_analysis(report_rml):
         company=user_obj.browse(cr,uid,[uid],context)[0].company_id
 
         rml ="""<document filename="Survey Analysis Report.pdf">
-                <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+                <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
                         <pageTemplate>
                         <frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
                         <pageGraphics>

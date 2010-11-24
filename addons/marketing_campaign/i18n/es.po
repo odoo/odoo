@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-14 08:17+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 23:47+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -54,9 +54,9 @@ msgstr ""
 "alguna actividad con una señal y sin actividad previa)"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.transition,trigger:0
-msgid "Time"
-msgstr "Tiempo"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -78,7 +78,7 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Group By..."
-msgstr "Agrupado por..."
+msgstr "Agrupar por..."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
@@ -329,6 +329,11 @@ msgid "Don't delete workitems"
 msgstr ""
 
 #. module: marketing_campaign
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,state:0
 #: view:marketing.campaign:0
@@ -446,7 +451,7 @@ msgstr "Argumentos inválidos"
 #. module: marketing_campaign
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para la arquitectura de la vista"
+msgstr "¡XML no válido para la estructura de la vista!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -562,6 +567,12 @@ msgid "Campaign Statistics"
 msgstr "Estadísticas de la campaña"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "ID recurso"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
 msgstr "La acción a realizar cuando la actividad es activada"
@@ -612,7 +623,7 @@ msgstr "¡Error! No puede crear un menú recursivo"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"¡El objeto debe de empezar con _x y no debe de contener ningún carácter "
+"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
 "especial!"
 
 #. module: marketing_campaign
@@ -821,6 +832,11 @@ msgid "Synchronize Manually"
 msgstr "Sincronizar manualmente"
 
 #. module: marketing_campaign
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are done"
@@ -829,10 +845,19 @@ msgstr ""
 "realizados"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
-msgstr "ID recurso"
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A marketing campaign is an event or activity that will help you manage and "
+"reach your partners with specific messages. A campaign can have many "
+"activities that will be triggered based on a specific situation. One "
+"possible action could be sending an email template that has previously been "
+"created in the system."
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Tiempo"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -896,7 +921,7 @@ msgstr "Mayo"
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
-msgstr "En curso"
+msgstr "En ejecucion"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
