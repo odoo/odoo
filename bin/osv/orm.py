@@ -980,6 +980,8 @@ class orm_template(object):
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
+                            if hasattr(msg, '__call__'):
+                                msg = msg(cr, uid, [res_id,], context=context)
                             break
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '')
                 if isinstance(e, osv.orm.except_orm):
@@ -2602,7 +2604,7 @@ class orm(orm_template):
                                 if not ok:
                                     i = 0
                                     while True:
-                                        newname = self._table + '_moved' + str(i)
+                                        newname = k + '_moved' + str(i)
                                         cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
                                             "WHERE c.relname=%s " \
                                             "AND a.attname=%s " \
@@ -3053,21 +3055,6 @@ class orm(orm_template):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-#        if not res:
-#            res = map(lambda x: {'id': x}, ids)
-#            for record in res:
-#                for f in fields_to_read:
-#                    field_val = False
-#                    if f in self._columns.keys():
-#                        ftype = self._columns[f]._type
-#                    elif f in self._inherit_fields.keys():
-#                        ftype = self._inherit_fields[f][2]._type
-#                    else:
-#                        continue
-#                    if ftype in ('one2many', 'many2many'):
-#                        field_val = []
-#                    record.update({f:field_val})
-
         for f in fields_pre:
             if f == self.CONCURRENCY_CHECK_FIELD:
                 continue
@@ -3204,9 +3191,11 @@ class orm(orm_template):
         for r in res:
             for key in r:
                 r[key] = r[key] or False
-                if details and key in ('write_uid', 'create_uid'):
-                    if r[key]:
+                if details and key in ('write_uid', 'create_uid') and r[key]:
+                    try:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+                    except Exception:
+                        pass # Leave the numeric uid there
             r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
             del r['name'], r['module']
         if uniq:

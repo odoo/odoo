@@ -75,10 +75,12 @@ class ir_model(osv.osv):
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
     }
+    
     _defaults = {
         'model': lambda *a: 'x_',
-        'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
+    
     def _check_model_name(self, cr, uid, ids):
         for model in self.browse(cr, uid, ids):
             if model.state=='manual':
@@ -386,8 +388,8 @@ class ir_model_data(osv.osv):
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'noupdate': lambda *a: False,
-        'module': lambda *a: ''
+        'noupdate': False,
+        'module': ''
     }
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),

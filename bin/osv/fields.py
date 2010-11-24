@@ -341,8 +341,10 @@ class many2one(_column):
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        context = context or {}
-        values = values or {}
+        if context is None:
+            context = {}
+        if values is None:
+            values = {}
 
         res = {}
         for r in values:
@@ -454,12 +456,12 @@ class one2many(_column):
         raise _('Not Implemented')
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         if self._context:
             context = context.copy()
         context.update(self._context)
-        if not values:
+        if values is None:
             values = {}
 
         res = {}
@@ -740,9 +742,9 @@ class function(_column):
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
-        if not values:
+        if values is None:
             values = {}
         res = {}
         if self._method:

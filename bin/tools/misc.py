@@ -25,6 +25,7 @@ Miscelleanous tools used by OpenERP.
 """
 
 import inspect
+import subprocess
 import logging
 import os
 import re
@@ -33,6 +34,7 @@ import socket
 import sys
 import threading
 import time
+import warnings
 import zipfile
 from datetime import datetime
 from email.MIMEText import MIMEText
@@ -141,27 +143,24 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (os.path.basename(prog),) + args
-    return os.spawnv(os.P_WAIT, prog, args2)
+    
+    return subprocess.call(args2, executable=prog)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"' + prog + '" ' + ' '.join(args)
-    else:
-        cmd = prog + ' ' + ' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"'+prog+'" '+' '.join(args)
-    else:
-        cmd = prog+' '+' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 #----------------------------------------------------------
 # File paths
@@ -1114,6 +1113,8 @@ def debug(what):
             --log-level=debug
 
     """
+    warnings.warn("The tools.debug() method is deprecated, please use logging.",
+                      DeprecationWarning, stacklevel=2)
     from inspect import stack
     from pprint import pformat
     st = stack()[1]
@@ -1122,7 +1123,7 @@ def debug(what):
     what = pformat(what)
     if param != what:
         what = "%s = %s" % (param, what)
-    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, what)
+    logging.getLogger(st[3]).debug(what)
 
 
 __icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',

@@ -27,6 +27,7 @@ import itertools
 import locale
 import os
 import re
+import logging
 import tarfile
 import tempfile
 from os.path import join
@@ -220,11 +221,11 @@ def unquote(str):
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
     def warn(self, msg):
-        self.logger.notifyChannel("i18n", netsvc.LOG_WARNING, msg)
+        self.logger.warning(msg)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -316,7 +317,9 @@ class TinyPoFile(object):
         self.first = False
 
         if name is None:
-            self.warn('Missing "#:" formated comment for the following source:\n\t%s' % (source,))
+            if not fuzzy:
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s', 
+                        self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
 
@@ -483,7 +486,7 @@ def in_modules(object_name, modules):
     return module in modules
 
 def trans_generate(lang, modules, dbname=None):
-    logger = netsvc.Logger()
+    logger = logging.getLogger('i18n')
     if not dbname:
         dbname=tools.config['db_name']
         if not modules:
@@ -534,12 +537,12 @@ def trans_generate(lang, modules, dbname=None):
         xml_name = "%s.%s" % (module, encode(xml_name))
 
         if not pool.get(model):
-            logger.notifyChannel("db", netsvc.LOG_ERROR, "Unable to find object %r" % (model,))
+            logger.error("Unable to find object %r", model)
             continue
 
         exists = pool.get(model).exists(cr, uid, res_id)
         if not exists:
-            logger.notifyChannel("db", netsvc.LOG_WARNING, "Unable to find object %r with id %d" % (model, res_id))
+            logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
 
@@ -566,7 +569,7 @@ def trans_generate(lang, modules, dbname=None):
 
                         # export fields
                         if not result.has_key('fields'):
-                            logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
+                            logger.warning("res has no fields: %r", result)
                             continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
@@ -595,7 +598,7 @@ def trans_generate(lang, modules, dbname=None):
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
-                logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
+                logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
@@ -643,7 +646,7 @@ def trans_generate(lang, modules, dbname=None):
                     for t in parse_func(d.iter()):
                         push_translation(module, report_type, name, 0, t)
                 except (IOError, etree.XMLSyntaxError):
-                    logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
+                    logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name,field_def in obj._table._columns.items():
             if field_def.translate:
@@ -771,23 +774,26 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load(db_name, filename, lang, strict=False, verbose=True, context=None):
+    logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
+        logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
         r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+            logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context=None):
+    logger = logging.getLogger('i18n')
     if verbose:
-        logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
+        logger.info('loading translation file for language %s', lang)
+    if context is None:
+        context = {}
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -811,7 +817,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if fail:
                 lc = locale.getdefaultlocale()[0]
                 msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc))
+                logger.warning(msg, lang, lc)
 
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
@@ -850,6 +856,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value']
         else:
+            logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # read the rest of the file
@@ -928,11 +935,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             cr.commit()
         cr.close()
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_INFO,
-                    "translation file loaded succesfully")
+            logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
-        logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+        logger.exception("couldn't read translation file %s", filename)
 
 def get_locales(lang=None):
     if lang is None:

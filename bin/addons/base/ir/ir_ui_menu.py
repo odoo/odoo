@@ -68,8 +68,10 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def create_shortcut(self, cr, uid, values, context={}):
+    def create_shortcut(self, cr, uid, values, context=None):
         dataobj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         new_context = context.copy()
         for key in context:
             if key.startswith('default_'):
@@ -294,9 +296,9 @@ class ir_ui_menu(osv.osv):
         (_check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
-        'icon' : lambda *a: 'STOCK_OPEN',
-        'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10,
+        'icon' : 'STOCK_OPEN',
+        'icon_pict': ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
+        'sequence' : 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

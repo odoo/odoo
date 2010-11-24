@@ -32,7 +32,7 @@ import traceback
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from tools.func import wraps
-from tools.translate import _
+from tools.translate import translate
 
 module_list = []
 module_class_list = {}
@@ -51,6 +51,73 @@ class osv_pool(netsvc.Service):
     def check(f):
         @wraps(f)
         def wrapper(self, dbname, *args, **kwargs):
+            """ Wraps around OSV functions and normalises a few exceptions
+            """
+
+            def tr(src, ttype):
+                # We try to do the same as the _(), but without the frame
+                # inspection, since we aready are wrapping an osv function
+                # trans_obj = self.get('ir.translation') cannot work yet :(
+                ctx = {}
+                if not kwargs:
+                    if args and isinstance(args[-1], dict):
+                        ctx = args[-1]
+                    else:
+                        ctx = {}
+                elif isinstance(kwargs, dict):
+                    ctx = kwargs.get('context', {})
+                else:
+                    ctx = {}
+
+                uid = 1
+                if args and isinstance(args[0], (long, int)):
+                    uid = args[0]
+
+                lang = ctx and ctx.get('lang', False)
+                if not (lang or hasattr(src, '__call__')):
+                    return src
+
+                # We open a *new* cursor here, one reason is that failed SQL
+                # queries (as in IntegrityError) will invalidate the current one.
+                cr = False
+                
+                if hasattr(src, '__call__'):
+                    # callable. We need to find the right parameters to call
+                    # the  orm._sql_message(self, cr, uid, ids, context) function,
+                    # or we skip..
+                    # our signature is f(osv_pool, dbname [,uid, obj, method, args])
+                    try:
+                        if args and len(args) > 1:
+                            obj = self.get(args[1])
+                            if len(args) > 3 and isinstance(args[3], (long, int, list)):
+                                ids = args[3]
+                            else:
+                                ids = []
+                        cr = pooler.get_db_only(dbname).cursor()
+                        return src(obj, cr, uid, ids, context=(ctx or {}))
+                    except Exception:
+                        pass
+                    finally:
+                        if cr: cr.close()
+                   
+                    return False # so that the original SQL error will
+                                 # be returned, it is the best we have.
+
+                try:
+                    cr = pooler.get_db_only(dbname).cursor()
+                    #return trans_obj._get_source( name=?)
+                    res = translate(cr, name=False, source_type=ttype,
+                                    lang=lang, source=src)
+                    if res:
+                        return res
+                    else:
+                        return src
+                finally:
+                    if cr: cr.close()
+
+            def _(src):
+                return tr(src, 'code')
+
             try:
                 if not pooler.get_pool(dbname)._ready:
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
@@ -64,7 +131,8 @@ class osv_pool(netsvc.Service):
             except IntegrityError, inst:
                 for key in self._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
+                        self.abortResponse(1, _('Constraint Error'), 'warning',
+                                        tr(self._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     self.logger.debug("IntegrityError", exc_info=True)
