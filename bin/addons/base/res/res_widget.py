@@ -46,7 +46,7 @@ class res_widget_wizard(osv.osv_memory):
         'widget_id': fields.many2one("res.widget", 'Widget', required=1),
     }
     
-    def add_res_widget(self, cr, uid, ids, context=None):
+    def res_widget_add(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         wizard = self.read(cr, uid, ids)[0]
