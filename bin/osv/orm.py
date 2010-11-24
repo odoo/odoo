@@ -1058,8 +1058,6 @@ class orm_template(object):
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
                     tmp_msg = msg(self, cr, uid, ids, context=context)
-                    # Why translate something that has been generated dynamically?
-                    # tmp_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=txt_msg) or txt_msg
                     if isinstance(tmp_msg, tuple):
                         tmp_msg, params = tmp_msg
                         translated_msg = tmp_msg % params
