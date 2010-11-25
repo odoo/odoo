@@ -203,7 +203,7 @@ class res_company(osv.osv):
         return """
 <header>
 <pageTemplate>
-    <frame id="first" x1="28.0" y1="57.0" width="772" height="481"/>
+    <frame id="first" x1="28.0" y1="28.0" width="786" height="525"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
@@ -212,7 +212,7 @@ class res_company(osv.osv):
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
         <stroke color="#000000"/>
-        <lines>25 550 808 550</lines>
+        <lines>25 550 818 550</lines>
     </pageGraphics>
     </pageTemplate>
 </header>"""
@@ -220,16 +220,16 @@ class res_company(osv.osv):
         return """
         <header>
         <pageTemplate>
-        <frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
+        <frame id="first" x1="28.0" y1="28.0" width="539" height="772"/>
         <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="1.3cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="9.8cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
+        <drawString x="9.3cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
         <stroke color="#000000"/>
-        <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
+        <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
         </pageGraphics>
         </pageTemplate>
 </header>"""
