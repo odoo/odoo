@@ -541,7 +541,9 @@ class account_move_line(osv.osv):
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
-    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False):
+    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False, context=None):
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
         currency_obj = self.pool.get('res.currency')
@@ -552,7 +554,8 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc)
+        context.update({'date': date})
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0
