@@ -24,7 +24,7 @@
     'name': 'Event',
     'version': '0.1',
     'category': 'Generic Modules/Association',
-    'description': """Oraganization and management of Event.
+    'description': """Organization and management of Event.
 
     This module allow you
         * to manage your events and their registrations

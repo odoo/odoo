@@ -464,8 +464,8 @@ def _create_dta(obj, cr, uid, data, context=None):
             v['partner_zip']= ''
             v['partner_country']= ''
             raise osv.except_osv(_('Error'), _('No address defined \n' \
-                    'for the partner: ' + pline.partner_id.name + '\n' \
-                    'on line: ' + pline.name))
+                    'for the partner: %s \n' \
+                    'on line: %s') % (pline.partner_id.name,pline.name))
 
         if pline.order_id.date_scheduled:
             date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
