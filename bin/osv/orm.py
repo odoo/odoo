@@ -3349,7 +3349,7 @@ class orm(orm_template):
             fobj = None
             if field in self._columns:
                 fobj = self._columns[field]
-            else:
+            elif field in self._inherit_fields:
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
