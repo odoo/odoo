@@ -81,6 +81,7 @@
         'base_demo.xml',
         'res/partner/partner_demo.xml',
         'res/partner/crm_demo.xml',
+        'res/res_widget_demo.xml',
     ],
     'test': [
         'test/base_test.xml',

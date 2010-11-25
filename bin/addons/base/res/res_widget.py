@@ -35,21 +35,23 @@ class res_widget_user(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users','User', select=1),
-        'widget_id': fields.many2one('res.widget','Widget',required=1),
+        'widget_id': fields.many2one('res.widget','Widget',required=True),
     }
 res_widget_user()
 
 class res_widget_wizard(osv.osv_memory):
     _name = "res.widget.wizard"
-    _description = "Add a widget"
+    _description = "Add a widget for User"
     _columns = {
-        'widget_id': fields.one2many("res.widget", 'Widget', required=True),
+        'widget_id': fields.many2many("res.widget",
+                                      "res_widget_user_rel", "uid", "wid",
+                                      "Widget"),
     }
-    def widget_add(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        wizard = self.read(cr, uid, ids)[0]
-        self.pool.get('res.widget.user').create(cr, uid, {'user_id':uid, 'widget_id':wizard['widget_id']})
-        return {}
-res_widget_wizard()
 
+    def res_widget_add(self, cr, uid, ids, context=None):
+        wizard = self.read(cr, uid, ids, context=context)[0]
+        for wiz_id in wizard['widget_id']:
+            self.pool.get('res.widget.user').create(
+                cr, uid, {'user_id':uid, 'widget_id':wiz_id}, context=context)
+        return {'type': 'ir.actions.act_window_close'}
+res_widget_wizard()
