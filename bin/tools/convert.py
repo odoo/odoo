@@ -284,7 +284,7 @@ form: module.record_id""" % (xml_id,)
         d_search = rec.get("search",'').encode('utf-8')
         d_id = rec.get("id",'')
         ids = []
-        
+
         if d_search:
             idref = _get_idref(self, cr, self.uid, d_model, context={}, idref={})
             ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search, idref))
@@ -556,7 +556,7 @@ form: module.record_id""" % (xml_id,)
 
         values = {'parent_id': False}
         if rec.get('parent', False) is False and len(m_l) > 1:
-            # No parent attribute specified and the menu name has several menu components, 
+            # No parent attribute specified and the menu name has several menu components,
             # try to determine the ID of the parent according to menu path
             pid = False
             res = None
@@ -637,6 +637,10 @@ form: module.record_id""" % (xml_id,)
             values['sequence'] = int(rec.get('sequence'))
         if rec.get('icon'):
             values['icon'] = str(rec.get('icon'))
+        if rec.get('web_icon'):
+            values['web_icon'] = "%s,%s" %(self.module, str(rec.get('web_icon')))
+        if rec.get('web_icon_hover'):
+            values['web_icon_hover'] = "%s,%s" %(self.module, str(rec.get('web_icon_hover')))
 
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
