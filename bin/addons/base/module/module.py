@@ -477,7 +477,7 @@ class module(osv.osv):
                 if f:
                     logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
                     tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
-                else:
+                elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 
     def check(self, cr, uid, ids, context=None):
