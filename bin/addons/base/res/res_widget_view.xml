@@ -74,11 +74,9 @@
         </record>
         <menuitem action="res_widget_user_act_window" id="menu_res_widget_user_act_window" parent="base.next_id_2"
             groups="base.group_no_one"/>
-        
-        
 
         <record id="view_res_widget_wizard" model="ir.ui.view">
-            <field name="name">Res Widget Wizard</field>
+            <field name="name">Homepage Widgets Management</field>
             <field name="model">res.widget.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -87,12 +85,15 @@
                 <newline/>
                 <separator string="" colspan="6"/>
                 <group colspan="6" col="4" >
-                <button special="cancel" string="Cancel" icon="gtk-cancel" />
-                <button name="res_widget_add" string="Add" type="object"/>
+                  <button special="cancel" string="Cancel" icon="gtk-cancel" />
+                  <button name="res_widget_add" string="Add" type="object"/>
                 </group>
             </form>
             </field>
         </record>
-        <act_window name="Res Widget Wizard" res_model="res.widget.wizard" src_model="res.widget.user" view_mode="form" target="new" key2="client_action_multi" id="action_res_widget_wizard"/>
+        <act_window name="Homepage Widgets Management"
+                    res_model="res.widget.wizard" src_model="res.widget.user"
+                    view_mode="form" target="new" key2="client_action_multi"
+                    id="action_res_widget_wizard"/>
     </data>
 </openerp>
