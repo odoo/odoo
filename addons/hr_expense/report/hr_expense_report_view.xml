@@ -69,7 +69,7 @@
                     <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
                       help = "Approved Expenses"/>
                     <separator orientation="vertical"/>
-                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','=','invoiced')]"
+                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
                       help = "Invoiced Expenses"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
