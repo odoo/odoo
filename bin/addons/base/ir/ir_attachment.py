@@ -81,10 +81,8 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).create(cr, uid, values, context)
 
     def action_get(self, cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
-        res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
+        return self.pool.get('ir.actions.act_window').for_xml_id(
+            cr, uid, 'base', 'action_attachment', context=context)
 
     def _name_get_resname(self, cr, uid, ids, object,method, context):
         data = {}

@@ -272,6 +272,19 @@ class act_window(osv.osv):
         'multi': False,
     }
 
+    def for_xml_id(self, cr, uid, module, xml_id, context=None):
+        """ Returns the act_window object created for the provided xml_id
+
+        :param module: the module the act_window originates in
+        :param xml_id: the namespace-less id of the action (the @id
+                       attribute from the XML file)
+        :return: A read() view of the ir.actions.act_window
+        """
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id (cr, 1, module, xml_id)
+        res_id = dataobj.browse(cr, uid, data_id, context).res_id
+        return self.read(cr, uid, res_id, [], context)
+
 act_window()
 
 class act_window_view(osv.osv):

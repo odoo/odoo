@@ -49,11 +49,8 @@ class res_widget_wizard(osv.osv_memory):
     }
 
     def action_get(self, cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_widget_wizard')
-        res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.pool.get('ir.actions.act_window').read(
-            cr, uid, res_id, [], context)
+        return self.pool.get('ir.actions.act_window').for_xml_id(
+            cr, uid, 'base', 'action_res_widget_wizard', context=context)
 
     def res_widget_add(self, cr, uid, ids, context=None):
         wizard = self.read(cr, uid, ids, context=context)[0]
