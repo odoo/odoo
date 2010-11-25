@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 02:11+0000\n"
+"Last-Translator: sugi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -119,6 +119,15 @@ msgstr ""
 "Хэрэв танд харилцагч руу сануулга илгээхэд дүрэм хэрэгтэй бол үүнийг сонго."
 
 #. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Харилцагчийн моделийн нөхцөл"
@@ -149,6 +158,11 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Гол агуулгад тусгай тэмдэгтүүд хэрэглэгдсэн"
 
 #. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Модулийн нэр давхцах ёсгүй !"
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Төлөв"
@@ -157,6 +171,11 @@ msgstr "Төлөв"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr ""
+
+#. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Модулийн сертификат ID давхцах ёсгүй !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -241,7 +260,7 @@ msgstr "Саатлын төрөл"
 #. module: base_action_rule
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: base_action_rule
 #: help:base.action.rule,regex_name:0
@@ -260,7 +279,7 @@ msgstr "Объектын метод дуудах"
 #. module: base_action_rule
 #: field:base.action.rule,act_email_to:0
 msgid "Email To"
-msgstr ""
+msgstr "Э-мэйлрүү"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
@@ -318,7 +337,7 @@ msgstr "Идэвхитэй"
 #: code:addons/base_action_rule/base_action_rule.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Таны компаны хаягийн санд Э-мэйл ID байхгүй байна!"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -333,7 +352,7 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Дэлгэцэнд дүрмийн жагсаалт харагдахад захиалгын дарааллыг өгнө."
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -360,17 +379,22 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_ir_cron
 msgid "ir.cron"
-msgstr ""
+msgstr "ir.cron"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_description)s = Object description"
-msgstr ""
+msgstr "%(object_description)s = Тодорхойлолт"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Имэйл үйл ажиллагаанууд"
+
+#. module: base_action_rule
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -382,6 +406,8 @@ msgstr "Имэйлийн мэдээлэл"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй !"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -416,12 +442,12 @@ msgstr "Имэйлийн гол утга"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_watchers:0
 msgid "Mail to Watchers (CC)"
-msgstr ""
+msgstr "Ажиглагчруу илгээх (CC)"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server Action to be Triggered"
-msgstr ""
+msgstr "Серверийн үйлдэл эхэлсэн"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_user:0
