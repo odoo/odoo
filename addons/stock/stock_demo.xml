@@ -172,11 +172,11 @@
         </record>
 
         <function model="stock.inventory" name="action_confirm">
-            <function eval="[[]]" model="stock.inventory" name="search"/>
+            <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
         <function model="stock.inventory" name="action_done">
-            <function eval="[[]]" model="stock.inventory" name="search"/>
+            <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
         </function>
 
 

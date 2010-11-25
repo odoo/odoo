@@ -456,7 +456,7 @@ class product_product(osv.osv):
         'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
         'price': fields.function(_product_price, method=True, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
-        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
+        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='Public Price', digits_compute=dp.get_precision('Sale Price')),
         'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Reference', size=64),
@@ -489,7 +489,9 @@ class product_product(osv.osv):
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         def _name_get(d):
@@ -497,10 +499,26 @@ class product_product(osv.osv):
             code = d.get('default_code',False)
             if code:
                 name = '[%s] %s' % (code,name)
-            if d['variants']:
+            if d.get('variants'):
                 name = name + ' - %s' % (d['variants'],)
             return (d['id'], name)
-        result = map(_name_get, self.read(cr, user, ids, ['variants','name','default_code'], context))
+
+        partner_id = context.get('partner_id', False)
+
+        result = []
+        for product in self.browse(cr, user, ids, context=context):
+            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if sellers:
+                for s in sellers:
+                    mydict = {
+                              'id': product.id, 
+                              'name': s.product_name or product.name, 
+                              'default_code': s.product_code or product.default_code, 
+                              'variants': product.variants
+                              }
+                    result.append(_name_get(mydict))
+            else:
+                result.append(_name_get(self.read(cr, user, product.id, ['variants','name','default_code'], context)))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):

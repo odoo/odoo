@@ -589,8 +589,8 @@ class stock_picking(osv.osv):
             group by
                 picking_id""",(tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
-                res[pick]['min_date'] = dt1
-                res[pick]['max_date'] = dt2
+            res[pick]['min_date'] = dt1
+            res[pick]['max_date'] = dt2
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -2422,7 +2422,7 @@ class stock_inventory(osv.osv):
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
-            self.write(cr, uid, [inv.id], {'state':'done'}, context=context)
+            self.write(cr, uid, [inv.id], {'state':'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -2475,7 +2475,7 @@ class stock_inventory(osv.osv):
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
             self.log(cr, uid, inv.id, message)
-            self.write(cr, uid, [inv.id], {'state': 'confirm', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6, 0, move_ids)]})
+            self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
