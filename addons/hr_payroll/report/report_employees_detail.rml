@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="Employees Salary Details.pdf">
-  <template pageSize="(1120.0,770.0)" title="Employees Salary Details" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(842.0,595.0)" title="Employees Salary Details" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="28.0" y1="28.0" width="1064" height="714"/>
+      <frame id="first" x1="28.0" y1="57.0" width="786" height="481"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -258,90 +258,9 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] </para>
-    <blockTable colWidths="1063.0" style="Table12">
-      <tr>
-        <td>
-          <para style="terp_header_Centre">Employees Salary Details </para>
-          <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="terp_default_Centre_9">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table2">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Employee Code</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.ssnid ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Department</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.company_id and o.company_id.name or '' ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Bank</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.otherid or '' ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table3">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Employee Name</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Other No.</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.otherid or '' ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Address</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[o.address_home_id and o.address_home_id.name or '' ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table5">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Designation</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.contract_ids and o.contract_ids[0].job_id.name or '' ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Phone No.</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[ o.work_phone or '' ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">E-mail Address</para>
-        </td>
-        <td>
-          <para style="terp_default_9">[[o.work_email or '' ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="terp_default_space">
-      <font color="white"> </font>
-    </para>
-    <section>
-      <para style="terp_default_1">[[ repeatIn(get_periods(data['form']),'m') ]] [[ get_employee_detail(o) ]]</para>
-      <blockTable colWidths="244.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,71.0" style="Table4">
+  <pto>
+  <pto_header>
+  <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table4">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Title</para>
@@ -387,11 +306,138 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
+  </pto_header>
+    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] </para>
+    <blockTable colWidths="785.0" style="Table12">
+      <tr>
+        <td>
+          <para style="terp_header_Centre">Employees Salary Details </para>
+          <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_Centre_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table2">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Employee Code</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.ssnid ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Department</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.company_id and o.company_id.name or '' ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Bank</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.otherid or '' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table3">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Employee Name</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Other No.</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.otherid or '' ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Address</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[o.address_home_id and o.address_home_id.name or '' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table5">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Designation</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.contract_ids and o.contract_ids[0].job_id.name or '' ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Phone No.</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ o.work_phone or '' ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">E-mail Address</para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[o.work_email or '' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_space">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="terp_default_1">[[ repeatIn(get_periods(data['form']),'m') ]] [[ get_employee_detail(o) ]]</para>
+      <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Title</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[0] != 'None' and m[0] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[1] != 'None' and m[1] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[2] != 'None' and m[2] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[3] != 'None' and m[3] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[4] != 'None' and m[4] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[5] != 'None' and m[5] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[6] != 'None' and m[6] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[7] != 'None' and m[7] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[8] != 'None' and m[8] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[9] != 'None' and m[9] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[10] != 'None' and m[10] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[11] != 'None' and m[11] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Total</para>
+          </td>
+        </tr>
+      </blockTable>
       <section>
-        <blockTable colWidths="1063.0" style="Table7">
+        <blockTable colWidths="785.0" style="Table7">
           <tr>
             <td>
               <para style="terp_tblheader_Details">Allowances with Basic: </para>
@@ -400,7 +446,7 @@
         </blockTable>
         <section>
           <para style="terp_default_1">[[ repeatIn(get_allow(),'e1') ]]</para>
-          <blockTable colWidths="244.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,71.0" style="Table6">
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table6">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e1[0] ]]</para>
@@ -471,7 +517,7 @@
             </tr>
           </blockTable>
         </section>
-        <blockTable colWidths="1063.0" style="Table10">
+        <blockTable colWidths="785.0" style="Table10">
           <tr>
             <td>
               <para style="terp_tblheader_Details">Deductions: </para>
@@ -480,7 +526,7 @@
         </blockTable>
         <section>
           <para style="terp_default_1">[[ repeatIn(get_deduct(),'e2') ]]</para>
-          <blockTable colWidths="244.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,71.0" style="Table8">
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table8">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e2[0] ]]</para>
@@ -551,7 +597,7 @@
             </tr>
           </blockTable>
         </section>
-        <blockTable colWidths="1063.0" style="Table11">
+        <blockTable colWidths="785.0" style="Table11">
           <tr>
             <td>
               <para style="terp_tblheader_Details">Others: </para>
@@ -560,7 +606,7 @@
         </blockTable>
         <section>
           <para style="terp_default_1">[[ repeatIn(get_other(),'e3') ]]</para>
-          <blockTable colWidths="244.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,71.0" style="Table9">
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table9">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e3[0] ]]</para>
@@ -632,7 +678,7 @@
           </blockTable>
         </section>
       </section>
-      <blockTable colWidths="244.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,62.0,71.0" style="Table1">
+      <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table1">
         <tr>
           <td>
             <para style="terp_tblheader_Details">[[ get_monthly_total()[0] ]]</para>
@@ -679,5 +725,6 @@
         </tr>
       </blockTable>
     </section>
+    </pto>
   </story>
 </document>
