@@ -767,10 +767,7 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
-<<<<<<< TREE
-=======
         self.unixperms = 040750
->>>>>>> MERGE-SOURCE
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:

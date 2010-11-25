@@ -248,7 +248,6 @@ class CalDAV(object):
          @param value: Get Attribute Value
          @param type: Get Attribute Type
         """
-        print "valueeeeeeeeee",value,name, type
         if name in self.__attribute__ and self.__attribute__[name]:
             self.__attribute__[name][type] = value
         return True
@@ -302,7 +301,6 @@ class CalDAV(object):
 
         att_data = []
         exdates = []
-        print "tools.get_server_timezone()",tools.get_server_timezone()
         _server_tzinfo = pytz.timezone(tools.get_server_timezone())
 
         for cal_data in child.getChildren():
@@ -337,7 +335,6 @@ class CalDAV(object):
                 self.ical_set(cal_data.name.lower(), ','.join(exvals), 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
-                print "_server_tzinfo",cal_data.params.get('X-VOBJ-ORIGINAL-TZID')
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                     date_local = cal_data.value.astimezone(_server_tzinfo)
@@ -456,23 +453,19 @@ class CalDAV(object):
                                 dtfield.value = parser.parse(data[map_field])
                                 
                         elif map_type == 'utc'and data[map_field]:
-                            dtfield = vevent.add(field)
-#                            if tzval:
-#                                dtfield.params['TZID'] = [tzval.title()]
-#                                dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
-#                            else:
-#                                import pytz, datetime
-##                            print "tzinfo",tzinfo
-#                            local = pytz.timezone (tools.get_server_timezone())
-#                            naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
-#                            print "naiteeee",naive.timetz()
-#                            t = naive.utcfromtimestamp(naive.timetz())
-                            print "ttttttttttttt",t
-                            local_dt = naive.replace (local)
-                            utc_dt = local_dt.astimezone (pytz.utc)
-#                            dtfield.value = utc_dt.strftime ("%Y-%m-%d %H:%M:%S")
-                            dtfield.value  = self.format_date_tz(parser.parse(data[map_field]), context.get('tz',False))
-                                
+                            if tzval:
+                                local = pytz.timezone (tzval.title())
+                                naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
+                                local_dt = naive.replace (tzinfo = local)
+                                utc_dt = local_dt.astimezone (pytz.utc)
+                                vevent.add(field).value = utc_dt
+                            else:
+                               utc_timezone = pytz.timezone ('UTC')
+                               naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
+                               local_dt = naive.replace (tzinfo = utc_timezone)
+                               utc_dt = local_dt.astimezone (pytz.utc)
+                               vevent.add(field).value = utc_dt
+
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
