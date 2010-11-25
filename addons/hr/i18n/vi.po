@@ -1,20 +1,25 @@
 # Vietnamese translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Phong Nguyen <phong.nguyen_thanh@yahoo.com>, 2009.
+#
+# This file contains the translation of the following modules:
+#	* hr
+#	* hr_attendance
+#	* hr_timesheet
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 13:10+0000\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 07:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -26,17 +31,17 @@ msgstr "Người dùng OpenERP"
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Yêu cầu"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr "Lỗi tên phòng! Phòng ban này đã được định nghĩa trong cơ sở dữ liệu."
+msgstr "Lỗi! Bạn không thể tạo phòng ban đệ quy"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Kết nối nhân viên tới thông tin"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -50,24 +55,24 @@ msgstr "Số bảo hiểm xã hội"
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
-msgstr "Quản trị nguồn nhân lực"
+msgstr "Quản trị nhân lực"
 
 #. module: hr
 #: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Nhóm theo"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Địa chỉ thư điện tử công việc"
 
 #. module: hr
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Tên mẫu không hợp lệ khi định nghĩa hành động"
+msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: hr
 #: view:hr.employee:0
@@ -76,7 +81,7 @@ msgstr "Tên mẫu không hợp lệ khi định nghĩa hành động"
 #: field:hr.job,department_id:0
 #: view:res.users:0
 msgid "Department"
-msgstr "Phòng ban"
+msgstr "Phòng/Ban"
 
 #. module: hr
 #: help:hr.installer,hr_attendance:0
@@ -86,22 +91,22 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Đánh dấu \"Cũ\""
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Công việc"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "Đang tuyển dụng"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "cách xưng hô"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -119,7 +124,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Nghỉ lễ"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
@@ -129,7 +134,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Tình trạng hôn nhân của nhân viên"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -141,22 +146,22 @@ msgstr ""
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Kết nối người sử dụng đến nhân viên"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Hợp đồng của nhân viên"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Hệ thống thanh toán lương chung"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "chung"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -167,7 +172,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Thông tin hộ chiếu của nhân viên"
 
 #. module: hr
 #: view:hr.employee:0
@@ -221,7 +226,7 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Bảng chấm công"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -241,7 +246,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr "Điện thoại cơ quan"
+msgstr "Điện thoại công ty"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
@@ -253,6 +258,11 @@ msgstr "Hạng mục con"
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
+msgstr "Mô tả công việc"
+
+#. module: hr
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr
@@ -263,7 +273,7 @@ msgstr "Địa điểm văn phòng"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport"
-msgstr ""
+msgstr "Hộ chiếu"
 
 #. module: hr
 #: view:hr.employee:0
@@ -276,7 +286,7 @@ msgstr "Nhân viên"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Thông tin khác"
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -289,9 +299,14 @@ msgid "Human Resources Application Configuration"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Ngày sinh"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -313,7 +328,7 @@ msgstr ""
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Công việc"
 
 #. module: hr
 #: view:hr.department:0
@@ -329,7 +344,7 @@ msgstr "Cấu hình"
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Loại"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
@@ -339,7 +354,7 @@ msgstr ""
 #. module: hr
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML không hợp lệ để xem kiến trúc"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -412,6 +427,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
+msgstr "hr.department"
+
+#. module: hr
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: hr
@@ -431,6 +451,21 @@ msgid "Category"
 msgstr "Loại"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+
+#. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
 msgstr ""
@@ -443,7 +478,7 @@ msgstr "Ghi chú"
 #. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
-msgstr "Thông tin liên lạc"
+msgstr "Thông tin liên hệ"
 
 #. module: hr
 #: constraint:ir.ui.menu:0
@@ -459,6 +494,14 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Trạng thái"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Departments Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitements, etc."
+msgstr ""
 
 #. module: hr
 #: field:hr.installer,progress:0
@@ -489,7 +532,7 @@ msgstr "Số an ninh xã hội"
 #. module: hr
 #: view:hr.employee:0
 msgid "Active"
-msgstr "Đang hoạt động"
+msgstr "Hiệu lực"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -572,7 +615,9 @@ msgstr "Thông tin cá nhân"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "Tên đối tượng phải bắt đầu bằng chữ x_ và không chứa ký tự đặc biệt"
+msgstr ""
+"Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
+"nào!"
 
 #. module: hr
 #: view:res.users:0
@@ -594,7 +639,7 @@ msgstr ""
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "Phòng/Ban cấp trên"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -610,7 +655,7 @@ msgstr "Địa chỉ nhà"
 #: field:hr.installer,hr_attendance:0
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
-msgstr ""
+msgstr "Tham dự"
 
 #. module: hr
 #: view:hr.employee.marital.status:0
@@ -642,7 +687,7 @@ msgstr ""
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "phòng/ban"
 
 #. module: hr
 #: field:hr.employee,country_id:0
@@ -716,7 +761,7 @@ msgstr ""
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Phòng/ban con"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -741,11 +786,19 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "Người quản lý"
+msgstr "Quản lý"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"JJob Positions is used to define jobs and their requirements. You can attach "
+"a survey to a job position. This survey will be used in the recruitment "
+"process to evaluate the applicants for this job position."
 msgstr ""
 
 #. module: hr
@@ -756,32 +809,11 @@ msgstr "Người cấp dưới"
 #~ msgid "Group name"
 #~ msgstr "Tên nhóm"
 
-#~ msgid "Friday"
-#~ msgstr "Thứ Sáu"
-
-#~ msgid "Divorced"
-#~ msgstr "Ly dị"
-
-#~ msgid "Tuesday"
-#~ msgstr "Thứ Ba"
-
 #~ msgid "Day of week"
 #~ msgstr "Ngày trong tuần"
 
-#~ msgid "Birthday"
-#~ msgstr "Ngày sinh"
-
-#~ msgid "Monday"
-#~ msgstr "Thứ Hai"
-
-#~ msgid "Wednesday"
-#~ msgstr "Thứ Tư"
-
 #~ msgid "Starting date"
 #~ msgstr "Ngày bắt đầu"
-
-#~ msgid "Thursday"
-#~ msgstr "Thứ Năm"
 
 #~ msgid "Other"
 #~ msgstr "Khác"
@@ -789,17 +821,8 @@ msgstr "Người cấp dưới"
 #~ msgid "New Employee"
 #~ msgstr "Nhân viên mới"
 
-#~ msgid "Saturday"
-#~ msgstr "Thứ Bảy"
-
 #~ msgid "Job Information"
 #~ msgstr "Thông tin công việc"
-
-#~ msgid "Work Email"
-#~ msgstr "Thư điện tử nơi làm việc"
-
-#~ msgid "Sunday"
-#~ msgstr "Chủ Nhật"
 
 #~ msgid "Maried"
 #~ msgstr "Kết hôn"
@@ -837,12 +860,6 @@ msgstr "Người cấp dưới"
 #~ msgid "Work from"
 #~ msgstr "Làm việc từ"
 
-#~ msgid "Parents"
-#~ msgstr "Cha; Mẹ:"
-
-#~ msgid "Employee Contract Process"
-#~ msgstr "Quy trình hợp đồng lao động với nhân viên"
-
 #~ msgid "Working Time"
 #~ msgstr "Thời gian làm việc"
 
@@ -852,5 +869,524 @@ msgstr "Người cấp dưới"
 #~ msgid "Employee Complete Form"
 #~ msgstr "Mẫu nhân viên hoàn chỉnh"
 
-#~ msgid "Timesheet Line"
-#~ msgstr "Dòng chấm công"
+#~ msgid "Wed"
+#~ msgstr "Thứ tư"
+
+#~ msgid "(Keep empty for current_time)"
+#~ msgstr "(Để trống cho thời gian hiện tại)"
+
+#~ msgid "Current Server Date"
+#~ msgstr "Ngày hiện tại trên máy chủ"
+
+#~ msgid "No employee defined for your user !"
+#~ msgstr "Không có nhân viên được xác định cho người dùng của bạn!"
+
+#~ msgid "Employee's name"
+#~ msgstr "Tên nhân viên"
+
+#~ msgid "Sunday"
+#~ msgstr "Chủ nhật"
+
+#~ msgid "Parents"
+#~ msgstr "Cha mẹ"
+
+#~ msgid "Contact  of employee"
+#~ msgstr "Thông tin liên hệ của nhân viên"
+
+#~ msgid "Sign Out"
+#~ msgstr "Đăng xuất"
+
+#~ msgid "Work Email"
+#~ msgstr "Email công việc"
+
+#~ msgid "March"
+#~ msgstr "Tháng ba"
+
+#~ msgid "My Working Hours of The Day"
+#~ msgstr "Giờ làm việc trong ngày của tôi"
+
+#~ msgid "Employee Timesheet"
+#~ msgstr "Bảng chấm công nhân viên"
+
+#~ msgid "Friday"
+#~ msgstr "Thứ sáu"
+
+#~ msgid "Timesheet"
+#~ msgstr "Bảng chấm công"
+
+#~ msgid ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+#~ msgstr ""
+#~ "Bạn đã không đăng xuất lần cuối cùng. Vui lòng nhập ngày và giờ bạn đăng "
+#~ "xuất."
+
+#~ msgid "Total period:"
+#~ msgstr "Tổng thời gian:"
+
+#~ msgid "Reason"
+#~ msgstr "Lý do"
+
+#~ msgid "Mon"
+#~ msgstr "Thứ hai"
+
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "Ngày đăng xuất phải là ngày quá khứ"
+
+#~ msgid "Date Signed"
+#~ msgstr "Ngày ký"
+
+#~ msgid "UnknownError"
+#~ msgstr "Lỗi không xác định"
+
+#~ msgid "Work done in the last period"
+#~ msgstr "Công việc được thực hiện trong giai đoạn cuối"
+
+#~ msgid "Attendance reasons"
+#~ msgstr "Lý do có mặt"
+
+#~ msgid "Present"
+#~ msgstr "Hiện tại"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Total time"
+#~ msgstr "Tổng thời gian"
+
+#~ msgid "Current state"
+#~ msgstr "Trạng thái hiện tại"
+
+#~ msgid "My Working Hours"
+#~ msgstr "Giờ làm việc của tôi"
+
+#~ msgid "Attendance Reasons"
+#~ msgstr "Lý do có mặt"
+
+#~ msgid ""
+#~ "You tried to sign with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Bạn đã cố gắng đăng nhập với một ngày trước một sự kiện khác !\n"
+#~ "Xin hãy liên hệ quản trị viên để điều chỉnh."
+
+#~ msgid "UserError"
+#~ msgstr "Lỗi người dùng"
+
+#~ msgid "Ending Date"
+#~ msgstr "Ngày kết thúc"
+
+#~ msgid "No cost unit defined for this employee !"
+#~ msgstr "Không có đơn vị chấp nhận chi phí xác định cho nhân viên này!"
+
+#~ msgid "Employee attendance"
+#~ msgstr "Nhân viên có mặt"
+
+#~ msgid "Print Timesheet"
+#~ msgstr "In bảng chấm công"
+
+#~ msgid "Tue"
+#~ msgstr "Thứ ba"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Tài khoản phân tích"
+
+#~ msgid "Timesheet Process"
+#~ msgstr "Quy trình chấm công"
+
+#~ msgid "Warning"
+#~ msgstr "Cảnh báo"
+
+#~ msgid "Human Resources (Timesheet encoding)"
+#~ msgstr "Quản trị nhân lực (mã hóa bảng chấm công)"
+
+#~ msgid "Operation"
+#~ msgstr "Hoạt động"
+
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "Đăng nhập phải ngay sau khi đăng xuất !"
+
+#~ msgid "Sat"
+#~ msgstr "Thứ bảy"
+
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr "Bây giờ bạn đã sẵn sàng để đăng nhập hoặc đăng xuất"
+
+#~ msgid "Absent"
+#~ msgstr "Vắng mặt"
+
+#~ msgid "Employees Timesheet"
+#~ msgstr "Bảng chấm công nhân viên"
+
+#~ msgid "Max. Delay (Min)"
+#~ msgstr "Chậm trễ tối đa (Phút)"
+
+#~ msgid "Minimum Analytic Amount"
+#~ msgstr "Số lượng phân tích tối thiểu"
+
+#~ msgid "Select a time span"
+#~ msgstr "Hãy chọn một khoảng thời gian"
+
+#~ msgid "This module aims to manage employee's attendances."
+#~ msgstr "Mô đun này nhằm mục đích quản lý việc tham dự của nhân viên."
+
+#~ msgid "Print"
+#~ msgstr "In"
+
+#~ msgid "Total cost"
+#~ msgstr "Tổng chi phí"
+
+#~ msgid "Action's type"
+#~ msgstr "Loại hành động"
+
+#~ msgid "July"
+#~ msgstr "Tháng bảy"
+
+#~ msgid "Attendance Error Report"
+#~ msgstr "Báo cáo lỗi tham dự"
+
+#~ msgid "Starting Date"
+#~ msgstr "Ngày bắt đầu"
+
+#~ msgid "Divorced"
+#~ msgstr "Ly hôn"
+
+#~ msgid "Min Delay"
+#~ msgstr "Chậm trễ tối thiểu"
+
+#~ msgid "Employee attendances"
+#~ msgstr "Tham dự của nhân viên"
+
+#~ msgid "Working Hours"
+#~ msgstr "Giờ làm việc"
+
+#~ msgid "No Data Available"
+#~ msgstr "Không có dữ liệu"
+
+#~ msgid "Timesheet line"
+#~ msgstr "Quy tắc chấm công"
+
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "Ngày đăng nhập phải là ngày trong quá khứ"
+
+#~ msgid "Analytic Journal"
+#~ msgstr "Nhật ký phân tích"
+
+#~ msgid "September"
+#~ msgstr "Tháng chín"
+
+#~ msgid "Tuesday"
+#~ msgstr "Thứ ba"
+
+#~ msgid "Thu"
+#~ msgstr "Thứ năm"
+
+#~ msgid "Select a month"
+#~ msgstr "Chọn tháng"
+
+#~ msgid "User"
+#~ msgstr "Người dùng"
+
+#~ msgid "Print My Timesheet"
+#~ msgstr "In bảng chấm công của tôi"
+
+#~ msgid ""
+#~ "(*) A negative delay means that the employee worked more than encoded."
+#~ msgstr ""
+#~ "(*) Một sự chậm trễ tiêu cực có nghĩa là nhân viên làm việc nhiều hơn thời "
+#~ "gian được ghi nhận."
+
+#~ msgid "ValidateError"
+#~ msgstr "Lỗi xác nhận"
+
+#~ msgid "Employee timesheet"
+#~ msgstr "Bảng chấm công nhân viên"
+
+#~ msgid "Sign in / Sign out by project"
+#~ msgstr "Đăng nhập/Đăng xuất bởi dự án"
+
+#~ msgid "June"
+#~ msgstr "Tháng sáu"
+
+#~ msgid "Fri"
+#~ msgstr "Thứ sáu"
+
+#~ msgid "Sign In"
+#~ msgstr "Đăng nhập"
+
+#~ msgid "Sign in / Sign out"
+#~ msgstr "Đăng nhập/Đăng xuất"
+
+#~ msgid ""
+#~ "You tried to sign in with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Bạn đã cố gắng đăng nhập với ngày trước một sự kiện khác!\n"
+#~ "Xin hãy liên hệ quản trị viên để điều chỉnh."
+
+#~ msgid "Attendance"
+#~ msgstr "Tham dự"
+
+#~ msgid "Print Timesheet by week"
+#~ msgstr "In bảng chấm công theo tuần"
+
+#~ msgid "Sign in status"
+#~ msgstr "Trạng thái đăng nhập"
+
+#~ msgid "Print Attendance Report"
+#~ msgstr "In báo cáo tham dự"
+
+#~ msgid "August"
+#~ msgstr "Tháng tám"
+
+#~ msgid "Monday"
+#~ msgstr "Thứ hai"
+
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr "Đăng xuất phải ngay sau đăng nhập!"
+
+#~ msgid "Attendances Of Employees"
+#~ msgstr "Sự tham dự của nhân viên"
+
+#~ msgid "Birthday"
+#~ msgstr "Sinh nhật"
+
+#~ msgid "Start Working"
+#~ msgstr "Bắt đầu làm việc"
+
+#~ msgid "Sun"
+#~ msgstr "Chủ nhật"
+
+#~ msgid "November"
+#~ msgstr "Tháng mười một"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implement a timesheet system. Each employee can encode and\n"
+#~ "track their time spent on the different projects. A project is an\n"
+#~ "analytic account and the time spent on a project generate costs on\n"
+#~ "the analytic account.\n"
+#~ "\n"
+#~ "Lots of reporting on time and employee tracking are provided.\n"
+#~ "\n"
+#~ "It is completely integrated with the cost accounting module. It allows you\n"
+#~ "to set up a management by affair.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "Mô đun này triển khai một hệ thống chấm công. Mỗi nhân viên có thể mã hóa "
+#~ "và\n"
+#~ "theo dõi thời gian họ đã làm việc trong các dự án khác nhau. Một dự án là "
+#~ "một\n"
+#~ "tài khoản phân tích và thời gian làm việc cho dự án phát sinh chi phí đối "
+#~ "với\n"
+#~ "tài khoản phân tích này.\n"
+#~ "\n"
+#~ "Nhiều báo cáo về theo dõi thời gian và nhân viên được cung cấp.\n"
+#~ "\n"
+#~ "Nó được tích hợp hoàn toàn với mô đun kế toán chi phí. Nó cho phép bạn\n"
+#~ "thiết lập quản lý theo vụ việc.\n"
+#~ "    "
+
+#~ msgid "Stop Working"
+#~ msgstr "Chấm dứt làm việc"
+
+#~ msgid "Closing Date"
+#~ msgstr "Ngày đóng"
+
+#~ msgid "Employee Contract Process"
+#~ msgstr "Xử lý hợp đồng lao động với nhân viên"
+
+#~ msgid "January"
+#~ msgstr "Tháng một"
+
+#~ msgid "Sign in"
+#~ msgstr "Đăng nhập"
+
+#~ msgid "Wednesday"
+#~ msgstr "Thứ tư"
+
+#~ msgid "Sign-Out Entry must follow Sign-In."
+#~ msgstr "Đăng xuất phải theo sau đăng nhập."
+
+#~ msgid "Date"
+#~ msgstr "Ngày"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module for human resource management. You can manage:\n"
+#~ "    * Employees and hierarchies\n"
+#~ "    * Work hours sheets\n"
+#~ "    * Attendances and sign in/out system\n"
+#~ "\n"
+#~ "    Different reports are also provided, mainly for attendance statistics.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Mô đun để quản trị nguồn nhân lực. Bạn có thể quản lý:\n"
+#~ "    * Nhân viên và hệ thống cấp bậc\n"
+#~ "    * Bảng chấm công\n"
+#~ "    * Sự có mặt và hệ thống đăng nhập/đăng xuất\n"
+#~ "\n"
+#~ "    Nhiều báo cáo khác nhau cũng được cung cấp, chủ yếu để thống kê việc "
+#~ "tham dự.\n"
+#~ "    "
+
+#~ msgid "Attendance Errors"
+#~ msgstr "Lỗi tham dự"
+
+#~ msgid "Action"
+#~ msgstr "Hành động"
+
+#~ msgid ""
+#~ "You tried to sign out with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Bạn đã cố gắng đăng xuất với một ngày trước một sự kiện khá !\n"
+#~ "Xin hãy liên hệ với quản trị viên để điều chỉnh."
+
+#~ msgid "Select a starting and a end date"
+#~ msgstr "Chọn ngày bắt đầu và ngày kết thúc"
+
+#~ msgid "Parent Users"
+#~ msgstr "Người dùng chính"
+
+#~ msgid "General Information"
+#~ msgstr "Thông tin chung"
+
+#~ msgid "December"
+#~ msgstr "Tháng mười hai"
+
+#~ msgid "Cancel"
+#~ msgstr "Hủy"
+
+#~ msgid "(Keep empty for current time)"
+#~ msgstr "(Để trống cho thời gian hiện tại)"
+
+#~ msgid "Choose your month"
+#~ msgstr "Chọn tháng của bạn"
+
+#~ msgid ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+#~ msgstr ""
+#~ "Không có nhật ký phân tích cho nhân viên này.\n"
+#~ "Xác định một nhân viên cho người dùng đã chọn và chỉ định một nhật ký phân "
+#~ "tích."
+
+#~ msgid ""
+#~ "(*) A positive delay means that the employee worked less than recorded."
+#~ msgstr ""
+#~ "(*) Một sự chậm trễ tích cực có nghĩa là nhân viên đã làm việc ít hơn thời "
+#~ "gian ghi nhận."
+
+#~ msgid "Thursday"
+#~ msgstr "Thứ năm"
+
+#~ msgid "Sign out"
+#~ msgstr "Đăng xuất"
+
+#~ msgid "Delay"
+#~ msgstr "Chậm trễ"
+
+#~ msgid "Print Attendance Error Report"
+#~ msgstr "In báo cáo lỗi tham dự"
+
+#~ msgid "Current Date"
+#~ msgstr "Ngày hiện tại"
+
+#~ msgid "Analysis Information"
+#~ msgstr "Thông tin phân tích"
+
+#~ msgid "Month"
+#~ msgstr "Tháng"
+
+#~ msgid ""
+#~ "No analytic account defined on the project.\n"
+#~ "Please set one or we can not automatically fill the timesheet."
+#~ msgstr ""
+#~ "Không có tài khoản phân tích được xác định đối với dự án. \n"
+#~ "Vui lòng thiết lập tài khoản phân tích hoặc chúng ta không thể tự động điền "
+#~ "bảng chấm công."
+
+#~ msgid "Product"
+#~ msgstr "Sản phẩm"
+
+#~ msgid "Action reason"
+#~ msgstr "Lý do hành động"
+
+#~ msgid "Users"
+#~ msgstr "Người dùng"
+
+#~ msgid "Working Hours of The Day"
+#~ msgstr "Giờ làm việc trong ngày"
+
+#~ msgid "May"
+#~ msgstr "Tháng năm"
+
+#~ msgid "Choose Users"
+#~ msgstr "Chọn người dùng"
+
+#~ msgid "Your last sign in"
+#~ msgstr "Lần đăng nhập cuối cùng của bạn"
+
+#~ msgid "Print Timesheet by month"
+#~ msgstr "In bảng chấm công theo tháng"
+
+#~ msgid "Date Recorded"
+#~ msgstr "Ngày ghi nhận"
+
+#~ msgid "(local time on the server side)"
+#~ msgstr "(giờ địa phương trên máy chủ)"
+
+#~ msgid "Define attendance reason"
+#~ msgstr "Định nghĩa lý do tham dự"
+
+#~ msgid "Other ID"
+#~ msgstr "Giấy tờ tùy thân khác"
+
+#~ msgid "February"
+#~ msgstr "Tháng hai"
+
+#~ msgid "Analytic line"
+#~ msgstr "Quy tắc phân tích"
+
+#~ msgid "April"
+#~ msgstr "Tháng tư"
+
+#~ msgid "Work Description"
+#~ msgstr "Mô tả công việc"
+
+#~ msgid "Timesheet Lines"
+#~ msgstr "Quy tắc chấm công"
+
+#~ msgid "Bellow this delay, the error is considered to be voluntary"
+#~ msgstr "Dưới sự chậm trễ này, lỗi này được coi là tự nguyện"
+
+#~ msgid "Your last sign out"
+#~ msgstr "Lần đăng xuất cuối cùng của bạn"
+
+#~ msgid "No records found for your selection!"
+#~ msgstr "Không có thông tin được tìm thấy cho lựa chọn của bạn!"
+
+#~ msgid "Fill up employee's contact information"
+#~ msgstr "Điền đầy đủ thông tin liên hệ của nhân viên"
+
+#~ msgid "October"
+#~ msgstr "Tháng mười"
+
+#~ msgid ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+#~ msgstr ""
+#~ "Bạn không đăng nhập lần cuối cùng. Vui lòng nhập ngày và thời gian bạn đăng "
+#~ "nhập."
+
+#~ msgid "Year"
+#~ msgstr "Năm"
+
+#~ msgid "Change Work"
+#~ msgstr "Thay đổi công việc"
+
+#~ msgid "Saturday"
+#~ msgstr "Thứ bảy"

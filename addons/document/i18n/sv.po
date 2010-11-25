@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* document
+#	* document
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:31+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 20:23+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -57,7 +57,7 @@ msgstr ""
 #: code:addons/document/document_directory.py:0
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr ""
+msgstr "Directory name contains special characters!"
 
 #. module: document
 #: view:document.directory:0
@@ -68,12 +68,12 @@ msgstr ""
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr ""
+msgstr "Directory Content Type"
 
 #. module: document
 #: view:document.directory:0
@@ -84,7 +84,7 @@ msgstr ""
 #: field:document.directory,file_ids:0
 #: view:report.document.user:0
 msgid "Files"
-msgstr ""
+msgstr "Files"
 
 #. module: document
 #: view:report.files.partner:0
@@ -105,7 +105,7 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
 msgid "Directory Content"
-msgstr ""
+msgstr "Directory Content"
 
 #. module: document
 #: view:document.directory:0
@@ -115,7 +115,7 @@ msgstr ""
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Dokumenthantering"
+msgstr "Document Management"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -139,13 +139,13 @@ msgstr ""
 #: code:addons/document/document_directory.py:0
 #, python-format
 msgid "Directory name must be unique!"
-msgstr ""
+msgstr "Directory name must be unique!"
 
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
-msgstr ""
+msgstr "Indexed Content"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -160,7 +160,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
-msgstr ""
+msgstr "Kataloger"
 
 #. module: document
 #: field:document.configuration,sale_order:0
@@ -181,7 +181,7 @@ msgstr ""
 #: code:addons/document/document_storage.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: document
 #: help:document.configuration,product:0
@@ -201,7 +201,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "Suffix"
 
 #. module: document
 #: field:report.document.user,change_date:0
@@ -213,7 +213,7 @@ msgstr ""
 #: field:ir.attachment,partner_id:0
 #: field:report.files.partner,partner:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: document
 #: view:board.board:0
@@ -223,14 +223,14 @@ msgstr ""
 #. module: document
 #: field:process.node,directory_id:0
 msgid "Document directory"
-msgstr ""
+msgstr "Document directory"
 
 #. module: document
 #: code:addons/document/document.py:0
 #: code:addons/document/document_directory.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -248,12 +248,12 @@ msgstr ""
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
-msgstr ""
+msgstr "Model Id"
 
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Error! Du kan inte skapa rekursiva kataloger."
 
 #. module: document
 #: view:document.directory:0
@@ -272,13 +272,13 @@ msgstr ""
 #: field:report.document.user,file_size:0
 #: field:report.files.partner,file_size:0
 msgid "File Size"
-msgstr ""
+msgstr "File Size"
 
 #. module: document
 #: field:document.directory.content.type,name:0
 #: field:ir.attachment,file_type:0
 msgid "Content Type"
-msgstr ""
+msgstr "Content Type"
 
 #. module: document
 #: view:document.directory:0
@@ -286,6 +286,11 @@ msgstr ""
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
+msgstr "Type"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: document
@@ -300,6 +305,7 @@ msgstr ""
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
+"Use a domain if you want to apply an automatic filter on visible resources."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_partner
@@ -314,18 +320,18 @@ msgstr ""
 #. module: document
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
-msgstr ""
+msgstr "Stored Filename"
 
 #. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
-msgstr ""
+msgstr "Directory Type"
 
 #. module: document
 #: field:document.directory.content,report_id:0
 msgid "Report"
-msgstr ""
+msgstr "Report"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -336,7 +342,7 @@ msgstr ""
 #. module: document
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Invalid XML for View Architecture!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -347,7 +353,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content.type,code:0
 msgid "Extension"
-msgstr ""
+msgstr "Extension"
 
 #. module: document
 #: view:ir.attachment:0
@@ -357,7 +363,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
-msgstr ""
+msgstr "Virtual Files"
 
 #. module: document
 #: view:ir.attachment:0
@@ -384,7 +390,7 @@ msgstr ""
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
-msgstr ""
+msgstr "Directory"
 
 #. module: document
 #: view:board.board:0
@@ -396,7 +402,7 @@ msgstr ""
 #: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr ""
+msgstr "Last Modification User"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -412,14 +418,14 @@ msgstr ""
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Domain"
 
 #. module: document
 #: field:document.directory,write_date:0
 #: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
-msgstr ""
+msgstr "Date Modified"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
@@ -452,12 +458,12 @@ msgstr ""
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr ""
+msgstr "Static Directory"
 
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Children"
 
 #. module: document
 #: view:document.directory:0
@@ -500,24 +506,24 @@ msgstr ""
 #: field:report.document.user,user_id:0
 #: field:report.document.wall,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Owner"
 
 #. module: document
 #: view:document.directory:0
 msgid "PDF Report"
-msgstr ""
+msgstr "PDF Report"
 
 #. module: document
 #: view:document.directory:0
 msgid "Contents"
-msgstr ""
+msgstr "Contents"
 
 #. module: document
 #: field:document.directory,create_date:0
 #: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
-msgstr ""
+msgstr "Date Created"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -530,12 +536,12 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
-msgstr ""
+msgstr "Include Record Name"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachment"
-msgstr ""
+msgstr "Attachment"
 
 #. module: document
 #: constraint:ir.ui.menu:0
@@ -553,16 +559,30 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Check this if you want to use the same tree structure as the object selected "
+"in the system."
 
 #. module: document
 #: view:document.directory:0
 msgid "Security"
+msgstr "Security"
+
+#. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
 msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
 msgstr ""
 
 #. module: document
@@ -581,7 +601,7 @@ msgstr ""
 #: field:document.directory,group_ids:0
 #: field:document.storage,group_ids:0
 msgid "Groups"
-msgstr ""
+msgstr "Groups"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -598,12 +618,21 @@ msgstr ""
 #: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
+msgstr "Data"
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
 msgstr ""
 
 #. module: document
 #: view:document.directory:0
 msgid "Definition"
-msgstr ""
+msgstr "Definition"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -614,12 +643,12 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 msgid "Seq."
-msgstr ""
+msgstr "Seq."
 
 #. module: document
 #: selection:document.storage,type:0
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #. module: document
 #: help:document.configuration,project:0
@@ -634,12 +663,12 @@ msgstr ""
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr ""
+msgstr "Integrated Document Management System"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
-msgstr ""
+msgstr "Attached To"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reports_document
@@ -662,17 +691,15 @@ msgid "Expression"
 msgstr ""
 
 #. module: document
-#: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
-msgid "Creator"
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+#: field:document.directory,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Creator"
+msgstr "Creator"
 
 #. module: document
 #: view:board.board:0
@@ -693,6 +720,11 @@ msgid "Prefix"
 msgstr ""
 
 #. module: document
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr ""
@@ -703,9 +735,14 @@ msgid "File Name"
 msgstr ""
 
 #. module: document
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Resource ID"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -749,7 +786,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Parent Model"
 
 #. module: document
 #: view:report.document.user:0
@@ -778,7 +815,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,ressource_tree:0
 msgid "Tree Structure"
-msgstr ""
+msgstr "Tree Structure"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -794,6 +831,13 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_report_document_wall
 msgid "Users that did not inserted documents since one month"
+msgstr ""
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
 msgstr ""
 
 #. module: document
@@ -876,6 +920,11 @@ msgstr ""
 #: field:document.directory,name:0
 #: field:document.storage,name:0
 msgid "Name"
+msgstr "Name"
+
+#. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
 msgstr ""
 
 #. module: document
@@ -920,24 +969,34 @@ msgid "Mime Type"
 msgstr ""
 
 #. module: document
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #. module: document
 #: field:document.directory.content,name:0
 msgid "Content Name"
-msgstr ""
+msgstr "Content Name"
 
 #. module: document
 #: code:addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "File name must be unique!"
 
 #. module: document
 #: selection:document.storage,type:0
 msgid "Internal File storage"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
 msgstr ""
 
 #. module: document
@@ -974,4 +1033,150 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
+msgstr "Document Type"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
+
+#~ msgid ""
+#~ "Select an object here and Open ERP will create a mapping for each of these "
+#~ "objects, using the given domain, when browsing through FTP."
+#~ msgstr ""
+#~ "Select an object here and Open ERP will create a mapping for each of these "
+#~ "objects, using the given domain, when browsing through FTP."
+
+#~ msgid ""
+#~ "This wizard will automatically configure the document management system "
+#~ "according to modules installed on your system."
+#~ msgstr ""
+#~ "This wizard will automatically configure the document management system "
+#~ "according to modules installed on your system."
+
+#~ msgid ""
+#~ "Put here the server address or IP. Keep localhost if you don't know what to "
+#~ "write."
+#~ msgstr ""
+#~ "Put here the server address or IP. Keep localhost if you don't know what to "
+#~ "write."
+
+#~ msgid "File Information"
+#~ msgstr "File Information"
+
+#~ msgid "Resource Title"
+#~ msgstr "Resource Title"
+
+#~ msgid "document.configuration.wizard"
+#~ msgstr "document.configuration.wizard"
+
+#~ msgid "Filesystem"
+#~ msgstr "Filesystem"
+
+#~ msgid "Browse Files"
+#~ msgstr "Bläddra filer"
+
+#~ msgid "Document Management System."
+#~ msgstr "Document Management System."
+
+#~ msgid "Storing Method"
+#~ msgstr "Storing Method"
+
+#~ msgid "Server Address"
+#~ msgstr "Server Address"
+
+#~ msgid "Link"
+#~ msgstr "Link"
+
+#~ msgid "Search a File"
+#~ msgstr "Sök fil"
+
+#~ msgid "Directories Mapped to Objects"
+#~ msgstr "Kataloger kopplade till objekt"
+
+#~ msgid "Document Configuration"
+#~ msgstr "Dokumentkonfiguration"
+
+#~ msgid "Auto Configure Directory"
+#~ msgstr "Auto Configure Directory"
+
+#~ msgid ""
+#~ "This wizard will configure the URL of the server of the document management "
+#~ "system."
+#~ msgstr ""
+#~ "This wizard will configure the URL of the server of the document management "
+#~ "system."
+
+#~ msgid "Preview"
+#~ msgstr "Preview"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * FTP Interface\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation\n"
+#~ "\n"
+#~ "    ATTENTION: \n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database, \n"
+#~ "      you will lose them all. \n"
+#~ "    - After installing this module PDF's are not longer stored into the "
+#~ "database, \n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+#~ msgstr ""
+#~ "This is a complete document management system:\n"
+#~ "    * FTP Interface\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation\n"
+#~ "\n"
+#~ "    ATTENTION: \n"
+#~ "    - When you install this module in a running company that have already "
+#~ "PDF files stored into the database, \n"
+#~ "      you will lose them all. \n"
+#~ "    - After installing this module PDF's are not longer stored into the "
+#~ "database, \n"
+#~ "      but in the servers rootpad like /server/bin/filestore.\n"
+
+#~ msgid "Directorie's Structure"
+#~ msgstr "Katalogstruktur"
+
+#~ msgid "Configure"
+#~ msgstr "Configure"
+
+#~ msgid "Others Info"
+#~ msgstr "Others Info"
+
+#~ msgid "History"
+#~ msgstr "History"
+
+#~ msgid ""
+#~ "If you put an object here, this directory template will appear bellow all of "
+#~ "these objects. Don't put a parent directory if you select a parent model."
+#~ msgstr ""
+#~ "If you put an object here, this directory template will appear bellow all of "
+#~ "these objects. Don't put a parent directory if you select a parent model."
+
+#~ msgid "Auto-Generated Files"
+#~ msgstr "Auto-Generated Files"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancel"
+
+#~ msgid ""
+#~ "Check this field if you want that the name of the file start by the record "
+#~ "name."
+#~ msgstr ""
+#~ "Check this field if you want that the name of the file start by the record "
+#~ "name."
+
+#~ msgid "Other Resources"
+#~ msgstr "Other Resources"
+
+#~ msgid "Parent Item"
+#~ msgstr "Parent Item"
+
+#~ msgid "Browse Files Using FTP"
+#~ msgstr "Bläddra filer med FTP"
+
+#~ msgid "Auto Configure"
+#~ msgstr "Auto Configure"

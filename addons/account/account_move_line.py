@@ -47,11 +47,8 @@ class account_move_line(osv.osv):
         if not context.get('fiscalyear', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         else:
-            if initial_bal:
-                fiscalyear_date_start = fiscalyear_obj.read(cr, uid, context['fiscalyear'], ['date_start'])['date_start']
-                fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_stop', '<', fiscalyear_date_start), ('state', '=', 'draft')], context=context)
-            else:
-                fiscalyear_ids = [context['fiscalyear']]
+            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
+            fiscalyear_ids = [context['fiscalyear']]
 
         fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         state = context.get('state', False)
@@ -436,7 +433,7 @@ class account_move_line(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
                                 store = {
@@ -492,6 +489,7 @@ class account_move_line(osv.osv):
         'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
+        'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
@@ -1094,7 +1092,7 @@ class account_move_line(osv.osv):
     def _update_check(self, cr, uid, ids, context={}):
         done = {}
         for line in self.browse(cr, uid, ids, context):
-            if line.move_id.state <> 'draft':
+            if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
                 raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !'))
             if line.reconcile_id:
                 raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !'))

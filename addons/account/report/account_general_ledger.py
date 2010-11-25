@@ -28,12 +28,10 @@
 ##############################################################################
 
 import time
-
 from report import report_sxw
 from common_report_header import common_report_header
-import rml_parse
 
-class general_ledger(rml_parse.rml_parse, common_report_header):
+class general_ledger(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -88,8 +86,17 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_target_move': self._get_target_move,
+            'strip_name': self._strip_name,
         })
         self.context = context
+
+    def _ellipsis(self, char, size=100, truncation_str='...'):
+        if len(char) <= size:
+            return char
+        return char[:size-len(truncation_str)] + truncation_str
+
+    def _strip_name(self, name, maxlen=50):
+        return self._ellipsis(name, maxlen)
 
     def _sum_currency_amount_account(self, account):
         self.cr.execute('SELECT sum(l.amount_currency) AS tot_currency \

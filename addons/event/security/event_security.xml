@@ -17,9 +17,6 @@
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">Sales / User</field>
     </record>
-	<record id="base.user_demo" model="res.users">
-             <field name="groups_id" eval="[(4, ref('marketing.group_marketing_user')),(4, ref('base.group_sale_salesman'))]"/>
-     </record>
   </data>
 </openerp>
 

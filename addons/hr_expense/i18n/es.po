@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 11:12+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-17 08:18+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-19 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -36,13 +36,13 @@ msgstr "﻿El contable reembolsa los gastos"
 #: field:hr.expense.expense,date_confirm:0
 #: field:hr.expense.report,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Fecha confirmación"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: view:hr.expense.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
@@ -60,12 +60,7 @@ msgstr "Nombre de modelo no válido en la definición de acción."
 #: view:hr.expense.report:0
 #: field:hr.expense.report,department_id:0
 msgid "Department"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Extended filters..."
-msgstr ""
+msgstr "Departamento"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -82,7 +77,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -92,12 +87,12 @@ msgstr "Cambiar a borrador"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "To Pay"
-msgstr ""
+msgstr "A pagar"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
-msgstr ""
+msgstr "Estadistícas de gastos"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -151,7 +146,7 @@ msgstr "Aceptado"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mes   "
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -176,7 +171,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Nº de líneas"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
@@ -191,7 +186,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Precio promedio"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -239,7 +234,7 @@ msgstr "Cuenta analítica"
 #. module: hr_expense
 #: field:hr.expense.report,date:0
 msgid "Date "
-msgstr ""
+msgstr "Fecha "
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
@@ -268,6 +263,11 @@ msgstr "Ctd."
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Precio total"
+
+#. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -321,7 +321,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
@@ -489,7 +489,7 @@ msgstr ""
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_approved0
 msgid "The direct manager approves the sheet"
-msgstr "El gestor inmediato aprueba la hoja."
+msgstr "El responsable inmediato aprueba la hoja."
 
 #. module: hr_expense
 #: field:hr.expense.expense,amount:0
@@ -518,6 +518,11 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: hr_expense
 #: report:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
@@ -527,6 +532,11 @@ msgstr "Fecha"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "November"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
 msgstr ""
 
 #. module: hr_expense
@@ -557,7 +567,8 @@ msgstr "El empleado valida su hoja de gastos"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_refused0
 msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr "El gestor inmediato rechaza la hoja. Restablecida como borrador."
+msgstr ""
+"El responsable inmediato rechaza la hoja. Restablecida como borrador."
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -599,9 +610,19 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: hr_expense
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Refacturar"
+
+#. module: hr_expense
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: hr_expense
 #: view:board.board:0
@@ -713,6 +734,17 @@ msgstr "Ref."
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on "
+"projects/analytic accounts. The accountant validates the proposed entries "
+"and the employee can be reimbursed. You can also reinvoice the customer at "
+"the end of the flow."
 msgstr ""
 
 #. module: hr_expense

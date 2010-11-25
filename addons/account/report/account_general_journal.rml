@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="general_journal.pdf">
-  <template pageSize="(596.0,842.0)" title="General Journal" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="General Journal.pdf">
+  <template pageSize="(596.0,842.0)" title="General Journal" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="42.0" width="540" height="758"/>
     </pageTemplate>
@@ -159,6 +159,7 @@
     <blockTableStyle id="Table_Journal_Detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -199,9 +200,7 @@
   <images/>
   <story>
  <para style="terp_default_8">[[ repeatIn( periods(objects), 'o') ]]</para>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
+
     <blockTable colWidths="180.0,180.0,179.0" style="Table_Header_Title">
       <tr>
         <td>

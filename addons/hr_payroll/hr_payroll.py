@@ -6,16 +6,16 @@
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -176,7 +176,7 @@ class hr_contract(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if not calculate:
                     continue
@@ -191,7 +191,7 @@ class hr_contract(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -281,7 +281,7 @@ class hr_contract(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -473,7 +473,7 @@ class payroll_register(osv.osv):
 
             for slip in reg.line_ids:
                 if not slip.employee_id.bank_account_id:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee' % (slip.employee_id.name)))
+                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
                 pline = {
                     'advice_id':pid,
                     'name':slip.employee_id.bank_account_id.acc_number,
@@ -855,7 +855,7 @@ class hr_payslip(osv.osv):
                     try:
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
@@ -1147,7 +1147,7 @@ class hr_payslip(osv.osv):
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if not calculate:
                     continue
@@ -1162,7 +1162,7 @@ class hr_payslip(osv.osv):
                     #Please have a look at the configuration guide.
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
@@ -1261,7 +1261,7 @@ class hr_payslip(osv.osv):
             paid_leave = 0.0
             for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
                 if not hday.holiday_status_id.head_id:
-                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing' % (hday.holiday_status_id.name)))
+                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
 
                 res = {
                     'slip_id':slip.id,
@@ -1448,7 +1448,7 @@ class hr_employee(osv.osv):
                 try:
                     amt = eval(base, obj)
                 except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ' % (e)))
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 amount = 0.0
                 if line.amount_type == 'per':
                     amount = amt * line.amount

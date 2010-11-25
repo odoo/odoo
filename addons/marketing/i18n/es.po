@@ -7,16 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-31 08:17+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-23 09:42+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: marketing
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: marketing
 #: constraint:ir.ui.view:0
@@ -75,9 +80,19 @@ msgstr ""
 "integrarlas en sus distintos procesos."
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_installer
-msgid "marketing.installer"
-msgstr "marketing.instalador"
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "¡El nombre del grupo debe ser único!"
+
+#. module: marketing
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: marketing
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: marketing
 #: constraint:ir.actions.act_window:0
@@ -107,3 +122,8 @@ msgid ""
 msgstr ""
 "Le ayuda a realizar segmentaciones de empresas y diseñar cuestionarios para "
 "las segmentaciones."
+
+#. module: marketing
+#: model:ir.model,name:marketing.model_marketing_installer
+msgid "marketing.installer"
+msgstr "marketing.instalador"

@@ -119,7 +119,7 @@ module named account_voucher.
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        #'account_unit_test.xml',
+#        'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',

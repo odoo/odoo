@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:28+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-21 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-22 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -38,10 +38,17 @@ msgid "Invalid model name in the action definition."
 msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "Printed at:"
-msgstr "Stampato a:"
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and expenses expected for a "
+"period in the future. With a budget, a company is able to carefully look at "
+"how much money they are taking in during a given period, and figure out the "
+"best way to divide it among various categories. By keeping  track of where "
+"your money goes, you may be less likely to overspend, and more likely to "
+"meet your financial goals. Forecast a budget by detailing the expected "
+"revenue per analytic account and monitor its evolution based on the actuals "
+"realised during that period."
+msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -52,6 +59,11 @@ msgstr "Conferma"
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
 msgstr "Validazione utente"
+
+#. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
@@ -79,18 +91,16 @@ msgstr "Bozza"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "at"
 msgstr "a"
 
 #. module: account_budget
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Errore! Non è possibile creare un menù ricorsivo."
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Currency:"
 msgstr "Valuta:"
 
@@ -125,7 +135,7 @@ msgstr "Stato"
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
-msgstr ""
+msgstr "Questo wizard è utilizzato per stampare un riepilogo dei budget"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -139,6 +149,16 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Total :"
+msgstr "Totale :"
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
@@ -146,9 +166,14 @@ msgid "Company"
 msgstr "Compagnia"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "a"
+
+#. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Reimposta a \"Bozza\""
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -215,7 +240,7 @@ msgstr "Nome"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Linea del budget"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -234,6 +259,11 @@ msgid "Budget"
 msgstr "Budget"
 
 #. module: account_budget
+#: report:account.budget:0
+msgid "Printed at:"
+msgstr "Stampato a:"
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "Error!"
@@ -249,7 +279,7 @@ msgstr "Codice"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Questo wizard è utilizzato per stampare il Budget"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -267,7 +297,7 @@ msgstr "Budget"
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "Il budget generale \"%s\" non ha conti!"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -277,12 +307,12 @@ msgstr "Annullato"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Approva"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "Da Approvare"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -320,7 +350,7 @@ msgstr ""
 #. module: account_budget
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -329,6 +359,11 @@ msgstr ""
 #: view:account.budget.report:0
 msgid "Select Dates Period"
 msgstr "Seleziona le date del periodo"
+
+#. module: account_budget
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere unico!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -375,7 +410,6 @@ msgstr "Conto analitico"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Budget :"
 msgstr "Budget :"
 
@@ -383,7 +417,7 @@ msgstr "Budget :"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Ammontare pianificato"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -404,6 +438,11 @@ msgstr "Conti"
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 msgid "Budget Lines"
 msgstr "Linee Budget"
+
+#. module: account_budget
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "La regola deve avere almento un diritto di accesso spuntato!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -431,14 +470,16 @@ msgstr "Data di inizio"
 msgid "Analysis from"
 msgstr "Maschera Analisi"
 
+#. module: account_budget
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere minore di 1!"
+
 #~ msgid "Analytic Account :"
 #~ msgstr "Conto analitico :"
 
 #~ msgid "A/c No."
 #~ msgstr "Conto n."
-
-#~ msgid "Total :"
-#~ msgstr "Totale :"
 
 #~ msgid "Select Options"
 #~ msgstr "Selezione opzioni"
@@ -460,9 +501,6 @@ msgstr "Maschera Analisi"
 
 #~ msgid "Results"
 #~ msgstr "Risultati"
-
-#~ msgid "to"
-#~ msgstr "a"
 
 #~ msgid "Period Budget"
 #~ msgstr "Bugdet del periodo"

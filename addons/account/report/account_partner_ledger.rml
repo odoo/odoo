@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Partner Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Partner Ledger.pdf">
+  <template pageSize="(595.0,842.0)" title="Partner Ledger" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -175,6 +175,68 @@
   </stylesheet>
   <images/>
   <story>
+  <pto>
+  <pto_header>
+  <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">JNRL</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Account</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Entry Label</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Debit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Credit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Balance</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">JNRL</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Account</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Entry Label</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Debit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Credit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Balance</para>
+        </td>
+         <td>
+          <para style="terp_tblheader_Details_Right">Currency</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
       <para style="terp_default_2">
       <font color="white"> </font>
     </para>
@@ -277,7 +339,7 @@
       <para style="P4">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="55.0,28.0,60.0,81.0,125.0,57.0,58.0,65.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table_header_1">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -286,7 +348,7 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Account</para>
@@ -311,20 +373,20 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="349.0,57.0,58.0,65.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="329.0,70.0,70.0,80.0" style="Table2">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
 
       <tr>
         <td>
           <para style="P2">[[ p.ref ]] - [[ p.name ]]</para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p))) ]]</para>
+          <para style="P5"><u>[[ formatLang((sum_debit_partner(p))) ]]</u></para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_credit_partner(p))) ]] </para>
+          <para style="P5"><u>[[ formatLang((sum_credit_partner(p))) ]]</u></para>
         </td>
         <td>
-          <para style="P5">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="P5"><u>[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</u></para>
         </td>
       </tr>
        <tr>
@@ -347,7 +409,7 @@
     </para>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="55.0,28.0,60.0,81.0,125.0,57.0,58.0,65.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
+      <blockTable colWidths="50.0,50.0,70.0,50.0,109.0,70.0,70.0,80.0" style="Table3">[[ display_currency(data) == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
@@ -379,7 +441,7 @@
         <font color="white"> </font>
       </para>
     </section>
-     <blockTable colWidths="50.0,25.0,60.0,81.0,97.0,56.0,58.0,63.0,53.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+     <blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table4">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -388,10 +450,10 @@
           <para style="terp_tblheader_Details">JNRL</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Ref.</para>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Account</para>
+          <para style="terp_tblheader_Details_Centre">Account</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Entry Label</para>
@@ -416,7 +478,7 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="308.0,56.0,58.0,63.0,53.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+    <blockTable colWidths="260.0,65.0,65.0,80.0,80.0" style="Table6">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
 
       <tr>
         <td>
@@ -460,7 +522,7 @@
     </para>
     <section>
       <para style="P1">[[ repeatIn(lines(p), 'line') ]]</para>
-      <blockTable colWidths="50.0,25.0,60.0,81.0,97.0,56.0,58.0,63.0,53.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
+      <blockTable colWidths="50.0,40.0,60.0,50.0,60.0,65.0,65.0,80.0,80.0" style="Table7">[[ display_currency(data) == True or removeParentNode('blockTable') ]]
         <tr>
           <td>
             <para style="P3">[[ formatLang(line['date'],date=True) ]]</para>
@@ -472,7 +534,7 @@
             <para style="P3">[[ line['move_name'] ]]</para>
           </td>
           <td>
-            <para style="P3">[[ line['a_code'] ]]</para>
+            <para style="terp_default_Centre_9">[[ line['a_code'] ]]</para>
           </td>
           <td>
             <para style="P3">[[ (line['ref'] or '') + ' ' + line['name'] ]]</para>
@@ -499,5 +561,6 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
+    </pto>
   </story>
 </document>

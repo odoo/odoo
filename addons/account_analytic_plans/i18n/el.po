@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-02 20:53+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-19 13:31+0000\n"
+"Last-Translator: Kontaxis Panagiotis <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
+"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -25,7 +25,7 @@ msgstr "Account4 Id"
 #. module: account_analytic_plans
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
@@ -78,6 +78,8 @@ msgstr "Πλάνο Αναλυτικής"
 msgid ""
 "This distribution model has been saved.You will be able to reuse it later."
 msgstr ""
+"Το μοντέλο διανομής έχει αποθηκευτεί. Μπορείτε να το χρησιμοποιήσεται "
+"αργότερα"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
@@ -149,7 +151,7 @@ msgstr "Ποσοστό"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Γραμμή Παραγγελίας Πώλησης"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -157,8 +159,8 @@ msgid "Dont show empty lines"
 msgstr "Απόκρυψη κενών γραμμών"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
-msgid "analytic.plan.create.model.action"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -182,7 +184,7 @@ msgstr "100.00%"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Currency"
-msgstr ""
+msgstr "Νόμισμα"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -239,12 +241,12 @@ msgstr "Σφάλμα Χρήστη"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Στοιχεία Ημερολογίου"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
-msgstr ""
+msgstr "αναλυτικό.πλάνο.δημιουργία.μοντέλο"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
@@ -286,7 +288,7 @@ msgstr "Μοντέλα Διανομής"
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Ok"
-msgstr ""
+msgstr "ΟΚ"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
@@ -317,12 +319,17 @@ msgstr "Account2 Id"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "Το Σύνολο θα πρέπει να είναι Μεταξύ %s και %s"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Γραμμή Εξτρέ"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr "αναλυτικό.πλάνο.δημιουργία.ενέργεια"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -376,11 +383,48 @@ msgid ""
 "of distribution models.\n"
 "        "
 msgstr ""
+"Αυτό το πρόσθετο επιτρέπει τη χρήση πολλών αναλυτικών προγραμμάτων, σύμφωνα "
+"με το γενικό ημερολόγιο,\n"
+"έτσι ώστε να δημιουργηθούν πολλές αναλυτικές γραμμές όταν το τιμολόγιο ή οι "
+"καταχωρήσεις\n"
+"επιβεβαιώνονται.\n"
+"\n"
+"Για παράδειγμα, μπορείτε να ορίσετε την ακόλουθη αναλυτική δομή:\n"
+"  Έργα\n"
+"      Έργο1\n"
+"          Υποέργο 1,1\n"
+"          Υποέργο 1,2\n"
+"      Έργο 2\n"
+"  Πωλητής\n"
+"      Eric\n"
+"      Fabien\n"
+"\n"
+"Εδώ, έχουμε δύο σχέδια: Έργα και Πωλητής. Μια γραμμή τιμολογίου πρέπει\n"
+"να είναι σε θέση να γράψει αναλυτικά τις εγγραφές στο 2 σχέδια: Υποέργο 1,1 "
+"και\n"
+"Fabien. Το ποσό αυτό μπορεί επίσης να διαιρεθεί. Το ακόλουθο παράδειγμα "
+"είναι για\n"
+"ένα τιμολόγιο που αγγίζει τα δύο υποπρογράμματα και να ανατίθενται σε έναν "
+"πωλητή:\n"
+"\n"
+"Πλάνο1:\n"
+"    Υποέργο 1.1: 50%\n"
+"    Υποέργο 1.2: 50%\n"
+"Πλάνο2:\n"
+"    Eric: 100%\n"
+"\n"
+"Έτσι, όταν αυτή η γραμμή του τιμολογίου  επιβεβαιωθεί, δημιουργήσει 3 "
+"αναλυτικές γραμμές,\n"
+"για μία καταχώρηση λογαριασμόυ.\n"
+"Το αναλυτικό πλάνο επικυρώνει το ελάχιστο και το μέγιστο ποσοστό που κατά τη "
+"στιγμή της δημιουργίας\n"
+"των μοντέλων διανομής.\n"
+"        "
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
-msgstr ""
+msgstr "Αποθήκευση αυτής της Διανομής ως Μοντέλο"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -390,7 +434,7 @@ msgstr "Ποσότητα"
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
 msgid "Multi Plans"
-msgstr ""
+msgstr "ΠολυΠλάνα"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
@@ -405,18 +449,23 @@ msgstr "Κωδικός"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Ημερολόγιο"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "Πρέπει να ορίσετε το αναλυτικό ημερολόγιο για το '%s' ημερολόγιο!"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "No Analytic Journal !"
+msgstr "Όχι Αναλυτικό Ημερολόγιο"
+
+#. module: account_analytic_plans
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -427,12 +476,12 @@ msgstr "Αλληλουχία"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Γραμμή Τιμολογίου"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Εξτρέ"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
@@ -464,12 +513,12 @@ msgstr "Κύριος λογαριασμός για αυτό το πλάνο."
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
-msgstr ""
+msgstr "Αναφορά Λογαριασμού Αναλυτικής"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Τιμολόγιο"
 
 #. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
@@ -490,6 +539,11 @@ msgstr "σε"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Company"
+msgstr "Εταιρία"
+
+#. module: account_analytic_plans
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: account_analytic_plans

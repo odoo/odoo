@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:35+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:35+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12:17+0000\n"
+"PO-Revision-Date: 2010-11-18 16:12:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,13 +18,6 @@ msgstr ""
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n"
-"\'Open\' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -77,6 +70,12 @@ msgstr ""
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -200,6 +199,11 @@ msgid "Not Voted"
 msgstr ""
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
 msgstr ""
@@ -220,11 +224,21 @@ msgid "Next"
 msgstr ""
 
 #. module: idea
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: idea
 #: view:idea.idea:0
 #: field:idea.idea,state:0
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
+msgstr ""
+
+#. module: idea
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: idea
@@ -541,6 +555,11 @@ msgstr ""
 #: view:idea.idea:0
 #: view:report.vote:0
 msgid "Open"
+msgstr ""
+
+#. module: idea
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: idea

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-11 09:42+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-19 07:35+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-12 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -51,9 +51,9 @@ msgstr ""
 "enige activiteit met een signaal en geen voorgaande activiteit)"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.transition,trigger:0
-msgid "Time"
-msgstr "Tijd"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -92,33 +92,33 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
-msgstr ""
+msgstr "Activatie"
 
 #. module: marketing_campaign
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
-msgstr ""
+msgstr "# Acties"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr ""
+msgstr "Campagne bewerker"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: view:marketing.campaign.workitem:0
 msgid "Today"
-msgstr ""
+msgstr "Vandaag"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr ""
+msgstr "Maart"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
@@ -130,7 +130,7 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,object_id:0
 msgid "Object"
-msgstr ""
+msgstr "Object"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -149,28 +149,28 @@ msgstr ""
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Naar Concept"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
-msgstr ""
+msgstr "Volgende activiteiten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronization"
-msgstr ""
+msgstr "Synchronisatie"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "This Year"
-msgstr ""
+msgstr "Dit jaar"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "No preview"
-msgstr ""
+msgstr "Geen voorbeeld"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -187,12 +187,12 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "Uitgaande overgangen"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
-msgstr ""
+msgstr "Herstellen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -202,7 +202,7 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "Jaar(en)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -217,12 +217,12 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Geannuleerd"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr ""
+msgstr "Automatisch"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
@@ -236,6 +236,15 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Test - Het maakt en verwerkt alle activiteiten direct (zonder wachten op "
+"vertraging bij overgangen) maar verstuurt geen emails en maakt geen "
+"rapporten.\n"
+"Test in Realtime - Het maakt en verwerkt alle activiteiten direct maar "
+"verstuurt geen emails en maakt geen rapporten.\n"
+"Met handmatige bevestiging - de campagne loopt normaal, maar de gebruiker "
+"moet alle activiteiten handmatig bevestigen.\n"
+"Normaal - de campagne loopt normaal en verstuurt alle emails en rapporten "
+"(wees voorzichtig met deze stand, u bent live!)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
@@ -252,12 +261,12 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,campaign_id:0
 msgid "Campaign"
-msgstr ""
+msgstr "Campagne"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,start:0
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -273,7 +282,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,segment_id:0
 msgid "Segment"
-msgstr ""
+msgstr "Segment"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -300,7 +309,7 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "Maand(en)"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -308,16 +317,21 @@ msgstr ""
 #: model:ir.model,name:marketing_campaign.model_res_partner
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Transitions"
-msgstr ""
+msgstr "Overgangen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't delete workitems"
+msgstr ""
+
+#. module: marketing_campaign
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: marketing_campaign
@@ -330,17 +344,17 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Marketing Reports"
-msgstr ""
+msgstr "Marketingrapporten"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,type:0
 msgid "Type"
-msgstr ""
+msgstr "Soort"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -348,12 +362,12 @@ msgstr ""
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.workitem,res_name:0
 msgid "Resource Name"
-msgstr ""
+msgstr "Naam bron"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
@@ -364,7 +378,7 @@ msgstr ""
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Run"
-msgstr ""
+msgstr "Uitvoeren"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,from_ids:0
@@ -379,13 +393,13 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activities"
-msgstr ""
+msgstr "Marketing campagne activiteiten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,error_msg:0
 msgid "Error Message"
-msgstr ""
+msgstr "Foutmelding"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -393,17 +407,17 @@ msgstr ""
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
 msgid "Campaigns"
-msgstr ""
+msgstr "Campagnes"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_type:0
 msgid "Interval Unit"
-msgstr ""
+msgstr "Eenheid interval"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -414,12 +428,12 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Configuratie"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,variable_cost:0
@@ -432,29 +446,29 @@ msgstr ""
 #. module: marketing_campaign
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "Ongeldige argumenten"
 
 #. module: marketing_campaign
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Ongeldige XML voor weergave opbouw"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "Uur/Uren"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr ""
+msgstr "Campagne segment"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -462,21 +476,24 @@ msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
+"Bij activering van deze optie worden taken die niet worden uitgevoerd omdat "
+"niet aan de voorwaarde is voldaan gemarkeerd als geannuleerd in plaats van "
+"verwijderd."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Exceptions"
-msgstr ""
+msgstr "Uitzonderingen"
 
 #. module: marketing_campaign
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
-msgstr ""
+msgstr "Taken"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
-msgstr ""
+msgstr "Vaste kosten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -486,34 +503,34 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
 msgid "Interval Value"
-msgstr ""
+msgstr "Interval aantal"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,revenue:0
 #: field:marketing.campaign.activity,revenue:0
 msgid "Revenue"
-msgstr ""
+msgstr "Opbrengst"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,month:0
 msgid "Month"
-msgstr ""
+msgstr "Maand"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,activity_to_id:0
 msgid "Next Activity"
-msgstr ""
+msgstr "Volgende activiteit"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
@@ -523,17 +540,17 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The e-mail to send when this activity is activated"
-msgstr ""
+msgstr "De e-mail die wordt gestuurd als deze activiteit is geactiveerd"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "This Month"
-msgstr ""
+msgstr "Deze maand"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Test Mode"
-msgstr ""
+msgstr "Testmodus"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -543,7 +560,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
@@ -551,14 +568,20 @@ msgid "Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "Resource ID"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "De actie die wordt uitgevoerd als de activiteit is geactiveerd"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
 msgid "Partner Field"
-msgstr ""
+msgstr "Relatie veld"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -566,22 +589,22 @@ msgstr ""
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
 msgid "Campaign Analysis"
-msgstr ""
+msgstr "Campagne analyse"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
-msgstr ""
+msgstr "Test in realtime"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr ""
+msgstr "Test direct"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
 msgid "Directory"
-msgstr ""
+msgstr "Map"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -589,43 +612,44 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Concept"
 
 #. module: marketing_campaign
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: marketing_campaign
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Preview"
-msgstr ""
+msgstr "Voorbeeld"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Related Resource"
-msgstr ""
+msgstr "Gekoppelde resource"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Normal"
-msgstr ""
+msgstr "Normaal"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "Deze actie wordt opgestart als de campagne start."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
@@ -633,11 +657,13 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Een activiteit met een signaal kan via een programma worden aangeroepen. "
+"Wees voorzichtig, de taak wordt altijd gemaakt als een signaal wordt gestuurd"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -653,35 +679,35 @@ msgstr ""
 #: field:campaign.analysis,date:0
 #: view:marketing.campaign.workitem:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
-msgstr ""
+msgstr "Voorwaarde"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "Het rapport wordt gegenereerd als de activiteit is geactiveerd"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Uitzondering"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -699,13 +725,13 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,date:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Uitvoeringsdatum"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
@@ -716,63 +742,63 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
 msgid "This folder is used to store the generated reports"
-msgstr ""
+msgstr "Deze map wordt gebruikt om gegenereerde rapporten op te slaan"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
-msgstr ""
+msgstr "Actie"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "Automatic transition"
-msgstr ""
+msgstr "Automatische overgang"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "Geschiedenis"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the model on which you want this campaign to be run"
-msgstr ""
+msgstr "Kies het model waarmee u deze campagne wilt laten lopen"
 
 #. module: marketing_campaign
 #: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
 msgid "marketing_campaign"
-msgstr ""
+msgstr "marketing_campaign"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
-msgstr ""
+msgstr "Verwerken"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "Cosmetisch"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "Hoe wordt de bestemming taak geactiveerd"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -781,18 +807,18 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates for Models"
-msgstr ""
+msgstr "Email sjablonen voor modellen"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -806,21 +832,36 @@ msgid "Synchronize Manually"
 msgstr ""
 
 #. module: marketing_campaign
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are done"
 msgstr ""
+"De campagne kan niet gereed worden gemeld voordat alle segmenten klaar zijn"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A marketing campaign is an event or activity that will help you manage and "
+"reach your partners with specific messages. A campaign can have many "
+"activities that will be triggered based on a specific situation. One "
+"possible action could be sending an email template that has previously been "
+"created in the system."
 msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Tijd"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Campagne overgang"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -828,50 +869,50 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Te doen"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Campaign Step"
-msgstr ""
+msgstr "Campagnestap"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
 #: view:marketing.campaign.segment:0
 msgid "Segments"
-msgstr ""
+msgstr "Segmenten"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 msgid "All Segments"
-msgstr ""
+msgstr "Alle segmenten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Binnenkomende overgangen"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Dag(en)"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
-msgstr ""
+msgstr "Activiteiten"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -879,7 +920,7 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
-msgstr ""
+msgstr "Loopt"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -890,17 +931,17 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 msgid "Marketing Campaign"
-msgstr ""
+msgstr "Marketing campagne"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
 msgid "End Date"
-msgstr ""
+msgstr "Einddatum"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -911,7 +952,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,object_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resource"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
@@ -925,18 +966,18 @@ msgstr ""
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "Email Preview"
-msgstr ""
+msgstr "Email voorbeeld"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
-msgstr ""
+msgstr "Signaal"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "The campaign cannot be started: there are no activities in it"
-msgstr ""
+msgstr "De campagne kan niet worden gestart: er zitten geen activiteiten in"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -946,13 +987,13 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: field:marketing.campaign,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -961,7 +1002,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
-msgstr ""
+msgstr "Activiteit"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,ir_filter_id:0
@@ -976,7 +1017,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Followup"
-msgstr ""
+msgstr "Campagne opvolging"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -986,7 +1027,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr ""
+msgstr "Campagne activiteit"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1001,22 +1042,22 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
-msgstr ""
+msgstr "Variabele kosten"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "Met handmatige bevestiging"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
 #: view:marketing.campaign:0
 msgid "Cost"
-msgstr ""
+msgstr "Kosten"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
