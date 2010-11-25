@@ -164,6 +164,7 @@ class rml_parse(object):
             'lang' : user.company_id.partner_id.lang,
             'translate' : self._translate,
             'setHtmlImage' : self.set_html_image,
+            'strip_name' : self._strip_name,
             'time' : time
         }
         self.localcontext.update(context)
@@ -183,6 +184,14 @@ class rml_parse(object):
 
     def setTag(self, oldtag, newtag, attrs=None):
         return newtag, attrs
+
+    def _ellipsis(self, char, size=100, truncation_str='...'):
+        if len(char) <= size:
+            return char
+        return char[:size-len(truncation_str)] + truncation_str
+
+    def _strip_name(self, name, maxlen=50):
+        return self._ellipsis(name, maxlen)
 
     def format(self, text, oldtag=None):
         return text.strip()

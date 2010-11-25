@@ -73,7 +73,7 @@ class NumberedCanvas(canvas.Canvas):
             while not self.pages.get(key,False):
                 key = key + 1
         self.setFont("Helvetica", 8)
-        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-43),
+        self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             "Page %(this)i of %(total)i" % {
                'this': self._pageNumber+1,
                'total': self.pages.get(key,False),
