@@ -54,4 +54,3 @@ class res_widget_wizard(osv.osv_memory):
             self.pool.get('res.widget.user').create(cr, uid, {'user_id':uid, 'widget_id':wiz_id})
         return {'type': 'ir.actions.act_window_close'}
 res_widget_wizard()
-
