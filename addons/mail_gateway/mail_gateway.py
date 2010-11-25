@@ -200,7 +200,8 @@ class mailgate_message(osv.osv):
                 action_data = action_pool.read(cr, uid, action_ids[0], context=context)
                 action_data.update({
                     'domain' : "[('id','=',%d)]"%(res_id),
-                    'nodestroy': True
+                    'nodestroy': True,
+                    'context': {}
                     })
         return action_data
 
