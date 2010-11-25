@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
+    
         <record model="document.directory" id="document.dir_calendars">
             <field name="name">Calendars</field>
             <field name="calendar_collection">True</field>
-        </record>
+        </record>    
+    
         <!--        Event attributes-->
-
         <record model="basic.calendar.attributes" id="field_event_comment">
             <field name="name">comment</field>
             <field name="type">vevent</field>
