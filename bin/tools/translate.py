@@ -714,7 +714,7 @@ def trans_generate(lang, modules, dbname=None):
     else :
         path_list = [root_path,] + apaths
 
-    logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning modules at paths: %s" % (' '.join(path_list),))
+    logger.debug("Scanning modules at paths: ", path_list)
 
     mod_paths = []
     join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
@@ -728,7 +728,7 @@ def trans_generate(lang, modules, dbname=None):
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
-            logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning code of %s at module: %s" % (frelativepath, module))
+            logger.debug("Scanning code of %s at module: %s", frelativepath, module)
             code_string = tools.file_open(fabsolutepath, subdir='').read()
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
@@ -756,7 +756,7 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, terms_type, frelativepath, 0, encode(src))
 
     for path in path_list:
-        logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning files of modules at %s" % path)
+        logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in tools.osutil.walksymlinks(path):
             for fname in itertools.chain(fnmatch.filter(files, '*.py')):
                 export_code_terms_from_file(fname, path, root, 'code')
