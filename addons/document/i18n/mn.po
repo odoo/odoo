@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* document
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:41+0000\n"
-"Last-Translator: ub121 <ubs121@gmail.com>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-24 10:51+0000\n"
+"Last-Translator: sugi <Unknown>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -25,7 +24,7 @@ msgstr "Толгой хавтас"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Auto Directory Configuration"
-msgstr ""
+msgstr "Автомат тохиргооны хавтас"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -187,17 +186,17 @@ msgstr "Алдаа!"
 #. module: document
 #: help:document.configuration,product:0
 msgid "Auto directory configuration for Products."
-msgstr ""
+msgstr "Бүтээгдэхүүний автомат тохиргооны хавтас."
 
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr ""
+msgstr "Бүх нөөцөөс хайх"
 
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr ""
+msgstr "Нөөц бүрийн хавтас"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -290,6 +289,11 @@ msgid "Type"
 msgstr "Төрөл"
 
 #. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: document
 #: help:document.directory,ressource_type_id:0
 msgid ""
 "Select an object here and there will be one folder per record of that "
@@ -305,12 +309,12 @@ msgstr "Хэрэв нөөцүүд дээр шүүлт хэрэглэх бол д
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_partner
 msgid "Files Per Partner"
-msgstr ""
+msgstr "Харилцагч бүрийн файл"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Агуулга талбар"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
@@ -337,7 +341,7 @@ msgstr "7 сар"
 #. module: document
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -369,12 +373,12 @@ msgstr "Өөрчилсөн"
 #: code:addons/document/document_storage.py:0
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "Бичих алдаа!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Generated Files"
-msgstr ""
+msgstr "Боловсорсон файл"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -430,7 +434,7 @@ msgstr "Файлын дэлгэрэнгүй, хавтасаар"
 #. module: document
 #: view:report.document.user:0
 msgid "All users files"
-msgstr ""
+msgstr "Бүх хэрэглэгчийн файл"
 
 #. module: document
 #: view:board.board:0
@@ -458,7 +462,7 @@ msgstr "Статик хавтас"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Дэд"
 
 #. module: document
 #: view:document.directory:0
@@ -485,6 +489,22 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"This is a complete document management system:\n"
+"    * User Authentication\n"
+"    * Document Indexation :- .pptx and .docx files are not support in "
+"windows platform.\n"
+"    * Dashboard for Document that includes:\n"
+"        * New Files (list)\n"
+"        * Files by Resource Type (graph)\n"
+"        * Files by Partner (graph)\n"
+"        * Files by Month (graph)\n"
+"    ATTENTION:\n"
+"    - When you install this module in a running company that have already "
+"PDF files stored into the database,\n"
+"      you will lose them all.\n"
+"    - After installing this module PDF's are no longer stored into the "
+"database,\n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
 
 #. module: document
 #: help:document.storage,online:0
@@ -561,10 +581,22 @@ msgid "Security"
 msgstr "Аюулгүй байдал"
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
 msgstr "8 сар"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -602,6 +634,15 @@ msgid "Data"
 msgstr "Өгөгдөл"
 
 #. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Definition"
 msgstr "Тодорхойлолт"
@@ -625,7 +666,7 @@ msgstr "Өгөгдлийн сан"
 #. module: document
 #: help:document.configuration,project:0
 msgid "Auto directory configuration for Projects."
-msgstr ""
+msgstr "Төслийн автомат тохиргооны хавтас"
 
 #. module: document
 #: view:ir.attachment:0
@@ -663,17 +704,15 @@ msgid "Expression"
 msgstr "Илэрхийлэл"
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Хавтасны нэр давхцаж болохгүй!"
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Үүсгэгч"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
 
 #. module: document
 #: view:board.board:0
@@ -694,6 +733,11 @@ msgid "Prefix"
 msgstr "Угтвар"
 
 #. module: document
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr "Сүүлд оруулсан огноо"
@@ -702,6 +746,11 @@ msgstr "Сүүлд оруулсан огноо"
 #: field:report.document.user,datas_fname:0
 msgid "File Name"
 msgstr "Файлын нэр"
+
+#. module: document
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -726,7 +775,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.action_view_wall
 #: view:report.document.wall:0
 msgid "Wall of Shame"
-msgstr ""
+msgstr "Wall of Shame"
 
 #. module: document
 #: help:document.storage,path:0
@@ -746,7 +795,7 @@ msgstr "Талбар"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Хавтасны динамик утга"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -797,6 +846,13 @@ msgstr "Бүх хэрэглэгчийн файлууд"
 #: model:ir.model,name:document.model_report_document_wall
 msgid "Users that did not inserted documents since one month"
 msgstr "Нэг сараас хойш баримт оруулаагүй хэрэглэгчид"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -872,13 +928,18 @@ msgstr "2 сар"
 #: model:ir.actions.act_window,name:document.open_board_document_manager1
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
-msgstr ""
+msgstr "Статистик ( хэрэглэгчээр )"
 
 #. module: document
 #: field:document.directory,name:0
 #: field:document.storage,name:0
 msgid "Name"
 msgstr "Нэр"
+
+#. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr "Хадгалах зам нь давхцаж болохгүй!"
 
 #. module: document
 #: view:document.directory:0
@@ -922,6 +983,11 @@ msgid "Mime Type"
 msgstr "MIME Төрөл"
 
 #. module: document
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr "Дараалал"
@@ -943,10 +1009,15 @@ msgid "Internal File storage"
 msgstr "Дотоод файлын төхөөрөмж"
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+
+#. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Хавтасны бүтэц"
 
 #. module: document
 #: view:board.board:0
@@ -959,24 +1030,29 @@ msgstr "Файлууд, нөөцийн төрлөөр"
 #: field:report.document.user,name:0
 #: field:report.files.partner,name:0
 msgid "Year"
-msgstr ""
+msgstr "Жил"
 
 #. module: document
 #: view:document.storage:0
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
-msgstr ""
+msgstr "Хадгалах ой"
 
 #. module: document
 #: view:document.storage:0
 msgid "Search Document storage"
-msgstr ""
+msgstr "Хайх"
 
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Баримтын төрөл"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Модулийн нэр давхцаж болохгүй !"
 
 #~ msgid "Preview"
 #~ msgstr "Урьдчилан харах"
