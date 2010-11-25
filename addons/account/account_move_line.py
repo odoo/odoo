@@ -82,7 +82,7 @@ class account_move_line(osv.osv):
                     periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
                     periods = ','.join([str(x) for x in periods])
                     if periods:
-                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) OR id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
