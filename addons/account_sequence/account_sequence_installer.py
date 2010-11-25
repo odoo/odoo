@@ -24,33 +24,31 @@ from osv import fields, osv
 class account_sequence_installer(osv.osv_memory):
     _name = 'account.sequence.installer'
     _inherit = 'res.config.installer'
-    
+
     _columns = {
         'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence', help="This sequence will be used on Journals to maintain internal number for accounting entries."),
-        }
-    
-    def _get_internal_sequence(self, cr, uid, context):
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj.get_object_reference(cr, uid, 'account_sequence', 'internal_sequence_journal')
-        res = result and result[1] or False
-        return res
-            
-     
-    def execute(self, cr, uid, ids, context):
+    }
+
+    def _get_internal_sequence(self, cr, uid, context=None):
+        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_sequence', 'internal_sequence_journal')
+        return result and result[1] or False
+
+    def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
         jou_obj = self.pool.get('account.journal')
         obj_sequence = self.pool.get('ir.sequence')
-        journal_ids = jou_obj.search(cr, uid, [])
-        for line in self.browse(cr, uid, ids):
-            for journal in jou_obj.browse(cr, uid, journal_ids):
-                if not journal.internal_sequence:
-                    for seq in obj_sequence.browse(cr, uid, [line.internal_sequence.id]):
-                        if seq.id:
-                            jou_obj.write(cr, uid, [journal.id], {'internal_sequence': seq.id})
+        record = self.browse(cr, uid, ids)[0]
+        j_ids = []
+        res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
+        journal_ids = jou_obj.search(cr, uid, [], context=context)
+        for journal in jou_obj.browse(cr, uid, journal_ids):
+            if not journal.internal_sequence:
+                j_ids.append(journal.id)
+        if j_ids:
+            jou_obj.write(cr, uid, j_ids, {'internal_sequence': record.internal_sequence.id})
         return res
-    
+
     _defaults = {
         'internal_sequence': _get_internal_sequence
     }

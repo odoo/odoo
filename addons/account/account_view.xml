@@ -618,7 +618,19 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries">
-                            <field colspan="4" name="move_line_ids" nolabel="1" widget="many2many"/>
+                            <field colspan="4" name="move_line_ids" nolabel="1" widget="many2many" domain="[('statement_id', '=', False)]">
+                                <tree string="Statement lines">
+                                    <field name="date"/>
+                                    <field name="period_id"/>
+                                    <field name="journal_id"/>
+                                    <field name="ref"/>
+                                    <field name="name"/>
+                                    <field name="account_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
