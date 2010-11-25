@@ -165,6 +165,8 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         res[attr] = {}
         res[attr]['field'] = field.field_id.name
         res[attr]['type'] = field.field_id.ttype
+        if field.fn == 'datetime_utc':
+            res[attr]['type'] = 'utc'
         if field.fn == 'hours':
             res[attr]['type'] = "timedelta"
         if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
@@ -228,6 +230,7 @@ def map_data(cr, uid, obj, context=None):
                     id = modobj.create(cr, uid, map_val, context=context)
                 vals[field] = id
                 continue
+            
             if field_type == 'timedelta':
                 if map_val:
                     vals[field] = (map_val.seconds/float(86400) + map_val.days)
@@ -245,6 +248,7 @@ class CalDAV(object):
          @param value: Get Attribute Value
          @param type: Get Attribute Type
         """
+        print "valueeeeeeeeee",value,name, type
         if name in self.__attribute__ and self.__attribute__[name]:
             self.__attribute__[name][type] = value
         return True
@@ -255,7 +259,6 @@ class CalDAV(object):
          @param name: Get Attribute Name
          @param type: Get Attribute Type
         """
-
         if self.__attribute__.get(name):
             val = self.__attribute__.get(name).get(type, None)
             valtype =  self.__attribute__.get(name).get('type', None)
@@ -299,6 +302,7 @@ class CalDAV(object):
 
         att_data = []
         exdates = []
+        print "tools.get_server_timezone()",tools.get_server_timezone()
         _server_tzinfo = pytz.timezone(tools.get_server_timezone())
 
         for cal_data in child.getChildren():
@@ -333,11 +337,14 @@ class CalDAV(object):
                 self.ical_set(cal_data.name.lower(), ','.join(exvals), 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
+                print "_server_tzinfo",cal_data.params.get('X-VOBJ-ORIGINAL-TZID')
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                     date_local = cal_data.value.astimezone(_server_tzinfo)
                     self.ical_set(cal_data.name.lower(), date_local, 'value')
                     continue
+#                date_local = cal_data.value.astimezone(pytz.utc)
+                
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
         return vals
@@ -447,6 +454,25 @@ class CalDAV(object):
                                 dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
                                 dtfield.value = parser.parse(data[map_field])
+                                
+                        elif map_type == 'utc'and data[map_field]:
+                            dtfield = vevent.add(field)
+#                            if tzval:
+#                                dtfield.params['TZID'] = [tzval.title()]
+#                                dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
+#                            else:
+#                                import pytz, datetime
+##                            print "tzinfo",tzinfo
+#                            local = pytz.timezone (tools.get_server_timezone())
+#                            naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
+#                            print "naiteeee",naive.timetz()
+#                            t = naive.utcfromtimestamp(naive.timetz())
+                            print "ttttttttttttt",t
+                            local_dt = naive.replace (local)
+                            utc_dt = local_dt.astimezone (pytz.utc)
+#                            dtfield.value = utc_dt.strftime ("%Y-%m-%d %H:%M:%S")
+                            dtfield.value  = self.format_date_tz(parser.parse(data[map_field]), context.get('tz',False))
+                                
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -829,6 +855,7 @@ class basic_calendar_fields(osv.osv):
         'fn': fields.selection([('field', 'Use the field'),
                         ('const', 'Expression as constant'),
                         ('hours', 'Interval in hours'),
+                        ('datetime_utc', 'Datetime In UTC'),
                         ], 'Function'),
         'mapping': fields.text('Mapping'),
     }
