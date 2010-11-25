@@ -376,7 +376,9 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        context="{'search_default_phase_id': [active_id]}"/>
+        context="{'search_default_phase_id': [active_id]}"
+        domain="[('phase_id', '=', active_id)]"
+        />
 
     <act_window
         context="{'search_default_project_id': [active_id]}"
