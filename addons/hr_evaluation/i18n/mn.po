@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_evaluation
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:38+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-24 11:04+0000\n"
+"Last-Translator: badralkh <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -27,12 +26,12 @@ msgstr "Өмнөх үеийг хүлээх эсэх"
 #: view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_evaluation
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Дэлгэцийн үйлдлийг тодорхойлохдоо байхгүй моделын нэр хэрэглэжээ"
+msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -66,7 +65,7 @@ msgstr "Ялгах тэмдэг"
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid "You cannot start evaluation without Evaluation."
-msgstr "Үнэлгээгүйгээр үнэлгээний ярилцлагыг хэлж болохгүй."
+msgstr "Та үнэлгээгүйгээр үнэлгээг эхэлж болохгүй"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -173,14 +172,9 @@ msgid "July"
 msgstr "7 сар"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
-"Зарим дүгнэлт нь хариу буюу ноорог төлөвт байгаа учраас төлөвийг өөрчилж "
-"чадахгүй"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -188,14 +182,50 @@ msgid "Ending Date"
 msgstr "Дуусах огноо"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
-msgstr "Эхлэх огнооноос хэдэн сарын дараа"
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee can be assigned to an evaluation plan. These plans define the "
+"frequency and the way you manage your periodic personnal evaluation. You "
+"will be able to define steps and attach interview forms to each step. "
+"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
+"evaluation and final evaluation by the manager."
+msgstr ""
+"Ажилтан бүрийг үнэлгээний төлөвлөгөөнд оноож болно. Энэ төлөвлөгөө нь таны "
+"хувийн үечилсэн үнэлгээгээ удирдаж түүний давтамжийг тодорхойлно. Алхмуудыг "
+"тодорхойлж алхам бүрт ярилцлагын маягтыг холбож өгч болно. Доороос дээш, "
+"дээрээс доош, өөрийн ба менежерээр эцсийн үнэлнээ зэрэг бүх төрлийн үнэлгээг "
+"зохицуулах боломжтой."
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
 msgstr "Ажилтнуудад илгээх"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "After the Date of Start"
+msgstr "Эхлэх огнооноос хэдэн сарын дараа"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
@@ -223,12 +253,6 @@ msgid "Periodic Evaluations"
 msgstr "Үечилсэн үнэлгээ"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''Regarding ''"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
 msgid "Send evaluation reminder"
 msgstr "Үнэлгээний сануулгын илгээх"
@@ -242,6 +266,17 @@ msgstr "Үнэлгээний товчоо"
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
 msgstr "(Огноо) Өнөөдрийн огноо"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "Regarding "
+msgstr ""
+
+#. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -420,7 +455,7 @@ msgstr "Хүний нөөцийн үнэлгээ"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Group by..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -450,6 +485,17 @@ msgid ""
 msgstr ""
 "Энэ шат эхлэхээс өмнө түүнээс өмнөх бүх шат дуустал нь хүлээхийг хүсвэл энэ "
 "талбарыг сонгоорой."
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to "
+"employees evaluation plan. Each user receives automatic emails and requests "
+"to perform evaluation of their collegues periodically."
+msgstr ""
+"Ажилтны үнэлгээний төлөвлөгөөний дагуу ярилцлагын хүсэлт нь автоматаар "
+"үүснэ. Хэрэглэгч бүр автомат э-мэйл хүлээн авах ба өөрийн хамтран "
+"ажиллагсдын үнэлгээ үе шаттайгаар хийнэ."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -545,33 +591,12 @@ msgstr "11 сар"
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
-msgstr "Нэмэлт шүүлтүүр"
+msgstr "Өргөтгөсөн хайлт..."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
 msgstr "10 сар"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"''\n"
-"Date : %(date)s\n"
-"\n"
-"Dear %(employee_name)s,\n"
-"\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
-"\n"
-"Kindly submit your response.\n"
-"\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
-msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -607,7 +632,7 @@ msgstr "Огноо"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Survey"
-msgstr ""
+msgstr "Санал асуулга"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
@@ -696,6 +721,11 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: hr_evaluation
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Эхэлсэн"
@@ -705,6 +735,8 @@ msgstr "Эхэлсэн"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -720,12 +752,12 @@ msgstr "Үнэлгээний шатууд"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Current"
-msgstr ""
+msgstr "Одоо"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Evaluation Interview"
-msgstr "Одоогийн"
+msgstr "Үнэлгээний ярилцлага"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.reminder,evaluation_id:0
@@ -771,7 +803,7 @@ msgstr "Үнэлгээг батламжлах"
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
-msgstr "Эцсийн ярилцлага"
+msgstr "Төгсгөлийн ярилцлага"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
@@ -787,7 +819,7 @@ msgstr "Доороос дээш дүгнэх хүсэлт"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Search Evaluation"
-msgstr "Үнэлгээг хайх"
+msgstr "Хайх"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_plan_id:0
@@ -797,6 +829,11 @@ msgstr "Үнэлгээг хайх"
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Evaluation Plan"
 msgstr "Үнэлгээний төлөвлөгөө"
+
+#. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -849,6 +886,16 @@ msgid "(user_signature)s: User name"
 msgstr "(Хэрэглэгчийн гарын үсэг) :  Хэрэглэгчийн нэр"
 
 #. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
+msgstr ""
+"Зарим дүгнэлт нь хариу буюу ноорог төлөвт байгаа учраас төлөвийг өөрчилж "
+"чадахгүй"
+
+#. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
@@ -863,7 +910,7 @@ msgstr "Үүссэн огноо"
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,year:0
 msgid "Year"
-msgstr "Он"
+msgstr "Жил"
 
 #~ msgid "Information"
 #~ msgstr "Мэдээлэл"
@@ -891,9 +938,6 @@ msgstr "Он"
 
 #~ msgid "To Improve"
 #~ msgstr "Сайжруулах"
-
-#~ msgid "Status"
-#~ msgstr "Байдал"
 
 #~ msgid "Quote"
 #~ msgstr "Квот"
@@ -927,9 +971,6 @@ msgstr "Он"
 
 #~ msgid "Employee Evaluation Type"
 #~ msgstr "Ажилтаны үнэлгээний төрөл"
-
-#~ msgid "Quotations"
-#~ msgstr "Квот"
 
 #~ msgid "Next Employee Evaluation"
 #~ msgstr "Дараагийн ажилтаны үнэлгээ"

@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_attendance
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 08:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-24 11:03+0000\n"
+"Last-Translator: badralkh <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -25,7 +24,7 @@ msgstr "Ирц, цагийн хяналт"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_attendance
 #: constraint:ir.actions.act_window:0
@@ -36,16 +35,6 @@ msgstr "Үйлдлийн тодорхойлолтод буруу моделий�
 #: view:hr.attendance:0
 msgid "Today"
 msgstr "Өнөөдөр"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Өөр үйлдлээс өмнөх огноо байна ( %s)  !\n"
-"Администраторт хэлж ирцүүдийг засуулна уу."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -83,9 +72,11 @@ msgid "The sign-out date must be in the past"
 msgstr "Системээс гарсан огноо нь өнгөрсөн огноо байх ёстой"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Нэвтэрсэн огноо"
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign in"
+msgstr "Нэвтрэх"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -117,7 +108,7 @@ msgstr "Ирцийн үйлдэл"
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
 msgid "Ok"
-msgstr ""
+msgstr "Тийм"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -183,20 +174,25 @@ msgid "Attendance"
 msgstr "Ирц"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr "Ирцийн зөв дарааллын дагуу нэврэх буюу гарахад бэлэн боллоо"
-
-#. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
 msgstr "Хамгийн их саатал (Хамгийн бага)"
+
+#. module: hr_attendance
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 msgid "Print"
 msgstr "Хэвлэх"
+
+#. module: hr_attendance
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -289,7 +285,7 @@ msgstr "Сарын ирцийн тайланг хэвлэх"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr ""
+msgstr "Нэвтрэх Гарах"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
@@ -299,6 +295,17 @@ msgstr ""
 #, python-format
 msgid "Sign in / Sign out"
 msgstr "Нэвтрэх / Гарах"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"Time Tracking functionality aims to manage employee's attendances on the "
+"basis of the actions (Sign in/Sign out) performed by them. You can also link "
+"this to an attendance machine using OpenERP's webservices features."
+msgstr ""
+"Цагийг хяналт модулийн үүрэг нь ажилчдын гүйцэтгэх нэвтрэх, гарах үйлдэл "
+"дээр үндэслэн тэдний ирцийг зохицуулах зорилготой. OpenERP-ийн веб "
+"үйлчилгээг ашиглан ирцийн төхөөрөмжтэй холбож бас болно."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -362,11 +369,9 @@ msgid "January"
 msgstr "1 сар"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Нэвтрэх"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Нэвтэрсэн огноо"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -390,6 +395,15 @@ msgid "Action"
 msgstr "Үйлдэл"
 
 #. module: hr_attendance
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
+msgstr ""
+
+#. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
 #, python-format
 msgid "No records found for your selection!"
@@ -407,12 +421,22 @@ msgid "Empoyee ID"
 msgstr "Ажилтны дугаар"
 
 #. module: hr_attendance
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Цуцлах"
+
+#. module: hr_attendance
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: hr_attendance
 #: constraint:ir.model:0
@@ -458,6 +482,16 @@ msgid "Employee"
 msgstr "Ажилтан"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+"Өөр үйлдлээс өмнөх огноо байна ( %s)  !\n"
+"Администраторт хэлж ирцүүдийг засуулна уу."
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
@@ -490,6 +524,15 @@ msgstr "Таны сүүлийн нэвтрэлт"
 #: view:hr.employee:0
 msgid "Sign Out"
 msgstr "Гарах"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid ""
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
+msgstr ""
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -554,6 +597,9 @@ msgstr "Жил"
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.in.out.ask"
 msgstr "Нэвтрэх, гарахыг хүсэх"
+
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr "Ирцийн зөв дарааллын дагуу нэврэх буюу гарахад бэлэн боллоо"
 
 #~ msgid "Employee's name"
 #~ msgstr "Ажилтны нэр"
