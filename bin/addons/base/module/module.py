@@ -27,7 +27,6 @@ import urllib
 import zipimport
 
 import addons
-import netsvc
 import pooler
 import release
 import tools
@@ -41,7 +40,7 @@ class module_category(osv.osv):
     _name = "ir.module.category"
     _description = "Module Category"
 
-    def _module_nbr(self,cr,uid, ids, prop, unknow_none,context):
+    def _module_nbr(self,cr,uid, ids, prop, unknow_none, context):
         cr.execute('SELECT category_id, COUNT(*) \
                       FROM ir_module_module \
                      WHERE category_id IN %(ids)s \
@@ -82,13 +81,13 @@ class module(osv.osv):
                                 'module %s', name, exc_info=True)
         return info
 
-    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
+    def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for m in self.browse(cr, uid, ids):
             res[m.id] = self.get_module_info(m.name).get('version', '')
         return res
 
-    def _get_views(self, cr, uid, ids, field_name=None, arg=None, context={}):
+    def _get_views(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = {}
         model_data_obj = self.pool.get('ir.model.data')
         view_obj = self.pool.get('ir.ui.view')
@@ -99,37 +98,36 @@ class module(osv.osv):
         for m in mlist:
             mnames[m.name] = m.id
             res[m.id] = {
-                'menus_by_module':'',
-                'reports_by_module':'',
-                'views_by_module': ''
+                'menus_by_module':[],
+                'reports_by_module':[],
+                'views_by_module': []
             }
         view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
             ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
         for data_id in model_data_obj.browse(cr,uid,view_id,context):
             # We use try except, because views or menus may not exist
             try:
-                key = data_id['model']
+                key = data_id.model
                 if key=='ir.ui.view':
-                    try:
-                        v = view_obj.browse(cr,uid,data_id.res_id)
-                        aa = v.inherit_id and '* INHERIT ' or ''
-                        res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
-                    except Exception:
-                        self.__logger.debug(
-                            'Unknown error while browsing ir.ui.view[%s]',
-                            data_id.res_id, exc_info=True)
+                    v = view_obj.browse(cr,uid,data_id.res_id)
+                    aa = v.inherit_id and '* INHERIT ' or ''
+                    res[mnames[data_id.module]]['views_by_module'].append(aa + v.name + '('+v.type+')')
                 elif key=='ir.actions.report.xml':
-                    res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
+                    res[mnames[data_id.module]]['reports_by_module'].append(report_obj.browse(cr,uid,data_id.res_id).name)
                 elif key=='ir.ui.menu':
-                    try:
-                        m = menu_obj.browse(cr,uid,data_id.res_id)
-                        res[mnames[data_id.module]]['menus_by_module'] += m.complete_name + '\n'
-                    except Exception:
-                        self.__logger.debug(
-                            'Unknown error while browsing ir.ui.menu[%s]',
-                            data_id.res_id, exc_info=True)
-            except KeyError:
+                    res[mnames[data_id.module]]['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
+            except KeyError, e:
+                self.__logger.warning(
+                            'Data not found for reference %s[%s:%s.%s]', data_id.model,
+                            data_id.res_id, data_id.model, data_id.name, exc_info=True)
                 pass
+            except Exception, e:
+                self.__logger.warning('Unknown error while browsing %s[%s]',
+                            data_id.model, data_id.res_id, exc_info=True)
+                pass
+        for key, value in res.iteritems():
+            for k, v in res[key].iteritems() :
+                res[key][k] = "\n".join(sorted(v))
         return res
 
     _columns = {
@@ -180,16 +178,21 @@ class module(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'uninstalled',
-        'demo': lambda *a: False,
-        'license': lambda *a: 'AGPL-3',
+        'state': 'uninstalled',
+        'demo': False,
+        'license': 'AGPL-3',
         'web': False,
     }
     _order = 'name'
 
+    def _name_uniq_msg(self, cr, uid, ids, context=None):
+        return _('The name of the module must be unique !')
+    def _certificate_uniq_msg(self, cr, uid, ids, context=None):
+        return _('The certificate ID of the module must be unique !')
+
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The name of the module must be unique !'),
-        ('certificate_uniq', 'unique (certificate)', 'The certificate ID of the module must be unique !')
+        ('name_uniq', 'UNIQUE (name)',_name_uniq_msg ),
+        ('certificate_uniq', 'UNIQUE (certificate)',_certificate_uniq_msg )
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -266,14 +269,14 @@ class module(osv.osv):
             demo = demo or mdemo
         return demo
 
-    def button_install(self, cr, uid, ids, context={}):
+    def button_install(self, cr, uid, ids, context=None):
         return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
-    def button_install_cancel(self, cr, uid, ids, context={}):
+    def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
         return True
 
-    def button_uninstall(self, cr, uid, ids, context={}):
+    def button_uninstall(self, cr, uid, ids, context=None):
         for module in self.browse(cr, uid, ids):
             cr.execute('''select m.state,m.name
                 from
@@ -289,7 +292,7 @@ class module(osv.osv):
         self.write(cr, uid, ids, {'state': 'to remove'})
         return True
 
-    def button_uninstall_cancel(self, cr, uid, ids, context={}):
+    def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
 
@@ -325,7 +328,7 @@ class module(osv.osv):
         self.button_install(cr, uid, to_install, context=context)
         return True
 
-    def button_upgrade_cancel(self, cr, uid, ids, context={}):
+    def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
     def button_update_translations(self, cr, uid, ids, context=None):
@@ -418,7 +421,9 @@ class module(osv.osv):
             zimp.load_module(mod.name)
         return res
 
-    def _update_dependencies(self, cr, uid, id, depends=[]):
+    def _update_dependencies(self, cr, uid, id, depends=None):
+        if depends is None:
+            depends = []
         for d in depends:
             cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 
@@ -441,8 +446,8 @@ class module(osv.osv):
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
-        logger = netsvc.Logger()
+    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+        logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
@@ -462,13 +467,18 @@ class module(osv.osv):
                 if len(lang) > 5:
                     raise osv.except_osv(_('Error'), _('You Can Not Load Translation For language Due To Invalid Language/Country Code'))
                 iso_lang = tools.get_iso_codes(lang)
-                f = os.path.join(modpath, 'i18n', iso_lang + '.po')
-                if not os.path.exists(f) and iso_lang.find('_') != -1:
-                    f = os.path.join(modpath, 'i18n', iso_lang.split('_')[0] + '.po')
+                f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                # Implementation notice: we must first search for the full name of
+                # the language derivative, like "en_UK", and then the generic,
+                # like "en".
+                if (not f) and '_' in iso_lang:
+                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang.split('_')[0] + '.po')
                     iso_lang = iso_lang.split('_')[0]
-                if os.path.exists(f):
-                    logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
+                if f:
+                    logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
                     tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
+                else:
+                    logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')
@@ -537,7 +547,7 @@ class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
 
-    def _state(self, cr, uid, ids, name, args, context={}):
+    def _state(self, cr, uid, ids, name, args, context=None):
         result = {}
         mod_obj = self.pool.get('ir.module.module')
         for md in self.browse(cr, uid, ids):
