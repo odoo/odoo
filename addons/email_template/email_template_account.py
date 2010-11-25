@@ -360,19 +360,19 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                             payload_part.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
-                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
+                    return {'error_msg': _("Server Send Error\nDescription: %s")%error}
                 try:
                     serv.sendmail(payload_part['From'], addresses_l['all-recipients'], payload_part.as_string())
                 except Exception, error:
-                    logging.getLogger('email_template').error("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s", id, error, exc_info=True)
-                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
+                    logging.getLogger('email_template').error(_("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s"), id, error, exc_info=True)
+                    return {'error_msg': _("Server Send Error\nDescription: %s")%error}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
-                return {'nodestroy':True,'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
+                return {'nodestroy':True,'error_msg': _("Mail from Account %s failed. Probable Reason:Account not approved")% id}
 
     def extracttime(self, time_as_string):
         """

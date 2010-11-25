@@ -30,6 +30,34 @@ from tools.translate import _
 def is_pair(x):
     return not x%2
 
+def check_ean(eancode):
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
+        return False
+    try:
+        int(eancode)
+    except:
+        return False
+    oddsum=0
+    evensum=0
+    total=0
+    eanvalue=eancode
+    reversevalue = eanvalue[::-1]
+    finalean=reversevalue[1:]
+
+    for i in range(len(finalean)):
+        if is_pair(i):
+            oddsum += int(finalean[i])
+        else:
+            evensum += int(finalean[i])
+    total=(oddsum * 3) + evensum
+
+    check = int(10 - math.ceil(total % 10.0))
+
+    if check != int(eancode[-1]):
+        return False
+    return True
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -428,7 +456,7 @@ class product_product(osv.osv):
         'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
         'price': fields.function(_product_price, method=True, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
-        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
+        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='Public Price', digits_compute=dp.get_precision('Sale Price')),
         'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Reference', size=64),
@@ -452,32 +480,18 @@ class product_product(osv.osv):
         return False
 
     def _check_ean_key(self, cr, uid, ids):
-        for partner in self.browse(cr, uid, ids):
-            if not partner.ean13:
-                continue
-            if len(partner.ean13) <> 13:
-                return False
-            try:
-                int(partner.ean13)
-            except:
-                return False
-            sum=0
-            for i in range(12):
-                if is_pair(i):
-                    sum += int(partner.ean13[i])
-                else:
-                    sum += 3 * int(partner.ean13[i])
-            check = int(math.ceil(sum / 10.0) * 10 - sum)
-            if check != int(partner.ean13[12]):
-                return False
-        return True
+        for product in self.browse(cr, uid, ids):
+            res = check_ean(product.ean13)
+        return res
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         def _name_get(d):
@@ -485,10 +499,26 @@ class product_product(osv.osv):
             code = d.get('default_code',False)
             if code:
                 name = '[%s] %s' % (code,name)
-            if d['variants']:
+            if d.get('variants'):
                 name = name + ' - %s' % (d['variants'],)
             return (d['id'], name)
-        result = map(_name_get, self.read(cr, user, ids, ['variants','name','default_code'], context))
+
+        partner_id = context.get('partner_id', False)
+
+        result = []
+        for product in self.browse(cr, user, ids, context=context):
+            sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
+            if sellers:
+                for s in sellers:
+                    mydict = {
+                              'id': product.id, 
+                              'name': s.product_name or product.name, 
+                              'default_code': s.product_code or product.default_code, 
+                              'variants': product.variants
+                              }
+                    result.append(_name_get(mydict))
+            else:
+                result.append(_name_get(self.read(cr, user, product.id, ['variants','name','default_code'], context)))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -599,6 +629,13 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
+
+    def _check_ean_key(self, cr, uid, ids):
+        for pack in self.browse(cr, uid, ids):
+            res = check_ean(pack.ean)
+        return res
+
+    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):

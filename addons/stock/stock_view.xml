@@ -144,14 +144,15 @@
                              </field>
                     </page>
                     </notebook>
-                    <field name="state"/>
-                    <group col="4" colspan="2">
+                    <group col="2" colspan="2">
+                     <field name="state"/>
+                    </group>
+                    <group col="2" colspan="2">
                         <button name="action_cancel_inventary" states="draft" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Validate Inventory" type="object" icon="gtk-apply"/>
                         <button name="action_done" states="confirm" string="Confirm Inventory" type="object" icon="gtk-jump-to"/>
                         <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                     </group>
-
                 </form>
             </field>
         </record>
@@ -783,7 +784,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
@@ -928,7 +929,7 @@
                                     </group>
                                 </form>
                             </field>
-                            <group col="10" colspan="4">
+                            <group col="12" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
@@ -937,6 +938,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done" type="action" icon="terp-gtk-go-back-rtl"/>
+                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1158,6 +1160,7 @@
                                 <group colspan="1" states="done">
                                     <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl"/>
                                 </group>
+                                <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">

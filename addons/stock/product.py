@@ -188,7 +188,7 @@ class product_product(osv.osv):
         if not ids:
             return res
 
-	# TODO: write in more ORM way, less queries, more pg84 magic
+    # TODO: write in more ORM way, less queries, more pg84 magic
         if context.get('shop', False):
             cr.execute('select warehouse_id from sale_shop where id=%s', (int(context['shop']),))
             res2 = cr.fetchone()
@@ -247,7 +247,7 @@ class product_product(osv.osv):
             date_values = [to_date]
 
 
-	# TODO: perhaps merge in one query.
+    # TODO: perhaps merge in one query.
         if date_values:
             where.append(tuple(date_values))
         if 'in' in what:
@@ -280,16 +280,17 @@ class product_product(osv.osv):
         uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
         if uoms:
             uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
-        for o in uoms:
-            uoms_o[o.id] = o
-        ctx = {'raise-exception': False} #TOCHECK: before change uom of product, stock move line are in old uom.
+            for o in uoms:
+                uoms_o[o.id] = o
+        #TOCHECK: before change uom of product, stock move line are in old uom.
+        context.update({'raise-exception': False})
         for amount, prod_id, prod_uom in results:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
+                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
             res[prod_id] += amount
         for amount, prod_id, prod_uom in results2:
             amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=ctx)
+                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
             res[prod_id] -= amount
         return res
 
