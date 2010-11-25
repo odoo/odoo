@@ -284,8 +284,8 @@ class WebKitParser(report_sxw):
                                              _=self.translate_call,
                                              **self.parser_instance.localcontext
                                         )
-        except :
-            raise Exception(exceptions.html_error_template().render())
+        except Exception, e:
+            raise except_osv(exceptions.html_error_template().render())
         head_mako_tpl = Template(header, input_encoding='utf-8')
         try :
             head = head_mako_tpl.render(
@@ -298,8 +298,8 @@ class WebKitParser(report_sxw):
                                         _=self.translate_call,
                                         _debug=False
                                     )
-        except :
-            raise Exception(exceptions.html_error_template().render())
+        except Exception, e:
+            raise except_osv(exceptions.html_error_template().render())
         foot = False
         if footer :
             foot_mako_tpl = Template(footer ,input_encoding='utf-8')
@@ -314,7 +314,7 @@ class WebKitParser(report_sxw):
                                             _=self.translate_call,
                                             )
             except:
-                raise Exception(exceptions.html_error_template().render())
+                raise except_osv(exceptions.html_error_template().render())
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(
@@ -327,8 +327,8 @@ class WebKitParser(report_sxw):
                                             setLang=self.setLang,
                                             _=self.translate_call,
                                             )
-            except :
-                raise Exception(exceptions.html_error_template().render())
+            except Exception, e:
+                raise except_osv(exceptions.html_error_template().render())
             return (deb, 'html')
         bin = self.get_lib(cursor, uid, company.id)
         pdf = self.generate_pdf(bin, report_xml, head, foot, [html])
