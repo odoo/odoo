@@ -19,11 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import re
-import tools
 import base64
+import re
+
+import tools
 import addons
+from osv import fields, osv
+from tools.translate import _
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -69,8 +71,10 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def create_shortcut(self, cr, uid, values, context={}):
+    def create_shortcut(self, cr, uid, values, context=None):
         dataobj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         new_context = context.copy()
         for key in context:
             if key.startswith('default_'):
@@ -309,13 +313,17 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    
+    def _rec_message(self, cr, uid, ids, context=None):
+        return _('Error ! You can not create recursive Menu.')
+
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+        (_check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
-        'icon' : lambda *a: 'STOCK_OPEN',
-        'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10,
+        'icon' : 'STOCK_OPEN',
+        'icon_pict': ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
+        'sequence' : 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

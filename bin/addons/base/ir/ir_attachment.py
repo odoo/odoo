@@ -24,16 +24,29 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
-    def check(self, cr, uid, ids, mode, context=None):
+    def check(self, cr, uid, ids, mode, context=None, values=None):
+        """Restricts the access to an ir.attachment, according to referred model
+        In the 'document' module, it is overriden to relax this hard rule, since
+        more complex ones apply there.
+        """
         if not ids:
             return
         ima = self.pool.get('ir.model.access')
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        cr.execute('select distinct res_model from ir_attachment where id IN %s', (tuple(ids),))
-        for obj in cr.fetchall():
-            if obj[0]:
-                ima.check(cr, uid, obj[0], mode, context=context)
+        res_ids = {}
+        if ids:
+            if isinstance(ids, (int, long)):
+                ids = [ids]
+            cr.execute('SELECT DISTINCT res_model, res_id FROM ir_attachment WHERE id = ANY (%s)', (ids,))
+            for rmod, rid in cr.fetchall():
+                if not (rmod and rid):
+                    continue
+                res_ids.setdefault(rmod,[]).append(rid)
+        if values:
+            if 'res_model' in values and 'res_id' in values:
+                res_ids.setdefault(values['res_model'],[]).append(values['res_id'])
+        
+        for model, mids in res_ids.items():
+            self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -64,7 +77,7 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context, load)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self.check(cr, uid, ids, 'write', context=context)
+        self.check(cr, uid, ids, 'write', context=context, values=vals)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -76,8 +89,7 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
     def create(self, cr, uid, values, context=None):
-        if 'res_model' in values and values['res_model'] != '':
-            self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create', context=context)
+        self.check(cr, uid, [], mode='create', context=context, values=values)
         return super(ir_attachment, self).create(cr, uid, values, context)
 
     def action_get(self, cr, uid, context=None):
@@ -112,11 +124,11 @@ class ir_attachment(osv.osv):
         'url': fields.char('Url', size=512, oldname="link"),
         'type': fields.selection(
                 [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or external URL", required=True),
+                'Type', help="Binary File or external URL", required=True, change_default=True),
 
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', change_default=True),
     }
     
     _defaults = {

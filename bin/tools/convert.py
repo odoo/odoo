@@ -277,7 +277,7 @@ form: module.record_id""" % (xml_id,)
                 assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
-            self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'% (id,))
+            self.logger.error('id: %s is to long (max: 64)', id)
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.get("model",'')
@@ -572,7 +572,7 @@ form: module.record_id""" % (xml_id,)
                     pid = res[0]
                 else:
                     # the menuitem does't exist but we are in branch (not a leaf)
-                    self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
+                    self.logger.warning('Warning no ID for submenu %s of menu %s !', menu_elem, str(m_l))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
             values['parent_id'] = pid
         else:
@@ -705,7 +705,7 @@ form: module.record_id""" % (xml_id,)
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    self.logger.notifyChannel('init', severity, msg)
+                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
@@ -737,7 +737,7 @@ form: module.record_id""" % (xml_id,)
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    self.logger.notifyChannel('init', severity, msg)
+                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
@@ -852,11 +852,11 @@ form: module.record_id""" % (xml_id,)
 
     def parse(self, de):
         if not de.tag in ['terp', 'openerp']:
-            self.logger.notifyChannel("init", netsvc.LOG_ERROR, "Mismatch xml format" )
+            self.logger.error("Mismatch xml format")
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
         if de.tag == 'terp':
-            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp/> is deprecated, use <openerp/>")
+            self.logger.warning("The tag <terp/> is deprecated, use <openerp/>")
 
         for n in de.findall('./data'):
             for rec in n:
@@ -874,7 +874,7 @@ form: module.record_id""" % (xml_id,)
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
 
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger('init')
         self.mode = mode
         self.module = module
         self.cr = cr
@@ -907,13 +907,14 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         encoding: utf-8'''
     if not idref:
         idref={}
+    logger = logging.getLogger('init')
     model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
     #remove folder path from model
     head, model = os.path.split(model)
 
     pool = pooler.get_pool(cr.dbname)
 
-    input = cStringIO.StringIO(csvcontent)
+    input = cStringIO.StringIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
     fname_partial = ""
@@ -931,9 +932,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
                         reader.next()
 
     if not (mode == 'init' or 'id' in fields):
-        logger = netsvc.Logger()
-        logger.notifyChannel("init", netsvc.LOG_ERROR,
-            "Import specification does not contain 'id' and we are in init mode, Cannot continue.")
+        logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
         return
 
     uid = 1
@@ -944,8 +943,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         try:
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
-            logger = netsvc.Logger()
-            logger.notifyChannel("init", netsvc.LOG_ERROR, "Cannot import the line: %s" % line)
+            logger.error("Cannot import the line: %s", line)
     pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
