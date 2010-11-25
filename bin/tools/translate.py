@@ -877,7 +877,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 dic[f[i]] = row[i]
 
             try:
-                dic['res_id'] = int(dic['res_id'])
+                dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
             except:
                 model_data_ids = model_data_obj.search(cr, uid, [
                     ('model', '=', dic['name'].split(',')[0]),
