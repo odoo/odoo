@@ -23,6 +23,7 @@ from osv import fields, osv
 import re
 import tools
 import base64
+import addons
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -263,7 +264,9 @@ class ir_ui_menu(osv.osv):
         return True
 
     def read_image(self, path):
-        icon = tools.file_open(path,'rb').read()
+        file = path.split(',')
+        icon_path = addons.get_module_resource(file[0],file[1])
+        icon = tools.file_open(icon_path,'rb').read()
         return base64.encodestring(icon)
 
     def _get_image_icon(self, cr, uid, ids, name, args, context=None):

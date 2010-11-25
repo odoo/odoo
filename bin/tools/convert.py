@@ -25,7 +25,6 @@ import logging
 import os.path
 import pickle
 import re
-import addons
 
 # for eval context:
 import time
@@ -638,11 +637,10 @@ form: module.record_id""" % (xml_id,)
             values['sequence'] = int(rec.get('sequence'))
         if rec.get('icon'):
             values['icon'] = str(rec.get('icon'))
-
         if rec.get('web_icon'):
-            values['web_icon'] = addons.get_module_resource(self.module,str(rec.get('web_icon')))
+            values['web_icon'] = "%s,%s" %(self.module, str(rec.get('web_icon')))
         if rec.get('web_icon_hover'):
-            values['web_icon_hover'] = addons.get_module_resource(self.module,str(rec.get('web_icon_hover')))
+            values['web_icon_hover'] = "%s,%s" %(self.module, str(rec.get('web_icon_hover')))
 
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
