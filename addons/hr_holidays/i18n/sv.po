@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 13:47+0000\n"
-"Last-Translator: Anders Eriksson (Mobila System) <ae@mobilasystem.se>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-23 09:32+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -50,8 +50,27 @@ msgid "Leaves Management"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for %s while available leaves are less than asked "
+"leaves.' %(record.employee_id.name)))\n"
+"                nb = -(record.number_of_days_temp)\n"
+"            elif record.holiday_type == 'category' and record.type == "
+"'remove':\n"
+"                if record.category_id and not "
+"record.holiday_status_id.limit:\n"
+"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
+"uid, [record.holiday_status_id.id], record.category_id.id, "
+"False)[record.holiday_status_id.id]['remaining_leaves']\n"
+"                    if leaves_rest < leave_asked:\n"
+"                        raise osv.except_osv(_('Warning!"
+msgstr ""
+
+#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
+#: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr ""
 
@@ -80,9 +99,8 @@ msgid "Refused"
 msgstr "Nekad"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
-#: field:available.holidays.report,max_leave:0
-msgid "Allocated Leaves"
+#: help:hr.holidays,category_id:0
+msgid "Category Of employee"
 msgstr ""
 
 #. module: hr_holidays
@@ -96,7 +114,6 @@ msgid "Brown"
 msgstr "Brun"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
 #: view:hr.holidays:0
 msgid "Remaining Days"
 msgstr ""
@@ -116,11 +133,6 @@ msgstr ""
 msgid ""
 "Leave Manager can let this field empty if this leave request/allocation is "
 "for every employee"
-msgstr ""
-
-#. module: hr_holidays
-#: view:available.holidays.report:0
-msgid "Leave Days"
 msgstr ""
 
 #. module: hr_holidays
@@ -202,6 +214,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Validation"
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
 #, python-format
 msgid "Warning !"
@@ -219,6 +236,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: field:available.holidays.report,holiday_status_id:0
+#: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
@@ -387,6 +405,11 @@ msgid "Leaves by Type"
 msgstr ""
 
 #. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Ljusrosa"
@@ -404,13 +427,19 @@ msgid "Number of Days"
 msgstr "Antal dagar"
 
 #. module: hr_holidays
-#: help:hr.holidays,category_id:0
-msgid "Category Of employee"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,max_leave:0
+msgid "Allocated Leaves"
 msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Remaining Leave by Type and User"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Search Leave Type"
 msgstr ""
 
 #. module: hr_holidays
@@ -443,6 +472,11 @@ msgstr "Anställd(a)"
 #. module: hr_holidays
 #: view:available.holidays.report:0
 msgid " Month "
+msgstr ""
+
+#. module: hr_holidays
+#: view:board.board:0
+msgid "Leaves By Month"
 msgstr ""
 
 #. module: hr_holidays
@@ -647,6 +681,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
+#: view:hr.holidays:0
 msgid "Extended Filters..."
 msgstr ""
 
@@ -682,27 +717,14 @@ msgstr "Datum"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Extended options..."
+#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
+msgid "Leaves Summary"
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
 #, python-format
 msgid "Error"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
 msgstr ""
 
 #. module: hr_holidays
@@ -720,6 +742,11 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,type:0
 msgid "Request Type"
+msgstr ""
+
+#. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_holidays
@@ -742,9 +769,23 @@ msgid "Reasons"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
+msgid ""
+"Leaves requests can be recorded by employees and validated by their "
+"managers. Once a leave request is validated it appears automatically in the "
+"agenda of the employee. You can define several allowance types (paid "
+"holidays, sickness, etc) and manage allowances per type."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
+msgstr ""
+
+#. module: hr_holidays
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: hr_holidays
@@ -771,6 +812,11 @@ msgid "Validated"
 msgstr "Beslutad"
 
 #. module: hr_holidays
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
@@ -794,25 +840,20 @@ msgid "Apply Double Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_status_id:0
-msgid " Leave Type"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Skriv ut"
 
 #. module: hr_holidays
-#: view:board.board:0
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
-msgid "My Leaves"
+#: view:hr.holidays.status:0
+msgid "Details"
 msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
-msgid "My Leaves by Type"
+#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
+msgid "My Leaves"
 msgstr ""
 
 #. module: hr_holidays
@@ -837,6 +878,7 @@ msgid "May"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Category"
 msgstr ""
@@ -969,12 +1011,6 @@ msgid "Light Pink"
 msgstr "Ljusrosa"
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
-msgid "Leaves Summary"
-msgstr ""
-
-#. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
 #, python-format
 msgid "Wrong leave definition."
@@ -1008,191 +1044,69 @@ msgid ""
 "You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 
-#~ msgid "Employee Holidays"
-#~ msgstr "Den anställdes semestrar"
-
-#~ msgid "Validate"
-#~ msgstr "Bekräfta"
-
-#~ msgid "Both"
-#~ msgstr "Båda"
-
-#~ msgid "Refused Request"
-#~ msgstr "Nekad ansökan"
-
-#~ msgid "to"
-#~ msgstr "till"
-
-#~ msgid "Holiday's Status"
-#~ msgstr "Semesterstatus"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "Notes"
-#~ msgstr "Anteckningar"
-
-#~ msgid "Holidays Management"
-#~ msgstr "Semesterhantering"
-
-#~ msgid "Summary Of Holidays"
-#~ msgstr "Semesteröversikt"
-
-#~ msgid "Vacation end day"
-#~ msgstr "Semesterns slutdatum"
-
-#~ msgid "Holidays Status"
-#~ msgstr "Semesterstatus"
-
-#~ msgid "Define holiday status"
-#~ msgstr "Definiera semeserstatus"
-
-#~ msgid "Holiday status"
-#~ msgstr "Semesterstatus"
-
-#~ msgid "Holidays Per User"
-#~ msgstr "Semester per användare"
-
-#~ msgid "Employee_id"
-#~ msgstr "Anställningsid"
-
-#~ msgid "Number of Holidays Requested"
-#~ msgstr "Antal begärda semestrar"
-
-#~ msgid "Employee get holidays"
-#~ msgstr "Den anställde får semestrar"
-
-#~ msgid "My Holiday Requests"
-#~ msgstr "Mina semesteransökningar"
-
-#~ msgid "Report Options"
-#~ msgstr "Rapportinställningar"
-
-#~ msgid "His manager approves the request"
-#~ msgstr "Hans chef godkänner begäran"
-
-#~ msgid "Holiday Status"
-#~ msgstr "Semesterstatus"
-
-#~ msgid "Holidays Per Employee"
-#~ msgstr "Semestrar per anställd"
-
-#~ msgid "Vacation start day"
-#~ msgstr "Semesterns startdatum"
-
-#~ msgid "Holidays user"
-#~ msgstr "Semesteranvändare"
-
-#~ msgid "Print Summary of Employee's Holidays"
-#~ msgstr "Skriv ut den anställdes semesteröversikt"
-
-#~ msgid "Calendar"
-#~ msgstr "Kalender"
-
-#~ msgid "Allow to override Limit"
-#~ msgstr "Godkänn att gränsen överskrids"
-
-#~ msgid "Notification"
-#~ msgstr "Anmärkning"
-
-#~ msgid "My Draft Holidays Requests"
-#~ msgstr "Mina preliminära semesteransökningar"
-
-#~ msgid "My Available Holidays"
-#~ msgstr "Mina tillgängliga semestrar"
-
-#~ msgid "Set Holiday"
-#~ msgstr "Definiera semester"
-
-#~ msgid "Employee fills in a request for holidays"
-#~ msgstr "Den anställde registrerar en semesteransökan"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "My Holidays Request"
-#~ msgstr "Mina semesteransökningar"
-
-#~ msgid "Color of the status"
-#~ msgstr "Statusfärg"
-
-#~ msgid "draft"
-#~ msgstr "preliminär"
-
-#~ msgid "holidays."
-#~ msgstr "semestrar."
-
-#~ msgid "Document for employee"
-#~ msgstr "Den anställdes dokument"
-
-#~ msgid "Section"
-#~ msgstr "Område"
-
-#~ msgid "Holiday manager"
-#~ msgstr "Semesteransvarig"
-
-#~ msgid "Approved Request"
-#~ msgstr "Godkänd ansökning"
-
-#~ msgid "Holidays Requests Awaiting for Validation"
-#~ msgstr "Semesteransökningar som väntar på beslut"
-
-#~ msgid "Holidays Request"
-#~ msgstr "Semesteransökan"
-
-#~ msgid "My Holidays Request Draft"
-#~ msgstr "Mina preliminära semesteransökningar"
-
-#~ msgid "Reufse"
-#~ msgstr "Vägra"
-
-#~ msgid "Print Summary of Holidays"
-#~ msgstr "Skriv ut semesteröversikt"
-
-#~ msgid "My Holidays Request Refused"
-#~ msgstr "Mina nekade semesteransökningar"
-
-#~ msgid "Holiday per user"
-#~ msgstr "Semester per användare"
-
-#~ msgid "Holidays Definition"
-#~ msgstr "Semesterdefinition"
-
-#~ msgid "Request is approved."
-#~ msgstr "Ansökan har godkänts."
-
-#~ msgid "Holiday Request ID"
-#~ msgstr "Semesteransökan id"
-
-#~ msgid "Holidays Process"
-#~ msgstr "Semesterprocess"
-
-#~ msgid "You have to select at least 1 Department. Try again."
-#~ msgstr "Du måste välja minst 1 avdelning. Försök igen."
-
-#~ msgid "My Holidays Request Validated"
-#~ msgstr "Mina beslutade semesteransökningar"
-
-#~ msgid "Requests Awaiting for Validation"
-#~ msgstr "Ansökan väntar på beslut"
-
-#~ msgid "Request is refused."
-#~ msgstr "Ansökan är inte godkänd."
-
-#~ msgid "Number of Days in this Holiday Request"
-#~ msgstr "Antal dagar för denna semesteransökan"
-
-#~ msgid "New Holidays Request"
-#~ msgstr "Ny semesteransökan"
-
-#~ msgid "My Holidays Requests"
-#~ msgstr "Mina semesteransökningar"
-
-#~ msgid "All Holidays Requests"
-#~ msgstr "Alla semeseransökningar"
-
-#~ msgid "My Awaiting Confirmation Holidays Requests"
-#~ msgstr "Mina semesteransökningar som väntar på beslut"
-
-#~ msgid "My Validated Holidays Requests"
-#~ msgstr "Mina beslutade semesteransökningar"
+#~ msgid ""
+#~ "Human Ressources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage holidays and holidays requests. For "
+#~ "each employee, you can also define a number of available holidays per "
+#~ "holiday status.\n"
+#~ "\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make a negative holiday request (holiday request of -2 "
+#~ "days for example), this is considered by the system as an ask for more off-"
+#~ "days. It will increase his total of that holiday status available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR' and with the role 'holidays'. You "
+#~ "can define these features in the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'.\n"
+#~ msgstr ""
+#~ "Human Ressources: Holidays tracking and workflow\n"
+#~ "\n"
+#~ "    This module allows you to manage holidays and holidays requests. For "
+#~ "each employee, you can also define a number of available holidays per "
+#~ "holiday status.\n"
+#~ "\n"
+#~ "    Note that:\n"
+#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
+#~ "possible: in order to automatically create a case when an holiday request is "
+#~ "accepted, you have to link the holidays status to a case section. You can "
+#~ "set up this info and your colour preferences in\n"
+#~ "                HR / Configuration / Holidays Status\n"
+#~ "    - An employee can make a negative holiday request (holiday request of -2 "
+#~ "days for example), this is considered by the system as an ask for more off-"
+#~ "days. It will increase his total of that holiday status available (if the "
+#~ "request is accepted).\n"
+#~ "    - There are two ways to print the employee's holidays:\n"
+#~ "        * The first will allow to choose employees by department and is used "
+#~ "by clicking the menu item located in\n"
+#~ "                HR / Holidays Request / Print Summary of Holidays\n"
+#~ "        * The second will allow you to choose the holidays report for "
+#~ "specific employees. Go on the list\n"
+#~ "                HR / Employees / Employees\n"
+#~ "            then select the ones you want to choose, click on the print icon "
+#~ "and select the option\n"
+#~ "                'Print Summary of Employee's Holidays'\n"
+#~ "    - The wizard allows you to choose if you want to print either the "
+#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
+#~ "be set up by a user from the group 'HR' and with the role 'holidays'. You "
+#~ "can define these features in the security tab from the user data in\n"
+#~ "                Administration / Users / Users\n"
+#~ "            for example, you maybe will do it for the user 'admin'.\n"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-01 08:44+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-23 09:25+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
@@ -125,9 +125,19 @@ msgid "Partner Function"
 msgstr "Función en empresa"
 
 #. module: base_contact
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
 msgstr "Estado"
+
+#. module: base_contact
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -390,6 +400,11 @@ msgstr "General"
 #: view:res.partner.contact:0
 msgid "Photo"
 msgstr "Foto"
+
+#. module: base_contact
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0

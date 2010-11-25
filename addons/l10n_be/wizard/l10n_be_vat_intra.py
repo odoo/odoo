@@ -68,13 +68,11 @@ class partner_vat_intra(osv.osv_memory):
 
     def create_xml(self, cursor, user, ids, context=None):
         obj_user = self.pool.get('res.users')
-        obj_fyear = self.pool.get('account.fiscalyear')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
         mod_obj = self.pool.get('ir.model.data')
         street = zip_city = country = p_list = data_clientinfo = ''
-        error_message = list_partner = []
         seq = amount_sum = 0
 
         if context is None:

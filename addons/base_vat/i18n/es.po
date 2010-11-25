@@ -6,16 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-31 08:45+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-23 09:39+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base_vat
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -46,6 +51,16 @@ msgid "Base VAT - To check VAT number validity"
 msgstr "Base CIF/NIF - Para comprobar la validez de los CIF/NIF"
 
 #. module: base_vat
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: base_vat
+#: field:res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "Sujeto a IVA"
+
+#. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
@@ -66,9 +81,9 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Sujeto a IVA"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."

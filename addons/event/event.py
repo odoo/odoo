@@ -370,6 +370,18 @@ class event_registration(osv.osv):
         self.history(cr, uid, [reg], _('Invoiced'))
         return inv_id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """ Copy record of Given id
+        @param id: Id of Registration record.
+        @param context: A standard dictionary for contextual values
+        """
+        if not default:
+            default = {}
+        default.update({
+            'invoice_id': False,
+        })
+        return super(event_registration, self).copy(cr, uid, id, default=default, context=context)
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, date_inv = False, context=None):
         """ Action of Create Invoice """
         res = False
@@ -550,11 +562,11 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                tools.email_send(src, email_to, subject, body, email_cc = email_cc, openobject_id = regestration.id)
+                tools.email_send(src, email_to, subject, body, email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
-                        email = email_to, details = body, \
-                        subject = subject, email_from = src, \
-                        email_cc = ', '.join(email_cc))
+                        email=email_to, details=body, \
+                        subjec=subject, email_from=src, \
+                        email_cc=', '.join(email_cc))
 
         return True
 

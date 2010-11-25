@@ -1143,7 +1143,7 @@ class stock_picking(osv.osv):
                 if move.state in ('done', 'cancel'):
                     continue
                 partial_data = partial_datas.get('move%s'%(move.id), False)
-                assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
+                assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
                 product_qty = partial_data.get('product_qty',0.0)
                 move_product_qty[move.id] = product_qty
                 product_uom = partial_data.get('product_uom',False)
@@ -1619,6 +1619,32 @@ class stock_move(osv.osv):
 
         return {'value': result}
 
+    def onchange_uos_quantity(self, cr, uid, ids, product_id, product_uos_qty,
+                          product_uos, product_uom):
+        """ On change of product quantity finds UoM and UoS quantities
+        @param product_id: Product id
+        @param product_uos_qty: Changed UoS Quantity of product
+        @param product_uom: Unit of measure of product
+        @param product_uos: Unit of sale of product
+        @return: Dictionary of values
+        """
+        result = {
+                  'product_qty': 0.00
+          }
+
+        if (not product_id) or (product_uos_qty <=0.0):
+            return {'value': result}
+
+        product_obj = self.pool.get('product.product')
+        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+
+        if product_uos and product_uom and (product_uom != product_uos):
+            result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
+        else:
+            result['product_qty'] = product_uos_qty
+
+        return {'value': result}
+    
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, address_id=False):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
@@ -2274,7 +2300,7 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 continue
             partial_data = partial_datas.get('move%s'%(move.id), False)
-            assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
+            assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
             product_qty = partial_data.get('product_qty',0.0)
             move_product_qty[move.id] = product_qty
             product_uom = partial_data.get('product_uom',False)

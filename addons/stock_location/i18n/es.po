@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-14 17:46+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 09:48+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -75,6 +75,11 @@ msgstr "Tipo de abastecimiento"
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Ubicación utilizada por la ubicación de destino para suministar."
+
+#. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -144,6 +149,11 @@ msgstr "Condiciones"
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
 msgstr "Zona empaquetado"
+
+#. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -303,6 +313,11 @@ msgid "Is the destination location that needs supplying"
 msgstr "Es la ubicación destino que necesita suministro."
 
 #. module: stock_location
+#: sql_constraint:stock.warehouse.orderpoint:0
+msgid "Qty Multiple must be greater than zero."
+msgstr "El múltiplo de la cantidad debe ser más grande que cero."
+
+#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Productos"
@@ -379,6 +394,11 @@ msgstr "Tipo acción"
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
 msgstr "Movimiento"
+
+#. module: stock_location
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0

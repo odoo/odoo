@@ -285,7 +285,9 @@ class WebKitParser(report_sxw):
                                              **self.parser_instance.localcontext
                                         )
         except Exception, e:
-            raise except_osv(exceptions.html_error_template().render())
+            msg = exceptions.text_error_template().render()
+            netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+            raise except_osv(_('Webkit render'), msg)
         head_mako_tpl = Template(header, input_encoding='utf-8')
         try :
             head = head_mako_tpl.render(
@@ -299,7 +301,8 @@ class WebKitParser(report_sxw):
                                         _debug=False
                                     )
         except Exception, e:
-            raise except_osv(exceptions.html_error_template().render())
+            raise except_osv(_('Webkit render'),
+                exceptions.text_error_template().render())
         foot = False
         if footer :
             foot_mako_tpl = Template(footer ,input_encoding='utf-8')
@@ -314,7 +317,9 @@ class WebKitParser(report_sxw):
                                             _=self.translate_call,
                                             )
             except:
-                raise except_osv(exceptions.html_error_template().render())
+                msg = exceptions.text_error_template().render()
+                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                raise except_osv(_('Webkit render'), msg)
         if report_xml.webkit_debug :
             try :
                 deb = head_mako_tpl.render(
@@ -328,7 +333,9 @@ class WebKitParser(report_sxw):
                                             _=self.translate_call,
                                             )
             except Exception, e:
-                raise except_osv(exceptions.html_error_template().render())
+                msg = exceptions.text_error_template().render()
+                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid, company.id)
         pdf = self.generate_pdf(bin, report_xml, head, foot, [html])

@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:01+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-23 09:29+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -58,15 +58,14 @@ msgid "Information from the routing definition."
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
-#: view:mrp.production.workcenter.line:0
-msgid "Resources"
+#: selection:mrp.workorder,month:0
+msgid "March"
 msgstr ""
 
 #. module: mrp_operations
-#: selection:mrp.workorder,month:0
-msgid "March"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
+msgid "Work Centers"
 msgstr ""
 
 #. module: mrp_operations
@@ -188,6 +187,11 @@ msgid "In Production"
 msgstr "I produktion"
 
 #. module: mrp_operations
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 #: field:mrp.production.workcenter.line,state:0
 #: view:mrp.workorder:0
@@ -223,6 +227,11 @@ msgid ""
 "or to make changes in order then can set in 'Pause' state.\n"
 "* When the user cancels the work order it will be set in 'Canceled' state.\n"
 "* When order is completely processed that time it is set in 'Finished' state."
+msgstr ""
+
+#. module: mrp_operations
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: mrp_operations
@@ -279,6 +288,14 @@ msgid "Future Work Orders"
 msgstr ""
 
 #. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid ""
+"Operation has already started !You  can either Pause /Finish/Cancel the "
+"operation"
+msgstr ""
+
+#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
 msgstr ""
@@ -312,14 +329,6 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr ""
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid ""
-"Operation has already started !' 'You  can either Pause /Finish/Cancel the "
-"operation"
 msgstr ""
 
 #. module: mrp_operations
@@ -514,6 +523,16 @@ msgid "Operation is Already Cancelled  !"
 msgstr ""
 
 #. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, as well as using raw materials and "
+"finished product you must also handle manufacturing operations. "
+"Manufacturing operations are often called work orders. The different "
+"operations will have different impacts on the costs of manufacture and "
+"planning depending on the available workload."
+msgstr ""
+
+#. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
 msgstr ""
@@ -550,6 +569,21 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 msgid "Cancel"
 msgstr "Avbryt"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each manufacturing "
+"order. Once you start the first work order of a manufacturing order, the "
+"manufacturing order is automatically marked as started. Once you finish the "
+"latest operation of a manufacturing order, the MO is automatically done and "
+"the related products are produced."
+msgstr ""
+
+#. module: mrp_operations
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -735,5 +769,5 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#~ msgid "Cancel Operation"
-#~ msgstr "Avbryt åtgärd"
+#~ msgid "Workcenter Production start end workflow"
+#~ msgstr "Workcenter Production start end workflow"
