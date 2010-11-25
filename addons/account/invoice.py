@@ -1236,7 +1236,7 @@ class account_invoice(osv.osv):
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
-            code = invoice.currency_id.code
+            code = invoice.currency_id.symbol
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)

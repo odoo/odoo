@@ -310,7 +310,7 @@ class account_account(osv.osv):
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
+            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
         return result
 
     def _get_child_ids(self, cr, uid, ids, field_name, arg, context=None):
@@ -1292,7 +1292,7 @@ class account_move(osv.osv):
         return result
 
     def _compute_balance(self, cr, uid, id, context=None):
-        move = self.browse(cr, uid, [id], context=context)[0]
+        move = self.browse(cr, uid, id, context=context)
         amount = 0
         for line in move.line_id:
             amount+= (line.debit - line.credit)

@@ -6,35 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-12 11:46+0000\n"
-"Last-Translator: Freerk Kalsbeek (Mindswitch BV) <f.kalsbeek@mindswitch.nl>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-24 09:43+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,wiki:0
-msgid "Wiki"
-msgstr ""
-
-#. module: association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "Event Management"
-msgstr ""
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,project_gtd:0
-msgid "Getting Things Done"
-msgstr ""
-
-#. module: association
-#: model:ir.module.module,description:association.module_meta_information
-msgid "This module is to create Profile for Associates"
-msgstr ""
 
 #. module: association
 #: constraint:ir.model:0
@@ -44,36 +24,9 @@ msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: association
-#: field:profile.association.config.install_modules_wizard,progress:0
-msgid "Configuration Progress"
-msgstr ""
-
-#. module: association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "title"
-msgstr ""
-
-#. module: association
 #: help:profile.association.config.install_modules_wizard,event_project:0
 msgid "Helps you to manage and organize your events."
-msgstr ""
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,config_logo:0
-msgid "Image"
-msgstr ""
-
-#. module: association
-#: help:profile.association.config.install_modules_wizard,hr_expense:0
-msgid ""
-"Tracks and manages employee expenses, and can automatically re-invoice "
-"clients if the expenses are project-related."
-msgstr ""
-
-#. module: association
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Helpt bij het beheren en organiseren van evenementen."
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,project_gtd:0
@@ -81,33 +34,99 @@ msgid ""
 "GTD is a methodology to efficiently organise yourself and your tasks. This "
 "module fully integrates GTD principle with OpenERP's project management."
 msgstr ""
+"GTD is een methode om uzelf en uw taken efficiënt te beheren. Deze module "
+"integreert de GTD-uitgangspunten naadloos in OpenERP's projectmanagement "
+"module."
 
 #. module: association
-#: model:ir.module.module,shortdesc:association.module_meta_information
-msgid "Association profile"
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: association
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,hr_expense:0
-msgid "Expenses Tracking"
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie definitie."
 
 #. module: association
 #: view:profile.association.config.install_modules_wizard:0
 msgid "Resources Management"
-msgstr ""
+msgstr "Resourcebeheer"
 
 #. module: association
-#: help:profile.association.config.install_modules_wizard,wiki:0
+#: field:profile.association.config.install_modules_wizard,event_project:0
+msgid "Events"
+msgstr "Evenementen"
+
+#. module: association
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid "Event Management"
+msgstr "Evenementenbeheer"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,progress:0
+msgid "Configuration Progress"
+msgstr "Configuratievoortgang"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid "title"
+msgstr "titel"
+
+#. module: association
+#: help:profile.association.config.install_modules_wizard,hr_expense:0
 msgid ""
-"Lets you create wiki pages and page groups in order to keep track of "
-"business knowledge and share it with and  between your employees."
+"Tracks and manages employee expenses, and can automatically re-invoice "
+"clients if the expenses are project-related."
 msgstr ""
+"Beheert medewerker declaraties en kan automatisch doorberekenen aan klanten "
+"als de uitgave project-gerelateerd is."
+
+#. module: association
+#: model:ir.module.module,shortdesc:association.module_meta_information
+msgid "Association profile"
+msgstr "Vereniging profiel"
+
+#. module: association
+#: model:ir.module.module,description:association.module_meta_information
+msgid "This module is to create Profile for Associates"
+msgstr "Deze module is voor het maken van een vereniging profiel"
+
+#. module: association
+#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
+msgid "profile.association.config.install_modules_wizard"
+msgstr "profile.association.config.install_modules_wizard"
+
+#. module: association
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Ongeldige XML voor overzicht"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,hr_expense:0
+msgid "Expenses Tracking"
+msgstr "Declaratiebeheer"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+#: field:profile.association.config.install_modules_wizard,project:0
+msgid "Project Management"
+msgstr "Projectmanagement"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,wiki:0
+msgid "Wiki"
+msgstr "Wiki"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,project_gtd:0
+msgid "Getting Things Done"
+msgstr "Getting Things Done (dingen gedaan krijgen)"
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,project:0
@@ -115,22 +134,27 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Helpt uw projecten en taken te beheren door ze te volgen, planningen te "
+"genereren, etc..."
 
 #. module: association
-#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
-msgid "profile.association.config.install_modules_wizard"
-msgstr ""
+#: field:profile.association.config.install_modules_wizard,config_logo:0
+msgid "Image"
+msgstr "Afbeelding"
 
 #. module: association
-#: field:profile.association.config.install_modules_wizard,event_project:0
-msgid "Events"
+#: help:profile.association.config.install_modules_wizard,wiki:0
+msgid ""
+"Lets you create wiki pages and page groups in order to keep track of "
+"business knowledge and share it with and  between your employees."
 msgstr ""
+"Laat u wiki pagina's en pagina groepen maken om bedrijfskennis te volgen en "
+"te delen met en tussen uw medewerkers."
 
 #. module: association
-#: view:profile.association.config.install_modules_wizard:0
-#: field:profile.association.config.install_modules_wizard,project:0
-msgid "Project Management"
-msgstr ""
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #~ msgid "Profile for Associates"
 #~ msgstr "Profiel voor verenigingen"

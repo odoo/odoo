@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 09:25+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-24 14:34+0000\n"
+"Last-Translator: Alexsandro Haag <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_gtd
@@ -129,7 +129,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "Esta Semana"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -144,7 +144,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "Ícone"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -174,7 +174,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "Carro"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -219,7 +219,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -229,7 +229,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -238,7 +238,7 @@ msgstr ""
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
-msgid "STOCK_GO_BACK"
+msgid "STOCK_MEDIA_PREVIOUS"
 msgstr ""
 
 #. module: project_gtd
@@ -259,7 +259,12 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
+
+#. module: project_gtd
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo precisa ser único !"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -279,7 +284,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Longo Prazo"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -294,7 +299,7 @@ msgstr "Pegando coisas feitas - Módulo de administração de tempo"
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Fornece a sequencia de ordem quando exibe uma lista de contextos."
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
@@ -305,7 +310,7 @@ msgstr "Definir um período"
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erro!"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -350,7 +355,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "Hoje"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -408,10 +413,9 @@ msgid "STOCK_DND"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
-#: view:project.timebox.fill.plan:0
-msgid "Plannify Timebox"
-msgstr "Período planejado"
+#: selection:project.gtd.timebox,icon:0
+msgid "STOCK_CLEAR"
+msgstr ""
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -434,19 +438,20 @@ msgid "terp-locked"
 msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,icon:0
-msgid "STOCK_CLEAR"
-msgstr ""
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
+#: view:project.timebox.fill.plan:0
+msgid "Plannify Timebox"
+msgstr "Período planejado"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "_Ok"
-msgstr ""
+msgstr "_Ok"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-project"
-msgstr ""
+msgstr "terp-project"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -456,7 +461,7 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_PREFERENCES"
-msgstr ""
+msgstr "STOCK_PREFERENCES"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -466,7 +471,7 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_HELP"
-msgstr ""
+msgstr "STOCK_HELP"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -476,12 +481,12 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_GO_UP"
-msgstr ""
+msgstr "STOCK_GO_UP"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_SORT_DESCENDING"
-msgstr ""
+msgstr "STOCK_SORT_DESCENDING"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -496,37 +501,37 @@ msgstr "Definição do período"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "Início"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_ADD"
-msgstr ""
+msgstr "STOCK_ADD"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_GOTO_LAST"
-msgstr ""
+msgstr "STOCK_GOTO_LAST"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_FIND"
-msgstr ""
+msgstr "STOCK_FIND"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_PROPERTIES"
-msgstr ""
+msgstr "STOCK_PROPERTIES"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_UNDO"
-msgstr ""
+msgstr "STOCK_UNDO"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-gnome-cpu-frequency-applet+"
-msgstr ""
+msgstr "terp-gnome-cpu-frequency-applet+"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
@@ -536,22 +541,22 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_FLOPPY"
-msgstr ""
+msgstr "STOCK_FLOPPY"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_DIRECTORY"
-msgstr ""
+msgstr "STOCK_DIRECTORY"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Viagens"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-go-week"
-msgstr ""
+msgstr "terp-go-week"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,task_ids:0
@@ -561,52 +566,52 @@ msgstr "Seleção de tarefas"
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-gtk-media-pause"
-msgstr ""
+msgstr "terp-gtk-media-pause"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_JUSTIFY_CENTER"
-msgstr ""
+msgstr "STOCK_JUSTIFY_CENTER"
 
 #. module: project_gtd
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Erro ! Você não pode criar Menu recursivo."
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_OPEN"
-msgstr ""
+msgstr "STOCK_OPEN"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-gtk-jump-to-rtl"
-msgstr ""
+msgstr "terp-gtk-jump-to-rtl"
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,icon:0
-msgid "STOCK_MEDIA_PREVIOUS"
-msgstr ""
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "project.gtd.timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_MEDIA_STOP"
-msgstr ""
+msgstr "STOCK_MEDIA_STOP"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-face-plain"
-msgstr ""
+msgstr "terp-face-plain"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_MISSING_IMAGE"
-msgstr ""
+msgstr "STOCK_MISSING_IMAGE"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_UNDERLINE"
-msgstr ""
+msgstr "STOCK_UNDERLINE"
 
 #. module: project_gtd
 #: help:project.task,context_id:0
@@ -616,12 +621,17 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-stock_align_left_24"
-msgstr ""
+msgstr "terp-stock_align_left_24"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_DND_MULTIPLE"
-msgstr ""
+msgstr "STOCK_DND_MULTIPLE"
+
+#. module: project_gtd
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "O nome do grupo precisa ser único!"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -632,27 +642,32 @@ msgstr "Período vazio"
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-folder-blue"
-msgstr ""
+msgstr "terp-folder-blue"
+
+#. module: project_gtd
+#: selection:project.gtd.timebox,icon:0
+msgid "STOCK_GO_BACK"
+msgstr "STOCK_GO_BACK"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_JUSTIFY_FILL"
-msgstr ""
+msgstr "STOCK_JUSTIFY_FILL"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_REMOVE"
-msgstr ""
+msgstr "STOCK_REMOVE"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_REVERT_TO_SAVED"
-msgstr ""
+msgstr "STOCK_REVERT_TO_SAVED"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-idea"
-msgstr ""
+msgstr "terp-idea"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -787,6 +802,11 @@ msgid "STOCK_GOTO_FIRST"
 msgstr ""
 
 #. module: project_gtd
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-go-today"
 msgstr ""
@@ -851,6 +871,14 @@ msgid "Task"
 msgstr ""
 
 #. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. It defines "
+"a period of time in order to categorize your tasks: today, this week, this "
+"month, long term."
+msgstr ""
+
+#. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-report"
 msgstr ""
@@ -906,6 +934,11 @@ msgid "Project Timebox Fill"
 msgstr ""
 
 #. module: project_gtd
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
 msgstr ""
@@ -920,11 +953,6 @@ msgstr ""
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 msgid "Contexts"
 msgstr "Contextos"
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_timebox
-msgid "project.gtd.timebox"
-msgstr "project.gtd.timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -978,6 +1006,14 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-stage"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at office, at home, when I take my car, etc."
 msgstr ""
 
 #. module: project_gtd

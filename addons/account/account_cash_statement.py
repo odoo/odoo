@@ -95,7 +95,7 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res ={}
+        res = {}
         for statement in self.browse(cr, uid, ids, context=context):
             amount_total = 0.0
             for line in statement.ending_details_ids:
@@ -110,7 +110,7 @@ class account_cash_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        res2={}
+        res2 = {}
         for statement in self.browse(cr, uid, ids, context=context):
             encoding_total=0.0
             for line in statement.line_ids:
