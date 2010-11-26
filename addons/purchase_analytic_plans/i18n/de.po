@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:24+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-25 20:23+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: purchase_analytic_plans
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: purchase_analytic_plans
 #: constraint:ir.ui.view:0
@@ -32,19 +37,29 @@ msgstr ""
 #. module: purchase_analytic_plans
 #: field:purchase.order.line,analytics_id:0
 msgid "Analytic Distribution"
-msgstr "Analyt. Verkaufsvorgänge"
+msgstr "Analytische Verrechnung"
 
 #. module: purchase_analytic_plans
 #: model:ir.model,name:purchase_analytic_plans.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Einkaufsauftragszeile"
+msgstr "Beschaffungsauftragspositionen"
 
 #. module: purchase_analytic_plans
 #: model:ir.model,name:purchase_analytic_plans.model_purchase_order
 msgid "Purchase Order"
-msgstr "Einkaufsauftrag"
+msgstr "Beschaffungsauftrag"
 
 #. module: purchase_analytic_plans
 #: model:ir.module.module,shortdesc:purchase_analytic_plans.module_meta_information
 msgid "Purchase Analytic Distribution Management"
-msgstr "Einkauf Analyse Verteilung Management"
+msgstr "Beschaffung Analytische Verrechnung"
+
+#. module: purchase_analytic_plans
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: purchase_analytic_plans
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
