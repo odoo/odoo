@@ -844,11 +844,7 @@ form: module.record_id""" % (xml_id,)
         mod = self.module
         if '.' in id_str:
             mod,id_str = id_str.split('.')
-        result = model_data_obj._get_id(cr, self.uid, mod, id_str)
-        res = model_data_obj.read(cr, self.uid, [result], ['model', 'res_id'])
-        if res and res[0] and res[0]['res_id']:
-            return res[0]['model'], int(res[0]['res_id'])
-        return False
+        return model_data_obj.get_object_reference(cr, self.uid, mod, id_str)
 
     def parse(self, de):
         if not de.tag in ['terp', 'openerp']:
