@@ -46,7 +46,7 @@ class account_journal(osv.osv):
     _inherit = "account.journal"
 
     _columns = {
-        'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence', help="This sequence will be used to maintain the internal number for the journal entries related to this journal."),
+        'internal_sequence_id': fields.many2one('ir.sequence', 'Internal Sequence', help="This sequence will be used to maintain the internal number for the journal entries related to this journal."),
     }
 
 account_journal()

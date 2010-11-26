@@ -22,7 +22,13 @@
                 <attribute name="string">You can enhance the Account Sequence Application by installing .</attribute>
             </xpath>
           <group colspan="8">
-            <field name="internal_sequence"/>
+            <field name="name" colspan="4"/>
+            <field name="prefix"/>
+            <field name="suffix"/>
+            <field name="number_next"/>
+            <field name="number_increment"/>
+            <field name="padding"/>
+            <field name="company_id" groups="base.group_multi_company"/>
           </group>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
               <attribute name="string">Configure</attribute>
@@ -44,7 +50,7 @@
     <record id="account_seq_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_account_seq_installer"/>
       <field name="sequence">3</field>
-      <field name="restart">always</field>
+      <field name="restart">onskip</field>
     </record>
 
   </data>
