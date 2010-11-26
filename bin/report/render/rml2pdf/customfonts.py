@@ -20,11 +20,13 @@
 #
 ##############################################################################
 
-from reportlab import rl_config
-from tools import config
 import glob
-import os
 import logging
+import os
+import platform
+from reportlab import rl_config
+
+from tools import config
 
 """This module allows the mapping of some system-available TTF fonts to
 the reportlab engine.
@@ -65,8 +67,28 @@ TTFSearchPath_Linux = (
             '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
             )
 
+TTFSearchPath_Windows = ( 
+            'c:/winnt/fonts',
+            'c:/windows/fonts'
+            )
+
+TTFSearchPath_Darwin = ( 
+            #mac os X - from
+            #http://developer.apple.com/technotes/tn/tn2024.html
+            '~/Library/Fonts',
+            '/Library/Fonts',
+            '/Network/Library/Fonts',
+            '/System/Library/Fonts',
+            )
+
+TTFSearchPathMap = {
+    'Darwin': TTFSearchPath_Darwin,
+    'Windows': TTFSearchPath_Windows,
+    'Linux': TTFSearchPath_Linux,
+}
+
 # ----- The code below is less distro-specific, please avoid editing! -------
-__foundFonts = []
+__foundFonts = None
 
 def FindCustomFonts():
     """Fill the __foundFonts list with those filenames, whose fonts
@@ -79,40 +101,37 @@ def FindCustomFonts():
     dirpath =  []
     log = logging.getLogger('report.fonts')
     global __foundFonts
+    __foundFonts = {}
     searchpath = []
 
-    if config.get_misc('ttfonts', 'search_path', False):
-        searchpath += map(str.strip, config.get_misc('ttfonts', 'search_path').split(','))
+    if config.get('fonts_search_path'):
+        searchpath += map(str.strip, config.get('fonts_search_path').split(','))
 
-    if os.name == 'nt':
-        pass # TODO
-    elif os.uname()[0] == 'Linux':
-        searchpath += TTFSearchPath_Linux
-    else:
-        pass # TODO for MacOSX, Unix etc.
-    
-    if config.get_misc('ttfonts', 'use_default_path', True):
-        # Append the original search path of reportlab (at the end)
-        searchpath += rl_config.TTFSearchPath
+    local_platform = platform.system()
+    if local_platform in TTFSearchPathMap:
+        searchpath += TTFSearchPathMap[local_platform]
 
+    # Append the original search path of reportlab (at the end)
+    searchpath += rl_config.TTFSearchPath
+
+    # Perform the search for font files ourselves, as reportlab's
+    # TTFOpenFile is not very good at it.
     for dirglob in searchpath:
         dirglob = os.path.expanduser(dirglob)
         for dirname in glob.iglob(dirglob):
             abp = os.path.abspath(dirname)
             if os.path.isdir(abp):
                 dirpath.append(abp)
-        
-    for k, (name, font, fname, mode) in enumerate(CustomTTFonts):
-        if fname in __foundFonts:
+
+    for k, (name, font, filename, mode) in enumerate(CustomTTFonts):
+        if filename in __foundFonts:
             continue
         for d in dirpath:
-            if os.path.exists(os.path.join(d, fname)):
-                log.debug("Found font %s in %s as %s", fname, d, name)
-                __foundFonts.append(fname)
+            abs_filename = os.path.join(d, filename)
+            if os.path.exists(abs_filename):
+                log.debug("Found font %s at %s", filename, abs_filename)
+                __foundFonts[filename] = abs_filename
                 break
-
-    # print "Found fonts:", __foundFonts
-
 
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts
@@ -123,11 +142,13 @@ def SetCustomFonts(rmldoc):
         avoid system-wide processing (cache it, instead).
     """
     global __foundFonts
-    if not len(__foundFonts):
+    if __foundFonts is None:
         FindCustomFonts()
-    for name, font, fname, mode in CustomTTFonts:
-        if os.path.isabs(fname) or fname in __foundFonts:
-            rmldoc.setTTFontMapping(name, font, fname, mode)
+    for name, font, filename, mode in CustomTTFonts:
+        if os.path.isabs(filename):
+            rmldoc.setTTFontMapping(name, font, filename, mode)
+        elif filename in __foundFonts:
+            rmldoc.setTTFontMapping(name, font, __foundFonts[filename], mode)
     return True
 
 #eof
