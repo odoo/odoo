@@ -253,6 +253,8 @@ class TinyPoFile(object):
 
         if self.tnrs:
             type, name, res_id, source, trad = self.tnrs.pop(0)
+            if not res_id:
+                res_id = '0'
         else:
             tmp_tnrs = []
             line = None
