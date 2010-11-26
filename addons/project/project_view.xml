@@ -223,20 +223,17 @@
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="effective_hours" widget="float_time"/>
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-
-                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
-                                    <field name="hours" widget="float_time" />
+                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="user_id" />
                                     <field name="date" />
                                 </tree>
@@ -310,7 +307,8 @@
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
+		    <field name="effective_hours" widget="float_time" sum="Spent Hours"/>                    
+		    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"

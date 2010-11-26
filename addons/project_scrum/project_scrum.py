@@ -43,7 +43,7 @@ project_scrum_project()
 class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
-    _order = 'date_start'
+    _order = 'date_start desc'
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}

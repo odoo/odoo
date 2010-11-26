@@ -26,7 +26,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'emails': fields.one2many('mailgate.message', 'partner_id',\
-                                        'Emails', readonly=True),
+                                        'Emails', readonly=True, domain=[('history','=',True)]),
     }
 
 res_partner()

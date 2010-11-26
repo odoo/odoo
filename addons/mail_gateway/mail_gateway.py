@@ -200,7 +200,8 @@ class mailgate_message(osv.osv):
                 action_data = action_pool.read(cr, uid, action_ids[0], context=context)
                 action_data.update({
                     'domain' : "[('id','=',%d)]"%(res_id),
-                    'nodestroy': True
+                    'nodestroy': True,
+                    'context': {}
                     })
         return action_data
 
@@ -486,6 +487,8 @@ class mailgate_tool(osv.osv_memory):
         if not msg_txt.is_multipart() or 'text/plain' in msg.get('Content-Type', ''):
             encoding = msg_txt.get_content_charset()
             body = msg_txt.get_payload(decode=True)
+            if 'text/html' in msg_txt.get('Content-Type', ''):
+                body = tools.html2plaintext(body)
             msg['body'] = tools.ustr(body, encoding)
 
         attachments = {}
@@ -566,6 +569,7 @@ class mailgate_tool(osv.osv_memory):
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
+                            email_date = msg.get('date'),
                             context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, attachment_ids, context=context)

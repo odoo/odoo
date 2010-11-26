@@ -106,7 +106,7 @@
                             <field name="extension"/>
                             <field name="include_name"/>
                             <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            <field name="report_id" domain="[ ('type','=','ressource'),('model_id','=',parent.ressource_type_id)]"/>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>
@@ -148,6 +148,7 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="storage_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
@@ -166,12 +167,16 @@
                     <separator orientation="vertical"/>
                     <field name="name" />
                     <field name="user_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Storage" domain="[]" icon="terp-accessories-archiver" context="{'group_by':'storage_id'}"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
             </field>
