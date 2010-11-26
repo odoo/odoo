@@ -23,10 +23,10 @@
 {
     'name': 'Subscription and recurring operations',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """Module allows to create new documents and add subscription on that document.""",
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['base_tools'],
     'init_xml': [],
     'update_xml': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
     'demo_xml': ['subscription_demo.xml',],

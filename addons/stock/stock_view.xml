@@ -2,7 +2,10 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" groups="group_stock_manager,group_stock_user" sequence="5"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"
+                  groups="group_stock_manager,group_stock_user" sequence="5"
+                  web_icon="images/warehouse.png"
+                  web_icon_hover="images/warehouse-hover.png"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="base.group_extended"/>
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
