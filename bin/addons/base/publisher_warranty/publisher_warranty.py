@@ -243,9 +243,10 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
     A wizard osv to help people entering a publisher warranty contract.
     """
     _name = 'publisher_warranty.contract.wizard'
+    _inherit = "ir.wizard.screen"
 
     _columns = {
-        'name' : fields.char('Contract Name', size=256, required=True ),
+        'name' : fields.char('Serial Key', size=256, required=True ),
         'state' : fields.selection([("draft", "Draft"), ("finished", "Finished")])
     }
     
