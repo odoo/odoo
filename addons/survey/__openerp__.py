@@ -31,7 +31,7 @@
     Partners are also sent mails with user name and password for the invitation of the survey
     """,
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['base_tools'],
     'update_xml': ['survey_report.xml',
                    'survey_data.xml',
                    'wizard/survey_selection.xml',
