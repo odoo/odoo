@@ -207,7 +207,7 @@ class publisher_warranty_contract(osv.osv):
         return True
 
     _columns = {
-        'name' : fields.char('Contract Name', size=384, required=True),
+        'name' : fields.char('Serial Key', size=384, required=True),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'state' : fields.selection([('unvalidated', 'Unvalidated'), ('valid', 'Valid')
