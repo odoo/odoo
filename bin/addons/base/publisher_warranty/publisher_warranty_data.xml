@@ -3,7 +3,7 @@
     <data>
 
 		<record id="ir_cron_ping_scheduler" model="ir.cron">
-			<field name="name">Update Data Scheduler</field>
+			<field name="name">Update System Logs</field>
 			<field eval="True" name="active" />
 			<field name="user_id" ref="base.user_root" />
 			<field name="interval_number">1</field>
@@ -11,7 +11,7 @@
 			<field name="numbercall">-1</field>
 			<field eval="True" name="doall" />
 			<field eval="'publisher_warranty.contract'" name="model" />
-			<field eval="'send_ping'" name="function" />
+			<field eval="'get_logs'" name="function" />
 			<field eval="'(None,)'" name="args" />
 		</record>
     

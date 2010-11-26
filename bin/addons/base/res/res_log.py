@@ -24,13 +24,13 @@ from osv import fields, osv
 class res_log(osv.osv):
     _name = 'res.log'
     _columns = {
-        'name': fields.char('Message', size=128, help='The logging message.', required=True),
+        'name': fields.char('Message', size=250, help='The logging message.', required=True, select=1),
         'user_id': fields.many2one('res.users','User'),
-        'res_model': fields.char('Object', size=128),
+        'res_model': fields.char('Object', size=128, select=1),
         'context': fields.char('Context', size=250),
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
-        'create_date': fields.datetime('Created Date', readonly=True),
+        'create_date': fields.datetime('Created Date', readonly=True, select=1),
         'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client"),
     }
     _defaults = {

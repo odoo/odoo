@@ -490,6 +490,7 @@ class OpenERPDispatcher:
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 5 or 3))
             return result
         except Exception, e:
+            logging.getLogger(__name__).exception("Dispatcher error")
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
             tb_s = "".join(traceback.format_exception(*tb))

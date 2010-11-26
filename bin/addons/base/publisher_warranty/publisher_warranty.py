@@ -116,7 +116,7 @@ class publisher_warranty_contract(osv.osv):
     
     def check_validity(self, cr, uid, ids, context={}):
         """
-        Check the validity of a publisher warranty contract. This method just call send_ping() but checks
+        Check the validity of a publisher warranty contract. This method just call get_logs() but checks
         some more things, so it can be called from a user interface.
         """
         contract_id = ids[0]
@@ -124,7 +124,7 @@ class publisher_warranty_contract(osv.osv):
         state = contract.state
         validated = state != "unvalidated"
         
-        self.send_ping(cr, uid, ids, cron_mode=False, context=context)
+        self.get_logs(cr, uid, ids, cron_mode=False, context=context)
         
         contract = self.browse(cr, uid, contract_id)
         validated2 = contract.state != "unvalidated"
@@ -132,7 +132,7 @@ class publisher_warranty_contract(osv.osv):
             raise osv.except_osv(_("Contract validation error"),
                                  _("Please check your publisher warranty contract name and validity."))
     
-    def send_ping(self, cr, uid, ids, cron_mode=True, context={}):
+    def get_logs(self, cr, uid, ids, cron_mode=True, context={}):
         """
         Send a message to OpenERP's publisher warranty server to check the validity of
         the contracts, get notifications, etc...
@@ -142,9 +142,9 @@ class publisher_warranty_contract(osv.osv):
         """
         try:
             try:
-                result = send_ping(cr, uid)
+                result = get_sys_logs(cr, uid)
             except:
-                _logger.debug("Exception while sending a ping", exc_info=1)
+                _logger.debug("Exception while sending a get logs messages", exc_info=1)
                 raise osv.except_osv(_("Error"), _("Error during communication with the publisher warranty server."))
             
             contracts = result["contracts"]
@@ -161,16 +161,14 @@ class publisher_warranty_contract(osv.osv):
             
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
             for message in result["messages"]:
-                content = message if isinstance(message, str) or \
-                                isinstance(message, unicode) else message[0]
                 ids = self.pool.get("res.log").search(cr, uid, [("res_model", "=", "publisher_warranty.contract"),
                                                           ("create_date", ">=", limit_date),
-                                                          ("name", "=", content)])
+                                                          ("name", "=", message)])
                 if ids:
                     continue
                 self.pool.get('res.log').create(cr, uid,
                         {
-                            'name': content,
+                            'name': message,
                             'res_model': "publisher_warranty.contract",
                             "read": True,
                             "user_id": False,
@@ -178,7 +176,7 @@ class publisher_warranty_contract(osv.osv):
                         context=context
                 )
         except:
-            _logger.debug("Exception while interpreting the result of a ping", exc_info=1)
+            _logger.debug("Exception while interpreting the result of a logs message", exc_info=1)
             if cron_mode:
                 return False # same as before
             else:
@@ -186,19 +184,27 @@ class publisher_warranty_contract(osv.osv):
             
         return True
     
-    def get_last_user_message(self, cr, uid, context={}):
+    def get_last_user_messages(self, cr, uid, limit, context={}):
         """
-        Get the message to be written in the web client.
-        @return: An html message, can be False instead.
-        @rtype: string
+        Get the messages to be written in the web client.
+        @return: A list of html messages with ids, can be False or empty.
+        @rtype: list of tuples(int,string)
         """
         ids = self.pool.get('res.log').search(cr, uid, [("res_model", "=", "publisher_warranty.contract")]
-                                        , order="create_date desc", limit=1)
+                                        , order="create_date desc", limit=limit)
         if not ids:
-            return False
-        message = self.pool.get('res.log').browse(cr, uid, ids[0]).name
+            return []
+        messages = [(x.id, x.name) for x in self.pool.get('res.log').browse(cr, uid, ids)]
     
-        return message
+        return messages
+    
+    def del_user_message(self, cr, uid, id, context={}):
+        """
+        Delete a message.
+        """
+        self.pool.get('res.log').unlink(cr, uid, [id])
+        
+        return True
 
     _columns = {
         'name' : fields.char('Contract Name', size=384, required=True),
@@ -273,9 +279,9 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
 
 publisher_warranty_contract_wizard()
 
-def send_ping(cr, uid):
+def get_sys_logs(cr, uid):
     """
-    Utility method to send a publisher warranty ping.
+    Utility method to send a publisher warranty get logs messages.
     """
     pool = pooler.get_pool(cr.dbname)
     
@@ -284,6 +290,7 @@ def send_ping(cr, uid):
     nbr_users = pool.get("res.users").search(cr, uid, [], count=True)
     contractosv = pool.get('publisher_warranty.contract')
     contracts = contractosv.browse(cr, uid, contractosv.search(cr, uid, []))
+    user = pool.get("res.users").browse(cr, uid, uid)
     msg = {
         "dbuuid": dbuuid,
         "nbr_users": nbr_users,
@@ -291,6 +298,7 @@ def send_ping(cr, uid):
         "db_create_date": db_create_date,
         "version": release.version,
         "contracts": [c.name for c in contracts],
+        "language": user.context_lang,
     }
     
     uo = urllib.urlopen(config.get("publisher_warranty_url"),

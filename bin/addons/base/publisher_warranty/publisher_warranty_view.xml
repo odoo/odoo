@@ -7,7 +7,7 @@
             <field name="model">publisher_warranty.contract</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Publisher Warranty Contract">
+                <tree string="Publisher Warranty Contracts">
                     <field name="name"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -71,7 +71,7 @@
         </record>
 
         <record id="action_publisher_warranty_contract_form" model="ir.actions.act_window">
-            <field name="name">Publisher Warranty Contracts</field>
+            <field name="name">Contracts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">publisher_warranty.contract</field>
             <field name="view_type">form</field>
@@ -82,7 +82,8 @@
         <menuitem name="Publisher Warranty" id="publisher_warranty"
             parent="base.menu_administration" groups="base.group_extended"/>
 
-        <menuitem action="action_publisher_warranty_contract_form" id="menu_publisher_warranty_contract" parent="publisher_warranty"/>
+        <menuitem action="action_publisher_warranty_contract_form" id="menu_publisher_warranty_contract"
+        	parent="publisher_warranty" sequence="2"/>
 
 
         <record id="publisher_warranty_contract_add_wizard" model="ir.ui.view">
@@ -113,7 +114,7 @@
         </record>
 
         <record id="action_publisher_warranty_contract_add_wizard" model="ir.actions.act_window">
-            <field name="name">Add Publisher Warranty Contract</field>
+            <field name="name">Register a contract</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">publisher_warranty.contract.wizard</field>
             <field name="view_type">form</field>
@@ -124,20 +125,7 @@
         <menuitem
             action="action_publisher_warranty_contract_add_wizard"
             id="menu_publisher_warranty_contract_add"
-            parent="publisher_warranty" />
-            
-        <record id="publisher_warranty_res_log_act_window" model="ir.actions.act_window">
-            <field name="name">Notifications</field>
-            <field name="res_model">res.log</field>
-            <field name="view_type">form</field>
-            <field name="context">{}</field>
-            <field name="domain">[('res_model','=','publisher_warranty.contract')]</field>
-        </record>
-        
-        <menuitem
-            action="publisher_warranty_res_log_act_window"
-            id="menu_publisher_warranty_res_log"
-            parent="publisher_warranty"/>
+            parent="publisher_warranty" sequence="1"/>
 
     </data>
 </openerp>
