@@ -49,6 +49,14 @@ class res_log(osv.osv):
             cr.execute('CREATE INDEX %s ON res_log (user_id, read)' %
                        self._index_name)
 
+    def create(self, cr, uid, vals, context=None):
+        create_context = context and dict(context) or {}
+        if 'res_log_read' in create_context:
+            vals['read'] = create_context.pop('res_log_read')
+        if create_context and not vals.get('context'):
+            vals['context'] = create_context
+        return super(res_log, self).create(cr, uid, vals, context=context)
+
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context=None):
         unread_log_ids = self.search(cr, uid,

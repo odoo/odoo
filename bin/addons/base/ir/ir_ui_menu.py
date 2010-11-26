@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import base64
 import re
+
 import tools
+import addons
+from osv import fields, osv
+from tools.translate import _
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -67,8 +71,10 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def create_shortcut(self, cr, uid, values, context={}):
+    def create_shortcut(self, cr, uid, values, context=None):
         dataobj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         new_context = context.copy()
         for key in context:
             if key.startswith('default_'):
@@ -260,8 +266,26 @@ class ir_ui_menu(osv.osv):
                 return False
             level -= 1
         return True
-    
-    
+
+    def read_image(self, path):
+        path_info = path.split(',')
+        icon_path = addons.get_module_resource(path_info[0],path_info[1])
+        icon = tools.file_open(icon_path,'rb').read()
+        return base64.encodestring(icon)
+
+    def _get_image_icon(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id] = {
+                'web_icon_data': False,
+                'web_icon_hover_data': False,
+            }
+            if not menu.parent_id:
+                if menu.web_icon_hover:
+                    res[menu.id]['web_icon_hover_data'] = self.read_image(menu.web_icon_hover)
+                if menu.web_icon:
+                    res[menu.id]['web_icon_data'] = self.read_image(menu.web_icon)
+        return res
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
@@ -275,6 +299,10 @@ class ir_ui_menu(osv.osv):
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, method=True, type='char', size=32),
+        'web_icon': fields.char('Icon File', size=128),
+        'web_icon_hover':fields.char('Icon hover File', size=128),
+        'web_icon_data': fields.function(_get_image_icon, string='Web Icons', type='binary', method=True, readonly=True, store=True, multi='icon'),
+        'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icons Hover', type='binary', method=True, readonly=True, store=True,multi='icon'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
@@ -285,13 +313,17 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    
+    def _rec_message(self, cr, uid, ids, context=None):
+        return _('Error ! You can not create recursive Menu.')
+
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+        (_check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
-        'icon' : lambda *a: 'STOCK_OPEN',
-        'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10,
+        'icon' : 'STOCK_OPEN',
+        'icon_pict': ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
+        'sequence' : 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

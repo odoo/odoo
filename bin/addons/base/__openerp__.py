@@ -23,7 +23,7 @@
 
 {
     'name': 'Base',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Generic Modules/Base',
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
@@ -82,6 +82,7 @@
         'base_demo.xml',
         'res/partner/partner_demo.xml',
         'res/partner/crm_demo.xml',
+        'res/res_widget_demo.xml',
     ],
     'test': [
         'test/base_test.xml',

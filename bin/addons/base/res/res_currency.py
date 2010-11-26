@@ -48,7 +48,6 @@ class res_currency(osv.osv):
     _description = "Currency"
     _columns = {
         'name': fields.char('Currency', size=32, required=True),
-        'code': fields.char('Code', size=3),
         'symbol': fields.char('Symbol', size=3),
         'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1'),
@@ -65,7 +64,7 @@ class res_currency(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
     }
-    _order = "code"
+    _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
@@ -102,12 +101,12 @@ class res_currency(osv.osv):
         if from_currency['rate'] == 0 or to_currency['rate'] == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
             if from_currency['rate'] == 0:
-                code = from_currency.code
+                currency_symbol = from_currency.symbol
             else:
-                code = to_currency.code
+                currency_symbol = to_currency.symbol
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
-                    'at the date: %s') % (code, date))
+                    'at the date: %s') % (currency_symbol, date))
         rate = to_currency.rate/from_currency.rate
         if account and (account.currency_mode=='average') and account.currency_id:
             q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
@@ -133,9 +132,7 @@ class res_currency(osv.osv):
         args2 = args[:]
         if name:
             args += [('name', operator, name)]
-            args2 += [('code', operator, name)]
         ids = self.search(cr, uid, args, limit=limit)
-        ids += self.search(cr, uid, args2, limit=limit)
         res = self.name_get(cr, uid, ids, context)
         return res
 res_currency()

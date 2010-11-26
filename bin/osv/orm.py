@@ -41,6 +41,7 @@ import calendar
 import copy
 import datetime
 import logging
+import warnings
 import operator
 import pickle
 import re
@@ -394,7 +395,6 @@ class orm_template(object):
                     'res_model': self._name,
                     'secondary': secondary,
                     'res_id': id,
-                    'context': context,
                 },
                 context=context
         )
@@ -979,6 +979,10 @@ class orm_template(object):
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
+                            if hasattr(msg, '__call__'):
+                                msg = msg(cr, uid, [res_id,], context=context)
+                            else:
+                                msg = _(msg)
                             break
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '')
                 if isinstance(e, osv.orm.except_orm):
@@ -1052,9 +1056,12 @@ class orm_template(object):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
-                    txt_msg, params = msg(self, cr, uid, ids)
-                    tmp_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=txt_msg) or txt_msg
-                    translated_msg = tmp_msg % params
+                    tmp_msg = msg(self, cr, uid, ids, context=context)
+                    if isinstance(tmp_msg, tuple):
+                        tmp_msg, params = tmp_msg
+                        translated_msg = tmp_msg % params
+                    else:
+                        translated_msg = tmp_msg
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
@@ -2243,7 +2250,7 @@ class orm(orm_template):
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
-        group_by = groupby
+        group_count = group_by = groupby
         if groupby:
             if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
@@ -2273,7 +2280,9 @@ class orm(orm_template):
         where_clause = where_clause and ' WHERE ' + where_clause
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
-        cr.execute('SELECT min(%s.id) AS id,' % self._table + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
+            group_count = '_'
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS  %s_count, ' % (self._table, self._table, group_count) + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -2596,7 +2605,7 @@ class orm(orm_template):
                                 if not ok:
                                     i = 0
                                     while True:
-                                        newname = self._table + '_moved' + str(i)
+                                        newname = k + '_moved' + str(i)
                                         cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
                                             "WHERE c.relname=%s " \
                                             "AND a.attname=%s " \
@@ -3047,21 +3056,6 @@ class orm(orm_template):
         else:
             res = map(lambda x: {'id': x}, ids)
 
-#        if not res:
-#            res = map(lambda x: {'id': x}, ids)
-#            for record in res:
-#                for f in fields_to_read:
-#                    field_val = False
-#                    if f in self._columns.keys():
-#                        ftype = self._columns[f]._type
-#                    elif f in self._inherit_fields.keys():
-#                        ftype = self._inherit_fields[f][2]._type
-#                    else:
-#                        continue
-#                    if ftype in ('one2many', 'many2many'):
-#                        field_val = []
-#                    record.update({f:field_val})
-
         for f in fields_pre:
             if f == self.CONCURRENCY_CHECK_FIELD:
                 continue
@@ -3198,9 +3192,11 @@ class orm(orm_template):
         for r in res:
             for key in r:
                 r[key] = r[key] or False
-                if details and key in ('write_uid', 'create_uid'):
-                    if r[key]:
+                if details and key in ('write_uid', 'create_uid') and r[key]:
+                    try:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+                    except Exception:
+                        pass # Leave the numeric uid there
             r['xmlid'] = ("%(module)s.%(name)s" % r) if r['name'] else False
             del r['name'], r['module']
         if uniq:
@@ -3354,7 +3350,7 @@ class orm(orm_template):
             fobj = None
             if field in self._columns:
                 fobj = self._columns[field]
-            else:
+            elif field in self._inherit_fields:
                 fobj = self._inherit_fields[field][2]
             if not fobj:
                 continue
@@ -4096,10 +4092,14 @@ class orm(orm_template):
                 else:
                     default['state'] = self._defaults['state']
 
-        context_wo_lang = context
+        context_wo_lang = context.copy()
         if 'lang' in context:
             del context_wo_lang['lang']
-        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
+        data = self.read(cr, uid, [id,], context=context_wo_lang)
+        if data:
+            data = data[0]
+        else:
+            raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
@@ -4210,6 +4210,13 @@ class orm(orm_template):
         return cr.fetchone()[0] == len(ids)
 
     def check_recursion(self, cr, uid, ids, parent=None):
+        warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
+                        self._name, DeprecationWarning, stacklevel=3)
+        assert parent is None or parent in self._columns or parent in self._inherit_fields,\
+                    "The 'parent' parameter passed to check_recursion() must be None or a valid field name"
+        return self._check_recursion(cr, uid, ids, parent)
+
+    def _check_recursion(self, cr, uid, ids, parent=None):
         """
         Verifies that there is no loop in a hierarchical structure of records,
         by following the parent relationship using the **parent** field until a loop

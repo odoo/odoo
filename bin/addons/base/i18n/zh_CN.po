@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 07:56+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 07:18+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-28 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -89,6 +89,16 @@ msgid "Hungarian / Magyar"
 msgstr "匈牙利/匈牙利语"
 
 #. module: base
+#: selection:ir.model.fields,select_level:0
+msgid "Not Searchable"
+msgstr "不可搜索"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (VE) / Español (VE)"
+msgstr "西班牙语"
+
+#. module: base
 #: field:ir.actions.server,wkf_model_id:0
 msgid "Workflow On"
 msgstr "工作流作用于"
@@ -106,7 +116,7 @@ msgstr "已创建的视图"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-emblem-important"
-msgstr ""
+msgstr "terp-emblem-important"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -151,6 +161,16 @@ msgid "Wood Suppliers"
 msgstr "木材供应商"
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Some installed modules depend on the module you plan to Uninstall :\n"
+" %s"
+msgstr ""
+"一些已安装的模块依靠您打算卸载的模块：\n"
+" %s"
+
+#. module: base
 #: field:ir.sequence,number_increment:0
 msgid "Increment Number"
 msgstr "增量编号"
@@ -160,6 +180,11 @@ msgstr "增量编号"
 #: model:ir.ui.menu,name:base.menu_action_res_company_tree
 msgid "Company's Structure"
 msgstr "公司结构"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
+msgstr "因纽特语"
 
 #. module: base
 #: view:res.partner:0
@@ -196,7 +221,7 @@ msgstr "模块数"
 #. module: base
 #: help:multi_company.default,company_dest_id:0
 msgid "Company to store the current record"
-msgstr ""
+msgstr "将该记录保存到此公司"
 
 #. module: base
 #: field:res.partner.bank.type.field,size:0
@@ -220,6 +245,11 @@ msgstr "把此文档保存为 %s 文件之后可以用编辑器或相应的软�
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DELETE"
 msgstr "STOCK_DELETE"
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr "语言名称必须唯一"
 
 #. module: base
 #: selection:res.request,state:0
@@ -346,9 +376,11 @@ msgid "Bosnian / bosanski jezik"
 msgstr "波斯尼亚语 / bosanski jezik"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Serbian / Serbia"
-msgstr ""
+#: help:ir.actions.report.xml,attachment_use:0
+msgid ""
+"If you check this, then the second time the user prints with same attachment "
+"name, it returns the previous report."
+msgstr "如果您选中此处，当下次用户使用相同的附件名称打印时将返回以前的报表。"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -382,9 +414,9 @@ msgid "Schedule Upgrade"
 msgstr "安排升级"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Mongolian / Mongolia"
-msgstr ""
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Mister"
+msgstr "小姐"
 
 #. module: base
 #: help:res.country,code:0
@@ -409,6 +441,11 @@ msgstr "要启动的动作"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "销售与采购"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
+msgid "Corporation"
+msgstr "公司"
 
 #. module: base
 #: view:ir.translation:0
@@ -436,7 +473,7 @@ msgstr "向导"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_miscellaneoussuppliers0
 msgid "Miscellaneous Suppliers"
-msgstr ""
+msgstr "其他供应商"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
@@ -452,7 +489,7 @@ msgstr "选择要执行的动作窗口、报表或向导。"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-gtk-jump-to-ltr"
-msgstr ""
+msgstr "terp-gtk-jump-to-ltr"
 
 #. module: base
 #: view:base.language.export:0
@@ -468,17 +505,12 @@ msgstr "域说明"
 #: help:ir.actions.act_window,src_model:0
 msgid ""
 "Optional model name of the objects on which this action should be visible"
-msgstr ""
+msgstr "可选参数，对象名，此操作会显示在此对象视图的右侧"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
 msgid "Trigger Expression"
 msgstr "触发器表达式"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Korean / Korea, Democratic Peoples Republic of"
-msgstr "朝鲜民主主义人民共和国"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -496,9 +528,10 @@ msgid "Eritrea"
 msgstr "厄立特里亚"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Bulgarian / български"
-msgstr "保加利亚语 / български"
+#: view:res.config:0
+#: view:res.config.installer:0
+msgid "description"
+msgstr "描述"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_action_rule
@@ -513,7 +546,7 @@ msgstr "ir.actions.actions"
 #. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Want to check Ean ? "
-msgstr ""
+msgstr "是否检查EAN码 "
 
 #. module: base
 #: field:ir.values,key2:0
@@ -531,12 +564,12 @@ msgid ""
 "OpenERP translations (core, modules, clients) are managed through "
 "Launchpad.net, our open source project management facility. We use their "
 "online interface to synchronize all translations efforts."
-msgstr ""
+msgstr "OpenERP的翻译在Launchpad.net网站上进行，OpenERP项目本身也在这个网站上，并能定期通过接口同步所有语言的翻译。"
 
 #. module: base
 #: field:res.partner,title:0
 msgid "Partner Form"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -574,12 +607,17 @@ msgstr "导入语言"
 #. module: base
 #: model:ir.model,name:base.model_res_config_users
 msgid "res.config.users"
-msgstr ""
+msgstr "res.config.users"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Albanian / Shqip"
+msgstr "阿尔巴尼亚语"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "base.language.export"
-msgstr ""
+msgstr "base.language.export"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -599,7 +637,7 @@ msgstr "报表类型，如：pdf, html, raw, sxw, odt, html2html, mako2html, ...
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-folder-yellow"
-msgstr ""
+msgstr "terp-folder-yellow"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -635,7 +673,7 @@ msgstr "导入／导出"
 #: help:ir.actions.act_window,domain:0
 msgid ""
 "Optional domain filtering of the destination data, as a Python expression"
-msgstr ""
+msgstr "可选参数，Python表达式，用于过滤操作的结果数据"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
@@ -648,7 +686,12 @@ msgstr "模块升级"
 msgid ""
 "Groups are used to define access rights on objects and the visibility of "
 "screens and menus"
-msgstr ""
+msgstr "用户组用于设置对象访问权限和决定用户可以看到的屏幕和菜单"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (UY) / Español (UY)"
+msgstr "Spanish (UY) / Español (UY)"
 
 #. module: base
 #: field:res.partner,mobile:0
@@ -666,18 +709,6 @@ msgstr "阿曼"
 #: model:ir.model,name:base.model_res_payterm
 msgid "Payment term"
 msgstr "付款条件"
-
-#. module: base
-#: code:addons/base/res/res_config.py:0
-#, python-format
-msgid ""
-"\n"
-"\n"
-"This addon is already installed on your system"
-msgstr ""
-"\n"
-"\n"
-"该模块已经安装到您的系统中了。"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -700,7 +731,7 @@ msgstr "其他 OSI 认可的授权协议"
 msgid ""
 "Sets the language for the user's user interface, when UI translations are "
 "available"
-msgstr ""
+msgstr "设置该用户使用的界面语言"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -722,7 +753,7 @@ msgstr "维护合同模块"
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Request Reference Types"
-msgstr ""
+msgstr "短消息链接类型"
 
 #. module: base
 #: view:ir.values:0
@@ -820,7 +851,7 @@ msgstr "贡献者"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Char"
-msgstr ""
+msgstr "字符"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -858,7 +889,12 @@ msgid ""
 "To improve or expand the official translations, you should use directly "
 "Lauchpad's web interface (Rosetta). If you need to perform mass translation, "
 "Launchpad also allows uploading full .po files at once"
-msgstr ""
+msgstr "改善翻译的最好方法是到Lauchpad网站上参与翻译。如果你有了一个完整的.po文件，也可以在Lauchpad网站上传。"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (GT) / Español (GT)"
+msgstr "Spanish (GT) / Español (GT)"
 
 #. module: base
 #: view:res.lang:0
@@ -914,7 +950,7 @@ msgstr "搜索"
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
-msgstr ""
+msgstr "多个组规则采用AND逻辑最终起作用"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -1022,7 +1058,7 @@ msgstr "ir.exports.line"
 msgid ""
 "If you check this box, your customized translations will be overwritten and "
 "replaced by the official ones."
-msgstr ""
+msgstr "如果勾上这个勾，数据库中的翻译将被服务器上的po文件中的翻译覆盖"
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
@@ -1066,7 +1102,7 @@ msgstr "用户名"
 msgid ""
 "Access all the fields related to the current object using expressions, i.e. "
 "object.partner_id.name "
-msgstr ""
+msgstr "用表达式访问对象的所有字段，如object.partner_id.name "
 
 #. module: base
 #: view:maintenance.contract:0
@@ -1082,22 +1118,12 @@ msgstr "国家的州"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr ""
+msgstr "浮点数"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_COPY"
 msgstr "STOCK_COPY"
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"You try to install the module '%s' that depends on the module:'%s'.\n"
-"But this module is not available in your system."
-msgstr ""
-"您试图安装模块'%s'.这模块依赖模块： %s。\n"
-"但您的系统中该模块不可用。"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1119,7 +1145,7 @@ msgstr "科摩罗群岛"
 msgid ""
 "Do not display this log if it belongs to the same object the user is working "
 "on"
-msgstr ""
+msgstr "如果用户在修改相同的对象，不显示这个log"
 
 #. module: base
 #: model:res.country,name:base.tp
@@ -1143,6 +1169,18 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"日期 : %(date)s\n"
+"\n"
+"%(partner_name)s,\n"
+"\n"
+"以下是贵公司尚未付款的发票列表，金额总计：\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"提请关注为盼，\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1150,9 +1188,9 @@ msgid "Computational Accuracy"
 msgstr "计算精度"
 
 #. module: base
-#: model:res.country,name:base.kg
-msgid "Kyrgyz Republic (Kyrgyzstan)"
-msgstr "吉尔吉斯斯坦"
+#: selection:base.language.install,lang:0
+msgid "Sinhalese / සිංහල"
+msgstr "Sinhalese / සිංහල"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
@@ -1181,6 +1219,19 @@ msgid "STOCK_FIND_AND_REPLACE"
 msgstr "STOCK_FIND_AND_REPLACE"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.open_module_tree
+msgid ""
+"List all certified modules available to configure your OpenERP. Modules that "
+"are installed are flagged as such. You can search for a specific module "
+"using the name or the description of the module. You do not need to install "
+"modules one by one, you can install many at the same time by clicking on the "
+"schedule button in this list. Then, apply the schedule upgrade from Action "
+"menu once for all the ones you have scheduled for installation."
+msgstr ""
+"这里列出了您服务器上所有可安装的模块，包括已安装的模块。您可以用模块名称或描述的部分字符去查找模块。并不需要逐个安装，可以先在列表中点“安排安装”按钮，最"
+"后点“执行安排的升级”操作。"
+
+#. module: base
 #: model:res.country,name:base.mv
 msgid "Maldives"
 msgstr "马尔代夫"
@@ -1201,9 +1252,9 @@ msgid "Days"
 msgstr "日"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-calendar"
-msgstr "terp-calendar"
+#: selection:base.language.install,lang:0
+msgid "Serbian / српски језик"
+msgstr "Serbian / српски језик"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1218,6 +1269,7 @@ msgid ""
 msgstr "动作执行前所做的条件判断，如：object.list_price > object.cost_price"
 
 #. module: base
+#: code:addons/base/res/partner/partner.py:0
 #: code:addons/base/res/res_company.py:0
 #, python-format
 msgid " (copy)"
@@ -1239,7 +1291,7 @@ msgstr "业务伙伴"
 #: model:ir.actions.act_window,name:base.res_widget_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_act_window
 msgid "Homepage Widgets"
-msgstr ""
+msgstr "首页控件"
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1256,7 +1308,7 @@ msgstr "附加的模型"
 #. module: base
 #: view:ir.rule:0
 msgid "Domain Setup"
-msgstr ""
+msgstr "筛选条件设置"
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
@@ -1310,7 +1362,7 @@ msgstr "马拉维"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (副本)"
 
 #. module: base
 #: field:res.partner.address,type:0
@@ -1320,7 +1372,7 @@ msgstr "地址类型"
 #. module: base
 #: view:ir.ui.menu:0
 msgid "Full Path"
-msgstr ""
+msgstr "完整路径"
 
 #. module: base
 #: view:res.request:0
@@ -1334,22 +1386,6 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Sunday "
 "are considered to be in week 0."
 msgstr "%U - 一年中的周数（周日是每周的第一天）[00,53]。在新年的第一个星期日之前的日子归于周0."
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid ""
-"Model %s Does not Exist !\" % vals['relation']))\n"
-"\n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                #Added context to _auto_init for special treatment to custom "
-"field for select_level\n"
-"                ctx = context.copy()\n"
-"                "
-"ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
-"t('select_level','0"
-msgstr ""
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1395,7 +1431,7 @@ msgstr "创建/写入/复制"
 #. module: base
 #: view:base.language.export:0
 msgid "https://help.launchpad.net/Translations"
-msgstr ""
+msgstr "https://help.launchpad.net/Translations"
 
 #. module: base
 #: field:ir.actions.act_window,view_mode:0
@@ -1407,7 +1443,7 @@ msgstr "视图模式"
 msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
-msgstr ""
+msgstr "如果用CSV格式文件导入，请确定文件首行如下："
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_log_act_window
@@ -1422,11 +1458,16 @@ msgid "Spanish / Español"
 msgstr "西班牙语 / Español"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Korean (KP) / 한국어 (KP)"
+msgstr "Korean (KP) / 한국어 (KP)"
+
+#. module: base
 #: view:base.module.update:0
 msgid ""
 "This wizard will scan all module repositories on the server side to detect "
 "newly added modules as well as any change to existing modules."
-msgstr ""
+msgstr "此向导会检查服务器上新增的或已修改的模块"
 
 #. module: base
 #: field:res.company,logo:0
@@ -1492,11 +1533,20 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 msgstr ""
+"例如：Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-stock_align_left_24"
-msgstr ""
+msgstr "terp-stock_align_left_24"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_ui_view
+msgid ""
+"Views allows you to personalize each view of OpenERP. You can add new "
+"fields, move fields, rename them or delete the ones that you do not need."
+msgstr "您可以自定义OpenERP中的任意一个视图。可以添加字段、移动字段、重命名或删除字段"
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -1518,6 +1568,11 @@ msgstr ""
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "组"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (CL) / Español (CL)"
+msgstr "Spanish (CL) / Español (CL)"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1572,9 +1627,11 @@ msgstr ""
 "输入返回列表的字段／表达式。比如当选择的对象是销售订单，那么您可以在销售订单明细中使用循环，表达式：`object.order_line`。"
 
 #. module: base
+#: field:ir.property,fields_id:0
 #: selection:ir.translation,type:0
-msgid "Wizard Field"
-msgstr "向导字段"
+#: field:multi_company.default,field_id:0
+msgid "Field"
+msgstr "字段"
 
 #. module: base
 #: view:ir.rule:0
@@ -1596,7 +1653,7 @@ msgstr "STOCK_NO"
 #: selection:res.config.view,view:0
 #: selection:res.users,view:0
 msgid "Simplified"
-msgstr ""
+msgstr "简化界面"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -1607,6 +1664,11 @@ msgstr "圣多美和普林西比"
 #: selection:res.partner.address,type:0
 msgid "Invoice"
 msgstr "发票"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Portugese (BR) / Português (BR)"
+msgstr "Portugese (BR) / Português (BR)"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -1649,13 +1711,13 @@ msgstr "原始视图"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-camera_test"
-msgstr ""
+msgstr "terp-camera_test"
 
 #. module: base
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Make sure you have no users linked with the group(s)!"
-msgstr ""
+msgstr "确定这个组中没有用户！"
 
 #. module: base
 #: field:ir.actions.url,target:0
@@ -1692,7 +1754,7 @@ msgstr "津巴布韦"
 #. module: base
 #: view:base.module.update:0
 msgid "Please be patient, as this operation may take a few seconds..."
-msgstr ""
+msgstr "稍等一下，此操作需要些时间"
 
 #. module: base
 #: help:ir.values,action_id:0
@@ -1744,7 +1806,7 @@ msgstr "字段映射"
 #. module: base
 #: view:base.language.export:0
 msgid "Export Translations"
-msgstr ""
+msgstr "导出翻译"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -1776,14 +1838,14 @@ msgstr "立陶宛"
 #: model:ir.model,name:base.model_partner_clear_ids
 #: view:partner.clear.ids:0
 msgid "Clear IDs"
-msgstr ""
+msgstr "清除 ID"
 
 #. module: base
 #: help:ir.cron,model:0
 msgid ""
 "Name of object whose function will be called when this scheduler will run. "
 "e.g. 'res.partener'"
-msgstr ""
+msgstr "作业运行时需要调用的方法所在的对象名 如res.partner"
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -1791,7 +1853,7 @@ msgstr ""
 msgid ""
 "You Can Not Load Translation For language Due To Invalid Language/Country "
 "Code"
-msgstr ""
+msgstr "语言/国家代码不匹配，无法载入该语言的翻译"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1806,7 +1868,12 @@ msgstr "斯洛文尼亚"
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-stock_format-default"
-msgstr ""
+msgstr "terp-stock_format-default"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_email_gateway_form
+msgid "Messages"
+msgstr "信件"
 
 #. module: base
 #: view:res.lang:0
@@ -1821,7 +1888,7 @@ msgstr "遍历动作"
 #. module: base
 #: help:multi_company.default,company_id:0
 msgid "Company where the user is connected"
-msgstr ""
+msgstr "用户所属的公司"
 
 #. module: base
 #: field:maintenance.contract,date_stop:0
@@ -1832,6 +1899,14 @@ msgstr "结束日期"
 #: model:res.country,name:base.nz
 msgid "New Zealand"
 msgstr "新西兰"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_country
+msgid ""
+"Display and manage the list of all countries that can be assigned to your "
+"partner records. You can create or delete countries to make sure the ones "
+"you are working on will be maintained."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -1847,6 +1922,11 @@ msgstr "诺福克岛"
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_MEDIA_PLAY"
 msgstr "STOCK_MEDIA_PLAY"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Korean (KR) / 한국어 (KR)"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1915,6 +1995,16 @@ msgstr "亚美尼亚"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Configuration Parameters"
+msgstr "配置参数"
+
+#. module: base
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss."
 msgstr ""
 
 #. module: base
@@ -1974,7 +2064,7 @@ msgstr ""
 #: field:res.config.users,config_logo:0
 #: field:res.config.view,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "图像"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2039,6 +2129,14 @@ msgid "Extended"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_partner_title_contact
+msgid ""
+"Manage the contact titles you want to have available in your system and the "
+"way you want to print them in letters and other documents. Some example: "
+"Mr., Mrs. "
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_footer1:0
 msgid "Report Footer 1"
 msgstr "报告脚注1"
@@ -2092,6 +2190,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (DO) / Español (DO)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_workflow_activity
 msgid "workflow.activity"
 msgstr "workflow.activity"
@@ -2105,6 +2208,11 @@ msgstr "可搜索"
 #: model:res.country,name:base.uy
 msgid "Uruguay"
 msgstr "乌拉圭"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Finnish / Suomi"
+msgstr ""
 
 #. module: base
 #: field:ir.rule,perm_write:0
@@ -2137,9 +2245,9 @@ msgid "Fields Mapping"
 msgstr "字段映射"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Sir"
-msgstr "先生"
+#: selection:base.language.install,lang:0
+msgid "Portugese / Português"
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -2177,15 +2285,9 @@ msgid "Module"
 msgstr "模块"
 
 #. module: base
-#: field:ir.attachment,description:0
-#: view:ir.module.module:0
-#: field:ir.module.module,description:0
-#: field:res.partner.bank,name:0
-#: view:res.partner.event:0
-#: field:res.partner.event,description:0
-#: view:res.request:0
-msgid "Description"
-msgstr "说明"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_BOLD"
+msgstr "STOCK_BOLD"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_instance_form
@@ -2194,9 +2296,9 @@ msgid "Instances"
 msgstr "实例"
 
 #. module: base
-#: help:res.partner,employee:0
-msgid "Check this box if the partner is an Employee."
-msgstr ""
+#: model:res.country,name:base.aq
+msgid "Antarctica"
+msgstr "南极洲"
 
 #. module: base
 #: field:ir.actions.report.xml,auto:0
@@ -2274,7 +2376,7 @@ msgstr "从右到左"
 #: model:ir.model,name:base.model_ir_filters
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "Filters"
-msgstr ""
+msgstr "过滤"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -2332,14 +2434,14 @@ msgid ""
 msgstr "增值税编号，如该业务伙伴适用于增值税，请选择。用于增值税申报。"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Ukrainian / украї́нська мо́ва"
-msgstr "乌克兰语 / украї́нська мо́ва"
-
-#. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
 msgstr "俄罗斯联邦"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Urdu / اردو"
+msgstr ""
 
 #. module: base
 #: field:res.company,name:0
@@ -2365,12 +2467,12 @@ msgstr "记录规则"
 #. module: base
 #: view:ir.property:0
 msgid "Field Information"
-msgstr ""
+msgstr "字段内容"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Search Actions"
-msgstr ""
+msgstr "搜索 动作"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_partner_wizard_ean_check
@@ -2409,15 +2511,14 @@ msgid "GPL-2 or later version"
 msgstr "GPL-2 或更新版本"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "M."
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Can not create the module file:\n"
+" %s"
 msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_ir_actions_wizard
-#: selection:ir.ui.menu,action:0
-msgid "ir.actions.wizard"
-msgstr "ir.actions.wizard"
+"无法创建模块文件：\n"
+" %s"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2428,6 +2529,11 @@ msgstr ""
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "瑙鲁"
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -2463,6 +2569,14 @@ msgstr "技术数据"
 #: field:res.partner,category_id:0
 msgid "Categories"
 msgstr "分类"
+
+#. module: base
+#: view:base.language.import:0
+msgid ""
+"If you need another language than the official ones available, you can "
+"import a language pack from here. Other OpenERP languages than the official "
+"ones can be found on launchpad."
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -2508,11 +2622,6 @@ msgid "Send SMS"
 msgstr "发送SMS"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Hindi / India"
-msgstr ""
-
-#. module: base
 #: field:res.partner,ean13:0
 msgid "EAN13"
 msgstr "条形码（EAN13）"
@@ -2546,7 +2655,7 @@ msgstr ""
 #. module: base
 #: field:ir.actions.act_window,help:0
 msgid "Action description"
-msgstr ""
+msgstr "动作 描述"
 
 #. module: base
 #: help:res.partner,customer:0
@@ -2634,6 +2743,12 @@ msgid "Action to Trigger"
 msgstr "待触发动作"
 
 #. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "\"email_from\" needs to be set to send welcome mails to users"
+msgstr ""
+
+#. module: base
 #: selection:ir.translation,type:0
 msgid "Constraint"
 msgstr "约束"
@@ -2654,7 +2769,7 @@ msgstr "必填"
 #. module: base
 #: view:res.users:0
 msgid "Default Filters"
-msgstr ""
+msgstr "默认的过滤"
 
 #. module: base
 #: field:res.request.history,name:0
@@ -2669,7 +2784,7 @@ msgstr ""
 #. module: base
 #: field:multi_company.default,expression:0
 msgid "Expression"
-msgstr ""
+msgstr "表达式"
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -2743,17 +2858,19 @@ msgid "Bank account"
 msgstr "银行帐号"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (HN) / Español (HN)"
+msgstr ""
+
+#. module: base
 #: view:ir.sequence.type:0
 msgid "Sequence Type"
 msgstr "序号类型"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"You try to upgrade a module that depends on the module: %s.\n"
-"But this module is not available in your system."
-msgstr "您试图升级的一个模块依赖模块： %s，但您的系统中该模块不可用。"
+#: selection:base.language.install,lang:0
+msgid "Hindi / हिंदी"
+msgstr ""
 
 #. module: base
 #: field:ir.module.module,license:0
@@ -2845,14 +2962,9 @@ msgid "STOCK_UNDELETE"
 msgstr "STOCK_UNDELETE"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_EXECUTE"
-msgstr "STOCK_EXECUTE"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Finland / Suomi"
-msgstr "芬兰 / Suomi"
+#: view:res.lang:0
+msgid "%c - Appropriate date and time representation."
+msgstr "%c - 日期时间表示"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -2875,11 +2987,6 @@ msgid "Direction"
 msgstr "方向"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Latvian / Latvia"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.act_window:0
 #: model:ir.actions.act_window,name:base.action_ui_view
 #: field:ir.actions.act_window,view_ids:0
@@ -2897,11 +3004,6 @@ msgid "Rules"
 msgstr "规则"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Urdu / Pakistan"
-msgstr ""
-
-#. module: base
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
@@ -2912,6 +3014,11 @@ msgstr "您试图删除一个已安装或正要安装的模块"
 msgid ""
 "The kind of action or button in the client side that will trigger the action."
 msgstr "客户端的该类动作或按钮将触发此动作。"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (PR) / Español (PR)"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2934,7 +3041,7 @@ msgstr "工作流"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_user_form
 msgid "Create Users"
-msgstr ""
+msgstr "创建用户"
 
 #. module: base
 #: view:ir.values:0
@@ -2944,7 +3051,7 @@ msgstr "tree_but_action, client_print_multi"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_retailers0
 msgid "Retailers"
-msgstr ""
+msgstr "零售商"
 
 #. module: base
 #: help:ir.cron,priority:0
@@ -2986,14 +3093,19 @@ msgid "Custom Reports"
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Abkhazian / аҧсуа"
+msgstr ""
+
+#. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
-msgstr ""
+msgstr "系统配置完成"
 
 #. module: base
 #: view:ir.property:0
 msgid "Generic"
-msgstr ""
+msgstr "常规"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -3031,48 +3143,14 @@ msgid "STOCK_CONNECT"
 msgstr "STOCK_CONNECT"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Not Searchable"
-msgstr "不可搜索"
+#: selection:base.language.install,lang:0
+msgid "Spanish (PY) / Español (PY)"
+msgstr ""
 
 #. module: base
 #: field:res.company,rml_header:0
 msgid "RML Header"
 msgstr "RML 页眉"
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Unable %s the module \"%s\" because an external dependencie is not met: %s' "
-"% (newstate, module.name, e.args[0])))\n"
-"            if not module.dependencies_id:\n"
-"                mdemo = module.demo\n"
-"            if module.state in states_to_update:\n"
-"                self.write(cr, uid, [module.id], {'state': newstate, "
-"'demo':mdemo})\n"
-"            demo = demo or mdemo\n"
-"        return demo\n"
-"\n"
-"    def button_install(self, cr, uid, ids, context={}):\n"
-"        return self.state_update(cr, uid, ids, 'to install', "
-"['uninstalled'], context)\n"
-"\n"
-"    def button_install_cancel(self, cr, uid, ids, context={}):\n"
-"        self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})\n"
-"        return True\n"
-"\n"
-"    def button_uninstall(self, cr, uid, ids, context={}):\n"
-"        for module in self.browse(cr, uid, ids):\n"
-"            cr.execute('''select m.state,m.name\n"
-"                from\n"
-"                    ir_module_module_dependency d\n"
-"                join\n"
-"                    ir_module_module m on (d.module_id=m.id)\n"
-"                where\n"
-"                    d.name=%s and\n"
-"                    m.state not in ('uninstalled','uninstallable','to remove"
-msgstr ""
 
 #. module: base
 #: field:partner.sms.send,app_id:0
@@ -3117,6 +3195,11 @@ msgid "Installed"
 msgstr "已安装的模块"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Ukrainian / українська"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_translation
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "Translation Terms"
@@ -3131,11 +3214,6 @@ msgstr "塞内加尔"
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr "匈牙利"
-
-#. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "res.groups"
-msgstr "组"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -3163,15 +3241,15 @@ msgid "terp-gtk-media-pause"
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (PA) / Español (PA)"
+msgstr ""
+
+#. module: base
 #: view:res.currency:0
 #: field:res.currency,rate_ids:0
 msgid "Rates"
 msgstr "汇率"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Albanian / Shqipëri"
-msgstr "阿尔巴尼亚语 / Shqipëri"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -3195,7 +3273,7 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "System update completed"
-msgstr ""
+msgstr "系统更新完成"
 
 #. module: base
 #: field:ir.model.fields,selection:0
@@ -3236,7 +3314,7 @@ msgstr "上级菜单"
 #. module: base
 #: field:ir.rule,perm_unlink:0
 msgid "Apply For Delete"
-msgstr ""
+msgstr "请求删除"
 
 #. module: base
 #: help:ir.actions.act_window.view,multi:0
@@ -3267,6 +3345,17 @@ msgid "Decimal Separator"
 msgstr "十进位分割符"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_res_groups
+msgid ""
+"A group is a set of functional areas that will be assigned to the user in "
+"order to give them access and rights to specific applications and tasks in "
+"the system. You can create custom groups or edit the ones existing by "
+"default in order to customize the view of the menu that users will be able "
+"to see. Whether they can have a read, write, create and delete access right "
+"can be managed from here."
+msgstr ""
+
+#. module: base
 #: view:res.partner:0
 #: view:res.request:0
 #: field:res.request,history:0
@@ -3291,7 +3380,7 @@ msgstr "瑞典语 / svenska"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config_plugins
 msgid "Plugins"
-msgstr ""
+msgstr "插件"
 
 #. module: base
 #: field:res.company,child_ids:0
@@ -3316,7 +3405,7 @@ msgstr "一般说明"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_simple_view_form
 msgid "Configure Your Interface"
-msgstr ""
+msgstr "配置你的界面"
 
 #. module: base
 #: field:ir.values,meta:0
@@ -3324,21 +3413,14 @@ msgid "Meta Datas"
 msgstr "元数据"
 
 #. module: base
-#: field:ir.property,fields_id:0
-#: selection:ir.translation,type:0
-#: field:multi_company.default,field_id:0
-msgid "Field"
-msgstr "字段"
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr "快捷菜已经存在!"
 
 #. module: base
 #: model:res.country,name:base.ve
 msgid "Venezuela"
 msgstr "委内瑞拉"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Malayalam / India"
-msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -3411,7 +3493,7 @@ msgstr "名称"
 msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view"
-msgstr ""
+msgstr "如果设为true，这个动作将不显示在表单视图右边工具栏."
 
 #. module: base
 #: model:res.country,name:base.ms
@@ -3429,7 +3511,7 @@ msgstr "应用程序术语"
 msgid ""
 "The user's timezone, used to perform timezone conversions between the server "
 "and the client."
-msgstr ""
+msgstr "用户时区,用于服务器与客户端之间的时区转换."
 
 #. module: base
 #: field:ir.module.module,demo:0
@@ -3442,9 +3524,9 @@ msgid "English (UK)"
 msgstr "英语（英国）"
 
 #. module: base
-#: model:res.country,name:base.aq
-msgid "Antarctica"
-msgstr "南极洲"
+#: selection:base.language.install,lang:0
+msgid "Japanese / 日本語"
+msgstr ""
 
 #. module: base
 #: help:workflow.transition,act_from:0
@@ -3461,7 +3543,7 @@ msgstr "起始业务伙伴"
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Your system will be updated."
-msgstr ""
+msgstr "你的系统将会被更新。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -3504,9 +3586,10 @@ msgid "Svalbard and Jan Mayen Islands"
 msgstr "斯瓦尔巴特和扬马延岛"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_view_base_module_update
-msgid " Update Modules List"
-msgstr ""
+#: model:ir.model,name:base.model_ir_actions_wizard
+#: selection:ir.ui.menu,action:0
+msgid "ir.actions.wizard"
+msgstr "ir.actions.wizard"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -3521,12 +3604,12 @@ msgstr "分组方式"
 #: view:res.config:0
 #: view:res.config.installer:0
 msgid "title"
-msgstr ""
+msgstr "标题"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "安装语言"
 
 #. module: base
 #: view:ir.translation:0
@@ -3566,7 +3649,7 @@ msgstr "写标识符"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Products"
-msgstr ""
+msgstr "产品"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3588,6 +3671,11 @@ msgstr "STOCK_REDO"
 #: view:ir.actions.server:0
 msgid "SMS Configuration"
 msgstr "短信设置"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (BO) / Español (BO)"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_access_act
@@ -3622,6 +3710,18 @@ msgstr "快捷"
 #: field:ir.model.data,date_init:0
 msgid "Init Date"
 msgstr "初始日期"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Gujarati / ગુજરાતી"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
 
 #. module: base
 #: view:workflow.activity:0
@@ -3692,7 +3792,7 @@ msgstr "菜单名称"
 #. module: base
 #: view:ir.module.module:0
 msgid "Author Website"
-msgstr ""
+msgstr "作者网站"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3708,7 +3808,12 @@ msgstr "马来西亚"
 #: view:base.language.install:0
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Load Official Translation"
-msgstr ""
+msgstr "载入官方翻译"
+
+#. module: base
+#: model:ir.model,name:base.model_res_request_history
+msgid "res.request.history"
+msgstr "res.request.history"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -3735,16 +3840,6 @@ msgstr "印尼语 / Bahasa Indonesia"
 #: model:res.country,name:base.cv
 msgid "Cape Verde"
 msgstr "佛得角"
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Some installed modules depend on the module you plan to Uninstall :\n"
-" %s"
-msgstr ""
-"一些已安装的模块依靠您打算卸载的模块：\n"
-" %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -3783,6 +3878,11 @@ msgstr "已添加的模块个数"
 #. module: base
 #: view:res.currency:0
 msgid "Price Accuracy"
+msgstr "价格准确性"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Latvian / latviešu valoda"
 msgstr ""
 
 #. module: base
@@ -3795,7 +3895,7 @@ msgstr ""
 #: model:ir.actions.server,name:base.action_start_configurator
 #: model:ir.ui.menu,name:base.menu_view_base_module_configuration
 msgid "Start Configuration"
-msgstr ""
+msgstr "开始配置"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3846,12 +3946,12 @@ msgstr "ir.cron"
 #. module: base
 #: view:ir.rule:0
 msgid "Combination of rules"
-msgstr ""
+msgstr "组合的规则"
 
 #. module: base
 #: view:ir.sequence:0
 msgid "Current Year without Century: %(y)s"
-msgstr ""
+msgstr "没有世纪的年份%(y)s"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3862,6 +3962,11 @@ msgstr "terp-mrp"
 #: field:ir.actions.server,trigger_obj_id:0
 msgid "Trigger On"
 msgstr "触发于"
+
+#. module: base
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "规则必须至少有一个检查访问权限"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -3906,6 +4011,11 @@ msgid "Uninstallable"
 msgstr "可删除的模块"
 
 #. module: base
+#: view:base.module.upgrade:0
+msgid "The selected modules have been updated / installed !"
+msgstr "选择的模块将被更新/安装"
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_SORT_DESCENDING"
 msgstr "STOCK_SORT_DESCENDING"
@@ -3924,7 +4034,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_maintenance_contract_form
 #: model:ir.ui.menu,name:base.menu_maintenance_contract
 msgid "Maintenance Contracts"
-msgstr ""
+msgstr "维护合同"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_server_action_create
@@ -3997,12 +4107,23 @@ msgstr "银行"
 #. module: base
 #: view:res.log:0
 msgid "Unread"
-msgstr ""
+msgstr "未读"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-sale"
 msgstr "terp-sale"
+
+#. module: base
+#: field:ir.attachment,description:0
+#: view:ir.module.module:0
+#: field:ir.module.module,description:0
+#: field:res.partner.bank,name:0
+#: view:res.partner.event:0
+#: field:res.partner.event,description:0
+#: view:res.request:0
+msgid "Description"
+msgstr "说明"
 
 #. module: base
 #: view:res.lang:0
@@ -4013,11 +4134,6 @@ msgstr "%d - 十进制表示的每月中的日数 [01,31]。"
 #: view:res.lang:0
 msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
 msgstr "%I - 十进制格式的小时数（12 小时）[01,12]."
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Romanian / limba română"
-msgstr "罗马尼亚语 / limba română"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4085,6 +4201,16 @@ msgid "Add an auto-refresh on the view"
 msgstr "给此视图添加“自动刷新”"
 
 #. module: base
+#: help:res.partner,employee:0
+msgid "Check this box if the partner is an Employee."
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Limited Company"
+msgstr "有限公司"
+
+#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4136,12 +4262,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_main_pm
 msgid "Project"
-msgstr ""
+msgstr "项目"
 
 #. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
-msgstr ""
+msgstr "模块文件成功导入"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -4151,12 +4277,7 @@ msgstr ""
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
-msgstr ""
-
-#. module: base
-#: selection:res.request,priority:0
-msgid "Low"
-msgstr "低"
+msgstr "要清除Ids吗？ "
 
 #. module: base
 #: field:res.partner,customer:0
@@ -4200,7 +4321,7 @@ msgstr "省／州"
 #. module: base
 #: field:ir.actions.server,copy_object:0
 msgid "Copy Of"
-msgstr ""
+msgstr "复制"
 
 #. module: base
 #: field:ir.model,osv_memory:0
@@ -4334,14 +4455,6 @@ msgid "Faroe Islands"
 msgstr "法罗群岛"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid ""
-"\"email_from\" needs to be set to send welcome mails '\n"
-"                  'to users"
-msgstr ""
-
-#. module: base
 #: view:base.module.upgrade:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_window
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
@@ -4359,9 +4472,9 @@ msgid "Widgets"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.mp
-msgid "Northern Mariana Islands"
-msgstr "北马里亚纳群岛"
+#: model:res.country,name:base.cz
+msgid "Czech Republic"
+msgstr "捷克共和国"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -4434,9 +4547,9 @@ msgstr "蒙古"
 #: code:addons/base/ir/ir_model.py:0
 #: code:addons/base/maintenance/maintenance.py:0
 #: code:addons/base/module/module.py:0
-#: code:addons/base/res/res_config.py:0
 #: code:addons/base/res/res_currency.py:0
 #: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/ir_property.py:0
 #, python-format
 msgid "Error"
 msgstr "错误"
@@ -4462,6 +4575,11 @@ msgid "Close"
 msgstr "关闭"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (MX) / Español (MX)"
+msgstr ""
+
+#. module: base
 #: view:res.log:0
 msgid "My Logs"
 msgstr ""
@@ -4474,7 +4592,7 @@ msgstr "不丹"
 #. module: base
 #: help:ir.sequence,number_next:0
 msgid "Next number of this sequence"
-msgstr ""
+msgstr "下一个序列号码"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
@@ -4489,7 +4607,7 @@ msgstr "此窗口"
 #. module: base
 #: help:res.log,name:0
 msgid "The logging message."
-msgstr ""
+msgstr "日志信息"
 
 #. module: base
 #: field:base.language.export,format:0
@@ -4516,6 +4634,19 @@ msgstr ""
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_INDENT"
 msgstr "STOCK_INDENT"
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "国家名必须唯一"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_country_state
+msgid ""
+"If you are working on the American market, you can manage the different "
+"federal states you are working on from here. Each state is attached to one "
+"country."
+msgstr ""
 
 #. module: base
 #: view:workflow.workitem:0
@@ -4572,6 +4703,14 @@ msgstr "搜索视图引用"
 #: field:ir.module.module,installed_version:0
 msgid "Latest version"
 msgstr "最新版本"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.res_partner_canal-act
+msgid ""
+"Track from where is coming your leads and opportunities by creating specific "
+"channels that will be maintained at the creation of a document in the "
+"system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
+msgstr ""
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4756,6 +4895,11 @@ msgstr "对象字段"
 
 #. module: base
 #: selection:base.language.install,lang:0
+msgid "Spanish (PE) / Español (PE)"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
 msgid "French (CH) / Français (CH)"
 msgstr "法语（瑞士）/ Français (CH)"
 
@@ -4775,20 +4919,20 @@ msgstr ""
 #. module: base
 #: view:ir.values:0
 msgid "Client Actions"
-msgstr ""
+msgstr "客户端动作"
+
+#. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"You try to upgrade a module that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr "您试图升级的一个模块依赖模块： %s，但您的系统中该模块不可用。"
 
 #. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr "目标活动"
-
-#. module: base
-#: code:addons/base/res/res_config.py:0
-#, python-format
-msgid ""
-"Can't set an ir.actions.todo's state to \"\n"
-"                               \"nothingness"
-msgstr ""
 
 #. module: base
 #: view:ir.values:0
@@ -4811,11 +4955,6 @@ msgid "base.update.translations"
 msgstr ""
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "高级搜索"
-
-#. module: base
 #: field:ir.module.category,parent_id:0
 #: field:res.partner.category,parent_id:0
 msgid "Parent Category"
@@ -4824,7 +4963,7 @@ msgstr "上级分类"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Integer Big"
-msgstr ""
+msgstr "长整型"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -4839,9 +4978,9 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: base
-#: model:res.country,name:base.us
-msgid "United States"
-msgstr "美国"
+#: view:partner.wizard.ean.check:0
+msgid "Ignore"
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -4930,11 +5069,6 @@ msgid "Values for Event Type"
 msgstr "事件类型的取值"
 
 #. module: base
-#: model:res.country,name:base.zr
-msgid "Zaire"
-msgstr "扎伊尔"
-
-#. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Always Searchable"
 msgstr "总是可搜索"
@@ -4943,14 +5077,6 @@ msgstr "总是可搜索"
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CLOSE"
 msgstr "STOCK_CLOSE"
-
-#. module: base
-#: code:addons/base/res/res_lang.py:0
-#, python-format
-msgid ""
-"You cannot delete the language which is Active !\n"
-"Please de-activate the language first."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.hk
@@ -4968,9 +5094,16 @@ msgid "STOCK_ZOOM_100"
 msgstr "STOCK_ZOOM_100"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_BOLD"
-msgstr "STOCK_BOLD"
+#: model:ir.actions.act_window,help:base.action_partner_address_form
+msgid ""
+"Customers (also called Partners in other areas of the system) helps you "
+"manage your address book of companies whether they are prospects, customers "
+"and/or suppliers. The partner form allows you to track and record all the "
+"necessary information to interact with your partners from the company "
+"address to their contacts as well as pricelists, and much more. If you "
+"installed the CRM, with the history tab, you can track all the interactions "
+"with a partner such as opportunities, emails, or sales orders issued."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -5000,7 +5133,7 @@ msgstr ""
 #. module: base
 #: help:ir.rule,global:0
 msgid "If no group is specified the rule is global and applied to everyone"
-msgstr ""
+msgstr "如果不指定组，规则是全局的并应用于每个用户."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -5041,7 +5174,7 @@ msgstr ""
 #: help:res.config.users,view:0
 #: help:res.users,view:0
 msgid "Choose between the simplified interface and the extended one"
-msgstr ""
+msgstr "在简单界面和扩展界面选择其一."
 
 #. module: base
 #: model:res.country,name:base.np
@@ -5056,7 +5189,7 @@ msgstr ""
 #. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method. e.g. (uid,)"
-msgstr ""
+msgstr "参数传送给方法,如(uid,)"
 
 #. module: base
 #: help:ir.ui.menu,groups_id:0
@@ -5072,9 +5205,9 @@ msgid "Bulk SMS send"
 msgstr "批量发送SMS"
 
 #. module: base
-#: view:res.lang:0
-msgid "%Y - Year with century as a decimal number."
-msgstr "%Y - 十进制形式包含世纪的年份数。"
+#: model:ir.ui.menu,name:base.next_id_2
+msgid "User Interface"
+msgstr "用户界面"
 
 #. module: base
 #: view:ir.sequence:0
@@ -5082,18 +5215,30 @@ msgid "Seconde: %(sec)s"
 msgstr "秒：%(sec)s"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Can not create the module file:\n"
-" %s"
-msgstr ""
-"无法创建模块文件：\n"
-" %s"
+#: model:ir.ui.menu,name:base.menu_view_base_module_update
+msgid "Update Modules List"
+msgstr "更新模块列表"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-accessories-archiver"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid ""
+"Please keep in mind that documents currently displayed may not be relevant "
+"after switching to another company. If you have unsaved changes, please make "
+"sure to save and close all forms before switching to a different company. "
+"(You can click on Cancel in the User Preferences now)"
 msgstr ""
 
 #. module: base
@@ -5135,7 +5280,7 @@ msgstr "文件"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr ""
+msgstr "模块安装升级"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_configuration_wizard
@@ -5180,6 +5325,11 @@ msgid "Default Company"
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (EC) / Español (EC)"
+msgstr ""
+
+#. module: base
 #: help:ir.ui.view,xml_id:0
 msgid "ID of the view defined in xml file"
 msgstr ""
@@ -5188,7 +5338,7 @@ msgstr ""
 #: model:ir.model,name:base.model_base_module_import
 #: model:ir.ui.menu,name:base.menu_view_base_module_import
 msgid "Import Module"
-msgstr ""
+msgstr "导入模块"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -5196,17 +5346,9 @@ msgid "American Samoa"
 msgstr "美属萨摩亚"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid ""
-"--\n"
-"%(name)s %(email)s\n"
-msgstr ""
-
-#. module: base
 #: help:ir.actions.act_window,res_model:0
 msgid "Model name of the object to open in the view window"
-msgstr ""
+msgstr "模型对象的名称打开视图窗口"
 
 #. module: base
 #: field:res.log,secondary:0
@@ -5261,11 +5403,6 @@ msgid "Recruitment"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Occitan (post 1500) / France"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
 msgstr "法属留尼旺岛"
@@ -5280,12 +5417,12 @@ msgstr "全局"
 #. module: base
 #: view:res.users:0
 msgid "You must logout and login again after changing your password."
-msgstr ""
+msgstr "更改密码后,你需要登出再登入"
 
 #. module: base
-#: model:res.country,name:base.cz
-msgid "Czech Republic"
-msgstr "捷克共和国"
+#: model:res.country,name:base.mp
+msgid "Northern Mariana Islands"
+msgstr "北马里亚纳群岛"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -5341,9 +5478,9 @@ msgid "Module Category"
 msgstr "模块分类"
 
 #. module: base
-#: view:partner.wizard.ean.check:0
-msgid "Ignore"
-msgstr ""
+#: model:res.country,name:base.us
+msgid "United States"
+msgstr "美国"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5382,7 +5519,7 @@ msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "Japanese / Japan"
+msgid "Flemish (BE) / Vlaams (BE)"
 msgstr ""
 
 #. module: base
@@ -5420,9 +5557,9 @@ msgid "View Type"
 msgstr "视图类型"
 
 #. module: base
-#: model:ir.ui.menu,name:base.next_id_2
-msgid "User Interface"
-msgstr "用户界面"
+#: view:res.lang:0
+msgid "%Y - Year with century as a decimal number."
+msgstr "%Y - 十进制形式包含世纪的年份数。"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5461,6 +5598,11 @@ msgid "Custom Shortcuts"
 msgstr "自定义快捷方式"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Vietnamese / Tiếng Việt"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dz
 msgid "Algeria"
 msgstr "阿尔及利亚"
@@ -5476,8 +5618,8 @@ msgid "Belgium"
 msgstr "比利时"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Inuktitut / Canada"
+#: model:ir.model,name:base.model_osv_memory_autovacuum
+msgid "osv_memory.autovacuum"
 msgstr ""
 
 #. module: base
@@ -5514,15 +5656,16 @@ msgid "res.widget"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid "You cannot delete the language which is User's Preferred Language !"
+msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Norwegian Bokmål / Norway"
-msgstr ""
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr "不能删除用户的首先语言."
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5642,11 +5785,6 @@ msgid "Guyana"
 msgstr "圭亚那"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Portugese (BR) / português (BR)"
-msgstr "葡萄牙语 / português (BR)"
-
-#. module: base
 #: help:ir.actions.act_window,view_type:0
 msgid ""
 "View type: set to 'tree' for a hierarchical tree view, or 'form' for other "
@@ -5678,7 +5816,7 @@ msgstr "埃及"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply For Read"
-msgstr ""
+msgstr "读请求.."
 
 #. module: base
 #: help:ir.actions.server,model_id:0
@@ -5690,12 +5828,12 @@ msgstr "选择动作（读、写、创建）执行所在之对象。"
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify server option --email-from !"
-msgstr ""
+msgstr "请指定服务器选项,email from!"
 
 #. module: base
 #: field:base.language.import,name:0
 msgid "Language Name"
-msgstr ""
+msgstr "语言名"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -5726,7 +5864,7 @@ msgstr "STOCK_CDROM"
 #: view:res.partner.address:0
 #: view:workflow.activity:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组于"
 
 #. module: base
 #: view:ir.model.fields:0
@@ -5759,6 +5897,11 @@ msgstr ""
 #: field:res.currency,base:0
 msgid "Base"
 msgstr "基本信息"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Telugu / తెలుగు"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5815,11 +5958,6 @@ msgid "res.config.installer"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Sinhalese / Sri Lanka"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.mc
 msgid "Monaco"
 msgstr "摩纳哥"
@@ -5844,7 +5982,7 @@ msgstr "帮助"
 #: help:res.users,menu_id:0
 msgid ""
 "If specified, the action will replace the standard menu for this user."
-msgstr ""
+msgstr "如果指定，这个动作将为此用户更换标准菜单."
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -5860,11 +5998,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.ir_sequence_type
 #: model:ir.ui.menu,name:base.menu_ir_sequence_type
 msgid "Sequence Codes"
-msgstr ""
+msgstr "序列编码"
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "Abkhazian (RU)"
+msgid "Spanish (CO) / Español (CO)"
 msgstr ""
 
 #. module: base
@@ -5882,7 +6020,7 @@ msgstr "创建"
 #. module: base
 #: view:ir.sequence:0
 msgid "Current Year with Century: %(year)s"
-msgstr ""
+msgstr "含世纪的年份"
 
 #. module: base
 #: field:ir.exports,export_fields:0
@@ -5917,6 +6055,7 @@ msgstr "阿富汗伊斯兰国"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/ir/ir_values.py:
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -5984,7 +6123,7 @@ msgstr "res.request"
 #. module: base
 #: view:ir.model:0
 msgid "In Memory"
-msgstr ""
+msgstr "在内存里"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -6019,11 +6158,6 @@ msgid "Panama"
 msgstr "巴拿马"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Ltd"
-msgstr "有限公司"
-
-#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -6053,7 +6187,7 @@ msgstr "皮特克恩岛"
 #: view:base.module.upgrade:0
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
-msgstr ""
+msgstr "我们提议重载菜单来查看新菜单（Ctrl+T then Ctrl+R）"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
@@ -6105,6 +6239,11 @@ msgstr "月末"
 #: field:ir.actions.act_window,search_view:0
 msgid "Search View"
 msgstr "搜索视图"
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr "语言代码必须唯一"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -6197,12 +6336,7 @@ msgstr "爱沙尼亚语 / Eesti keel"
 #: field:res.partner,email:0
 #: field:res.users,email:0
 msgid "E-mail"
-msgstr ""
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Portugese / português"
-msgstr "葡萄牙语 / português"
+msgstr "电子邮件"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -6224,12 +6358,19 @@ msgstr "英语(美国)"
 #: view:ir.model.data:0
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "Object Identifiers"
+msgstr "对象标识符"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_title_partner
+msgid ""
+"Manage the partner titles you want to have available in your system. The "
+"partner titles is the legal status of the company: Private Limited, SA, etc."
 msgstr ""
 
 #. module: base
 #: view:base.language.export:0
 msgid "To browse official translations, you can start with these links:"
-msgstr ""
+msgstr "浏览官方的翻译，从这些连接开始:"
 
 #. module: base
 #: view:res.bank:0
@@ -6246,9 +6387,19 @@ msgid "Installed version"
 msgstr "已安装版本"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Mongolian / монгол"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mr
 msgid "Mauritania"
 msgstr "毛里塔尼亚"
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "terp-calendar"
+msgstr "terp-calendar"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_translation
@@ -6258,7 +6409,7 @@ msgstr "ir.translation"
 #. module: base
 #: view:base.module.update:0
 msgid "Module update result"
-msgstr ""
+msgstr "模块更新结果"
 
 #. module: base
 #: view:workflow.activity:0
@@ -6276,6 +6427,16 @@ msgstr "邮政地址"
 #: field:res.company,parent_id:0
 msgid "Parent Company"
 msgstr "母公司"
+
+#. module: base
+#: field:ir.translation,src:0
+msgid "Source"
+msgstr "原文"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (CR) / Español (CR)"
+msgstr ""
 
 #. module: base
 #: field:res.currency.rate,rate:0
@@ -6311,6 +6472,15 @@ msgstr ""
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
 msgstr "圣基茨和尼维斯"
+
+#. module: base
+#: code:addons/base/res/res_currency.py:0
+#, python-format
+msgid ""
+"No rate found \n"
+"for the currency: %s \n"
+"at the date: %s"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6357,7 +6527,7 @@ msgstr "马提尼（法属）"
 #. module: base
 #: view:ir.sequence.type:0
 msgid "Sequences Type"
-msgstr ""
+msgstr "序列类型"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request-act
@@ -6385,7 +6555,7 @@ msgstr "巴基斯坦"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Set as Todo"
-msgstr ""
+msgstr "作为待办事项"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6393,12 +6563,20 @@ msgid "Samoa"
 msgstr "萨摩亚"
 
 #. module: base
+#: code:addons/base/res/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
+msgstr ""
+
+#. module: base
 #: view:base.language.install:0
 #: view:base.module.import:0
 msgid ""
 "Please be patient, this operation may take a few minutes (depending on the "
 "number of modules currently installed)..."
-msgstr ""
+msgstr "请耐心等待,这些操作将花费一些时间.(取决于当前安装模块数量)..."
 
 #. module: base
 #: field:ir.ui.menu,child_id:0
@@ -6415,13 +6593,18 @@ msgstr "设置服务器动作的“记录标识符”时出错！"
 #: view:base.module.import:0
 #: view:base.module.update:0
 msgid "Open Modules"
-msgstr ""
+msgstr "打开模块"
 
 #. module: base
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "This error occurs on database %s"
 msgstr "该错误是在数据库%s发生的"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_res_bank_form
+msgid "Manage bank records you want to be used in the system."
+msgstr "你想用于管理银行记录在系统中."
 
 #. module: base
 #: view:base.module.import:0
@@ -6447,7 +6630,6 @@ msgstr "老挝"
 
 #. module: base
 #: selection:ir.actions.server,state:0
-#: model:ir.ui.menu,name:base.menu_mail_gateway
 #: field:res.config.users,user_email:0
 #: field:res.users,user_email:0
 msgid "Email"
@@ -6536,7 +6718,7 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Start update"
-msgstr ""
+msgstr "开始更新"
 
 #. module: base
 #: field:res.country.state,name:0
@@ -6566,11 +6748,6 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6596,9 +6773,16 @@ msgid "HR Manager Dashboard"
 msgstr ""
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr "不能按照模块“%s”，因为找到一个外表的依赖:%s"
+
+#. module: base
 #: view:ir.module.module:0
 msgid "Search modules"
-msgstr ""
+msgstr "搜索模块"
 
 #. module: base
 #: model:res.country,name:base.by
@@ -6616,6 +6800,15 @@ msgid "Action Name"
 msgstr "动作名称"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_res_users
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
+
+#. module: base
 #: selection:res.request,priority:0
 msgid "Normal"
 msgstr "一般"
@@ -6629,7 +6822,7 @@ msgstr "街区地址2"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
 msgid "Module Update"
-msgstr ""
+msgstr "模块更新"
 
 #. module: base
 #: view:ir.cron:0
@@ -6651,18 +6844,6 @@ msgid "Puerto Rico"
 msgstr "波多黎各"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:0
-#, python-format
-msgid ""
-"No rate found \n"
-"' \\n                    'for the currency: %s \n"
-"' \\n                    'at the date: %s"
-msgstr ""
-"未找到外币汇率 \n"
-"'\\n '相关货币： %s\n"
-"'\\n '日期： %s"
-
-#. module: base
 #: view:ir.actions.act_window:0
 msgid "Open Window"
 msgstr "打开窗口"
@@ -6670,7 +6851,7 @@ msgstr "打开窗口"
 #. module: base
 #: field:ir.actions.act_window,auto_search:0
 msgid "Auto Search"
-msgstr ""
+msgstr "自动搜索"
 
 #. module: base
 #: field:ir.actions.act_window,filter:0
@@ -6680,6 +6861,11 @@ msgstr "过滤"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -6719,9 +6905,9 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_request_history
-msgid "res.request.history"
-msgstr "res.request.history"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "字段的长度不小于1"
 
 #. module: base
 #: model:res.country,name:base.so
@@ -6774,6 +6960,11 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_audit
 msgid "Audit"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (NI) / Español (NI)"
 msgstr ""
 
 #. module: base
@@ -6835,11 +7026,16 @@ msgid "Tunisia"
 msgstr "突尼斯"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_mrp_root
+msgid "Manufacturing"
+msgstr ""
+
+#. module: base
 #: view:base.language.export:0
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
 #: model:ir.ui.menu,name:base.menu_wizard_lang_export
 msgid "Export Translation"
-msgstr ""
+msgstr "导出翻译"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -6879,12 +7075,6 @@ msgstr "访问规则"
 #: field:ir.default,ref_table:0
 msgid "Table Ref."
 msgstr "表参照"
-
-#. module: base
-#: view:res.config:0
-#: view:res.config.installer:0
-msgid "description"
-msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -6929,7 +7119,7 @@ msgstr "分钟：%(min)s"
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 msgid "Synchronize Translations"
-msgstr ""
+msgstr "同步翻译"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_10
@@ -6946,7 +7136,7 @@ msgstr "%w - 十进制的周数 [0(周日),6]"
 msgid ""
 "Number of time the function is called,\n"
 "a negative number indicates no limit"
-msgstr ""
+msgstr "函数执行次数（负数表示没有限制）"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -6978,7 +7168,7 @@ msgstr "循环表达式"
 #. module: base
 #: help:res.partner,website:0
 msgid "Website of Partner"
-msgstr ""
+msgstr "伙伴网站"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
@@ -7070,6 +7260,11 @@ msgid "Open Source Service Company"
 msgstr "开源服务公司"
 
 #. module: base
+#: model:res.country,name:base.kg
+msgid "Kyrgyz Republic (Kyrgyzstan)"
+msgstr "吉尔吉斯斯坦"
+
+#. module: base
 #: selection:res.request,state:0
 msgid "waiting"
 msgstr "等待中"
@@ -7077,7 +7272,7 @@ msgstr "等待中"
 #. module: base
 #: field:ir.actions.report.xml,report_file:0
 msgid "Report file"
-msgstr ""
+msgstr "报表文件"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_triggers
@@ -7122,11 +7317,6 @@ msgid "View Ref."
 msgstr "视图参照"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Dutch (Belgium) / Nederlands (Belgïe)"
-msgstr "荷兰语（比利时） / Nederlands (Belgïe)"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "Selection"
 msgstr "选中内容"
@@ -7150,11 +7340,19 @@ msgid "Action Type"
 msgstr "动作类型"
 
 #. module: base
+#: code:addons/base/module/module.py:0
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr "你要安装的模块'%s'依赖于‘%s’,但后者在你系统中不可用."
+
+#. module: base
 #: view:base.language.import:0
 #: model:ir.actions.act_window,name:base.action_view_base_import_language
 #: model:ir.ui.menu,name:base.menu_view_base_import_language
 msgid "Import Translation"
-msgstr ""
+msgstr "导入翻译"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
@@ -7172,7 +7370,7 @@ msgstr "分类"
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
-msgstr ""
+msgstr "二进制"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7197,6 +7395,14 @@ msgid "Your can't submit bug reports due to uncovered modules: %s"
 msgstr "您无法提交错误报告，因为您没有为模块 %s 签订技术服务协议"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"With the Suppliers menu, you have access to all informations regarding your "
+"suppliers, including an history to track event (crm) and his accounting "
+"properties."
+msgstr "在供应商菜单,你能查看关于供应商的所有信息,包括历史事件(crm)和会计内容."
+
+#. module: base
 #: view:workflow.activity:0
 msgid "Conditions"
 msgstr ""
@@ -7212,6 +7418,11 @@ msgstr "其它业务伙伴"
 #: view:res.currency:0
 msgid "Currencies"
 msgstr "货币"
+
+#. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
 
 #. module: base
 #: view:ir.sequence:0
@@ -7244,6 +7455,11 @@ msgid "10. %S              ==> 20"
 msgstr "10. %S ==> 20"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Norwegian Bokmål / Norsk bokmål"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
 msgid "Madam"
 msgstr "女士"
@@ -7261,7 +7477,7 @@ msgstr ""
 #. module: base
 #: help:ir.attachment,type:0
 msgid "Binary File or external URL"
-msgstr ""
+msgstr "二进制文件或外部URL"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -7274,9 +7490,19 @@ msgid "Low Level Objects"
 msgstr "底层对象"
 
 #. module: base
+#: view:res.company:0
+msgid "Your Logo - Use a size of about 450x150 pixels."
+msgstr "您的徽标——使用大小约为 450x150 像素的图片"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_values
 msgid "ir.values"
 msgstr "ir.values"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Occitan (FR, post 1500) / Occitan"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7285,6 +7511,7 @@ msgstr "STOCK_ZOOM_FIT"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_emails
+#: model:ir.ui.menu,name:base.menu_mail_gateway
 msgid "Emails"
 msgstr ""
 
@@ -7292,6 +7519,11 @@ msgstr ""
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
 msgstr "刚果民主共和国"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Malayalam / മലയാളം"
+msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -7364,9 +7596,14 @@ msgid "Python code to be executed"
 msgstr "要执行的 Python 代码"
 
 #. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr "国家代码须唯一"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "时间估计"
 
 #. module: base
 #: view:res.partner.category:0
@@ -7573,6 +7810,14 @@ msgid "China"
 msgstr "中国"
 
 #. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid ""
+"--\n"
+"%(name)s %(email)s\n"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.eh
 msgid "Western Sahara"
 msgstr "西撒哈拉"
@@ -7581,6 +7826,13 @@ msgstr "西撒哈拉"
 #: model:ir.model,name:base.model_workflow
 msgid "workflow"
 msgstr "工作流"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_res_company_form
+msgid ""
+"Create and manage the companies that will be managed by OpenERP from here. "
+"Shops or subsidiaries can be created and maintained from here."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.id
@@ -7646,11 +7898,6 @@ msgstr "渠道名称"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y ==> 08, 2008"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "ltd"
-msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7739,9 +7986,9 @@ msgid "Association"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Action to Launch"
-msgstr "要启动的动作"
+#: model:res.country,name:base.cl
+msgid "Chile"
+msgstr "智利"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_address_book
@@ -7802,6 +8049,15 @@ msgid "Field Label"
 msgstr "字段标签"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"The Address book manages your customers list. The form for customer allows "
+"you to record detailed on your customers (address, contacts, pricelist, "
+"account, etc.). With the history tab, you can follow all moves transactions "
+"related to a customer, like sales order, claims."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "吉布提"
@@ -7817,9 +8073,9 @@ msgid "Antigua and Barbuda"
 msgstr "安提瓜和巴布达"
 
 #. module: base
-#: model:res.country,name:base.gw
-msgid "Guinea Bissau"
-msgstr "几内亚比绍"
+#: model:res.country,name:base.zr
+msgid "Zaire"
+msgstr "扎伊尔"
 
 #. module: base
 #: field:ir.model.data,res_id:0
@@ -7882,6 +8138,11 @@ msgstr "自动刷新"
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr ""
+
+#. module: base
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "瓦利斯和富图纳群岛"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -8006,9 +8267,9 @@ msgid "Other Actions Configuration"
 msgstr "其他动作设置"
 
 #. module: base
-#: view:res.lang:0
-msgid "%c - Appropriate date and time representation."
-msgstr "%c - 日期时间表示"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_EXECUTE"
+msgstr "STOCK_EXECUTE"
 
 #. module: base
 #: view:res.config.installer:0
@@ -8046,23 +8307,19 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_user.py:0
+#: sql_constraint:res.users:0
 #, python-format
 msgid "You can not have two users with the same login !"
 msgstr "用户名必须唯一！"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid ""
-"Please keep in mind that data currently displayed may not be relevant after "
-"switching to another company. If you have unsaved changes, please make sure "
-"to save and close the forms before switching to a different company (you can "
-"click on Cancel now)"
+#: model:ir.model,name:base.model_multi_company_default
+msgid "Default multi company"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_multi_company_default
-msgid "Default multi company"
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8077,9 +8334,9 @@ msgid "Menu Tips"
 msgstr ""
 
 #. module: base
-#: field:ir.translation,src:0
-msgid "Source"
-msgstr "原文"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: base
 #: help:res.partner.address,partner_id:0
@@ -8206,9 +8463,9 @@ msgid "Luxembourg"
 msgstr "卢森堡"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "The selected modules have been updated / installed !"
-msgstr ""
+#: selection:res.request,priority:0
+msgid "Low"
+msgstr "低"
 
 #. module: base
 #: constraint:ir.ui.menu:0
@@ -8240,13 +8497,6 @@ msgid "Phone"
 msgstr "电话"
 
 #. module: base
-#: help:ir.actions.report.xml,attachment_use:0
-msgid ""
-"If you check this, then the second time the user prints with same attachment "
-"name, it returns the previous report."
-msgstr "如果您选中此处，当下次用户使用相同的附件名称打印时将返回以前的报表。"
-
-#. module: base
 #: field:res.groups,menu_access:0
 msgid "Access Menu"
 msgstr "访问菜单"
@@ -8259,6 +8509,11 @@ msgstr "泰国"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Romanian / română"
 msgstr ""
 
 #. module: base
@@ -8315,6 +8570,16 @@ msgid "Currency Rate"
 msgstr "兑换率"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.grant_menu_access
+msgid ""
+"Manage and customize the items available and displayed in your OpenERP "
+"system menu. You can delete an item by clicking on the box at the beginning "
+"of each line and then delete it through the button that appeared. Items can "
+"be assigned to specific groups in order to make them accessible to some "
+"users within the system."
+msgstr ""
+
+#. module: base
 #: field:ir.ui.view,field_parent:0
 msgid "Child Field"
 msgstr "子栏位"
@@ -8359,11 +8624,6 @@ msgstr ""
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_JUMP_TO"
 msgstr "STOCK_JUMP_TO"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Gujarati / India"
-msgstr ""
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -8458,6 +8718,11 @@ msgid "Email & Signature"
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Bulgarian / български език"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale Services"
 msgstr ""
@@ -8475,11 +8740,6 @@ msgid "Launch"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
-msgstr "越南 / Cộng hòa xã hội chủ nghĩa Việt Nam"
-
-#. module: base
 #: field:ir.actions.act_window,limit:0
 msgid "Limit"
 msgstr "数量限制"
@@ -8495,8 +8755,12 @@ msgid "Jamaica"
 msgstr "牙买加"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_mrp_root
-msgid "Manufacturing"
+#: model:ir.actions.act_window,help:base.action_partner_category_form
+msgid ""
+"Manage the partner categories in order to better classify them for tracking "
+"and analysis purposes. A partner may belong to several categories and "
+"categories have a hierarchy structure: a partner belonging to a category "
+"also belong to his parent category."
 msgstr ""
 
 #. module: base
@@ -8537,9 +8801,9 @@ msgid "Czech / Čeština"
 msgstr "捷克语 / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "瓦利斯和富图纳群岛"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "高级搜索"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
@@ -8604,11 +8868,6 @@ msgid "Country"
 msgstr "国家"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Telugu / India"
-msgstr ""
-
-#. module: base
 #: field:ir.model.fields,complete_name:0
 #: field:ir.ui.menu,complete_name:0
 msgid "Complete Name"
@@ -8652,9 +8911,9 @@ msgid "terp-mail_delete"
 msgstr ""
 
 #. module: base
-#: view:res.company:0
-msgid "Your Logo - Use a size of about 450x150 pixels."
-msgstr "您的徽标——使用大小约为 450x150 像素的图片"
+#: selection:base.language.install,lang:0
+msgid "Spanish (SV) / Español (SV)"
+msgstr ""
 
 #. module: base
 #: help:res.lang,grouping:0
@@ -8735,9 +8994,9 @@ msgid "Localisation"
 msgstr "地区"
 
 #. module: base
-#: model:res.country,name:base.cl
-msgid "Chile"
-msgstr "智利"
+#: view:ir.actions.server:0
+msgid "Action to Launch"
+msgstr "要启动的动作"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8764,6 +9023,11 @@ msgstr "此字段不可用，其目的是帮您选择一个好的模型。"
 #: field:ir.ui.view,name:0
 msgid "View Name"
 msgstr "视图名称"
+
+#. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8805,6 +9069,11 @@ msgstr "业务伙伴分类"
 #: view:base.module.upgrade:0
 msgid "System Update"
 msgstr ""
+
+#. module: base
+#: selection:ir.translation,type:0
+msgid "Wizard Field"
+msgstr "向导字段"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -8854,6 +9123,12 @@ msgid "terp-mail-message-new"
 msgstr ""
 
 #. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "Company Switch Warning"
+msgstr ""
+
+#. module: base
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
@@ -8862,7 +9137,7 @@ msgstr "资源对象"
 #. module: base
 #: help:ir.sequence,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
+msgstr "下一序号将以此数增加."
 
 #. module: base
 #: field:ir.cron,function:0
@@ -8887,15 +9162,14 @@ msgid "Delivery"
 msgstr "运输"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "公司"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Korean / Korea, Republic of"
-msgstr ""
+#: model:res.country,name:base.gw
+msgid "Guinea Bissau"
+msgstr "几内亚比绍"
 
 #. module: base
 #: view:workflow.instance:0
@@ -8960,6 +9234,54 @@ msgstr "斯里兰卡"
 #: selection:base.language.install,lang:0
 msgid "Russian / русский язык"
 msgstr "俄语 / русский язык"
+
+#. module: base
+#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#, python-format
+msgid "Unmet dependency !"
+msgstr "未满足依赖."
+
+#. module: base
+#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#, python-format
+msgid "Following modules are not installed or unknown: %s"
+msgstr "一下模块不能安装或未知:'%s'"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:0
+#, python-format
+msgid "Invalid search criterions"
+msgstr "无效搜索规则"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:0
+#, python-format
+msgid "The osv_memory field can only be compared with = and != operator."
+msgstr "osv_memory 字段仅用 = 和 != 操作符作比较."
+
+#. module: base
+#: code:addons/base/ir/ir_values.py:0
+#, python-format
+msgid "You do not have the permission to perform this operation !!!"
+msgstr "你不允许进行这操作"
+
+#. module: base
+#: code:addons/base/res/ir_property.py:0
+#, python-format
+msgid "Invalid type"
+msgstr "无效类型"
+
+#. module: base
+#: code:addons/__init__.py:0
+#, python-format
+msgid "Could not load base module"
+msgstr "不能载入基本模块"
+
+#. module: base
+#: code:addons/__init__.py:0
+#, python-format
+msgid "module base cannot be loaded! (hint: verify addons-path)"
+msgstr "模块库不能装载!(提示:检查addons路径)"
 
 #~ msgid "Yearly"
 #~ msgstr "每年"
@@ -9059,6 +9381,9 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "查找新模块"
+
+#~ msgid "res.groups"
+#~ msgstr "组"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "商机"
@@ -9358,6 +9683,9 @@ msgstr "俄语 / русский язык"
 #~ msgid "Configure simple view"
 #~ msgstr "配置为简单视图"
 
+#~ msgid "Bulgarian / български"
+#~ msgstr "保加利亚语 / български"
+
 #~ msgid "Field child2"
 #~ msgstr "字段 child2"
 
@@ -9458,6 +9786,9 @@ msgstr "俄语 / русский язык"
 #~ msgid "res.partner.som"
 #~ msgstr "res.partner.som"
 
+#~ msgid "Sir"
+#~ msgstr "先生"
+
 #~ msgid "Start Upgrade"
 #~ msgstr "开始升级"
 
@@ -9474,6 +9805,9 @@ msgstr "俄语 / русский язык"
 #, python-format
 #~ msgid "Recursivity Detected."
 #~ msgstr "检测到循环。"
+
+#~ msgid "Ukrainian / украї́нська мо́ва"
+#~ msgstr "乌克兰语 / украї́нська мо́ва"
 
 #~ msgid "Not Started"
 #~ msgstr "尚未开始"
@@ -9495,6 +9829,9 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "Repositories"
 #~ msgstr "软件库"
+
+#~ msgid "Ltd"
+#~ msgstr "有限公司"
 
 #~ msgid "Language name"
 #~ msgstr "语言名称"
@@ -9595,6 +9932,9 @@ msgstr "俄语 / русский язык"
 #~ msgid "Your system will be upgraded."
 #~ msgstr "即将升级您的系统。"
 
+#~ msgid "Romanian / limba română"
+#~ msgstr "罗马尼亚语 / limba română"
+
 #~ msgid "in"
 #~ msgstr "包含"
 
@@ -9644,9 +9984,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "iCal id"
 #~ msgstr "iCal 标识符"
 
-#~ msgid "Update Modules List"
-#~ msgstr "更新模块列表"
-
 #~ msgid "Default Properties"
 #~ msgstr "默认属性"
 
@@ -9691,6 +10028,9 @@ msgstr "俄语 / русский язык"
 #~ msgid "GPL-3"
 #~ msgstr "GPL-3"
 
+#~ msgid "Portugese (BR) / português (BR)"
+#~ msgstr "葡萄牙语 / português (BR)"
+
 #, python-format
 #~ msgid "Bad file format"
 #~ msgstr "无效的文件格式"
@@ -9723,6 +10063,9 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "Force Domain"
 #~ msgstr "强制域"
+
+#~ msgid "Portugese / português"
+#~ msgstr "葡萄牙语 / português"
 
 #, python-format
 #~ msgid "Unknown position in inherited view %s !"
@@ -9782,6 +10125,9 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "odt"
 #~ msgstr "ODT"
+
+#~ msgid "Dutch (Belgium) / Nederlands (Belgïe)"
+#~ msgstr "荷兰语（比利时） / Nederlands (Belgïe)"
 
 #~ msgid "Repository list"
 #~ msgstr "软件仓库列表"
@@ -10534,6 +10880,9 @@ msgstr "俄语 / русский язык"
 #~ msgid "Alert for ' + product_info.name +' !"
 #~ msgstr "'product_info.name +'的警报！"
 
+#~ msgid "Finland / Suomi"
+#~ msgstr "芬兰 / Suomi"
+
 #, python-format
 #~ msgid ""
 #~ "Couldn't send mail because the contact for this task (%s) has no email "
@@ -10630,6 +10979,9 @@ msgstr "俄语 / русский язык"
 #, python-format
 #~ msgid "This image has been created by the synchronization wizard"
 #~ msgstr "该影像已由同步向导创建"
+
+#~ msgid "Albanian / Shqipëri"
+#~ msgstr "阿尔巴尼亚语 / Shqipëri"
 
 #, python-format
 #~ msgid "You have to select a partner in the repair form !"
@@ -11160,6 +11512,16 @@ msgstr "俄语 / русский язык"
 #~ msgid "Default Company per Object"
 #~ msgstr "每对象的默认公司"
 
+#, python-format
+#~ msgid ""
+#~ "No rate found \n"
+#~ "' \\n                    'for the currency: %s \n"
+#~ "' \\n                    'at the date: %s"
+#~ msgstr ""
+#~ "未找到外币汇率 \n"
+#~ "'\\n '相关货币： %s\n"
+#~ "'\\n '日期： %s"
+
 #~ msgid "Parent"
 #~ msgstr "上级"
 
@@ -11170,8 +11532,19 @@ msgstr "俄语 / русский язык"
 #~ msgid "Second field should be figures"
 #~ msgstr "第二字段应该是数字"
 
+#~ msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
+#~ msgstr "越南 / Cộng hòa xã hội chủ nghĩa Việt Nam"
+
 #~ msgid "Weight"
 #~ msgstr "重量"
+
+#, python-format
+#~ msgid ""
+#~ "You try to install the module '%s' that depends on the module:'%s'.\n"
+#~ "But this module is not available in your system."
+#~ msgstr ""
+#~ "您试图安装模块'%s'.这模块依赖模块： %s。\n"
+#~ "但您的系统中该模块不可用。"
 
 #~ msgid "txt"
 #~ msgstr "txt"
@@ -11247,3 +11620,16 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "You cannot have two users with the same login !"
 #~ msgstr "用户名必须唯一！"
+
+#~ msgid "Korean / Korea, Democratic Peoples Republic of"
+#~ msgstr "朝鲜民主主义人民共和国"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "This addon is already installed on your system"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "该模块已经安装到您的系统中了。"

@@ -27,6 +27,7 @@ import itertools
 import locale
 import os
 import re
+import logging
 import tarfile
 import tempfile
 from os.path import join
@@ -220,11 +221,11 @@ def unquote(str):
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
     def warn(self, msg):
-        self.logger.notifyChannel("i18n", netsvc.LOG_WARNING, msg)
+        self.logger.warning(msg)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -252,6 +253,8 @@ class TinyPoFile(object):
 
         if self.tnrs:
             type, name, res_id, source, trad = self.tnrs.pop(0)
+            if not res_id:
+                res_id = '0'
         else:
             tmp_tnrs = []
             line = None
@@ -316,7 +319,9 @@ class TinyPoFile(object):
         self.first = False
 
         if name is None:
-            self.warn('Missing "#:" formated comment for the following source:\n\t%s' % (source,))
+            if not fuzzy:
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s', 
+                        self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
 
@@ -483,7 +488,7 @@ def in_modules(object_name, modules):
     return module in modules
 
 def trans_generate(lang, modules, dbname=None):
-    logger = netsvc.Logger()
+    logger = logging.getLogger('i18n')
     if not dbname:
         dbname=tools.config['db_name']
         if not modules:
@@ -499,13 +504,21 @@ def trans_generate(lang, modules, dbname=None):
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
+            
+    query_models = """SELECT m.id, m.model, imd.module 
+            FROM ir_model AS m, ir_model_data AS imd 
+            WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
+
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
+        query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
     query_param = None
     if 'all' not in modules:
         query += ' WHERE module IN %s'
+        query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
     query += ' ORDER BY module, model, name'
+    query_models += ' ORDER BY module, model'
 
     cr.execute(query, query_param)
 
@@ -526,12 +539,12 @@ def trans_generate(lang, modules, dbname=None):
         xml_name = "%s.%s" % (module, encode(xml_name))
 
         if not pool.get(model):
-            logger.notifyChannel("db", netsvc.LOG_ERROR, "Unable to find object %r" % (model,))
+            logger.error("Unable to find object %r", model)
             continue
 
         exists = pool.get(model).exists(cr, uid, res_id)
         if not exists:
-            logger.notifyChannel("db", netsvc.LOG_WARNING, "Unable to find object %r with id %d" % (model, res_id))
+            logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
 
@@ -558,7 +571,7 @@ def trans_generate(lang, modules, dbname=None):
 
                         # export fields
                         if not result.has_key('fields'):
-                            logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
+                            logger.warning("res has no fields: %r", result)
                             continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
@@ -587,7 +600,7 @@ def trans_generate(lang, modules, dbname=None):
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
-                logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
+                logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
@@ -635,22 +648,9 @@ def trans_generate(lang, modules, dbname=None):
                     for t in parse_func(d.iter()):
                         push_translation(module, report_type, name, 0, t)
                 except (IOError, etree.XMLSyntaxError):
-                    logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
+                    logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        model_obj = pool.get(model)
-        def push_constraint_msg(module, term_type, model, msg):
-            # Check presence of __call__ directly instead of using
-            # callable() because it will be deprecated as of Python 3.0
-            if not hasattr(msg, '__call__'):
-                push_translation(module, term_type, model, 0, encode(msg))
-
-        for constraint in model_obj._constraints:
-            push_constraint_msg(module, 'constraint', model, constraint[1])
-
-        for constraint in model_obj._sql_constraints:
-            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
-
-        for field_name,field_def in model_obj._columns.items():
+        for field_name,field_def in obj._table._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
                 try:
@@ -658,6 +658,32 @@ def trans_generate(lang, modules, dbname=None):
                 except:
                     trad = ''
                 push_translation(module, 'model', name, xml_name, encode(trad))
+
+        # End of data for ir.model.data query results
+
+    cr.execute(query_models, query_param)
+
+    def push_constraint_msg(module, term_type, model, msg):
+        # Check presence of __call__ directly instead of using
+        # callable() because it will be deprecated as of Python 3.0
+        if not hasattr(msg, '__call__'):
+            push_translation(module, term_type, model, 0, encode(msg))
+
+    for (model_id, model, module) in cr.fetchall():
+        module = encode(module)
+        model = encode(model)
+
+        model_obj = pool.get(model)
+
+        if not model_obj:
+            logging.getLogger("i18n").error("Unable to find object %r", model)
+            continue
+
+        for constraint in getattr(model_obj, '_constraints', []):
+            push_constraint_msg(module, 'constraint', model, constraint[1])
+
+        for constraint in getattr(model_obj, '_sql_constraints', []):
+            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
 
     # parse source code for _() calls
     def get_module_from_path(path, mod_paths=None):
@@ -690,7 +716,7 @@ def trans_generate(lang, modules, dbname=None):
     else :
         path_list = [root_path,] + apaths
 
-    logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning modules at paths: %s" % (' '.join(path_list),))
+    logger.debug("Scanning modules at paths: ", path_list)
 
     mod_paths = []
     join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
@@ -704,7 +730,7 @@ def trans_generate(lang, modules, dbname=None):
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
-            logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning code of %s at module: %s" % (frelativepath, module))
+            logger.debug("Scanning code of %s at module: %s", frelativepath, module)
             code_string = tools.file_open(fabsolutepath, subdir='').read()
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
@@ -732,7 +758,7 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, terms_type, frelativepath, 0, encode(src))
 
     for path in path_list:
-        logger.notifyChannel("i18n", netsvc.LOG_DEBUG, "Scanning files of modules at %s" % path)
+        logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in tools.osutil.walksymlinks(path):
             for fname in itertools.chain(fnmatch.filter(files, '*.py')):
                 export_code_terms_from_file(fname, path, root, 'code')
@@ -750,23 +776,26 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load(db_name, filename, lang, strict=False, verbose=True, context=None):
+    logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
+        logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
         r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+            logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context=None):
+    logger = logging.getLogger('i18n')
     if verbose:
-        logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
+        logger.info('loading translation file for language %s', lang)
+    if context is None:
+        context = {}
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -790,7 +819,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if fail:
                 lc = locale.getdefaultlocale()[0]
                 msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc))
+                logger.warning(msg, lang, lc)
 
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
@@ -829,6 +858,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value']
         else:
+            logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # read the rest of the file
@@ -849,7 +879,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 dic[f[i]] = row[i]
 
             try:
-                dic['res_id'] = int(dic['res_id'])
+                dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
             except:
                 model_data_ids = model_data_obj.search(cr, uid, [
                     ('model', '=', dic['name'].split(',')[0]),
@@ -907,11 +937,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             cr.commit()
         cr.close()
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_INFO,
-                    "translation file loaded succesfully")
+            logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
-        logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+        logger.exception("couldn't read translation file %s", filename)
 
 def get_locales(lang=None):
     if lang is None:

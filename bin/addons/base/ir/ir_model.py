@@ -75,10 +75,12 @@ class ir_model(osv.osv):
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
     }
+    
     _defaults = {
         'model': lambda *a: 'x_',
-        'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
+    
     def _check_model_name(self, cr, uid, ids):
         for model in self.browse(cr, uid, ids):
             if model.state=='manual':
@@ -88,8 +90,10 @@ class ir_model(osv.osv):
                 return False
         return True
 
+    def _model_name_msg(self, cr, uid, ids, context=None):
+        return _('The Object name must start with x_ and not contain any special character !')
     _constraints = [
-        (_check_model_name, 'The Object name must start with x_ and not contain any special character !', ['model']),
+        (_check_model_name, _model_name_msg, ['model']),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -181,8 +185,11 @@ class ir_model_fields(osv.osv):
         'selectable': lambda *a: 1,
     }
     _order = "id"
+    def _size_gt_zero_msg(self, cr, user, ids, context=None):
+        return _('Size of the field can never be less than 1 !')
+
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)', 'Size of the field can never be less than 1 !'),
+        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
@@ -381,8 +388,8 @@ class ir_model_data(osv.osv):
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'noupdate': lambda *a: False,
-        'module': lambda *a: ''
+        'noupdate': False,
+        'module': ''
     }
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
@@ -429,6 +436,10 @@ class ir_model_data(osv.osv):
         model_obj = self.pool.get(model)
         if not context:
             context = {}
+
+        # records created during module install should result in res.log entries that are already read!
+        context = dict(context, res_log_read=True)
+
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id = xml_id.split('.')
