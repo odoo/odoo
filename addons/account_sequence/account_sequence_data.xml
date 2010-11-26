@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!--Account Journal Internal Sequences-->
-        <record id="internal_sequence_journal" model="ir.sequence">
-            <field name="name">Internal Sequence Journal</field>
-                <field name="code">account.journal</field>
-                <field name="number_next">1</field>
-        </record>
-
-        <function eval="('default', False, 'internal_sequence', [('account.journal', False)], internal_sequence_journal, True, False, False, False, True)" id="internal_seq_default_set" model="ir.values" name="set"/>
 
         <!--Account Journal Internal Number of account move line-->
 
