@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 P. Christeas, Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP SA. (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,6 +21,8 @@
 ##############################################################################
 
 from reportlab import rl_config
+from tools import config
+import glob
 import os
 import logging
 
@@ -28,6 +31,9 @@ the reportlab engine.
 
 This file could be customized per distro (although most Linux/Unix ones)
 should have the same filenames, only need the code below).
+
+Due to an awful configuration that ships with reportlab at many Linux 
+and Ubuntu distros, we have to override the search path, too.
 """
 
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
@@ -51,6 +57,16 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
+
+TTFSearchPath_Linux = ( 
+            '/usr/share/fonts/truetype', # SuSE
+            '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
+            '/usr/share/fonts/truetype/*', # Ubuntu,
+            '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            )
+
+
+# ----- The code below is less distro-specific, please avoid editing! -------
 __foundFonts = []
 
 def FindCustomFonts():
@@ -64,10 +80,28 @@ def FindCustomFonts():
     dirpath =  []
     log = logging.getLogger('report.fonts')
     global __foundFonts
-    for dirname in rl_config.TTFSearchPath:
-        abp = os.path.abspath(dirname)
-        if os.path.isdir(abp):
-            dirpath.append(abp)
+    searchpath = []
+
+    if config.get_misc('ttfonts', 'search_path', False):
+        searchpath += map(str.strip, config.get_misc('ttfonts', 'search_path').split(','))
+
+    if os.name == 'nt':
+        pass # TODO
+    elif os.uname()[0] == 'Linux':
+        searchpath += TTFSearchPath_Linux
+    else:
+        pass # TODO for MacOSX, Unix etc.
+    
+    if config.get_misc('ttfonts', 'use_default_path', True):
+        # Append the original search path of reportlab (at the end)
+        searchpath += rl_config.TTFSearchPath
+
+    for dirglob in searchpath:
+        dirglob = os.path.expanduser(dirglob)
+        for dirname in glob.iglob(dirglob):
+            abp = os.path.abspath(dirname)
+            if os.path.isdir(abp):
+                dirpath.append(abp)
         
     for k, (name, font, fname, mode) in enumerate(CustomTTFonts):
         if fname in __foundFonts:
@@ -77,7 +111,7 @@ def FindCustomFonts():
                 log.debug("Found font %s in %s as %s", fname, d, name)
                 __foundFonts.append(fname)
                 break
-                
+
     # print "Found fonts:", __foundFonts
 
 
