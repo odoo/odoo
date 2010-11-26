@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 22:56+0000\n"
+"PO-Revision-Date: 2010-11-25 10:35+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -108,6 +108,8 @@ msgid ""
 "This is the list of all delivery orders that must be prepared, according to "
 "your different sales orders and your logistics rules."
 msgstr ""
+"Esta es la lista de todas las órdenes de entrega que deben ser preparadas, "
+"de acuerdo con sus distintos pedidos de ventas y sus reglas logísticas."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -226,6 +228,9 @@ msgid ""
 "if you really want to change it '             #                        'for "
 "this product: \"%s\" (id: %d)"
 msgstr ""
+"La línea de movimiento actual ya está asignada a un albarán, elimínela "
+"primero si realmente quiere cambiarla ' # 'para este este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
@@ -270,7 +275,7 @@ msgstr "Referencia"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Productos a procesar"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -360,7 +365,7 @@ msgstr "Empresa"
 #. module: stock
 #: help:stock.move.memory,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Moneda en la que se expresa el coste unidad."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -474,7 +479,7 @@ msgstr "Albarán de salida"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr ""
+msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1833,7 +1838,7 @@ msgstr "Moneda"
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr "Lotes seguimiento fabricación"
+msgstr "Lotes seguimiento de fabricación"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
@@ -2387,7 +2392,7 @@ msgstr ""
 #. module: stock
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no son soportadas en objetos osv_memory!"
+msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
 
 #. module: stock
 #: view:board.board:0
@@ -2403,7 +2408,7 @@ msgstr "Creación"
 #. module: stock
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "¡El nombre del diaro debe ser único por compañía!"
+msgstr "¡El nombre del diario debe ser único por compañía!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3525,7 +3530,7 @@ msgstr "Consumir productos"
 #: field:stock.move.scrap,product_uom:0
 #, python-format
 msgid "Product UOM"
-msgstr "UdM producto"
+msgstr "UdM del producto"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3873,7 +3878,7 @@ msgstr "STOCK_MEDIA_PLAY"
 #. module: stock
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "El código del diario debe ser único por compañia !"
+msgstr "¡El código del diario debe ser único por compañía!"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_tree
@@ -3882,6 +3887,9 @@ msgid ""
 "click on a location in order to get the list of the products and their stock "
 "level in this particular location and all its children."
 msgstr ""
+"Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
+"hacer clic en una ubicación para obtener la lista de productos y su nivel de "
+"stock para esta ubicación en particular y todos sus hijos."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3990,7 +3998,7 @@ msgstr "Coste unidad para esta línea de producto"
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr "Categoría producto"
+msgstr "Categoría de producto"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -4026,6 +4034,9 @@ msgid ""
 "get the up-stream or down-stream traceability of the products contained in "
 "the pack."
 msgstr ""
+"Esta es la lista de todos sus paquetes. Después de haber seleccionado un "
+"paquete, puede obtener la trazabilidad para arriba y para abajo de los "
+"productos contenidos en el paquete."
 
 #. module: stock
 #: view:report.stock.lines.date:0

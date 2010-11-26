@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 07:59+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-25 20:20+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees Line"
-msgstr "Gebühren"
+msgstr "Aufwandspositionen"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -86,7 +86,7 @@ msgstr "Abbrechen Reparatur"
 #: field:mrp.repair.fee,to_invoice:0
 #: field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
-msgstr "Abzurechnen"
+msgstr "Abrechnen"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -140,7 +140,7 @@ msgstr "Rechnungsanschrift :"
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
-msgstr "Garantielimit"
+msgstr "Garantie bis"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -157,7 +157,7 @@ msgstr "Steuern"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Net Total :"
-msgstr "Netto"
+msgstr "Nettobetrag :"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:0
@@ -168,7 +168,7 @@ msgstr "Warnung !"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "VAT"
-msgstr "Ust"
+msgstr "USt."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -178,7 +178,7 @@ msgstr "Reparaturvorgang"
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
 msgid "Move"
-msgstr "Buchung"
+msgstr "Lieferauftrag"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:0
@@ -196,7 +196,7 @@ msgstr "Reparaturaufträge"
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
 msgid "Quotation / Order"
-msgstr "Angebot / Bestellung"
+msgstr "Angebot / Auftrag"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -238,9 +238,24 @@ msgid "Repairs order"
 msgstr "Reparaturauftrag"
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allows you to organize your reparations on the products. On a "
+"repair order, you can detail the components you remove, add or replace and "
+"record the time you spent on the different operations. The repair order uses "
+"the warranty date on the production lot in order to know if you have to "
+"invoice the reparation to the customer or not."
+msgstr ""
+
+#. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
 msgstr "ReparaturNr."
+
+#. module: mrp_repair
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
@@ -256,7 +271,7 @@ msgstr "In Reparatur"
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
 msgid "Fees Lines"
-msgstr "Gebührenpositionen"
+msgstr "Aufwandspositionen"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -271,7 +286,12 @@ msgstr "Gebührenposition(en)"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr "Abzurechnen"
+msgstr "Abrechenbar"
+
+#. module: mrp_repair
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -287,7 +307,7 @@ msgstr "Fehler !"
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "Menge (ME)"
+msgstr "Anzahl (ME)"
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -311,7 +331,7 @@ msgstr ""
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Total :"
-msgstr "Summe :"
+msgstr "Bruttobetrag :"
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
@@ -405,7 +425,7 @@ msgstr "Vor Reparatur"
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr "Aktueller Standort"
+msgstr "Aktueller Lagerort"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -437,7 +457,7 @@ msgstr "(Entferne)"
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Add"
-msgstr "Hinzu"
+msgstr "Ersatz"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -486,7 +506,7 @@ msgstr "unbekannt"
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr "Produkte in Reparatur"
+msgstr "Defektes Produkt"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -565,14 +585,14 @@ msgstr "Status"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Qty"
-msgstr "Menge"
+msgstr "Anzahl"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
 #: field:mrp.repair.line,price_unit:0
 #: report:repair.order:0
 msgid "Unit Price"
-msgstr "Preis pro Einheit"
+msgstr "Preis/ME"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -602,18 +622,23 @@ msgstr "Rechnung"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Fees"
-msgstr "Gebühren"
+msgstr "Aufwendungen"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Abgebrochen"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr "Ziellager"
+msgstr "Ziel"
+
+#. module: mrp_repair
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -628,7 +653,7 @@ msgstr "Historie"
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr "Auslieferungsstandort"
+msgstr "Auslieferung Lagerort"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -694,7 +719,7 @@ msgstr "Interne Hinweise"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Taxes:"
-msgstr "Steuern :"
+msgstr "Umsatzsteuer :"
 
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
@@ -721,7 +746,7 @@ msgstr "Reparatur wurde nicht berechnet."
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Total amount"
-msgstr "Summe Betrag"
+msgstr "Gesamt Betrag"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -731,13 +756,13 @@ msgstr "ME"
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
-msgstr "Entferne"
+msgstr "Ausbau"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0
 #: field:mrp.repair.line,product_uom:0
 msgid "Product UoM"
-msgstr "Produkt ME"
+msgstr "Mengeneinheit"
 
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
@@ -786,7 +811,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
-msgstr "Summe"
+msgstr "Bruttobetrag"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0

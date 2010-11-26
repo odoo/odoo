@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_expense
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:31+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-25 19:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -42,7 +41,7 @@ msgstr "Баталсан огноо"
 #: view:hr.expense.expense:0
 #: view:hr.expense.report:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
@@ -61,11 +60,6 @@ msgstr "Үйлдлийн тодорхойлолтод буруу моделий�
 #: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Хэлтэс"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Extended filters..."
-msgstr "Нэмэлт шүүлтүүр"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -109,7 +103,7 @@ msgstr "Зөвшөөрсөн"
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr "Хэмжих нэгж"
+msgstr "Х.н"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_valid:0
@@ -160,7 +154,7 @@ msgstr "   Сар   "
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr "Лавлах"
+msgstr "Дугаар"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -272,6 +266,11 @@ msgstr "Тоо хэмжээ"
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Нийт үнэ"
+
+#. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -524,6 +523,11 @@ msgid "User"
 msgstr "Хэрэглэгч"
 
 #. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: hr_expense
 #: report:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
@@ -534,6 +538,11 @@ msgstr "Огноо"
 #: selection:hr.expense.report,month:0
 msgid "November"
 msgstr "11 сар"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -607,9 +616,19 @@ msgid "Invoice"
 msgstr "Нэхэмжлэл"
 
 #. module: hr_expense
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Дахин нэхэмжлэх"
+
+#. module: hr_expense
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: hr_expense
 #: view:board.board:0
@@ -726,6 +745,22 @@ msgid "Employee's Name"
 msgstr "Ажилтны нэр"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on "
+"projects/analytic accounts. The accountant validates the proposed entries "
+"and the employee can be reimbursed. You can also reinvoice the customer at "
+"the end of the flow."
+msgstr ""
+"Зардлыг зохицуулах модуль нь зардлын бүрэн урсгалыг хянах боломж олгоно. Сар "
+"бүр ажилтан өөрийн зардлаа бүртгэнэ. Сарын эцэст анилитик данс/ төсөл дэх "
+"өртгийг үүсгэх зардлын хүснэгтийг менежер батламжилна. Нягтлан санал "
+"болгосон бичлэгийг батламжлах ба ажилтан нөхөн төллүүлж болно. Урсгалын "
+"төгсгөлд үйлчлүүлэгчээс дахин нэхэмжилж болно."
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "This Month"
 msgstr "Энэ сар"
@@ -787,7 +822,6 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
-"When the expense request is created the state is 'Draft'.\n"
 "Зардлын хүсэлт 'Ноорог' төлөвт үүссэний дара:\n"
 "Хэрэглэгч баталбал хүсэлт администраторт 'Зөвшөөрөл хүлээж байгаа' "
 "төлөвтэйгөөр шилжинэ. \n"
@@ -832,13 +866,13 @@ msgstr "Зардлууд"
 #. module: hr_expense
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Алдаа: EAN код буруу"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,year:0
 msgid "Year"
-msgstr "Он"
+msgstr "Жил"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
