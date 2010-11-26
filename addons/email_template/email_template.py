@@ -267,7 +267,7 @@ This is useful for CRM leads for example"),
     }
 
     _sql_constraints = [
-        ('name', 'unique (name)', _('The template name must be unique !'))
+        ('name', 'unique (name)','The template name must be unique !')
     ]
 
     def create_action(self, cr, uid, ids, context):

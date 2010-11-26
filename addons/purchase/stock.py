@@ -37,7 +37,7 @@ class stock_move(osv.osv):
         """
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
         if move.product_id.cost_method != 'average' or not move.price_unit:
-            # no average price costing or cost not specified during picking validation, we will 
+            # no average price costing or cost not specified during picking validation, we will
             # plug the purchase line values if they are found.
             if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
                 reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.purchase_id.pricelist_id.currency_id.id
@@ -123,6 +123,8 @@ class stock_partial_picking(osv.osv_memory):
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             has_product_cost = (pick.type == 'in' and pick.purchase_id)
             for m in pick.move_lines:
+                if m.state in ('done','cancel') :
+                    continue
                 if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed
                     # in the currency of the PO (i.e the PO's pricelist currency)

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!-- 
-    Resource: product.category 
-    -->
+            
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
+        </record>
         
+        <!--
+    Resource: product.category
+    -->
+
         <record id="cat1" model="product.category">
             <field name="parent_id" ref="product.cat0"/>
             <field name="name">Sellable</field>
@@ -52,40 +57,40 @@
 
 
 
-    <record id="product_category_marketableproduct0" model="product.category">
-            <field name="name">Marketable Products</field>
-    </record>
-    
-    
-    <record id="product_category_shelves0" model="product.category">
-        <field name="parent_id" ref="product_category_marketableproduct0"/>
-            <field name="name">Shelves</field>
-    </record>
-    
-    
-    <record id="product_category_otherproducts0" model="product.category">
-            <field name="name">Other Products</field>
-    </record>
-    
-    
-    <record id="product_category_rawmaterial0" model="product.category">
-        <field name="parent_id" ref="product_category_otherproducts0"/>
-            <field name="name">Raw Materials</field>
-    </record>
-    
-    
-    <record id="product_category_services0" model="product.category">
-        <field name="parent_id" ref="product_category_marketableproduct0"/>
-            <field name="name">Marketable Services</field>
-    </record>
-    
-    
-    <record id="product_category_misc0" model="product.category">
-        <field name="parent_id" ref="product_category_otherproducts0"/>
-            <field name="name">Misc</field>
-    </record>
+        <record id="product_category_marketableproduct0" model="product.category">
+                <field name="name">Marketable Products</field>
+        </record>
 
-        
+
+        <record id="product_category_shelves0" model="product.category">
+            <field name="parent_id" ref="product_category_marketableproduct0"/>
+                <field name="name">Shelves</field>
+        </record>
+
+
+        <record id="product_category_otherproducts0" model="product.category">
+                <field name="name">Other Products</field>
+        </record>
+
+
+        <record id="product_category_rawmaterial0" model="product.category">
+            <field name="parent_id" ref="product_category_otherproducts0"/>
+                <field name="name">Raw Materials</field>
+        </record>
+
+
+        <record id="product_category_services0" model="product.category">
+            <field name="parent_id" ref="product_category_marketableproduct0"/>
+                <field name="name">Marketable Services</field>
+        </record>
+
+
+        <record id="product_category_misc0" model="product.category">
+            <field name="parent_id" ref="product_category_otherproducts0"/>
+            <field name="name">Misc</field>
+        </record>
+
+
         <record id="product_ul_box" model="product.ul">
             <field name="name">Box 20x20x40</field>
             <field name="type">box</field>
@@ -94,11 +99,11 @@
             <field name="name">Box 30x40x60</field>
             <field name="type">box</field>
         </record>
-        
+
         <!--
     Resource: product.product
     -->
-        
+
         <record id="product_product_0" model="product.product">
             <field name="list_price">38.25</field>
             <field name="standard_price">25.5</field>
@@ -126,6 +131,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">2.0</field>
             <field name="name">Basic PC</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_pc"/>
         </record>
         <record id="product_product_pc2" model="product.product">
@@ -138,6 +144,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="sale_delay">18.0</field>
             <field name="name">Basic+ PC (assembly on order)</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_pc"/>
         </record>
         <record id="product_product_pc3" model="product.product">
@@ -149,6 +156,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">3.0</field>
             <field name="name">Medium PC</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_pc"/>
         </record>
         <record id="product_product_pc4" model="product.product">
@@ -160,6 +168,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="procure_method">make_to_order</field>
             <field name="name">Customizable PC</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_pc"/>
             <field name="state">end</field>
         </record>
@@ -171,6 +180,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Mainboard ASUStek A7N8X</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_mb2" model="product.product">
@@ -181,6 +191,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Mainboard ASUStek A7V8X-X</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
             <field name="state">draft</field>
         </record>
@@ -192,6 +203,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Processor AMD Athlon XP 1800+</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_cpu3" model="product.product">
@@ -202,6 +214,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Processor AMD Athlon XP 2200+</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_hdd1" model="product.product">
@@ -212,6 +225,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">HDD Seagate 7200.8 80GB</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_hdd2" model="product.product">
@@ -222,6 +236,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">HDD Seagate 7200.8 120GB</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_hdd3" model="product.product">
@@ -233,6 +248,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="sale_delay">1.0</field>
             <field name="name">HDD Seagate 7200.8 160GB</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_fan" model="product.product">
@@ -243,6 +259,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Regular case fan 80mm</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_fan2" model="product.product">
@@ -253,6 +270,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">Silent fan</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="cat1"/>
         </record>
         <record id="product_product_cpu_gen" model="product.product">
@@ -265,6 +283,7 @@
             <field name="sale_delay">1.0</field>
             <field name="name">Regular processor config</field>
             <field name="procure_method">make_to_order</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_ram" model="product.product">
@@ -275,6 +294,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">DDR 256MB PC400</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_pc"/>
         </record>
         <record id="product_product_ram512" model="product.product">
@@ -285,6 +305,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">DDR 512MB PC400</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_cpu2" model="product.product">
@@ -297,6 +318,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="sale_delay">1.0</field>
             <field name="name">High speed processor config</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_tow1" model="product.product">
@@ -307,6 +329,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="sale_delay">1.0</field>
             <field name="name">ATX Mid-size Tower</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_20" model="product.product">
@@ -319,6 +342,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="sale_delay">1.0</field>
             <field name="name">HDD on demand</field>
+            <field name="type">product</field>
             <field eval="False" name="sale_ok"/>
             <field name="categ_id" ref="product_category_10"/>
         </record>
@@ -331,6 +355,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">RAM on demand</field>
             <field eval="False" name="sale_ok"/>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_22" model="product.product">
@@ -341,6 +366,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Processor on demand</field>
+            <field name="type">product</field>
             <field eval="False" name="sale_ok"/>
             <field name="categ_id" ref="product_category_10"/>
         </record>
@@ -352,6 +378,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Complete PC With Peripherals</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_24" model="product.product">
@@ -362,6 +389,7 @@
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Keyboard</field>
             <field name="variants">AZERTY</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_25" model="product.product">
@@ -371,6 +399,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Mouse</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_26" model="product.product">
@@ -381,6 +410,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Kit Keyboard + Mouse</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_11"/>
         </record>
 
@@ -388,213 +418,223 @@
     Resource: product.product NEW EVV
     -->
 
-    <record id="product_product_shelfofcm0" model="product.product">
+        <record id="product_product_shelfofcm0" model="product.product">
             <field name="default_code">SHE100</field>
             <field name="supply_method">produce</field>
             <field name="list_price">130.0</field>
             <field name="standard_price">50.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Shelf of 100cm</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Shelf of 100cm</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_shelves0"/>
-    </record>
-    
-    <record id="product_product_shelfofcm1" model="product.product">
+        </record>
+
+        <record id="product_product_shelfofcm1" model="product.product">
             <field name="default_code">SHE200</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
             <field name="list_price">210.0</field>
             <field name="standard_price">80.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Shelf of 200cm</field>
-            <field name="categ_id" ref="product_category_shelves0"/>
-    </record>
-    <record id="product_product_woodmm0" model="product.product">
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Shelf of 200cm</field>
+            <field name="type">product</field>
+                <field name="categ_id" ref="product_category_shelves0"/>
+        </record>
+        <record id="product_product_woodmm0" model="product.product">
             <field name="default_code">WOOD002</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">5.0</field>
-        <field name="uom_id" ref="product_uom_meter"/>
-        <field name="uom_po_id" ref="product_uom_meter"/>
-        <field name="name">Wood 2mm</field>
-        <field eval="10" name="seller_delay"/>
-        <field eval="7.0" name="sale_delay"/>
-        <field name="categ_id" ref="product_category_rawmaterial0"/>
-    </record>
+            <field name="uom_id" ref="product_uom_meter"/>
+            <field name="uom_po_id" ref="product_uom_meter"/>
+            <field name="name">Wood 2mm</field>
+            <field eval="10" name="seller_delay"/>
+            <field eval="7.0" name="sale_delay"/>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_rawmaterial0"/>
+        </record>
 
-    <record id="product_product_kitchendesignproject0" model="product.product">
+        <record id="product_product_kitchendesignproject0" model="product.product">
             <field name="default_code">PROJ</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
             <field name="type">service</field>
             <field name="list_price">90.0</field>
             <field name="standard_price">20.0</field>
-        <field name="uom_id" ref="uom_hour"/>
-        <field name="uom_po_id" ref="uom_hour"/>
-        <field name="name">Kitchen Design Project</field>
-        <field name="categ_id" ref="product_category_services0"/>
-    </record>
+            <field name="uom_id" ref="uom_hour"/>
+            <field name="uom_po_id" ref="uom_hour"/>
+            <field name="name">Kitchen Design Project</field>
+            <field name="categ_id" ref="product_category_services0"/>
+        </record>
 
-    <record id="product_product_employee0" model="product.product">
+        <record id="product_product_employee0" model="product.product">
             <field name="default_code">EMPL</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
             <field name="type">service</field>
             <field name="list_price">200.0</field>
             <field name="standard_price">50.0</field>
-        <field name="uom_id" ref="uom_hour"/>
-        <field name="uom_po_id" ref="uom_hour"/>
-        <field name="name">Employee</field>
-        <field name="categ_id" ref="product_category_services0"/>
-    </record>
+            <field name="uom_id" ref="uom_hour"/>
+            <field name="uom_po_id" ref="uom_hour"/>
+            <field name="name">Employee</field>
+            <field name="categ_id" ref="product_category_services0"/>
+        </record>
 
-    <record id="product_product_restaurantexpenses0" model="product.product">
+        <record id="product_product_restaurantexpenses0" model="product.product">
             <field name="default_code">REST</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
-            <field name="type">consu</field>
             <field name="list_price">1.0</field>
             <field name="standard_price">1.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Restaurant Expenses</field>
-        <field name="categ_id" ref="product_category_otherproducts0"/>
-    </record>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Restaurant Expenses</field>
+            <field name="categ_id" ref="product_category_otherproducts0"/>
+        </record>
 
-    <record id="product_product_worker0" model="product.product">
- 		<field name="default_code">WORK</field>
-		<field name="supply_method">produce</field>
- 		<field name="type">service</field>
-		<field eval="'make_to_order'" name="procure_method"/>
-        <field eval="0" name="sale_ok"/>
-        <field eval="1" name="purchase_ok"/> 
-        <field name="standard_price">20.0</field>
-        <field name="uom_id" ref="uom_hour"/>
-        <field name="uom_po_id" ref="uom_hour"/>
-        <field name="name">Worker</field>
-        <field name="categ_id" ref="product_category_services0"/>
-    </record>
+        <record id="product_product_worker0" model="product.product">
+            <field name="default_code">WORK</field>
+            <field name="supply_method">produce</field>
+            <field name="type">service</field>
+            <field eval="'make_to_order'" name="procure_method"/>
+            <field eval="0" name="sale_ok"/>
+            <field eval="1" name="purchase_ok"/>
+            <field name="standard_price">20.0</field>
+            <field name="uom_id" ref="uom_hour"/>
+            <field name="uom_po_id" ref="uom_hour"/>
+            <field name="name">Worker</field>
+            <field name="categ_id" ref="product_category_services0"/>
+        </record>
 
-    <record id="product_product_rearpanelarm0" model="product.product">
+        <record id="product_product_rearpanelarm0" model="product.product">
             <field name="default_code">RPAN100</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">10.0</field>
             <field eval="0" name="sale_ok"/>
-        	<field name="uom_id" ref="product_uom_unit"/>
-        	<field name="uom_po_id" ref="product_uom_unit"/>
-        	<field name="name">Rear Panel SHE100</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Rear Panel SHE100</field>
             <field eval="5" name="seller_delay"/>
-        	<field name="categ_id" ref="product_category_misc0"/>
-	</record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_rearpanelarm1" model="product.product">
+        <record id="product_product_rearpanelarm1" model="product.product">
             <field name="default_code">RPAN200</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">13.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Rear Panel SHE200</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Rear Panel SHE200</field>
             <field eval="5" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_sidepanel0" model="product.product">
+        <record id="product_product_sidepanel0" model="product.product">
             <field name="default_code">SIDEPAN</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">3.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Side Panel</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Side Panel</field>
             <field eval="5" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_shelf0" model="product.product">
+        <record id="product_product_shelf0" model="product.product">
             <field name="default_code">RCK100</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">5.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Rack 100cm</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Rack 100cm</field>
             <field eval="8" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_shelf1" model="product.product">
+        <record id="product_product_shelf1" model="product.product">
             <field name="default_code">RCK200</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">4.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Rack 200cm</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Rack 200cm</field>
             <field eval="8" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
 
-    <record id="product_product_assemblysection0" model="product.product">
+        <record id="product_product_assemblysection0" model="product.product">
             <field name="default_code">PROFIL</field>
             <field name="supply_method">produce</field>
             <field name="list_price">1.0</field>
             <field name="standard_price">2.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Assembly Section</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Assembly Section</field>
+            <field name="type">product</field>
             <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+        </record>
 
-    <record id="product_product_woodlintelm0" model="product.product">
+        <record id="product_product_woodlintelm0" model="product.product">
             <field name="default_code">LIN40</field>
             <field name="supply_method">buy</field>
             <field name="standard_price">8.0</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Wood Lintel 4m</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Wood Lintel 4m</field>
             <field eval="10" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_metalcleats0" model="product.product">
+        <record id="product_product_metalcleats0" model="product.product">
             <field name="default_code">METC000</field>
             <field name="supply_method">buy</field>
             <field eval="0" name="sale_ok"/>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Metal Cleats</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Metal Cleats</field>
             <field eval="20" name="seller_delay"/>
-        <field name="categ_id" ref="product_category_misc0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_misc0"/>
+        </record>
 
-    <record id="product_product_hotelexpenses0" model="product.product">
+        <record id="product_product_hotelexpenses0" model="product.product">
             <field name="default_code">HOT</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
-            <field name="type">consu</field>
             <field name="list_price">1.0</field>
             <field name="standard_price">1.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">Hotel Expenses</field>
-        <field name="categ_id" ref="product_category_otherproducts0"/>
-    </record>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Hotel Expenses</field>
+            <field name="categ_id" ref="product_category_otherproducts0"/>
+        </record>
 
-    <record id="product_product_kitshelfofcm0" model="product.product">
+        <record id="product_product_kitshelfofcm0" model="product.product">
             <field name="default_code">SHE100KIT</field>
             <field name="supply_method">produce</field>
             <field eval="'make_to_order'" name="procure_method"/>
             <field name="list_price">110.0</field>
             <field name="standard_price">48.0</field>
-        <field name="uom_id" ref="product_uom_unit"/>
-        <field name="uom_po_id" ref="product_uom_unit"/>
-        <field name="name">KIT Shelf of 100cm</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">KIT Shelf of 100cm</field>
             <field eval="0" name="purchase_ok"/>
-        <field name="categ_id" ref="product_category_shelves0"/>
-    </record>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product_category_shelves0"/>
+        </record>
 
         <!--
     Resource: product.supplierinfo
@@ -741,77 +781,76 @@
     Resource: product.supplierinfo NEW for training
     -->
 
-    <record id="product_supplierinfo_0" model="product.supplierinfo">
+        <record id="product_supplierinfo_0" model="product.supplierinfo">
             <field name="product_id" ref="product_product_rearpanelarm0"/>
             <field name="delay">10</field>
             <field name="min_qty">1</field>
             <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+        </record>
 
 
-    <record id="product_supplierinfo_1" model="product.supplierinfo">
+        <record id="product_supplierinfo_1" model="product.supplierinfo">
             <field name="product_id" ref="product_product_rearpanelarm0"/>
             <field name="delay">5</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_2" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_rearpanelarm1"/>
+        <record id="product_supplierinfo_2" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_rearpanelarm1"/>
             <field name="delay">5</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_3" model="product.supplierinfo">
-         <field name="product_id" ref="product_product_sidepanel0"/>
+        <record id="product_supplierinfo_3" model="product.supplierinfo">
+             <field name="product_id" ref="product_product_sidepanel0"/>
             <field name="delay">5</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_4" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_shelfofcm0"/>
+        <record id="product_supplierinfo_4" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_shelfofcm0"/>
             <field name="delay">8</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_5" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_shelfofcm1"/>
+        <record id="product_supplierinfo_5" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_shelfofcm1"/>
             <field name="delay">8</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_6" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_assemblysection0"/>
+        <record id="product_supplierinfo_6" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_assemblysection0"/>
             <field name="delay">2</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_7" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_woodlintelm0"/>
+        <record id="product_supplierinfo_7" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_woodlintelm0"/>
             <field name="delay">10</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
-    <record id="product_supplierinfo_8" model="product.supplierinfo">
-        <field name="product_id" ref="product_product_metalcleats0"/>
+        <record id="product_supplierinfo_8" model="product.supplierinfo">
+            <field name="product_id" ref="product_product_metalcleats0"/>
             <field name="delay">20</field>
             <field name="min_qty">1</field>
-        <field name="name" ref="base.res_partner_woodywoodpecker0"/>
-    </record>
-
+            <field name="name" ref="base.res_partner_woodywoodpecker0"/>
+        </record>
 
 
     </data>

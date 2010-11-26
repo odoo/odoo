@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import netsvc
+from tools.translate import _
 
 class auction_catalog_flagey(osv.osv_memory):
     _name = 'auction.catalog.flagey'
@@ -57,7 +58,7 @@ class auction_catalog_flagey(osv.osv_memory):
         v_ids = lots_obj.browse(cr, uid, v_lots)
         for ab in v_ids:
             if not ab.auction_id :
-                raise osv.except_osv('Error!','No Lots belong to this Auction Date')
+                raise osv.except_osv(_('Error!'), _('No Lots belong to this Auction Date'))
         pass
     
     def print_report(self, cr, uid, ids, context):

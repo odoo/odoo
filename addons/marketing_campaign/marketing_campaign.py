@@ -205,7 +205,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv("Operation not supported", "Sorry, campaign duplication is not supported at the moment.")
+        raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
 
 marketing_campaign()
 
@@ -257,7 +257,7 @@ class marketing_campaign_segment(osv.osv):
         return True
 
     _constraints = [
-        (_check_model, _('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
+        (_check_model, 'Model of filter must be same as resource model of Campaign ', ['ir_filter_id,campaign_id']),
     ]
 
     def onchange_campaign_id(self, cr, uid, ids, campaign_id):
@@ -309,7 +309,7 @@ class marketing_campaign_segment(osv.osv):
         for segment in self.browse(cr, uid, segment_ids, context=context):
             if segment.campaign_id.state != 'running':
                 continue
-            
+
             campaigns.add(segment.campaign_id.id)
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
@@ -377,7 +377,7 @@ class marketing_campaign_activity(osv.osv):
                                  help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."
                                  "The expression may use the following [browsable] variables:\n"
                                  "   - activity: the campaign activity\n"
-                                 "   - workitem: the campaign workitem\n" 
+                                 "   - workitem: the campaign workitem\n"
                                  "   - resource: the resource object this campaign item represents\n"
                                  "   - transitions: list of campaign transitions outgoing from this activity\n"
                                  "...- re: Python regular expression module"),
@@ -539,9 +539,9 @@ class marketing_campaign_transition(osv.osv):
         return True
 
     _constraints = [
-            (_check_campaign, _('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
         ]
- 
+
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
@@ -638,7 +638,7 @@ class marketing_campaign_workitem(osv.osv):
             'activity': activity,
             'workitem': workitem,
             'object': object_id,
-            'resource': object_id, 
+            'resource': object_id,
             'transitions': activity.to_ids,
             're': re,
         }
