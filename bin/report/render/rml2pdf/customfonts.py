@@ -50,10 +50,6 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Times-Roman',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
         ('Times-Roman',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
         ('Times-Roman',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
-        ('ZapfDingbats',"DejaVu Serif", "DejaVuSerif.ttf", 'normal'),
-        ('ZapfDingbats',"DejaVu Serif Bold", "DejaVuSerif-Bold.ttf", 'bold'),
-        ('ZapfDingbats',"DejaVu Serif Italic", "DejaVuSerif-Italic.ttf", 'italic'),
-        ('ZapfDingbats',"DejaVu Serif BoldItalic", "DejaVuSerif-BoldItalic.ttf", 'bolditalic'),
         ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
         ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
@@ -145,7 +141,7 @@ def SetCustomFonts(rmldoc):
     if __foundFonts is None:
         FindCustomFonts()
     for name, font, filename, mode in CustomTTFonts:
-        if os.path.isabs(filename):
+        if os.path.isabs(filename) and os.path.exists(filename):
             rmldoc.setTTFontMapping(name, font, filename, mode)
         elif filename in __foundFonts:
             rmldoc.setTTFontMapping(name, font, __foundFonts[filename], mode)
