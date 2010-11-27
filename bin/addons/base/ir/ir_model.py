@@ -401,6 +401,12 @@ class ir_model_data(osv.osv):
         self.doinit = True
         self.unlink_mark = {}
 
+    def _auto_init(self, cr, context=None):
+        super(ir_model_data, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_model_data_module_name_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
+
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
@@ -448,18 +454,19 @@ class ir_model_data(osv.osv):
         action_id = False
 
         if xml_id:
-            cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
+            cr.execute('''SELECT imd.id, imd.res_id, md.id
+                          FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
+                          WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
+                          (module, xml_id))
             results = cr.fetchall()
-            for action_id2,res_id2 in results:
-                cr.execute('select id from '+model_obj._table+' where id=%s', (res_id2,))
-                result3 = cr.fetchone()
-                if not result3:
+            for imd_id2,res_id2,real_id2 in results:
+                if not real_id2:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
                     self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
-                    cr.execute('delete from ir_model_data where id=%s', (action_id2,))
+                    cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
-                    res_id,action_id = res_id2,action_id2
+                    res_id,action_id = res_id2,imd_id2
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)

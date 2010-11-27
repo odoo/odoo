@@ -57,7 +57,7 @@ class module_category(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char("Name", size=128, required=True),
+        'name': fields.char("Name", size=128, required=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
         'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer')
@@ -96,26 +96,34 @@ class module(osv.osv):
         mlist = self.browse(cr, uid, ids, context=context)
         mnames = {}
         for m in mlist:
-            mnames[m.name] = m.id
+            # skip uninstalled modules below,
+            # no data to find anyway
+            if m.state in ('installed', 'to upgrade', 'to remove'):
+                mnames[m.name] = m.id
             res[m.id] = {
                 'menus_by_module':[],
                 'reports_by_module':[],
                 'views_by_module': []
             }
+
+        if not mnames:
+            return res
+
         view_id = model_data_obj.search(cr,uid,[('module','in', mnames.keys()),
             ('model','in',('ir.ui.view','ir.actions.report.xml','ir.ui.menu'))])
         for data_id in model_data_obj.browse(cr,uid,view_id,context):
             # We use try except, because views or menus may not exist
             try:
                 key = data_id.model
+                res_mod_dic = res[mnames[data_id.module]]
                 if key=='ir.ui.view':
                     v = view_obj.browse(cr,uid,data_id.res_id)
                     aa = v.inherit_id and '* INHERIT ' or ''
-                    res[mnames[data_id.module]]['views_by_module'].append(aa + v.name + '('+v.type+')')
+                    res_mod_dic['views_by_module'].append(aa + v.name + '('+v.type+')')
                 elif key=='ir.actions.report.xml':
-                    res[mnames[data_id.module]]['reports_by_module'].append(report_obj.browse(cr,uid,data_id.res_id).name)
+                    res_mod_dic['reports_by_module'].append(report_obj.browse(cr,uid,data_id.res_id).name)
                 elif key=='ir.ui.menu':
-                    res[mnames[data_id.module]]['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
+                    res_mod_dic['menus_by_module'].append(menu_obj.browse(cr,uid,data_id.res_id).complete_name)
             except KeyError, e:
                 self.__logger.warning(
                             'Data not found for reference %s[%s:%s.%s]', data_id.model,
@@ -344,8 +352,8 @@ class module(osv.osv):
             'maintainer': terp.get('maintainer', False),
             'contributors': ', '.join(terp.get('contributors', [])) or False,
             'website': terp.get('website', ''),
-            'license': terp.get('license', 'GPL-2'),
-            'certificate': terp.get('certificate') or None,
+            'license': terp.get('license', 'AGPL-3'),
+            'certificate': terp.get('certificate') or False,
             'web': terp.get('web') or False,
         }
 
@@ -353,34 +361,40 @@ class module(osv.osv):
     def update_list(self, cr, uid, context={}):
         res = [0, 0] # [update, add]
 
-        # iterate through installed modules and mark them as being so
+        known_mods = self.browse(cr, uid, self.search(cr, uid, []))
+        known_mods_names = dict([(m.name, m) for m in known_mods])
+
+        # iterate through detected modules and update/create them in db
         for mod_name in addons.get_modules():
-            ids = self.search(cr, uid, [('name','=',mod_name)])
+            mod = known_mods_names.get(mod_name)
             terp = self.get_module_info(mod_name)
             values = self.get_values_from_terp(terp)
 
-            if ids:
-                id = ids[0]
-                mod = self.browse(cr, uid, id)
+            if mod:
+                updated_values = {}
+                for key in values:
+                    old = getattr(mod, key)
+                    updated = isinstance(values[key], basestring) and tools.ustr(values[key]) or values[key] 
+                    if not old == updated:
+                        updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
-                    self.write(cr, uid, id, {'state': 'uninstalled'})
+                    updated_values['state'] = 'uninstalled'
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
-                    self.write(cr, uid, id, {'url': ''})
                     res[0] += 1
-                self.write(cr, uid, id, values)
-                cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
+                if updated_values:
+                    self.write(cr, uid, mod.id, updated_values)
             else:
                 mod_path = addons.get_module_path(mod_name)
                 if not mod_path:
                     continue
                 if not terp or not terp.get('installable', True):
                     continue
-
-                ids = self.search(cr, uid, [('name','=',mod_name)])
                 id = self.create(cr, uid, dict(name=mod_name, state='uninstalled', **values))
+                mod = self.browse(cr, uid, id)
                 res[1] += 1
-            self._update_dependencies(cr, uid, id, terp.get('depends', []))
-            self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
+
+            self._update_dependencies(cr, uid, mod, terp.get('depends', []))
+            self._update_category(cr, uid, mod, terp.get('category', 'Uncategorized'))
 
         return res
 
@@ -412,39 +426,49 @@ class module(osv.osv):
             self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
-            self._update_dependencies(cr, uid, mod.id, terp.get('depends',
+            self._update_dependencies(cr, uid, mod, terp.get('depends',
                 []))
-            self._update_category(cr, uid, mod.id, terp.get('category',
+            self._update_category(cr, uid, mod, terp.get('category',
                 'Uncategorized'))
             # Import module
             zimp = zipimport.zipimporter(fname)
             zimp.load_module(mod.name)
         return res
 
-    def _update_dependencies(self, cr, uid, id, depends=None):
+    def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:
             depends = []
-        for d in depends:
-            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
+        existing = set(x.name for x in mod_browse.dependencies_id)
+        needed = set(depends)
+        for dep in (needed - existing):
+            cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (mod_browse.id, dep))
+        for dep in (existing - needed):
+            cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (mod_browse.id, dep))
 
-    def _update_category(self, cr, uid, id, category='Uncategorized'):
+    def _update_category(self, cr, uid, mod_browse, category='Uncategorized'):
+        current_category = mod_browse.category_id
+        current_category_path = []
+        while current_category:
+            current_category_path.insert(0, current_category.name)
+            current_category = current_category.parent_id
+
         categs = category.split('/')
-        p_id = None
-        while categs:
-            if p_id is not None:
-                cr.execute('select id from ir_module_category where name=%s and parent_id=%s', (categs[0], p_id))
-            else:
-                cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
-            c_id = cr.fetchone()
-            if not c_id:
-                cr.execute('select nextval(\'ir_module_category_id_seq\')')
-                c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category (id, name, parent_id) values (%s, %s, %s)', (c_id, categs[0], p_id))
-            else:
-                c_id = c_id[0]
-            p_id = c_id
-            categs = categs[1:]
-        self.write(cr, uid, [id], {'category_id': p_id})
+        if categs != current_category_path:
+            p_id = None
+            while categs:
+                if p_id is not None:
+                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id=%s', (categs[0], p_id))
+                else:
+                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id is NULL', (categs[0],))
+                c_id = cr.fetchone()
+                if not c_id:
+                    cr.execute('INSERT INTO ir_module_category (name, parent_id) VALUES (%s, %s) RETURNING id', (categs[0], p_id))
+                    c_id = cr.fetchone()[0]
+                else:
+                    c_id = c_id[0]
+                p_id = c_id
+                categs = categs[1:]
+            self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         logger = logging.getLogger('i18n')
