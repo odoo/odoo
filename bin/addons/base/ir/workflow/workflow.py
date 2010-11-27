@@ -175,7 +175,7 @@ class wkf_instance(osv.osv):
         'res_type': fields.char('Resource Object', size=64, select=True),
         'state': fields.char('State', size=32, select=True),
     }
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(wkf_instance, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
         if not cr.fetchone():

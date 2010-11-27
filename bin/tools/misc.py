@@ -76,20 +76,19 @@ def init_db(cr):
         p_id = None
         while categs:
             if p_id is not None:
-                cr.execute('select id \
-                           from ir_module_category \
-                           where name=%s and parent_id=%s', (categs[0], p_id))
+                cr.execute('SELECT id \
+                           FROM ir_module_category \
+                           WHERE name=%s AND parent_id=%s', (categs[0], p_id))
             else:
-                cr.execute('select id \
-                           from ir_module_category \
-                           where name=%s and parent_id is NULL', (categs[0],))
+                cr.execute('SELECT id \
+                           FROM ir_module_category \
+                           WHERE name=%s AND parent_id IS NULL', (categs[0],))
             c_id = cr.fetchone()
             if not c_id:
-                cr.execute('select nextval(\'ir_module_category_id_seq\')')
-                c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category \
+                cr.execute('INSERT INTO ir_module_category \
                         (id, name, parent_id) \
-                        values (%s, %s, %s)', (c_id, categs[0], p_id))
+                        VALUES (%s, %s) RETURNING id', (categs[0], p_id))
+                c_id = cr.fetchone()[0]
             else:
                 c_id = c_id[0]
             p_id = c_id
@@ -104,23 +103,23 @@ def init_db(cr):
                 state = 'uninstalled'
         else:
             state = 'uninstallable'
-        cr.execute('select nextval(\'ir_module_module_id_seq\')')
-        id = cr.fetchone()[0]
-        cr.execute('insert into ir_module_module \
-                (id, author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web) \
-                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (
-            id, info.get('author', ''),
+        cr.execute('INSERT INTO ir_module_module \
+                (author, website, name, shortdesc, description, \
+                    category_id, state, certificate, web, license) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+            info.get('author', ''),
             info.get('website', ''), i, info.get('name', False),
             info.get('description', ''), p_id, state, info.get('certificate') or None,
-            info.get('web') or False))
-        cr.execute('insert into ir_model_data \
-            (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
+            info.get('web') or False,
+            info.get('license') or 'AGPL-3'))
+        id = cr.fetchone()[0]
+        cr.execute('INSERT INTO ir_model_data \
+            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
                 'module_meta_information', 'ir.module.module', i, id, True))
         dependencies = info.get('depends', [])
         for d in dependencies:
-            cr.execute('insert into ir_module_module_dependency \
-                    (module_id,name) values (%s, %s)', (id, d))
+            cr.execute('INSERT INTO ir_module_module_dependency \
+                    (module_id,name) VALUES (%s, %s)', (id, d))
         cr.commit()
 
 def find_in_path(name):
