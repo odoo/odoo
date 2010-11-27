@@ -44,28 +44,25 @@
         
         <record model="crm.case.stage" id="stage_claim1">
             <field name="name">Accepted as Claim</field>
+            <field name="sequence">1</field>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
-        
+        <record model="crm.case.stage" id="stage_claim5">
+            <field name="name">Actions Defined</field>
+            <field name="sequence">2</field>
+            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+        </record>
         <record model="crm.case.stage" id="stage_claim2">
-            <field name="name">Fixed</field>
+            <field name="name">Actions Done</field>
+            <field name="sequence">10</field>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
-            
         <record model="crm.case.stage" id="stage_claim3">
             <field name="name">Won't fix</field>
+            <field name="sequence">11</field>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
         
-        <record model="crm.case.stage" id="stage_claim4">
-            <field name="name">Invalid</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
-        </record>
-        
-        <record model="crm.case.stage" id="stage_claim5">
-            <field name="name">Awaiting Response</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
-        </record>
 
         <record model="crm.case.section" id="crm.section_sales_department">
             <field name="name">Sales Department</field>
