@@ -247,7 +247,7 @@ class event_event(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids):
-        return super(event_event, self)._check_recursion(self, cr, uid, ids)
+        return super(event_event, self)._check_recursion(cr, uid, ids)
 
     def _check_closing_date(self, cr, uid, ids):
         for event in self.browse(cr, uid, ids):
