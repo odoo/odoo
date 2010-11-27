@@ -247,17 +247,7 @@ class event_event(osv.osv):
     }
 
     def _check_recursion(self, cr, uid, ids):
-        """
-        Checks for recursion level for event
-        """
-        level = 100
-        while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM event_event WHERE id IN %s', (tuple(ids),))
-            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
+        return super(event_event, self)._check_recursion(self, cr, uid, ids)
 
     def _check_closing_date(self, cr, uid, ids):
         for event in self.browse(cr, uid, ids):
