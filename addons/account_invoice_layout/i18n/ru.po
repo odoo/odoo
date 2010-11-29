@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 15:06+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-28 17:00+0000\n"
+"Last-Translator: Pomazan Bogdan <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-29 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -25,7 +25,7 @@ msgstr "Подитог"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
+msgstr "Примечание:"
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
@@ -84,7 +84,7 @@ msgstr "Цена за ед."
 #. module: account_invoice_layout
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
@@ -143,7 +143,7 @@ msgstr "Цена"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Дата выставления счета"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -193,7 +193,12 @@ msgstr "Количество"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
-msgstr ""
+msgstr "Ссылка на партнера"
+
+#. module: account_invoice_layout
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
@@ -211,7 +216,7 @@ msgstr "Счет"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Всего:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -244,7 +249,7 @@ msgstr "Сумма"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Тел. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -290,6 +295,11 @@ msgid "Supplier Invoice"
 msgstr "Счета поставщиков"
 
 #. module: account_invoice_layout
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
 msgid "Print"
 msgstr "Печать"
@@ -298,7 +308,7 @@ msgstr "Печать"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "НДС:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -309,13 +319,13 @@ msgstr "Налог"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Позиция счета"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Чистый итог:"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -326,7 +336,7 @@ msgstr "Напишите уведомление или пожелание."
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Факс:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -343,6 +353,11 @@ msgstr "Возврат средств от поставщика"
 #: field:account.invoice.special.msg,message:0
 msgid "Message"
 msgstr "Сообщение"
+
+#. module: account_invoice_layout
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Размер поля не может быть меньше 1 !"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form

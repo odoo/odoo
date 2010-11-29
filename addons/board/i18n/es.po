@@ -6,16 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-01 08:43+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-28 19:45+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-11-29 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: board
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  Año  "
 
 #. module: board
 #: model:ir.model,name:board.model_board_menu_create
@@ -39,10 +44,20 @@ msgid "Dashboard main module"
 msgstr "Módulo principal de tableros"
 
 #. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Últimas conexiones"
+
+#. module: board
 #: code:addons/board/wizard/board_menu_create.py:0
 #, python-format
 msgid "User Error!"
 msgstr "¡Error de usuario!"
+
+#. module: board
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: board
 #: view:board.board:0
@@ -60,6 +75,7 @@ msgstr "Nota"
 
 #. module: board
 #: view:board.note:0
+#: view:res.log.report:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -72,6 +88,13 @@ msgstr "Tablero"
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
 msgstr "¡Error! No puede crear menús recursivos."
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr "Actividad global semanal"
 
 #. module: board
 #: field:board.board.line,name:0
@@ -87,15 +110,69 @@ msgstr ""
 "especial!"
 
 #. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr "Nº de entradas"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Mes"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Abrir tablero"
+
+#. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "NOte Type"
 msgstr "Tipo nota"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr "Actividad mensual por documento"
+
+#. module: board
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
 msgstr "Definición tablero"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr "Conexiones de usuario"
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -109,11 +186,9 @@ msgid "Menu Information"
 msgstr "Información del menú"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Últimas conexiones"
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr ""
 
 #. module: board
 #: field:board.note,type:0
@@ -126,16 +201,31 @@ msgid "Action Views"
 msgstr "Vistas de acciones"
 
 #. module: board
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "Fecha"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Tipo de nota"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr ""
 
 #. module: board
 #: view:board.menu.create:0
@@ -143,9 +233,14 @@ msgid "Create Menu For Dashboard"
 msgstr "Crear menú para tablero"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
@@ -158,9 +253,19 @@ msgid "Parent Menu"
 msgstr "Menú padre"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 msgid "Notes"
 msgstr "Notas"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr ""
 
 #. module: board
 #: help:board.board.line,sequence:0
@@ -172,10 +277,14 @@ msgstr ""
 "tablero."
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:0
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "¡Por favor inserte vista(s) de tablero!"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
@@ -192,14 +301,19 @@ msgid "Base module for all dashboards."
 msgstr "Módulo base para todos los tableros."
 
 #. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr ""
+
+#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
 msgstr "Posición"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Abrir tablero"
+#: view:res.log.report:0
+msgid "Model"
+msgstr ""
 
 #. module: board
 #: field:board.menu.create,menu_name:0
@@ -211,6 +325,11 @@ msgstr "Nombre menú"
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Últimas actividades"
+
+#. module: board
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -233,9 +352,25 @@ msgid "Width"
 msgstr "Ancho"
 
 #. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: board
+#: view:board.note:0
+#: field:board.note.type,name:0
+msgid "Note Type"
+msgstr "Tipo de nota"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
@@ -254,6 +389,22 @@ msgid "Create Board Menu"
 msgstr "Crear menú del tablero"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr ""
+
+#. module: board
 #: view:board.menu.create:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -262,6 +413,17 @@ msgstr "Cancelar"
 #: view:board.board:0
 msgid "Dashboard View"
 msgstr "Vista tablero"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "¡Por favor inserte vista(s) de tablero!"
+
+#. module: board
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: board
 #: view:board.note:0
