@@ -72,12 +72,12 @@ def _get_moves(self, cr, uid, data, context):
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
             price = m.product_id.standard_price
-            if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                price=m.purchase_line_id.price_unit
+            if m.__hasattr__('purchase_line_id') and m.purchase_line_id:
+                price = m.purchase_line_id.price_unit
 
             currency=0
-            if hasattr(pick, 'purchase_id') and pick.purchase_id:
-                currency=pick.purchase_id.pricelist_id.currency_id.id
+            if pick.__hasattr__('purchase_id') and pick.purchase_id:
+                currency = pick.purchase_id.pricelist_id.currency_id.id
 
             _moves_arch_lst.append('<group col="6"><field name="uom%s" nolabel="1"/>\
                     <field name="price%s"/>' % (m.id,m.id,))
