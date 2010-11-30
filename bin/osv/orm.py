@@ -1205,46 +1205,49 @@ class orm_template(object):
 
         if self._columns.keys():
             for f in self._columns.keys():
+                field_col = self._columns[f]
                 if allfields and f not in allfields:
                     continue
-                res[f] = {'type': self._columns[f]._type}
+                res[f] = {'type': field_col._type}
                 # This additional attributes for M2M and function field is added
                 # because we need to display tooltip with this additional information
                 # when client is started in debug mode.
-                if isinstance(self._columns[f], fields.function):
-                    res[f]['function'] = self._columns[f]._fnct and self._columns[f]._fnct.func_name or False
-                    res[f]['store'] = self._columns[f].store
-                    if isinstance(self._columns[f].store, dict):
-                        res[f]['store'] = str(self._columns[f].store)
-                    res[f]['fnct_search'] = self._columns[f]._fnct_search and self._columns[f]._fnct_search.func_name or False
-                    res[f]['fnct_inv'] = self._columns[f]._fnct_inv and self._columns[f]._fnct_inv.func_name or False
-                    res[f]['fnct_inv_arg'] = self._columns[f]._fnct_inv_arg or False
-                    res[f]['func_obj'] = self._columns[f]._obj or False
-                    res[f]['func_method'] = self._columns[f]._method
-                if isinstance(self._columns[f], fields.many2many):
-                    res[f]['related_columns'] = list((self._columns[f]._id1, self._columns[f]._id2))
-                    res[f]['third_table'] = self._columns[f]._rel
+                if isinstance(field_col, fields.function):
+                    res[f]['function'] = field_col._fnct and field_col._fnct.func_name or False
+                    res[f]['store'] = field_col.store
+                    if isinstance(field_col.store, dict):
+                        res[f]['store'] = str(field_col.store)
+                    res[f]['fnct_search'] = field_col._fnct_search and field_col._fnct_search.func_name or False
+                    res[f]['fnct_inv'] = field_col._fnct_inv and field_col._fnct_inv.func_name or False
+                    res[f]['fnct_inv_arg'] = field_col._fnct_inv_arg or False
+                    res[f]['func_obj'] = field_col._obj or False
+                    res[f]['func_method'] = field_col._method
+                if isinstance(field_col, fields.many2many):
+                    res[f]['related_columns'] = list((field_col._id1, field_col._id2))
+                    res[f]['third_table'] = field_col._rel
                 for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
-                    if getattr(self._columns[f], arg):
-                        res[f][arg] = getattr(self._columns[f], arg)
+                    if getattr(field_col, arg):
+                        res[f][arg] = getattr(field_col, arg)
                 if not write_access:
                     res[f]['readonly'] = True
                     res[f]['states'] = {}
                 for arg in ('digits', 'invisible', 'filters'):
-                    if getattr(self._columns[f], arg, None):
-                        res[f][arg] = getattr(self._columns[f], arg)
+                    if getattr(field_col, arg, None):
+                        res[f][arg] = getattr(field_col, arg)
 
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', self._columns[f].string)
-                if res_trans:
-                    res[f]['string'] = res_trans
-                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                if help_trans:
-                    res[f]['help'] = help_trans
+                if field_col.string:
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', field_col.string)
+                    if res_trans:
+                        res[f]['string'] = res_trans
+                if field_col.help:
+                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                    if help_trans:
+                        res[f]['help'] = help_trans
 
-                if hasattr(self._columns[f], 'selection'):
-                    if isinstance(self._columns[f].selection, (tuple, list)):
-                        sel = self._columns[f].selection
+                if hasattr(field_col, 'selection'):
+                    if isinstance(field_col.selection, (tuple, list)):
+                        sel = field_col.selection
                         # translate each selection option
                         sel2 = []
                         for (key, val) in sel:
@@ -1256,12 +1259,11 @@ class orm_template(object):
                         res[f]['selection'] = sel
                     else:
                         # call the 'dynamic selection' function
-                        res[f]['selection'] = self._columns[f].selection(self, cr,
-                                user, context)
+                        res[f]['selection'] = field_col.selection(self, cr, user, context)
                 if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                    res[f]['relation'] = self._columns[f]._obj
-                    res[f]['domain'] = self._columns[f]._domain
-                    res[f]['context'] = self._columns[f]._context
+                    res[f]['relation'] = field_col._obj
+                    res[f]['domain'] = field_col._domain
+                    res[f]['context'] = field_col._context
         else:
             #TODO : read the fields from the database
             pass
@@ -1318,13 +1320,13 @@ class orm_template(object):
                 new_xml = etree.fromstring(encode(xml))
                 ctx = context.copy()
                 ctx['base_model_name'] = self._name
-                xarch, xfields = self.pool.get(node.get('object', False)).__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
-                views[str(f.tag)] = {
+                xarch, xfields = self.pool.get(node.get('object')).__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
+                views['form'] = {
                     'arch': xarch,
                     'fields': xfields
                 }
                 attrs = {'views': views}
-                fields = views.get('field', False) and views['field'].get('fields', False)
+                fields = xfields
             if node.get('name'):
                 attrs = {}
                 try:
@@ -1332,7 +1334,7 @@ class orm_template(object):
                         column = self._columns[node.get('name')]
                     else:
                         column = self._inherit_fields[node.get('name')][2]
-                except:
+                except Exception:
                     column = False
 
                 if column:
@@ -1394,6 +1396,10 @@ class orm_template(object):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
+            if node.get('confirm'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('confirm'))
+                if trans:
+                    node.set('confirm', trans)
             if node.get('sum'):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
                 if trans:
@@ -4087,6 +4093,13 @@ class orm(orm_template):
 
         if context is None:
             context = {}
+
+        # avoid recursion through already copied records in case of circular relationship
+        seen_map = context.setdefault('__copy_data_seen',{})
+        if id in seen_map.setdefault(self._name,[]):
+            return
+        seen_map[self._name].append(id)
+
         if default is None:
             default = {}
         if 'state' not in default:
@@ -4114,7 +4127,7 @@ class orm(orm_template):
 
             if f in default:
                 data[f] = default[f]
-            elif ftype == 'function':
+            elif 'function' in fields[f]:
                 del data[f]
             elif ftype == 'many2one':
                 try:
@@ -4134,7 +4147,8 @@ class orm(orm_template):
                         # parent but then are reassigned to the correct one thanks
                         # to the (0, 0, ...)
                         d = rel.copy_data(cr, uid, rel_id, context=context)
-                        res.append((0, 0, d))
+                        if d:
+                            res.append((0, 0, d))
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
@@ -4151,6 +4165,15 @@ class orm(orm_template):
         return data
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
+        if context is None:
+            context = {}
+
+        # avoid recursion through already copied records in case of circular relationship
+        seen_map = context.setdefault('__copy_translations_seen',{})
+        if old_id in seen_map.setdefault(self._name,[]):
+            return
+        seen_map[self._name].append(old_id)
+
         trans_obj = self.pool.get('ir.translation')
         fields = self.fields_get(cr, uid, context=context)
 
@@ -4165,7 +4188,6 @@ class orm(orm_template):
                 old_children = sorted(old_record[field_name])
                 new_children = sorted(new_record[field_name])
                 for (old_child, new_child) in zip(old_children, new_children):
-                    # recursive copy of translations here
                     target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
             # and for translatable fields we keep them for copy
             elif field_def.get('translate'):
@@ -4201,6 +4223,9 @@ class orm(orm_template):
         :return: True
 
         """
+        if context is None:
+            context = {}
+        context = context.copy()
         data = self.copy_data(cr, uid, id, default, context)
         new_id = self.create(cr, uid, data, context)
         self.copy_translations(cr, uid, id, new_id, context)
