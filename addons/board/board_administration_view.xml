@@ -38,10 +38,18 @@
             <field name="arch" type="xml">
                 <search string="Log Analysis">
                     <group col="20" colspan="8">
-                        <filter string="Last 30 Days" icon="terp-go-month" name="thismonth"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days" separator="1" name="thisweek"
-                            domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter icon="terp-go-year" string="  Year  "
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
+                        help="Log created in current year"/>
+                    <filter icon="terp-go-month" string="   Month   "
+                        name="month"
+                        domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                        help="Log created in current month"/>
+                    <filter icon="terp-go-month"
+                         string="    Month-1    "
+                         separator="1"
+                         domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                         help="Log created in last month"/>
                    </group>
                    <newline/>
                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -97,7 +105,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
-            <field name="context">{'search_default_thismonth':1,'group_by':['res_model'],'group_by_no_leaf':1}</field>
+            <field name="context">{'group_by':['res_model'],'group_by_no_leaf':1}</field>
             <field name="view_id" ref="board_res_log_report_graph"></field>
         </record>
 
@@ -119,7 +127,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]</field>
-            <field name="context">{'search_default_thisweek':1,'group_by':['day'],'group_by_no_leaf':1}</field>
+            <field name="context">{'group_by':['day'],'group_by_no_leaf':1}</field>
             <field name="view_id" ref="board_weekly_res_log_report_graph"></field>
         </record>
 
