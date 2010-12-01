@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:37+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 20:23+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -49,9 +49,9 @@ msgid "Minimum Registrations"
 msgstr "Minimum inschrijvingen"
 
 #. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
+#: model:ir.model,name:event.model_event_confirm_registration
+msgid "Confirmation for Event Registration"
+msgstr "Bevestiging van registratie"
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -217,6 +217,11 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: event
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr "Nieuwe email sturen"
+
+#. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To"
 msgstr "Antwoord naar"
@@ -302,12 +307,10 @@ msgid "Extra Info"
 msgstr "Extra informatie"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
-msgstr "Inschrijving"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Customer Invoices"
+msgstr "Verkoopfacturen"
 
 #. module: event
 #: selection:event.event,state:0
@@ -401,9 +404,21 @@ msgid "Warning !"
 msgstr "Waarschuwing !"
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Nieuwe email sturen"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low-level object used by meeting and others documents that have "
+"to be synchronized with mobile or calendar applications through caldav. Most "
+"of the users should work on the Calendar menu, and not on the list of events."
+msgstr ""
+"Gebeurtenis is een onderliggend object dat wordt gebruikt door agenda en "
+"andere documenten die moeten worden gesynchroniseerd met mobiele of agenda "
+"applicaties via caldav. De meeste gebruikers werken via het agenda menu en "
+"niet met een lijst van gebeurtenissen."
 
 #. module: event
 #: view:event.event:0
@@ -441,6 +456,11 @@ msgstr "Email"
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
 msgstr "Te factureren"
+
+#. module: event
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -510,11 +530,6 @@ msgid "Event Organization"
 msgstr "Evenementen"
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Event Registraion"
-msgstr "Evenementinschrijving"
-
-#. module: event
 #: view:event.registration:0
 msgid "History Information"
 msgstr "Geschiedenis"
@@ -537,10 +552,12 @@ msgstr ""
 "Fout: Verkoopeenheid moet in een andere categorie staan dan de maateenheid"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr "Inschrijving is ingesteld als niet facturabel"
+#: view:event.event:0
+#: view:event.registration:0
+#: field:event.registration.badge,registration_id:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+msgid "Registration"
+msgstr "Inschrijving"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
@@ -752,6 +769,11 @@ msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
@@ -958,6 +980,12 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr "Jaar"
+
+#. module: event
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Cancel"
@@ -980,6 +1008,11 @@ msgstr "Evenement per inschrijving"
 #, python-format
 msgid "Open"
 msgstr "Openen"
+
+#. module: event
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: event
 #: field:event.event,user_id:0
@@ -1169,10 +1202,10 @@ msgid "Country"
 msgstr "Land"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
-msgstr "Jaar"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Registration is set as Cannot be invoiced"
+msgstr "Inschrijving is ingesteld als niet facturabel"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -1446,3 +1479,6 @@ msgstr "Spreker bevestigd"
 
 #~ msgid "Draft Events"
 #~ msgstr "Concept evenement"
+
+#~ msgid "Event Registraion"
+#~ msgstr "Evenementinschrijving"

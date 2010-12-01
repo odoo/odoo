@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-29 10:02+0000\n"
-"Last-Translator: ub121 <ubs121@gmail.com>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 09:53+0000\n"
+"Last-Translator: sugi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -22,29 +22,19 @@ msgstr ""
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Suggestion"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"<html>O(1) means that the number of SQL requests to read the object does not "
-"depand on the number of objects we are reading. This feature is mostly "
-"wished.\n"
-"</html>"
-msgstr ""
+msgstr "Зөвлөгөө"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "Programming Error"
-msgstr ""
+msgstr "Програмын алдаа"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Method Test"
-msgstr ""
+msgstr "Тестийн арга"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
@@ -52,12 +42,17 @@ msgid "Base module quality - To check the quality of other modules"
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
+#: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid ""
-"\"\"\n"
-"This test checks if the module satisfy tiny structure\n"
-"\"\""
+"\n"
+"Test checks for fields, views, security rules, dependancy level\n"
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "O(n) or worst"
 msgstr ""
 
 #. module: base_module_quality
@@ -66,14 +61,9 @@ msgid "Skipped"
 msgstr "Алгассан"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"This test checks the speed of the module. Note that at least 5 demo data is "
-"needed in order to run it.\n"
-"\n"
-"\"\""
+msgid "Module has no objects"
 msgstr ""
 
 #. module: base_module_quality
@@ -97,13 +87,13 @@ msgstr ""
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Object Name"
-msgstr ""
+msgstr "Объектын нэр"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
@@ -117,23 +107,13 @@ msgstr ""
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
 #, python-format
 msgid "No report to save!"
-msgstr ""
+msgstr "Тайлан хадгалагдсангүй!"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of dependancy in %"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks if the module classes are raising exception when calling "
-"basic methods or not.\n"
-"\"\""
-msgstr ""
+msgstr "%-д хамааралтай үр дүн"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -151,19 +131,16 @@ msgid "Result (/10)"
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"Test checks for fields, views, security rules, dependancy level\n"
-"\"\""
-msgstr ""
+msgid "Terp Test"
+msgstr "Terp Тест"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Object Test"
-msgstr ""
+msgstr "Обьектийн тест"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -192,48 +169,36 @@ msgstr "Чанарын шалгалт"
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "Ашиггүй"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
-#, python-format
-msgid "Feedback about structure of module"
-msgstr ""
+msgstr "Сануулга"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Unit Test"
-msgstr ""
+msgstr "Unit Тест"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Reading Complexity"
-msgstr ""
+msgstr "Уншихад төвөгтэй"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Result of pep8_test in %"
-msgstr ""
+msgstr "pep8_test % тестийн үр дүн"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/unit_test/unit_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
-"'unit_test/test.py' is needed in module.\n"
-"\n"
-"\"\""
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Модулийн нэр давхцах ёсгүй !"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
@@ -255,7 +220,7 @@ msgstr "Жин"
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of Security in %"
-msgstr ""
+msgstr "Аюулгүй байдлын үр дүн %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -266,37 +231,33 @@ msgstr ""
 "Зарим тестүүд бусдаасаа чухал учраас эцсийн үнэлгээнд илүү жинтэй нөлөөлнө"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/pep8_test/pep8_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"PEP-8 Test , copyright of py files check, method can not call from loops\n"
-"\"\""
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Модулийн сертификат ID давхцах ёсгүй !"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "Өгөгдөл хангалтгүй"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Result (/1)"
-msgstr ""
+msgstr "Үр дүн (/1)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N (Number of Records)"
-msgstr ""
+msgstr "N (Бичлэгийн дугаар)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Өгөгдөлгүй"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
@@ -307,12 +268,6 @@ msgstr "module.quality.detail"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Дэлгэцийн XML алдаатай!"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid "O(n) or worst"
-msgstr ""
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
@@ -328,16 +283,10 @@ msgid ""
 msgstr ""
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid "Module has no objects"
-msgstr ""
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Result in %"
-msgstr ""
+msgstr "Үр дүн %"
 
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
@@ -349,7 +298,7 @@ msgstr "Стандарт бичлэгүүд"
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "No python file found"
-msgstr ""
+msgstr "Python файл алга"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -375,22 +324,42 @@ msgid "Note"
 msgstr "Тэмдэглэл"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"<html>O(1) means that the number of SQL requests to read the object does not "
+"depand on the number of objects we are reading. This feature is mostly "
+"wished.\n"
+"</html>"
+msgstr ""
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "__openerp__.py file"
-msgstr ""
+msgstr "__openerp__.py file"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: base_module_quality
 #: view:module.quality.check:0
 #: field:module.quality.check,check_detail_ids:0
 msgid "Tests"
 msgstr "Тестүүд"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the speed of the module. Note that at least 5 demo data is "
+"needed in order to run it.\n"
+"\n"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -400,10 +369,18 @@ msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module satisfy tiny structure\n"
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Module Name"
-msgstr ""
+msgstr "Модулийн нэр"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
@@ -427,28 +404,18 @@ msgstr ""
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N/2"
-msgstr ""
+msgstr "N/2"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Exception"
-msgstr ""
+msgstr "Алдаа"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "Test Is Not Implemented"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
-#, python-format
-msgid ""
-"\"\"This test uses Pylint and checks if the module satisfies the coding "
-"standard of Python. See http://www.logilab.org/project/name/pylint for "
-"further info.\n"
-" \"\""
 msgstr ""
 
 #. module: base_module_quality
@@ -463,9 +430,9 @@ msgid "Report Save"
 msgstr "Тайланг хадгалах"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
-msgid "Feed back About Workflow of Module"
+msgid "Feedback about structure of module"
 msgstr ""
 
 #. module: base_module_quality
@@ -474,6 +441,21 @@ msgstr ""
 msgid ""
 "Given module has no objects.Speed test can work only when new objects are "
 "created in the module along with demo data"
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid ""
+"This test uses Pylint and checks if the module satisfies the coding standard "
+"of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
+" "
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "Feed back About Workflow of Module"
 msgstr ""
 
 #. module: base_module_quality
@@ -491,6 +473,11 @@ msgstr "Дууссан"
 #: wizard_button:quality_detail_save,init,end:0
 msgid "Cancel"
 msgstr "Цуцлах"
+
+#. module: base_module_quality
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
@@ -527,6 +514,25 @@ msgstr "Шалгасан модуль"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Workflow Test"
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/unit_test/unit_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
+"'unit_test/test.py' is needed in module.\n"
+"\n"
+msgstr ""
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module classes are raising exception when calling "
+"basic methods or not.\n"
 msgstr ""
 
 #. module: base_module_quality
@@ -574,6 +580,26 @@ msgstr ""
 #: wizard_field:quality_detail_save,init,name:0
 msgid "File name"
 msgstr "Файлын нэр"
+
+#. module: base_module_quality
+#: model:ir.module.module,description:base_module_quality.module_meta_information
+msgid ""
+"\n"
+"The aim of this module is to check the quality of other modules.\n"
+"\n"
+"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
+"evaluate them on different criteria such as: the respect of OpenERP coding\n"
+"standards, the speed efficiency...\n"
+"\n"
+"This module also provides generic framework to define your own quality "
+"test.\n"
+"For further info, coders may take a look into base_module_quality\\"
+"README.txt\n"
+"\n"
+"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
+"using it, otherwise it may crash.\n"
+"    "
+msgstr ""
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -645,12 +671,6 @@ msgstr ""
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Structure Test"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:0
-#, python-format
-msgid "Terp Test"
 msgstr ""
 
 #. module: base_module_quality

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-27 14:33+0000\n"
-"Last-Translator: Eric Vernichon <eric.vernichon@l3it.ch>\n"
+"PO-Revision-Date: 2010-11-30 23:10+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -50,25 +50,6 @@ msgid "Fiscal Year"
 msgstr "Exercice fiscal"
 
 #. module: account
-#: help:account.aged.trial.balance,fiscalyear_id:0
-#: help:account.balance.report,fiscalyear_id:0
-#: help:account.bs.report,fiscalyear_id:0
-#: help:account.central.journal,fiscalyear_id:0
-#: help:account.common.account.report,fiscalyear_id:0
-#: help:account.common.journal.report,fiscalyear_id:0
-#: help:account.common.partner.report,fiscalyear_id:0
-#: help:account.common.report,fiscalyear_id:0
-#: help:account.general.journal,fiscalyear_id:0
-#: help:account.partner.balance,fiscalyear_id:0
-#: help:account.partner.ledger,fiscalyear_id:0
-#: help:account.pl.report,fiscalyear_id:0
-#: help:account.print.journal,fiscalyear_id:0
-#: help:account.report.general.ledger,fiscalyear_id:0
-#: help:account.vat.declaration,fiscalyear_id:0
-msgid "Keep empty for all open fiscal year"
-msgstr "Laisser vide pour tous les exercices fiscaux ouverts"
-
-#. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid ""
@@ -89,26 +70,6 @@ msgstr "Des écritures semblent déjà réconciliées !"
 #, python-format
 msgid "End of Fiscal Year Entry"
 msgstr "Ecriture de fin d'exercice fiscal"
-
-#. module: account
-#: field:account.aged.trial.balance,fiscalyear_id:0
-#: field:account.balance.report,fiscalyear_id:0
-#: field:account.bs.report,fiscalyear_id:0
-#: field:account.central.journal,fiscalyear_id:0
-#: field:account.chart,fiscalyear:0
-#: field:account.common.account.report,fiscalyear_id:0
-#: field:account.common.journal.report,fiscalyear_id:0
-#: field:account.common.partner.report,fiscalyear_id:0
-#: field:account.common.report,fiscalyear_id:0
-#: field:account.general.journal,fiscalyear_id:0
-#: field:account.partner.balance,fiscalyear_id:0
-#: field:account.partner.ledger,fiscalyear_id:0
-#: field:account.pl.report,fiscalyear_id:0
-#: field:account.print.journal,fiscalyear_id:0
-#: field:account.report.general.ledger,fiscalyear_id:0
-#: field:account.vat.declaration,fiscalyear_id:0
-msgid "Fiscal year"
-msgstr "Exercice fiscal"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:0
@@ -608,12 +569,12 @@ msgstr "Journal"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr ""
+msgstr "Confirmer les factures sélectionnées"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
-msgstr ""
+msgstr "Cible parent"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -697,12 +658,12 @@ msgstr "Tous"
 #. module: account
 #: field:account.invoice.report,address_invoice_id:0
 msgid "Invoice Address Name"
-msgstr ""
+msgstr "Nom de l'adresse de facturation"
 
 #. module: account
 #: selection:account.installer,period:0
 msgid "3 Monthly"
-msgstr ""
+msgstr "Trimestriel"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
@@ -716,7 +677,7 @@ msgstr ""
 #. module: account
 #: view:analytic.entries.report:0
 msgid "   30 Days   "
-msgstr ""
+msgstr "   30 Jours   "
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -836,7 +797,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:0
 #, python-format
 msgid "You can only change currency for Draft Invoice !"
-msgstr ""
+msgstr "Vous ne pouvez changer la devise que pour les factures brouillon !"
 
 #. module: account
 #: view:account.analytic.journal:0
@@ -888,7 +849,7 @@ msgstr "Réconciliation Automatique"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Due date Computation"
-msgstr ""
+msgstr "Calcul de date d'échéance"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -950,7 +911,7 @@ msgstr "Vous ne pouvez pas modifier une écriture validée."
 #: view:account.invoice.report:0
 #: field:account.invoice.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Délai moyen de paiement"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
@@ -984,7 +945,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "TTC"
 
 #. module: account
 #: view:account.invoice:0
@@ -1024,7 +985,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
 msgid "Bank statement"
-msgstr ""
+msgstr "Relevé bancaire"
 
 #. module: account
 #: field:account.analytic.line,move_id:0
@@ -1087,7 +1048,7 @@ msgstr "Balance des tiers"
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr ""
+msgstr "Nom du compte"
 
 #. module: account
 #: field:account.chart.template,property_reserve_and_surplus_account:0
@@ -1115,7 +1076,7 @@ msgstr ""
 #. module: account
 #: view:board.board:0
 msgid "Customer Invoices to Approve"
-msgstr ""
+msgstr "Factures client à approuver"
 
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
@@ -1149,7 +1110,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Profit & Loss (Expense Accounts)"
-msgstr ""
+msgstr "Pertes et profits (comptes de charges)"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -1260,7 +1221,7 @@ msgstr "Autres"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "UnknownError"
-msgstr ""
+msgstr "Erreur inconnue"
 
 #. module: account
 #: view:account.account:0
@@ -1298,7 +1259,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_entries_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_entries_report_all
 msgid "Entries Analysis"
-msgstr ""
+msgstr "Analyse des écritures"
 
 #. module: account
 #: field:account.account,level:0
@@ -1577,7 +1538,7 @@ msgstr "Hors-taxe"
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Go to next partner"
-msgstr ""
+msgstr "Aller au partenaire suivant"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1633,7 +1594,7 @@ msgstr "Facture"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr ""
+msgstr "Coût analytique à facturer"
 
 #. module: account
 #: view:ir.sequence:0
@@ -1650,8 +1611,6 @@ msgstr "Séquences de journaux séparées"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux"
 
 #. module: account
 #: view:account.invoice:0
@@ -1666,7 +1625,7 @@ msgstr "Sous-Total :"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
 msgid "Sales by Account Type"
-msgstr ""
+msgstr "Ventes par type de compte"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -1674,6 +1633,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
+"Annuler la facture : crée, valide et rapproche un avoir pour annuler la "
+"facture actuelle."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1699,12 +1660,12 @@ msgstr "Montant total de l'exercice"
 #. module: account
 #: model:ir.actions.report.xml,name:account.report_account_voucher_new
 msgid "Print Voucher"
-msgstr ""
+msgstr "Imprimer la pièce"
 
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr ""
+msgstr "Cette assistant permet de modifier la devise de la facture"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_chart
@@ -2196,6 +2157,25 @@ msgstr ""
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
 msgstr ""
+
+#. module: account
+#: help:account.aged.trial.balance,fiscalyear_id:0
+#: help:account.balance.report,fiscalyear_id:0
+#: help:account.bs.report,fiscalyear_id:0
+#: help:account.central.journal,fiscalyear_id:0
+#: help:account.common.account.report,fiscalyear_id:0
+#: help:account.common.journal.report,fiscalyear_id:0
+#: help:account.common.partner.report,fiscalyear_id:0
+#: help:account.common.report,fiscalyear_id:0
+#: help:account.general.journal,fiscalyear_id:0
+#: help:account.partner.balance,fiscalyear_id:0
+#: help:account.partner.ledger,fiscalyear_id:0
+#: help:account.pl.report,fiscalyear_id:0
+#: help:account.print.journal,fiscalyear_id:0
+#: help:account.report.general.ledger,fiscalyear_id:0
+#: help:account.vat.declaration,fiscalyear_id:0
+msgid "Keep empty for all open fiscal year"
+msgstr "Laisser vide pour tous les exercices fiscaux ouverts"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
@@ -3225,7 +3205,7 @@ msgstr ""
 #: view:account.addtmpl.wizard:0
 #: model:ir.actions.act_window,name:account.action_account_addtmpl_wizard_form
 msgid "Create Account"
-msgstr ""
+msgstr "Créer un compte"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -3367,7 +3347,7 @@ msgstr "Taxe"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
 msgid "Budgets"
-msgstr ""
+msgstr "Budgets"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -3396,7 +3376,7 @@ msgstr "Situation"
 #. module: account
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "Historique"
 
 #. module: account
 #: help:account.tax,applicable_type:0
@@ -3418,7 +3398,7 @@ msgstr "Code applicable (si type=code)"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,product_qty:0
 msgid "Qty"
-msgstr ""
+msgstr "Qté"
 
 #. module: account
 #: report:account.journal.period.print:0
@@ -3607,7 +3587,7 @@ msgstr ""
 #: view:account.installer.modules:0
 #: view:wizard.multi.charts.accounts:0
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 #. module: account
 #: view:account.invoice:0
@@ -3703,7 +3683,7 @@ msgstr "Balance analytique"
 #: code:addons/account/report/account_profit_loss.py:0
 #, python-format
 msgid "Net Loss"
-msgstr ""
+msgstr "Perte nette"
 
 #. module: account
 #: view:account.tax.template:0
@@ -3832,6 +3812,7 @@ msgstr ""
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Il n'y a pas de compte de charge définit pour ce produit : \"%s\" (id. : %d)"
 
 #. module: account
 #: view:res.partner:0
@@ -3911,7 +3892,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,view_id:0
 msgid "Display Mode"
-msgstr ""
+msgstr "Mode d'affichage"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -5579,6 +5560,26 @@ msgstr "IntraCom"
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Information addendum"
 msgstr "Informations supplémentaires"
+
+#. module: account
+#: field:account.aged.trial.balance,fiscalyear_id:0
+#: field:account.balance.report,fiscalyear_id:0
+#: field:account.bs.report,fiscalyear_id:0
+#: field:account.central.journal,fiscalyear_id:0
+#: field:account.chart,fiscalyear:0
+#: field:account.common.account.report,fiscalyear_id:0
+#: field:account.common.journal.report,fiscalyear_id:0
+#: field:account.common.partner.report,fiscalyear_id:0
+#: field:account.common.report,fiscalyear_id:0
+#: field:account.general.journal,fiscalyear_id:0
+#: field:account.partner.balance,fiscalyear_id:0
+#: field:account.partner.ledger,fiscalyear_id:0
+#: field:account.pl.report,fiscalyear_id:0
+#: field:account.print.journal,fiscalyear_id:0
+#: field:account.report.general.ledger,fiscalyear_id:0
+#: field:account.vat.declaration,fiscalyear_id:0
+msgid "Fiscal year"
+msgstr "Exercice fiscal"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -9414,7 +9415,7 @@ msgstr "Taxes manuelle"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_low_level
 msgid "Low Level"
-msgstr ""
+msgstr "Bas niveau"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -9434,7 +9435,7 @@ msgstr "Parent Droit"
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
 msgid "account.addtmpl.wizard"
-msgstr ""
+msgstr "account.addtmpl.wizard"
 
 #. module: account
 #: field:account.aged.trial.balance,result_selection:0
@@ -9467,7 +9468,7 @@ msgstr "Modèle de Compte"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr ""
+msgstr "Février"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0

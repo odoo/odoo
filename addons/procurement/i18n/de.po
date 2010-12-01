@@ -6,21 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:26+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 12:20+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
 msgid "Schedulers"
-msgstr ""
+msgstr "Beschaffungsdisposition"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
@@ -80,6 +80,24 @@ msgstr "Keine Adresse bei Lieferant hinterlegt"
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
 msgstr "Berechne nur die Meldebestandregel"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+msgid ""
+"A procurement order is used to record a need in a specific product at a "
+"specific location. They are usually created automatically by the sales "
+"orders, the Pull Logistics rules or the minimum stock rules. When the "
+"procurement order is confirmed, it creates automatically the necessary "
+"operations to fullfil the need: purchase order proposition, manufacturing "
+"order, etc."
+msgstr ""
+"Ein Beschaffungsauftrag wird erzeugt, um den Bedarf eines Produktes zu einer "
+"bestimmten Zeit an einem bestimmten Ort zu decken. Üblicherweise wird ein "
+"Beschaffungsauftrag automatisch durch einen Verkaufsauftrag, durch eine Pull "
+"Regel einer Lieferkette oder durch eine Meldebestandsregel ausgelöst. Durch "
+"Bestätigung eines Beschaffungsauftrags werden automatisch alle weiteren "
+"Bearbeitungsschritte für die Bedarfsdeckung erzeugt: Beschaffungsvorschlag, "
+"Fertigungsauftrag, etc."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -175,7 +193,7 @@ msgstr "Parameter Autom. Beschaffung"
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Lieferung"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -233,6 +251,11 @@ msgid "Priority"
 msgstr "Priorität"
 
 #. module: procurement
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: procurement
 #: view:procurement.order:0
 #: field:procurement.order,state:0
 msgid "State"
@@ -248,7 +271,7 @@ msgstr "Lagerort"
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lieferauftrag"
 
 #. module: procurement
 #: field:make.procurement,warehouse_id:0
@@ -256,6 +279,24 @@ msgstr ""
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
 msgstr "Lager"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"You can define your minimum stock rules, so that OpenERP will trigger "
+"automatically the propositions of manufacturing or purchase orders according "
+"to the stock level. Once the virtual stock of a product (=stock on hand "
+"minus all confirmed orders and reservations) is bellow the minimum quantity, "
+"OpenERP will generate a procurement request in order to fullfil the stock up "
+"to the maximum quantity."
+msgstr ""
+"Sie können Meldebestandregeln definieren, damit OpenERP in Abhängigkeit von "
+"der Bestandssituation automatisch Fertigungsaufträge oder "
+"Beschaffungsaufträge vorschlägt. Sobald der fiktive Bestand (=verfügbarer "
+"Bestand abzüglich bestätigte Verkaufsaufträge und Bestandsreservierungen) "
+"geringer als der Meldebestand ist, erzeugt OpenERP einen "
+"Beschaffungsauftrag, um den Bestand wieder aufzufüllen bis zum angegebenen "
+"Max. Bestand."
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -266,6 +307,11 @@ msgstr "Günstigster Preis (noch nicht aktiviert!)"
 #: view:procurement.order:0
 msgid "Product & Location"
 msgstr "Produkt & Lagerort"
+
+#. module: procurement
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
@@ -347,13 +393,18 @@ msgstr ""
 
 #. module: procurement
 #: view:res.company:0
-msgid "MRP & Logistic Scheduler"
-msgstr "Assitent Beschaffungsvorschlag"
+msgid "MRP & Logistics Scheduler"
+msgstr "Beschaffungsdisposition"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "Automatische Beschaffung"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
+msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -470,6 +521,14 @@ msgid ""
 "background, you may have to wait for a few minutes until it has finished "
 "computing."
 msgstr ""
+"Dieser Assistent ermöglicht die automatische Durchführung der gesamten "
+"Beschaffung in Form von Fertigungsaufträgen und Beschaffungsaufträgen auf "
+"Basis der jeweiligen Konfiguration. Als Standard erfolgt jede Nacht eine "
+"automatische Durchführung der Beschaffungsdisposition. Über dieses Menü "
+"können Sie einen sofortigen Start der Berechnung erzwingen. Beachten Sie "
+"bitte, dass die Berechnung im Hintergrund erfolgt, insofern kann es sein, "
+"dass Sie einige Minuten warten müssen, bis die Berechnung abschliessend "
+"vorgenommen wurde."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -485,7 +544,7 @@ msgstr "Entwurf"
 #. module: procurement
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: procurement
 #: constraint:ir.model:0
@@ -494,6 +553,32 @@ msgid ""
 msgstr ""
 "Die Objektbezeichnung muss mit einem x_ starten und darf keine Sonderzeichen "
 "haben!"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_exceptions
+msgid ""
+"Procurement Orders represent the need for a certain quantity of products, at "
+"a given time, in a given location. Sale Orders are one typical source of "
+"Procurement Orders (but these are distinct documents). Depending on the "
+"procurement parameters and the products configuration, the procurement "
+"engine will attempt to satisfy the need by reserving products from stock, or "
+"ordering products from a supplier, or passing a manufacturing order, etc. A "
+"Procurement Exception occurs when the system cannot find a way to fulfill a "
+"procurement. Some exceptions will resolve themselves automatically, but "
+"others require manual intervention (those are identified by a specific error "
+"message)"
+msgstr ""
+"Beschaffungsaufträge repräsentieren den Bedarf an Produkten, zu einer "
+"bestimmten Zeit an einem bestimmten Ort. Verkaufsaufträge sind eine typische "
+"Quelle für Beschaffungsaufträge (es handelt sich allerdings um verschiedene "
+"Belege). In Abhängigkeit der Konfiguration für die Beschaffung, wird die "
+"Beschaffungsdisposition automatisch berechnen, wie der jeweilige Bedarf zu "
+"decken ist, sei es durch eine Entnahme von verfügbaren Beständen, eine "
+"Bestellung bei Lieferanten oder durch die Fertigung von Produkten, etc. Ein "
+"Beschaffungsfehler tritt auf, wenn das System nicht in der Lage ist eine "
+"geeignete Beschaffungsmöglichkeit vorzuschlagen. Einige Fehler lösen sich "
+"dabei von selbst, andere erfordern einen Eingriff (diese sind "
+"gekennzeichnet)."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -554,7 +639,7 @@ msgstr "Fehlermeldung"
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "Automatic OP: %s"
-msgstr ""
+msgstr "Automatische Beschaffungsregel: %s"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
@@ -588,6 +673,7 @@ msgstr "Beschaffungsgrund"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
+#: sql_constraint:stock.warehouse.orderpoint:0
 #, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Multiple Menge muss grösser 0 sein."
@@ -607,12 +693,13 @@ msgstr "Datum Ende"
 #, python-format
 msgid "Procurement '%s' is in exception: not enough stock."
 msgstr ""
+"Beschaffungsdisposition '%s' verursacht Fehler: Nicht ausreichend Bestand."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s State!"
-msgstr ""
+msgstr "Beschaffungsauftrag im Zustand %s kann nicht gelöschet werden!"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -658,9 +745,9 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
 
 #. module: procurement
 #: view:make.procurement:0
@@ -671,6 +758,11 @@ msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: procurement
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -698,12 +790,16 @@ msgid "Current"
 msgstr "Aktuell"
 
 #. module: procurement
+#: view:board.board:0
+msgid "Procurements in Exception"
+msgstr "Aufträge in Fehlerliste"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Details"
 msgstr "Details"
 
 #. module: procurement
-#: view:board.board:0
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
@@ -742,7 +838,7 @@ msgstr "Produkt"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary"
-msgstr ""
+msgstr "Temporär"
 
 #. module: procurement
 #: field:mrp.property,description:0
@@ -883,4 +979,7 @@ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "SCHEDULER"
-msgstr ""
+msgstr "DISPOSITION"
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "Assitent Beschaffungsvorschlag"

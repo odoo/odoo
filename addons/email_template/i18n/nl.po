@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:16+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 20:19+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -32,6 +32,31 @@ msgstr "Email Account Configuratie"
 #, python-format
 msgid "Emails for multiple items saved in outbox."
 msgstr "Emails voor meer items bewaard in Postvak UIT"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid ""
+"No personal email accounts are configured for you. \n"
+"Either ask admin to enforce an account for this template or get yourself a "
+"personal email account."
+msgstr ""
+"Geen persoonlijke email accounts voor u geconfigureerd. \n"
+"Vraag de beheerder om voor een account voor dit sjabloon te zorgen of zorg "
+"zelf voor een persoonlijke email account."
+
+#. module: email_template
+#: model:ir.actions.act_window,help:email_template.action_email_template_mailbox
+msgid ""
+"An email template is an email document that will be sent as part of a "
+"marketing campaign. You can personalize it based on specific customer "
+"profile fields so that their names or other partner related information can "
+"be automatically inserted in it."
+msgstr ""
+"Een email sjabloon is een email document dat wordt verstuurd als onderdeel "
+"van een marketing campagne. U kunt het personaliseren op basis van "
+"specifieke velden zodat hun namen of andere relatie informatie automatisch "
+"kan worden ingevoegd."
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -59,16 +84,18 @@ msgid "Plain Text & HTML with no attachments"
 msgstr "Platte tekst & HTML zonder bijlagen"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
+#: help:email.template,model_object_field:0
 msgid ""
-"Mail from Account %s failed on login. Probable Reason:Could not login to "
-"server\n"
-"Error: %s"
+"Select the field from the model you want to use.\n"
+"If it is a relationship field you will be able to choose the nested values "
+"in the box below\n"
+"(Note:If there are no values make sure you have selected the correct model)"
 msgstr ""
-"Mail van account %s mislukt bij aanmelding. Waarschijnlijke reden: Kon niet "
-"aanmelden op server\n"
-"Error: %s"
+"Kies het veld van het model dat u gebruiken wilt.\n"
+"Als het een relatieveld betreft, dan kunt u de geneste waarden hieronder "
+"kiezen.\n"
+"(NB: als er geen waarden zijn, controleer dan of u het juiste model heeft "
+"gekozen)"
 
 #. module: email_template
 #: field:email_template.preview,body_html:0
@@ -116,6 +143,15 @@ msgid "Send all mails"
 msgstr "Verstuur alle emails"
 
 #. module: email_template
+#: help:email_template.account,smtpuname:0
+msgid ""
+"Specify the username if your SMTP server requires authentication, otherwise "
+"leave it empty."
+msgstr ""
+"Vul de gebruikersnaam in als uw SMTP server authenticatie vereist, laat het "
+"anders leeg."
+
+#. module: email_template
 #: field:email_template.mailbox,server_ref:0
 msgid "Server Reference of mail"
 msgstr "Server referentie van email"
@@ -161,6 +197,12 @@ msgstr ""
 "De omschrijving wordt gebruikt als zendernaam samen met het opgegeven Van "
 "emailadres, behalve als het al is opgegeven bij het Van emailadres, bijv.: "
 "John Doe <john@doe.com>"
+
+#. module: email_template
+#: field:email_template.preview,to:0
+#: field:email_template.send.wizard,to:0
+msgid "To"
+msgstr "Aan"
 
 #. module: email_template
 #: field:email.template,from_account:0
@@ -419,6 +461,11 @@ msgid "Mail from Account %s successfully Sent."
 msgstr "Mail van account %s met succes verstuurd."
 
 #. module: email_template
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr "Mako Sjablonen"
@@ -433,17 +480,6 @@ msgstr " (Email Bijlage)"
 #: selection:email_template.mailbox,folder:0
 msgid "Sent Items"
 msgstr "Verstuurde berichten"
-
-#. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-"Error: %s"
-msgstr ""
-"Mail %s versturen is mislukt. Waarschijnlijke reden: Kon niet aanmelden bij "
-"server\n"
-"Fout: %s"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -499,18 +535,9 @@ msgid "Template"
 msgstr "Sjabloon"
 
 #. module: email_template
-#: help:email.template,model_object_field:0
-msgid ""
-"Select the field from the model you want to use.\n"
-"If it is a relationship field you will be able to choose the nested values "
-"in the box below\n"
-"(Note:If there are no values make sure you have selected the correct model)"
-msgstr ""
-"Kies het veld van het model dat u gebruiken wilt.\n"
-"Als het een relatieveld betreft, dan kunt u de geneste waarden hieronder "
-"kiezen.\n"
-"(NB: als er geen waarden zijn, controleer dan of u het juiste model heeft "
-"gekozen)"
+#: field:email.template,sub_model_object_field:0
+msgid "Sub Field"
+msgstr "Sub-veld"
 
 #. module: email_template
 #: view:email.template:0
@@ -613,6 +640,11 @@ msgid "Rec/Sent Date"
 msgstr "Datum ontv/verz"
 
 #. module: email_template
+#: selection:email_template.account,state:0
+msgid "Initiated"
+msgstr "Begonnen"
+
+#. module: email_template
 #: field:email.template,report_template:0
 msgid "Report to send"
 msgstr "Te versturen overzicht"
@@ -672,14 +704,6 @@ msgstr "Ja"
 #: field:email.template,ref_ir_act_window:0
 msgid "Window Action"
 msgstr "Vensteractie"
-
-#. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-msgstr ""
-"Datumtijd extractie mislukt.Datum:%s \\n                      \tFout:%s"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -775,9 +799,10 @@ msgid "Outgoing"
 msgstr "Uitgaand"
 
 #. module: email_template
-#: selection:email_template.account,state:0
-msgid "Initiated"
-msgstr "Begonnen"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
+msgstr "Datumtijd extractie mislukt.Datum:%s                       \tFout:%s"
 
 #. module: email_template
 #: help:email.template,use_sign:0
@@ -814,11 +839,6 @@ msgid "User Name"
 msgstr "Gebruikersnaam"
 
 #. module: email_template
-#: field:email.template,sub_model_object_field:0
-msgid "Sub Field"
-msgstr "Sub-veld"
-
-#. module: email_template
 #: help:email.template,attachment_ids:0
 msgid ""
 "You may attach existing files to this template, so they will be added in all "
@@ -849,6 +869,16 @@ msgid "Save in Drafts"
 msgstr "Bewaar in Concepten"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason:MIME Error\n"
+"Description: %s"
+msgstr ""
+"Mail vanaf account %s mislukt. Waarschijnlijke reden: MIME Fout\n"
+"Omschrijving: %s"
+
+#. module: email_template
 #: field:email_template.account,smtptls:0
 msgid "TLS"
 msgstr "TLS"
@@ -861,7 +891,6 @@ msgstr "Taal"
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
 #: code:addons/email_template/email_template_account.py:0
-#: code:addons/email_template/email_template_mailbox.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
@@ -880,28 +909,6 @@ msgstr "Versturen/ontvangen"
 #: view:email_template.mailbox:0
 msgid "Send Mail"
 msgstr "Verstuur bericht"
-
-#. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Error sending mail: %s\" % str(e)))\n"
-"        \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"        if ids is None:\n"
-"            ids = []\n"
-"        if context is None:\n"
-"            context = {}\n"
-"        filters = [('folder', '=', 'outbox"
-msgstr ""
-"Fout bij versturen mail: %s\" % str(e)))\n"
-"        \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"        if ids is None:\n"
-"            ids = []\n"
-"        if context is None:\n"
-"            context = {}\n"
-"        filters = [('folder', '=', 'outbox"
 
 #. module: email_template
 #: help:email.template,allowed_groups:0
@@ -954,10 +961,9 @@ msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
-msgid "To"
-msgstr "Aan"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -986,6 +992,17 @@ msgid "Close"
 msgstr "Sluiten"
 
 #. module: email_template
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
+msgid "Error sending mail: %s"
+msgstr "Fout bij het verzenden van mail: %s"
+
+#. module: email_template
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: email_template
 #: view:email_template.mailbox:0
 msgid "Body (HTML-Web Client Only)"
 msgstr "Berichttekst (HTML-Alleen web-client)"
@@ -1004,18 +1021,6 @@ msgid "%s (Email Attachment)"
 msgstr "%s (Email bijlage)"
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
-#, python-format
-msgid ""
-"No personal email accounts are configured for you. \n"
-"Either ask admin to enforce an account for this template or get yourself a "
-"personal email account."
-msgstr ""
-"Geen persoonlijke email accounts voor u geconfigureerd. \n"
-"Vraag de beheerder om voor een account voor dit sjabloon te zorgen of zorg "
-"zelf voor een persoonlijke email account."
-
-#. module: email_template
 #: field:email.template,allowed_groups:0
 msgid "Allowed User Groups"
 msgstr "Toegestane gebruikersgroepen"
@@ -1029,6 +1034,11 @@ msgstr "Veld"
 #: view:email_template.account:0
 msgid "User Information"
 msgstr "Gebruikersinformatie"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Actions"
+msgstr "Acties"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1046,9 +1056,9 @@ msgstr ""
 "gebruikt in de bestandsnaam. bijv: 2009_SO003.pdf"
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
-msgstr "Map"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
+msgstr "Datum waarop de email is verstuurd of ontvangen"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -1057,18 +1067,20 @@ msgid "Trash"
 msgstr "Prullenbak"
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
-msgstr "Datum waarop de email is verstuurd of ontvangen"
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr "Email postvak"
 
 #. module: email_template
-#: help:email_template.account,smtpuname:0
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
 msgid ""
-"Specify the username if your SMTP server requires authentication, otherwise "
-"leave it empty."
+"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
+"Error: %s"
 msgstr ""
-"Vul de gebruikersnaam in als uw SMTP server authenticatie vereist, laat het "
-"anders leeg."
+"Mail %s versturen is mislukt. Waarschijnlijke reden: Kon niet aanmelden bij "
+"server\n"
+"Fout: %s"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
@@ -1132,11 +1144,6 @@ msgstr "Ontvanger (Aan)"
 #: field:email.template,null_value:0
 msgid "Null Value"
 msgstr "Nulwaarde"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
-msgstr "Email postvak"
 
 #. module: email_template
 #: field:email.template,template_language:0
@@ -1271,6 +1278,18 @@ msgid "Corporate"
 msgstr "Bedrijf"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed on login. Probable Reason:Could not login to "
+"server\n"
+"Error: %s"
+msgstr ""
+"Mail van account %s mislukt bij aanmelding. Waarschijnlijke reden: Kon niet "
+"aanmelden op server\n"
+"Error: %s"
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template_send_wizard
 msgid "This is the wizard for sending mail"
 msgstr "Dit is de assistent voor het versturen van email."
@@ -1286,24 +1305,14 @@ msgid "Emails will be sent from this approved account."
 msgstr "Emails worden verstuurd vanaf deze bevestigde account."
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Mail from Account %s failed. Probable Reason:MIME Error\n"
-"Description: %s"
-msgstr ""
-"Mail vanaf account %s mislukt. Waarschijnlijke reden: MIME Fout\n"
-"Omschrijving: %s"
-
-#. module: email_template
 #: field:email_template.account,send_pref:0
 msgid "Mail Format"
 msgstr "Mail-indeling"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr "Acties"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Map"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1344,3 +1353,29 @@ msgstr "Heeft bijlagen"
 #, python-format
 msgid "No Description"
 msgstr "Geen beschrijving"
+
+#, python-format
+#~ msgid ""
+#~ "Error sending mail: %s\" % str(e)))\n"
+#~ "        \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "        if ids is None:\n"
+#~ "            ids = []\n"
+#~ "        if context is None:\n"
+#~ "            context = {}\n"
+#~ "        filters = [('folder', '=', 'outbox"
+#~ msgstr ""
+#~ "Fout bij versturen mail: %s\" % str(e)))\n"
+#~ "        \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "        if ids is None:\n"
+#~ "            ids = []\n"
+#~ "        if context is None:\n"
+#~ "            context = {}\n"
+#~ "        filters = [('folder', '=', 'outbox"
+
+#, python-format
+#~ msgid ""
+#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
+#~ msgstr ""
+#~ "Datumtijd extractie mislukt.Datum:%s \\n                      \tFout:%s"

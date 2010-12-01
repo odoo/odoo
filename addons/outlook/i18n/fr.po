@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-13 20:51+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 19:08+0000\n"
+"Last-Translator: swinter <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-14 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: outlook
@@ -31,12 +31,18 @@ msgstr ""
 #. module: outlook
 #: field:outlook.installer,plugin_file:0
 msgid "Outlook Plug-in"
-msgstr ""
+msgstr "Extension pour Outlook"
+
+#. module: outlook
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Le nom d'un module doit être unique !"
 
 #. module: outlook
 #: help:outlook.installer,doc_file:0
 msgid "The documentation file :- how to install Outlook Plug-in."
 msgstr ""
+"Fichier de documentation : comment installer l'extension pour Outlook"
 
 #. module: outlook
 #: help:outlook.installer,outlook:0
@@ -56,9 +62,14 @@ msgid "_Close"
 msgstr ""
 
 #. module: outlook
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: outlook
 #: field:outlook.installer,doc_file:0
 msgid "Installation Manual"
-msgstr ""
+msgstr "Manuel d'installation"
 
 #. module: outlook
 #: view:outlook.installer:0
@@ -68,17 +79,17 @@ msgstr ""
 #. module: outlook
 #: model:ir.ui.menu,name:outlook.menu_base_config_plugins_outlook
 msgid "Outlook Plug-In"
-msgstr ""
+msgstr "Extension pour Outlook"
 
 #. module: outlook
 #: view:outlook.installer:0
 msgid "title"
-msgstr ""
+msgstr "Titre :"
 
 #. module: outlook
 #: model:ir.module.module,shortdesc:outlook.module_meta_information
 msgid "Outlook Interface"
-msgstr ""
+msgstr "Interface Outlook"
 
 #. module: outlook
 #: help:outlook.installer,plugin_file:0
@@ -100,40 +111,45 @@ msgstr ""
 #: field:outlook.installer,doc_name:0
 #: field:outlook.installer,name:0
 msgid "File name"
-msgstr ""
+msgstr "Nom du fichier"
 
 #. module: outlook
 #: field:outlook.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Avancement de la configuration"
 
 #. module: outlook
 #: view:outlook.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
+msgstr "Etapes de l'installation et de la configuration"
 
 #. module: outlook
 #: field:outlook.installer,description:0
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #. module: outlook
 #: view:outlook.installer:0
 msgid "Skip"
-msgstr ""
+msgstr "Passer"
 
 #. module: outlook
 #: field:outlook.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #. module: outlook
 #: field:outlook.installer,outlook:0
 msgid "Outlook Plug-in "
-msgstr ""
+msgstr "Extension pour Outlook "
 
 #. module: outlook
 #: model:ir.actions.act_window,name:outlook.action_outlook_installer
 #: model:ir.actions.act_window,name:outlook.action_outlook_wizard
 msgid "Outlook Plug-In Configuration"
-msgstr ""
+msgstr "Configuration de l'extension pour Outlook"
+
+#. module: outlook
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La taille du champ ne doit jamais être inférieure à 1 !"

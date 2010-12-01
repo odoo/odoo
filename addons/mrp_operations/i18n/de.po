@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-27 07:57+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-30 10:54+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -66,7 +67,7 @@ msgstr "März"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr ""
+msgstr "Fertigungsstellen"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -193,7 +194,7 @@ msgstr "In Bearbeitung"
 #. module: mrp_operations
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -249,7 +250,7 @@ msgstr ""
 #. module: mrp_operations
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
@@ -313,6 +314,8 @@ msgid ""
 "Operation has already started !You  can either Pause /Finish/Cancel the "
 "operation"
 msgstr ""
+"Fertigungsvorgang wurde bereits gestartet! Sie können den Zustand durch "
+"Pause / Beenden / Abbrechen ändern"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -555,6 +558,12 @@ msgid ""
 "operations will have different impacts on the costs of manufacture and "
 "planning depending on the available workload."
 msgstr ""
+"Für die Fertigung oder die Montage von Produkten müssen Sie nicht nur die "
+"Bauteile verwenden und das Endprodukt erstellen , sondern auch die "
+"Fertigungsvorgänge bearbeiten. Die Fertigungsvorgänge werden oftmals auch "
+"als Arbeitsaufträge deklariert. Fertigungsvorgänge haben unterschiedliche "
+"Auswirkungen auf die Fertigungskosten und die Fertigungsplanung in "
+"Abhängigkeit von den verfügbaren Ressourcen."
 
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
@@ -605,11 +614,17 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Arbeitsaufträge repräsentieren einzelne Schritte eines durchzuführenden "
+"Fertigungsvorgangs im Rahmen von Fertigungsaufträgen. Sobald Sie einen "
+"Arbeitsauftrag beginnen wird der Fertigungsauftrag automatisch als 'In "
+"Bearbeitung' gekennzeichnet. Sobald Sie den letzten Arbeitsauftrag zu einem "
+"Fertigungsauftrag beenden, wird auch der Fertigungsauftrag beendet sowie das "
+"zu produzierende Produkt als fertig erstellt gemeldet."
 
 #. module: mrp_operations
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0

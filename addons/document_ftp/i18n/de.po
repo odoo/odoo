@@ -7,20 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 09:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 16:50+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: document_ftp
-#: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr "Abbrechen"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -43,9 +39,69 @@ msgstr ""
 "Sonderzeichen haben !"
 
 #. module: document_ftp
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#. module: document_ftp
+#: field:document.ftp.browse,url:0
+msgid "FTP Server"
+msgstr "FTP Server"
+
+#. module: document_ftp
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: document_ftp
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
+msgid "Browse Document"
+msgstr "Suche Dokument"
+
+#. module: document_ftp
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
+msgid "_Browse"
+msgstr "Suchen"
+
+#. module: document_ftp
 #: field:document.ftp.configuration,progress:0
 msgid "Configuration Progress"
 msgstr "Abfolge Konfiguration"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "title"
+msgstr "Bezeichnung"
+
+#. module: document_ftp
+#: model:ir.ui.menu,name:document_ftp.menu_document_browse
+msgid "Shared Repository (FTP)"
+msgstr "Gemeinsames Verzeichnis (FTP)"
+
+#. module: document_ftp
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#. module: document_ftp
+#: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
+msgid "FTP Server Configuration"
+msgstr "Konfiguration FTP Server"
+
+#. module: document_ftp
+#: model:ir.actions.act_window,name:document_ftp.action_ftp_browse
+msgid "Document Browse"
+msgstr "Suche Dokument"
 
 #. module: document_ftp
 #: model:ir.actions.url,name:document_ftp.action_document_browse
@@ -56,21 +112,6 @@ msgstr "Dateien durchsuchen"
 #: field:document.ftp.configuration,config_logo:0
 msgid "Image"
 msgstr "Bild"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
-msgstr "Bezeichnung"
-
-#. module: document_ftp
-#: field:document.ftp.browse,url:0
-msgid "FTP Server"
-msgstr "FTP Server"
-
-#. module: document_ftp
-#: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
-msgid "FTP Server Configuration"
-msgstr "Konfiguration FTP Server"
 
 #. module: document_ftp
 #: model:ir.module.module,description:document_ftp.module_meta_information
@@ -89,29 +130,14 @@ msgstr ""
 "Anwendungen auf diese Dokumente zugreifen.\n"
 
 #. module: document_ftp
-#: view:document.ftp.browse:0
-msgid "_Browse"
-msgstr "Suchen"
-
-#. module: document_ftp
 #: view:document.ftp.configuration:0
 msgid "res_config_contents"
 msgstr ""
 
 #. module: document_ftp
-#: model:ir.ui.menu,name:document_ftp.menu_document_browse
-msgid "Shared Repository (FTP)"
-msgstr "Gemeinsames Verzeichnis (FTP)"
-
-#. module: document_ftp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
-
-#. module: document_ftp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: view:document.ftp.browse:0
+msgid "_Cancel"
+msgstr "Abbrechen"
 
 #. module: document_ftp
 #: model:ir.module.module,shortdesc:document_ftp.module_meta_information
@@ -119,21 +145,11 @@ msgid "Integrated FTP Server with Document Management System"
 msgstr "Integration FTP Server in Dokumentenmanagement"
 
 #. module: document_ftp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
 msgid "Document FTP Browse"
 msgstr "Suche per FTP Dokument"
 
 #. module: document_ftp
-#: model:ir.actions.act_window,name:document_ftp.action_ftp_browse
-msgid "Document Browse"
-msgstr "Suche Dokument"
-
-#. module: document_ftp
-#: view:document.ftp.browse:0
-msgid "Browse Document"
-msgstr "Suche Dokument"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

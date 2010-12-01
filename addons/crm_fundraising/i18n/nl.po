@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 16:26+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_fundraising
@@ -179,8 +179,8 @@ msgstr "CRM Fondsenwerving"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Estimates"
-msgstr "Schattingen"
+msgid "Misc"
+msgstr "Overig"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,section_id:0
@@ -197,6 +197,11 @@ msgstr "Ongeldige XML voor weergave opbouw!"
 #: field:crm.fundraising,priority:0
 msgid "Priority"
 msgstr "Prioriteit"
+
+#. module: crm_fundraising
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -325,6 +330,17 @@ msgid "Fundraising"
 msgstr "Fondsenwerving"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.action_report_crm_fundraising
+msgid ""
+"Have a general overview of all fund raising activities by sorting them with "
+"specific criteria such as the estimated revenue, average success probability "
+"and delay to close."
+msgstr ""
+"Gefet een algemeen overzicht van de fondsenwerving activiteiten door "
+"sortering in verschillende criteria zoals geschatte omzet, gemiddelde "
+"slaagkans en dagen tot sluiting."
+
+#. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
 msgid "September"
 msgstr "September"
@@ -387,6 +403,17 @@ msgstr "Referentie 2"
 #: field:crm.fundraising.report,categ_id:0
 msgid "Category"
 msgstr "Categorie"
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
+msgid ""
+"If you need to support your organization or a campaign, with 'Fund Raising' "
+"you can track all you fund raising activities. The search list allows you to "
+"filter by funds description, email, history and probability of success."
+msgstr ""
+"Om uw organisatie or campagne te ondersteunen kunt u met 'fondsenwerving' "
+"alle wervingsactiviteiten volgen. De zoeklijst laat u fondsen filteren op "
+"omschrijving, email, geschiedenis en slagingskans."
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
@@ -518,6 +545,15 @@ msgid "Cheque"
 msgstr "Cheque"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
+msgid ""
+"Manage and define the fund raising categories you want to be maintained in "
+"the system."
+msgstr ""
+"De fondsenwerving categorieën beheren en definiëren die u wilt bijhouden in "
+"het systeem."
+
+#. module: crm_fundraising
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr "Deze personen ontvangen email."
@@ -544,8 +580,8 @@ msgstr "Bijlagen"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Misc"
-msgstr "Overig"
+msgid "Estimates"
+msgstr "Schattingen"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -579,6 +615,11 @@ msgstr "Annuleren"
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
 msgstr "Open"
+
+#. module: crm_fundraising
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: crm_fundraising
 #: constraint:ir.model:0
@@ -629,6 +670,15 @@ msgid "Est. Rev*Prob."
 msgstr "Verw. omzet*kans"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
+msgid ""
+"Create and manage fund raising activity categories you want to be maintained "
+"in the system."
+msgstr ""
+"Maak en beheer fondsenwerving activiteiten categorieën die u wilt bijhouden "
+"in het systeem."
+
+#. module: crm_fundraising
 #: field:crm.fundraising,description:0
 msgid "Description"
 msgstr "Omschrijving"
@@ -676,6 +726,11 @@ msgstr ""
 "            \n"
 "Als de aanvraag moet worden onderzocht, wordt de status op 'Behandeling' "
 "gezet."
+
+#. module: crm_fundraising
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0

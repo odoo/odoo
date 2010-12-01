@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-25 19:11+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-30 23:10+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -103,7 +103,7 @@ msgstr ""
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr "Liste de colisage"
+msgstr "Bon de transfert"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -621,8 +621,8 @@ msgid ""
 "This is the internal picking list that brings the finished product to the "
 "production plan"
 msgstr ""
-"Ceci est la liste de colisage qui fournit les produits finis au plan de "
-"fabrication"
+"C'est le bon de transfert interne qui fournit les produits finis au plan de "
+"production"
 
 #. module: mrp
 #: help:mrp.product_price,number:0
@@ -638,7 +638,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Picking Exception"
-msgstr "Excerption du colisage"
+msgstr "Exception de transfert"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -832,10 +832,10 @@ msgid ""
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
 msgstr ""
-"En fonction de la méthode choisie pour pour \"approvisionner\" le service, "
-"l'ordre d'approvisionnement va créer un appel d'offre pour une commande de "
-"sous-traitance, ou va attendre jusqu'à ce que le service soit effectué (= la "
-"livraison des produits)."
+"En fonction de la méthode choisie pour \"l'approvisionnement\" du service, "
+"le besoin va générer un appel d'offres pour une commande de sous-traitance, "
+"ou va attendre jusqu'à ce que le service soit effectué (= la livraison des "
+"produits)."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1308,7 +1308,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1360,6 +1360,8 @@ msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
 msgstr ""
+"Dans le cas où la méthode d'approvisionnement est \"Acheter\", le système va "
+"créer un Ordre d'Achat"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1915,7 +1917,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "Recréer le colisage"
+msgstr "Recréer le bon de transfert"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1943,6 +1945,14 @@ msgid ""
 " When the production gets started then the state is set to 'In Production'.\n"
 " When the production is over, the state is set to 'Done'."
 msgstr ""
+"Quand un ordre de fabrication est créé, il passe à l'état 'Brouillon'.\n"
+" Si l'ordre est concirmé il passe à l'état 'En approvisionnement'.\n"
+" En cas de défaut à ce stade, l'état passe à 'Approvisionnement en défaut'.  "
+"                                                                 \n"
+"Si le stock indique la disponibilité, l'état passe à 'Fabrication "
+"possible'.\n"
+" Quand la production démarre,  l'état passe à 'Fabrication en cours'.\n"
+" Quand la production est achevée, l'état passe à 'Terminé'."
 
 #. module: mrp
 #: selection:mrp.bom,method:0

@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 09:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 11:16+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: outlook
@@ -34,6 +35,11 @@ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 #: field:outlook.installer,plugin_file:0
 msgid "Outlook Plug-in"
 msgstr "Outlook Plug-in"
+
+#. module: outlook
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: outlook
 #: help:outlook.installer,doc_file:0
@@ -57,6 +63,11 @@ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 #: view:outlook.installer:0
 msgid "_Close"
 msgstr "Beenden"
+
+#. module: outlook
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: outlook
 #: field:outlook.installer,doc_file:0
@@ -142,3 +153,8 @@ msgstr "Outlook Plug-in "
 #: model:ir.actions.act_window,name:outlook.action_outlook_wizard
 msgid "Outlook Plug-In Configuration"
 msgstr "Outlook Plug-In Konfiguration"
+
+#. module: outlook
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

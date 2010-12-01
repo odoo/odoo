@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 07:59+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 15:11+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -35,6 +36,19 @@ msgstr "Der aktuelle Schritt bietet keine EMail oder Report als Vorschau."
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
+msgid "Operation not supported"
+msgstr "Vorgang nicht unterstützt"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Sorry, campaign duplication is not supported at the moment."
+msgstr ""
+"Entschuldigung, eine Kopie durch Duplizierung wird aktuell nicht unterstützt"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 "Ein- und ausgehende Verbindungen müssen zur gleichen Kampagne gehören "
@@ -50,9 +64,9 @@ msgstr ""
 "deklarierte Aktivität (oder vorgelagerte Aktivität als Signal zur Auslösung)"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.transition,trigger:0
-msgid "Time"
-msgstr "Zeit"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -356,6 +370,11 @@ msgid "Don't delete workitems"
 msgstr "Lösche keine einzelnen Auftragspositionen der Kampagne"
 
 #. module: marketing_campaign
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,state:0
 #: view:marketing.campaign:0
@@ -590,6 +609,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
 msgid "Campaign Statistics"
 msgstr "Kampagnen Auswertungen"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "Ressource ID"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
@@ -854,6 +879,11 @@ msgid "Synchronize Manually"
 msgstr "Manuelle Synchronisation"
 
 #. module: marketing_campaign
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are done"
@@ -862,10 +892,23 @@ msgstr ""
 "bearbeitet wurden"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
-msgstr "Ressource ID"
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A marketing campaign is an event or activity that will help you manage and "
+"reach your partners with specific messages. A campaign can have many "
+"activities that will be triggered based on a specific situation. One "
+"possible action could be sending an email template that has previously been "
+"created in the system."
+msgstr ""
+"Eine Marketingkampagne ist ein Termin oder eine Aktivität für die Verwaltung "
+"der Erreichbarkeit von Partnern durch speziellen Nachrichtenformate. Eine "
+"Kampagne kann dabei auch aus mehreren Mailvorlagen bestehen, die bereits "
+"früher im System  erzeugt wurden."
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Zeit"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
