@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-25 19:46+0000\n"
+"PO-Revision-Date: 2010-11-29 06:57+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-30 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -90,7 +90,7 @@ msgstr "Seleccionar oportunidades"
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -256,7 +256,7 @@ msgstr "Llamada de telefono"
 #. module: crm
 #: field:crm.lead,optout:0
 msgid "Opt-Out"
-msgstr ""
+msgstr "No acepta recibir emails"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:0
@@ -305,7 +305,7 @@ msgstr "¡El ID del certificado del módulo debe ser único!"
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "_Merge"
-msgstr ""
+msgstr "_Fusionar"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -610,7 +610,7 @@ msgstr ""
 #. module: crm
 #: field:crm.meeting,count:0
 msgid "Count"
-msgstr ""
+msgstr "Total"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
@@ -877,6 +877,10 @@ msgid ""
 "allow them to easily track how is positioned a specific lead or opportunity "
 "in the sales cycle."
 msgstr ""
+"Cree etapas específicas para ayudar a su equipo de ventas a organizar mejor "
+"su flujo de ventas dentro de sus iniciativas y oportunidades. Les permitirá "
+"saber con facilidad en que etapa está cada iniciativa u oportunidad dentro "
+"del ciclo de ventas."
 
 #. module: crm
 #: field:crm.segmentation,som_interval:0
@@ -902,7 +906,7 @@ msgstr "Tipo de evento"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_installer
 msgid "crm.installer"
-msgstr ""
+msgstr "crm.instalador"
 
 #. module: crm
 #: field:crm.segmentation,exclusif:0
@@ -918,7 +922,7 @@ msgstr "La oportunidad '%s' ha sido ganada"
 #. module: crm
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Configure una alarma en este momento, antes de que ocurra el evento"
 
 #. module: crm
 #: model:ir.module.module,description:crm.module_meta_information
@@ -954,6 +958,37 @@ msgid ""
 "    * My Cases (list)\n"
 "    * Jobs Tracking (graph)\n"
 msgstr ""
+"El sistema genérico de gestión de relaciones con el cliente de OpenERP\n"
+"permite a un grupo de gente manejar de forma inteligente y eficiente\n"
+"iniciativas, oportunidades, reuniones, llamadas, etc.\n"
+"Maneja tareas clave como la comunicación, identificación, priorización,\n"
+"asignación, resolución y notificación.\n"
+"\n"
+"OpenERP se asegura de que todos los casos son seguidos por los usuarios, "
+"clientes y\n"
+"proveedores. Puede enviar automáticamente recordatorios, escalar la "
+"petición, disparar\n"
+"métodos específicos y muchas otras acciones basadas en las reglas de su "
+"empresa.\n"
+"\n"
+"Lo mejor de este sistema es que los usuarios no necesitan hacer nada \n"
+"especial. Tan sólo tienen que enviar un correo electrónico al gestor de "
+"seguimientos. \n"
+"OpenERP le agradecerá su mensaje, enrutándolo automáticamente a la \n"
+"persona adecuada, asegurándose de que toda la correspondencia futura llegue "
+"al\n"
+"lugar correcto.\n"
+"\n"
+"El módulo CRM tiene una pasarela de correo para el interfaz de "
+"sincronización\n"
+"entre correos electrónicos y OpenERP. \n"
+"Cree tableros para el CRM que incluyan:\n"
+"    *Mis iniciativas(lista)\n"
+"    *Iniciativas por etapa (gráfico)\n"
+"    *Mis reuniones (lista)\n"
+"    *Proceso de ventas por etapa (gráfico)\n"
+"    *Mis casos (lista)\n"
+"    *Seguimiento de trabajos (gráfico)\n"
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
@@ -1058,7 +1093,7 @@ msgstr "La oportunidad '%s' ha sido cerrada"
 #. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Días para abrir"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1101,7 +1136,7 @@ msgstr "Referencia"
 #. module: crm
 #: field:crm.lead,optin:0
 msgid "Opt-In"
-msgstr ""
+msgstr "Acepta recibir emails"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:0
@@ -1186,6 +1221,14 @@ msgid ""
 "can use leads when you import a database of prospects or to integrate your "
 "website's contact form with OpenERP."
 msgstr ""
+"Las 'iniciativas' le permiten gestionar y llevar un seguimiento de todos los "
+"intereses de un cliente por uno de sus productos o servicios. Una iniciativa "
+"es un primer contacto, sin cualificar, con un posible cliente o cliente. "
+"Tras ser cualificada, una iniciativa se puede convertir en una oportunidad "
+"de negocio con la creación de la empresa relacionada para un futuro "
+"seguimiento detallado de cualquier actividad asociada. Puede usar "
+"iniciativas cuando importa una base de datos de clientes potenciales o "
+"integrar el formulario de contacto de su página web con OpenERP."
 
 #. module: crm
 #: view:crm.lead2opportunity.action:0
@@ -1330,7 +1373,7 @@ msgstr "Permite que el evento se repita en ese intervalo"
 #. module: crm
 #: view:base.action.rule:0
 msgid "Condition Case Fields"
-msgstr ""
+msgstr "Campos de condiciones de casos"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -1402,6 +1445,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the sales team "
 "without removing it."
 msgstr ""
+"Si el campo activo se marca, permite ocultar el equipo de ventas sin "
+"eliminarlo."
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1671,6 +1716,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the "
 "teams of the sales pipeline."
 msgstr ""
+"El análisis de oportunidades le da acceso instantáneo a sus oportunidades "
+"con información como el ingreso previsto, coste planeado, fechas límite "
+"incumplidas o el número de interacciones por oportunidad. Este informe lo "
+"utiliza principalmente el responsable de ventas para hacer una revisión "
+"periódica del proceso de ventas con los equipos."
 
 #. module: crm
 #: field:crm.case.categ,name:0
@@ -1689,6 +1739,11 @@ msgid ""
 "contact you get with a partner. From the call record, you can trigger a "
 "request for another call, a meeting or a business opportunity."
 msgstr ""
+"La herramienta de llamadas entrantes le permite registrar sus llamadas "
+"entrantes al momento. Cada llamada que recibe aparecerá en el formulario de "
+"la empresa para la trazabilidad de todos los contactos que haga con un "
+"cliente. Desde el registro de llamadas, puede crear una petición para otra "
+"llamada, una reunión o una oportunidad de negocio."
 
 #. module: crm
 #: field:crm.meeting,alarm_id:0
@@ -3439,6 +3494,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Estas direcciones de correo serán añadidas al campo CC para todos los "
+"correos entrantes y salientes de este registro antes de ser enviados. Separe "
+"las diferentes direcciones de correo con una coma."
 
 #. module: crm
 #: field:crm.partner2opportunity,probability:0
@@ -3852,7 +3910,7 @@ msgstr "Negociación"
 #. module: crm
 #: view:crm.lead:0
 msgid "Exp.Closing"
-msgstr ""
+msgstr "Cierre previsto"
 
 #. module: crm
 #: field:crm.case.stage,sequence:0

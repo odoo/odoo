@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 08:03+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-01 08:46+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -174,14 +174,9 @@ msgid "July"
 msgstr "July"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
-msgstr ""
-"U kunt de status niet wijzigen omdat een beoordeling nog in wacht of concept "
-"status is"
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -189,14 +184,65 @@ msgid "Ending Date"
 msgstr "Einddatum"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
-msgstr "Na de startdaum"
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee can be assigned to an evaluation plan. These plans define the "
+"frequency and the way you manage your periodic personnal evaluation. You "
+"will be able to define steps and attach interview forms to each step. "
+"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
+"evaluation and final evaluation by the manager."
+msgstr ""
+"Elke medewerker kan worden toegewezen aan een beoordelingsplan. Deze plannen "
+"definiëren de frequentie en manier waarop periodieke beoordelingen "
+"plaatsvinden. U kunt stappen definiëren en vragenformulieren toewijzen aan "
+"elke stap. OpenERP beheert allerlei soorten beoordelingen: bottom-up, top-"
+"down, zelfbeoordeling en eindbeoordeling door manager."
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr ""
+"\n"
+"Datem: %(date)s\n"
+"\n"
+"Beste %(employee_name)s,\n"
+"\n"
+"Ik ben bezig met een beoordeling van %(eval_name)s.\n"
+"\n"
+"Wil je de antwoorden indienen.\n"
+"\n"
+"\n"
+"Bedankt,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Send to Employees"
 msgstr "Versturen aan medewerkers"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "After the Date of Start"
+msgstr "Na de startdaum"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
@@ -224,12 +270,6 @@ msgid "Periodic Evaluations"
 msgstr "Periodieke beoordelingen"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''Regarding ''"
-msgstr "\"Betreft\""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
 msgid "Send evaluation reminder"
 msgstr "Versturen beoordeling herinnering"
@@ -243,6 +283,17 @@ msgstr "Samenvatting beoordeling"
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
 msgstr "(date)s: Actuele datum"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "Regarding "
+msgstr "Betreffend "
+
+#. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -453,6 +504,18 @@ msgstr ""
 "stadium start."
 
 #. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to "
+"employees evaluation plan. Each user receives automatic emails and requests "
+"to perform evaluation of their collegues periodically."
+msgstr ""
+"Gespreksaanvragen worden automatisch door OpenERP gegenereerd volgens het "
+"beoordelingsplan van de medewerker. Elke gebruiker ontvangt automatisch e-"
+"mails en aanvragen om periodiek beoordelingen  van hun collega's uit te "
+"voeren."
+
+#. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Evaluation Data"
 msgstr "Beoordeling gegevens"
@@ -552,42 +615,6 @@ msgstr "Uitgebreide filters..."
 #: selection:hr.evaluation.report,month:0
 msgid "October"
 msgstr "October"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"''\n"
-"Date : %(date)s\n"
-"\n"
-"Dear %(employee_name)s,\n"
-"\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
-"\n"
-"Kindly submit your response.\n"
-"\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
-msgstr ""
-"''\n"
-"Datum : %(date)s\n"
-"\n"
-"Beste %(employee_name)s,\n"
-"\n"
-"Ik ben bezig met een beoordeling betreffende %(eval_name)s.\n"
-"\n"
-"Graag ontvang ik je reactie.\n"
-"\n"
-"\n"
-"Bedankt,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -712,6 +739,11 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: hr_evaluation
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Loopt"
@@ -816,6 +848,11 @@ msgid "Evaluation Plan"
 msgstr "Beoordelingsplan"
 
 #. module: hr_evaluation
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr "Februari"
@@ -864,6 +901,16 @@ msgstr "Volgorde"
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
 msgstr "(user_signature)s: Gebruikersnaam"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
+msgstr ""
+"U kunt de status niet wijzigen omdat een beoordeling nog in wacht of concept "
+"status is"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
@@ -983,3 +1030,41 @@ msgstr "Jaar"
 
 #~ msgid "Employee Evaluation Quote"
 #~ msgstr "Citaat evaluatie werknemer"
+
+#, python-format
+#~ msgid "''Regarding ''"
+#~ msgstr "\"Betreft\""
+
+#, python-format
+#~ msgid ""
+#~ "''\n"
+#~ "Date : %(date)s\n"
+#~ "\n"
+#~ "Dear %(employee_name)s,\n"
+#~ "\n"
+#~ "I am doing an evaluation regarding %(eval_name)s.\n"
+#~ "\n"
+#~ "Kindly submit your response.\n"
+#~ "\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "\n"
+#~ "        ''"
+#~ msgstr ""
+#~ "''\n"
+#~ "Datum : %(date)s\n"
+#~ "\n"
+#~ "Beste %(employee_name)s,\n"
+#~ "\n"
+#~ "Ik ben bezig met een beoordeling betreffende %(eval_name)s.\n"
+#~ "\n"
+#~ "Graag ontvang ik je reactie.\n"
+#~ "\n"
+#~ "\n"
+#~ "Bedankt,\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "\n"
+#~ "        ''"

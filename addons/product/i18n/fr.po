@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-26 18:27+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2010-12-01 19:42+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -317,10 +317,10 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Production sur Stock': lorsque nécessaire, prend à partir du stock ou "
-"attend un réapprovisionnement.\r\n"
-"'Production sur Commande': lorsque nécessaire, achète ou produit pour une "
-"demande d'approvisionnement."
+"'Fabrication sur stock' : quand il y a une demande, on prend du stock ou on "
+"attend jusqu'au prochain réapprovisionnement. 'Fabrication à la commande' : "
+"quand il y a une demande, on achète ou on fabrique en lien avec cette "
+"demande."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -890,7 +890,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "Besoins et emplacements"
+msgstr "Approvisionnement & Emplacements"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -1003,6 +1003,11 @@ msgid ""
 "contains a detailed information of your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Vous devez définir un produit pour chaque chose vendue ou achetée. Les "
+"produits peuvent être des matières premières, des produits stockables, des "
+"consommables ou des services. Le formulaire \"Produit\" contient une "
+"description détaillée en terme de logistique d'approvisionnement, de prix de "
+"vente, de classement de produit, de fournisseurs, etc."
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -1177,7 +1182,7 @@ msgstr ""
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Gestion des besoins"
 
 #. module: product
 #: report:product.pricelist:0
@@ -1334,7 +1339,7 @@ msgstr "Le poids brut en Kg."
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1522,6 +1527,11 @@ msgid ""
 "information on your  products related to procurement logistics, sales price, "
 "product category, suppliers and so on."
 msgstr ""
+"Les produits peuvent être achetés ou vendus. Ils peuvent être des matières "
+"premières, des produits stockables, des consommables ou des services. Le "
+"formulaire \"Produit\" contient une description détaillée en terme de "
+"logistique d'approvisionnement, de prix de vente, de classement de produit, "
+"de fournisseurs, etc."
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -2131,9 +2141,9 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
-"Permet de changer la façon dont les approvisionnements sont effectués. Les "
-"consommables sont des produits stockables avec un stock infini, ou à "
-"utiliser quand vous n'avez pas de gestion d'inventaire dans le système."
+"Permet de changer la façon dont les besoins sont gérés. Les consommables "
+"sont des produits physiques avec un stock infini, pour lesquels vous n'avez "
+"pas de gestion de stock dans le système."
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0

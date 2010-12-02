@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-05 09:54+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-01 08:57+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-06 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -50,8 +50,27 @@ msgid "Leaves Management"
 msgstr "Verlofbeheer"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for %s while available leaves are less than asked "
+"leaves.' %(record.employee_id.name)))\n"
+"                nb = -(record.number_of_days_temp)\n"
+"            elif record.holiday_type == 'category' and record.type == "
+"'remove':\n"
+"                if record.category_id and not "
+"record.holiday_status_id.limit:\n"
+"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
+"uid, [record.holiday_status_id.id], record.category_id.id, "
+"False)[record.holiday_status_id.id]['remaining_leaves']\n"
+"                    if leaves_rest < leave_asked:\n"
+"                        raise osv.except_osv(_('Warning!"
+msgstr ""
+
+#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
+#: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr "Groepeer op..."
 
@@ -80,10 +99,9 @@ msgid "Refused"
 msgstr "Geweigerd"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
-#: field:available.holidays.report,max_leave:0
-msgid "Allocated Leaves"
-msgstr "Gereserveerd verlof"
+#: help:hr.holidays,category_id:0
+msgid "Category Of employee"
+msgstr "Medewerkerscategorie"
 
 #. module: hr_holidays
 #: selection:hr.holidays,allocation_type:0
@@ -96,7 +114,6 @@ msgid "Brown"
 msgstr "Bruin"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
 #: view:hr.holidays:0
 msgid "Remaining Days"
 msgstr "Resterende dagen"
@@ -119,11 +136,6 @@ msgid ""
 msgstr ""
 "De verlof manager kan dit veld leeg laten als de aanvraag/reservering voor "
 "elke medewerker is"
-
-#. module: hr_holidays
-#: view:available.holidays.report:0
-msgid "Leave Days"
-msgstr "Verlofdagen"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -207,6 +219,11 @@ msgstr ""
 "iemand te verhogen."
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Validation"
+msgstr "Controle"
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
 #, python-format
 msgid "Warning !"
@@ -224,6 +241,7 @@ msgstr "HR Vakantie samenvatting overzicht per medewerker"
 
 #. module: hr_holidays
 #: field:available.holidays.report,holiday_status_id:0
+#: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
@@ -431,6 +449,11 @@ msgid "Leaves by Type"
 msgstr "Verlof per soort"
 
 #. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Lichtzalm"
@@ -448,14 +471,20 @@ msgid "Number of Days"
 msgstr "Aantal dagen"
 
 #. module: hr_holidays
-#: help:hr.holidays,category_id:0
-msgid "Category Of employee"
-msgstr "Medewerkerscategorie"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,max_leave:0
+msgid "Allocated Leaves"
+msgstr "Gereserveerd verlof"
 
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Remaining Leave by Type and User"
 msgstr "Resterend verlof per soort en gebruiker"
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Search Leave Type"
+msgstr "Verlofsoort zoeken"
 
 #. module: hr_holidays
 #: selection:available.holidays.report,month:0
@@ -490,6 +519,11 @@ msgstr "Medewerkers"
 #: view:available.holidays.report:0
 msgid " Month "
 msgstr " Maand "
+
+#. module: hr_holidays
+#: view:board.board:0
+msgid "Leaves By Month"
+msgstr "Verlof per maand"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -718,6 +752,7 @@ msgstr "November"
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
+#: view:hr.holidays:0
 msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
 
@@ -753,36 +788,15 @@ msgstr "Datum"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Extended options..."
-msgstr "Uitgebreide opties..."
+#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
+msgid "Leaves Summary"
+msgstr "Verlof samenvatting"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
 #, python-format
 msgid "Error"
 msgstr "Fout"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
-msgstr ""
-"U kunt geen verlof goedkeuren voor %s als er minder verlof beschikbaar is "
-"dan het gevraagde verlof.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -802,6 +816,11 @@ msgstr ""
 #: field:hr.holidays,type:0
 msgid "Request Type"
 msgstr "Soort aanvraag"
+
+#. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
@@ -825,10 +844,28 @@ msgid "Reasons"
 msgstr "Redenen"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
+msgid ""
+"Leaves requests can be recorded by employees and validated by their "
+"managers. Once a leave request is validated it appears automatically in the "
+"agenda of the employee. You can define several allowance types (paid "
+"holidays, sickness, etc) and manage allowances per type."
+msgstr ""
+"Verlofaanvragen kunnen worden ingediend door medewerkers en gecontroleerd "
+"door hun managers. Als de de verlofaanvraag is gecontroleerd verschijnt die "
+"automatisch in de agenda van de medewerker. U kunt verschillende soorten "
+"verlof (betaalde verlof, ziek, etc.) definieren en deze per soort beheren."
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Verlof analyse"
+
+#. module: hr_holidays
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -856,6 +893,11 @@ msgid "Validated"
 msgstr "Goedgekeurd"
 
 #. module: hr_holidays
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
@@ -879,26 +921,21 @@ msgid "Apply Double Validation"
 msgstr "Gebruik dubbele goedkeuring"
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_status_id:0
-msgid " Leave Type"
-msgstr " Verlofsoort"
-
-#. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Afdrukken"
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Details"
+msgstr "Details"
+
+#. module: hr_holidays
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
 msgid "My Leaves"
 msgstr "Mijn verlof"
-
-#. module: hr_holidays
-#: view:board.board:0
-msgid "My Leaves by Type"
-msgstr "Mijn verlof per soort"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
@@ -922,6 +959,7 @@ msgid "May"
 msgstr "Mei"
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Category"
 msgstr "Afspraak categorie"
@@ -1061,12 +1099,6 @@ msgstr "Lichtgeel"
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
 msgstr "Lichtpaars"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
-msgid "Leaves Summary"
-msgstr "Verlof samenvatting"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
@@ -1408,3 +1440,35 @@ msgstr ""
 
 #~ msgid "His manager refuses the request"
 #~ msgstr "Diens manager weigert de aanvraag"
+
+#~ msgid "Leave Days"
+#~ msgstr "Verlofdagen"
+
+#~ msgid "Extended options..."
+#~ msgstr "Uitgebreide opties..."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for %s while available leaves are less than asked "
+#~ "leaves.' %(record.employee_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            elif record.holiday_type == 'category' and record.type == "
+#~ "'remove':\n"
+#~ "                if record.category_id and not "
+#~ "record.holiday_status_id.limit:\n"
+#~ "                    leaves_rest = self.pool.get('hr.holidays.status"
+#~ msgstr ""
+#~ "U kunt geen verlof goedkeuren voor %s als er minder verlof beschikbaar is "
+#~ "dan het gevraagde verlof.' %(record.employee_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            elif record.holiday_type == 'category' and record.type == "
+#~ "'remove':\n"
+#~ "                if record.category_id and not "
+#~ "record.holiday_status_id.limit:\n"
+#~ "                    leaves_rest = self.pool.get('hr.holidays.status"
+
+#~ msgid "My Leaves by Type"
+#~ msgstr "Mijn verlof per soort"
+
+#~ msgid " Leave Type"
+#~ msgstr " Verlofsoort"

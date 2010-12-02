@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 09:10+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-12-01 08:38+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase_requisition
@@ -44,6 +45,23 @@ msgstr "Bestätige"
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Verantwortlich"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"A purchase requisition is a step before the request for quotation. In a "
+"purchase requisition (or purchase tender), you can record the products you "
+"need to buy and trigger the creation of RfQs to supplier. After the "
+"negotiation, once you have reviewed all the supplier's offers, you can "
+"validate some and cancel others."
+msgstr ""
+"Eine Bedarfsmeldung ist einer Beschaffungsanfrage an Lieferanten "
+"vorgeschaltet. In einer Bedarfsmeldung (oder einer Ausschreibung) können Sie "
+"die Produkte vermerken, die beschafft werden sollen, bevor dann konkret "
+"Angebote bei Lieferanten angefragt werden. Nach abgeschlossener Verhandlung "
+"mit Lieferanten können Sie entscheiden, welches Angebot oder welche Angebote "
+"zur Bedarfsdeckung ausgeführt werden sollen. Die verbleibenden nicht "
+"angenommen Angebote werden dabei automatisch verworfen."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -148,9 +166,9 @@ msgid "Request a Quotation"
 msgstr "Anfrage eines Angebots"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Erfasse Angebot"
+#: selection:purchase.requisition,exclusive:0
+msgid "Multiple Requisitions"
+msgstr "Bedarfsmeldung (Multiple)"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -282,6 +300,11 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: purchase_requisition
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "["
 msgstr "["
@@ -324,6 +347,11 @@ msgid "Reference"
 msgstr "Referenz"
 
 #. module: purchase_requisition
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
 msgid "Warehouse"
 msgstr "Zentrallager"
@@ -344,9 +372,9 @@ msgid "Purchase Requisition (exclusive)"
 msgstr "Bedarfsmeldung (Exklusiv)"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Multiple Requisitions"
-msgstr "Bedarfsmeldung (Multiple)"
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Erfasse Angebot"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
@@ -390,6 +418,23 @@ msgid "Unassigned"
 msgstr "Nicht zugewiesen"
 
 #. module: purchase_requisition
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Beschaffungsaufträge"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "Error!"
+msgstr "Fehler!"
+
+#. module: purchase_requisition
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "No Product in Tender"
+msgstr "Kein Produkt in Ausschreibung"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-27 00:29+0000\n"
+"PO-Revision-Date: 2010-11-30 12:28+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -52,6 +52,30 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    Dieses Modul ermöglicht den Versand von Zahlungserinnerungen über "
+"mehrere Mahnstufen.\n"
+"\n"
+"    Sie können mehrere Mahnstufen über das folgende Menü anlegen:\n"
+"        Finanzen/Konfiguration/Sonstige Konfiguration/Zahlungserinnerungen\n"
+"\n"
+"    Sobald Sie die Stufen definiert haben, können Sie folgendermassen "
+"täglich \n"
+"    wiederkehrend den aktuellen Zahlungsstatus erhalten:\n"
+"        Finanzen/Periodische Buchungen/Abrechnung/Sende Zahlungserinnerung\n"
+"\n"
+"    Hierdurch wird ein PDF Druck generiert, der die von Ihnen definierten "
+"Stufen\n"
+"    beim Druck berücksichtigt. Sie können für jedes Unternehmen ein "
+"individuelles\n"
+"    Vorgehen hinterlegen. Desweiteren lassen sich alle Berichte auch per "
+"EMail versenden,\n"
+"\n"
+"    Vermerken Sie bitte, dass Sie Änderungen der Mahnstufen für einen "
+"bestimmten Partner folgendermassen durchführen:\n"
+"        Finanzen/Berichtswesen/Standard Auswertungen/ Partner "
+"Konten/Gesendete Zahlungserinnerungen\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -92,7 +116,7 @@ msgstr "EMail Betreff"
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr ""
+msgstr "Zahlungserinnerungen an Partner für unbezahlte Rechnungen"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -108,7 +132,7 @@ msgstr "OK"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr ""
+msgstr "Wähle Partner für Zahlungserinnerung"
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -129,7 +153,7 @@ msgstr "Erinnerungen"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Saldo > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -172,7 +196,7 @@ msgstr "Partner"
 #: code:addons/account_followup/wizard/account_followup_print.py:0
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Erinnerung für zu zahlende Rechnungen"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -192,7 +216,7 @@ msgstr "Kein Verzug"
 #. module: account_followup
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -211,6 +235,9 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Diese Anwendung ermöglicht den Versand von Zahlungserinnerungen zu "
+"unbezahlten Rechnungen. Sie können hierzu den Standard Text für unbezahlte "
+"Rechnungen verwenden oder individuelle Benachrichtungen konfigurieren."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -226,7 +253,7 @@ msgstr ""
 #. module: account_followup
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -319,7 +346,7 @@ msgstr "Sende Zahlungserinnerung"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Zu erinnernde Partner"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -403,7 +430,7 @@ msgstr "Währung"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "Statistik Zahlungserinnerungen"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
@@ -592,7 +619,7 @@ msgstr "Zahlungserinnerung Zeilen"
 #. module: account_followup
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -602,7 +629,7 @@ msgstr "In Verzug"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Max. Mahnstufe"
 
 #. module: account_followup
 #: constraint:ir.model:0
@@ -700,6 +727,9 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"E-Mail konnte nicht an folgende Partner gesendet werden. Die EMail Adresse "
+"ist nicht vorhanden !\n"
+"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0

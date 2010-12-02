@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-24 09:09+0000\n"
+"PO-Revision-Date: 2010-12-01 09:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:55+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr ""
+msgstr "Övrig Konfiguration"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:0
@@ -48,7 +48,7 @@ msgstr ""
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr ""
+msgstr "Kuponghantering"
 
 #. module: account
 #: view:account.account:0
@@ -68,7 +68,7 @@ msgstr "Kvarvarande"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr ""
+msgstr "Vänligen definera en sekvens på fakturajournalen"
 
 #. module: account
 #: constraint:account.period:0
@@ -78,7 +78,7 @@ msgstr "Fel! Fel periodintervall. "
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Kontovaluta"
 
 #. module: account
 #: view:account.tax:0
@@ -214,7 +214,7 @@ msgstr "account.tax"
 msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
-msgstr ""
+msgstr "Ingen period är definerad för detta datum: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -242,7 +242,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
-msgstr ""
+msgstr "Faktura '%s' är delbetald: %s%s av %s%s (%s%s återstår)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
@@ -252,7 +252,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr ""
+msgstr "Belgiska rapporter"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -493,7 +493,7 @@ msgstr "Journal"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr ""
+msgstr "Bekräfta valda fakturor"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
@@ -555,7 +555,7 @@ msgstr "Tax Mapping"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr ""
+msgstr "account.installer.modules"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -582,7 +582,7 @@ msgstr "Alla"
 #. module: account
 #: field:account.invoice.report,address_invoice_id:0
 msgid "Invoice Address Name"
-msgstr ""
+msgstr "Fakturaadress"
 
 #. module: account
 #: selection:account.installer,period:0
@@ -601,7 +601,7 @@ msgstr ""
 #. module: account
 #: view:analytic.entries.report:0
 msgid "   30 Days   "
-msgstr ""
+msgstr "   30 dagar   "
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -6029,6 +6029,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/account_invoice_refund.py:0
 #: code:addons/account/wizard/account_use_model.py:0
+#: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "Error !"
 msgstr "Error !"
@@ -6662,6 +6663,12 @@ msgstr "Sign on Reports"
 #: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "You can not have two open register for the same journal"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_cash_statement.py:0
+#, python-format
+msgid "You cannot create a bank or cash register without a journal!"
 msgstr ""
 
 #. module: account
