@@ -88,7 +88,10 @@ class purchase_requisition_partner(osv.osv_memory):
                     newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
                     newdate = newdate - relativedelta(days=company.po_lead)
                     delay = partner_rec and partner_rec.delay or 0.0
-                    newdate = newdate -(delay and relativedelta(days=delay) or datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S') )
+                    if delay:
+                        newdate = (newdate - (delay and relativedelta(days=delay)))
+                    else:
+                        newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
                     partner = partner_rec and partner_rec.name or supplier_data
                     pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id or False
                     price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]
