@@ -224,7 +224,7 @@
         </record>
 
         <record id="action_vendor_payment" model="ir.actions.act_window">
-            <field name="name">Vendor Payment</field>
+            <field name="name">Supplier Payment</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
