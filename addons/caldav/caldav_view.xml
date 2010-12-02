@@ -45,6 +45,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('calendar_collection','=',True)]</field>
+            <field name="help">"Calendar Collections" is directory which contain Calendars.</field>
         </record>
 
         <record model="ir.actions.act_window" id="document.action_document_directory_form">
@@ -168,6 +169,7 @@
             <field name="res_model">basic.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">"Calendars" allow you to Customize calendar event and todo attribute with any of OpenERP model.Caledars provide iCal Import/Export functionality.Help You to synchronize Meeting with Calendars client.You can access Calendars using CalDAV clients, like sunbird, Calendar Evaluation, Mobile.</field>
         </record>
 
         <record id="action_caldav_view1" model="ir.actions.act_window.view">
