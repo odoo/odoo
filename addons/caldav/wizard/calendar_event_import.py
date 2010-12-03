@@ -27,7 +27,6 @@ import time
 import tools
 import wizard
 import base64
-import logging
 
 class calendar_event_import(osv.osv_memory):
     """
