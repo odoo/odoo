@@ -223,6 +223,9 @@
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
+                                <field
+                                    name="effective_hours"
+                                    widget="float_time" invisible="1"/>
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
