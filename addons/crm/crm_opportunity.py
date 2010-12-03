@@ -60,7 +60,11 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead5')
+        stage_id = data_obj.browse(cr, uid, data_id).res_id
+        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'probability': stage_obj.probability, 'stage_id': stage_id}
 
         self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
@@ -79,9 +83,13 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead6')
+        stage_id = data_obj.browse(cr, uid, data_id).res_id
+        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'probability': stage_obj.probability, 'stage_id': stage_id}
 
-        res = self.write(cr, uid, ids, value)
+        self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
@@ -110,7 +118,7 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'stage_id': False})
+        self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
         return res
    
  
