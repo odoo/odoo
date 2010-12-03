@@ -79,7 +79,7 @@ class calendar_event_import(osv.osv_memory):
                }
 
     _defaults = {
-               'msg':lambda *a:'Import Sucessful'
+               'msg': lambda cr, uid, ids, context: _('Import Sucessful')
                }
 
 calendar_event_import()

@@ -148,7 +148,6 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         @param uid: the current user’s ID for security checks,
         @param calname: Get Calendar name
         @param context: A standard dictionary for contextual values """
-
     if not context:
         context = {}
     pool = pooler.get_pool(cr.dbname)
@@ -276,7 +275,6 @@ class CalDAV(object):
          @param self: The object pointer,
          @param type: Get Attribute Type
         """
-
         for name in self.__attribute__:
             if self.__attribute__[name]:
                 self.__attribute__[name][type] = None
@@ -340,8 +338,6 @@ class CalDAV(object):
                     date_local = cal_data.value.astimezone(_server_tzinfo)
                     self.ical_set(cal_data.name.lower(), date_local, 'value')
                     continue
-#                date_local = cal_data.value.astimezone(pytz.utc)
-                
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
         return vals
@@ -854,7 +850,7 @@ class basic_calendar_fields(osv.osv):
     }
 
     _defaults = {
-        'fn': lambda *a: 'field',
+        'fn': 'field',
     }
 
     _sql_constraints = [
@@ -906,7 +902,6 @@ class basic_calendar_fields(osv.osv):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-
         if not vals:
             return
         for id in ids:
@@ -1186,11 +1181,16 @@ class Alarm(CalDAV, osv.osv_memory):
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
-                seconds = child.value.seconds
-                days = child.value.days
-                diff = (days * 86400) +  seconds
-                interval = 'days'
-                related = 'before'
+                if isinstance(child.value, timedelta):
+                    seconds = child.value.seconds
+                    days = child.value.days
+                    diff = (days * 86400) +  seconds
+                    interval = 'days'
+                    related = 'before'
+                elif isinstance(child.value, datetime):
+                    # TODO
+                    # remember, spec says this datetime is in UTC
+                    raise NotImplementedError("we cannot parse absolute triggers")
                 if not seconds:
                     duration = abs(days)
                     related = days > 0 and 'after' or 'before'
@@ -1293,5 +1293,6 @@ class Attendee(CalDAV, osv.osv_memory):
         return vevent
 
 Attendee()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -117,8 +117,8 @@
         <record model="basic.calendar.fields" id="map_event_13">
             <field name="name" ref="caldav.field_event_dtstamp"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-            <field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
-            <field name="fn">field</field>
+            <field name="field_id" search="[('name','=','write_date'),('model_id.model','=','crm.meeting')]" />
+            <field name="fn">datetime_utc</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_14">
