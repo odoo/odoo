@@ -218,14 +218,9 @@ class procurement_order(osv.osv):
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
 
-#            for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-#                for pro_data in op.procurement_data_id:
-#                    pro_qty.append(pro_data.product_qty)
-#                pro_qty.sort()
-
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 pro_qty = {}
-                for pro_data in op.procurement_data_id:
+                for pro_data in op.procurement_draft_id:
                     pro_qty.update({pro_data.product_qty: pro_data.id })
                 procure_list = pro_qty.keys()
                 procure_list.sort()
@@ -242,45 +237,47 @@ class procurement_order(osv.osv):
                 if prods < op.product_min_qty:
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
                     def check_qty(procure_list, qty):
-                        new_qty = 0.0
+                        new_qty = qty
                         newdate = datetime.today()
                         for proc in procure_list:
-                            if qty >= proc:
-                                #generate ORDER
-                                new_qty = qty - proc
+                            if new_qty >= proc:
+#                                print 'Confirm PO ID: ', pro_qty[proc], 'for', proc
+                                wf_service.trg_validate(uid, 'procurement.order', pro_qty[proc],
+                                        'button_confirm', cr)
+                                procurement_obj.write(cr, uid, [pro_qty[proc]],
+                                            {'origin': op.name}, context=context)
+                                new_qty -= proc
+                            else:
+#                                print "generate ORDER of ",new_qty#, qty, proc
+                                reste = qty % op.qty_multiple
+                                if reste > 0:
+                                    qty += op.qty_multiple - reste
+                                    newdate += relativedelta(
+                                    days = int(op.product_id.seller_delay))
+                                if op.product_id.type not in ('consu'):
+                                    proc_id = procurement_obj.create(cr, uid, {
+                                        'name': op.name,
+                                        'date_planned': newdate.strftime('%Y-%m-%d'),
+                                        'product_id': op.product_id.id,
+                                        'product_qty': new_qty,
+                                        'product_uom': op.product_uom.id,
+                                        'location_id': op.location_id.id,
+                                        'procure_method': 'make_to_order',
+                                        'origin': op.name
+                                    })
+                                    wf_service.trg_validate(uid, 'procurement.order', proc_id,
+                                                'button_confirm', cr)
+                                    wf_service.trg_validate(uid, 'procurement.order', proc_id,
+                                                'button_check', cr)
+                                    orderpoint_obj.write(cr, uid, [op.id],
+                                            {'procurement_id': proc_id}, context=context)
 
-                            reste = qty % op.qty_multiple
-                            if reste > 0:
-                                qty += op.qty_multiple - reste
-                                newdate += relativedelta(
-                                days = int(op.product_id.seller_delay))
+                            if not new_qty:
+                                break
 
-                        if op.product_id.type not in ('consu'):
-                            proc_id = procurement_obj.create(cr, uid, {
-                                'name': op.name,
-                                'date_planned': newdate.strftime('%Y-%m-%d'),
-                                'product_id': op.product_id.id,
-                                'product_qty': new_qty,
-                                'product_uom': op.product_uom.id,
-                                'location_id': op.location_id.id,
-                                'procure_method': 'make_to_order',
-                                'origin': op.name
-                            })
-#                                wf_service.trg_validate(uid, 'procurement.order', proc_id,
-#                                            'button_confirm', cr)
-#                                wf_service.trg_validate(uid, 'procurement.order', proc_id,
-#                                            'button_check', cr)
-                            orderpoint_obj.write(cr, uid, [op.id],
-                                    {'procurement_id': proc_id}, context=context)
-                            wf_service.trg_validate(uid, 'procurement.order', pro_qty[proc],
-                        'button_confirm', cr)
-                        else:
-                            print 'GENERATE NEW ORDER'
                         return new_qty
 
-                    while qty!=0:
-                        qty = check_qty(procure_list, qty)
-
+                    qty = check_qty(procure_list, qty)
 
                     reste = qty % op.qty_multiple
                     if reste > 0:
@@ -323,5 +320,4 @@ class procurement_order(osv.osv):
         return {}
 
 procurement_order()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
