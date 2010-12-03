@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:24+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-12-02 12:52+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: analytic_user_function
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: analytic_user_function
 #: constraint:ir.ui.view:0
@@ -25,12 +30,12 @@ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 #: code:addons/analytic_user_function/analytic_user_function.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fout !"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Urenstaatregel"
 
 #. module: analytic_user_function
 #: constraint:ir.model:0
@@ -51,12 +56,9 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                    "
-"'for this product: \"%s\" (id:%d)"
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -70,6 +72,13 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+msgstr ""
+"Er is geen kostenrekening gedefinieerd voor dit product: \"%s\" (id:%d)"
+
+#. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
 msgid "Relation table between users and products on a analytic account"
 msgstr "Koppeltabel tussen gebruikers en producten op een kostenplaats"
@@ -77,15 +86,12 @@ msgstr "Koppeltabel tussen gebruikers en producten op een kostenplaats"
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
-msgstr ""
+msgstr "Analytische gebruikers funktie"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                'for "
-"this product: \"%s\" (id:%d)"
-msgstr ""
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0

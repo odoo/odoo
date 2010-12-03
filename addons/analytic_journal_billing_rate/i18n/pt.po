@@ -6,37 +6,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-29 00:19+0000\n"
-"Last-Translator: Paulino <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-12-02 15:32+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: analytic_journal_billing_rate
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: analytic_journal_billing_rate
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+msgstr "XML Inválido para a Arquitectura de Vista !"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
 msgid "Analytic Journal"
-msgstr "Diário analítico"
+msgstr "Diário Analítico"
 
 #. module: analytic_journal_billing_rate
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+"especial !"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
 msgid "Billing Rate per Journal for this Analytic Account"
-msgstr "Taxa de facturação por diário para esta conta analítica"
+msgstr "Taxa de Facturação por Diário para esta Conta Analítica"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,account_id:0
@@ -45,9 +51,14 @@ msgid "Analytic Account"
 msgstr "Conta Analítica"
 
 #. module: analytic_journal_billing_rate
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo deve ser único!"
+
+#. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_analytic_journal_rate_grid
 msgid "Relation table between journals and billing rates"
-msgstr "Tabela de relação entre diários e taxas de facturação"
+msgstr "Tabela de Relação entre diários e taxas de facturação"
 
 #. module: analytic_journal_billing_rate
 #: field:account.analytic.account,journal_rate_ids:0
@@ -64,14 +75,19 @@ msgstr ""
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
 msgid "Invoicing Rate"
-msgstr "Taxa de facturação"
+msgstr "Taxa de Facturação"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "O tamanho do campo não pode ser inferior a 1 !"

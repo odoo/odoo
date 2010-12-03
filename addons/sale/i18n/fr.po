@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-30 22:24+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2010-12-01 14:45+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -817,6 +818,11 @@ msgid ""
 "the sale order. There is 1 pick list by sale order line which evolves with "
 "the availability of parts."
 msgstr ""
+"Le formulaire de bon de préparation est créé dès que la commande de ventes "
+"est confirmée, en même temps que le besoin de stock ou de service. Il "
+"représente l'assignation des produits à une commande de ventes. Il y a une "
+"ligne bon de préparation par ligne de commande de ventes qui évolue avec la "
+"disponibilité des composants."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_form
@@ -1014,7 +1020,7 @@ msgstr "Créer un bon de livraison"
 #. module: sale
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr "Les règles ne sont pas compatibles avec les objets osv_memory !"
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -1252,7 +1258,7 @@ msgstr "Juillet"
 #. module: sale
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1302,6 +1308,8 @@ msgstr ""
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sale order line."
 msgstr ""
+"Pilote la satisfaction des besoins pour toutes les lignes de commande de "
+"ventes."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1766,6 +1774,8 @@ msgid ""
 "For every sale order line, a procurement order is created to supply the sold "
 "product."
 msgstr ""
+"Pour chaque ligne de commande de ventes, un besoin est créé pour "
+"l'approvisionnement du produit vendu."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -2095,6 +2105,10 @@ msgid ""
 "production of products regarding to the rules and to the sale order's "
 "parameters. "
 msgstr ""
+"Un besoin est automatiquement enregistré dès qu'une commande de vente est "
+"confirmée ou qu'une facture est payée. Il provoque l'achat ou à la "
+"production des produits selon les règles et les paramètres de la commande de "
+"vente. "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all

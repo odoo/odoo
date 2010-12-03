@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 23:10+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2010-12-02 09:04+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -87,8 +88,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
-"Les règles de stock mini permettent au système de créer automatiquement des "
-"approvisionnements dès que les minima sont atteints"
+"La \"règle de stock minimum\" permet au système d'enregistrer "
+"automatiquement les besoins dès que le stock minimum est atteint."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -382,7 +383,7 @@ msgstr "Octobre"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
-msgstr "Approvisionnement d'un produit stocké"
+msgstr "Besoin de produit stocké"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -899,7 +900,7 @@ msgstr "Type de Nomenclature"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Extended Filters..."
-msgstr "Filtre étendus"
+msgstr "Filtres étendus..."
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:0
@@ -907,6 +908,8 @@ msgstr "Filtre étendus"
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr ""
+"L'approvisionnement '%s' possède une exception : pas de nomenclature définie "
+"pour ce produit !"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1095,6 +1098,11 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
+"Permet le calcul en Juste-à-temps des besoins.\n"
+"\n"
+"Bien que cela soit plus gourmand en ressources que le fonctionnement "
+"standard, le calcul en Juste-à-Temps permet d'éviter d'attendre l'activation "
+"du planificateur de besoins ou son lancement manuel."
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1273,6 +1281,9 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
+"La règle du stock minimum est une règle de gestion automatique des besoins, "
+"basée sur des quantités minimum et maximum. Cette règle est disponible dans "
+"le menu de gestion des stocks, et paramétrable pour chaque produit."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1293,6 +1304,13 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"Les ordres de fabrication sont généralement proposés automatiquemet par "
+"OpenERP selon les nomenclatures et les règles de traitement des besoins, "
+"mais il est également possible d'enregistrer des ordres de fabrication "
+"manuellement.\r\n"
+"OpenERP se chargera de la consommation des matières premières (sortie de "
+"stock) et de la production des produits finis (entrée de stock) quand "
+"l'ordre sera traité."
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1366,7 +1384,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1449,7 +1467,7 @@ msgstr "Actif"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr "Approvisionnement produit"
+msgstr "Satisfaire le besoin de produit"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
@@ -1493,7 +1511,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Pilote la gestion des besoins de matières premières"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1814,7 +1832,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
-msgstr ""
+msgstr "Règle de gestion automatique des besoins"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1988,7 +2006,7 @@ msgstr "Nombre d'Heures"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
-msgstr "Ordre d'Approvisionnement"
+msgstr "Besoins"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
@@ -2219,7 +2237,7 @@ msgstr "Production"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Besoins en exception"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -2300,7 +2318,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Le moyen de satisfaire le besoin dépend du type de produit"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -2334,6 +2352,8 @@ msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
 msgstr ""
+"Selon la méthode d'approvisionnement choisie pour les produits suivis en "
+"stock, le besoin générera un appel d'offres, un ordre de fabrication, ... "
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2359,6 +2379,9 @@ msgid ""
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
 msgstr ""
+"Afin de s'approvisionner en matières premières (à acheter ou à fabriquer), "
+"l'ordre de fabrication crée autant de besoins que de composants présents "
+"dans la nomenclature, par le biais des planificateurs (MRP)."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
