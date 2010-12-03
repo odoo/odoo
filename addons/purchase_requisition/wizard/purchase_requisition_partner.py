@@ -93,9 +93,6 @@ class purchase_requisition_partner(osv.osv_memory):
                     delay = partner_rec and partner_rec.delay or 0.0
                     if delay:
                         newdate -= relativedelta(days=delay)
-#                    TO-CHECK: If not delay take date considering PO lead or tender date
-#                    else:
-#                        newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
 
                     partner = partner_rec and partner_rec.name or supplier_data
                     pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id or False
