@@ -85,7 +85,7 @@
     ],
     'test': [
         'test/base_test.xml',
-        #'test/base_test.yml'
+        'test/base_test.yml',
         'test/test_context.xml',
         'test/bug_lp541545.xml',
     ],
