@@ -159,14 +159,14 @@ class OutlookAddin:
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_Button = DispatchWithEvents(item, Configuration)
-            item.Caption="OpenERP Configuration"
+            item.Caption="Configuration"
             item.TooltipText = "Click to configure OpenERP"
             item.Enabled = True
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_arch_Button = DispatchWithEvents(item, ArchiveEvent)
-            item.Caption="Push to OpenERP"
+            item.Caption="Push"
             item.TooltipText = "Click to push to OpenERP"
             item.Enabled = True
 
@@ -175,7 +175,7 @@ class OutlookAddin:
             item = toolbar.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.toolbarButton = DispatchWithEvents(item, ArchiveEvent)
-            item.Caption="Push to OpenERP"
+            item.Caption="Push"
             item.TooltipText = "Click to push to OpenERP"
             item.Enabled = True
 
@@ -184,14 +184,14 @@ class OutlookAddin:
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonOpenPartner = DispatchWithEvents(item, OpenPartner)
-            item.Caption = "Open Partners"
+            item.Caption = "Partner"
             item.TooltipText = "Click to Open OpenERP Partner Contact Information."
             item.Enabled = True
 
 
             item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
-            item.Caption = "Open Document"
+            item.Caption = "Document"
             item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 
@@ -213,14 +213,14 @@ class OutlookAddin:
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_openpartner_Button = DispatchWithEvents(item, OpenPartner)
-            item.Caption = "Open Partner"
+            item.Caption = "Partner"
             item.TooltipText = "Click to Open Partner detail"
             item.Enabled = True
 
             item = tools_menu.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.menu_bar_opendocument_Button = DispatchWithEvents(item, OpenDocument)
-            item.Caption = "Open Document"
+            item.Caption = "Document"
             item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 

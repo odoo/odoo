@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-19 08:35+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"PO-Revision-Date: 2010-12-02 11:52+0000\n"
+"Last-Translator: Michael Kotsarinis <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -58,6 +58,8 @@ msgstr "Πληρωμή Πριν Την Παράδοση"
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sale order request."
 msgstr ""
+"Αναφορά αυτού του εγγράφου που δημιούργησε αυτήν την εντολή παραγγελίας "
+"πώλησης"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:0
@@ -109,7 +111,7 @@ msgstr "Γραμμή Εντολής"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete a sale order line which is %s !"
-msgstr ""
+msgstr "Δεν μπορεί να διαγραφεί γραμμή παραγγελίας πώλησης που είναι %s!"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -135,7 +137,7 @@ msgstr "Προκαθορισμένος Όρος Πληρωμής"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr ""
+msgstr "Προσδιορίστε Πολιτική Μεταφορικών για την Παραγγελία Πώλησης"
 
 #. module: sale
 #: view:sale.order:0
@@ -301,7 +303,7 @@ msgstr ""
 #. module: sale
 #: help:sale.installer,delivery:0
 msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
+msgstr "Επιτρέπει τον υπολογισμό του κόστους μεταφοράς στις προσφορές σου"
 
 #. module: sale
 #: report:sale.order:0
@@ -316,7 +318,7 @@ msgstr "Ιούνιος"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Στατιστικά Πωλήσεων Παραγγελιών"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -329,7 +331,7 @@ msgstr "Οκτώβριος"
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Προσφορές"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:0
@@ -363,11 +365,13 @@ msgid ""
 "Number of days between the order confirmation the shipping of the products "
 "to the customer"
 msgstr ""
+"Ημέρες μεταξύ της επιβεβαίωσης παραγγελίας και της παραλαβής των προϊόντων "
+"στον πελάτη"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "Ημερομηνία Προσφοράς"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
@@ -395,6 +399,8 @@ msgstr "Αριθμός συσκευασίας"
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced !"
 msgstr ""
+"Δεν μπορεί να γίνει ακύρωση μιας γραμμής παραγγελίας πώλησης η οποία έχει "
+"τιμολογηθεί !"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -413,6 +419,9 @@ msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
 "have to create it and set it as a default value on this field."
 msgstr ""
+"Επιλέξτε ένα προϊόν τύπου υπηρεσίας που ονομάζεται 'Προηγμένο Προϊόν'. "
+"Μπορεί να χρειαστεί να το δημιουργήσετε και να θέσετε προεπιλεγμένη τιμή για "
+"το πεδίο."
 
 #. module: sale
 #: report:sale.order:0
@@ -437,7 +446,7 @@ msgstr "Σημειώσεις"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The quotation '%s' has been converted to a sale order."
-msgstr ""
+msgstr "Η προσφορά '%s' έχει μετατραπεί σε παραγγελία πώλησης."
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
@@ -447,7 +456,7 @@ msgstr "Τιμοκατάλογοι Αγορών"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "Το συνολικό ποσό"
 
 #. module: sale
 #: constraint:product.product:0
@@ -457,7 +466,7 @@ msgstr "Σφάλμα: Άκυρος κώδικας ΕΑΝ"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sale order"
-msgstr ""
+msgstr "Διεύθυνση Τιμολογίου για την τρέχουσα παραγγελία πώλησης"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -467,12 +476,12 @@ msgstr "Αφορολόγητο Ποσό"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sale Advance Payment Invoice"
-msgstr ""
+msgstr "Προηγμένη Πληρωμή Πώλησης Τιμολογίου"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sale order"
-msgstr ""
+msgstr "Ο κωδικός αναλυτικής που σχετίζεται με την παραγγελία πώλησης"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
@@ -482,7 +491,7 @@ msgstr "Εντολή Παράδοσης"
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Ημερομηνία Επιβεβαίωσης"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -492,7 +501,7 @@ msgstr "Συνεργάτης Παροχής"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Μάρτιος"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -518,7 +527,7 @@ msgstr "Διεύθυνση Τιμολογίου"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "Αναζήτηση Ατιμολόγητων γραμμών"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -567,7 +576,7 @@ msgstr "Αφορολόγητο ποσό"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr ""
+msgstr "Γραμμές προς τιμολόγηση"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
@@ -579,6 +588,8 @@ msgstr "Ποσότητα (ΜΜ)"
 msgid ""
 "Provides some features to improve the layout of the Sales Order reports."
 msgstr ""
+"Παρέχει ορισμένα χαρακτηριστικά για να βελτιώσουν τη διάρθρωση των εκθέσεων "
+"Παραγγελιών Πωλήσεων."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -593,7 +604,7 @@ msgstr "Σύνολο:"
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr ""
+msgstr "Οι πωλήσεις μου"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -627,12 +638,12 @@ msgstr "Τιμοκατάλογος"
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "# από Ποσ."
 
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Υποδεικνύει ότι ένα τιμολόγιο έχει πληρωθεί"
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -642,13 +653,13 @@ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Ημερομηνία Παραγγελίας"
 
 #. module: sale
 #: view:sale.order.line:0
 #: field:sale.report,shipped:0
 msgid "Shipped"
-msgstr ""
+msgstr "Απεσταλμένο"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
@@ -658,18 +669,18 @@ msgstr "Όλες οι προσφορές"
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Το ποσό φόρου"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Σεπτέμβριος"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr ""
+msgstr "Κατηγορία Προϊόντος"
 
 #. module: sale
 #: report:sale.order:0
@@ -684,7 +695,7 @@ msgstr "Κινήσεις Αποθεμάτων"
 #. module: sale
 #: view:sale.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Έτος  "
 
 #. module: sale
 #: field:sale.order,state:0
@@ -696,19 +707,19 @@ msgstr "Κατάσταση Εντολών"
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Είστε σιγουροι ότι θέλετε να δημιουργήσετε τιμολόγιο(α);"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
-msgstr ""
+msgstr "Πωλήσεις ανά Μήνα"
 
 #. module: sale
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "Ημέρες Ασφαλείας"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
@@ -718,7 +729,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Create Final Invoice"
-msgstr ""
+msgstr "Δημιουργεία Τελικού Τιμολογίου"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -728,7 +739,7 @@ msgstr "Διεύθυνση Παράδοσης"
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -746,17 +757,17 @@ msgstr ""
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Εταιρίες"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Νοέμβριος"
 
 #. module: sale
 #: view:sale.order:0
@@ -788,7 +799,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr "Οι Παραπομπές σας"
+msgstr "Ο αριθμός πρωτοκόλλου σας"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
@@ -966,7 +977,7 @@ msgstr ""
 #. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
-msgstr ""
+msgstr "Κόστος Μεταφορικών"
 
 #. module: sale
 #: view:sale.order:0
@@ -1004,7 +1015,7 @@ msgstr "Επιβεβαίωση Πώλησης"
 #: view:sale.order.line:0
 #: view:sale.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ομαδοποίηση Κατά..."
 
 #. module: sale
 #: view:sale.order:0
@@ -1195,7 +1206,7 @@ msgstr "Σφάλμα!"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Ιούλιος"
 
 #. module: sale
 #: field:sale.order.line,procurement_id:0
@@ -1239,7 +1250,7 @@ msgstr "Διαχείριση Πωλήσεων"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid " Quantity: "
-msgstr ""
+msgstr " Ποσότητα: "
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1299,7 +1310,7 @@ msgstr "Πληρωμένα"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Ανάλυση Πωλήσεων"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
@@ -1487,11 +1498,11 @@ msgstr "1η ΜΜ Προϊόντος"
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 #: view:sale.report:0
 msgid "Sales By Salesman"
-msgstr ""
+msgstr "Πωλήσεις ανά Πωλητή"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Logistic"
+msgid "Logistics"
 msgstr ""
 
 #. module: sale
@@ -1513,7 +1524,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
-msgstr ""
+msgstr "Διεύθυνση αποστολής για την τρέχουσα εντολή πώλησης"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1536,7 +1547,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Πρωτόκολλο πελάτη"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1641,7 +1652,7 @@ msgstr "Κατάστημα"
 #. module: sale
 #: view:sale.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Μήνας   "
 
 #. module: sale
 #: view:sale.report:0
@@ -1658,7 +1669,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Προειδοποίηση"
 
 #. module: sale
 #: view:sale.order:0
@@ -1740,7 +1751,7 @@ msgstr "Ολοκληρωμένη Παράδοση"
 #. module: sale
 #: view:sale.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Μήνας-1    "
 
 #. module: sale
 #: help:sale.config.picking_policy,picking_policy:0
@@ -1769,7 +1780,7 @@ msgstr "Τιμολόγια"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Δεκέμβριος"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
@@ -1788,7 +1799,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Το ποσό χωρίς φόρο"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1899,7 +1910,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1949,7 +1960,7 @@ msgstr "Κατάστημα Πώλησης"
 #. module: sale
 #: view:board.board:0
 msgid "Sales By Customer"
-msgstr ""
+msgstr "Πωλήσεις ανά πελάτη"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -1964,13 +1975,13 @@ msgstr ""
 #. module: sale
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr ""
+msgstr "Παραδόθηκε"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Not enough stock !"
-msgstr ""
+msgstr "Δεν υπάρχει αρκετό απόθεμα !"
 
 #. module: sale
 #: view:sale.order:0
@@ -1995,7 +2006,7 @@ msgstr "Περιγραφή"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
@@ -2012,7 +2023,7 @@ msgstr "Πελάτης"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Φεβρουάριος"
 
 #. module: sale
 #: help:sale.installer,sale_journal:0
@@ -2029,7 +2040,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Απρίλιος"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -2082,7 +2093,7 @@ msgstr "Picked"
 #: view:sale.report:0
 #: field:sale.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Έτος"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

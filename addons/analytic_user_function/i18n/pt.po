@@ -6,38 +6,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-29 00:20+0000\n"
-"Last-Translator: Paulino <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 12:37+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: analytic_user_function
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: analytic_user_function
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+msgstr "XML Inválido para a Arquitectura de Vista !"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erro !"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Linha de folha de horas"
 
 #. module: analytic_user_function
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+"especial !"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -51,18 +57,15 @@ msgid "Analytic Account"
 msgstr "Conta Analítica"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                    "
-"'for this product: \"%s\" (id:%d)"
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo deve ser único!"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
-msgstr "Utilizadores/rel de produtos"
+msgstr "Utilizadores/Relação de Produtos"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,user_id:0
@@ -70,24 +73,29 @@ msgid "User"
 msgstr "Utilizador"
 
 #. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+msgstr ""
+"Não há qualquer conta de despesas definida para o produto: \"%s\" (id:%d)"
+
+#. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
 msgid "Relation table between users and products on a analytic account"
-msgstr "Tabela da relação entre utilizadores e produtos numa conta analítica"
+msgstr ""
+"Tabela da Relação entre utilizadores e produtos em uma Conta Analítica"
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
-msgstr ""
+msgstr "Função do Utilizador Analítico"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                'for "
-"this product: \"%s\" (id:%d)"
-msgstr ""
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "O tamanho do campo não pode ser inferior a 1 !"
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
-msgstr "Produto do utilizador para este conta analítica"
+msgstr "Produto do Utilizador para esta Conta Analítica"

@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-24 20:58+0000\n"
-"Last-Translator: swinter <Unknown>\n"
+"PO-Revision-Date: 2010-12-02 09:16+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -74,7 +75,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Upstream Traceability"
-msgstr ""
+msgstr "Traçabilité amont"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -138,6 +139,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
+"Référence interne, dans le cas où celle-ci est différente du n° de série du "
+"fabricant."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -147,7 +150,7 @@ msgstr "STOCK_ZOOM_100"
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:0
@@ -220,7 +223,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "Livrer/recevoir des produits"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:0
@@ -250,7 +253,7 @@ msgstr ""
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "Autre référence ou n° de série"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -280,7 +283,7 @@ msgstr "Référence"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Produits à traiter"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -302,6 +305,8 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
+"Si cette case est cochée, toutes les quantités du produit seront mises à "
+"zéro pour s'assurer qu'un inventaire physique est réellement effectué."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -322,6 +327,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
+"Impossible d'annuler l'opération de manutention car le mouvement de stock "
+"est à l'état \"Terminé\" !"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -344,6 +351,12 @@ msgid ""
 "   \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Quand le mouvement de stock est créé, il est à l'état \"Brouillon\".\n"
+" Ensuite, il passe à l'état \"Confirmé\".\n"
+" Si le stock est disponible, il passe à l'état \"Disponible\".\n"
+" Quand la manutention est effectuée, il passe à l'état \"Terminé\".\n"
+"Le statut est \"En attente\" si le mouvement attend qu'un autre soit "
+"effectué."
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -400,7 +413,7 @@ msgstr "Emplacement interne"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Confirm Inventory"
-msgstr "Confirmer l'Inventaire"
+msgstr "Confirmer l'inventaire"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -603,6 +616,7 @@ msgstr ""
 #, python-format
 msgid "You can not process picking without stock moves"
 msgstr ""
+"Imposible de traiter une opération de manutention sans mouvement de stock"
 
 #. module: stock
 #: field:stock.move,product_packaging:0
@@ -791,7 +805,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
-msgstr ""
+msgstr "Traiter l'opération"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -884,7 +898,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "Réapprovisionnement"
+msgstr "Approvisionnements"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -1173,6 +1187,30 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* \"Emplacement Fournisseur\" : emplacement virtuel représentant l'origine "
+"des produits reçus d'un fournisseur\n"
+"                       \n"
+"* \"Vue\" : emplacement virtuel servant à donner une vision hiérarchisée de "
+"votre entrepôt, en regroupant les produits des emplacements enfants. Ne peut "
+"pas contenir de produit directement\n"
+"                       \n"
+"* \"Emplacement interne\" : emplacement physique dans votre entrepôt\n"
+"                       \n"
+"* \"Emplacement client\": emplacement virtuel représentant la destination "
+"des produits envoyés à un client\n"
+"                       \n"
+"* \"Inventaire\": emplacement virtuel servant de contrepartie aux mouvements "
+"servant à corriger les niveaux des stocks lors des inventaires physiques\n"
+"                       \n"
+"* \"Besoin\" : emplacement virtuel servant de contrepartie temporaire pour "
+"les besoins de stock lorsque l'emplacement d'origine (fournisseur ou "
+"production interne) n'est pas connu à l'avance. Cet emplacement est "
+"normalement vide lorsque le planificateur termine son exécution\n"
+"                       \n"
+"* \"Fabrication\" : emplacement virtuel servant de contrepartie pour les "
+"opérations de fabrication : les matières premières y sont consommées et les "
+"produits finis y sont créés\n"
+"                      "
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1266,6 +1304,9 @@ msgid ""
 "The company the Picking List containing the chained move will belong to "
 "(leave empty to use the default company determination rules"
 msgstr ""
+"La société à laquelle appartiendra l'opération de manutention contenant le "
+"mouvement chainé (laisser vide pour laisser le système déterminer la société "
+"selon les règles par défaut)"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1373,6 +1414,9 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Champ technique utilisé pour enregistrer le coût du produit défini par "
+"l'utilisateur lors de la confirmation de l'opération de manutention (quand "
+"la valorisation se fait sur le prix moyen)"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -1457,6 +1501,8 @@ msgstr "Depuis"
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
+"Les retours sont possibles uniquement sur les opérations de manutention dans "
+"l'état \"Confirmé\", \"Disponible\" ou \"Terminé\" !"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1472,7 +1518,7 @@ msgstr "Révisions des lots de productions"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr ""
+msgstr "Bon de transfert"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -1492,7 +1538,7 @@ msgstr "Diviser"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr ""
+msgstr "Chercher une opération de manutention"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -1733,6 +1779,8 @@ msgid ""
 "If this picking was split this field links to the picking that contains the "
 "other part that has been processed already."
 msgstr ""
+"Si cette opération de manutention a été divisée en deux, ce champ renvoie à "
+"celle qui a déjà été traitée."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -2012,7 +2060,7 @@ msgstr "Annuler"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Retour de marchandise"
 
 #. module: stock
 #: view:stock.move:0
@@ -2090,7 +2138,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Picking"
-msgstr ""
+msgstr "Hors manutention"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -2406,7 +2454,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr ""
+msgstr "Bon de réception"
 
 #. module: stock
 #: field:stock.move,product_uom:0
@@ -2494,7 +2542,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Traitement partiel"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
@@ -2639,7 +2687,7 @@ msgstr "terp-stock"
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "Date à laquelle l'opération de manutention doit être effectuée"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2720,7 +2768,7 @@ msgstr "Inventaire"
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Picking List"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -2862,7 +2910,7 @@ msgstr "STOCK_CLEAR"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2916,7 +2964,7 @@ msgstr "Voir les stocks produits"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking list"
-msgstr ""
+msgstr "Bon de transfert interne"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3143,7 +3191,7 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Internal picking"
-msgstr ""
+msgstr "Bon de transfert"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3246,8 +3294,8 @@ msgstr "Date de fin"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
-"Merci de mettre un partenaire sur la liste de colisage si vous souhaitez "
-"faire une facture."
+"Veuillez indiquer un partenaire sur l'opération de manutention si vous "
+"souhaitez générer une facture."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -3647,9 +3695,16 @@ msgstr "Clients non européen"
 #: code:addons/stock/product.py:0
 #: code:addons/stock/stock.py:0
 #: code:addons/stock/wizard/stock_splitinto.py:0
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
 #, python-format
 msgid "Error!"
 msgstr "Erreur!"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Stock Inventory is done"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3687,7 +3742,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Cette opération de manutention n'a pas à être facturée."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3710,6 +3765,16 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Détermine si cet emplacement est chaîné à un autre : dans ce cas un produit "
+"arrivant à cet emplacement \n"
+"doit ensuite aller à l'emplacement chaîné. L'emplacement chaîné est "
+"déterminé selon le type :\n"
+" * \"Aucun\" : pas de chaînage\n"
+" * \"Client\" : l'emplacement sera indiqué par le champ \"Emplacement "
+"client\" du formulaire \"Partenaire\" du partenaire indiqué sur le bon de "
+"réception des produits.\n"
+" * \"Emplacement fixe\": l'emplacement sera indiqué par le champ "
+"\"Emplacement chaîné si fixe\"."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3809,7 +3874,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Colisage lié"
+msgstr "Opérations de manutention associées"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4041,6 +4106,9 @@ msgid ""
 "Technical field used to record the currency chosen by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
+"Champ technique utilisé pour enregistrer la devise choisie par l'utilisateur "
+"lors de la confirmation de l'opération de manutention (si la valorisation se "
+"fait sur le prix moyen)"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -4080,7 +4148,7 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr ""
+msgstr "Manutention auto"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -4125,6 +4193,12 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Quand un mouvement de stock est enregistré il est à l'état \"Brouillon\".\n"
+" Ensuite il passe à l'état \"Confirmé\".\n"
+" Si le stock est disponible, il passe à \"Disponible\".\n"
+" Quand le mouvement est effectué, il passe à \"Terminé\".\n"
+"L'état \"En attente\" indique que le mouvement attend qu'un autre soit "
+"effectué."
 
 #. module: stock
 #: view:board.board:0
@@ -4163,6 +4237,9 @@ msgid ""
 "For the current product, this stock location will be used, instead of the "
 "default one, as the source location for stock moves generated by procurements"
 msgstr ""
+"Pour le produit actuel, cet emplacement sera utilisé à la place de "
+"l'emplacement par défaut comme emplacement d'origine des mouvements de stock "
+"générés par les besoins de stock."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
@@ -4179,7 +4256,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "Référence du document à l'origine de l'opération de manutetion."
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -4200,7 +4277,7 @@ msgstr "STOCK_REVERT_TO_SAVED"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Aucune de ces opérations de manutention n'est à facturer."
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -4476,7 +4553,7 @@ msgstr "Compte du Stock d'Entrée"
 #. module: stock
 #: view:stock.move:0
 msgid "Picking"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -4552,6 +4629,7 @@ msgstr "Sortie"
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
 msgstr ""
+"Impossible de supprimer une opération de manutention dans l'état \"%s\" !"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -4570,6 +4648,9 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
+"Type d'expédition de l'opération de manutention qui contiendra le mouvement "
+"chaîné (laisser vide pour que le système détermine le type en fonction des "
+"emplacements source et destination)."
 
 #. module: stock
 #: selection:stock.move.split.lines,action:0

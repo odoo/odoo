@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 17:43+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2010-12-01 14:45+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -184,7 +185,7 @@ msgstr "Condition de règlement par défaut"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr "Configurer la politique de colisage pour les commandes de ventes"
+msgstr "Configurer la politique d'expédition pour les commandes de ventes"
 
 #. module: sale
 #: view:sale.order:0
@@ -647,6 +648,18 @@ msgid ""
 "  - The 'Invoice from the picking' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"La politique d'expédition est utilisée pour coordonner les opérations de "
+"facturation et de livraison.\n"
+"  - L'option \"Paiement avant livraison\" va d'abord générer la facture, et "
+"ne générera le bon de préparation qu'après le paiement de la facture.\n"
+"  - L'option \"Expédition puis facturation manuelle\" va créer le bon de "
+"préparation directement, et attendre que l'utilisateur clique manuellement "
+"sur le bouton \"Facturer\" pour générer la facture brouillon.\n"
+"  - L'option \"Facturer sur commande après la livraison\" va générer la "
+"facture brouillon en se basant sur les quantités commandées lorsque toutes "
+"les expéditions seront terminées.\n"
+"  - L'option \"Facturer sur préparation\" est utilisée pour créer une "
+"facture durant la préparation de l'expédition."
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -805,6 +818,11 @@ msgid ""
 "the sale order. There is 1 pick list by sale order line which evolves with "
 "the availability of parts."
 msgstr ""
+"Le formulaire de bon de préparation est créé dès que la commande de ventes "
+"est confirmée, en même temps que le besoin de stock ou de service. Il "
+"représente l'assignation des produits à une commande de ventes. Il y a une "
+"ligne bon de préparation par ligne de commande de ventes qui évolue avec la "
+"disponibilité des composants."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_form
@@ -967,7 +985,7 @@ msgstr "Basé sur les quantités expédiées ou commandées"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr ""
+msgstr "Expédition associée"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1002,7 +1020,7 @@ msgstr "Créer un bon de livraison"
 #. module: sale
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr "Les règles ne sont pas supportées par les objets osv_memory !"
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -1094,8 +1112,7 @@ msgstr "Date de commande"
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr ""
-"C'est la liste de liste de picking qui a été générée pour cette facture"
+msgstr "C'est la liste des expéditions générées pour cette commande"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1115,7 +1132,7 @@ msgstr "Confirmer la commande"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr ""
+msgstr "Créer un ordre d'approvisionnement"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1160,11 +1177,12 @@ msgid ""
 "waiting for the scheduler to run on the date 'Ordered Date'."
 msgstr ""
 "Donne l'état du devis ou de la commande. \n"
-"L'état \"exception\" est mis automatiquement quand une annulation a lieu "
-"pendant la validation d'une facture (Exception de facturation) ou d'une "
-"expédition (Exception d'expédition) \n"
-"L'état \"attente de planification\" est mis quand une facture est confirmée "
-"mais attend que le planificateur s'éxécute à la date \"date de commande\"."
+"La commande passe automatiquement à l'état \"Exception\" quand une "
+"annulation a lieu pendant la validation d'une facture (\"Exception de "
+"facturation\") ou d'une expédition (\"Exception d'expédition\") \n"
+"La commande passe à l'état \"Attente de planification\" quand une facture "
+"est confirmée mais attend que le planificateur s'exécute à la date \"Date de "
+"commande\"."
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -1219,7 +1237,7 @@ msgstr "Facturation basée sur les commandes"
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "Liste de Pickings"
+msgstr "Opération de manutention"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1240,7 +1258,7 @@ msgstr "Juillet"
 #. module: sale
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1262,7 +1280,7 @@ msgstr "Livraison et facture manuelle"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Picking Information !"
-msgstr ""
+msgstr "Informations de préparation !"
 
 #. module: sale
 #: view:sale.report:0
@@ -1290,6 +1308,8 @@ msgstr ""
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sale order line."
 msgstr ""
+"Pilote la satisfaction des besoins pour toutes les lignes de commande de "
+"ventes."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1424,7 +1444,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
-msgstr ""
+msgstr "Bon de préparation et de livraison"
 
 #. module: sale
 #: constraint:ir.model:0
@@ -1442,7 +1462,7 @@ msgstr "À faire"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr ""
+msgstr "Politique d'expédition"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1518,8 +1538,8 @@ msgstr "Ventes par vendeur"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Logistic"
-msgstr "Logistique"
+msgid "Logistics"
+msgstr ""
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1712,6 +1732,8 @@ msgstr "Confirmer"
 #, python-format
 msgid "You must first cancel all picking attached to this sale order."
 msgstr ""
+"Vous devez d'abord annuler toutes les préparations et expéditions associées "
+"à cette commande de ventes."
 
 #. module: sale
 #: view:sale.order:0
@@ -1752,6 +1774,8 @@ msgid ""
 "For every sale order line, a procurement order is created to supply the sold "
 "product."
 msgstr ""
+"Pour chaque ligne de commande de ventes, un besoin est créé pour "
+"l'approvisionnement du produit vendu."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -2049,7 +2073,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Picking Default Policy"
-msgstr ""
+msgstr "Politique d'expédition par défaut"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2081,6 +2105,10 @@ msgid ""
 "production of products regarding to the rules and to the sale order's "
 "parameters. "
 msgstr ""
+"Un besoin est automatiquement enregistré dès qu'une commande de vente est "
+"confirmée ou qu'une facture est payée. Il provoque l'achat ou à la "
+"production des produits selon les règles et les paramètres de la commande de "
+"vente. "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2538,3 +2566,6 @@ msgstr "Facture basé sur les livraisons"
 #~ "   'for this product: \"%s\" (id:%d)"
 #~ msgstr ""
 #~ "Il n'y a aucun compte de revenu défini ' \\n 'pour ce produit: \"%s\" (id:%d)"
+
+#~ msgid "Logistic"
+#~ msgstr "Logistique"

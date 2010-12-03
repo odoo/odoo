@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:25+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 17:14+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -31,6 +32,31 @@ msgstr "EMail Konto Konfiguration"
 #, python-format
 msgid "Emails for multiple items saved in outbox."
 msgstr "E-Mails für mehrere Elemente in Postausgang gespeichert"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid ""
+"No personal email accounts are configured for you. \n"
+"Either ask admin to enforce an account for this template or get yourself a "
+"personal email account."
+msgstr ""
+"Keine eigenes EMailkonto ist für Sie definiert.\n"
+"Entweder erfragen Sie ein Konto für dieses Template bei Ihrem Administrator "
+"oder beantragen ein persönliches Mailkonto für die Versendung."
+
+#. module: email_template
+#: model:ir.actions.act_window,help:email_template.action_email_template_mailbox
+msgid ""
+"An email template is an email document that will be sent as part of a "
+"marketing campaign. You can personalize it based on specific customer "
+"profile fields so that their names or other partner related information can "
+"be automatically inserted in it."
+msgstr ""
+"Eine Email Vorlage ist ein Email die als Bestandteil einer Marketing "
+"Kampagne versendet wird. Sie können eine Personalisierung der Vorlage nach "
+"Ihren Vorstellungen vornehmen, um definierte Platzhalter automatisch mit "
+"Ihren Daten bei dem Emailversand zu füllen."
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -58,16 +84,18 @@ msgid "Plain Text & HTML with no attachments"
 msgstr "Klartext & HTML ohne Anhänge"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
+#: help:email.template,model_object_field:0
 msgid ""
-"Mail from Account %s failed on login. Probable Reason:Could not login to "
-"server\n"
-"Error: %s"
+"Select the field from the model you want to use.\n"
+"If it is a relationship field you will be able to choose the nested values "
+"in the box below\n"
+"(Note:If there are no values make sure you have selected the correct model)"
 msgstr ""
-"Fehler bei Anmeldung mit EMailkonto  %s . Eventuelle Ursache: Login an "
-"Server nicht möglich\n"
-"Fehler: %s"
+"Wähle das Feld des Moduls welches genutzt werden soll.\n"
+"Falls dieses Datenfeld ein Feld mit Verknüpfung ist, können zu "
+"referenzierende Werte in der Box unten gewählt werden \n"
+"(Hinweis: Sollten Sie keine Werte sehen können, stellen Sie sicher, dass Sie "
+"das richtige Modul gewählt haben.)"
 
 #. module: email_template
 #: field:email_template.preview,body_html:0
@@ -115,6 +143,15 @@ msgid "Send all mails"
 msgstr "Sende alle EMails"
 
 #. module: email_template
+#: help:email_template.account,smtpuname:0
+msgid ""
+"Specify the username if your SMTP server requires authentication, otherwise "
+"leave it empty."
+msgstr ""
+"Spezifizieren Sie den Benutzernamen wenn Ihr SMTP Server diese "
+"Authentifizier benötigt, alternativ tragen Sie nichts ein."
+
+#. module: email_template
 #: field:email_template.mailbox,server_ref:0
 msgid "Server Reference of mail"
 msgstr "Server Referenz der Mail"
@@ -159,6 +196,12 @@ msgid ""
 msgstr ""
 "Die Beschreibung wird parallel als Absender-Name zusammen mit der E-Mail "
 "verwendet, es sei denn, es ist bereits in der E-Mail versendet worden."
+
+#. module: email_template
+#: field:email_template.preview,to:0
+#: field:email_template.send.wizard,to:0
+msgid "To"
+msgstr "An"
 
 #. module: email_template
 #: field:email.template,from_account:0
@@ -418,6 +461,11 @@ msgid "Mail from Account %s successfully Sent."
 msgstr "EMail von Konto %s erfolgreich versendet."
 
 #. module: email_template
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr "Mako Vorlagen"
@@ -432,17 +480,6 @@ msgstr " (Email Anhang)"
 #: selection:email_template.mailbox,folder:0
 msgid "Sent Items"
 msgstr "Versendete EMails"
-
-#. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-"Error: %s"
-msgstr ""
-"Versand der EMail %s ist fehlgeschlagen. Möglicher Grund: Kein Server Login "
-"möglich\n"
-"Fehler: %s"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -498,18 +535,9 @@ msgid "Template"
 msgstr "Vorlage"
 
 #. module: email_template
-#: help:email.template,model_object_field:0
-msgid ""
-"Select the field from the model you want to use.\n"
-"If it is a relationship field you will be able to choose the nested values "
-"in the box below\n"
-"(Note:If there are no values make sure you have selected the correct model)"
-msgstr ""
-"Wähle das Feld des Moduls welches genutzt werden soll.\n"
-"Falls dieses Datenfeld ein Feld mit Verknüpfung ist, können zu "
-"referenzierende Werte in der Box unten gewählt werden \n"
-"(Hinweis: Sollten Sie keine Werte sehen können, stellen Sie sicher, dass Sie "
-"das richtige Modul gewählt haben.)"
+#: field:email.template,sub_model_object_field:0
+msgid "Sub Field"
+msgstr "Sub Feld"
 
 #. module: email_template
 #: view:email.template:0
@@ -613,6 +641,11 @@ msgid "Rec/Sent Date"
 msgstr "Empfang /Sende Datum"
 
 #. module: email_template
+#: selection:email_template.account,state:0
+msgid "Initiated"
+msgstr "Initialisiert"
+
+#. module: email_template
 #: field:email.template,report_template:0
 msgid "Report to send"
 msgstr "Zu versend. Anhang"
@@ -672,15 +705,6 @@ msgstr "Ja"
 #: field:email.template,ref_ir_act_window:0
 msgid "Window Action"
 msgstr "Fenster Aktion"
-
-#. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-msgstr ""
-"Extraktion Datum/Zeit fehlgeschlagen.Datum:%s \\n                      \t"
-"Fehler:%s"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -776,9 +800,10 @@ msgid "Outgoing"
 msgstr "Postausgang"
 
 #. module: email_template
-#: selection:email_template.account,state:0
-msgid "Initiated"
-msgstr "Initialisiert"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
+msgstr "Datumzeit Extraktion fehlgeschlagen.Datum:%s \tFehler:%s"
 
 #. module: email_template
 #: help:email.template,use_sign:0
@@ -814,11 +839,6 @@ msgid "User Name"
 msgstr "Benutzer Name"
 
 #. module: email_template
-#: field:email.template,sub_model_object_field:0
-msgid "Sub Field"
-msgstr "Sub Feld"
-
-#. module: email_template
 #: help:email.template,attachment_ids:0
 msgid ""
 "You may attach existing files to this template, so they will be added in all "
@@ -849,6 +869,16 @@ msgid "Save in Drafts"
 msgstr "Speichern als Entwurf"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason:MIME Error\n"
+"Description: %s"
+msgstr ""
+"Mail von Konto %s ist fehlgeschlagen. Mögliche Ursache:MIME Fehler\n"
+"Beschreibung:%s"
+
+#. module: email_template
 #: field:email_template.account,smtptls:0
 msgid "TLS"
 msgstr "TLS"
@@ -861,7 +891,6 @@ msgstr "Sprache"
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
 #: code:addons/email_template/email_template_account.py:0
-#: code:addons/email_template/email_template_mailbox.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
@@ -880,28 +909,6 @@ msgstr "Sende / Empfange"
 #: view:email_template.mailbox:0
 msgid "Send Mail"
 msgstr "Sende EMail"
-
-#. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Error sending mail: %s\" % str(e)))\n"
-"        \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"        if ids is None:\n"
-"            ids = []\n"
-"        if context is None:\n"
-"            context = {}\n"
-"        filters = [('folder', '=', 'outbox"
-msgstr ""
-"Fehler bei Mailversand: %s\" % str(e)))\n"
-"        \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"        if ids is None:\n"
-"            ids = []\n"
-"        if context is None:\n"
-"            context = {}\n"
-"        filters = [('folder', '=', 'outbox"
 
 #. module: email_template
 #: help:email.template,allowed_groups:0
@@ -954,10 +961,9 @@ msgid "Attachments"
 msgstr "Anhänge"
 
 #. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
-msgid "To"
-msgstr "An"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -986,6 +992,17 @@ msgid "Close"
 msgstr "Beenden"
 
 #. module: email_template
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
+msgid "Error sending mail: %s"
+msgstr "Fehler beim Senden der E-Mail: %s"
+
+#. module: email_template
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: email_template
 #: view:email_template.mailbox:0
 msgid "Body (HTML-Web Client Only)"
 msgstr "Haupttext (HTML - Nur Web-Client)"
@@ -1005,18 +1022,6 @@ msgid "%s (Email Attachment)"
 msgstr "%s (Email Anhang)"
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
-#, python-format
-msgid ""
-"No personal email accounts are configured for you. \n"
-"Either ask admin to enforce an account for this template or get yourself a "
-"personal email account."
-msgstr ""
-"Keine eigenes EMailkonto ist für Sie definiert.\n"
-"Entweder erfragen Sie ein Konto für dieses Template bei Ihrem Administrator "
-"oder beantragen ein persönliches Mailkonto für die Versendung."
-
-#. module: email_template
 #: field:email.template,allowed_groups:0
 msgid "Allowed User Groups"
 msgstr "Berechtigte Benutzer Gruppe"
@@ -1030,6 +1035,11 @@ msgstr "Feld"
 #: view:email_template.account:0
 msgid "User Information"
 msgstr "Benutzer Information"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Actions"
+msgstr "Aktionen"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1047,9 +1057,9 @@ msgstr ""
 "verwendet werden, z.B. 2009_S0003.pdf"
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
-msgstr "Verzeichnis"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
+msgstr "Datum an dem EMail gesendet werden soll"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -1058,18 +1068,20 @@ msgid "Trash"
 msgstr "Müll"
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
-msgstr "Datum an dem EMail gesendet werden soll"
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr "EMail Eingang"
 
 #. module: email_template
-#: help:email_template.account,smtpuname:0
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
 msgid ""
-"Specify the username if your SMTP server requires authentication, otherwise "
-"leave it empty."
+"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
+"Error: %s"
 msgstr ""
-"Spezifizieren Sie den Benutzernamen wenn Ihr SMTP Server diese "
-"Authentifizier benötigt, alternativ tragen Sie nichts ein."
+"Versand der EMail %s ist fehlgeschlagen. Möglicher Grund: Kein Server Login "
+"möglich\n"
+"Fehler: %s"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
@@ -1132,11 +1144,6 @@ msgstr "Empfänger (An)"
 #: field:email.template,null_value:0
 msgid "Null Value"
 msgstr "Null Wert"
-
-#. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
-msgstr "EMail Eingang"
 
 #. module: email_template
 #: field:email.template,template_language:0
@@ -1271,6 +1278,18 @@ msgid "Corporate"
 msgstr "Gesellschaft"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed on login. Probable Reason:Could not login to "
+"server\n"
+"Error: %s"
+msgstr ""
+"Fehler bei Anmeldung mit EMailkonto  %s . Eventuelle Ursache: Login an "
+"Server nicht möglich\n"
+"Fehler: %s"
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template_send_wizard
 msgid "This is the wizard for sending mail"
 msgstr "Assistent für den Versand der EMail"
@@ -1286,24 +1305,14 @@ msgid "Emails will be sent from this approved account."
 msgstr "EMails werden von genehmigtem Konto versendet"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Mail from Account %s failed. Probable Reason:MIME Error\n"
-"Description: %s"
-msgstr ""
-"Mail von Konto %s ist fehlgeschlagen. Mögliche Ursache:MIME Fehler\n"
-"Beschreibung:%s"
-
-#. module: email_template
 #: field:email_template.account,send_pref:0
 msgid "Mail Format"
 msgstr "Mail Format"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr "Aktionen"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Verzeichnis"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1345,3 +1354,30 @@ msgstr "Hat Dateianhang"
 #, python-format
 msgid "No Description"
 msgstr "Keine Beschreibung"
+
+#, python-format
+#~ msgid ""
+#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
+#~ msgstr ""
+#~ "Extraktion Datum/Zeit fehlgeschlagen.Datum:%s \\n                      \t"
+#~ "Fehler:%s"
+
+#, python-format
+#~ msgid ""
+#~ "Error sending mail: %s\" % str(e)))\n"
+#~ "        \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "        if ids is None:\n"
+#~ "            ids = []\n"
+#~ "        if context is None:\n"
+#~ "            context = {}\n"
+#~ "        filters = [('folder', '=', 'outbox"
+#~ msgstr ""
+#~ "Fehler bei Mailversand: %s\" % str(e)))\n"
+#~ "        \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "        if ids is None:\n"
+#~ "            ids = []\n"
+#~ "        if context is None:\n"
+#~ "            context = {}\n"
+#~ "        filters = [('folder', '=', 'outbox"

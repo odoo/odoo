@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 08:01+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 16:05+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -50,8 +51,27 @@ msgid "Leaves Management"
 msgstr "Urlaubsmanagement"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for %s while available leaves are less than asked "
+"leaves.' %(record.employee_id.name)))\n"
+"                nb = -(record.number_of_days_temp)\n"
+"            elif record.holiday_type == 'category' and record.type == "
+"'remove':\n"
+"                if record.category_id and not "
+"record.holiday_status_id.limit:\n"
+"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
+"uid, [record.holiday_status_id.id], record.category_id.id, "
+"False)[record.holiday_status_id.id]['remaining_leaves']\n"
+"                    if leaves_rest < leave_asked:\n"
+"                        raise osv.except_osv(_('Warning!"
+msgstr ""
+
+#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
+#: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
@@ -80,10 +100,9 @@ msgid "Refused"
 msgstr "Abgelehnt"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
-#: field:available.holidays.report,max_leave:0
-msgid "Allocated Leaves"
-msgstr "Urlaubsanspruch"
+#: help:hr.holidays,category_id:0
+msgid "Category Of employee"
+msgstr "Kategorie Mitarbeiter"
 
 #. module: hr_holidays
 #: selection:hr.holidays,allocation_type:0
@@ -96,7 +115,6 @@ msgid "Brown"
 msgstr "Braun"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
 #: view:hr.holidays:0
 msgid "Remaining Days"
 msgstr "Resturlaub"
@@ -119,11 +137,6 @@ msgid ""
 msgstr ""
 "Urlaubsmanager kann dieses Feld freilassen, wenn die Abwesenheit wegen "
 "Urlaub o.a. Gründen für alle Mitarbeiter gilt"
-
-#. module: hr_holidays
-#: view:available.holidays.report:0
-msgid "Leave Days"
-msgstr "Urlaubstage"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -207,6 +220,11 @@ msgstr ""
 "gegebenenfalls erhöhen wollen."
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Validation"
+msgstr "Genehmigung"
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
 #, python-format
 msgid "Warning !"
@@ -224,6 +242,7 @@ msgstr "Personal Urlaubskonten nach Mitarbeitern"
 
 #. module: hr_holidays
 #: field:available.holidays.report,holiday_status_id:0
+#: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
@@ -431,6 +450,11 @@ msgid "Leaves by Type"
 msgstr "Abwesenheit nach Typ"
 
 #. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Hell Rosa"
@@ -448,14 +472,20 @@ msgid "Number of Days"
 msgstr "Anzahl Tage"
 
 #. module: hr_holidays
-#: help:hr.holidays,category_id:0
-msgid "Category Of employee"
-msgstr "Kategorie Mitarbeiter"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,max_leave:0
+msgid "Allocated Leaves"
+msgstr "Urlaubsanspruch"
 
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Remaining Leave by Type and User"
 msgstr "Resturlaub n. Typ u. Benutzer"
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Search Leave Type"
+msgstr "Suche Abwesenheitstyp"
 
 #. module: hr_holidays
 #: selection:available.holidays.report,month:0
@@ -490,6 +520,11 @@ msgstr "Mitarbeiter"
 #: view:available.holidays.report:0
 msgid " Month "
 msgstr " Monat "
+
+#. module: hr_holidays
+#: view:board.board:0
+msgid "Leaves By Month"
+msgstr "Abwesenheit nach Monaten"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -717,6 +752,7 @@ msgstr "November"
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
+#: view:hr.holidays:0
 msgid "Extended Filters..."
 msgstr "Erweiterter Filter..."
 
@@ -752,36 +788,15 @@ msgstr "Datum"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Extended options..."
-msgstr "Erweiterte Optionen.."
+#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
+msgid "Leaves Summary"
+msgstr "Auswertung Urlaubskonto"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
 #, python-format
 msgid "Error"
 msgstr "Fehler"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
-msgstr ""
-"Sie können die beantragten %s Tage nicht genehmigen, wenn die verbleibenden "
-"Urlaubstage diesen Anspruch nicht decken.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -801,6 +816,11 @@ msgstr ""
 #: field:hr.holidays,type:0
 msgid "Request Type"
 msgstr "Anfragetyp"
+
+#. module: hr_holidays
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
@@ -824,10 +844,32 @@ msgid "Reasons"
 msgstr "Abwesenheitsgrund"
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
+msgid ""
+"Leaves requests can be recorded by employees and validated by their "
+"managers. Once a leave request is validated it appears automatically in the "
+"agenda of the employee. You can define several allowance types (paid "
+"holidays, sickness, etc) and manage allowances per type."
+msgstr ""
+"Abwesenheitsanfragen zum Beispiel aufgrund Urlaub können durch Mitarbeiter "
+"erstellt und durch Vorgesetzte genehmigt werden. Sobald ein Antrag genehmigt "
+"wird erscheint, die Abwesenheit auch in der Abwesenheits- und Terminliste "
+"für den Mitarbeiter. Sie können unterschiedliche Abwesenheitstypen "
+"generieren (bezahlter Urlaub, Krankheit etc.) und die Abwesenheit gemäss "
+"dieser unterschiedlichen Typen verwalten."
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Analyse Abwesenheit"
+
+#. module: hr_holidays
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+"vorhanden sein !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -856,6 +898,11 @@ msgid "Validated"
 msgstr "Bestätigt"
 
 #. module: hr_holidays
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
@@ -880,26 +927,21 @@ msgid "Apply Double Validation"
 msgstr "Doppelte Genehmigung"
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_status_id:0
-msgid " Leave Type"
-msgstr " Abwesenheitstyp"
-
-#. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Druck"
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Details"
+msgstr "Details"
+
+#. module: hr_holidays
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
 msgid "My Leaves"
 msgstr "Mein Urlaubskonto"
-
-#. module: hr_holidays
-#: view:board.board:0
-msgid "My Leaves by Type"
-msgstr "Abwesenheit nach Typ"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
@@ -923,6 +965,7 @@ msgid "May"
 msgstr "Mai"
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Category"
 msgstr "Meeting Kategorie"
@@ -1061,12 +1104,6 @@ msgstr "Hellgelb"
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
 msgstr "Hellrosa"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
-msgid "Leaves Summary"
-msgstr "Auswertung Urlaubskonto"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
@@ -1393,3 +1430,35 @@ msgstr ""
 #~ "mehrere auswählen und Druck Menü aufrufen)\n"
 #~ "Benutzer der Gruppe Personal/HR und der Rolle Urlaube/holidays können den "
 #~ "Status definieren.\n"
+
+#~ msgid "Leave Days"
+#~ msgstr "Urlaubstage"
+
+#~ msgid "Extended options..."
+#~ msgstr "Erweiterte Optionen.."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for %s while available leaves are less than asked "
+#~ "leaves.' %(record.employee_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            elif record.holiday_type == 'category' and record.type == "
+#~ "'remove':\n"
+#~ "                if record.category_id and not "
+#~ "record.holiday_status_id.limit:\n"
+#~ "                    leaves_rest = self.pool.get('hr.holidays.status"
+#~ msgstr ""
+#~ "Sie können die beantragten %s Tage nicht genehmigen, wenn die verbleibenden "
+#~ "Urlaubstage diesen Anspruch nicht decken.' %(record.employee_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            elif record.holiday_type == 'category' and record.type == "
+#~ "'remove':\n"
+#~ "                if record.category_id and not "
+#~ "record.holiday_status_id.limit:\n"
+#~ "                    leaves_rest = self.pool.get('hr.holidays.status"
+
+#~ msgid " Leave Type"
+#~ msgstr " Abwesenheitstyp"
+
+#~ msgid "My Leaves by Type"
+#~ msgstr "Abwesenheit nach Typ"
