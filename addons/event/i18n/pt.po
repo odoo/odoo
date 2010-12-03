@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:53+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-02 16:18+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -41,32 +41,32 @@ msgstr ""
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: event
 #: field:event.event,register_min:0
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "Registo Minimo"
 
 #. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
+#: model:ir.model,name:event.model_event_confirm_registration
+msgid "Confirmation for Event Registration"
+msgstr ""
 
 #. module: event
 #: field:event.registration.badge,title:0
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #. module: event
 #: field:event.event,mail_registr:0
 msgid "Registration Email"
-msgstr "Email de registo"
+msgstr "Email de Registo"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_confirm_registration
 msgid "Make Invoices"
-msgstr ""
+msgstr "Criar faturas"
 
 #. module: event
 #: view:event.event:0
@@ -87,7 +87,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Concert of Bon Jovi"
-msgstr "Concerto do Bon Jovi"
+msgstr "Concerto de Bon Jovi"
 
 #. module: event
 #: help:event.event,unit_price:0
@@ -100,12 +100,12 @@ msgstr ""
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "March"
-msgstr ""
+msgstr "Março"
 
 #. module: event
 #: field:event.event,mail_confirm:0
 msgid "Confirmation Email"
-msgstr "Email de confirmação"
+msgstr "Email de Confirmação"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:0
@@ -119,12 +119,12 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: event
 #: field:event.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Data da fatura"
 
 #. module: event
 #: help:event.event,pricelist_id:0
@@ -139,12 +139,12 @@ msgstr ""
 #: view:partner.event.registration:0
 #, python-format
 msgid "Event Registration"
-msgstr "Registo de eventos"
+msgstr "Registo de Eventos"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Last 7 Days"
-msgstr ""
+msgstr "Últimos 7 dias"
 
 #. module: event
 #: field:event.event,parent_id:0
@@ -154,17 +154,17 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,name:event.action_make_invoices
 msgid "Make Invoice"
-msgstr "Criar factura"
+msgstr "Criar Factura"
 
 #. module: event
 #: field:event.registration,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event on Registration"
-msgstr ""
+msgstr "Evento ao Registar"
 
 #. module: event
 #: view:report.event.registration:0
@@ -192,25 +192,30 @@ msgstr ""
 #. module: event
 #: field:event.event,mail_auto_confirm:0
 msgid "Mail Auto Confirm"
-msgstr ""
+msgstr "Auto Confirmação de Correio"
 
 #. module: event
 #: model:product.template,name:event.event_product_1_product_template
 msgid "Ticket for Opera"
-msgstr ""
+msgstr "Bilhete para Opera"
 
 #. module: event
 #: code:addons/event/event.py:0
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
-msgstr ""
+msgstr "Confirmação do Evento"
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
 #: selection:report.event.registration,state:0
 msgid "Cancelled"
+msgstr ""
+
+#. module: event
+#: view:event.registration:0
+msgid "Send New Email"
 msgstr ""
 
 #. module: event
@@ -226,17 +231,17 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Opera of Verdi"
-msgstr ""
+msgstr "Opera de Verdi"
 
 #. module: event
 #: field:event.event,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Lista de Preços"
 
 #. module: event
 #: field:event.registration,contact_id:0
 msgid "Partner Contact"
-msgstr ""
+msgstr "Contacto do Terceiro"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration_badge
@@ -246,7 +251,7 @@ msgstr ""
 #. module: event
 #: field:event.registration,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: event
 #: help:event.event,date_end:0
@@ -282,31 +287,29 @@ msgstr ""
 #. module: event
 #: view:event.registration:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Informação Extra"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Customer Invoices"
 msgstr ""
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Rascunho"
 
 #. module: event
 #: field:event.type,name:0
 msgid "Event type"
-msgstr ""
+msgstr "Tipo de Evento"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
 msgid " Event Type "
-msgstr ""
+msgstr " Tipo de Evento "
 
 #. module: event
 #: view:event.event:0
@@ -319,7 +322,7 @@ msgstr ""
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
-msgstr ""
+msgstr "Envento"
 
 #. module: event
 #: view:event.registration:0
@@ -334,17 +337,17 @@ msgstr ""
 #: selection:event.registration,state:0
 #: selection:report.event.registration,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Confirmado"
 
 #. module: event
 #: view:event.confirm.registration:0
 msgid "Registration Confirmation"
-msgstr ""
+msgstr "Registro Confirmado"
 
 #. module: event
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Erro! Não pode criar menus recursivos."
 
 #. module: event
 #: help:event.event,product_id:0
@@ -382,8 +385,16 @@ msgid "Warning !"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo deve ser único!"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low-level object used by meeting and others documents that have "
+"to be synchronized with mobile or calendar applications through caldav. Most "
+"of the users should work on the Calendar menu, and not on the list of events."
 msgstr ""
 
 #. module: event
@@ -400,18 +411,18 @@ msgstr ""
 #: field:event.event,register_current:0
 #: view:report.event.registration:0
 msgid "Confirmed Registrations"
-msgstr ""
+msgstr "Registros Confirmados"
 
 #. module: event
 #: field:event.event,mail_auto_registr:0
 msgid "Mail Auto Register"
-msgstr ""
+msgstr "Auto Registo de Correio"
 
 #. module: event
 #: field:event.event,type:0
 #: field:partner.event.registration,event_type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: event
 #: field:event.registration,email_from:0
@@ -421,7 +432,12 @@ msgstr ""
 #. module: event
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "Para ser Facturado"
+
+#. module: event
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -445,7 +461,7 @@ msgstr ""
 #: view:event.registration:0
 #: view:res.partner:0
 msgid "Cancel Registration"
-msgstr ""
+msgstr "Cancelar Registro"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -456,7 +472,7 @@ msgstr ""
 #. module: event
 #: field:event.registration,nb_register:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: event
 #: help:event.event,type:0
@@ -470,6 +486,9 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
+"Este email será enviado quand o event obter a cofirmação ou quando alguem "
+"subescrever para uma confirmação do evento. Este email é também enviado para "
+"lembrar alguem sobre o evento."
 
 #. module: event
 #: help:event.event,register_prospect:0
@@ -479,16 +498,11 @@ msgstr ""
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #. module: event
 #: view:event.event:0
 msgid "Event Organization"
-msgstr ""
-
-#. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Event Registraion"
 msgstr ""
 
 #. module: event
@@ -499,13 +513,13 @@ msgstr ""
 #. module: event
 #: view:event.registration:0
 msgid "Dates"
-msgstr ""
+msgstr "Datas"
 
 #. module: event
 #: view:event.confirm:0
 #: view:event.confirm.registration:0
 msgid "Confirm Anyway"
-msgstr ""
+msgstr "Confirmar de Qualquer Forma"
 
 #. module: event
 #: constraint:product.template:0
@@ -513,15 +527,17 @@ msgid "Error: UOS must be in a different category than the UOM"
 msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+#: view:event.event:0
+#: view:event.registration:0
+#: field:event.registration.badge,registration_id:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+msgid "Registration"
+msgstr "Registro"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number Of Events"
-msgstr ""
+msgstr "Número de Eventos"
 
 #. module: event
 #: help:event.event,state:0
@@ -534,18 +550,18 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Cancel Event"
-msgstr ""
+msgstr "Cancelar Evento"
 
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Últimos 30 dias"
 
 #. module: event
 #: view:event.event:0
@@ -553,12 +569,12 @@ msgstr ""
 #: field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Terceiro"
 
 #. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+msgstr "XML Inválido para a Arquitectura de Vista !"
 
 #. module: event
 #: view:board.board:0
@@ -570,28 +586,28 @@ msgstr ""
 #. module: event
 #: field:event.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr ""
+msgstr "Agrupar as faturas"
 
 #. module: event
 #: view:event.event:0
 msgid "Mailing"
-msgstr ""
+msgstr "Correio"
 
 #. module: event
 #: model:product.template,name:event.event_product_0_product_template
 msgid "Ticket for Concert"
-msgstr ""
+msgstr "Bilhete para Concerto"
 
 #. module: event
 #: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "Registro não Confirmado"
 
 #. module: event
 #: field:event.registration,partner_invoice_id:0
 msgid "Partner Invoiced"
-msgstr ""
+msgstr "Terceiro Facturado"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -606,17 +622,17 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,state:0
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #. module: event
 #: field:event.registration,event_product:0
@@ -632,12 +648,12 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mês"
 
 #. module: event
 #: view:event.event:0
 msgid "Event Done"
-msgstr ""
+msgstr "Evento Concluído"
 
 #. module: event
 #: help:event.event,register_current:0
@@ -647,7 +663,7 @@ msgstr ""
 #. module: event
 #: field:event.confirm.registration,msg:0
 msgid "Message"
-msgstr ""
+msgstr "Mensagem"
 
 #. module: event
 #: constraint:event.event:0
@@ -717,7 +733,13 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+"especial !"
+
+#. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nome de modelo inválido na definição da acção."
 
 #. module: event
 #: view:event.event:0
@@ -732,7 +754,7 @@ msgstr "Eventos"
 #. module: event
 #: field:partner.event.registration,nb_register:0
 msgid "Number of Registration"
-msgstr ""
+msgstr "Número de Registro"
 
 #. module: event
 #: field:event.event,child_ids:0
@@ -760,6 +782,8 @@ msgstr ""
 msgid ""
 "Check this box if you want to use the automatic mailing for new registration"
 msgstr ""
+"Assinale esta caixa se quer utilizar o correio automático para o novo "
+"registro"
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -827,7 +851,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Set To Draft"
-msgstr ""
+msgstr "Definir Para Rascunho"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -836,7 +860,7 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Confirm Registration"
-msgstr ""
+msgstr "Confirmar Registro"
 
 #. module: event
 #: view:event.event:0
@@ -859,7 +883,7 @@ msgstr ""
 #: view:event.registration:0
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "Histórico"
 
 #. module: event
 #: field:event.event,address_id:0
@@ -870,7 +894,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model:ir.ui.menu,name:event.menu_event_type_association
 msgid "Types of Events"
-msgstr ""
+msgstr "Tipos de Eventos"
 
 #. module: event
 #: view:event.registration:0
@@ -886,7 +910,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Auto Confirmation Email"
-msgstr ""
+msgstr "Auto Confirmação de Email"
 
 #. module: event
 #: view:report.event.registration:0
@@ -906,24 +930,30 @@ msgstr ""
 #: selection:report.event.registration,state:0
 #, python-format
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: event
 #: field:event.event,date_begin:0
 msgid "Beginning date"
-msgstr ""
+msgstr "Data Inicial"
 
 #. module: event
 #: view:event.registration:0
 #: field:event.registration,invoice_id:0
 msgid "Invoice"
+msgstr "Factura"
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,year:0
+msgid "Year"
 msgstr ""
 
 #. module: event
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: event
 #: view:event.confirm:0
@@ -941,6 +971,11 @@ msgstr ""
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Open"
+msgstr "Abrir"
+
+#. module: event
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: event
@@ -979,7 +1014,7 @@ msgstr ""
 #. module: event
 #: field:event.registration,unit_price:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Preço Único"
 
 #. module: event
 #: view:report.event.registration:0
@@ -996,7 +1031,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on ERP Buisness"
-msgstr ""
+msgstr "Conferência sobre Negocios ERP"
 
 #. module: event
 #: field:event.event,section_id:0
@@ -1022,7 +1057,7 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #. module: event
 #: view:event.event:0
@@ -1055,12 +1090,12 @@ msgstr ""
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr ""
+msgstr "Este email será enviado quando alguém sobescrever para o evento."
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
 msgid "Ticket for Conference"
-msgstr ""
+msgstr "Bilhete para Conferência"
 
 #. module: event
 #: field:event.registration.badge,address_id:0
@@ -1114,7 +1149,7 @@ msgstr ""
 #: view:event.event:0
 #: field:event.registration.badge,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: event
 #: help:event.event,mail_auto_confirm:0
@@ -1122,6 +1157,8 @@ msgid ""
 "Check this box if you want ot use the automatic confirmation emailing or the "
 "reminder"
 msgstr ""
+"Verifique esta caixa se quer utilizar a confirmação automatica de email ou o "
+"lembrete"
 
 #. module: event
 #: field:event.event,country_id:0
@@ -1129,9 +1166,9 @@ msgid "Country"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Registration is set as Cannot be invoiced"
 msgstr ""
 
 #. module: event
@@ -1160,7 +1197,7 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,type:0
 msgid "Event Type"
-msgstr ""
+msgstr "Tipo de Evento"
 
 #. module: event
 #: view:event.event:0
@@ -1169,7 +1206,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration_association
 msgid "Registrations"
-msgstr ""
+msgstr "Registos"
 
 #. module: event
 #: field:event.registration,date:0
@@ -1180,7 +1217,7 @@ msgstr ""
 #: field:event.event,register_max:0
 #: field:report.event.registration,register_max:0
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Maxímo de Registros"
 
 #. module: event
 #: field:report.event.registration,date:0
@@ -1218,7 +1255,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Auto Registration Email"
-msgstr ""
+msgstr "Auto Registo de Email"
 
 #. module: event
 #: view:event.registration:0
@@ -1237,17 +1274,8 @@ msgstr ""
 msgid "Speaker Confirmed"
 msgstr ""
 
-#~ msgid "Ending date"
-#~ msgstr "Data de fim"
-
 #~ msgid "Configuration"
 #~ msgstr "Configuração"
 
-#~ msgid "Draft Registrations"
-#~ msgstr "Registos em rascunho"
-
 #~ msgid "Reporting"
 #~ msgstr "Relatório"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "Erro! Não pode criar secções recursivamente."

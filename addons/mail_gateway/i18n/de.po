@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 09:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 16:20+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mail_gateway
@@ -33,11 +34,6 @@ msgstr "Methode ist nicht implementiert"
 #: field:mailgate.message,email_from:0
 msgid "From"
 msgstr "Von"
-
-#. module: mail_gateway
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: mail_gateway
 #: view:mailgate.message:0
@@ -91,9 +87,9 @@ msgid "Details"
 msgstr "Details"
 
 #. module: mail_gateway
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: mail_gateway
 #: view:mailgate.thread:0
@@ -117,6 +113,11 @@ msgstr "Email Server Werkzeuge"
 #: view:mailgate.message:0
 msgid "Email Followers"
 msgstr "EMail Verfolger"
+
+#. module: mail_gateway
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: mail_gateway
 #: model:ir.model,name:mail_gateway.model_res_partner
@@ -154,6 +155,11 @@ msgid "Email Gateway System"
 msgstr "Email Gateway System"
 
 #. module: mail_gateway
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: mail_gateway
 #: field:mailgate.message,date:0
 msgid "Date"
 msgstr "Datum"
@@ -169,6 +175,11 @@ msgid "Partner Name"
 msgstr "Partner Name"
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
+msgid "Mailgateway Threads"
+msgstr "Mailgateway Beiträge"
+
+#. module: mail_gateway
 #: code:addons/mail_gateway/mail_gateway.py:0
 #, python-format
 msgid "Opportunity"
@@ -181,6 +192,12 @@ msgstr "Verkaufschance"
 #: field:res.partner,emails:0
 msgid "Emails"
 msgstr "EMails"
+
+#. module: mail_gateway
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Stage"
+msgstr "Stufe"
 
 #. module: mail_gateway
 #: field:mailgate.message,email_to:0
@@ -203,6 +220,7 @@ msgid "Mailgateway Message"
 msgstr "Mailgateway Nachricht"
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
 #: field:mailgate.thread,message_ids:0
 msgid "Messages"
 msgstr "Nachrichten"
@@ -334,13 +352,12 @@ msgid "Owner"
 msgstr "Besitzer"
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
-msgid "Mailgateway Threads"
-msgstr "Mailgateway Beiträge"
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Changed Stage to: "
+msgstr "Ändere Bearbeitungsstufe auf: "
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
-#: model:ir.ui.menu,name:mail_gateway.menu_email_gateway_form
 #: view:mailgate.message:0
 msgid "Message"
 msgstr "Nachricht"
@@ -352,6 +369,14 @@ msgid "Subject"
 msgstr "Betreff"
 
 #. module: mail_gateway
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: mail_gateway
 #: help:mailgate.message,ref_id:0
 msgid "Message Id in Email Server."
 msgstr "Nachricht ID Email Server."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."

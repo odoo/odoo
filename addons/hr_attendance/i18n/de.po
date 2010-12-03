@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 08:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 17:37+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -35,17 +36,6 @@ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 #: view:hr.attendance:0
 msgid "Today"
 msgstr "Heute"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
-"erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
-"Anwesenheitszeiten."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -82,9 +72,11 @@ msgid "The sign-out date must be in the past"
 msgstr "Das Abmeldedatum muss in der Vergangenheit sein"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Datum Arbeitsbeginn"
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign in"
+msgstr "Anmeldung"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -182,22 +174,25 @@ msgid "Attendance"
 msgstr "Anwesenheitszeit"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
-"entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
-
-#. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
 msgstr "Max. Verzögerung"
+
+#. module: hr_attendance
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 msgid "Print"
 msgstr "Druck"
+
+#. module: hr_attendance
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -304,6 +299,18 @@ msgid "Sign in / Sign out"
 msgstr "Anmeldung / Abmeldung"
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"Time Tracking functionality aims to manage employee's attendances on the "
+"basis of the actions (Sign in/Sign out) performed by them. You can also link "
+"this to an attendance machine using OpenERP's webservices features."
+msgstr ""
+"Die Funktion der Anwesenheitszeit ermöglicht auf einfachem Wege durch ein An-"
+" und Abmelden eine automatische Ermittlung der Arbeitszeit von Mitarbeitern. "
+"Diese Funktion ist auch geeignet über die Webservices von OpenERP, externe "
+"Zeiterfassungsgeräte anzubinden."
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.out.ask"
 msgstr ""
@@ -367,11 +374,9 @@ msgid "January"
 msgstr "Januar"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Anmeldung"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Datum Arbeitsbeginn"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -397,6 +402,20 @@ msgid "Action"
 msgstr "Aktion"
 
 #. module: hr_attendance
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
+msgstr ""
+"Wenn Sie möchten, dass Ihre Mitarbeiter jeweils zu Beginn und Ende der "
+"Arbeit diese Zeit zur Ermittlung der Anwesenheitszeiten festhalten, können "
+"Sie dieses mit diesem Modul realisieren. Durch die Verbindung eines "
+"Benutzers zu einem Mitarbeiter kann die Anwesenheit einfach durch jeweils "
+"einen Anmelde- und Abmeldevorgang umgesetzt werden."
+
+#. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
 #, python-format
 msgid "No records found for your selection!"
@@ -414,12 +433,24 @@ msgid "Empoyee ID"
 msgstr "Mitarbeiter ID"
 
 #. module: hr_attendance
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+"vorhanden sein !"
+
+#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: hr_attendance
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: hr_attendance
 #: constraint:ir.model:0
@@ -466,6 +497,17 @@ msgid "Employee"
 msgstr "Mitabeiter"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+"Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
+"erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
+"Anwesenheitszeiten."
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
@@ -498,6 +540,19 @@ msgstr "Ihre letzte Anmeldung"
 #: view:hr.employee:0
 msgid "Sign Out"
 msgstr "Abmeldung"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid ""
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
+msgstr ""
+"Anmelden / Abmelden. In bestimmten Unternehmen ist es erforderlich die "
+"Anwesenheit der Mitarbeiter jeweils zu Beginn und Ende des Arbeitstages "
+"festzuhalten. Wenn ein Mitarbeiter einem Benutzer zugewiesen wurde, kann "
+"eine Erfassung sehr einfach durch diesen Button vorgenommen werden."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -609,3 +664,8 @@ msgstr ""
 
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Wähle Begin- und End Datum"
+
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr ""
+#~ "Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
+#~ "entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
