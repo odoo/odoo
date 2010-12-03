@@ -55,7 +55,7 @@ class stock_picking(osv.osv):
             ondelete='set null', select=True),
     }
     _defaults = {
-        'purchase_id': lambda *a: False,
+        'purchase_id': False,
     }
 
     def get_currency_id(self, cursor, user, picking):
