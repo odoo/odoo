@@ -85,23 +85,23 @@ class purchase_requisition_partner(osv.osv_memory):
                     partner_list = sorted([(partner.sequence, partner) for partner in  line.product_id.seller_ids if partner])
                     partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
                     uom_id = line.product_id.uom_po_id and line.product_id.uom_po_id.id or False
-                    newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
-                    newdate = newdate - relativedelta(days=company.po_lead)
+
+                    if tender.date_start:
+                        newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S') - relativedelta(days=company.po_lead)
+                    else:
+                        newdate = datetime.today() - relativedelta(days=company.po_lead)
                     delay = partner_rec and partner_rec.delay or 0.0
                     if delay:
-                        newdate = (newdate - (delay and relativedelta(days=delay)))
-                    else:
-                        newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
+                        newdate -= relativedelta(days=delay)
+#                    TO-CHECK: If not delay take date considering PO lead or tender date
+#                    else:
+#                        newdate = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
+
                     partner = partner_rec and partner_rec.name or supplier_data
                     pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id or False
                     price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]
                     product = prod_obj.browse(cr, uid, line.product_id.id, context=context)
                     location_id = self.pool.get('stock.warehouse').read(cr, uid, [tender.warehouse_id.id], ['lot_input_id'])[0]['lot_input_id'][0]
-
-                    if not newdate:
-                        date_planned = datetime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
-                    else:
-                        date_planned = newdate.strftime('%Y-%m-%d %H:%M:%S')
 
                     purchase_order_line= {
                             'name': product.partner_ref,
@@ -109,7 +109,7 @@ class purchase_requisition_partner(osv.osv_memory):
                             'product_id': line.product_id.id,
                             'product_uom': uom_id,
                             'price_unit': price,
-                            'date_planned': date_planned,
+                            'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                             'notes': product.description_purchase,
                     }
                     taxes_ids = line.product_id.product_tmpl_id.supplier_taxes_id
