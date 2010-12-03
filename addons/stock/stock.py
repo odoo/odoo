@@ -2431,7 +2431,6 @@ class stock_inventory(osv.osv):
         """
         if context is None:
             context = {}
-
         # to perform the correct inventory corrections we need analyze stock location by
         # location, never recursively, so we use a special context
         product_context = dict(context, compute_child=False)

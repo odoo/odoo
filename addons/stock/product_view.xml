@@ -102,9 +102,12 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="status" position="after">
-                    <group colspan="2" col="2">
+                    <group colspan="2" col="3">
                         <separator string="Stocks" colspan="4"/>
                         <field name="qty_available"/>
+                        <button name="%(action_view_change_product_quantity)d" string="Update"
+                            type="action" icon="gtk-execute" />
+                        <newline/>
                         <field name="virtual_available"/>
                     </group>
                     <group colspan="2" col="2" name="lot" groups="base.group_extended">
