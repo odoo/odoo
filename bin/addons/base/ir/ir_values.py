@@ -26,8 +26,7 @@ from tools.translate import _
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
-    'report_sxw_content_data', 'report_rml_content_data', 'search_view',
-    'search_view_id'))
+    'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
 
 class ir_values(osv.osv):
     _name = 'ir.values'
@@ -205,6 +204,12 @@ class ir_values(osv.osv):
                 datas = datas and datas[0]
                 if not datas:
                     return False
+                if model ==  'ir.actions.act_window' \
+                        and 'search_view_id' in datas \
+                        and datas['search_view_id']:
+                    # GTK client has a bug, where it expects only the integer id
+                    # rather than [id, name] (of many2one fields)
+                    datas['search_view_id'] = datas['search_view_id'][0]
             else:
                 datas = pickle.loads(x[2].encode('utf-8'))
             if meta:
