@@ -912,6 +912,8 @@ def get_iso_codes(lang):
     return lang
 
 def get_languages():
+    # The codes below are those from Launchpad's Rosetta, with the exception
+    # of some trivial codes where the Launchpad code is xx and we have xx_XX.
     languages={
         'ab_RU': u'Abkhazian / аҧсуа',
         'ar_AR': u'Arabic / الْعَرَبيّة',
@@ -978,7 +980,8 @@ def get_languages():
         'sl_SI': u'Slovenian / slovenščina',
         'sk_SK': u'Slovak / Slovenský jazyk',
         'sq_AL': u'Albanian / Shqip',
-        'sr_RS': u'Serbian / српски језик',
+        'sr_RS': u'Serbian (Cyrillic) / српски',
+        'sr@latin': u'Serbian (Latin) / srpski',
         'sv_SE': u'Swedish / svenska',
         'te_IN': u'Telugu / తెలుగు',
         'tr_TR': u'Turkish / Türkçe',

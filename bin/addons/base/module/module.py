@@ -488,8 +488,6 @@ class module(osv.osv):
                 # unable to find the module. we skip
                 continue
             for lang in filter_lang:
-                if len(lang) > 5:
-                    raise osv.except_osv(_('Error'), _('You Can Not Load Translation For language Due To Invalid Language/Country Code'))
                 iso_lang = tools.get_iso_codes(lang)
                 f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 # Implementation notice: we must first search for the full name of
