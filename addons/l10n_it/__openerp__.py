@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010
-#    Italian OpenERP Community (<http://www.openerp-italia.com>)
+#    Italian OpenERP Community (<http://www.openerp-italia.org>)
 #    Servabit srl
 #    Agile Business Group sagl
 #    Domsense srl
