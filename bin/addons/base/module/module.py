@@ -70,14 +70,15 @@ class module(osv.osv):
     _description = "Module"
     __logger = logging.getLogger('base.' + _name)
 
-    def get_module_info(self, name):
+    @classmethod
+    def get_module_info(cls, name):
         info = {}
         try:
             info = addons.load_information_from_description_file(name)
             if 'version' in info:
                 info['version'] = release.major_version + '.' + info['version']
         except Exception:
-            self.__logger.debug('Error when trying to fetch informations for '
+            cls.__logger.debug('Error when trying to fetch informations for '
                                 'module %s', name, exc_info=True)
         return info
 
@@ -242,6 +243,19 @@ class module(osv.osv):
             if tools.find_in_path(binary) is None:
                 raise Exception('Unable to find %r in path' % (binary,))
 
+    @classmethod
+    def check_external_dependencies(cls, module_name, newstate='to install'):
+        terp = cls.get_module_info(module_name)
+        try:
+            cls._check_external_dependencies(terp)
+        except Exception, e:
+            if newstate == 'to install':
+                msg = _('Unable to install module "%s" because an external dependency is not met: %s')
+            elif newstate == 'to upgrade':
+                msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s')
+            else:
+                msg = _('Unable to process module "%s" because an external dependency is not met: %s')
+            raise orm.except_orm(_('Error'), msg % (module_name, e.args[0]))
 
     def state_update(self, cr, uid, ids, newstate, states_to_update, context=None, level=100):
         if level<1:
@@ -259,17 +273,7 @@ class module(osv.osv):
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
 
-            terp = self.get_module_info(module.name)
-            try:
-                self._check_external_dependencies(terp)
-            except Exception, e:
-                if newstate == 'to install':
-                    msg = _('Unable to install module "%s" because an external dependency is not met: %s')
-                elif newstate == 'to upgrade':
-                    msg = _('Unable to upgrade module "%s" because an external dependency is not met: %s')
-                else:
-                    msg = _('Unable to process module "%s" because an external dependency is not met: %s')
-                raise orm.except_orm(_('Error'), msg % (module.name, e.args[0]))
+            self.check_external_dependencies(module.name, newstate)
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
@@ -316,6 +320,7 @@ class module(osv.osv):
             if mod.state not in ('installed','to upgrade'):
                 raise orm.except_orm(_('Error'),
                         _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
+            self.check_external_dependencies(mod.name, 'to upgrade')
             iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed' and dep.module_id not in todo:
