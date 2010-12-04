@@ -826,7 +826,6 @@ class account_voucher_line(osv.osv):
     _defaults = {
         'name': ''
     }
-
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context={}):
         """
         Returns a dict that contains new values and context
@@ -948,6 +947,17 @@ class account_bank_statement_line(osv.osv):
             else:
                 res[line.id] = 0.0
         return res
+
+    def _check_amount(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0])
+        if obj.voucher_id:
+            if not (obj.amount == obj.voucher_id.amount):
+                return False
+            return True
+
+    _constraints = [
+        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['statement_id']),
+    ]
 
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,
