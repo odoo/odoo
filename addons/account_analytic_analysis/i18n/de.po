@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-06 07:06+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 20:11+0000\n"
+"Last-Translator: Thorsten Vocks <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-07 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -34,7 +34,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -61,7 +61,12 @@ msgstr "Geplante Einnahmen"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "letztes Rechnungsdatum"
+msgstr "Letztes Rechnungsdatum"
+
+#. module: account_analytic_analysis
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -87,6 +92,11 @@ msgstr "Plan Marge"
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Marge (%)"
+
+#. module: account_analytic_analysis
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -203,7 +213,7 @@ msgstr "Abgerechnete Stunden"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Marge"
+msgstr "Realisierte Marge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -227,7 +237,7 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
-"Anzahl Stunden (des Journaltypen Generell) die berechnet werden können, "
+"Anzahl Stunden (des Journaltypen Allgemein) die berechnet werden können, "
 "falls Ihre Berechnung auf der Basis analytischer Konten beruht."
 
 #. module: account_analytic_analysis
@@ -247,7 +257,7 @@ msgid ""
 "the customer based on the total costs."
 msgstr ""
 "Falls eine Rechnung aus einem analytischen Konto generiert wird, basiert der "
-"verbleibende Betrag der an den Kunden weiter berechnet werden kann auf den "
+"verbleibende Betrag der an den Kunden weiter berechnet werden kann, auf den "
 "gesamten Kosten."
 
 #. module: account_analytic_analysis
@@ -295,6 +305,11 @@ msgstr "Alle offenen Positionen (Abrechenbar)"
 #: field:account.analytic.account,hours_quantity:0
 msgid "Hours Tot"
 msgstr "Gesamt Stunden"
+
+#. module: account_analytic_analysis
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0

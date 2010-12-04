@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-11 09:24+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 08:05+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-12 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -23,20 +23,6 @@ msgstr ""
 #, python-format
 msgid "Suggestion"
 msgstr "Suggestie"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"<html>O(1) means that the number of SQL requests to read the object does not "
-"depand on the number of objects we are reading. This feature is mostly "
-"wished.\n"
-"</html>"
-msgstr ""
-"<html>O(1) betekent dat het aantal SQL aanvragen om het object te lezen niet "
-"afhangt van het aantal objecten dat we lezen. Dit kenmerk is meestal "
-"gewenst.\n"
-"</html>"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
@@ -57,16 +43,21 @@ msgstr ""
 "Basis module kwaliteit - Om de kwaliteit van andere modules te controleren"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
+#: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid ""
-"\"\"\n"
-"This test checks if the module satisfy tiny structure\n"
-"\"\""
+"\n"
+"Test checks for fields, views, security rules, dependancy level\n"
 msgstr ""
-"\"\"\n"
-"Deze test controleert of de module voldoet aan de tiny struktuur\n"
-"\"\""
+"\n"
+"Test controleert op velden, weergaven, beveiligingsregels, "
+"afhankelijkheidsniveau\n"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "O(n) or worst"
+msgstr "O(n) of ergste"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -74,20 +65,10 @@ msgid "Skipped"
 msgstr "Overgeslagen"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"This test checks the speed of the module. Note that at least 5 demo data is "
-"needed in order to run it.\n"
-"\n"
-"\"\""
-msgstr ""
-"\"\"\n"
-"Deze test controleert de snelheid van de module. Merk op dat tenminste 5 "
-"demo gegevens nodig zijn om dit uit te voeren.\n"
-"\n"
-"\"\""
+msgid "Module has no objects"
+msgstr "Module heeft geen objecten"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -141,20 +122,6 @@ msgid "Result of dependancy in %"
 msgstr "Resultaat van afhankelijkheid in %"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks if the module classes are raising exception when calling "
-"basic methods or not.\n"
-"\"\""
-msgstr ""
-"\"\"\n"
-"Deze test controleert of de module klassen uitzonderingen veroorzaken bij "
-"het aanroepen van de basis methoden of niet.\n"
-"\"\""
-
-#. module: base_module_quality
 #: help:module.quality.detail,state:0
 msgid ""
 "The test will be completed only if the module is installed or if the test "
@@ -170,17 +137,10 @@ msgid "Result (/10)"
 msgstr "Resultaat (/10)"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"Test checks for fields, views, security rules, dependancy level\n"
-"\"\""
-msgstr ""
-"\"\"\n"
-"Test controleert op velden, weergaven, beveiligingsregels en "
-"afhankelijkheidsniveau\n"
-"\"\""
+msgid "Terp Test"
+msgstr "Terp test"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
@@ -229,12 +189,6 @@ msgid "Warning"
 msgstr "Waarschuwing"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
-#, python-format
-msgid "Feedback about structure of module"
-msgstr "Terugkoppeling over struktuur van de module"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Unit Test"
@@ -253,20 +207,9 @@ msgid "Result of pep8_test in %"
 msgstr "Resultaat van pep8_test in %"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/unit_test/unit_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
-"'unit_test/test.py' is needed in module.\n"
-"\n"
-"\"\""
-msgstr ""
-"\"\"\n"
-"Deze test controleert de Unit test(PyUnit) gevallen van de module. Merk op "
-"dat 'unit_test/test.py' nodig is in de module.\n"
-"\n"
-"\"\""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
@@ -300,17 +243,9 @@ msgstr ""
 "hebben in de berekening van de eindscore."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/pep8_test/pep8_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"PEP-8 Test , copyright of py files check, method can not call from loops\n"
-"\"\""
-msgstr ""
-"\"\"\n"
-"PEP-8 test , copyright van py bestanden controle, methode kan niet aanroepen "
-"vanuit lussen\n"
-"\"\""
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -347,12 +282,6 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid "O(n) or worst"
-msgstr "O(n) of ergste"
-
-#. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
 msgid "Save report"
 msgstr "Rapport opslaan"
@@ -367,12 +296,6 @@ msgstr ""
 "Deze test controleert of het object workflow erbij heeft of niet, of er een "
 "statusveld is met verschillende knoppen erbij en controleert ook de "
 "geldigheid van het workflow xml bestand"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid "Module has no objects"
-msgstr "Module heeft geen objecten"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -416,6 +339,20 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"<html>O(1) means that the number of SQL requests to read the object does not "
+"depand on the number of objects we are reading. This feature is mostly "
+"wished.\n"
+"</html>"
+msgstr ""
+"<html>O(1) betekent dat het aantal SQL aanvragen om het object te lezen niet "
+"afhangt van het aantal objecten dat we lezen. Dit kenmerk is meestal "
+"gewenst.\n"
+"</html>"
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "__openerp__.py file"
@@ -434,10 +371,34 @@ msgid "Tests"
 msgstr "Tests"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the speed of the module. Note that at least 5 demo data is "
+"needed in order to run it.\n"
+"\n"
+msgstr ""
+"\n"
+"Deze test controleert de snelheid van de module. Merk op dat er tenminste 5 "
+"demonstratiegegevens nodig zijn om het uit te voeren.\n"
+"\n"
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Unable to parse the result. Check the details."
 msgstr "Kan het resultaat niet verwerken. Controleer de details."
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module satisfy tiny structure\n"
+msgstr ""
+"\n"
+"Deze test controleert of de module voldoet aan de tiny structuur\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -483,20 +444,6 @@ msgid "Test Is Not Implemented"
 msgstr "Test Is niet geïmplementeerd"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
-#, python-format
-msgid ""
-"\"\"This test uses Pylint and checks if the module satisfies the coding "
-"standard of Python. See http://www.logilab.org/project/name/pylint for "
-"further info.\n"
-" \"\""
-msgstr ""
-"\"\"Deze test gebruikt Pylint en controleert of de module voldoet aan de "
-"codeer standaard van Python. See http://www.logilab.org/project/name/pylint "
-"voor meer info.\n"
-" \"\""
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N"
@@ -508,10 +455,10 @@ msgid "Report Save"
 msgstr "Rapport opslaan"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr "Terugkoppeling over workflow van de module"
+msgid "Feedback about structure of module"
+msgstr "Terugkoppeling over struktuur van de module"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -522,6 +469,25 @@ msgid ""
 msgstr ""
 "Opgegeven module heeft geen objecten. Snelheid test werkt alleen als nieuwe "
 "objecten in de module worden gemaakt samen met demo gegevens"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid ""
+"This test uses Pylint and checks if the module satisfies the coding standard "
+"of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
+" "
+msgstr ""
+"Deze test gebruikt Pylint en controleert of de module voldoet aan de Python "
+"codeerstandaard. Zie http://www.logilab.org/project/name/pylint voor meer "
+"info.\n"
+" "
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "Feed back About Workflow of Module"
+msgstr "Terugkoppeling over workflow van de module"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
@@ -538,6 +504,11 @@ msgstr "Klaar"
 #: wizard_button:quality_detail_save,init,end:0
 msgid "Cancel"
 msgstr "Annuleren"
+
+#. module: base_module_quality
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
@@ -575,6 +546,32 @@ msgstr "Beoordeelde module"
 #, python-format
 msgid "Workflow Test"
 msgstr "Workflow test"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/unit_test/unit_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
+"'unit_test/test.py' is needed in module.\n"
+"\n"
+msgstr ""
+"\n"
+"Deze test controleert de unit test (PyUnit) zaken van de module. Merk op dat "
+"'unit_test/test.py' benodigd is in de module.\n"
+"\n"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module classes are raising exception when calling "
+"basic methods or not.\n"
+msgstr ""
+"\n"
+"Deze test controleert of de module klassen uitzonderingen opleveren als "
+"basis methoden worden aangeroepen, of niet.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -621,6 +618,44 @@ msgstr "Tagnaam"
 #: wizard_field:quality_detail_save,init,name:0
 msgid "File name"
 msgstr "Bestandsnaam"
+
+#. module: base_module_quality
+#: model:ir.module.module,description:base_module_quality.module_meta_information
+msgid ""
+"\n"
+"The aim of this module is to check the quality of other modules.\n"
+"\n"
+"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
+"evaluate them on different criteria such as: the respect of OpenERP coding\n"
+"standards, the speed efficiency...\n"
+"\n"
+"This module also provides generic framework to define your own quality "
+"test.\n"
+"For further info, coders may take a look into base_module_quality\\"
+"README.txt\n"
+"\n"
+"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
+"using it, otherwise it may crash.\n"
+"    "
+msgstr ""
+"\n"
+"Het doel van deze module is om de kwaliteit van van andere modules te "
+"controleren.\n"
+"\n"
+"Het definieert een assistent bij de lijst van modules in OpenERP, waarmee u "
+"ze kunt\n"
+"evalueren volgens verschillende criteria zoals: het respecteren van OpenERP "
+"code\n"
+"standaarden, de snelheid....\n"
+"\n"
+"Deze module biedt ook een raamwerk om uw eigen kwaliteitstesten te "
+"ontwikkelen.\n"
+"Voor meer info kunnen ontwikkelaars kijken bij base_module_quality\\"
+"README.txt\n"
+"\n"
+"WAARSCHUWING: Deze module kan niet als een ZIP bestand werken; u moet het\n"
+"voor gebruik eerst unzippen, anders kan het vastlopen.\n"
+"    "
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -696,12 +731,6 @@ msgid "Structure Test"
 msgstr "Struktuur test"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:0
-#, python-format
-msgid "Terp Test"
-msgstr "Terp test"
-
-#. module: base_module_quality
 #: field:module.quality.detail,quality_check_id:0
 msgid "Quality"
 msgstr "Kwaliteit"
@@ -714,3 +743,87 @@ msgstr "Terugkoppeling over terp bestand van de module"
 
 #~ msgid "Base module quality"
 #~ msgstr "Basis module kwaliteit"
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "This test checks the speed of the module. Note that at least 5 demo data is "
+#~ "needed in order to run it.\n"
+#~ "\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "Deze test controleert de snelheid van de module. Merk op dat tenminste 5 "
+#~ "demo gegevens nodig zijn om dit uit te voeren.\n"
+#~ "\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "This test checks if the module satisfy tiny structure\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "Deze test controleert of de module voldoet aan de tiny struktuur\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "Test checks for fields, views, security rules, dependancy level\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "Test controleert op velden, weergaven, beveiligingsregels en "
+#~ "afhankelijkheidsniveau\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "This test checks if the module classes are raising exception when calling "
+#~ "basic methods or not.\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "Deze test controleert of de module klassen uitzonderingen veroorzaken bij "
+#~ "het aanroepen van de basis methoden of niet.\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "This test checks the Unit Test(PyUnit) Cases of the module. Note that "
+#~ "'unit_test/test.py' is needed in module.\n"
+#~ "\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "Deze test controleert de Unit test(PyUnit) gevallen van de module. Merk op "
+#~ "dat 'unit_test/test.py' nodig is in de module.\n"
+#~ "\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"\n"
+#~ "PEP-8 Test , copyright of py files check, method can not call from loops\n"
+#~ "\"\""
+#~ msgstr ""
+#~ "\"\"\n"
+#~ "PEP-8 test , copyright van py bestanden controle, methode kan niet aanroepen "
+#~ "vanuit lussen\n"
+#~ "\"\""
+
+#, python-format
+#~ msgid ""
+#~ "\"\"This test uses Pylint and checks if the module satisfies the coding "
+#~ "standard of Python. See http://www.logilab.org/project/name/pylint for "
+#~ "further info.\n"
+#~ " \"\""
+#~ msgstr ""
+#~ "\"\"Deze test gebruikt Pylint en controleert of de module voldoet aan de "
+#~ "codeer standaard van Python. See http://www.logilab.org/project/name/pylint "
+#~ "voor meer info.\n"
+#~ " \"\""
