@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 08:29+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-03 09:56+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_planning
@@ -23,11 +23,6 @@ msgstr ""
 msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
-msgstr ""
-
-#. module: project_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: project_planning
@@ -46,7 +41,7 @@ msgstr "Ligne de planning"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Unallocated Time"
-msgstr ""
+msgstr "Temps total non alloué"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,name:0
@@ -54,9 +49,14 @@ msgid "Planning Name"
 msgstr "Nom du planning"
 
 #. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
+
+#. module: project_planning
 #: view:board.board:0
 msgid "My Project's planning"
-msgstr ""
+msgstr "Planning de mon projet"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,timesheet:0
@@ -69,7 +69,7 @@ msgstr "Feuille de temps"
 #. module: project_planning
 #: model:ir.module.module,shortdesc:project_planning.module_meta_information
 msgid "Planning Management Module"
-msgstr ""
+msgstr "Module de gestion des plannings"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,account_id:0
@@ -115,18 +115,20 @@ msgstr "Annulé"
 #: view:report_account_analytic.planning:0
 #: view:report_account_analytic.planning.line:0
 msgid "Total Planned (in Days)"
-msgstr ""
+msgstr "Total planifié (en jours)"
 
 #. module: project_planning
 #: constraint:report_account_analytic.planning:0
 msgid ""
 "Invalid planning ! Planning dates can't overlap for the same responsible. "
 msgstr ""
+"Planning invalide ! Les dates de planning ne peuvent pas se chevaucher pour "
+"un même responsable ! "
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_account:0
 msgid "Planning By Account"
-msgstr ""
+msgstr "Planning par compte"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -167,10 +169,15 @@ msgid ""
 msgstr ""
 
 #. module: project_planning
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning.account,plan_open:0
 #: field:report_account_analytic.planning.user,plan_open:0
 msgid "Time Allocation without Tasks"
-msgstr ""
+msgstr "Allocation des temps sans tâches"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -178,20 +185,15 @@ msgid "From"
 msgstr "De"
 
 #. module: project_planning
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning.account,account_id:0
 #: field:report_account_analytic.planning.line,account_id:0
 msgid "Analytic account"
 msgstr "Compte Analytique"
-
-#. module: project_planning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: project_planning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,plan_open:0
@@ -208,7 +210,7 @@ msgstr "Divers"
 #. module: project_planning
 #: help:res.company,planning_time_mode_id:0
 msgid "This will set the unit of measure used in plannings."
-msgstr ""
+msgstr "Ceci définit l'unité de mesure qui sera utilisée en planification."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -236,19 +238,14 @@ msgid "Planning"
 msgstr "Planning"
 
 #. module: project_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
-msgstr ""
+msgstr "Saisie des temps"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,free:0
 msgid "Unallocated Time"
-msgstr ""
+msgstr "Temps non alloué"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
@@ -269,10 +266,8 @@ msgid "Delegate"
 msgstr "Déléguer"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
 msgstr ""
 
 #. module: project_planning
@@ -285,7 +280,7 @@ msgstr ""
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_user_ids:0
 msgid "Planning By User"
-msgstr ""
+msgstr "Planning par utilisateur"
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.act_task_of_lines
@@ -297,7 +292,7 @@ msgstr "Tâches"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Planning By Account (in Days)"
-msgstr ""
+msgstr "Planning par compte (en jours)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_from:0
@@ -307,7 +302,7 @@ msgstr "Date de début"
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "Total Planned Tasks"
-msgstr ""
+msgstr "Total des tâches planifiées"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,total_free:0
@@ -327,8 +322,10 @@ msgid "tasks"
 msgstr "tâches"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
 msgstr ""
 
 #. module: project_planning
@@ -348,15 +345,10 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: project_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
-
-#. module: project_planning
 #: view:account.analytic.account:0
 #: view:report_account_analytic.planning:0
 msgid "Planning Lines"
-msgstr ""
+msgstr "Lignes du planning"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -366,7 +358,7 @@ msgstr "En attente"
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,sum_amount:0
 msgid "Planned Days"
-msgstr ""
+msgstr "Jours planifiés"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,state:0
@@ -391,7 +383,7 @@ msgstr "Utilisateur"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Remaining Tasks"
-msgstr ""
+msgstr "Reste à faire"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
@@ -406,7 +398,7 @@ msgstr ""
 #. module: project_planning
 #: field:report_account_analytic.planning.user,plan_tasks:0
 msgid "Time Planned on Tasks"
-msgstr ""
+msgstr "Temps planifiés sur des tâches"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount:0
@@ -438,7 +430,7 @@ msgstr "Annuler"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Planning By User (in Days)"
-msgstr ""
+msgstr "Planning par utilisateur (en jours)"
 
 #. module: project_planning
 #: view:report_account_analytic.planning.stat:0
@@ -452,15 +444,10 @@ msgid "Open"
 msgstr "Ouvrir"
 
 #. module: project_planning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
 #: view:report_account_analytic.planning:0
 msgid "Planning by User"
-msgstr ""
+msgstr "Planning par utilisateur"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -471,14 +458,6 @@ msgstr "Informations"
 #: field:report_account_analytic.planning,business_days:0
 msgid "Business Days"
 msgstr "Jour Ouvrés"
-
-#. module: project_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
-"spécial !"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -494,7 +473,7 @@ msgstr "Responsable"
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
 msgid "Planning stat"
-msgstr ""
+msgstr "Statistiques de planification"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -504,7 +483,7 @@ msgstr "À"
 #. module: project_planning
 #: field:report_account_analytic.planning.account,plan_tasks:0
 msgid "Time Allocation of Tasks"
-msgstr ""
+msgstr "Allocation des temps des tâches"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -522,7 +501,7 @@ msgstr ""
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation without Tasks"
-msgstr ""
+msgstr "Temps total alloué sans tâches"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,holiday:0
@@ -532,7 +511,7 @@ msgstr "Congés"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation of Tasks"
-msgstr ""
+msgstr "Temps total alloué à des tâches"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_to:0
@@ -542,7 +521,7 @@ msgstr "Date de Fin"
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "Remaining tasks"
-msgstr ""
+msgstr "Tâches restantes"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -552,12 +531,12 @@ msgstr "Résumé par projet"
 #. module: project_planning
 #: field:res.company,planning_time_mode_id:0
 msgid "Planning Time Unit"
-msgstr ""
+msgstr "Unité de temps pour le planning"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,task_ids:0
 msgid "Planning Tasks"
-msgstr ""
+msgstr "Tâches du planning"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,manager_id:0

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-16 14:55+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-04 08:18+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,20 +22,9 @@ msgid "City"
 msgstr "Ville"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturation"
 
 #. module: base_setup
 #: field:base.setup.company,name:0
@@ -50,12 +39,12 @@ msgstr "E-mail"
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr ""
+msgstr "N° de compte bancaire"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr ""
+msgstr "Outils supplémentaires"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
@@ -82,12 +71,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Point de vente"
 
 #. module: base_setup
 #: field:base.setup.installer,association:0
 msgid "Associations"
-msgstr ""
+msgstr "Associations"
 
 #. module: base_setup
 #: help:base.setup.installer,account_accountant:0
@@ -97,17 +86,16 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "Les utilisateurs suivants ont été installées : \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Avancement de la configuration"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
@@ -123,22 +111,22 @@ msgstr "Devise"
 #. module: base_setup
 #: field:base.setup.company,state_id:0
 msgid "Fed. State"
-msgstr ""
+msgstr "État fédéral"
 
 #. module: base_setup
 #: field:base.setup.installer,marketing:0
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: base_setup
 #: field:base.setup.company,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: base_setup
 #: field:base.setup.installer,sale:0
 msgid "Sales Management"
-msgstr ""
+msgstr "Gestion des ventes"
 
 #. module: base_setup
 #: help:base.setup.installer,profile_tools:0
@@ -146,6 +134,15 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"Vous pouvez commencer à configurer le système, ou vous connecter directement "
+"à la base de données en tant qu'administrateur."
 
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
@@ -160,22 +157,17 @@ msgstr "Téléphone"
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Utiliser directement"
+msgstr "titre"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
-msgstr ""
+msgstr "Gestion des connaissances"
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -200,6 +192,11 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr ""
+
+#. module: base_setup
 #: help:base.setup.installer,hr:0
 msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
@@ -214,14 +211,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_setup
 #: field:base.setup.installer,hr:0
 msgid "Human Resources"
-msgstr ""
+msgstr "Ressources humaines"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -244,12 +236,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,street2:0
 msgid "Street 2"
-msgstr ""
+msgstr "Rue 2"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_installer
 msgid "base.setup.installer"
-msgstr ""
+msgstr "base.setup.installer"
 
 #. module: base_setup
 #: field:base.setup.company,country_id:0
@@ -264,7 +256,7 @@ msgstr "Installation"
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Comptabilité & finance"
 
 #. module: base_setup
 #: field:base.setup.installer,auction:0
@@ -274,7 +266,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,zip:0
 msgid "Zip Code"
-msgstr ""
+msgstr "Code postal"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -291,7 +283,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
-msgstr ""
+msgstr "Configuration de la société"
 
 #. module: base_setup
 #: field:base.setup.company,logo:0
@@ -301,7 +293,7 @@ msgstr "Logo"
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
-msgstr ""
+msgstr "Gestion des achats"
 
 #. module: base_setup
 #: help:base.setup.installer,sale:0
@@ -316,17 +308,17 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr ""
+msgstr "Gestion de projets"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
 msgid "Installed Users"
-msgstr ""
+msgstr "Utilisateurs installés"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "New Database"
-msgstr ""
+msgstr "Nouvelle base de données"
 
 #. module: base_setup
 #: field:base.setup.installer,crm:0
@@ -339,6 +331,8 @@ msgid ""
 "Installs a preselected set of OpenERP applications selected to help you "
 "manage your auctions as well as the business processes around them."
 msgstr ""
+"Installe un jeu d'applications d'OpenERP présélectionnées pour la gestion "
+"des ventes aux enchères, ainsi que les processus qui s'y rattachent."
 
 #. module: base_setup
 #: help:base.setup.company,rml_header1:0
@@ -373,7 +367,7 @@ msgstr ""
 #: field:base.setup.config,config_logo:0
 #: field:base.setup.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #. module: base_setup
 #: field:base.setup.installer,product_expiry:0
@@ -383,7 +377,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
 msgid "Manufacturing"
-msgstr ""
+msgstr "Gestion de production"
 
 #. module: base_setup
 #: view:base.setup.company:0
@@ -398,7 +392,7 @@ msgid ""
 "Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
 msgstr ""
 "Cette phrase apparaîtra en pied de vos rapports.\n"
-"Nous vous suggerons d'écrire vos informations légales ici.\n"
+"Nous vous suggérons d'écrire vos informations légales ici.\n"
 "Site: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
 
 #. module: base_setup
@@ -419,7 +413,7 @@ msgstr "Rue"
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_company
 msgid "base.setup.company"
-msgstr ""
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
@@ -429,7 +423,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
-msgstr ""
+msgstr "Installer les applications"
 
 #. module: base_setup
 #: help:base.setup.installer,crm:0
@@ -457,16 +451,12 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your association more efficiently."
 msgstr ""
+"Installe un jeu d'applications OpenERP présélectionnées pour vous aider à "
+"gérer efficacement votre association."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
 msgstr ""
 
 #~ msgid ""
@@ -533,6 +523,9 @@ msgstr ""
 
 #~ msgid "Installation Done"
 #~ msgstr "Installation terminée"
+
+#~ msgid "Use Directly"
+#~ msgstr "Utiliser directement"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuler"

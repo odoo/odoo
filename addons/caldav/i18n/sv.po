@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-02 20:14+0000\n"
-"Last-Translator: Magnus Brandt, Aspirix AB <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-03 07:37+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: caldav
@@ -38,7 +38,6 @@ msgid "Provide path for Remote Calendar"
 msgstr ""
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_import
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
 msgid "Import .ics File"
 msgstr "Importera  .ics fil"
@@ -53,6 +52,11 @@ msgstr "_Stäng"
 #: selection:basic.calendar.lines,name:0
 msgid "Attendee"
 msgstr "Deltagare"
+
+#. module: caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
+msgstr ""
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -96,6 +100,7 @@ msgstr "Fel!"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/wizard/calendar_event_import.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Varning!"
@@ -163,11 +168,6 @@ msgid "Error! You can not create recursive Directories."
 msgstr "Fel! Ni kan inte skapa rekursiva kataloger."
 
 #. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Namnet på modulen måste vara unikt!"
-
-#. module: caldav
 #: field:basic.calendar,type:0
 #: field:basic.calendar.attributes,type:0
 #: field:basic.calendar.fields,type_id:0
@@ -179,11 +179,6 @@ msgstr ""
 #: field:basic.calendar,description:0
 msgid "description"
 msgstr "beskrivning"
-
-#. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unikt!"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
@@ -200,11 +195,6 @@ msgstr "Fel !"
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
 msgstr ""
-
-#. module: caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -245,9 +235,17 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
-msgstr "Att göra"
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid ""
+"Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/wizard/calendar_event_import.py:0
+#, python-format
+msgid "Invalid format of the ics, file can not be imported"
+msgstr ""
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -265,21 +263,6 @@ msgid "Message..."
 msgstr "Meddelande"
 
 #. module: caldav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fel! Ni kan inte skapa rekursiva menyer"
-
-#. module: caldav
-#: model:ir.model,name:caldav.model_basic_calendar
-msgid "basic.calendar"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Felaktigt namn för modellen i händelsedefinitionen."
-
-#. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
@@ -294,6 +277,7 @@ msgstr ""
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
 msgstr ""
@@ -359,14 +343,8 @@ msgid "Fields Mapping"
 msgstr ""
 
 #. module: caldav
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:caldav.model_basic_calendar
+msgid "basic.calendar"
 msgstr ""
 
 #. module: caldav
@@ -461,9 +439,19 @@ msgid "Attendee must have an Email Id"
 msgstr ""
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_export
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid "vobject Import Error!"
+msgstr ""
+
+#. module: caldav
+#: view:basic.calendar:0
+msgid "MY"
 msgstr ""
 
 #. module: caldav
@@ -488,8 +476,8 @@ msgstr ""
 
 #. module: caldav
 #: view:basic.calendar:0
-msgid "MY"
-msgstr ""
+msgid "Todo"
+msgstr "Att göra"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
@@ -521,3 +509,18 @@ msgstr ""
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unikt!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modellen i händelsedefinitionen."

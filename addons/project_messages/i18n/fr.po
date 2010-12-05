@@ -6,25 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-19 09:40+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 08:22+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: project_messages
-#: field:project.messages,from_id:0
-msgid "From"
-msgstr "De"
-
-#. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erreur! Vous ne pouvez pas créer de Menu récursif."
 
 #. module: project_messages
 #: field:project.messages,to_id:0
@@ -32,30 +23,19 @@ msgid "To"
 msgstr "À"
 
 #. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: project_messages
-#: view:project.messages:0
-msgid "Today"
-msgstr "Aujourd'hui"
-
-#. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
+#: field:project.messages,from_id:0
+msgid "From"
+msgstr "De"
 
 #. module: project_messages
 #: help:project.messages,to_id:0
 msgid "Keep this empty to broadcast the message."
-msgstr ""
+msgstr "Laisser vide pour diffuser le message"
 
 #. module: project_messages
 #: field:project.messages,create_date:0
@@ -63,18 +43,11 @@ msgid "Creation Date"
 msgstr "Date de création"
 
 #. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
-msgstr ""
-
-#. module: project_messages
-#: model:ir.module.module,shortdesc:project_messages.module_meta_information
-msgid "In-Project Messaging System"
-msgstr ""
-
-#. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid ""
+"An in-project messagery system permits an efficient and trackable "
+"communication between project members. The messages are kept in the system "
+"and can then be used for post-analysis."
 msgstr ""
 
 #. module: project_messages
@@ -95,32 +68,22 @@ msgstr "Projet"
 
 #. module: project_messages
 #: view:project.messages:0
-msgid "Message To"
-msgstr ""
-
-#. module: project_messages
-#: model:ir.actions.act_window,help:project_messages.messages_form
-msgid ""
-"An in-project messagery system permits an efficient and trackable "
-"communication between project members. The messages are kept in the system "
-"and can then be used for post-analysis."
-msgstr ""
-
-#. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
-#: view:project.messages:0
-msgid "Project Messages"
-msgstr ""
-
-#. module: project_messages
-#: view:project.messages:0
 msgid "Group By..."
 msgstr ""
 
 #. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: view:project.messages:0
+msgid "Today"
+msgstr "Aujourd'hui"
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Message To"
+msgstr "Destinataire"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_messages
@@ -136,6 +99,21 @@ msgid "Message From"
 msgstr "Message de"
 
 #. module: project_messages
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+#: view:project.messages:0
+msgid "Project Messages"
+msgstr "Messages du projet"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+
+#. module: project_messages
+#: model:ir.module.module,shortdesc:project_messages.module_meta_information
+msgid "In-Project Messaging System"
+msgstr "Système de messagerie interne aux projets"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur! Vous ne pouvez pas créer de Menu récursif."
