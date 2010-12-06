@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-20 07:27+0000\n"
+"PO-Revision-Date: 2010-11-24 07:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-21 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "Vous ne pouvez pas effacer de mouvement posté: \"%s\" !"
+msgstr "You can not delete posted movement : \" %s \" !"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -133,7 +133,7 @@ msgstr "Exercices fiscaux"
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "System payment"
-msgstr ""
+msgstr "Système de paiement"
 
 #. module: account
 #: view:account.journal:0
@@ -145,8 +145,6 @@ msgstr "Autre configuration"
 #, python-format
 msgid "No journal for ending writing has been defined for the fiscal year"
 msgstr ""
-"Aucun journal pour l'écriture finale n'a été défini pour cette exercice "
-"fiscal"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -155,6 +153,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Vous ne pouvez pas supprimer / désactiver un compte tant qu'il est utilisé "
+"comme propriété d'un partenaire ."
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -266,7 +266,7 @@ msgstr "Référence"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
-msgstr ""
+msgstr "Choisir une année fiscale "
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -296,6 +296,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Donne le type du journal analytique . Quand des écritures analytiques "
+"doivent être crées pour un document ( une facture par exemple ) , OpenERP va "
+"rechercher un journal correspondant du même type ."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -311,7 +314,7 @@ msgstr "fournisseur"
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "Expenses Credit Notes Journal - (test)"
-msgstr ""
+msgstr "Journal des avoir de frais - ( test )"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -325,6 +328,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Pas de période définie pour cette date : %s !\n"
+"Veuillez créer un exercice comptable ."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select

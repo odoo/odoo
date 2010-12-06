@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-22 07:36+0000\n"
+"PO-Revision-Date: 2010-11-24 08:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -377,12 +377,12 @@ msgstr "Modificato"
 #: code:addons/document/document_storage.py:0
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "Errore durante la scrittura del documento!"
 
 #. module: document
 #: view:document.directory:0
 msgid "Generated Files"
-msgstr ""
+msgstr "File generati"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -416,7 +416,7 @@ msgstr ""
 #. module: document
 #: field:document.configuration,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Avanzamento Configurazione"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -493,6 +493,22 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"Questo è un sistema di gestione documentale completo:\n"
+"    * Autenticazione Utente\n"
+"    * Indicizzazione Documenti :- i file .pptx e .docx non sono supportati "
+"sulla piattaforma windows.\n"
+"    * Cruscotto per documenti che include:\n"
+"        * Nuovi Files (elenco)\n"
+"        * File per Tipo Risorsa (grafico)\n"
+"        * File per Partner (grafico)\n"
+"        * File per Mese (grafico)\n"
+"    Attenzione:\n"
+"    - Quando installi questo modulo su una azienda attiva in cui sono già "
+"presenti file PDF nel database,\n"
+"      essi verranno persi tutti.\n"
+"    - Dopo l'installazione di questo modulo i PDF non saranno più "
+"memorizzati all'interno del database,\n"
+"      ma sul percorso del server tipo /server/bin/filestore.\n"
 
 #. module: document
 #: help:document.storage,online:0

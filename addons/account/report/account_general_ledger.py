@@ -86,17 +86,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_target_move': self._get_target_move,
-            'strip_name': self._strip_name,
         })
         self.context = context
-
-    def _ellipsis(self, char, size=100, truncation_str='...'):
-        if len(char) <= size:
-            return char
-        return char[:size-len(truncation_str)] + truncation_str
-
-    def _strip_name(self, name, maxlen=50):
-        return self._ellipsis(name, maxlen)
 
     def _sum_currency_amount_account(self, account):
         self.cr.execute('SELECT sum(l.amount_currency) AS tot_currency \
@@ -164,9 +155,9 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
 
         # Then select all account_move_line of this account
         if self.sortby == 'sort_journal_partner':
-            sql_sort='j.code, p.name'
+            sql_sort='j.code, p.name, l.move_id'
         else:
-            sql_sort='l.date'
+            sql_sort='l.date, l.move_id'
         sql = """
             SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,
             case when a.currency_id is not null then
@@ -175,7 +166,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                         0.0
                         end as amount_currency,
             l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
-            m.name AS move_name, m.id AS mmove_id,
+            m.name AS move_name, m.id AS mmove_id,per.code as period_code,
             c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
@@ -185,6 +176,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             LEFT JOIN res_currency c on (l.currency_id=c.id)
             LEFT JOIN res_partner p on (l.partner_id=p.id)
             LEFT JOIN account_invoice i on (m.id =i.move_id)
+            LEFT JOIN account_period per on (per.id=l.period_id)
             JOIN account_journal j on (l.journal_id=j.id)
             WHERE %s AND m.state IN %s AND l.account_id = %%s ORDER by %s
         """ %(self.query, tuple(move_state), sql_sort)
@@ -220,15 +212,12 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             res_init = self.cr.dictfetchall()
         res = res_init + res_lines 
         account_sum = 0.0
-        inv_types = { 'out_invoice': 'CI', 'in_invoice': 'SI', 'out_refund': 'OR', 'in_refund': 'SR', }
         for l in res:
-            l['move'] = l['move_name']
-            if l['invoice_id']:
-                l['lref'] = '%s: %s'%(inv_types[l['invoice_type']], l['invoice_number'])
+            l['move'] = l['move_name'] != '/' and l['move_name'] or ('*'+str(l['mmove_id']))
             l['partner'] = l['partner_name'] or ''
             account_sum += l['debit'] - l['credit']
             l['progress'] = account_sum
-            l['line_corresp'] = l['mmove_id'] == '' and ' ' or counterpart_accounts[l['mmove_id']]
+            l['line_corresp'] = l['mmove_id'] == '' and ' ' or counterpart_accounts[l['mmove_id']].replace(', ',',')
             # Modification of amount Currency
             if l['credit'] > 0:
                 if l['amount_currency'] != None:
