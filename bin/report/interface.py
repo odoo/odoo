@@ -186,7 +186,7 @@ class report_rml(report_int):
         else:
             if 'logo' in self.bin_datas:
                 del self.bin_datas['logo']
-        obj = render.rml(rml, localcontext, self.bin_datas, tools.config['root_path'],title)
+        obj = render.rml(rml, localcontext, self.bin_datas, self._get_path(), title)
         obj.render()
         return obj.get()
 
@@ -226,5 +226,10 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
+    def _get_path(self):
+        ret = []
+        ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
+        ret.append(tools.config['root_path'])
+        return ret
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
