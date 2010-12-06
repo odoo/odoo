@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:43+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:43+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:07+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,11 +44,6 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Group By..."
-msgstr ""
-
-#. module: mrp_operations
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: mrp_operations
@@ -186,11 +181,6 @@ msgid "In Production"
 msgstr ""
 
 #. module: mrp_operations
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 #: field:mrp.production.workcenter.line,state:0
 #: view:mrp.workorder:0
@@ -221,11 +211,6 @@ msgid "* When a work order is created it is set in 'Draft' state.\n"
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n"
 "* When the user cancels the work order it will be set in 'Canceled' state.\n"
 "* When order is completely processed that time it is set in 'Finished' state."
-msgstr ""
-
-#. module: mrp_operations
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: mrp_operations
@@ -264,11 +249,6 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
-msgstr ""
-
-#. module: mrp_operations
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: mrp_operations
@@ -366,11 +346,6 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Calendar View"
-msgstr ""
-
-#. module: mrp_operations
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: mrp_operations
@@ -561,11 +536,6 @@ msgid "Work Orders is the list of operations to be performed for each manufactur
 msgstr ""
 
 #. module: mrp_operations
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
 msgstr ""
@@ -576,13 +546,13 @@ msgid "Information"
 msgstr ""
 
 #. module: mrp_operations
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
 msgstr ""
 
 #. module: mrp_operations
-#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
-msgid "Work Centers Barcode"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: mrp_operations
@@ -741,5 +711,15 @@ msgstr ""
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
+msgstr ""
+
+#. module: mrp_operations
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp_operations
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 

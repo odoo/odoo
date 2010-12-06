@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+
         <record id="base.user_demo" model="res.users">
-            <field name="groups_id" eval="[(4,ref('group_survey_user'))]"/> 
+            <field eval="[(4, ref('base.group_sale_salesman')),(4, ref('base.group_tool_user')),(4, ref('group_survey_user'))]" name="groups_id"/>
         </record>
+
         <record model="survey.type" id="survey_type1">
             <field name="name">Human Resources</field>
             <field name="code">Human Resources</field>

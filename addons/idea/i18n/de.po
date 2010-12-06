@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 08:05+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 17:17+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
@@ -22,12 +23,6 @@ msgid "If True creator of the idea will be visible to others"
 msgstr ""
 "Bei Aktivierung ist der Mitarbeiter, der den Vorschlag erstellt hat, für "
 "andere ersichtlich"
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n'Open' state before vote for that idea."
-msgstr "Vorschlag muss in \\nStatus 'Offen' sein, um Stimme abzugeben."
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
@@ -80,6 +75,12 @@ msgstr "Manager Vorschlagswesen"
 #: selection:report.vote,month:0
 msgid "March"
 msgstr "März"
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
+msgstr "Mitarbeitervorschlag muss offen sein für eine Abstimmung."
 
 #. module: idea
 #: view:report.vote:0
@@ -202,6 +203,11 @@ msgid "Not Voted"
 msgstr "Nicht Abgestimmt"
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr "Die Kategoriebezeichnung muss eindeutig sein"
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
 msgstr "Wähle Vorschlag"
@@ -222,12 +228,22 @@ msgid "Next"
 msgstr "Weiter"
 
 #. module: idea
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: idea
 #: view:idea.idea:0
 #: field:idea.idea,state:0
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
 msgstr "Status"
+
+#. module: idea
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -550,6 +566,11 @@ msgid "Open"
 msgstr "Öffnen"
 
 #. module: idea
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: idea
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -745,3 +766,7 @@ msgstr "Wähle Vorschlag zur Abstimmung"
 #~ "Unternehmen mitzuarbeiten. \r\n"
 #~ "Andere Benutzer können diese kommentieren und bewerten. \r\n"
 #~ "So können gute Ideen leicht ermittelt werden"
+
+#, python-format
+#~ msgid "Idea must be in \\n'Open' state before vote for that idea."
+#~ msgstr "Vorschlag muss in \\nStatus 'Offen' sein, um Stimme abzugeben."

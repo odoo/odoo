@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-23 07:02+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-30 17:40+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -41,6 +41,11 @@ msgid "Message for Purchase Order Line"
 msgstr "Сообщение о покупке позиции в заказе"
 
 #. module: warning
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Название модуля должно быть уникальным !"
+
+#. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Комплектовочный лист"
@@ -55,6 +60,11 @@ msgstr "Позиция заказа на продажу"
 #: view:product.product:0
 msgid "Warning when Purchasing this Product"
 msgstr "Предупреждение при покупке этого товара"
+
+#. module: warning
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
@@ -208,3 +218,8 @@ msgstr "Сообщение для комплектования запасов"
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
 msgstr "Партнёр"
+
+#. module: warning
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Размер поля никогда не может быть меньше 1 !"
