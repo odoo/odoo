@@ -27,7 +27,7 @@
     'author': 'OpenERP SA',
     'depends': ['base'],
     'update_xml': ['security/board_security.xml','security/ir.model.access.csv', 'wizard/board_menu_create_view.xml', 'board_view.xml','board_administration_view.xml'],
-    'demo_xml': [],
+    'demo_xml': ['board_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0076912305725',

@@ -69,6 +69,13 @@ class stock_picking(osv.osv):
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
+            uom_id = move_line.product_id.uom_id.id
+            uos_id = move_line.product_id.uos_id and move_line.product_id.uos_id.id or False
+            price = move_line.sale_line_id.price_unit
+            coeff = move_line.product_id.uos_coeff
+            if uom_id != uos_id  and coeff != 0:
+                price_unit = price / coeff
+                return price_unit
             return move_line.sale_line_id.price_unit
         return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
 
@@ -181,7 +188,7 @@ class stock_picking(osv.osv):
                     })
         return result
 
-    def action_cancel(self, cr, uid, ids, context={}):
+    def action_cancel(self, cr, uid, ids, context=None):
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
         for pick in self.browse(cr, uid, ids, context):
             call_ship_end = True

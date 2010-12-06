@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:07+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:07+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:36+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,11 +25,6 @@ msgstr ""
 #: view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: hr_evaluation
@@ -132,6 +127,11 @@ msgid "Interview Request"
 msgstr ""
 
 #. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
 msgstr ""
@@ -171,8 +171,9 @@ msgid "July"
 msgstr ""
 
 #. module: hr_evaluation
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "You cannot change state, because some appraisal in waiting answer or draft state"
 msgstr ""
 
 #. module: hr_evaluation
@@ -259,11 +260,6 @@ msgstr ""
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid "Regarding "
-msgstr ""
-
-#. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_evaluation
@@ -358,16 +354,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Evaluations"
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: hr_evaluation
@@ -490,11 +476,6 @@ msgid "Draft"
 msgstr ""
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
@@ -563,6 +544,11 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_evaluation
@@ -693,18 +679,8 @@ msgid "Cancel"
 msgstr ""
 
 #. module: hr_evaluation
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_evaluation
@@ -800,11 +776,6 @@ msgid "Evaluation Plan"
 msgstr ""
 
 #. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr ""
@@ -840,11 +811,6 @@ msgid "(months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -852,12 +818,6 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
-msgstr ""
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "You cannot change state, because some appraisal in waiting answer or draft state"
 msgstr ""
 
 #. module: hr_evaluation

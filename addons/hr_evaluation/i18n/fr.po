@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-24 09:36+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-03 18:04+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -29,11 +28,6 @@ msgstr "Attendre les phases précédentes"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Regrouper par..."
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -135,6 +129,12 @@ msgid "Interview Request"
 msgstr "Demande d'entretien"
 
 #. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
 msgstr "Corps du courriel"
@@ -174,9 +174,14 @@ msgid "July"
 msgstr "Juillet"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
 msgstr ""
+"Vous ne pouvez pas changer le statut car des évaluations sont en attente de "
+"réponse ou en brouillon."
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -268,11 +273,6 @@ msgstr "(date)s : date actuelle"
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid "Regarding "
-msgstr ""
-
-#. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_evaluation
@@ -371,16 +371,6 @@ msgstr "Nb. de requêtes"
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Evaluations"
 msgstr "Évaluations"
-
-#. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Arguments invalides"
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -513,11 +503,6 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
@@ -587,6 +572,11 @@ msgstr "Novembre"
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
 msgstr "Filtres étendus..."
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -716,20 +706,9 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "En cours"
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -824,11 +803,6 @@ msgid "Evaluation Plan"
 msgstr "Plan d'évaluation"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr "Février"
@@ -864,11 +838,6 @@ msgid "(months)"
 msgstr "(mois)"
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
@@ -877,16 +846,6 @@ msgstr "Séquence"
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
 msgstr "(user_signature)s : Nom de l'utilisateur"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
-msgstr ""
-"Vous ne pouvez pas changer le statut car des évaluations sont en attente de "
-"réponse ou en brouillon."
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
@@ -904,3 +863,9 @@ msgstr "Date de création"
 #: field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr "Année"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Les règles ne sont pas supportées par les objets osv_memory !"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Paramètres incorrects"

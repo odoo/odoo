@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:14+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:14+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:41+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -114,13 +114,13 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
+#: view:hr.sign.out.project:0
+msgid "Work done in the last period"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:0
-msgid "Work done in the last period"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
 
 #. module: hr_timesheet
@@ -195,20 +195,10 @@ msgid "Sat"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
-msgstr ""
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: hr_timesheet
@@ -220,11 +210,6 @@ msgstr ""
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
-msgstr ""
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_timesheet
@@ -262,16 +247,6 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
@@ -303,10 +278,8 @@ msgid "September"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet
@@ -356,8 +329,8 @@ msgid "Fri"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_timesheet
@@ -375,11 +348,6 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: hr_timesheet
@@ -428,6 +396,11 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "November"
+msgstr ""
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_timesheet
@@ -493,6 +466,13 @@ msgid "Analysis summary"
 msgstr ""
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -515,18 +495,8 @@ msgid "février"
 msgstr ""
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_timesheet
@@ -550,11 +520,6 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet
@@ -665,11 +630,6 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: hr_timesheet

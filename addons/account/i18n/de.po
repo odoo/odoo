@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 08:48+0000\n"
+"PO-Revision-Date: 2010-11-27 14:31+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-28 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1576,7 +1576,7 @@ msgstr "Kreditlimit"
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
 msgid "Invoice"
-msgstr "Rechnung"
+msgstr "Statistik Rechnungen"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
@@ -3341,7 +3341,7 @@ msgstr "UST:"
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr "Kontenplan"
+msgstr "Kontenplan Finanzen"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -4048,7 +4048,7 @@ msgstr "  Ultimo Monatstag: 0"
 #. module: account
 #: model:ir.model,name:account.model_account_chart
 msgid "Account chart"
-msgstr "Kontenplan"
+msgstr "Kontenplan Finanzkonten"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -6328,6 +6328,7 @@ msgstr "Ihre Bank und Kasse Konten"
 #: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/account_invoice_refund.py:0
 #: code:addons/account/wizard/account_use_model.py:0
+#: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -7052,6 +7053,12 @@ msgstr ""
 "verwalten."
 
 #. module: account
+#: code:addons/account/account_cash_statement.py:0
+#, python-format
+msgid "You cannot create a bank or cash register without a journal!"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  day of the month= -1"
 msgstr ""
@@ -7366,7 +7373,7 @@ msgstr "Barkasse Buchungen"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "Auszug Partnerkonto"
+msgstr "Partner Kontoauszug"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -8842,7 +8849,7 @@ msgstr "Juli"
 #. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
-msgstr "Kontenplan"
+msgstr "Kontenplan Finanzkonten"
 
 #. module: account
 #: field:account.subscription.line,subscription_id:0
@@ -8884,7 +8891,7 @@ msgstr "Ende der Periode"
 #: field:account.report.general.ledger,chart_account_id:0
 #: field:account.vat.declaration,chart_account_id:0
 msgid "Chart of account"
-msgstr "Kontenplan"
+msgstr "Kontenplan Finanzen"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -9771,7 +9778,7 @@ msgstr "Oberkonto"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr "Analytischer Kontenplan"
+msgstr "Kontenplan Analysekonten"
 
 #. module: account
 #: help:account.invoice,residual:0
