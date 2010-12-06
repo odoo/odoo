@@ -496,11 +496,8 @@ class stock_warehouse_orderpoint(osv.osv):
         result = {}
         procurement_obj = self.pool.get('procurement.order')
         for data in self.browse(cr, uid, ids, context=context):
-            procurement_id = []
-            result[data.id] = procurement_id
 
             procurement_ids = procurement_obj.search(cr, uid , [('state','=','draft'),('product_id','=',data.product_id.id),('location_id','=',data.location_id.id)])
-            procurement_ids.sort()
             result[data.id] = procurement_ids
         return result
 
