@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 15:56+0000\n"
+"PO-Revision-Date: 2010-11-25 20:00+0000\n"
 "Last-Translator: Paulino Ascenção <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr ""
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr ""
+msgstr "Outras configurações"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:0
@@ -39,6 +39,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Não pode remover / desativar uma conta definida como propriedade de um "
+"parceiro."
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -68,17 +70,17 @@ msgstr "Residual"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr ""
+msgstr "Defina uma sequencia para o diário"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Erro! A duração do(s) Período(s) não é/são válido(s). "
+msgstr "Erro! A duração do(s) Período(s) não é válida. "
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Divisa da conta"
 
 #. module: account
 #: view:account.tax:0
@@ -88,12 +90,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr ""
+msgstr "Antiguidade de saldos de clientes até hoje."
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr "Incluir movimentos reconciliados"
+msgstr "Incluir movimentos alocados"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -126,7 +128,7 @@ msgstr "Movimentos Contabilísticos-"
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "Você não pode apagar movimentos publicados: \"%s\"!"
+msgstr "Não pode apagar movimentos confirmados: \"%s\"!"
 
 #. module: account
 #: field:account.invoice.line,origin:0
@@ -141,7 +143,7 @@ msgstr "Origem"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "Reconciliar"
+msgstr "Alocar"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -172,7 +174,7 @@ msgstr "Todos os Movimentos Analíticos"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr ""
+msgstr "Facturas criadas nos últimos 15 dias."
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -392,7 +394,7 @@ msgstr "A divisa usada para inserir o extrato"
 #. module: account
 #: field:account.open.closed.fiscalyear,fyear_id:0
 msgid "Fiscal Year to Open"
-msgstr "Ano Fiscal para Abrir"
+msgstr "Exercício para Abrir"
 
 #. module: account
 #: help:account.journal,sequence_id:0
@@ -2121,7 +2123,7 @@ msgstr "Ano Fiscal"
 #: help:account.report.general.ledger,fiscalyear_id:0
 #: help:account.vat.declaration,fiscalyear_id:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Manter vazio para todos os anos fiscais abertos"
+msgstr "Manter vazio para todos os exercícios em aberto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
@@ -2172,7 +2174,7 @@ msgstr "Filtros"
 #: selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "Abrir"
+msgstr "Em aberto"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
@@ -3069,7 +3071,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Cannot delete invoice(s) that are already opened or paid !"
-msgstr "Não é possível eliminar as factura(s) em aberto ou pagas!"
+msgstr "Não é possível eliminar facturas em aberto ou pagas!"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -3216,9 +3218,7 @@ msgstr "2"
 #. module: account
 #: view:account.chart:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
-msgstr ""
-"(Se não selecionar um Ano Fiscal, irá considerar todos os anos fiscais em "
-"aberto)"
+msgstr "(Se não indicar um exercício, irá considerar todos os em aberto)"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -4990,7 +4990,7 @@ msgstr "Modelo da Posição Fiscal"
 #: view:account.chart:0
 #: view:account.tax.chart:0
 msgid "Open Charts"
-msgstr "Gráficos abertos"
+msgstr "Abrir quadros."
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -7166,7 +7166,7 @@ msgstr "Balancete Analítico Invertido -"
 #. module: account
 #: view:account.move.bank.reconcile:0
 msgid "Open for bank reconciliation"
-msgstr "Aberto para reconciliação bancária"
+msgstr "Abrir para reconciliação bancária"
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -7871,7 +7871,7 @@ msgstr "Linhas de movimento"
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Open Journal"
-msgstr "Diário Aberto"
+msgstr "Abrir diário"
 
 #. module: account
 #: report:account.analytic.account.journal:0

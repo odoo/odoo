@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 02:14+0000\n"
-"Last-Translator: Pedro_Maschio <pedro.bicudo@tgtconsult.com.br>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 11:37+0000\n"
+"Last-Translator: Alexsandro Haag <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_record
@@ -33,12 +33,16 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Se você acha que seu módulo poderia interessar a outra pessoas, nós "
+"gostaríamos que você o publicasse em OpenERP.com, na seção 'Módulos'. Você "
+"pode fazer através do site ou usando os recursos do módulo "
+"'base_module_publish'."
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "Fim"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -78,6 +82,11 @@ msgid "Filename"
 msgstr "Nome do Arquivo"
 
 #. module: base_module_record
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo precisa ser único !"
+
+#. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,version:0
 msgid "Version"
 msgstr "Versão"
@@ -93,7 +102,7 @@ msgstr "Gravação dos Objetos"
 #. module: base_module_record
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Erro ! Você não pode criar Menu recursivo."
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
@@ -108,6 +117,11 @@ msgid ""
 msgstr ""
 "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
 "especial!"
+
+#. module: base_module_record
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "O ID de certificado do módulo precisa ser único !"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,end:0
@@ -165,13 +179,13 @@ msgstr "Módulo criado com sucesso !"
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "YAML file successfully created !"
-msgstr ""
+msgstr "Arquivo YAML criado com sucesso !"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Resultado, colar isso para seu módulo xml"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -205,7 +219,7 @@ msgstr "Gravar"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Registro de Módulo"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -216,13 +230,13 @@ msgstr "Continuar"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "Exportar customizações como um arquivo de dados"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -254,13 +268,13 @@ msgstr "Informações do Modulo"
 #: wizard_field:base_module_record.module_record_data,init,info_yaml:0
 #: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
 msgid "YAML"
-msgstr ""
+msgstr "YAML"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
 #: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,init,end:0
