@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:38+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-01 09:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: event_project
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: event_project
 #: model:ir.model,name:event_project.model_event_project
@@ -44,15 +49,9 @@ msgstr ""
 "    Deze module laat u een retro-planning maken voor uw evenementen.\n"
 
 #. module: event_project
-#: help:event.project,project_id:0
-msgid ""
-"This is Template Project. Project of event is a duplicate of this Template. "
-"After click on  'Create Retro-planning', New Project will be duplicated from "
-"this template project."
-msgstr ""
-"DIt is een sjabloon project. Project van evenement is een duplicaat van dit "
-"sjabloon. Na klikken van 'Retro-planning maken', wordt het nieuwe project "
-"gedupliceerd van dit sjabloon project."
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: event_project
 #: constraint:ir.model:0
@@ -71,11 +70,6 @@ msgstr "Retro-planning"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Ongeldige XML voor weergave!"
-
-#. module: event_project
-#: field:event.event,project_id:0
-msgid "Project"
-msgstr "Project"
 
 #. module: event_project
 #: field:event.project,project_id:0
@@ -100,11 +94,6 @@ msgid "Tasks"
 msgstr "Taken"
 
 #. module: event_project
-#: field:event.event,task_ids:0
-msgid "Project tasks"
-msgstr "Projecttaken"
-
-#. module: event_project
 #: view:event.project:0
 msgid "Close"
 msgstr "Afsluiten"
@@ -120,14 +109,31 @@ msgid "Create Retro-Planning"
 msgstr "Retro-planning maken"
 
 #. module: event_project
-#: model:ir.model,name:event_project.model_event_event
-msgid "Event"
-msgstr "Evenement"
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
+msgstr ""
+"DIt is een sjabloon project. Project van evenement is een duplicaat van dit "
+"sjabloon. Na klikken van 'Retro-planning maken', wordt het nieuwe project "
+"gedupliceerd van dit sjabloon project."
+
+#. module: event_project
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: event_project
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Taakbeheer"
+
+#~ msgid "Project"
+#~ msgstr "Project"
+
+#~ msgid "Project tasks"
+#~ msgstr "Projecttaken"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
@@ -147,3 +153,6 @@ msgstr "Taakbeheer"
 #~ "Organisatie en management van evenementen.\n"
 #~ "\n"
 #~ "    Deze module stelt u in staat om evenementen achterwaarts te plannen.\n"
+
+#~ msgid "Event"
+#~ msgstr "Evenement"

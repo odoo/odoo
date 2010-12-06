@@ -218,10 +218,14 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
+        inventory_id = context.get('inventory_id', False)
         prodlot_obj = self.pool.get('stock.production.lot')
+        inventory_obj = self.pool.get('stock.inventory')
         move_obj = self.pool.get('stock.move')
         new_move = []
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             for move in move_obj.browse(cr, uid, move_ids):
                 move_qty = move.product_qty
                 quantity_rest = move.product_qty
@@ -247,8 +251,11 @@ class split_in_production_lot(osv.osv_memory):
                         'state': move.state
                     }
                     if quantity_rest > 0:
-                        current_move = move_obj.copy(cr, uid, move.id, default_val)
+                        current_move = move_obj.copy(cr, uid, move.id, default_val, context=context)
+                        if inventory_id and current_move:
+                            inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, current_move)]}, context=context)
                         new_move.append(current_move)
+
                     if quantity_rest == 0:
                         current_move = move.id
                     prodlot_id = False
@@ -259,7 +266,7 @@ class split_in_production_lot(osv.osv_memory):
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
-                    
+
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
 
                     update_val = {}
@@ -268,7 +275,9 @@ class split_in_production_lot(osv.osv_memory):
                         update_val['product_uos_qty'] = uos_qty_rest
                         update_val['state'] = move.state
                         move_obj.write(cr, uid, [move.id], update_val)
+
         return new_move
+
 split_in_production_lot()
 
 class stock_move_split_lines_exist(osv.osv_memory):

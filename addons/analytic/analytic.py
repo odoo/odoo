@@ -153,7 +153,7 @@ class account_analytic_account(osv.osv):
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
-        return super(account_analytic_account, self).check_recursion(cr, uid, ids, parent=parent)
+        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
     _order = 'date_start desc,parent_id desc,code'
     _constraints = [

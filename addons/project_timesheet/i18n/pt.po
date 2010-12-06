@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-08 12:24+0000\n"
-"Last-Translator: Madalena_prime <madalena.barreto@prime.cv>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 08:57+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_timesheet
@@ -21,27 +21,27 @@ msgstr ""
 #, python-format
 msgid "No employee defined for user \"%s\". You must create one."
 msgstr ""
+"Não há um empregado definido para o utilizador \"%s\". Tem de criar um."
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr ""
-
-#. module: project_timesheet
-#: constraint:ir.model:0
+#: code:addons/project_timesheet/project_timesheet.py:0
+#, python-format
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"No journal defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
+"Nenhum diário definido no funionário relacionado. \n"
+"Preencha o separador horário no formulário funcionário."
 
 #. module: project_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
 msgstr ""
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
 msgid "Related Timeline Id"
-msgstr ""
+msgstr "ID da Linha de Tempo Relacionada"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -49,85 +49,86 @@ msgid "Project Task Work"
 msgstr ""
 
 #. module: project_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr ""
-
-#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "Acionar facturas a partir de linhas de ordem de venda"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
 msgid "Task"
-msgstr ""
-
-#. module: project_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Tarefa"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,month:0
 msgid "Month"
+msgstr "Mês"
+
+#. module: project_timesheet
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid " Year "
 msgstr ""
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Março"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
 msgid "Task invoice"
-msgstr ""
+msgstr "Fatura da tarefa"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_taskwork0
 msgid "Task Work"
-msgstr ""
+msgstr "Trabalho da tarefa"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "May"
+msgstr "Maio"
+
+#. module: project_timesheet
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Junho"
 
 #. module: project_timesheet
-#: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
-msgid "Project Timesheet"
-msgstr ""
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Ano"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Utilizador"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "This Year"
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_timesheet
@@ -138,7 +139,7 @@ msgstr ""
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
@@ -146,12 +147,9 @@ msgid "Complete Your Timesheet."
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
-#, python-format
-msgid ""
-"No journal defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
+#: view:project.project:0
+msgid "Invoiceable"
+msgstr "Faturável"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
@@ -161,21 +159,16 @@ msgstr ""
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Outubro"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
 msgid "Timesheet Hours"
-msgstr ""
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
 msgstr ""
 
 #. module: project_timesheet
@@ -191,42 +184,22 @@ msgstr ""
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "Acionar fatura"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
-
-#. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_project
-msgid "Project"
-msgstr ""
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
-msgstr ""
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Invoicing Data"
-msgstr ""
-
-#. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr ""
+msgid "Tasks by User"
+msgstr "Tarefas por Utilizador"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:0
@@ -235,17 +208,50 @@ msgid ""
 "No product defined on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Nenhum produto definido no funcionário relacionado.\n"
+"Preencha o separador horário do formulário funcionário."
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "Projeto"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid " Month-1 "
+msgstr ""
+
+#. module: project_timesheet
+#: view:project.project:0
+msgid "Invoicing Data"
+msgstr "Dados de faturação"
+
+#. module: project_timesheet
+#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
+msgid "Encode how much time u spent on your task"
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid " Month "
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr ""
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:0
 #, python-format
 msgid "Bad Configuration !"
-msgstr ""
+msgstr "Má Configuração!"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
 msgid "Invoicing"
-msgstr ""
+msgstr "Faturação"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -253,20 +259,19 @@ msgid "Work on task"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-msgid "Task Hours Per Month"
-msgstr ""
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "Abril"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
@@ -274,13 +279,23 @@ msgid "After task is completed, Create its invoice."
 msgstr ""
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoiceble"
-msgstr ""
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "report.timesheet.task.user"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
+msgstr "Data"
+
+#. module: project_timesheet
+#: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
+msgid "Project Timesheet"
+msgstr "Horário do Projecto"
+
+#. module: project_timesheet
+#: view:project.project:0
+msgid "Invoice Task Work"
 msgstr ""
 
 #. module: project_timesheet
@@ -293,14 +308,10 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoice Task Work"
-msgstr ""
-
-#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
+msgid "Task Hours Per Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -308,7 +319,32 @@ msgstr ""
 msgid "Fill Timesheet"
 msgstr ""
 
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "This Month"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objeto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitetura de vista"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "This Year"
+#~ msgstr "Este ano"
+
+#~ msgid "This Month"
+#~ msgstr "Este mês"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
