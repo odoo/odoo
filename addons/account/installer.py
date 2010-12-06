@@ -200,7 +200,8 @@ class account_installer(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
-        self.pool._init = True
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id', 'child_of', [obj_acc_root.id]), ('nocreate', '!=', True)], context=context)
         children_acc_template.sort()
@@ -229,7 +230,7 @@ class account_installer(osv.osv_memory):
                 'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company_id.id,
             }
-            new_account = obj_acc.create(cr, uid, vals, context=context)
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
                 b_vals = {
@@ -243,8 +244,7 @@ class account_installer(osv.osv_memory):
                     'tax_ids': [(6,0,tax_ids)],
                     'company_id': company_id.id,
                 }
-                bank_account = obj_acc.create(cr, uid, b_vals, context=context)
-
+                bank_account = obj_acc.create(cr, uid, b_vals, context=ctx)
 
                 view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #why fixed name here?
                 view_id_cur = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal (Multi-Currency) View')], context=context)[0] #Why Fixed name here?
@@ -314,7 +314,7 @@ class account_installer(osv.osv_memory):
                         'parent_id': bank_account,
                         'company_id': company_id.id
                     }
-                    child_bnk_acc = obj_acc.create(cr, uid, vals_bnk, context=context)
+                    child_bnk_acc = obj_acc.create(cr, uid, vals_bnk, context=ctx)
                     vals_seq_child = {
                         'name': _(vals_bnk['name'] + ' ' + 'Journal'),
                         'code': 'account.journal',
@@ -348,7 +348,6 @@ class account_installer(osv.osv_memory):
                     code_cnt += 1
 
         #reactivate the parent_store functionality on account_account
-        self.pool._init = False
         obj_acc._parent_store_compute(cr)
 
         for key, value in todo_dict.items():
