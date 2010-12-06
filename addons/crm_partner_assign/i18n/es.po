@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-24 18:47+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-04 23:14+0000\n"
+"Last-Translator: Carlos @ smile.fr <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_partner_assign
@@ -42,11 +41,6 @@ msgstr "nº de casos"
 #: view:crm.lead.report.assign:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: crm_partner_assign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -82,7 +76,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,history:0
 msgid "Whole Story"
-msgstr ""
+msgstr "Historial completo"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -97,6 +91,8 @@ msgid ""
 "Could not contact geolocation servers, please make sure you have a working "
 "internet connection (%s)"
 msgstr ""
+"No se puede conectar con los servidores de geolocalización, por favor "
+"asegúrese de tener conexión a internet (%s)"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -152,14 +148,6 @@ msgstr ""
 "significa ninguna asignación)"
 
 #. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr ""
-
-#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
@@ -177,7 +165,7 @@ msgstr "Empresa"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability:0
 msgid "Avg Probability"
-msgstr ""
+msgstr "Probabilidad media"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -196,6 +184,8 @@ msgid ""
 "These addresses will receive a copy of this email. To modify the permanent "
 "CC list, edit the global CC field of this case"
 msgstr ""
+"Estas direcciones recibirán una copia de este correo electrónico. Para "
+"modificar la lista CC permanente, edite el campo CC global de este caso."
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_from:0
@@ -203,11 +193,12 @@ msgid "From"
 msgstr "De"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "Cerrado"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: field:res.partner,grade_id:0
+#: view:res.partner.grade:0
+msgid "Partner Grade"
+msgstr "Nivel empresa"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -224,11 +215,6 @@ msgstr "Siguiente"
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
 msgstr "Prioridad"
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -284,7 +270,7 @@ msgstr "7 días"
 #. module: crm_partner_assign
 #: view:crm.lead:0
 msgid "Partner Assignation"
-msgstr ""
+msgstr "Asignación empresa"
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,type:0
@@ -303,15 +289,10 @@ msgid "Stage"
 msgstr "Etapa"
 
 #. module: crm_partner_assign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la estructura de la vista!"
-
-#. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:0
 #, python-format
 msgid "Fwd"
-msgstr ""
+msgstr "Reenvío"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -321,7 +302,7 @@ msgstr "Geo localización"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Análisis de asignación de oportunidades"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -331,7 +312,7 @@ msgstr "Cancelar"
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,history:0
 msgid "Send history"
-msgstr ""
+msgstr "Enviar historial"
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
@@ -347,22 +328,22 @@ msgstr "Cerrar"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr ""
+msgstr "Análisis de asignación de op."
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,delay_close:0
 msgid "Number of Days to close the case"
-msgstr ""
+msgstr "Número de dias para cerrar el caso"
 
 #. module: crm_partner_assign
 #: field:res.partner,partner_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Delay to open"
-msgstr ""
+msgstr "Retraso de apertura"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -373,23 +354,23 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "December"
-msgstr ""
+msgstr "Diciembre"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mes"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,opening_date:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Fecha de apertura"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,subject:0
 msgid "Subject"
-msgstr ""
+msgstr "Asunto"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -399,85 +380,92 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,reply_to:0
 msgid "Reply To"
-msgstr ""
+msgstr "Responder a"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,categ_id:0
 msgid "Category"
-msgstr ""
+msgstr "Categoría"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "#Opportunities"
-msgstr ""
+msgstr "nº oportunidades"
 
 #. module: crm_partner_assign
 #: model:ir.module.module,shortdesc:crm_partner_assign.module_meta_information
 msgid "Partner Geo-Localisation"
+msgstr "Geolocalización empresa"
+
+#. module: crm_partner_assign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Borrador"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Baja"
 
 #. module: crm_partner_assign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: selection:crm.lead.forward.to.partner,state:0
+#: view:crm.lead.report.assign:0
+#: selection:crm.lead.report.assign,state:0
+msgid "Closed"
+msgstr "Cerrado"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
 #: field:res.partner,opportunity_assigned_ids:0
 msgid "Assigned Opportunities"
-msgstr ""
+msgstr "Oportunidades asignadas"
 
 #. module: crm_partner_assign
 #: field:crm.lead,date_assign:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Fecha de asignación"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability_max:0
 msgid "Max Probability"
-msgstr ""
+msgstr "Probabilidad max."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Escalate"
-msgstr ""
+msgstr "Escalar"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,attachment_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "desconocido"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,delay_open:0
 msgid "Number of Days to open the case"
-msgstr ""
+msgstr "Número de días para abrir el caso"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_open:0
@@ -489,22 +477,22 @@ msgstr ""
 #: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,active:0
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtros extendidos..."
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_longitude:0
@@ -515,27 +503,27 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
 msgid "Assignation"
-msgstr ""
+msgstr "Asignación"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_cc:0
 msgid "CC"
-msgstr ""
+msgstr "CC"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Planned Revenues"
-msgstr ""
+msgstr "Beneficio previsto"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_res_partner_grade
@@ -545,17 +533,17 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 msgid "Unchanged"
-msgstr ""
+msgstr "Sin cambios"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "September"
-msgstr ""
+msgstr "Septiembre"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Últimos 30 días"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,name:0
@@ -566,55 +554,45 @@ msgstr ""
 #: help:crm.lead,date_assign:0
 msgid "Last date this case was forwarded/assigned to a partner"
 msgstr ""
+"Última fecha en la que este caso fue reenviado/asignado a una empresa"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 #: view:res.partner:0
 msgid "Open"
-msgstr ""
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: crm_partner_assign
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Abierto"
 
 #. module: crm_partner_assign
 #: field:res.partner,date_localization:0
 msgid "Geo Localization Date"
-msgstr ""
+msgstr "Fecha geolocalización"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_to:0
 msgid "To"
-msgstr ""
+msgstr "Para"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Send new email"
-msgstr ""
+msgstr "Enviar nuevo email"
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_forward_to_partner_act
 msgid "Forward to Partner"
-msgstr ""
+msgstr "Reenviar a empresa"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probable_revenue:0
@@ -624,48 +602,43 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
-msgstr ""
+msgstr "Empresa asignada"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Dirección"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
-msgstr ""
+msgstr "Oportunidad"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
 msgid "Customer"
-msgstr ""
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Cliente"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,name:0
 msgid "Email Address"
-msgstr ""
+msgstr "Dirección de email"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Convert to Opportunity"
-msgstr ""
+msgstr "Convertir en oportunidad"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -675,7 +648,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -685,45 +658,54 @@ msgstr ""
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr ""
+msgstr "Informe de iniciativas CRM"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,history:0
 msgid "Case Information"
-msgstr ""
+msgstr "Información de caso"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secuencia"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0
 msgid "Message Body"
-msgstr ""
+msgstr "Cuerpo del mensaje"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "High"
-msgstr ""
+msgstr "Alta"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de ventas"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,state:0
 msgid "Set New State To"
-msgstr ""
+msgstr "Establecer nuevo estado a"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,name:0
 msgid "Year"
-msgstr ""
+msgstr "Año"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la estructura de la vista!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."

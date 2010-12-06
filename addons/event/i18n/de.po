@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 07:53+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 14:12+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -49,9 +50,9 @@ msgid "Minimum Registrations"
 msgstr "Minimum Anmeldungen"
 
 #. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: model:ir.model,name:event.model_event_confirm_registration
+msgid "Confirmation for Event Registration"
+msgstr "Bestätigung einer Anmeldung"
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -217,6 +218,11 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: event
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr "Sende EMail"
+
+#. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To"
 msgstr "Antwort an"
@@ -302,12 +308,10 @@ msgid "Extra Info"
 msgstr "Extra Info"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
-msgstr "Anmeldung"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Customer Invoices"
+msgstr "Ausgangsrechnungen"
 
 #. module: event
 #: selection:event.event,state:0
@@ -403,9 +407,22 @@ msgid "Warning !"
 msgstr "Warnung !"
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Sende EMail"
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low-level object used by meeting and others documents that have "
+"to be synchronized with mobile or calendar applications through caldav. Most "
+"of the users should work on the Calendar menu, and not on the list of events."
+msgstr ""
+"Ein Termin ist das Grundelement (low-level Objekt) welches durch "
+"Terminkalender, Veranstaltungen, Vertriebsmeetings u.a. verwendet wird und "
+"mit Ihrem Mobiltelefon durch WebDav synchronisierbar ist. Die meisten "
+"Benutzern werden sicherlich über das Kalendermenü arbeiten, anstelle der "
+"Listenansicht für Termine."
 
 #. module: event
 #: view:event.event:0
@@ -443,6 +460,11 @@ msgstr "EMail"
 #: field:event.registration,tobe_invoiced:0
 msgid "To be Invoiced"
 msgstr "Abzurechnen"
+
+#. module: event
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -513,11 +535,6 @@ msgid "Event Organization"
 msgstr "Organisation der Veranstaltung"
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Event Registraion"
-msgstr "Anmeldung an Veranstaltung"
-
-#. module: event
 #: view:event.registration:0
 msgid "History Information"
 msgstr "Historie Informationen"
@@ -541,10 +558,12 @@ msgstr ""
 "Mengeneinheit"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr "Anmeldung ist als nicht abrechenbar gekennzeichnet"
+#: view:event.event:0
+#: view:event.registration:0
+#: field:event.registration.badge,registration_id:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+msgid "Registration"
+msgstr "Anmeldung"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
@@ -757,6 +776,11 @@ msgstr ""
 "beinhalten"
 
 #. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
@@ -963,6 +987,12 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr "Jahr"
+
+#. module: event
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Cancel"
@@ -985,6 +1015,11 @@ msgstr "Veranstaltung nach Anmeldungen"
 #, python-format
 msgid "Open"
 msgstr "Offen"
+
+#. module: event
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: event
 #: field:event.event,user_id:0
@@ -1173,10 +1208,10 @@ msgid "Country"
 msgstr "Land"
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
-msgstr "Jahr"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Registration is set as Cannot be invoiced"
+msgstr "Anmeldung ist als nicht abrechenbar gekennzeichnet"
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -1442,3 +1477,6 @@ msgstr "Bestätigte Referenten"
 #~ "Beachte:\n"
 #~ "- Neue Event Typen können definiert werden. \n"
 #~ "- Berichte mit Anzahl der Anmeldungen je Event und Event Kategorie\n"
+
+#~ msgid "Event Registraion"
+#~ msgstr "Anmeldung an Veranstaltung"

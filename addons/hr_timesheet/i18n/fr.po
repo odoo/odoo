@@ -6,21 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-24 07:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-04 08:47+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
@@ -58,6 +56,10 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Les employés peuvent inscrire le temps sur différents projets. Un projet est "
+"un compte analytique et le temps passé sur un projet génère des coûts dans "
+"le compte analytique. Cette fonctionnalité permet d'enregistrer en même "
+"temps la présence et la feuille de temps."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -117,6 +119,10 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Les employés peuvent inscrire le temps sur différents projets auxquels ils "
+"sont affectés. Un projet est un compte analytique et le temps passé sur un "
+"projet génère des coûts dans le compte analytique. Cette fonctionnalité "
+"permet d'enregistrer en même temps la présence et la feuille de temps."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -129,14 +135,15 @@ msgid "Monthly Employee Timesheet"
 msgstr "Feuille de temps mensuelle de l'employé"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Pointer l'entrée / Pointer la sortie"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Travail effectué dans la dernière période"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -148,7 +155,7 @@ msgstr "État actuel"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr "Nom des employés"
+msgstr "Nom de l'employé"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -210,21 +217,11 @@ msgid "Sat"
 msgstr "Sam"
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Dim"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -239,11 +236,6 @@ msgstr ""
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Imprimer"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -280,11 +272,6 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
@@ -316,11 +303,9 @@ msgid "September"
 msgstr "Septembre"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "Décembre"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Ligne d'horaire"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -369,12 +354,9 @@ msgid "Fri"
 msgstr "Ven"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-"catégorie."
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Pointer l'entrée / Pointer la sortie"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -398,14 +380,9 @@ msgid "Timesheets"
 msgstr "Feuilles de présence"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
+msgstr "Spécifie une désignation d'employé comme produit de type 'service'."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -449,6 +426,11 @@ msgstr "Date"
 #, python-format
 msgid "November"
 msgstr "Novembre"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -514,6 +496,13 @@ msgid "Analysis summary"
 msgstr "Résumé analyse"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "Décembre"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -536,22 +525,9 @@ msgid "février"
 msgstr "février"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr "Information"
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
@@ -574,17 +550,12 @@ msgstr "Date du jour"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Ligne d'horaire"
+msgstr "Compte analytique"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "Cet assistant va imprimer les feuilles de temps mensuelles"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -630,7 +601,7 @@ msgstr "Heures de travail"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Entrée par projet"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -647,7 +618,7 @@ msgstr "Ligne analytique"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Sortie par projet"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -696,11 +667,6 @@ msgid "Start Working"
 msgstr "Commencer le travail"
 
 #. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erreur: code EAN invalide"
-
-#. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
 msgstr "Statistiques par utilisateur"
@@ -709,7 +675,7 @@ msgstr "Statistiques par utilisateur"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
 #, python-format
 msgid "No employee defined for this user"
-msgstr ""
+msgstr "Pas d'employé défini pour cet utilisateur"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -725,7 +691,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner Id"
-msgstr ""
+msgstr "Identifiant du partenaire"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -753,6 +719,9 @@ msgstr "septembre"
 #~ msgid "Hour"
 #~ msgstr "Heure"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "Choose Users"
 #~ msgstr "Choisir les utilisateurs"
 
@@ -774,6 +743,12 @@ msgstr "septembre"
 #~ msgid "Choose your month"
 #~ msgstr "Choisissez le mois"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
 #~ msgid "Working Time"
 #~ msgstr "Temps de Travail"
 
@@ -783,5 +758,14 @@ msgstr "septembre"
 #~ msgid "Working Hours of The Day"
 #~ msgstr "Heures de Travail du Jour"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erreur: code EAN invalide"
+
 #~ msgid "Total"
 #~ msgstr "Total"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
+#~ "catégorie."

@@ -155,7 +155,6 @@
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing/Pat 1/Partners of Test/Partner 1')
-        # TODO speed
         ftp.delete('pat1-dynamic.txt')
         ftp.close()        
     

@@ -44,8 +44,8 @@
   I check that Invoice is created for this timesheet.
 -
   !python {model: account.analytic.line}: |
-	account_id = self.pool.get('account.analytic.line')
- 	accounts = account_id.browse(cr, uid, [ref("account_analytic_line_developyamlforhrmodule0")])[0]
+    account_id = self.pool.get('account.analytic.line')
+    accounts = account_id.browse(cr, uid, [ref("account_analytic_line_developyamlforhrmodule0")])[0]
     exp = self.browse(cr, uid, [ref('account_analytic_line_developyamlforhrmodule0')])[0]
     analytic_account_obj = self.pool.get('account.analytic.account')
     data = self.pool.get('hr.timesheet.invoice.create').read(cr, uid, [ref("hr_timesheet_invoice_create_0")], [], context)[0]
