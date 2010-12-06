@@ -112,7 +112,7 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" select="1" readonly="1"/>
-                        <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-stop"/>
+                        <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending" icon="gtk-stop"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>

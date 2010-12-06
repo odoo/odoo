@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-11 09:22+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-27 14:41+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-12 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-28 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
@@ -42,6 +42,11 @@ msgstr "Rapportontwerper interface module"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Ongeldige XML voor weergave opbouw!"
+
+#. module: base_report_designer
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -84,6 +89,11 @@ msgid "title"
 msgstr "titel"
 
 #. module: base_report_designer
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "De groepsnaam moet uniek zijn !"
+
+#. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
 #: field:base.report.sxw,report_id:0
 msgid "Report"
@@ -95,24 +105,14 @@ msgid "base.report.rml.save"
 msgstr "base.report.rml.save"
 
 #. module: base_report_designer
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
 msgid "Report Designer"
 msgstr "Rapport Ontwerper"
-
-#. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid ""
-"This is the template of your requested report.\n"
-"Save it as a .SXW file and open it with OpenOffice.\n"
-"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
-"Once it is modified, re-upload it in OpenERP using this wizard."
-msgstr ""
-"Dit is het sjabloon van uw aangevraagde overzicht.\n"
-"Sla het op als .SXW bestand en open het met OpenOffice.\n"
-"Vergeet niet om het OpenERP SA OpenOffice package te installeren om het te "
-"wijzigen.\n"
-"Als het eenmaal is gewijzigd, gebruik dan deze assistent om het opnieuw in "
-"OpenERP te laden."
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,name:0
@@ -176,6 +176,21 @@ msgid "Configuration Progress"
 msgstr "Configuratie voortgang"
 
 #. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid ""
+"This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+"Dit is het sjabloon van uw aangevraagde overzicht.\n"
+"Sla het op als .SXW bestand en open het met OpenOffice.\n"
+"Vergeet niet om het OpenERP SA OpenOffice package te installeren om het te "
+"wijzigen.\n"
+"Als het eenmaal is gewijzigd, gebruik dan deze assistent om het opnieuw in "
+"OpenERP te laden."
+
+#. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Skip"
 msgstr "Overslaan"
@@ -201,6 +216,11 @@ msgid "OpenObject Report Designer Plug-in"
 msgstr "OpenObject Rapport Ontwerper Plug-in"
 
 #. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
 msgstr "OpenERP Rapport Ontwerper Installatie"
@@ -213,9 +233,9 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0

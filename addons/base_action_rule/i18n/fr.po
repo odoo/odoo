@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-30 12:19+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 16:22+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -21,16 +21,18 @@ msgstr ""
 msgid ""
 "Check this if you want the rule to send an email to the responsible person."
 msgstr ""
+"Cochez cette case si vous voulez que cette règle déclenche l'envoi d'un "
+"courriel au responsable."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_partner:0
 msgid "Remind Partner"
-msgstr ""
+msgstr "Envoyer un rappel au partenaire"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_categ_id:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Catégorie de partenaire"
 
 #. module: base_action_rule
 #: constraint:ir.actions.act_window:0
@@ -46,12 +48,12 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
 msgid "Button Pressed"
-msgstr ""
+msgstr "Bouton pressé"
 
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "Objet"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_email:0
@@ -61,12 +63,12 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
-msgstr ""
+msgstr "Changer l'état en"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_email_from:0
 msgid "Email From"
-msgstr ""
+msgstr "e-mail provenant de"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -76,18 +78,18 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Days"
-msgstr ""
+msgstr "Jours"
 
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_reply_to:0
 msgid "Reply-To"
-msgstr ""
+msgstr "Répondre à"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_email_cc:0
@@ -99,17 +101,28 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Minutes"
-msgstr ""
+msgstr "Minutes"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
 msgid "Rule Name"
-msgstr ""
+msgstr "Nom de la règle"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_remind_partner:0
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
+msgstr ""
+"Cocher là si vous voulez que la règle envoi un rappel par email au "
+"partenaire."
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
 msgstr ""
 
 #. module: base_action_rule
@@ -120,12 +133,12 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Deadline"
-msgstr ""
+msgstr "Echéance"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partenaire"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -143,9 +156,14 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr ""
 
 #. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
-msgstr ""
+msgstr "État"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
@@ -153,30 +171,35 @@ msgid "Email-id of the persons whom mail is to be sent"
 msgstr ""
 
 #. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 #: model:ir.module.module,shortdesc:base_action_rule.module_meta_information
 msgid "Action Rule"
-msgstr ""
+msgstr "Règle d'action"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "Champs à modifier"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Date de création"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Last Action Date"
-msgstr ""
+msgstr "Date de la dernière action"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Hours"
-msgstr ""
+msgstr "Heures"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -186,7 +209,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Délai après la date de déclenchement"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
@@ -201,7 +224,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible to"
-msgstr ""
+msgstr "Attribuer la responsabilité à"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -230,7 +253,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "Type de délai"
 
 #. module: base_action_rule
 #: constraint:ir.ui.view:0
@@ -364,6 +387,11 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
+msgstr ""
+
+#. module: base_action_rule
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: base_action_rule

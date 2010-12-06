@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:38+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-02 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: knowledge
@@ -45,6 +45,11 @@ msgid "Knowledge Management System"
 msgstr "Kennis Management Systeem"
 
 #. module: knowledge
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: knowledge
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
 msgstr "Fout ! U kunt geen recursief Menu maken."
@@ -58,6 +63,11 @@ msgstr "Ongeldige modelnaam in de definitie van de actie."
 #: model:ir.ui.menu,name:knowledge.menu_document
 msgid "Knowledge"
 msgstr "Kennis"
+
+#. module: knowledge
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: knowledge
 #: help:knowledge.installer,document_ftp:0
@@ -154,6 +164,11 @@ msgid ""
 msgstr ""
 "Laat u wiki pagina's en pagina groepen maken om bedrijfskennis te volgen en "
 "te delen met en tussen uw medewerkers."
+
+#. module: knowledge
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: knowledge
 #: view:knowledge.installer:0

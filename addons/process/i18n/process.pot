@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:49+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:49+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:12+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,34 +23,13 @@ msgid "Process Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: process
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr ""
-
-#. module: process
 #: help:process.process,active:0
-msgid "If the active field is set to true, it will allow you to hide the process without removing it."
+msgid "If the active field is set to False, it will allow you to hide the process without removing it."
+msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
 msgstr ""
 
 #. module: process
@@ -75,8 +54,8 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:process.node,help_url:0
+msgid "Help URL"
 msgstr ""
 
 #. module: process
@@ -146,11 +125,6 @@ msgid "Workflow Transitions"
 msgstr ""
 
 #. module: process
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: process
 #: field:process.transition.action,action:0
 msgid "Action ID"
 msgstr ""
@@ -172,8 +146,9 @@ msgid "Dummy"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
 msgstr ""
 
 #. module: process
@@ -223,11 +198,6 @@ msgstr ""
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
-
-#. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
 msgstr ""
 
 #. module: process
@@ -337,10 +307,5 @@ msgstr ""
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Object Method"
-msgstr ""
-
-#. module: process
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
