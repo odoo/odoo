@@ -204,12 +204,6 @@ class ir_values(osv.osv):
                 datas = datas and datas[0]
                 if not datas:
                     return False
-                if model ==  'ir.actions.act_window' \
-                        and 'search_view_id' in datas \
-                        and datas['search_view_id']:
-                    # GTK client has a bug, where it expects only the integer id
-                    # rather than [id, name] (of many2one fields)
-                    datas['search_view_id'] = datas['search_view_id'][0]
             else:
                 datas = pickle.loads(x[2].encode('utf-8'))
             if meta:
