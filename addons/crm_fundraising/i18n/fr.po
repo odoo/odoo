@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-02 17:45+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-03 08:54+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_fundraising
@@ -38,14 +38,9 @@ msgid "Avg. Probability"
 msgstr "Probabilité Moy."
 
 #. module: crm_fundraising
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Funds Form"
-msgstr ""
+#: selection:crm.fundraising.report,month:0
+msgid "March"
+msgstr "Mars"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,delay_close:0
@@ -187,20 +182,10 @@ msgid "Section"
 msgstr "Section"
 
 #. module: crm_fundraising
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML incorrect dans l'architecture de la vue !"
-
-#. module: crm_fundraising
 #: view:crm.fundraising:0
 #: field:crm.fundraising,priority:0
 msgid "Priority"
 msgstr "Priorité"
-
-#. module: crm_fundraising
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -242,13 +227,6 @@ msgstr "Minimum"
 #: field:crm.fundraising,create_date:0
 msgid "Creation Date"
 msgstr "Date de création"
-
-#. module: crm_fundraising
-#: field:crm.fundraising,date_closed:0
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Closed"
-msgstr "Cloturé"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,date_deadline:0
@@ -302,9 +280,9 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "March"
-msgstr "Mars"
+#: view:crm.fundraising:0
+msgid "Funds Form"
+msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -440,9 +418,11 @@ msgid "Low"
 msgstr "Basse"
 
 #. module: crm_fundraising
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."
+#: field:crm.fundraising,date_closed:0
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Closed"
+msgstr "Cloturé"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -604,17 +584,6 @@ msgid "Open"
 msgstr ""
 
 #. module: crm_fundraising
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: crm_fundraising
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: crm_fundraising
 #: view:crm.fundraising:0
 #: field:crm.fundraising,user_id:0
 msgid "Responsible"
@@ -700,11 +669,6 @@ msgid ""
 msgstr ""
 
 #. module: crm_fundraising
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
 msgid "February"
 msgstr "Février"
@@ -782,3 +746,9 @@ msgstr ""
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr ""
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML incorrect dans l'architecture de la vue !"

@@ -300,19 +300,15 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = [
-            """SELECT l2.id, SUM(l1.debit-l1.credit) FROM account_move_line l1, account_move_line l2""",
-            """WHERE l2.account_id = l1.account_id""",
-            """AND""",
-            """l1.id <= l2.id""",
-            """AND""",
-            """l2.id IN %s""",
-            """AND""",
-            self._query_get(cr, uid, obj='l1', context=c),
-            """ GROUP BY l2.id""",
-        ]
+        sql = """SELECT l2.id, SUM(l1.debit-l1.credit) 
+                    FROM account_move_line l1, account_move_line l2
+                    WHERE l2.account_id = l1.account_id
+                      AND l1.id <= l2.id
+                      AND l2.id IN %%s AND """ + \
+                self._query_get(cr, uid, obj='l1', context=c) + \
+                " GROUP BY l2.id"
 
-        cr.execute('\n'.join(sql), [tuple(ids)])
+        cr.execute(sql, [tuple(ids)])
         res = dict(cr.fetchall())
         return res
 
