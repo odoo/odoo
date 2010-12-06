@@ -34,14 +34,14 @@ class procurement_order(osv.osv):
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
         Call the scheduler to check the procurement order
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values        
+        @return:  Dictionary of values
         '''
         if not context:
             context = {}
@@ -50,7 +50,7 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
             wf_service = netsvc.LocalService("workflow")
-    
+
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
                 ids = procurement_obj.search(cr, uid, [], order="date_planned")
@@ -112,13 +112,13 @@ class procurement_order(osv.osv):
             if uid:
                 request = self.pool.get('res.request')
                 summary = '''Here is the procurement scheduling report.
-    
+
         Start Time: %s
         End Time: %s
         Total Procurements processed: %d
         Procurements with exceptions: %d
         Skipped Procurements (scheduled date outside of scheduler range) %d
-    
+
         Exceptions:\n'''% (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
                 request.create(cr, uid,
@@ -141,7 +141,7 @@ class procurement_order(osv.osv):
     def create_automatic_op(self, cr, uid, context=None):
         """
         Create procurement of  virtual stock < 0
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
@@ -163,42 +163,43 @@ class procurement_order(osv.osv):
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
             for product in product_obj.browse(cr, uid, products_id, context=context):
-                if product.virtual_available >= 0.0:
-                    continue
+                if (product.active == True) and (product.purchase_ok == True):
+                    if product.virtual_available >= 0.0:
+                        continue
 
-                newdate = datetime.today()
-                if product.supply_method == 'buy':
-                    location_id = warehouse.lot_input_id.id
-                elif product.supply_method == 'produce':
-                    location_id = warehouse.lot_stock_id.id
-                else:
-                    continue
-                proc_id = proc_obj.create(cr, uid, {
-                    'name': _('Automatic OP: %s') % (product.name,),
-                    'origin': _('SCHEDULER'),
-                    'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
-                    'product_id': product.id,
-                    'product_qty': -product.virtual_available,
-                    'product_uom': product.uom_id.id,
-                    'location_id': location_id,
-                    'procure_method': 'make_to_order',
-                    })
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
+                    newdate = datetime.today()
+                    if product.supply_method == 'buy':
+                        location_id = warehouse.lot_input_id.id
+                    elif product.supply_method == 'produce':
+                        location_id = warehouse.lot_stock_id.id
+                    else:
+                        continue
+                    proc_id = proc_obj.create(cr, uid, {
+                        'name': _('Automatic OP: %s') % (product.name,),
+                        'origin': _('SCHEDULER'),
+                        'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                        'product_id': product.id,
+                        'product_qty': -product.virtual_available,
+                        'product_uom': product.uom_id.id,
+                        'location_id': location_id,
+                        'procure_method': 'make_to_order',
+                        })
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
         '''
         Create procurement based on Orderpoint
         use_new_cursor: False or the dbname
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param user_id: The current user ID for security checks
         @param context: A standard dictionary for contextual values
         @param param: False or the dbname
         @return:  Dictionary of values
-        """        
+        """
         '''
         if not context:
             context = {}
