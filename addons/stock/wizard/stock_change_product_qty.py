@@ -83,24 +83,33 @@ class stock_change_product_qty(osv.osv_memory):
         assert rec_id, _('Active ID is not set in Context')
 
         inventry_obj_pool = self.pool.get('stock.inventory')
+        inventry_line_obj_pool = self.pool.get('stock.inventory.line')
         prod_obj_pool = self.pool.get('product.product')
         move_obj_pool = self.pool.get('stock.move')
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id)
         res_update = self.browse(cr, uid, ids)
 
-        move_data ={
+        datas = {
+            'name': 'INV:' + str(res_original.name),
+            'company_id' : self.pool.get('res.users').browse(cr, uid, uid).company_id.id or False ,
+            'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+        invntry_id = inventry_obj_pool.create(cr , uid, datas, context = context)
+
+        line_data ={
+            'inventory_id' : invntry_id,
             'product_qty' : res_update[0].new_quantity,
             'location_id' : res_update[0].location_id.id,
             'product_id' : rec_id,
+            'product_uom' : res_original.uom_id.id,
+            'company_id' : self.pool.get('res.users').browse(cr, uid, uid).company_id.id or False ,
+            'state' : 'draft'
         }
-        datas = {
-            'name': 'INV:' + str(res_original.name),
-            'company_id' : 1 or False ,
-            'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'move_ids': [(6, 0, move_data)]
-        }
+        line_id = inventry_line_obj_pool.create(cr , uid, line_data, context = context)
 
-#        inventry_obj_pool.create(cr , uid, datas, context = context)
+        inventry_obj_pool.action_confirm(cr, uid, [invntry_id], context = context)
+        inventry_obj_pool.action_done(cr, uid, [invntry_id], context = context)
         return {}
 stock_change_product_qty()
