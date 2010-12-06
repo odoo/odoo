@@ -324,11 +324,11 @@
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_qty"/>
-                        <field name="product_uom" widget="selection"/>
-                        <field name="routing_id" widget="selection" groups="base.group_extended"/>
+                        <field name="product_uom"/>
+                        <field name="routing_id"  groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uos_qty" groups="product.group_uos" />
-                        <field name="product_uos" widget="selection" groups="product.group_uos"/>
+                        <field name="product_uos"  groups="product.group_uos"/>
                         <newline/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
@@ -569,8 +569,8 @@
                         <field name="origin"/>
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
-                        <group colspan="2" col="3">
-                        <field name="product_uom" widget="selection"/>
+                        <group colspan="2" col="4">
+                        <field name="product_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
@@ -584,7 +584,7 @@
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
-                            <field name="routing_id" groups="base.group_extended" select="1" widget="selection"/>
+                            <field name="routing_id" groups="base.group_extended" select="1"/>
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
@@ -594,7 +594,7 @@
                                 <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM" widget="selection"/>
+                                    <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
@@ -613,7 +613,7 @@
                                    <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel') " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
                                        <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
@@ -634,7 +634,6 @@
                             <group col="9" colspan="4">
                                 <field name="state"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
-                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
@@ -648,7 +647,7 @@
                                 <tree string="Products to Finish">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
-                                    <field name="product_uom"  string="UOM" widget="selection"/>
+                                    <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc." />
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.action_partial_move)d" 
@@ -667,7 +666,7 @@
                                    <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                       <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
+                                       <field name="product_uom" readonly="1" string="UOM"/>
                                        <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="scrapped" invisible="1"/>
@@ -681,6 +680,10 @@
                                </field>
                         </page>
                         <page string="Work Orders" groups="base.group_extended">
+                            <button name="action_compute" states="draft"
+                                string="Compute Data" type="object"
+                                icon="terp-stock_format-scientific"
+                                colspan="4" />
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name"/>
@@ -699,6 +702,10 @@
                             </field>
                         </page>
                         <page string="Scheduled Products">
+                            <button name="action_compute" states="draft"
+                                string="Compute Data" type="object"
+                                icon="terp-stock_format-scientific"
+                                colspan="4" />
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
@@ -906,7 +913,7 @@
 
         <act_window
             domain="[('bom_id','=',False)]"
-            context="{'search_default_product_id': [active_id]}"
+            context="{'search_default_product_id': [active_id],'default_product_id':active_id}"
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"
             res_model="mrp.bom"

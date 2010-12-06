@@ -321,6 +321,15 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
+    
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        bom_data = self.read(cr, uid, id, [], context=context)
+        default.update({'name': bom_data['name'] + _(' (copy)')})
+        return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()
 
