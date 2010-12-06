@@ -444,16 +444,14 @@ class account_voucher(osv.osv):
         moves = move_line_pool.browse(cr, uid, ids)
 
         priority_moves = []
+        unpriority_moves = []
         for line in moves:
             original_amount = line.credit or line.debit or 0.0
             if original_amount == price:
                 priority_moves.append(line)
-
-        if priority_moves:
-            for line in moves:
-                if line not in priority_moves:
-                    priority_moves.append(line)
-            moves = priority_moves
+            else:
+                unpriority_moves.append(line)
+        moves = priority_moves + unpriority_moves
 
         company_currency = journal.company_id.currency_id.id
         if company_currency != currency_id and ttype == 'payment':
