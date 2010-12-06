@@ -2,7 +2,10 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" groups="group_stock_manager,group_stock_user" sequence="5"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"
+                  groups="group_stock_manager,group_stock_user" sequence="5"
+                  web_icon="images/warehouse.png"
+                  web_icon_hover="images/warehouse-hover.png"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="base.group_extended"/>
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
@@ -648,7 +651,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="product_uos" groups="product.product_uos"/>
+                                    <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -692,7 +695,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                                         <field name="product_uom" string="Unit Of Measure" widget="selection" colspan="4"/>
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
@@ -847,7 +850,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="product_uos" groups="product.product_uos"/>
+                                    <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -885,7 +888,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1" groups="base.group_extended"/>
                                         <field name="product_uom" string="Unit Of Measure" widget="selection" colspan="4" />
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4" />
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4" />
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4" />
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4" />
                                     </group>
@@ -1105,7 +1108,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                                         <field name="product_uom" string="Unit Of Measure" widget="selection" colspan="4"/>
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
@@ -1316,7 +1319,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="UoM"/>
-                    <field name="product_uos" groups="product.product_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
@@ -1373,7 +1376,7 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.group_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                         <field name="product_uos" groups="product.group_uos" colspan="4"/>
                     </group>
 
@@ -1569,8 +1572,8 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
-                        <field name="product_uos" groups="product.product_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos"  on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
+                        <field name="product_uos" groups="product.group_uos" colspan="4"/>
                     </group>
 
                     <group colspan="2" col="2">

@@ -69,7 +69,7 @@ class mrp_routing(osv.osv):
     _description = 'Routing'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the routing without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
@@ -178,7 +178,7 @@ class mrp_bom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Reference', size=16),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
                                  help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
                                  "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\

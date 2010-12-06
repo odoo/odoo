@@ -7,25 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 08:14+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 15:15+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: document_webdav
-#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
-msgid "document.webdav.dir.property"
-msgstr ""
-
-#. module: document_webdav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: document_webdav
 #: constraint:ir.model:0
@@ -36,24 +27,14 @@ msgstr ""
 "beinhalten !"
 
 #. module: document_webdav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: document_webdav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "Fehler ! Sie können keine rekursiven Verzeichnisse anlegen."
-
-#. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Group By..."
-msgstr "Gruppierung..."
-
-#. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
-msgstr "WebDAV Server für Dokumentenmanagement"
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
@@ -67,9 +48,9 @@ msgid "DAV properties"
 msgstr "DAV Eigenschaften"
 
 #. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Dyn. Kontext"
+#: view:document.webdav.dir.property:0
+msgid "Group By..."
+msgstr "Gruppierung..."
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -77,14 +58,24 @@ msgid "These properties will be added to WebDAV requests"
 msgstr "Diese Eigenschaften werden bei WebDav Anfragen angefügt"
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,do_subst:0
-msgid "Substitute"
-msgstr "Substituiere"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: document_webdav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Das Verzeichnis kann nicht sich selbst übergeordnet werden"
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Dyn. Kontext"
 
 #. module: document_webdav
 #: view:document.directory:0
@@ -92,20 +83,9 @@ msgid "WebDAV properties"
 msgstr "WebDav Eigenschaften"
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,dir_id:0
-#: model:ir.model,name:document_webdav.model_document_directory
-msgid "Directory"
-msgstr "Verzeichnis"
-
-#. module: document_webdav
-#: field:document.webdav.dir.property,value:0
-msgid "Value"
-msgstr "Wert"
-
-#. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Search Document storage"
-msgstr "Diese Eigenschaften werden bei WebDav Anfragen angefügt"
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Das Verzeichnis muss eindeutig sein"
 
 #. module: document_webdav
 #: model:ir.ui.menu,name:document_webdav.menu_dir_props
@@ -119,14 +99,67 @@ msgid "Properties"
 msgstr "Eigenschaften"
 
 #. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Dir"
-msgstr "Verzeichnis"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,name:0
 msgid "Name"
 msgstr "Bezeichnung"
+
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+msgid "Value"
+msgstr "Wert"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr "Verzeichnis"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Dir"
+msgstr "Verzeichnis"
+
+#. module: document_webdav
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: document_webdav
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr "WebDAV Server für Dokumentenmanagement"
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+"Das Verzeichnis muss ein Hauptverzeichnis oder einen Speicher zugewiesen "
+"haben"
+
+#. module: document_webdav
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Search Document storage"
+msgstr "Diese Eigenschaften werden bei WebDav Anfragen angefügt"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+msgid "Substitute"
+msgstr "Substituiere"
 
 #~ msgid ""
 #~ "This is a complete document management system:\n"

@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:23+0000\n"
-"Last-Translator: Douglas Morato <dfamorato@gmail.com>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-27 00:49+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.cash_journal_multi_in
+msgid "Cash Journal - (OpenERP IN)"
+msgstr "Livro Caixa - (OpenERP IN)"
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -40,11 +45,140 @@ msgid ""
 "%(company_name)s\n"
 "        "
 msgstr ""
+"\n"
+"Data: %(date)s\n"
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Em anexo encontra-se  um lembrete de todas suas  faturas à pagar, por um "
+"montante total devido de;\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Obrigado,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
+
+#. module: multi_company
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Não é permitido criar dois usuários com o mesmo login!"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.check_journal_multi_in
+msgid "Checks Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
+
+#. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
+msgid "Multi-Companies"
+msgstr "Multi-Empresas"
+
+#. module: multi_company
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "O nome do módulo precisa ser único !"
+
+#. module: multi_company
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erro! Você não pode criar membros recursivos associados."
+
+#. module: multi_company
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"A empresa escolhida não está entre as empresas habilitadas para este usuário"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_us
+msgid "Sales Credit Note Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Erro ! Você não pode criar Menu recursivo."
 
 #. module: multi_company
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Nome de modelo inválido na definição da ação"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_us
+msgid "Expenses Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "O ID de certificado do módulo precisa ser único !"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_be
+msgid "Expenses Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.sales_journal_multi_us
+msgid "Sales Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_in
+msgid "Expenses Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Retornando"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_us
+msgid "Expenses Credit Notes Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:ir.module.module,shortdesc:multi_company.module_meta_information
+#: view:multi_company.default:0
+msgid "Multi Company"
+msgstr "Multi-Empresa"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.sales_journal_multi_in
+msgid "Sales Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.check_journal_multi_be
+msgid "Checks Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Condition"
+msgstr "Condição"
+
+#. module: multi_company
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML inválido para Arquitetura da View"
 
 #. module: multi_company
 #: constraint:product.template:0
@@ -58,61 +192,48 @@ msgid "Odoo Offers"
 msgstr "Promoções Odoo (On Demand Open Object)"
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Erro!  Você não pode criar categorias recursivas."
-
-#. module: multi_company
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Erro! Você não pode criar empresas recursivas."
 
 #. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
-msgid "Multi-Companies"
+#: model:account.journal,name:multi_company.cash_journal_multi_us
+msgid "Cash Journal - (OpenERP US)"
 msgstr ""
 
 #. module: multi_company
-#: model:ir.module.module,shortdesc:multi_company.module_meta_information
-#: view:multi_company.default:0
-msgid "Multi Company"
-msgstr "Empresa Múltipla"
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
+#: model:account.journal,name:multi_company.bank_journal_multi_us
+msgid "Bank Journal - (OpenERP US)"
 msgstr ""
 
 #. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código EAN inválido"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_in
+msgid "Sales Credit Note Journal - (OpenERP IN)"
 msgstr ""
 
 #. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: model:account.journal,name:multi_company.cash_journal_multi_be
+msgid "Cash Journal - (OpenERP BE)"
 msgstr ""
 
 #. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
+#: model:account.journal,name:multi_company.check_journal_multi_us
+msgid "Checks Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.sales_journal_multi_be
+msgid "Sales Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_be
+msgid "Expenses Credit Notes Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_be
+msgid "Sales Credit Note Journal - (OpenERP BE)"
 msgstr ""
 
 #. module: multi_company
@@ -122,19 +243,44 @@ msgid "Default Company per Object"
 msgstr "Empresa Padrão por Objeto"
 
 #. module: multi_company
-#: view:multi_company.default:0
-msgid "Matching"
-msgstr "Correspondendo a"
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr "Condição"
-
-#. module: multi_company
 #: model:product.template,name:multi_company.product_product_odoo1_product_template
 msgid "Odoo Offer"
 msgstr "Promoções Odoo (On Demand Open Object)"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_in
+msgid "Expenses Credit Notes Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.bank_journal_multi_in
+msgid "Bank Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Erro!  Você não pode criar categorias recursivas."
+
+#. module: multi_company
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.bank_journal_multi_be
+msgid "Bank Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erro: Código EAN inválido"
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Matching"
+msgstr "Correspondendo a"
 
 #~ msgid "Default Company"
 #~ msgstr "Empresa Padrão"
