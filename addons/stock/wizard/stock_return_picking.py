@@ -155,10 +155,9 @@ class stock_return_picking(osv.osv_memory):
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
     
-        move_ids = [m.id for m in [line for line in pick.move_lines]]
         set_invoice_state_to_none = True
         returned_lines = 0
-        for move in move_obj.browse(cr, uid, move_ids):
+        for move in pick.move_lines:
             if not new_picking:
                 if pick.type=='out':
                     new_type = 'in'

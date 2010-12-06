@@ -6,34 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-24 09:39+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-04 08:53+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
 msgid "Account Analytic Default"
 msgstr "Compte Analytique par Défaut"
-
-#. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
-
-#. module: account_analytic_default
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -75,14 +62,9 @@ msgid "Default end date for this Analytical Account"
 msgstr "Date de fin par défaut pour ce compte analytique"
 
 #. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -105,11 +87,6 @@ msgstr ""
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sale Order Line"
 msgstr "Ligne de commande de vente"
-
-#. module: account_analytic_default
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -150,11 +127,6 @@ msgid "End Date"
 msgstr "Date de fin"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
@@ -185,11 +157,6 @@ msgstr ""
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
-
-#. module: account_analytic_default
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -226,13 +193,20 @@ msgstr ""
 "Donne la séquence d'ordre lors de l'affichage d'une liste de distribution "
 "analytique"
 
-#. module: account_analytic_default
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
 
 #~ msgid "Seq"
 #~ msgstr "Séq"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "Distributions Analytiques"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom du Modèle non valide dans la définition de l'action."

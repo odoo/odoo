@@ -332,14 +332,17 @@ class account_invoice(osv.osv):
         if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
             partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
-                view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])[0]
+                view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
                 view_type = 'tree'
             if view_type == 'form':
                 if partner['supplier'] and not partner['customer']:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')])[0]
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')])
                 else:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')])[0]
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')])
+        if view_id and isinstance(view_id, (list, tuple)):
+            view_id = view_id[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+
         type = context.get('journal_type', 'sale')
         for field in res['fields']:
             if field == 'journal_id':
@@ -383,7 +386,7 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise orm.except_orm(_('UnknownError'), str(e))
+                raise orm.except_orm(_('Unknown Error'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)

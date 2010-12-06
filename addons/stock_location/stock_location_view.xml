@@ -40,7 +40,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Logistic Flow">
+                    <page string="Logistics Flow">
                         <field name="flow_pull_ids" editable="bottom" colspan="4" nolabel="1">
                             <tree string="Pulled flows">
                                 <field name="location_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>

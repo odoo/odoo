@@ -82,7 +82,7 @@ class account_move_line(osv.osv):
                     periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
                     periods = ','.join([str(x) for x in periods])
                     if periods:
-                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) OR id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
@@ -304,19 +304,15 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = [
-            """SELECT l2.id, SUM(l1.debit-l1.credit) FROM account_move_line l1, account_move_line l2""",
-            """WHERE l2.account_id = l1.account_id""",
-            """AND""",
-            """l1.id <= l2.id""",
-            """AND""",
-            """l2.id IN %s""",
-            """AND""",
-            self._query_get(cr, uid, obj='l1', context=c),
-            """ GROUP BY l2.id""",
-        ]
+        sql = """SELECT l2.id, SUM(l1.debit-l1.credit) 
+                    FROM account_move_line l1, account_move_line l2
+                    WHERE l2.account_id = l1.account_id
+                      AND l1.id <= l2.id
+                      AND l2.id IN %%s AND """ + \
+                self._query_get(cr, uid, obj='l1', context=c) + \
+                " GROUP BY l2.id"
 
-        cr.execute('\n'.join(sql), [tuple(ids)])
+        cr.execute(sql, [tuple(ids)])
         res = dict(cr.fetchall())
         return res
 
@@ -547,7 +543,9 @@ class account_move_line(osv.osv):
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
-    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False):
+    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False, context=None):
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
         currency_obj = self.pool.get('res.currency')
@@ -558,7 +556,8 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc)
+        context.update({'date': date})
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0

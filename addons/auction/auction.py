@@ -211,7 +211,7 @@ class auction_lot_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
+        'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the auction lot category without removing it."),
         'aie_categ': fields.many2one('aie.category', 'Category', ondelete='cascade'),
     }
     _defaults = {

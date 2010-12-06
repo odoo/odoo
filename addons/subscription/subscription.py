@@ -67,7 +67,7 @@ class subscription_subscription(osv.osv):
     _description = "Subscription"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the subscription without removing it."),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'notes': fields.text('Notes'),
         'user_id': fields.many2one('res.users', 'User', required=True),

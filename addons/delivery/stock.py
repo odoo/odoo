@@ -160,13 +160,12 @@ class stock_move(osv.osv):
     _columns = {
         'weight': fields.function(_cal_move_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
-                 'stock.move': (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_qty', 'product_uom'], 20),
+                 'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),
         'weight_net': fields.function(_cal_move_weight, method=True, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
-                 'stock.move': (lambda self, cr, uid, ids, c={}: ids, ['product_id', 'product_qty', 'product_uom'], 20),
+                 'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),
-                 
         }
 
 stock_move()

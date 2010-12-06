@@ -62,12 +62,12 @@ _ref_iban = { 'al':'ALkk BBBS SSSK CCCC CCCC CCCC CCCC', 'ad':'ADkk BBBB SSSS CC
 
 def _format_iban(string):
     '''
-    This function removes all characters from given 'string' that isn't a alpha numeric and converts it to lower case.
+    This function removes all characters from given 'string' that isn't a alpha numeric and converts it to upper case.
     '''
     res = ""
     for char in string:
         if char.isalnum():
-            res += char.lower()
+            res += char.upper()
     return res
 
 class res_partner_bank(osv.osv):
@@ -92,7 +92,7 @@ class res_partner_bank(osv.osv):
         for bank_acc in self.browse(cr, uid, ids, context=context):
             if not bank_acc.iban:
                 continue
-            iban = _format_iban(bank_acc.iban)
+            iban = _format_iban(bank_acc.iban).lower()
             if iban[:2] in _iban_len and len(iban) != _iban_len[iban[:2]]:
                 return False
             #the four first digits have to be shifted to the end

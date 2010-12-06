@@ -101,7 +101,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                       ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('UserError', 'This record does not exist !')
+            raise osv.except_osv(_('UserError'), _('This record does not exist !'))
         lots_obj.write(cr, uid, found, {'obj_num':int(datas['obj_num'])} )
         view_id = data_obj._get_id(cr, uid, 'auction', 'view_auction_numerotate')
         if view_id:
@@ -127,7 +127,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                         ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('UserError', 'This record does not exist !')
+            raise osv.except_osv(_('UserError'), _('This record does not exist !'))
         lots_datas = lots_obj.read(cr, uid, found,
                                    ['obj_num', 'name', 'lot_est1', 
                                    'lot_est2', 'obj_desc'])
@@ -144,7 +144,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                                     ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('Error', 'This lot does not exist !')
+            raise osv.except_osv(_('Error'), _('This lot does not exist !'))
         view_id = data_obj._get_id(cr, uid, 'auction', 'view_auction_lots_numerotate_second')
         if view_id:
             res_id = data_obj.browse(cr, uid, view_id, context=context).res_id

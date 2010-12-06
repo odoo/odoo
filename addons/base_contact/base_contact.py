@@ -58,7 +58,7 @@ class res_partner_contact(osv.osv):
         'job_ids': fields.one2many('res.partner.job', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
         'birthdate': fields.date('Birth Date'),
-        'active': fields.boolean('Active', help="If the active field is set to true,\
+        'active': fields.boolean('Active', help="If the active field is set to False,\
                  it will allow you to hide the partner contact without removing it."),
         'partner_id': fields.related('job_ids', 'address_id', 'partner_id', type='many2one',\
                          relation='res.partner', string='Main Employer'),

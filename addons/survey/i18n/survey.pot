@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13:19+0000\n"
-"PO-Revision-Date: 2010-11-18 16:13:19+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:39+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -98,8 +98,8 @@ msgid "A Range"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:survey.response.line:0
+msgid "Table Answer"
 msgstr ""
 
 #. module: survey
@@ -119,12 +119,8 @@ msgid "You must enter one or more menu                                 choices i
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
-msgid "Descriptive Text"
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
 msgstr ""
 
 #. module: survey
@@ -203,11 +199,6 @@ msgstr ""
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
-msgstr ""
-
-#. module: survey
-#: view:survey.response.line:0
-msgid "Table Answer"
 msgstr ""
 
 #. module: survey
@@ -385,6 +376,11 @@ msgid "Text"
 msgstr ""
 
 #. module: survey
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Letter (8.5\" x 11\")"
@@ -424,13 +420,13 @@ msgid "Late"
 msgstr ""
 
 #. module: survey
-#: field:survey.send.invitation,mail_from:0
-msgid "From"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: survey
-#: selection:survey,state:0
-msgid "Closed"
+#: field:survey.send.invitation,mail_from:0
+msgid "From"
 msgstr ""
 
 #. module: survey
@@ -473,11 +469,6 @@ msgstr ""
 #: code:addons/survey/survey.py:0
 #, python-format
 msgid "You must enter one or more menu choices                                 in column heading"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: survey
@@ -525,11 +516,6 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_answer_surveys
 msgid "Answer Surveys"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: survey
@@ -587,8 +573,12 @@ msgid "Page Nr"
 msgstr ""
 
 #. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+#: field:survey.question,descriptive_text:0
+#: selection:survey.question,type:0
+msgid "Descriptive Text"
 msgstr ""
 
 #. module: survey
@@ -611,11 +601,6 @@ msgstr ""
 #: code:addons/survey/survey.py:0
 #, python-format
 msgid "You must enter one or more menu choices in column heading"
-msgstr ""
-
-#. module: survey
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: survey
@@ -890,8 +875,8 @@ msgid "survey.print.statistics"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: selection:survey,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: survey
@@ -984,11 +969,6 @@ msgstr ""
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: survey
@@ -1249,11 +1229,6 @@ msgid "Open"
 msgstr ""
 
 #. module: survey
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
 msgstr ""
@@ -1262,11 +1237,6 @@ msgstr ""
 #: code:addons/survey/survey.py:0
 #, python-format
 msgid "#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d."
-msgstr ""
-
-#. module: survey
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: survey
