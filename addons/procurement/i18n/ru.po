@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-27 12:06+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 19:07+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -50,11 +50,6 @@ msgstr "Планирование"
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Для этого изделия/материала не задан поставщик!"
-
-#. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -228,19 +223,14 @@ msgstr ""
 "Выполнено OpenERP автоматически."
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Правило минимума ТМЦ"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
 msgstr "Приоритет"
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
@@ -287,11 +277,6 @@ msgstr "Лучшая цена (не активна!)"
 #: view:procurement.order:0
 msgid "Product & Location"
 msgstr "Продукция и местоположения"
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
@@ -354,14 +339,9 @@ msgid "Configuration"
 msgstr "Параметры"
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Недопустимые аргументы"
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Кратное кол-во"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -373,19 +353,9 @@ msgstr ""
 "использовать изготовление на заказ."
 
 #. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistics Scheduler"
-msgstr "ПМР и Логистическое планирование"
-
-#. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
 msgstr "Автоматическое снабжение"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "Закупаемое количество будет округляться до кратного."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -471,6 +441,13 @@ msgstr ""
 "меньше 1!"
 
 #. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"orderpoint without removing it."
+msgstr ""
+
+#. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 msgid ""
 "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
@@ -518,17 +495,9 @@ msgid "Draft"
 msgstr "Черновик"
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#. module: procurement
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
+msgstr "Этот мастер планирует снабжение"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -567,18 +536,9 @@ msgid "Normal"
 msgstr "Обычный"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr "Этот мастер планирует снабжение"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the orderpoint "
-"without removing it."
-msgstr ""
-"Если значение активного поля \"истина\", то это позволит вам скрыть точку "
-"заказа"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -612,9 +572,9 @@ msgid "Automatic Order Point"
 msgstr "Автоматическая точка заказа"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Кратное кол-во"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Правило минимума ТМЦ"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -630,6 +590,11 @@ msgstr "Доп. информация"
 #: help:procurement.order,name:0
 msgid "Procurement name."
 msgstr "Название закупки."
+
+#. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
@@ -709,9 +674,9 @@ msgid "Done"
 msgstr "Готово"
 
 #. module: procurement
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
+msgstr "Закупаемое количество будет округляться до кратного."
 
 #. module: procurement
 #: view:make.procurement:0
@@ -722,11 +687,6 @@ msgstr ""
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Отмена"
-
-#. module: procurement
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -870,6 +830,11 @@ msgstr ""
 "может генерировать задачи, заказы на производство, заказы на закупку."
 
 #. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr "ПМР и Логистическое планирование"
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -931,19 +896,42 @@ msgid "Procurement Details"
 msgstr "Детали снабжения"
 
 #. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Для объектов osv_memory правила не поддерживаются !"
-
-#. module: procurement
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "SCHEDULER"
 msgstr "ПЛАНИРОВЩИК"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
 #~ msgid "Temporary Procurement Exceptions"
 #~ msgstr "Временные исключения снабжения"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Недопустимые аргументы"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
 
 #, python-format
 #~ msgid "Procurement "
 #~ msgstr "Снабжение "
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the orderpoint "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Если значение активного поля \"истина\", то это позволит вам скрыть точку "
+#~ "заказа"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Для объектов osv_memory правила не поддерживаются !"

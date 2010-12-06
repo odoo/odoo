@@ -6,20 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 10:27+0000\n"
-"Last-Translator: Carlos Liebana <carlos.liebana@ting.es>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 23:14+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr "Ruta de centros de producción"
+#: field:mrp.production,move_created_ids:0
+#: field:mrp.production,move_created_ids2:0
+msgid "Moves Created"
+msgstr "Movimientos creados"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -47,20 +49,14 @@ msgid "Work Centers load"
 msgstr "Carga del centro de producción"
 
 #. module: mrp
-#: field:mrp.production,move_created_ids:0
-#: field:mrp.production,move_created_ids2:0
-msgid "Moves Created"
-msgstr "Movimientos creados"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr "Ruta de centros de producción"
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
 msgstr "Planificación de recursos de fabricación (MRP)"
-
-#. module: mrp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
@@ -75,15 +71,6 @@ msgid ""
 msgstr ""
 "La 'regla de stock mínimo' permite al sistema de crear órdenes  de "
 "abasteciemiento automáticamente cuando el stock mínimo es alcanzado"
-
-#. module: mrp
-#: help:mrp.bom,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the bills of "
-"material without removing it."
-msgstr ""
-"Si el campo activo se desmarca, permite ocultar las listas de materiales sin "
-"eliminarlas."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -204,11 +191,6 @@ msgid "Set / Pack"
 msgstr "Conjunto / Paquete"
 
 #. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
 msgstr "Subproductos MRP"
@@ -239,11 +221,6 @@ msgstr ""
 #: view:mrp.production:0
 msgid "UOM"
 msgstr "UdM"
-
-#. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -331,12 +308,6 @@ msgid "Sets / Phantom"
 msgstr "Conjuntos / Fantasma"
 
 #. module: mrp
-#: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
-msgid "Not urgent"
-msgstr "No urgente"
-
-#. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
 msgstr "Referencia a una ubicación en una plan. externa"
@@ -347,6 +318,11 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
 msgid "Production Order Report"
 msgstr "Informe de órden de producción"
@@ -355,11 +331,6 @@ msgstr "Informe de órden de producción"
 #: selection:mrp.production.order,month:0
 msgid "June"
 msgstr "Junio"
-
-#. module: mrp
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "¡El nombre del grupo debe ser único!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -384,7 +355,6 @@ msgstr "UdM por defecto"
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: report:bom.structure:0
-#: field:mrp.product.produce,product_qty:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
 #, python-format
@@ -534,6 +504,11 @@ msgstr ""
 "centros de trabajo."
 
 #. module: mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Workcenter per hour."
 msgstr "Indica coste del centro de trabajo por hora."
@@ -608,15 +583,6 @@ msgid "Produce"
 msgstr "Producir"
 
 #. module: mrp
-#: help:mrp.production,picking_id:0
-msgid ""
-"This is the internal picking list that brings the finished product to the "
-"production plan"
-msgstr ""
-"Este es el albarán interno que trae el producto terminado hacia el plan de "
-"producción."
-
-#. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
@@ -641,6 +607,13 @@ msgstr "Líneas de las listas de materiales"
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
 msgstr "Tiempo antes producción"
+
+#. module: mrp
+#: help:mrp.routing,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1133,11 +1106,6 @@ msgstr ""
 "de trabajo."
 
 #. module: mrp
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
-
-#. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
 msgstr "¡Cantidad ordenada no puede ser negativa o cero!"
@@ -1280,12 +1248,13 @@ msgid "Location where the system will stock the finished products."
 msgstr "Ubicación donde el sistema almacenará los productos finalizados."
 
 #. module: mrp
-#: help:mrp.routing,active:0
+#: help:mrp.production,picking_id:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the routing "
-"without removing it."
+"This is the internal picking list that brings the finished product to the "
+"production plan"
 msgstr ""
-"Si el campo activo se desmarca, permite ocultar la ruta sin eliminarla."
+"Este es el albarán interno que trae el producto terminado hacia el plan de "
+"producción."
 
 #. module: mrp
 #: field:stock.change.standard.price,change_parent_price:0
@@ -1338,11 +1307,6 @@ msgstr ""
 #: field:mrp.production.order,priority:0
 msgid "Priority"
 msgstr "Prioridad"
-
-#. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
@@ -1469,11 +1433,6 @@ msgid "Hour Account"
 msgstr "Cuenta horas"
 
 #. module: mrp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
 msgstr "Ubic. destino"
@@ -1576,11 +1535,6 @@ msgid "Change Standard Price"
 msgstr "Cambio de precio estándar"
 
 #. module: mrp
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,origin:0
@@ -1588,12 +1542,10 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#: selection:mrp.production,priority:0
+#: selection:mrp.production.order,priority:0
+msgid "Not urgent"
+msgstr "No urgente"
 
 #. module: mrp
 #: help:stock.change.standard.price,change_parent_price:0
@@ -1966,6 +1918,18 @@ msgid "Manufacturing Efficiency"
 msgstr "Eficiencia de la producción"
 
 #. module: mrp
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.bom,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,product_rounding:0
 msgid "Product Rounding"
 msgstr "Redondeo del producto"
@@ -2216,6 +2180,11 @@ msgid "Error"
 msgstr "Error"
 
 #. module: mrp
+#: field:mrp.product.produce,product_qty:0
+msgid "Select Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
@@ -2272,11 +2241,6 @@ msgstr ""
 "pasos especificos de fabricacion o bien definir una única LdM multi-nivel."
 
 #. module: mrp
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
 #: view:mrp.bom:0
 #: field:mrp.bom,routing_id:0
@@ -2299,6 +2263,11 @@ msgid ""
 "Reference of the document that generated this production order request."
 msgstr ""
 "Referencia al documento que generó esta solicitud de orden de producción."
+
+#. module: mrp
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -2478,7 +2447,7 @@ msgstr "Secuencia"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr "Hojas de recursos"
+msgstr "Ausencias recursos"
 
 #. module: mrp
 #: help:mrp.bom,sequence:0
@@ -2539,6 +2508,9 @@ msgstr "Año"
 
 #~ msgid "Automatic orderpoint"
 #~ msgstr "Generación de orden automática"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid ""
 #~ "This is the days added to what you promise to customers for security purpose"
@@ -2952,6 +2924,12 @@ msgstr "Año"
 #~ msgid "Reordering Mode"
 #~ msgstr "Modo de pedir de nuevo"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Central document to procure products"
 #~ msgstr "Documento central para abastecer productos"
 
@@ -3155,6 +3133,9 @@ msgstr "Año"
 #~ msgid "Production Workcenters"
 #~ msgstr "Centros de producción"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
 #~ msgid ""
 #~ "The list of operations (list of workcenters) to produce the finished "
 #~ "product. The routing is mainly used to compute workcenter costs during "
@@ -3186,6 +3167,9 @@ msgstr "Año"
 #~ msgid "of "
 #~ msgstr "de "
 
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
+
 #, python-format
 #~ msgid "Cost "
 #~ msgstr "Coste "
@@ -3198,8 +3182,39 @@ msgstr "Año"
 #~ msgid "Total Cost "
 #~ msgstr "Coste total "
 
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the bills of "
+#~ "material without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar las listas de materiales sin "
+#~ "eliminarlas."
+
 #~ msgid "Work Center Future load"
 #~ msgstr "Carga futura centro de trabajo"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the routing "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar la ruta sin eliminarla."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "¡El nombre del grupo debe ser único!"
 
 #~ msgid "MRP & Logistics Scheduler"
 #~ msgstr "Planificador MRP & Logística"

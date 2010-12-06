@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-02 16:46+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-04 09:23+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -52,11 +52,6 @@ msgstr "Geen medewerker gedefinieerd voor uw gebruiker!"
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr "Groepeer op..."
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie definitie."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -292,9 +287,9 @@ msgid "Timesheet lines"
 msgstr "Regels urenstaat"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Fout ! U kunt geen recursieve bedrijven maken."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -318,11 +313,6 @@ msgstr "Medewerker"
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "Nieuw"
-
-#. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -356,6 +346,12 @@ msgstr "Uren"
 #: field:timesheet.report,cost:0
 msgid "#Cost"
 msgstr "#Kosten"
+
+#. module: hr_timesheet_sheet
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+"Fout: Inklokken (resp uitklokken) moet volgen op uitklokken (resp. inklokken)"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -392,11 +388,6 @@ msgid ""
 "defined !"
 msgstr ""
 "U kunt geen urenstaat maken voor een medewerker die geen gebruiker is !"
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
@@ -531,11 +522,6 @@ msgstr "Concept"
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
 msgstr "Urenstaat toegestaan verschil (Uren)"
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -677,12 +663,6 @@ msgid "General Account"
 msgstr "Algemene rekening"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr "Soort facturatie"
-
-#. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
@@ -725,11 +705,6 @@ msgid "State is 'draft'."
 msgstr "Status is 'concept'."
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
-
-#. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -745,32 +720,20 @@ msgid "Open"
 msgstr "Openen"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Urenstaat op rekening"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
+msgstr "Kan geen urenstaten verwijderen die al bevestigd zijn !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "State is 'validated'."
-msgstr ""
+msgstr "Status is 'gecontroleerd'."
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -782,18 +745,24 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" * De 'Concept' status wordt gebruikt als een gebruiker een nieuwe urenstaat "
+"invult.                 \n"
+"* De 'Bevestigd' status wordt gebruikt door de gebruiker om de urenstaat te "
+"bevestigen.                 \n"
+"* De 'Klaar' status wordt gebruikt als de urenstaat is goedgekeurd door zijn "
+"manager."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Urenstaat analyse"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Urenstaat zoeken"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -802,6 +771,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
 "ins and sign outs!"
 msgstr ""
+"De urenstaat kan niet worden gecontroleerd omdat het niet evenveel ingeklokt "
+"als uitgeklokt heeft !"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -814,7 +785,7 @@ msgstr "Regel urenstaat"
 #: view:timesheet.report:0
 #: field:timesheet.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -833,18 +804,18 @@ msgstr "Omschrijving"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
-msgstr ""
+msgstr "De medewerker bevestigt periodiek zijn eigen urenstaten."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
 msgid "Defines the work summary of task"
-msgstr ""
+msgstr "Definieert de werk samenvatting van de taak"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -855,12 +826,12 @@ msgstr "Uitklokken"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-msgstr ""
+msgstr "Kan geen urenstaten verwijderen met ingevulde aanwezigheid !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr ""
+msgstr "Verplaatst taakregel naar de urenstaatregel"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -871,7 +842,7 @@ msgstr "Op dag"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "Urenstaat formulier analyse"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
@@ -889,28 +860,28 @@ msgstr "Afwezig"
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Employees"
-msgstr ""
+msgstr "Medewerkers"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Information of time spent on a service"
-msgstr ""
+msgstr "Informatie over gewerkte uren voor een service"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "Confirmation"
-msgstr ""
+msgstr "Bevestiging"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
@@ -925,7 +896,7 @@ msgstr "Factureer op werkzaamheden"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Approve"
-msgstr ""
+msgstr "Goedkeuren"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -933,15 +904,16 @@ msgid "Analytic accounts"
 msgstr "Kostenplaatsen"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+#: view:timesheet.report:0
+#: field:timesheet.report,to_invoice:0
+msgid "Type of Invoicing"
+msgstr "Soort facturatie"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
+msgstr "#Totaal aanwezigheid"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -950,11 +922,14 @@ msgid ""
 "You can also encode time spent on a project that is an analytic account and "
 "the time spent on a project generate costs on the analytic account."
 msgstr ""
+"Deze weergave laat u urenstaat formulieren controleren na ene bepaalde "
+"periode. U kunt ook gewerkte uren boeken op een project dat een kostenplaats "
+"is en de gewerkte tijd op een project genereert kosten op de kostenplaats."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Kosten"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_current:0
@@ -965,7 +940,7 @@ msgstr "Huidige datum"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr ""
+msgstr "Hr urenstaat"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -979,7 +954,7 @@ msgstr "Jaar"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "To Approve"
-msgstr ""
+msgstr "Goed te keuren"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -989,7 +964,12 @@ msgstr "Totaal"
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Dagboek"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #~ msgid "Total Difference"
 #~ msgstr "Totaal verschil"
@@ -1085,6 +1065,9 @@ msgstr ""
 #~ msgid "Hr Timesheet Process"
 #~ msgstr "Personeelszaken urenstaat proces"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid "Timesheet sheet confirm at the end of the period"
 #~ msgstr "Bevestiging urenstaat-formulier aan het einde van de periode"
 
@@ -1156,3 +1139,21 @@ msgstr ""
 
 #~ msgid "Defines the task work entry into timesheet line"
 #~ msgstr "Definieert de taakregel in de urenstaat"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"

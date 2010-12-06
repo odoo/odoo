@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-02 15:19+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-03 07:51+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -28,11 +28,6 @@ msgstr ""
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -134,6 +129,12 @@ msgid "Interview Request"
 msgstr "Pedido de entrevista"
 
 #. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
 msgstr ""
@@ -173,8 +174,11 @@ msgid "July"
 msgstr "Julho"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
 msgstr ""
 
 #. module: hr_evaluation
@@ -268,11 +272,6 @@ msgstr ""
 #, python-format
 msgid "Regarding "
 msgstr ""
-
-#. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -370,16 +369,6 @@ msgstr "Número de pedidos"
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Evaluations"
 msgstr "Avaliações"
-
-#. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitetura de vista"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -510,11 +499,6 @@ msgid "Draft"
 msgstr "Rascunho"
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Não pode criar menus recursivos."
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
@@ -583,6 +567,11 @@ msgstr "Novembro"
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_evaluation
@@ -713,22 +702,9 @@ msgid "Cancel"
 msgstr ""
 
 #. module: hr_evaluation
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Em curso"
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objeto deve começar com x_ e não pode conter nenhum caracter "
-"especial!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -823,11 +799,6 @@ msgid "Evaluation Plan"
 msgstr "Plano de avaliação"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr "Fevereiro"
@@ -863,11 +834,6 @@ msgid "(months)"
 msgstr "(meses)"
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "O objecto osv_memory não suporta regras!"
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr "Sequência"
@@ -875,14 +841,6 @@ msgstr "Sequência"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
-msgstr ""
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
 msgstr ""
 
 #. module: hr_evaluation
@@ -901,3 +859,30 @@ msgstr "Data de criação"
 #: field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr "Ano"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitetura de vista"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objeto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "O objecto osv_memory não suporta regras!"

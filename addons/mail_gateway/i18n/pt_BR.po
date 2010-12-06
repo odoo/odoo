@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-02 14:01+0000\n"
-"Last-Translator: Alexsandro Haag <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-03 07:41+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mail_gateway
@@ -50,9 +50,9 @@ msgid "Message Id"
 msgstr "Id da Mensagem"
 
 #. module: mail_gateway
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
+#: field:mailgate.message,ref_id:0
+msgid "Reference Id"
+msgstr "Id de Referência"
 
 #. module: mail_gateway
 #: view:mailgate.thread:0
@@ -71,6 +71,11 @@ msgid "Group By..."
 msgstr "Agrupado Por..."
 
 #. module: mail_gateway
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: mail_gateway
 #: help:mailgate.message,message_id:0
 msgid "Message Id on Email."
 msgstr "Id da Mensagem no Email"
@@ -86,22 +91,9 @@ msgid "Details"
 msgstr "Detalhes"
 
 #. module: mail_gateway
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
-
-#. module: mail_gateway
 #: view:mailgate.thread:0
 msgid "Mailgate History"
 msgstr "Histórico do Gateway de Email"
-
-#. module: mail_gateway
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-"especial!"
 
 #. module: mail_gateway
 #: model:ir.model,name:mail_gateway.model_email_server_tools
@@ -112,11 +104,6 @@ msgstr "Ferramentas do Servidor de Email"
 #: view:mailgate.message:0
 msgid "Email Followers"
 msgstr "Encaminhamentos de Email"
-
-#. module: mail_gateway
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
 
 #. module: mail_gateway
 #: model:ir.model,name:mail_gateway.model_res_partner
@@ -152,11 +139,6 @@ msgstr "Destinatários de Email Com Cópia"
 #: model:ir.module.module,shortdesc:mail_gateway.module_meta_information
 msgid "Email Gateway System"
 msgstr "Sistema de Gateway de Email"
-
-#. module: mail_gateway
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
 
 #. module: mail_gateway
 #: field:mailgate.message,date:0
@@ -249,11 +231,6 @@ msgstr "é Histórico?"
 #: help:mailgate.message,email_bcc:0
 msgid "Blind Carbon Copy Email Recipients"
 msgstr "Destinatário de Email com Cópia Oculta"
-
-#. module: mail_gateway
-#: field:mailgate.message,ref_id:0
-msgid "Reference Id"
-msgstr "Id de Referência"
 
 #. module: mail_gateway
 #: view:mailgate.message:0
@@ -369,11 +346,27 @@ msgid "Subject"
 msgstr "Assunto"
 
 #. module: mail_gateway
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
-
-#. module: mail_gateway
 #: help:mailgate.message,ref_id:0
 msgid "Message Id in Email Server."
 msgstr "Id da Mensagem no Servidor de Email"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

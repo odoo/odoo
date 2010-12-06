@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13:16+0000\n"
-"PO-Revision-Date: 2010-11-18 16:13:16+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:36+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: stock_no_autopicking
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: stock_no_autopicking
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -41,18 +31,13 @@ msgid "Auto Picking"
 msgstr ""
 
 #. module: stock_no_autopicking
-#: model:ir.model,name:stock_no_autopicking.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: stock_no_autopicking
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
 msgstr ""
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -61,7 +46,7 @@ msgid "Stock No Auto-Picking"
 msgstr ""
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
 msgstr ""
 

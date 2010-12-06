@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:18+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:18+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:45+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,53 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: knowledge
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr ""
-
-#. module: knowledge
-#: help:knowledge.installer,wiki_quality_manual:0
-msgid "Creates an example skeleton for a standard quality manual."
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,document_ftp:0
-msgid "Shared Repositories (FTP)"
-msgstr ""
-
-#. module: knowledge
-#: model:ir.module.module,shortdesc:knowledge.module_meta_information
-msgid "Knowledge Management System"
-msgstr ""
-
-#. module: knowledge
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: knowledge
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: knowledge
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr ""
-
-#. module: knowledge
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: help:knowledge.installer,wiki_faq:0
+msgid "Creates a skeleton internal FAQ pre-filled with documentation about OpenERP's Document Management System."
 msgstr ""
 
 #. module: knowledge
@@ -76,6 +31,67 @@ msgid "Provides a WebDAV access to your OpenERP's Document Management System. Le
 msgstr ""
 
 #. module: knowledge
+#: field:knowledge.installer,wiki:0
+msgid "Collaborative Content (Wiki)"
+msgstr ""
+
+#. module: knowledge
+#: help:knowledge.installer,wiki_quality_manual:0
+msgid "Creates an example skeleton for a standard quality manual."
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,wiki_quality_manual:0
+msgid "Quality Manual"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,wiki_faq:0
+msgid "Internal FAQ"
+msgstr ""
+
+#. module: knowledge
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+msgid "Knowledge Application Configuration"
+msgstr ""
+
+#. module: knowledge
+#: model:ir.module.module,shortdesc:knowledge.module_meta_information
+msgid "Knowledge Management System"
+msgstr ""
+
+#. module: knowledge
+#: model:ir.module.module,description:knowledge.module_meta_information
+msgid "Installer for knowledge-based tools\n"
+"    "
+msgstr ""
+
+#. module: knowledge
+#: model:ir.model,name:knowledge.model_knowledge_installer
+msgid "knowledge.installer"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,document_webdav:0
+msgid "Shared Repositories (WebDAV)"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,document_ftp:0
+msgid "Shared Repositories (FTP)"
+msgstr ""
+
+#. module: knowledge
+#: model:ir.ui.menu,name:knowledge.menu_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: knowledge
 #: field:knowledge.installer,progress:0
 msgid "Configuration Progress"
 msgstr ""
@@ -86,64 +102,13 @@ msgid "title"
 msgstr ""
 
 #. module: knowledge
-#: model:ir.module.module,description:knowledge.module_meta_information
-msgid "Installer for knowledge-based tools\n"
-"    "
-msgstr ""
-
-#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr ""
 
 #. module: knowledge
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_quality_manual:0
-msgid "Quality Manual"
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,document_webdav:0
-msgid "Shared Repositories (WebDAV)"
-msgstr ""
-
-#. module: knowledge
-#: help:knowledge.installer,wiki_faq:0
-msgid "Creates a skeleton internal FAQ pre-filled with documentation about OpenERP's Document Management System."
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_faq:0
-msgid "Internal FAQ"
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,config_logo:0
-msgid "Image"
-msgstr ""
-
-#. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
-msgid "Knowledge Application Configuration"
-msgstr ""
-
-#. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_installer
-msgid "knowledge.installer"
-msgstr ""
-
-#. module: knowledge
 #: help:knowledge.installer,wiki:0
 msgid "Lets you create wiki pages and page groups in order to keep track of business knowledge and share it with and  between your employees."
-msgstr ""
-
-#. module: knowledge
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: knowledge

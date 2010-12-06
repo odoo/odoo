@@ -6,25 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-02 12:52+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-03 07:29+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: analytic_user_function
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
+msgstr "Product"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:0
@@ -38,27 +33,10 @@ msgid "Timesheet Line"
 msgstr "Urenstaatregel"
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr "Product"
-
-#. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Kostenplaats"
-
-#. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -84,16 +62,33 @@ msgid "Relation table between users and products on a analytic account"
 msgstr "Koppeltabel tussen gebruikers en producten op een kostenplaats"
 
 #. module: analytic_user_function
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
 msgstr "Analytische gebruikers funktie"
 
 #. module: analytic_user_function
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
 msgstr "Product van gebruiker voor deze kostenplaats"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
