@@ -1,0 +1,1443 @@
+# Serbian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-11-03 07:56+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: email_template
+#: help:email_template.account,auto_delete:0
+msgid "Permanently delete emails after sending"
+msgstr "zauvek izbrisi Emailove nakon slanja"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Email Account Configuration"
+msgstr "Email AutoPodesavanja"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "Emails for multiple items saved in outbox."
+msgstr "Emailovi za visestruke stavke sacuvane u OutBox-u"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Personal Emails"
+msgstr "Licni Emailovi"
+
+#. module: email_template
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Neispravno ime modela u definiciji akcijue."
+
+#. module: email_template
+#: view:email.template:0
+msgid "Email Content  "
+msgstr "Sadrzaj Emaila  "
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Send mail Wizard"
+msgstr "Carobnjak Slanja Emaila"
+
+#. module: email_template
+#: selection:email_template.mailbox,mail_type:0
+msgid "Plain Text & HTML with no attachments"
+msgstr "Cisti Tekst & HTML bez attachemnta"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed on login. Probable Reason:Could not login to "
+"server\n"
+"Error: %s"
+msgstr ""
+"Email naloga %s nije uspeo da se uloguje. MOguci Razlozi: Ne mogu se "
+"konektovati ba server\n"
+"Greska: %s"
+
+#. module: email_template
+#: field:email_template.preview,body_html:0
+#: field:email_template.preview,body_text:0
+#: field:email_template.send.wizard,body_html:0
+#: field:email_template.send.wizard,body_text:0
+msgid "Body"
+msgstr "Sadrzaj"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Deletion of Record failed"
+msgstr "Brisanje zapisa nije uspelo"
+
+#. module: email_template
+#: help:email_template.account,company:0
+msgid ""
+"Select if this mail account does not belong to specific user but to the "
+"organization as a whole. eg: info@companydomain.com"
+msgstr ""
+"Selektuj ako ovaj nalog ne pripada specificiranom korisniku ali je deo neke "
+"organizacije npr:info@companydomain.com"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Send now"
+msgstr "Posalji sada"
+
+#. module: email_template
+#: selection:email_template.mailbox,state:0
+msgid "Not Applicable"
+msgstr "Ne moze se dodati"
+
+#. module: email_template
+#: view:email_template.account:0
+#: model:ir.ui.menu,name:email_template.menu_email_account_all_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_account_all
+msgid "Email Accounts"
+msgstr "Email Nalozi"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Send all mails"
+msgstr "Posalji SVE Emailove"
+
+#. module: email_template
+#: field:email_template.mailbox,server_ref:0
+msgid "Server Reference of mail"
+msgstr "Referenca Servera Email-a"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Reason: %s"
+msgstr "Razlog: %s"
+
+#. module: email_template
+#: view:email_template.account:0
+#: selection:email_template.account,state:0
+msgid "Approved"
+msgstr "Odobreno"
+
+#. module: email_template
+#: help:email.template,def_cc:0
+msgid ""
+"Carbon Copy address(es), comma-separated. Placeholders can be used here. "
+"e.g. ${object.email_cc}"
+msgstr ""
+"Carbon umnozi adresu(e), razdvojene zarezom. PlaceHolderi se ovde mogu "
+"koristiti npr. ${object.email_cc}"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Account"
+msgstr "Nalog"
+
+#. module: email_template
+#: field:email.template,table_html:0
+msgid "HTML code"
+msgstr "HTML zapis"
+
+#. module: email_template
+#: help:email_template.account,name:0
+msgid ""
+"The description is used as the Sender name along with the provided From "
+"Email, unless it is already specified in the From Email, e.g: John Doe "
+"<john@doe.com>"
+msgstr ""
+"Opis se koristi kao ime pošiljatelja uz uvslov iz e-pošte, ako to već "
+"navedeno u iz e-pošte, npr: Marko Markovic <marko@markovic.com>"
+
+#. module: email_template
+#: field:email.template,from_account:0
+msgid "Email Account"
+msgstr "Email nalog"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "Email sending failed for one or more objects."
+msgstr "Slanje Emaila je neuspesno zbog jednog ili vise objekata"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid ""
+"Add here all attachments of the current document you want to include in the "
+"Email."
+msgstr ""
+"Dodaj ovde sve dodatke datog dokumenta ukoliko ih zelis pridruziti Emailu"
+
+#. module: email_template
+#: help:email.template,lang:0
+msgid ""
+"The default language for the email. Placeholders can be used here. eg. "
+"${object.partner_id.lang}"
+msgstr ""
+"Predlozeni jezik Email-a. Razmaknice(donja crta) se mogu ovde koristiti. Npr "
+"${object.partner_id.lang}"
+
+#. module: email_template
+#: help:email.template,sub_model_object_field:0
+msgid ""
+"When you choose relationship fields this field will specify the sub value "
+"you can use."
+msgstr ""
+"Kada izaberete vezu polja, ovo polje ce specificirati sub vrednost koju "
+"mozete koristiti"
+
+#. module: email_template
+#: selection:email_template.send.wizard,state:0
+msgid "Wizard Complete"
+msgstr "Carobnjak je Zavrsio"
+
+#. module: email_template
+#: field:email.template,reply_to:0
+#: field:email_template.mailbox,reply_to:0
+#: field:email_template.preview,reply_to:0
+#: field:email_template.send.wizard,reply_to:0
+msgid "Reply-To"
+msgstr "Odgovor - Za"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Delete Action"
+msgstr "Obriši radnju"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Approve Account"
+msgstr "Dozvoli Nalog"
+
+#. module: email_template
+#: field:email_template.preview,rel_model_ref:0
+#: field:email_template.send.wizard,rel_model_ref:0
+msgid "Referred Document"
+msgstr "Referentni Dokumenat"
+
+#. module: email_template
+#: field:email_template.send.wizard,full_success:0
+msgid "Complete Success"
+msgstr "Uspesno kompletirano"
+
+#. module: email_template
+#: selection:email_template.account,send_pref:0
+msgid "Both HTML & Text (Mixed)"
+msgstr "Oba HTML & Tekst ( Miksovano)"
+
+#. module: email_template
+#: view:email_template.preview:0
+msgid "OK"
+msgstr "U redu"
+
+#. module: email_template
+#: field:email_template.account,auto_delete:0
+msgid "Auto Delete"
+msgstr "Automatsko Brisanje"
+
+#. module: email_template
+#: selection:email_template.account,send_pref:0
+msgid "Both HTML & Text (Alternative)"
+msgstr "Oba HTML & Tekst ( Aternativno)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Mako templates not installed"
+msgstr "Mako Obrazac nije instaliran"
+
+#. module: email_template
+#: field:email_template.send.wizard,requested:0
+msgid "No of requested Mails"
+msgstr "Br. trazenih Poruka"
+
+#. module: email_template
+#: field:email.template,def_body_text:0
+#: view:email_template.mailbox:0
+#: field:email_template.mailbox,body_text:0
+msgid "Standard Body (Text)"
+msgstr "Standarni Sadrzaj ( text)"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+msgid "Attached Files"
+msgstr "Prikačeni fajlovi"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Standard Body"
+msgstr "Standardan sadrzaj"
+
+#. module: email_template
+#: field:email_template.account,email_id:0
+msgid "From Email"
+msgstr "Od Email-a"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.action_email_template_account_tree_all
+msgid "Accounts"
+msgstr "Nalozi"
+
+#. module: email_template
+#: view:email_template.preview:0
+msgid "Body(Text)"
+msgstr "Sadrzaj ( text)"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Company Emails"
+msgstr "Emailovi Preduzeca"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid ""
+"Tip: Multiple emails are sent in the same language (the first one is "
+"proposed). We suggest you send emails in groups according to language."
+msgstr ""
+"TIP: Visestruki emailovi su poslati na istom jeziku( prvi koji je "
+"predlozen). Savetujemo vam da saljete E mailove u grupama po odgovarajucim "
+"jezicima."
+
+#. module: email_template
+#: help:email_template.preview,reply_to:0
+#: help:email_template.send.wizard,reply_to:0
+msgid ""
+"The address recipients should reply to, if different from the From address. "
+"Placeholders can be used here."
+msgstr ""
+"Adresa primaoca na koja treba odgovoriti ukoliko su drugacije( razlicite) iz "
+"dela adrese  OD. Rezervisana mesta se mogu ovde koristiti."
+
+#. module: email_template
+#: field:email.template,def_subject:0
+#: field:email_template.mailbox,subject:0
+#: field:email_template.preview,subject:0
+#: field:email_template.send.wizard,subject:0
+msgid "Subject"
+msgstr "Tema"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "My Emails"
+msgstr "Moji Emailovi"
+
+#. module: email_template
+#: field:email_template.mailbox,email_from:0
+msgid "From"
+msgstr "Od"
+
+#. module: email_template
+#: field:email.template,file_name:0
+msgid "Report Filename"
+msgstr "Izvestaj ImenaFajla"
+
+#. module: email_template
+#: selection:email_template.mailbox,state:0
+msgid "Sending"
+msgstr "Слање"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Insert Simple Field"
+msgstr "Ubaci Prosto polje"
+
+#. module: email_template
+#: view:email_template.preview:0
+msgid "Body(Html)"
+msgstr "Telo ( HTML )"
+
+#. module: email_template
+#: help:email.template,def_bcc:0
+msgid ""
+"Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
+"here. e.g. ${object.email_bcc}"
+msgstr ""
+"Iskopiraj adrese , zarezom razdvojene. Rezervisana mesta se mogu ovde "
+"koristiti npr ${object.email_bcc}"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Pregled Šablona"
+
+#. module: email_template
+#: field:email.template,def_body_html:0
+msgid "Body (Text-Web Client Only)"
+msgstr "Sadrzaj ( Samo TEKST-WEB Klijent)"
+
+#. module: email_template
+#: field:email_template.account,state:0
+#: view:email_template.mailbox:0
+msgid "State"
+msgstr "Stanje"
+
+#. module: email_template
+#: field:email.template,ref_ir_value:0
+msgid "Wizard Button"
+msgstr "Dugme čarobnjaka"
+
+#. module: email_template
+#: help:email_template.account,email_id:0
+msgid "eg: 'john@doe.com' or 'John Doe <john@doe.com>'"
+msgstr "npr 'marko@markovic.com'  ili  'Marko Markovic <marko@markovic.com>'"
+
+#. module: email_template
+#: view:email.template:0
+#: field:email.template,object_name:0
+msgid "Resource"
+msgstr "Resurs"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Out going connection test failed"
+msgstr "Test izlazne konekcije nije uspeo"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Mail from Account %s successfully Sent."
+msgstr "Mail od naloga %s je uspesno poslat"
+
+#. module: email_template
+#: selection:email.template,template_language:0
+msgid "Mako Templates"
+msgstr "Mako Sabloni"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid " (Email Attachment)"
+msgstr " (Email Attachment)"
+
+#. module: email_template
+#: selection:email_template.mailbox,folder:0
+msgid "Sent Items"
+msgstr "Poslate Stavke"
+
+#. module: email_template
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
+msgid ""
+"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
+"Error: %s"
+msgstr ""
+"Slanje poruke %s nije uspelo. Verovatan uzrok: Ne mogu se logovati na "
+"server\n"
+"Greska: %s"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Test Outgoing Connection"
+msgstr "Test Izlazne Konekcije"
+
+#. module: email_template
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr "Tekstualna verzija poruke"
+
+#. module: email_template
+#: help:email.template,reply_to:0
+msgid ""
+"The address recipients should reply to, if different from the From address. "
+"Placeholders can be used here. e.g. ${object.email_reply_to}"
+msgstr ""
+"Adresa primatelja na koju bi trebalo odgovoriti ukoliko se reazlikuje od IZ "
+"dea adrese. Rezervisana mesta( placeholders) se mogu koristiti ovde npr "
+"${object.email_reply_to}"
+
+#. module: email_template
+#: help:email.template,ref_ir_value:0
+msgid ""
+"Button in the side bar of the form view of this Resource that will invoke "
+"the Window Action"
+msgstr ""
+"Dugme Pregled Obrasca(Form View) koje se nalazi na baru sa strane  i koje ce "
+"pozvati odredjenu akciju prozora."
+
+#. module: email_template
+#: field:email_template.mailbox,account_id:0
+msgid "User account"
+msgstr "Korisnicki nalog"
+
+#. module: email_template
+#: field:email_template.send.wizard,signature:0
+msgid "Attach my signature to mail"
+msgstr "Dodaj moj potpis poruci"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: view:email.template:0
+#, python-format
+msgid "Report"
+msgstr "Izveštaj"
+
+#. module: email_template
+#: field:email_template.preview,ref_template:0
+#: field:email_template.send.wizard,ref_template:0
+msgid "Template"
+msgstr "Šablon"
+
+#. module: email_template
+#: help:email.template,model_object_field:0
+msgid ""
+"Select the field from the model you want to use.\n"
+"If it is a relationship field you will be able to choose the nested values "
+"in the box below\n"
+"(Note:If there are no values make sure you have selected the correct model)"
+msgstr ""
+"Selektuj polje modela koje zelis da koristis\n"
+"Ako je to vezno polje,. bicete u mogucnosti da izaberete podveze u polju "
+"ispod\n"
+"( Napomena: Ako nema nikakvog izbora budite sigurni da ste izabrali ispravan "
+"model)"
+
+#. module: email_template
+#: view:email.template:0
+#: view:email_template.mailbox:0
+msgid "Advanced"
+msgstr "Napredno"
+
+#. module: email_template
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Neispravni Argumenti"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Expression Builder"
+msgstr "Gradilac Ekstenizja"
+
+#. module: email_template
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Nevažeći XML za pregled arhitekture"
+
+#. module: email_template
+#: selection:email_template.mailbox,mail_type:0
+msgid "HTML Body"
+msgstr "HTML Sadrzaj"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Suspend Account"
+msgstr "Suspendovan nalog"
+
+#. module: email_template
+#: help:email.template,null_value:0
+msgid "This Value is used if the field is empty"
+msgstr "Ova se vrednost koristi ako je polje prazno"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Preview Template"
+msgstr "Pregled Sablona"
+
+#. module: email_template
+#: field:email_template.account,smtpserver:0
+msgid "Server"
+msgstr "Server"
+
+#. module: email_template
+#: help:email.template,copyvalue:0
+msgid ""
+"Copy and paste the value in the location you want to use a system value."
+msgstr ""
+"Iskopiraj i zalepi vrednost na lokaciju koju zelis da se koristi kao "
+"sistemsku vrednost"
+
+#. module: email_template
+#: help:email.template,track_campaign_item:0
+msgid ""
+"Enable this is you wish to include a special tracking marker in outgoing "
+"emails so you can identify replies and link them back to the corresponding "
+"resource record. This is useful for CRM leads for example"
+msgstr ""
+"Omoguci ovo ukoliko zelis da ukljucis specijalni marker za pracenje u "
+"izlaznim Emailovima, tako da mozes da identifikujes odgovore i zatim ih "
+"linkujes nazad odgovarajucem snimljenom zapisu."
+
+#. module: email_template
+#: view:email.template:0
+msgid "Body (Raw HTML)"
+msgstr "Sadrzaj Texta (Raw HTML)"
+
+#. module: email_template
+#: field:email.template,use_sign:0
+msgid "Signature"
+msgstr "Potpis"
+
+#. module: email_template
+#: field:email.template,sub_object:0
+msgid "Sub-model"
+msgstr "Sub-model"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Options"
+msgstr "Opcije"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Body (Plain Text)"
+msgstr "Telo teksta (Plain Text)"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Body (Text)"
+msgstr "Telo teksta (Text)"
+
+#. module: email_template
+#: field:email_template.mailbox,date_mail:0
+msgid "Rec/Sent Date"
+msgstr "Datum Slanja/Prijema"
+
+#. module: email_template
+#: field:email.template,report_template:0
+msgid "Report to send"
+msgstr "Izvestaj za slanje"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Server Information"
+msgstr "podaci o serveru"
+
+#. module: email_template
+#: field:email_template.send.wizard,generated:0
+msgid "No of generated Mails"
+msgstr "Br. Generisanih poruka"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Mail Details"
+msgstr "Detalji poruke"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "SMTP SERVER or PORT not specified"
+msgstr "SMTP SERVER ili PORT nije specificiran"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Note: This is Raw HTML."
+msgstr "Napomena: Ovo je Raw HTML."
+
+#. module: email_template
+#: view:email.template:0
+msgid "Group by..."
+msgstr "Grupisano po..."
+
+#. module: email_template
+#: selection:email_template.send.wizard,state:0
+msgid "Multiple Mail Wizard Step 1"
+msgstr "Visestruki Carobnjak Meilova Korak 1"
+
+#. module: email_template
+#: field:email_template.account,user:0
+msgid "Related User"
+msgstr "Vezni Korisnik"
+
+#. module: email_template
+#: field:email_template.mailbox,body_html:0
+msgid "Body (Rich Text Clients Only)"
+msgstr "Telo poruke (Rich Text Clients Only)"
+
+#. module: email_template
+#: selection:email_template.account,company:0
+msgid "Yes"
+msgstr "Da"
+
+#. module: email_template
+#: field:email.template,ref_ir_act_window:0
+msgid "Window Action"
+msgstr "Radnja prozora"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Datetime Extraction failed.Date:%s \\n                      \tError:%s"
+msgstr ""
+"Preuzimanje datuma i vremena nije uspelo. Datum:Date:%s \\n \tGreska:%s"
+
+#. module: email_template
+#: selection:email_template.account,send_pref:0
+msgid "HTML, otherwise Text"
+msgstr "HTML, a drugacije Text"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+#: selection:email_template.mailbox,folder:0
+msgid "Drafts"
+msgstr "U pripremi"
+
+#. module: email_template
+#: selection:email_template.account,company:0
+msgid "No"
+msgstr "Ne"
+
+#. module: email_template
+#: field:email_template.account,smtpport:0
+msgid "SMTP Port"
+msgstr "SMTP Port"
+
+#. module: email_template
+#: field:email_template.mailbox,mail_type:0
+msgid "Mail Contents"
+msgstr "Sadrzaj Poste"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "The template name must be unique !"
+msgstr "Ime Sablona mora biti jedinstveno"
+
+#. module: email_template
+#: field:email.template,def_bcc:0
+#: field:email_template.mailbox,email_bcc:0
+#: field:email_template.preview,bcc:0
+#: field:email_template.send.wizard,bcc:0
+msgid "BCC"
+msgstr "BCC"
+
+#. module: email_template
+#: selection:email_template.mailbox,mail_type:0
+msgid "Plain Text"
+msgstr "Samo tekst"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Draft"
+msgstr "Priprema"
+
+#. module: email_template
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Greska! Ne mozete kreirati rekursivni meni."
+
+#. module: email_template
+#: field:email.template,model_int_name:0
+msgid "Model Internal Name"
+msgstr "Interni Naziv Modula"
+
+#. module: email_template
+#: field:email.template,message_id:0
+#: field:email_template.mailbox,message_id:0
+#: field:email_template.preview,message_id:0
+#: field:email_template.send.wizard,message_id:0
+msgid "Message-ID"
+msgstr "Sifra Poruke"
+
+#. module: email_template
+#: help:email_template.mailbox,server_ref:0
+msgid "Applicable for inward items only"
+msgstr "Prihvatljivo samo za unutrasnje stavke"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid ""
+"After clicking send all mails, mails will be sent to outbox and cleared in "
+"next Send/Recieve"
+msgstr ""
+"Nakon klika na 'posalji sve poruke', poruke ce biti poslate u outbox i "
+"ociscene  u sledecem koraku Posalji/Primi"
+
+#. module: email_template
+#: field:email_template.mailbox,state:0
+#: field:email_template.send.wizard,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Outgoing"
+msgstr "Odlazno"
+
+#. module: email_template
+#: selection:email_template.account,state:0
+msgid "Initiated"
+msgstr "Inicirano"
+
+#. module: email_template
+#: help:email.template,use_sign:0
+msgid "the signature from the User details will be appended to the mail"
+msgstr "Potpis iz detalja korisnika ce biti pridodat poruci"
+
+#. module: email_template
+#: field:email_template.send.wizard,from:0
+msgid "From Account"
+msgstr "Od Naloga"
+
+#. module: email_template
+#: selection:email_template.mailbox,mail_type:0
+msgid "Intermixed content"
+msgstr "Izmesani sadrzaj"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Request Re-activation"
+msgstr "Zahtev za Re-Aktivacijom"
+
+#. module: email_template
+#: view:email.template:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_template_all
+#: model:ir.ui.menu,name:email_template.menu_email_template_all_tools
+msgid "Email Templates"
+msgstr "Sabloni Poruka"
+
+#. module: email_template
+#: field:email_template.account,smtpuname:0
+msgid "User Name"
+msgstr "Korisničko ime"
+
+#. module: email_template
+#: field:email.template,sub_model_object_field:0
+msgid "Sub Field"
+msgstr "Pod Polje"
+
+#. module: email_template
+#: help:email.template,attachment_ids:0
+msgid ""
+"You may attach existing files to this template, so they will be added in all "
+"emails created from this template"
+msgstr ""
+"Mozete pridodati postojeci fajl ovom sablonu, tako da ce on biti dodat u "
+"svim poruka,a kreiranih iz ovog sablona"
+
+#. module: email_template
+#: field:email_template.mailbox,user:0
+msgid "User"
+msgstr "Korisnik"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Advanced Options"
+msgstr "Napredne Opcije"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+#: selection:email_template.mailbox,folder:0
+msgid "Outbox"
+msgstr "OutBox"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Save in Drafts"
+msgstr "Sacuvaj u Pripremi"
+
+#. module: email_template
+#: field:email_template.account,smtptls:0
+msgid "TLS"
+msgstr "TLS"
+
+#. module: email_template
+#: field:email.template,lang:0
+msgid "Language"
+msgstr "Jezik"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_mailbox.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: model:ir.ui.menu,name:email_template.menu_email_template
+#: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
+#: model:ir.ui.menu,name:email_template.menu_email_template_tools
+#, python-format
+msgid "Email Template"
+msgstr "Sablon Poruka"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Send/Receive"
+msgstr "Slanje/Prijem"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Pošalji poštu"
+
+#. module: email_template
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
+msgid ""
+"Error sending mail: %s\" % str(e)))\n"
+"        \n"
+"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+"        if ids is None:\n"
+"            ids = []\n"
+"        if context is None:\n"
+"            context = {}\n"
+"        filters = [('folder', '=', 'outbox"
+msgstr ""
+"Greska slanja poruke: %s\" % str(e)))\n"
+"         \n"
+"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+"if ids is None:\n"
+"ids = []\n"
+"if context is None:\n"
+"context = {}\n"
+"filters = [('folder', '=', 'outbox"
+
+#. module: email_template
+#: help:email.template,allowed_groups:0
+msgid ""
+"Only users from these groups will be allowed to send mails from this Template"
+msgstr ""
+"Samo korisnicima iz ovih grupa ce biti dozvoljeno da salju poruke iz ovog "
+"Sablona"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Slanje POruke (%s)"
+
+#. module: email_template
+#: help:email.template,def_subject:0
+msgid "The subject of email. Placeholders can be used here."
+msgstr "Napredne Opcije"
+
+#. module: email_template
+#: field:email_template.send.wizard,report:0
+msgid "Report File Name"
+msgstr "Ime Fajla Izvestaja"
+
+#. module: email_template
+#: field:email.template,copyvalue:0
+msgid "Expression"
+msgstr "Izraz"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+#: field:email_template.mailbox,history:0
+msgid "History"
+msgstr "Istorija"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Django templates not installed"
+msgstr "Django Sabloni nisu instalirani"
+
+#. module: email_template
+#: view:email.template:0
+#: view:email_template.mailbox:0
+#: field:email_template.mailbox,attachments_ids:0
+#: view:email_template.send.wizard:0
+#: field:email_template.send.wizard,attachment_ids:0
+msgid "Attachments"
+msgstr "Prilozi"
+
+#. module: email_template
+#: field:email_template.preview,to:0
+#: field:email_template.send.wizard,to:0
+msgid "To"
+msgstr "Za"
+
+#. module: email_template
+#: selection:email_template.account,send_pref:0
+msgid "Text, otherwise HTML"
+msgstr "Text, inace HTML"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#, python-format
+msgid "Copy of template "
+msgstr "Kopija Sablona "
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Discard Mail"
+msgstr "Izbrisi poruku"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates for Models"
+msgstr "Sabloni Poruka za Modele"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Body (HTML-Web Client Only)"
+msgstr "Sadrzaj (HTML-Web Client Only)"
+
+#. module: email_template
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "%s (Email Attachment)"
+msgstr "Copy text   \t %s (Email Attachment)"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid ""
+"No personal email accounts are configured for you. \n"
+"Either ask admin to enforce an account for this template or get yourself a "
+"personal email account."
+msgstr ""
+"Ni jedan locni nalog nije kreiran za vas. \n"
+"Ili pitajte administratora ili napravite sami sebi licni postanski nalog."
+
+#. module: email_template
+#: field:email.template,allowed_groups:0
+msgid "Allowed User Groups"
+msgstr "Dozvoljene Korisnicke Grupe"
+
+#. module: email_template
+#: field:email.template,model_object_field:0
+msgid "Field"
+msgstr "Polje"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "User Information"
+msgstr "Podaci o korisniku"
+
+#. module: email_template
+#: view:email_template.account:0
+#: selection:email_template.account,state:0
+msgid "Suspended"
+msgstr "Суспендован"
+
+#. module: email_template
+#: help:email.template,file_name:0
+msgid ""
+"Name of the generated report file. Placeholders can be used in the filename. "
+"eg: 2009_SO003.pdf"
+msgstr ""
+"Ime generisanog Izvestaja. Rezervisana ( Placeholders) mesta se mogu  "
+"koristiti imenu fajla npr: 2009_SO003.pdf"
+
+#. module: email_template
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Fascikla"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+#: selection:email_template.mailbox,folder:0
+msgid "Trash"
+msgstr "Smeće"
+
+#. module: email_template
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
+msgstr "Datum kda je Email poslat ili primljen"
+
+#. module: email_template
+#: help:email_template.account,smtpuname:0
+msgid ""
+"Specify the username if your SMTP server requires authentication, otherwise "
+"leave it empty."
+msgstr ""
+"Specificiraj korisnicko ime ako tvoj SMTP zahteva autorizaciju, inace ostavi "
+"prazno."
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "Missing mail account"
+msgstr "Nedostaje Email nalog"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "SMTP Test Connection Was Successful"
+msgstr "SMTP test je prosao uspesno"
+
+#. module: email_template
+#: model:ir.module.module,shortdesc:email_template.module_meta_information
+msgid "Email Template for OpenERP"
+msgstr "Sablon poruka za OpenERP"
+
+#. module: email_template
+#: field:email_template.account,name:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Create Action"
+msgstr "Kreiraj akciju"
+
+#. module: email_template
+#: help:email_template.account,smtpserver:0
+msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
+msgstr "Upisi ime izlaznog Servera, npr: smtp:yourdomain.com"
+
+#. module: email_template
+#: help:email.template,sub_object:0
+msgid ""
+"When a relation field is used this field will show you the type of field you "
+"have selected"
+msgstr ""
+"Kada se koristi vezno polje, ovo polje ce vam pokazati tip polja koje ste "
+"izabrali"
+
+#. module: email_template
+#: help:email.template,message_id:0
+msgid ""
+"Specify the Message-ID SMTP header to use in outgoing emails. Please note "
+"that this overrides the Resource tracking option! Placeholders can be used "
+"here."
+msgstr ""
+"Specificiraj ID-Eporuke za SMTP zaglavlje koje ce se koristiti u odlaznim "
+"emailovima. MOlim upamtite da ce to da izbrise opciju pracenja Resursa! "
+"Rezervisana mesta( placeholders) se mogu ovde koristiti."
+
+#. module: email_template
+#: field:email.template,def_to:0
+#: field:email_template.mailbox,email_to:0
+msgid "Recipient (To)"
+msgstr "Prima (za)"
+
+#. module: email_template
+#: field:email.template,null_value:0
+msgid "Null Value"
+msgstr "Null вредност"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr "Postansko Sanduce"
+
+#. module: email_template
+#: field:email.template,template_language:0
+msgid "Templating Language"
+msgstr "Jezik Sablona"
+
+#. module: email_template
+#: field:email.template,def_cc:0
+#: field:email_template.mailbox,email_cc:0
+#: field:email_template.preview,cc:0
+#: field:email_template.send.wizard,cc:0
+msgid "CC"
+msgstr "CC"
+
+#. module: email_template
+#: view:email_template.mailbox:0
+msgid "Sent"
+msgstr "Poslato"
+
+#. module: email_template
+#: help:email.template,ref_ir_act_window:0
+msgid "Action that will open this email template on Resource records"
+msgstr "Akcija koja ce otvoriti ovaj Email u zapisima Resursa"
+
+#. module: email_template
+#: field:email_template.account,smtppass:0
+msgid "Password"
+msgstr "Lozinka"
+
+#. module: email_template
+#: help:email_template.preview,message_id:0
+#: help:email_template.send.wizard,message_id:0
+msgid ""
+"The Message-ID header value, if you need tospecify it, for example to "
+"automatically recognize the replies later. Placeholders can be used here."
+msgstr ""
+"Vrednost Sifre poruke, ako trebas da je specificiras. Na primer da bi je "
+"automatski prepoznao kasnije."
+
+#. module: email_template
+#: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+#: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
+msgid "Emails"
+msgstr "Email-ovi"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Templates"
+msgstr "Šabloni"
+
+#. module: email_template
+#: field:email_template.preview,report:0
+msgid "Report Name"
+msgstr "Naziv izveštaja"
+
+#. module: email_template
+#: field:email.template,name:0
+msgid "Name"
+msgstr "Ime"
+
+#. module: email_template
+#: field:email.template,track_campaign_item:0
+msgid "Resource Tracking"
+msgstr "Pracenje Resursa"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "Pregled Sablona Poruke"
+
+#. module: email_template
+#: view:email_template.preview:0
+msgid "Email Preview"
+msgstr "Pregled Poruke"
+
+#. module: email_template
+#: help:email.template,def_to:0
+msgid ""
+"The Recipient of email. Placeholders can be used here. e.g. "
+"${object.email_to}"
+msgstr ""
+"Primalac Emaila. Rezervisana mesta (placeholders) se mogu ovde koristiti "
+"npr. ${object.email_to}"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Existing files"
+msgstr "Postojeci fajlovi"
+
+#. module: email_template
+#: field:email_template.account,smtpssl:0
+msgid "SSL/TLS (only in python 2.6)"
+msgstr "SSL/TLS (samo u python 2.6)"
+
+#. module: email_template
+#: view:email_template.send.wizard:0
+msgid "Body (HTML)"
+msgstr "Sadrzaj (HTML)"
+
+#. module: email_template
+#: help:email.template,table_html:0
+msgid ""
+"Copy this html code to your HTML message body for displaying the info in "
+"your mail."
+msgstr ""
+"Iskopiraj ovaj HTML kod u telo svoje HTML poruke da bi se prikazala "
+"informacija u vasoj poruci"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_account
+msgid "email_template.account"
+msgstr "email_template.account"
+
+#. module: email_template
+#: field:email_template.preview,rel_model:0
+#: field:email_template.send.wizard,rel_model:0
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Core connection for the given ID does not exist"
+msgstr "Osnovna Konekcija za datu Sifru NE postoji"
+
+#. module: email_template
+#: field:email_template.account,company:0
+msgid "Corporate"
+msgstr "Saradjivanje"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_send_wizard
+msgid "This is the wizard for sending mail"
+msgstr "Craobnjak Slanja Poste"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Addresses"
+msgstr "Adrese"
+
+#. module: email_template
+#: help:email.template,from_account:0
+msgid "Emails will be sent from this approved account."
+msgstr "Poruke ce biti poslate sa ovog omogucenog naloga"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason:MIME Error\n"
+"Description: %s"
+msgstr ""
+"Poruka sa Naloga %s nije prosla. MOguci Razlog: MIME GRESKA\n"
+"Opis: %s"
+
+#. module: email_template
+#: field:email_template.account,send_pref:0
+msgid "Mail Format"
+msgstr "Format Poruke"
+
+#. module: email_template
+#: view:email.template:0
+msgid "Actions"
+msgstr "Akcije"
+
+#. module: email_template
+#: view:email_template.account:0
+msgid "Company Accounts"
+msgstr "Nalozi Preduzeca"
+
+#. module: email_template
+#: help:email_template.account,smtpport:0
+msgid "Enter port number, eg: 25 or 587"
+msgstr "Upisi broj porta, npr 25 ili 587"
+
+#. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "email-template"
+msgstr "sablon-poruke"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Mail from Account %s failed. Probable Reason:Account not approved"
+msgstr "Poruka sa naloga %s nije uspela. Moguci razlog: Nalog nije omogucen"
+
+#. module: email_template
+#: selection:email_template.send.wizard,state:0
+msgid "Simple Mail Wizard Step 1"
+msgstr "Jednostavni Carobnjak POruka Korak 1"
+
+#. module: email_template
+#: selection:email_template.mailbox,mail_type:0
+msgid "Has Attachments"
+msgstr "Ima Attachment"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid "No Description"
+msgstr "Bez Opisa"
+
+#~ msgid "Email Data"
+#~ msgstr "Podaci Email-a"
+
+#~ msgid "My Accounts"
+#~ msgstr "Moji Nalozi"
+
+#~ msgid ""
+#~ "File name pattern can be specified with placeholders.eg. 2009_SO003.pdf"
+#~ msgstr ""
+#~ "Ime fajla moze biti napisano i sa razmaknicama( donja crta) npr "
+#~ "2009_SO003.pdf"
+
+#~ msgid "Enter port number,eg:SMTP-587 "
+#~ msgstr "Upisi broj Port-a npr SMTP-587 "
+
+#~ msgid "E-MAIL Templates"
+#~ msgstr "E-MAIL Obrasci"
+
+#~ msgid "Download Full Mail"
+#~ msgstr "Download Celu poruku"
+
+#~ msgid "The default recipient of email.Placeholders can be used here."
+#~ msgstr ""
+#~ "Predlozeni primalac Email-a. Razmaknice se mogu koristiti ( donja crta)"
+
+#~ msgid "Mailboxes"
+#~ msgstr "Postanski Sanducici"
+
+#~ msgid "Track campaign items"
+#~ msgstr "Prati stavke Kampanje"
+
+#~ msgid "eg: yourname@yourdomain.com "
+#~ msgstr "npr: yourname@yourdomain.com "
+
+#~ msgid "Mailbox"
+#~ msgstr "Postansko Sanduče"
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP server"
+
+#~ msgid ""
+#~ "Add here all attachments of the current document you want to include in the "
+#~ "e-mail."
+#~ msgstr ""
+#~ "Ubaci ovde sve attachmente za dati dokument koji zelis da prikljucis poruci"
+
+#~ msgid "The default subject of email. Placeholders can be used here."
+#~ msgstr ""
+#~ "Podrazumevana Tema poruke. Razmaknice se mogu ovde koristiti ( donja crta)"
+
+#~ msgid "File Name Pattern"
+#~ msgstr "Ime fajla paterna"
+
+#~ msgid "Personal Mails"
+#~ msgstr "Licne Poruke"
+
+#~ msgid "SMTP Port "
+#~ msgstr "SMTP Port "
+
+#~ msgid "Personal Accounts"
+#~ msgstr "Licni Nalozi"
+
+#~ msgid "Company Mails"
+#~ msgstr "Poruke Preduzeca"
+
+#~ msgid "Enter name of outgoing server, eg:smtp.gmail.com "
+#~ msgstr "Upisi ime izlaznog servera, npr: smtp.gmail.com "
+
+#~ msgid ""
+#~ "\n"
+#~ "    Email Template is extraction of Power Email basically just to send the "
+#~ "emails.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Sablon Poruke je izvucen iz Power Email, samo da bi poslao poruke.\n"
+#~ "    "
+
+#~ msgid "Default Subject"
+#~ msgstr "Predefinisana tema"
+
+#~ msgid ""
+#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
+#~ "here."
+#~ msgstr ""
+#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
+#~ "here."
+
+#~ msgid ""
+#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here."
+#~ msgstr ""
+#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here."
+
+#~ msgid ""
+#~ "Enable this if you want the outgoing e-mails to include a tracking marker "
+#~ "that makes it possible to identify the replies an link them back to the "
+#~ "campaign item"
+#~ msgstr ""
+#~ "Omogucava vam , ako zelite da vase izlazne poruke sadrze markera pratnje "
+#~ "koji vam daju mogucnost da kasnije identifikujete odgovore i posaljewte ih "
+#~ "npr stavci Kampanje."
