@@ -277,24 +277,24 @@ class _rml_doc(object):
 
     def _images(self, el):
         result = {}
-        for node in el.findall('image'):
+        for node in el.findall('.//image'):
             rc =( node.text or '')
             result[node.get('name')] = base64.decodestring(rc)
         return result
 
     def render(self, out):
-        el = self.etree.findall('docinit')
+        el = self.etree.findall('.//docinit')
         if el:
             self.docinit(el)
 
-        el = self.etree.findall('stylesheet')
+        el = self.etree.findall('.//stylesheet')
         self.styles = _rml_styles(el,self.localcontext)
 
-        el = self.etree.findall('images')
+        el = self.etree.findall('.//images')
         if el:
             self.images.update( self._images(el[0]) )
 
-        el = self.etree.findall('template')
+        el = self.etree.findall('.//template')
         if len(el):
             pt_obj = _rml_template(self.localcontext, out, el[0], self, images=self.images, path=self.path, title=self.title)
             el = utils._child_get(self.etree, self, 'story')
