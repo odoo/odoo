@@ -74,10 +74,18 @@ class ir_sequence(osv.osv):
 
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
         assert test in ('code','id')
-        cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+'=%s AND active=%s FOR UPDATE NOWAIT', (sequence_id, True))
+        company_id = self.pool.get('res.users').read(cr, uid, uid, ['company_id'], context=context)['company_id'][0] or None
+        cr.execute('''SELECT id, number_next, prefix, suffix, padding
+                      FROM ir_sequence
+                      WHERE %s=%%s
+                       AND active=true
+                       AND (company_id = %%s or company_id is NULL)
+                      ORDER BY company_id, id
+                      FOR UPDATE NOWAIT''' % test,
+                      (sequence_id, company_id))
         res = cr.dictfetchone()
         if res:
-            cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
+            cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=true', (res['id'],))
             if res['number_next']:
                 return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
             else:

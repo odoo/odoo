@@ -139,7 +139,6 @@ class report_printscreen_list(report_int):
         _append_node('header-date', str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")))
         l = []
         t = 0
-        rowcount = 0;
         strmax = (pageSize[0]-40) * 2.8346
         temp = []
         tsum = []

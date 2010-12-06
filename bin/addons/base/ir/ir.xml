@@ -705,6 +705,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
+            <field name="help">Create and manage the companies that will be managed by OpenERP from here. Shops or subsidiaries can be created and maintained from here.</field>
         </record>
         <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
 
@@ -716,6 +717,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
+            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
         <record id="action_res_users_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -757,6 +759,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.groups</field>
             <field name="view_type">form</field>
+            <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
             groups="base.group_extended"/>
@@ -844,6 +847,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.ui.view</field>
             <field name="view_id" ref="view_view_tree"/>
+            <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2"/>
 
@@ -1375,6 +1379,12 @@
                         <field name="action" colspan="4" />
                         <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
                         <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
+                        <group col="4" colspan="8" groups="base.group_extended">
+                            <field name="web_icon" groups="base.group_extended" />
+                            <field name="web_icon_hover" groups="base.group_extended" />
+                            <field name="web_icon_data" widget="image" groups="base.group_extended"/>
+                            <field name="web_icon_hover_data" widget="image" groups="base.group_extended"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Groups">
@@ -1403,6 +1413,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_menu"/>
             <field name="search_view_id" ref="edit_menu_access_search"/>
+            <field name="help">Manage and customize the items available and displayed in your OpenERP system menu. You can delete an item by clicking on the box at the beginning of each line and then delete it through the button that appeared. Items can be assigned to specific groups in order to make them accessible to some users within the system.</field>
         </record>
         <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.next_id_2" sequence="1"/>
 
@@ -1868,5 +1879,20 @@
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" groups="base.group_extended" sequence="20"/>
+
+
+
+        <record model="ir.cron" id="cronjob_osv_memory_autovacuum">
+            <field name='name'>AutoVacuum osv_memory objects</field>
+            <field name='interval_number'>30</field>
+            <field name='interval_type'>minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="doall" eval="False" />
+            <field name="model">osv_memory.autovacuum</field>
+            <field name="function">power_on</field>
+            <field name="args">()</field>
+        </record>
+
     </data>
 </openerp>

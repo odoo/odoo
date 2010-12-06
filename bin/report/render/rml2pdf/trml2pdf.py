@@ -21,21 +21,27 @@
 
 
 import sys
-from StringIO import StringIO
 import copy
 import reportlab
 import re
 from reportlab.pdfgen import canvas
 from reportlab import platypus
-import cStringIO
 import utils
 import color
 import os
+import logging
 from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
 from tools.safe_eval import safe_eval as eval
 from reportlab.lib.units import inch,cm,mm
+from reportlab.pdfbase import pdfmetrics
+
+try:
+    from cStringIO import StringIO
+    _hush_pyflakes = [ StringIO ]
+except ImportError:
+    from StringIO import StringIO
 
 encoding = 'utf-8'
 
@@ -68,7 +74,7 @@ class NumberedCanvas(canvas.Canvas):
             while not self.pages.get(key,False):
                 key = key + 1
         self.setFont("Helvetica", 8)
-        self.drawRightString((self._pagesize[0]-35), (self._pagesize[1]-43),
+        self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             "Page %(this)i of %(total)i" % {
                'this': self._pageNumber+1,
                'total': self.pages.get(key,False),
@@ -222,7 +228,7 @@ class _rml_doc(object):
                 addMapping(name, 1, 0, name)    #bold
                 addMapping(name, 1, 1, name)    #italic and bold
 
-    def setTTFontMapping(self,face, fontname,filename, mode='all'):
+    def setTTFontMapping(self,face, fontname, filename, mode='all'):
         from reportlab.lib.fonts import addMapping
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
@@ -411,7 +417,7 @@ class _rml_canvas(object):
         if not node.get('file') :
             if node.get('name'):
                 image_data = self.images[node.get('name')]
-                s = cStringIO.StringIO(image_data)
+                s = StringIO(image_data)
             else:
                 if self.localcontext:
                     res = utils._regex.findall(node.text)
@@ -422,19 +428,19 @@ class _rml_canvas(object):
                 if node.text:
                     image_data = base64.decodestring(node.text)
                 if image_data:
-                    s = cStringIO.StringIO(image_data)
+                    s = StringIO(image_data)
                 else:
                     return False
         else:
             if node.get('file') in self.images:
-                s = cStringIO.StringIO(self.images[node.get('file')])
+                s = StringIO(self.images[node.get('file')])
             else:
                 try:
                     u = urllib.urlopen(str(node.get('file')))
-                    s = cStringIO.StringIO(u.read())
+                    s = StringIO(u.read())
                 except Exception:
                     u = file(os.path.join(self.path,str(node.get('file'))), 'rb')
-                    s = cStringIO.StringIO(u.read())
+                    s = StringIO(u.read())
         img = ImageReader(s)
         (sx,sy) = img.getSize()
 
@@ -480,12 +486,18 @@ class _rml_canvas(object):
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def setFont(self, node):
-        from reportlab.pdfbase import pdfmetrics
-        fname = node.get('name')
-        #TODO : other fonts should be supported
-        if fname not in pdfmetrics.standardFonts:
-           fname = self.canvas._fontname
-        return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
+        fontname = node.get('name')
+        if fontname not in pdfmetrics.getRegisteredFontNames()\
+             or fontname not in pdfmetrics.standardFonts:
+                # let reportlab attempt to find it
+                try:
+                    pdfmetrics.getFont(fontname)
+                except Exception:
+                    logging.getLogger('report.fonts').debug('Could not locate font %s, substituting default: %s',
+                                 fontname,
+                                 self.canvas._fontname)
+                    fontname = self.canvas._fontname
+        return self.canvas.setFont(fontname, utils.unit_get(node.get('size')))
 
     def render(self, node):
         tags = {
@@ -552,8 +564,8 @@ class _rml_flowable(object):
         return rc1
 
     def _table(self, node):
-        childs = utils._child_get(node,self,'tr')
-        if not childs:
+        children = utils._child_get(node,self,'tr')
+        if not children:
             return None
         length = 0
         colwidths = None
@@ -561,7 +573,7 @@ class _rml_flowable(object):
         data = []
         styles = []
         posy = 0
-        for tr in childs:
+        for tr in children:
             paraStyle = None
             if tr.get('style'):
                 st = copy.deepcopy(self.styles.table_styles[tr.get('style')])
@@ -645,7 +657,30 @@ class _rml_flowable(object):
     def _textual_image(self, node):
         return base64.decodestring(node.text)
 
+    def _pto(self, node):
+        sub_story = []
+        pto_header = None
+        pto_trailer = None
+        for node in utils._child_get(node, self):
+            if node.tag == etree.Comment:
+                node.text = ''
+                continue
+            elif node.tag=='pto_header':
+                pto_header = self.render(node)
+            elif node.tag=='pto_trailer':
+                pto_trailer = self.render(node)
+            else:
+                flow = self._flowable(node)
+                if flow:
+                    if isinstance(flow,list):
+                        sub_story = sub_story + flow
+                    else:
+                        sub_story.append(flow)
+        return platypus.flowables.PTOContainer(sub_story, trailer=pto_trailer, header=pto_header)
+
     def _flowable(self, node, extra_style=None):
+        if node.tag=='pto':
+            return self._pto(node)
         if node.tag=='para':
             style = self.styles.para_style_get(node)
             if extra_style:
@@ -714,7 +749,7 @@ class _rml_flowable(object):
                         node.text = newtext
                     image_data = base64.decodestring(node.text)
                 if not image_data: return False
-                image = cStringIO.StringIO(image_data)
+                image = StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
                 return platypus.Image(node.get('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
@@ -886,9 +921,13 @@ def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     try:
         from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except Exception:
+    except ImportError:
+        # means there is no custom fonts mapping in this system.
         pass
-    fp = cStringIO.StringIO()
+    except Exception:
+        logging.getLogger('report').warning('Cannot set font mapping', exc_info=True)
+        pass
+    fp = StringIO()
     r.render(fp)
     return fp.getvalue()
 
@@ -909,7 +948,7 @@ def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None
         fp.close()
         return fout
     else:
-        fp = cStringIO.StringIO()
+        fp = StringIO()
         r.render(fp)
         return fp.getvalue()
 

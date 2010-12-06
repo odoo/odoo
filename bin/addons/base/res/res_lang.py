@@ -36,8 +36,8 @@ class lang(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('Locale Code', size=5, required=True, help='This field is used to set/get locales for user'),
-        'iso_code': fields.char('ISO code', size=5, required=False, help='This ISO code is the name of po files to use for translations'),
+        'code': fields.char('Locale Code', size=16, required=True, help='This field is used to set/get locales for user'),
+        'iso_code': fields.char('ISO code', size=16, required=False, help='This ISO code is the name of po files to use for translations'),
         'translatable': fields.boolean('Translatable'),
         'active': fields.boolean('Active'),
         'direction': fields.selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], 'Direction',required=True),

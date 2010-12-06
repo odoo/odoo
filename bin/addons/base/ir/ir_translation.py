@@ -57,7 +57,7 @@ class ir_translation(osv.osv):
     _columns = {
         'name': fields.char('Field Name', size=128, required=True),
         'res_id': fields.integer('Resource ID', select=True),
-        'lang': fields.selection(_get_language, string='Language', size=5),
+        'lang': fields.selection(_get_language, string='Language', size=16),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),

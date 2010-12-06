@@ -34,7 +34,8 @@ def is_comment(node):
     return isinstance(node, types.StringTypes)
 
 def is_assert(node):
-    return _is_yaml_mapping(node, yaml_tag.Assert)
+    return isinstance(node, yaml_tag.Assert) \
+        or _is_yaml_mapping(node, yaml_tag.Assert)
 
 def is_record(node):
     return _is_yaml_mapping(node, yaml_tag.Record)
@@ -174,9 +175,7 @@ class YamlInterpreter(object):
             else:
                 module = self.module
                 checked_xml_id = xml_id
-            ir_id = self.pool.get('ir.model.data')._get_id(self.cr, self.uid, module, checked_xml_id)
-            obj = self.pool.get('ir.model.data').read(self.cr, self.uid, ir_id, ['res_id'])
-            id = int(obj['res_id'])
+            _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
             self.id_map[xml_id] = id
         return id
     
@@ -220,19 +219,22 @@ class YamlInterpreter(object):
         elif assertion.search:
             q = eval(assertion.search, self.eval_context)
             ids = self.pool.get(assertion.model).search(self.cr, self.uid, q, context=assertion.context)
-        if not ids:
+        else:
             raise YamlImportException('Nothing to assert: you must give either an id or a search criteria.')
         return ids
 
     def process_assert(self, node):
-        assertion, expressions = node.items()[0]
+        if isinstance(node, dict):
+            assertion, expressions = node.items()[0]
+        else:
+            assertion, expressions = node, []
 
         if self.isnoupdate(assertion) and self.mode != 'init':
             self.logger.warn('This assertion was not evaluated ("%s").' % assertion.string)
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
-        if assertion.count and len(ids) != assertion.count:
+        if assertion.count is not None and len(ids) != assertion.count:
             msg = 'assertion "%s" failed!\n'   \
                   ' Incorrect search count:\n' \
                   ' expected count: %d\n'      \

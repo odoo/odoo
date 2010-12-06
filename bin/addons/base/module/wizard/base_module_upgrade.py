@@ -20,6 +20,7 @@
 ##############################################################################
 
 import pooler
+import wizard
 from osv import osv, fields
 
 class base_module_upgrade(osv.osv_memory):
@@ -80,7 +81,7 @@ class base_module_upgrade(osv.osv_memory):
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
-    def upgrade_module(self, cr, uid, ids, context):
+    def upgrade_module(self, cr, uid, ids, context=None):
         pool = pooler.get_pool(cr.dbname)
         mod_obj = self.pool.get('ir.module.module')
         data_obj = self.pool.get('ir.model.data')
@@ -93,7 +94,7 @@ class base_module_upgrade(osv.osv_memory):
                 if dep_mod.state in ('unknown','uninstalled'):
                     unmet_packages.append(dep_mod.name)
         if len(unmet_packages):
-            raise osv.except_osv('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
+            raise osv.except_osv(_('Unmet dependency !'), _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
         _, pool = pooler.restart_pool(cr.dbname, update_module=True)

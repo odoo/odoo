@@ -35,7 +35,7 @@ class base_update_translations(osv.osv_memory):
         lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
         ids=lang_obj.search(cr, uid, [('code', '=', lang_code)])
         if not ids:
-            raise osv.except_osv(_('No language with code "%s" exists') % lang_code)
+            raise osv.except_osv(_('Error!'), _('No language with code "%s" exists') % lang_code)
         lang = lang_obj.browse(cr, uid, ids[0])
         return lang.name
     def act_cancel(self, cr, uid, ids, context=None):
@@ -51,8 +51,14 @@ class base_update_translations(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
         res = super(base_update_translations, self).default_get(cr, uid, fields, context=context)
-        record_id = context and context.get('active_id', False) or False
+        
+        if context.get('active_model') != "res.lang":
+            return res
+        
+        record_id = context.get('active_id', False) or False
         if record_id:
             lang = self.pool.get('res.lang').browse(cr, uid, record_id).code
             res.update(lang=lang)

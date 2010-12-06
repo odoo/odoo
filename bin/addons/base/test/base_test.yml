@@ -1,9 +1,6 @@
 -   |
-    Safe_Eval Scenario:
-    In order to check that common dangerous operations are 
-    not allowed by the safe_eval mechanism, attempt to 
-    evaluate some bad expressions, and verify that it triggers
-    an error.
+    To check that common dangerous operations are not allowed by the safe_eval mechanism, attempt to 
+    evaluate unauthorized expressions, and verify that they trigger an error.
 -
     1. Try a few common expressions to verify they work with safe_eval
 -
@@ -47,11 +44,11 @@
         from tools.safe_eval import safe_eval
         try:
            safe_eval('open("/etc/passwd","r")')
-           assert False, "safe_eval should not allow arbitrary expressions"
+           assert False, "safe_eval should not allow calling open() builtin"
         except NameError:
            pass
         except:
            # NameError should be raised because open() builtin is not found,
            # but other exceptions probably indicate that open() was executed!
-           assert False, "safe_eval should not allow arbitrary expressions"
+           assert False, "safe_eval should not allow calling open() builtin"
 

@@ -103,9 +103,7 @@ def data_files():
             files.append((root, [join(root, name) for name in names]))
         #for root, _, names in os.walk('pixmaps'):
         #    files.append((root, [join(root, name) for name in names]))
-        files.append(('.', [join('bin', 'import_xml.rng'),
-                            join('bin', 'server.pkey'),
-                            join('bin', 'server.cert')]))
+        files.append(('.', [join('bin', 'import_xml.rng'),]))
     else:
         man_directory = join('share', 'man')
         files.append((join(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -120,9 +118,7 @@ def data_files():
 
         openerp_site_packages = join(get_python_lib(prefix=''), 'openerp-server')
 
-        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),
-                                              join('bin', 'server.pkey'),
-                                              join('bin', 'server.cert')]))
+        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),]))
 
         if sys.version_info[0:2] == (2,5):
             files.append((openerp_site_packages, [ join('python25-compat','BaseHTTPServer.py'),

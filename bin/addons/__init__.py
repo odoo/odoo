@@ -30,7 +30,7 @@ import tools
 import tools.osutil
 from tools.safe_eval import safe_eval as eval
 import pooler
-
+from tools.translate import _
 
 import netsvc
 
@@ -649,8 +649,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
-                logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
-                pass
+                logging.getLogger('test').exception('Tests failed to execute in %s module %s', module_name)
             finally:
                 if tools.config.options['test_commit']:
                     cr.commit()
@@ -806,7 +805,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph = create_graph(cr, ['base'], force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
-            raise osv.osv.except_osv('Could not load base module', 'module base cannot be loaded! (hint: verify addons-path)')
+            raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if update_module:
@@ -857,7 +856,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if not isinstance(model_obj, osv.osv.osv_memory):
+                if model_obj and not isinstance(model_obj, osv.osv.osv_memory):
                     logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
@@ -873,6 +872,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 obj = pool.get(model)
                 if obj:
                     obj._check_removed_columns(cr, log=True)
+                else:
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
 
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)

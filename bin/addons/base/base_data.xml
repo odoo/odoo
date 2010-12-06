@@ -915,7 +915,7 @@
         </record>
         <record id="uk" model="res.country">
             <field name="name">United Kingdom</field>
-            <field name="code">uk</field>
+            <field name="code">gb</field>
         </record>
         <record id="um" model="res.country">
             <field name="name">USA Minor Outlying Islands</field>
@@ -989,7 +989,7 @@
             <field name="name">Zambia</field>
             <field name="code">zm</field>
         </record>
-        <!-- DEPRECATED, News name of Zaire is Democratic Republic of the Congo ! -->
+        <!-- DEPRECATED, New name of Zaire is Democratic Republic of the Congo ! -->
         <record id="zr" model="res.country">
             <field name="name">Zaire</field>
             <field name="code">zr</field>
@@ -1044,7 +1044,7 @@
         </record>
 
         <assert id="main_company" model="res.company">
-            <test expr="currency_id.code == 'eur'.upper()"/>
+            <test expr="currency_id.name == 'eur'.upper()"/>
             <test expr="name">OpenERP S.A.</test>
         </assert>
 
@@ -1170,7 +1170,7 @@
             <field name="currency_id" ref="COP"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="CZK" model="res.currency">
             <field name="name">Kč</field>
             <field name="code">CZK</field>
@@ -1213,7 +1213,7 @@
             <field name="currency_id" ref="HUF"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="IDR" model="res.currency">
             <field name="name">Rs</field>
             <field name="code">IDR</field>
@@ -1290,7 +1290,7 @@
             <field name="currency_id" ref="PLN"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="SEK" model="res.currency">
             <field name="name">kr</field>
             <field name="code">SEK</field>
@@ -1304,7 +1304,7 @@
             <field name="currency_id" ref="SEK"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
+
         <record id="GBP" model="res.currency">
             <field name="name">GBP</field>
             <field name="code">GBP</field>
@@ -1326,7 +1326,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
-        </record>        
+        </record>
         <record id="rateARS" model="res.currency.rate">
             <field name="rate">5.0881</field>
             <field name="currency_id" ref="ARS"/>
@@ -1378,5 +1378,19 @@
             <field name="name">Reserve</field>
             <field name="code">RSV</field>
         </record>
+
+        <record id="CRC" model="res.currency">
+           <field name="name">CRC</field>
+           <field name="code">CRC</field>
+           <field name="rounding">0.01</field>
+           <field name="accuracy">4</field>
+           <field name="symbol">¢</field>
+        </record>
+        <record id="rateCRC" model="res.currency.rate">
+           <field name="rate">691.3153</field>
+           <field name="currency_id" ref="CRC"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
+
     </data>
 </openerp>
