@@ -88,7 +88,7 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Supplier"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
@@ -106,7 +106,7 @@
                     <notebook colspan="4">
                         <page string="Payment Information">
                             <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
-                                <tree string="Open Vendor Journal Entries" editable="bottom">
+                                <tree string="Open Supplier Journal Entries" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
@@ -151,7 +151,7 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Supplier"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
@@ -169,7 +169,7 @@
                     <notebook colspan="4">
                         <page string="Payment Information">
                             <field name="line_dr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
-                                <tree string="Vendor Invoices and Outstanding transactions" editable="bottom">
+                                <tree string="Supplier Invoices and Outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"

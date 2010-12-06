@@ -2745,5 +2745,19 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
             groups="group_account_user,group_account_manager"/>
 
+        <record id="action_partner_all" model="ir.actions.act_window">
+            <field name="name">Partners</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <menuitem id="menu_partners_partners"
+                name="Partners"
+                parent="menu_partners"
+                action="action_partner_all"
+                sequence="1"/>
+
     </data>
 </openerp>
