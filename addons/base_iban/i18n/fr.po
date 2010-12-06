@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:51+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 16:32+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base_iban
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: base_iban
 #: constraint:ir.ui.view:0
@@ -31,8 +36,6 @@ msgstr "Création de comptes bancaires IBAN"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux !"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
@@ -75,6 +78,11 @@ msgid "iban"
 msgstr "IBAN"
 
 #. module: base_iban
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
 #, python-format
 msgid "The IBAN is invalid, It should begin with the country code"
@@ -89,6 +97,11 @@ msgstr "IBAN"
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "No IBAN du compte"
+
+#. module: base_iban
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field

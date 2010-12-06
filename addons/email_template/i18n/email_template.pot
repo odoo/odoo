@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:02+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:02+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:31+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,8 +49,8 @@ msgid "Personal Emails"
 msgstr ""
 
 #. module: email_template
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: field:email.template,file_name:0
+msgid "Report Filename"
 msgstr ""
 
 #. module: email_template
@@ -127,12 +127,6 @@ msgid "Server Reference of mail"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid "Reason: %s"
-msgstr ""
-
-#. module: email_template
 #: view:email_template.account:0
 #: selection:email_template.account,state:0
 msgid "Approved"
@@ -156,12 +150,6 @@ msgstr ""
 #. module: email_template
 #: help:email_template.account,name:0
 msgid "The description is used as the Sender name along with the provided From Email, unless it is already specified in the From Email, e.g: John Doe <john@doe.com>"
-msgstr ""
-
-#. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
-msgid "To"
 msgstr ""
 
 #. module: email_template
@@ -245,12 +233,6 @@ msgid "Both HTML & Text (Alternative)"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Mako templates not installed"
-msgstr ""
-
-#. module: email_template
 #: field:email_template.send.wizard,requested:0
 msgid "No of requested Mails"
 msgstr ""
@@ -318,8 +300,9 @@ msgid "Subject"
 msgstr ""
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "My Emails"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Reason: %s"
 msgstr ""
 
 #. module: email_template
@@ -328,13 +311,16 @@ msgid "From"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,file_name:0
-msgid "Report Filename"
+#: field:email_template.preview,ref_template:0
+#: field:email_template.send.wizard,ref_template:0
+msgid "Template"
 msgstr ""
 
 #. module: email_template
-#: selection:email_template.mailbox,state:0
-msgid "Sending"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Mail from Account %s failed. Probable Reason: Server Send Error\n"
+" Description: %s"
 msgstr ""
 
 #. module: email_template
@@ -397,11 +383,6 @@ msgid "Mail from Account %s successfully Sent."
 msgstr ""
 
 #. module: email_template
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr ""
@@ -456,12 +437,6 @@ msgid "Report"
 msgstr ""
 
 #. module: email_template
-#: field:email_template.preview,ref_template:0
-#: field:email_template.send.wizard,ref_template:0
-msgid "Template"
-msgstr ""
-
-#. module: email_template
 #: field:email.template,sub_model_object_field:0
 msgid "Sub Field"
 msgstr ""
@@ -473,8 +448,8 @@ msgid "Advanced"
 msgstr ""
 
 #. module: email_template
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
+#: view:email_template.mailbox:0
+msgid "My Emails"
 msgstr ""
 
 #. module: email_template
@@ -483,8 +458,8 @@ msgid "Expression Builder"
 msgstr ""
 
 #. module: email_template
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: help:email.template,sub_object:0
+msgid "When a relation field is used this field will show you the type of field you have selected"
 msgstr ""
 
 #. module: email_template
@@ -650,8 +625,7 @@ msgid "Mail Contents"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
+#: sql_constraint:email.template:0
 msgid "The template name must be unique !"
 msgstr ""
 
@@ -671,11 +645,6 @@ msgstr ""
 #. module: email_template
 #: view:email_template.account:0
 msgid "Draft"
-msgstr ""
-
-#. module: email_template
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: email_template
@@ -752,11 +721,6 @@ msgid "User Name"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,attachment_ids:0
-msgid "You may attach existing files to this template, so they will be added in all emails created from this template"
-msgstr ""
-
-#. module: email_template
 #: field:email_template.mailbox,user:0
 msgid "User"
 msgstr ""
@@ -795,7 +759,6 @@ msgid "Language"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
 #: code:addons/email_template/email_template_account.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
@@ -814,6 +777,12 @@ msgstr ""
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Send Mail"
+msgstr ""
+
+#. module: email_template
+#: view:email_template.account:0
+#: selection:email_template.account,state:0
+msgid "Suspended"
 msgstr ""
 
 #. module: email_template
@@ -849,12 +818,6 @@ msgid "History"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Django templates not installed"
-msgstr ""
-
-#. module: email_template
 #: view:email.template:0
 #: view:email_template.mailbox:0
 #: field:email_template.mailbox,attachments_ids:0
@@ -864,8 +827,9 @@ msgid "Attachments"
 msgstr ""
 
 #. module: email_template
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: field:email_template.preview,to:0
+#: field:email_template.send.wizard,to:0
+msgid "To"
 msgstr ""
 
 #. module: email_template
@@ -901,8 +865,8 @@ msgid "Error sending mail: %s"
 msgstr ""
 
 #. module: email_template
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:email_template.account:0
+msgid "Error: You are not allowed to have more than 1 account."
 msgstr ""
 
 #. module: email_template
@@ -911,14 +875,14 @@ msgid "Body (HTML-Web Client Only)"
 msgstr ""
 
 #. module: email_template
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #, python-format
 msgid "%s (Email Attachment)"
+msgstr ""
+
+#. module: email_template
+#: selection:email_template.mailbox,state:0
+msgid "Sending"
 msgstr ""
 
 #. module: email_template
@@ -942,9 +906,10 @@ msgid "Actions"
 msgstr ""
 
 #. module: email_template
-#: view:email_template.account:0
-#: selection:email_template.account,state:0
-msgid "Suspended"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Server Send Error\n"
+"Description: %s"
 msgstr ""
 
 #. module: email_template
@@ -1008,8 +973,8 @@ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,sub_object:0
-msgid "When a relation field is used this field will show you the type of field you have selected"
+#: help:email.template,attachment_ids:0
+msgid "You may attach existing files to this template, so they will be added in all emails created from this template"
 msgstr ""
 
 #. module: email_template
@@ -1044,6 +1009,11 @@ msgstr ""
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Sent"
+msgstr ""
+
+#. module: email_template
+#: sql_constraint:email_template.account:0
+msgid "Another setting already exists with this email ID !"
 msgstr ""
 
 #. module: email_template

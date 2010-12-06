@@ -150,7 +150,7 @@ class crm_case(object):
         for case in self.browse(cr, uid, ids, context):
             next_stage = False
             data = {}
-            domain = [('object_id.model', '=', model)]
+            domain = [('object_id.model', '=', model),('section_ids', '=', case.section_id.id)]
             if case.section_id and case.section_id.stage_ids:
                 domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
             stages = stage_pool.search(cr, uid, domain, order='sequence')
@@ -184,7 +184,7 @@ class crm_case(object):
         for case in self.browse(cr, uid, ids, context):
             prev_stage = False
             data = {}
-            domain = [('object_id.model', '=', model)]
+            domain = [('object_id.model', '=', model),('section_ids', '=', case.section_id.id)]
             if case.section_id and case.section_id.stage_ids:
                 domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
             stages = stage_pool.search(cr, uid, domain, order='sequence')

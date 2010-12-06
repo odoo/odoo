@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-25 19:11+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 09:49+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -31,9 +31,10 @@ msgid "Product UOM"
 msgstr "UdM du produit"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr "Postes de charge de la gamme"
+#: field:mrp.production,move_created_ids:0
+#: field:mrp.production,move_created_ids2:0
+msgid "Moves Created"
+msgstr "Mouvements créés"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -61,20 +62,14 @@ msgid "Work Centers load"
 msgstr "Occupation du poste de charge"
 
 #. module: mrp
-#: field:mrp.production,move_created_ids:0
-#: field:mrp.production,move_created_ids2:0
-msgid "Moves Created"
-msgstr "Mouvements créés"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr "Postes de charge de la gamme"
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
 msgstr "Planification des ressources de productions"
-
-#. module: mrp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Modèle de nom invalide dans la définition de l'action."
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
@@ -87,23 +82,14 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
-"Les règles de stock mini permettent au système de créer automatiquement des "
-"approvisionnements dès que les minima sont atteints"
-
-#. module: mrp
-#: help:mrp.bom,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the bills of "
-"material without removing it."
-msgstr ""
-"Si la coche Active est validée, la nomenclature n'est pas visible sans pour "
-"autant la supprimer"
+"La \"règle de stock minimum\" permet au système d'enregistrer "
+"automatiquement les besoins dès que le stock minimum est atteint."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr "Liste de colisage"
+msgstr "Bon de transfert"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -214,11 +200,6 @@ msgid "Set / Pack"
 msgstr "Ensemble / Pack"
 
 #. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
 msgstr "Sous-produits MRP"
@@ -249,11 +230,6 @@ msgstr ""
 #: view:mrp.production:0
 msgid "UOM"
 msgstr "UdM"
-
-#. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -339,12 +315,6 @@ msgid "Sets / Phantom"
 msgstr "KIt"
 
 #. module: mrp
-#: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
-msgid "Not urgent"
-msgstr "Non urgent"
-
-#. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
 msgstr "Référence vers une position dans un plan externe."
@@ -355,6 +325,11 @@ msgid "August"
 msgstr "Août"
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
 msgid "Production Order Report"
 msgstr ""
@@ -363,11 +338,6 @@ msgstr ""
 #: selection:mrp.production.order,month:0
 msgid "June"
 msgstr "Juin"
-
-#. module: mrp
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -382,7 +352,7 @@ msgstr "Octobre"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
-msgstr "Approvisionnement d'un produit stocké"
+msgstr "Besoin de produit stocké"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -392,7 +362,6 @@ msgstr "UdM par défaut"
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: report:bom.structure:0
-#: field:mrp.product.produce,product_qty:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
 #, python-format
@@ -542,6 +511,11 @@ msgstr ""
 "centres de charge)"
 
 #. module: mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Workcenter per hour."
 msgstr "Précisez le coût horaire du centre de charge"
@@ -616,15 +590,6 @@ msgid "Produce"
 msgstr "Fabriquer"
 
 #. module: mrp
-#: help:mrp.production,picking_id:0
-msgid ""
-"This is the internal picking list that brings the finished product to the "
-"production plan"
-msgstr ""
-"Ceci est la liste de colisage qui fournit les produits finis au plan de "
-"fabrication"
-
-#. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
@@ -638,7 +603,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Picking Exception"
-msgstr "Excerption du colisage"
+msgstr "Exception de transfert"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -649,6 +614,13 @@ msgstr "Lignes de Nomenclature"
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
 msgstr "Délai avant production"
+
+#. module: mrp
+#: help:mrp.routing,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -832,10 +804,10 @@ msgid ""
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
 msgstr ""
-"En fonction de la méthode choisie pour pour \"approvisionner\" le service, "
-"l'ordre d'approvisionnement va créer un appel d'offre pour une commande de "
-"sous-traitance, ou va attendre jusqu'à ce que le service soit effectué (= la "
-"livraison des produits)."
+"En fonction de la méthode choisie pour \"l'approvisionnement\" du service, "
+"le besoin va générer un appel d'offres pour une commande de sous-traitance, "
+"ou va attendre jusqu'à ce que le service soit effectué (= la livraison des "
+"produits)."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -899,7 +871,7 @@ msgstr "Type de Nomenclature"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Extended Filters..."
-msgstr "Filtre étendus"
+msgstr "Filtres étendus..."
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:0
@@ -907,6 +879,8 @@ msgstr "Filtre étendus"
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr ""
+"L'approvisionnement '%s' possède une exception : pas de nomenclature définie "
+"pour ce produit !"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1095,6 +1069,11 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
+"Permet le calcul en Juste-à-temps des besoins.\n"
+"\n"
+"Bien que cela soit plus gourmand en ressources que le fonctionnement "
+"standard, le calcul en Juste-à-Temps permet d'éviter d'attendre l'activation "
+"du planificateur de besoins ou son lancement manuel."
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1110,11 +1089,6 @@ msgstr ""
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing workcenters."
-msgstr ""
-
-#. module: mrp
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: mrp
@@ -1250,11 +1224,13 @@ msgid "Location where the system will stock the finished products."
 msgstr "Emplacement où le système stockera les produits finis."
 
 #. module: mrp
-#: help:mrp.routing,active:0
+#: help:mrp.production,picking_id:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the routing "
-"without removing it."
+"This is the internal picking list that brings the finished product to the "
+"production plan"
 msgstr ""
+"C'est le bon de transfert interne qui fournit les produits finis au plan de "
+"production"
 
 #. module: mrp
 #: field:stock.change.standard.price,change_parent_price:0
@@ -1273,6 +1249,9 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
+"La règle du stock minimum est une règle de gestion automatique des besoins, "
+"basée sur des quantités minimum et maximum. Cette règle est disponible dans "
+"le menu de gestion des stocks, et paramétrable pour chaque produit."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1293,6 +1272,13 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"Les ordres de fabrication sont généralement proposés automatiquemet par "
+"OpenERP selon les nomenclatures et les règles de traitement des besoins, "
+"mais il est également possible d'enregistrer des ordres de fabrication "
+"manuellement.\r\n"
+"OpenERP se chargera de la consommation des matières premières (sortie de "
+"stock) et de la production des produits finis (entrée de stock) quand "
+"l'ordre sera traité."
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1301,14 +1287,9 @@ msgid "Priority"
 msgstr "Priorité"
 
 #. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1360,11 +1341,13 @@ msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
 msgstr ""
+"Dans le cas où la méthode d'approvisionnement est \"Acheter\", le système va "
+"créer un Ordre d'Achat"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1424,11 +1407,6 @@ msgid "Hour Account"
 msgstr "Compte Horaire"
 
 #. module: mrp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
 msgstr ""
@@ -1447,7 +1425,7 @@ msgstr "Actif"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr "Approvisionnement produit"
+msgstr "Satisfaire le besoin de produit"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
@@ -1491,7 +1469,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Pilote la gestion des besoins de matières premières"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1528,11 +1506,6 @@ msgid "Change Standard Price"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,origin:0
@@ -1540,12 +1513,10 @@ msgid "Source Document"
 msgstr "Document d'origine"
 
 #. module: mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
-"spécial!"
+#: selection:mrp.production,priority:0
+#: selection:mrp.production.order,priority:0
+msgid "Not urgent"
+msgstr "Non urgent"
 
 #. module: mrp
 #: help:stock.change.standard.price,change_parent_price:0
@@ -1662,7 +1633,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr "US produit"
+msgstr "UdV du produit"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1812,7 +1783,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
-msgstr ""
+msgstr "Règle de gestion automatique des besoins"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1822,7 +1793,7 @@ msgstr "Calculer les Données"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr "Qté US produit"
+msgstr "Qté. de produit en UdV"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1864,7 +1835,7 @@ msgstr "Délai de fabrication"
 #: field:mrp.bom,product_uos_qty:0
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr "Qté US produit"
+msgstr "Qté du produit en UdV"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -1887,6 +1858,18 @@ msgstr "Confirmer"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
+msgstr ""
+
+#. module: mrp
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.bom,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
 msgstr ""
 
 #. module: mrp
@@ -1915,7 +1898,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "Recréer le colisage"
+msgstr "Recréer le bon de transfert"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -1943,6 +1926,14 @@ msgid ""
 " When the production gets started then the state is set to 'In Production'.\n"
 " When the production is over, the state is set to 'Done'."
 msgstr ""
+"Quand un ordre de fabrication est créé, il passe à l'état 'Brouillon'.\n"
+" Si l'ordre est concirmé il passe à l'état 'En approvisionnement'.\n"
+" En cas de défaut à ce stade, l'état passe à 'Approvisionnement en défaut'.  "
+"                                                                 \n"
+"Si le stock indique la disponibilité, l'état passe à 'Fabrication "
+"possible'.\n"
+" Quand la production démarre,  l'état passe à 'Fabrication en cours'.\n"
+" Quand la production est achevée, l'état passe à 'Terminé'."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -1978,7 +1969,7 @@ msgstr "Nombre d'Heures"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
-msgstr "Ordre d'Approvisionnement"
+msgstr "Besoins"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
@@ -2125,6 +2116,11 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: mrp
+#: field:mrp.product.produce,product_qty:0
+msgid "Select Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
@@ -2173,11 +2169,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
 #: view:mrp.bom:0
 #: field:mrp.bom,routing_id:0
@@ -2201,6 +2192,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production.order:0
 #: field:stock.move,production_id:0
 msgid "Production"
@@ -2209,7 +2205,7 @@ msgstr "Production"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Besoins en exception"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -2290,7 +2286,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Le moyen de satisfaire le besoin dépend du type de produit"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -2324,6 +2320,8 @@ msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
 msgstr ""
+"Selon la méthode d'approvisionnement choisie pour les produits suivis en "
+"stock, le besoin générera un appel d'offres, un ordre de fabrication, ... "
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2349,6 +2347,9 @@ msgid ""
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
 msgstr ""
+"Afin de s'approvisionner en matières premières (à acheter ou à fabriquer), "
+"l'ordre de fabrication crée autant de besoins que de composants présents "
+"dans la nomenclature, par le biais des planificateurs (MRP)."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2395,6 +2396,9 @@ msgstr ""
 
 #~ msgid "Origin"
 #~ msgstr "Origine"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
 
 #~ msgid "Best price (not yet active!)"
 #~ msgstr "Meilleur Prix (pas encore actif!)"
@@ -2611,6 +2615,9 @@ msgstr ""
 
 #~ msgid "Bill of Materials Components"
 #~ msgstr "Composants de la Nomenclature"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Modèle de nom invalide dans la définition de l'action."
 
 #~ msgid "Not used in computations, for information purpose only."
 #~ msgstr "Non utilisé dans les calculs, pour information seulement."
@@ -3061,3 +3068,19 @@ msgstr ""
 
 #~ msgid "Workcenter Loads"
 #~ msgstr "Charges du Centre de Travail"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the bills of "
+#~ "material without removing it."
+#~ msgstr ""
+#~ "Si la coche Active est validée, la nomenclature n'est pas visible sans pour "
+#~ "autant la supprimer"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
+#~ "spécial!"

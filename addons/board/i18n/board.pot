@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:49+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:49+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:20+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,8 +26,10 @@ msgid "Menu Create"
 msgstr ""
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
 msgstr ""
 
 #. module: board
@@ -50,11 +52,6 @@ msgstr ""
 #: code:addons/board/wizard/board_menu_create.py:0
 #, python-format
 msgid "User Error!"
-msgstr ""
-
-#. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: board
@@ -83,11 +80,6 @@ msgid "Board"
 msgstr ""
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
@@ -97,11 +89,6 @@ msgstr ""
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
-msgstr ""
-
-#. module: board
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: board
@@ -121,20 +108,10 @@ msgid "Open Dashboard"
 msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr ""
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
-msgstr ""
-
-#. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: board
@@ -269,11 +246,6 @@ msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
-msgid "September"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
 msgid "April"
 msgstr ""
 
@@ -318,11 +290,6 @@ msgid "Latest Activities"
 msgstr ""
 
 #. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
 msgstr ""
@@ -353,9 +320,8 @@ msgid "Sequence"
 msgstr ""
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
+#: selection:res.log.report,month:0
+msgid "September"
 msgstr ""
 
 #. module: board
@@ -409,11 +375,6 @@ msgstr ""
 #: code:addons/board/wizard/board_menu_create.py:0
 #, python-format
 msgid "Please Insert Dashboard View(s) !"
-msgstr ""
-
-#. module: board
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: board

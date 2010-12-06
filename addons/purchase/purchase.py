@@ -646,6 +646,8 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
+
+
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
@@ -660,6 +662,9 @@ class purchase_order_line(osv.osv):
             date_order = time.strftime('%Y-%m-%d')
         qty = qty or 1.0
         seller_delay = 0
+
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
+ 
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
@@ -675,7 +680,6 @@ class purchase_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
         res = {'value': {'price_unit': price, 'name': name or prod_name,

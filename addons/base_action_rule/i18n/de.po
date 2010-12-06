@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-06 07:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 15:00+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-07 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -119,6 +120,20 @@ msgstr ""
 "Aktiviere Feld, wenn diese Regel eine EMail an den Partner senden soll."
 
 #. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
+"Definition von  Aktionen, die durch bestimmte Vorgänge eines Benutzers "
+"automatisch ausgelöst werden. Z.B. eine neue Verkaufschance kann dazu "
+"führen, dass automatisch ein bestimmtes Vertriebsteam zugewiesen wird, oder "
+"eine Verkaufschance, die nach 14 Tagen immer noch offen ist, löst "
+"automatisch eine neue Email aus."
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Bedingungen Partner Daten"
@@ -149,6 +164,11 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Schlüsselwörter zur Benutzung im Haupttext"
 
 #. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
@@ -157,6 +177,11 @@ msgstr "Status"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr "Email Adressen der Empfänger"
+
+#. module: base_action_rule
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -392,6 +417,11 @@ msgstr "%(object_description)s = Objekt Beschreibung"
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "EMail Aktion"
+
+#. module: base_action_rule
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0

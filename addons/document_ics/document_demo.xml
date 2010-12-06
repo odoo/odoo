@@ -5,18 +5,18 @@
     <record model="crm.case.section" id="section_meeting">
         <field name="name">Shared Calendar Meetings</field>
         <field name="code">shcal</field>
-    </record>
-
+    </record> 
+    
     <record model="document.directory" id="document.dir_calendars">
         <field name="name">Calendars</field>
-    </record>
-
+    </record>    
+    
     <record model="document.directory.content" id="dir_content_calendar">
         <field name="name">Calendars</field>
         <field name="suffix">meetings</field>
-        <field name="directory_id" ref="document.dir_calendars"/>
         <field name="extension">.ics</field>
         <field name="include_name" eval="False"/>
+        <field name="directory_id" ref="document.dir_calendars"/>
         <field name="object_id" ref="crm.model_crm_meeting"/>
         <field name="ics_domain" eval="'[]'"/>
     </record>
