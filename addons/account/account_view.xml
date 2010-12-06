@@ -946,7 +946,14 @@
                                   <field groups="base.group_extended" name="child_depend"/>
                                   <field groups="base.group_extended" name="sequence"/>
                                   <field groups="base.group_extended" name="include_base_amount"/>
-                                  <field groups="base.group_extended" colspan="4" name="child_ids"/>
+                                  <field groups="base.group_extended" colspan="4" name="child_ids">
+                                      <tree string="Account Tax">
+                                          <field name="sequence"/>
+					                      <field name="name"/>
+					                      <field name="price_include" groups="base.group_extended"/>
+					                      <field name="description"/>
+					                 </tree>
+					             </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
