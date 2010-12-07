@@ -346,17 +346,7 @@ class product_template(osv.osv):
                 return False
         return True
 
-    def _check_uos(self, cursor, user, ids):
-        for product in self.browse(cursor, user, ids):
-            if product.uos_id \
-                    and product.uos_id.category_id.id \
-                    == product.uom_id.category_id.id:
-                return False
-        return True
-
     _constraints = [
-         # According to bug: 543979
-#        (_check_uos, 'Error: UOS must be in a different category than the UOM', ['uos_id']),
         (_check_uom, 'Error: The default UOM and the purchase UOM must be in the same category.', ['uom_id']),
     ]
 
