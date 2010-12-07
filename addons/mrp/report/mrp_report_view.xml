@@ -7,7 +7,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Work Centers load">
+                <tree string="Work Center Load">
                     <field name="name"/>
                     <field name="workcenter_id"/>
                     <field name="cycle"/>
@@ -21,7 +21,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Work Center load" type="bar">
+                <graph string="Work Center Load" type="bar">
                     <field name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
@@ -29,25 +29,25 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="view_workcenter_load_search" model="ir.ui.view">
             <field name="name">report.workcenter.load.search</field>
             <field name="model">report.workcenter.load</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Work Center load">
+                <search string="Work Center Load">
                     <field name="name"/>
                     <field name="workcenter_id" widget="selection"/>
                 </search>
             </field>
         </record>
         <record id="action_report_workcenter_load_tree" model="ir.actions.act_window">
-            <field name="name">Work Center Loads</field>
+            <field name="name">Work Center Load</field>
             <field name="res_model">report.workcenter.load</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_workcenter_load_search"/>
-            <field name="help">Work Center Loads gives you a projection of work center loads over a specified period. It is expressed in number of hours and machine related cycles.</field>
+            <field name="help">Work Center Load gives you a projection of work center loads over a specified period. It is expressed in number of hours and machine related cycles.</field>
         </record>
         <menuitem id="next_id_77" name="Reporting"
             parent="base.menu_mrp_root" sequence="49"/>
