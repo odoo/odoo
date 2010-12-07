@@ -63,10 +63,10 @@
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
 
                         <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <field name="product_uos" widget="selection" groups="product.group_uos,base.group_extended"/>
+                        <field name="product_uos"  groups="product.group_uos,base.group_extended"/>
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>

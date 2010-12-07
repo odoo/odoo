@@ -69,7 +69,7 @@ class mrp_routing(osv.osv):
     _description = 'Routing'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the routing without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
@@ -178,7 +178,7 @@ class mrp_bom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Reference', size=16),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
                                  help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
                                  "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
@@ -321,6 +321,15 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
+    
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        bom_data = self.read(cr, uid, id, [], context=context)
+        default.update({'name': bom_data['name'] + _(' (copy)')})
+        return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()
 

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-24 08:03+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-27 12:58+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -75,6 +75,11 @@ msgid "Location used by Destination Location to supply"
 msgstr "Место хранения используемое местом назначения для поставки"
 
 #. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
@@ -134,6 +139,11 @@ msgstr "Условия"
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
 msgstr "Зона упаковки"
+
+#. module: stock_location
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -295,6 +305,11 @@ msgid "Is the destination location that needs supplying"
 msgstr "Место хранения которое нуждается в поставке"
 
 #. module: stock_location
+#: sql_constraint:stock.warehouse.orderpoint:0
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
+
+#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Продукция"
@@ -367,6 +382,11 @@ msgstr "Тип действия"
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
 msgstr "Перемещение"
+
+#. module: stock_location
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0

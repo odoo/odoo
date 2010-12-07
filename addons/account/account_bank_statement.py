@@ -149,6 +149,7 @@ class account_bank_statement(osv.osv):
             \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
+        'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
     }
 
     _defaults = {
@@ -369,14 +370,15 @@ class account_bank_statement(osv.osv):
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
-    def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
-        cursor.execute('SELECT balance_end_real \
+    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-        res = cursor.fetchone()
+        res = cr.fetchone()
         balance_start = res and res[0] or 0.0
-        return {'value': {'balance_start': balance_start}}
+        account_id = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id'], context=context)['default_debit_account_id']
+        return {'value': {'balance_start': balance_start, 'account_id': account_id}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'])
