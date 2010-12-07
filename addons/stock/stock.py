@@ -123,8 +123,7 @@ class stock_location(osv.osv):
 
         currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         currency_obj = self.pool.get('res.currency')
-        currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-        currency_obj.round(cr, uid, currency, 300)
+        currency = currency_obj.browse(cr, uid, currency_id)
         for loc_id, product_ids in products_by_location.items():
             if prod_id:
                 product_ids = [prod_id]
