@@ -82,6 +82,7 @@ class calendar_collection(osv.osv):
         calendar_id = calendar_ids[0]
         calendar = calendar_obj.browse(cr, uid, calendar_id,
                 context=context)
+        print "rottt_cal_dirrrrrrrr",root_cal_dir,calendar.name
         return '%s/%s' %(root_cal_dir, calendar.name)
 
     def get_schedule_outbox_URL(self, cr, uid, ids, context=None):

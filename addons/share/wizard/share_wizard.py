@@ -311,9 +311,9 @@ class share_create(osv.osv_memory):
             # existing users
             for user in wizard_data.user_ids:
                 share_url = share_root_url % \
-                        {'login': email,
+                        {'login': user.user_id.login,
                          'password': '',
-                         'dbame': cr.dbname} if format_url else share_root_url
+                         'dbname': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
                         'login': user.user_id.login,

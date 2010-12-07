@@ -50,7 +50,7 @@ class survey_form(report_rml):
         _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
 
         rml="""<document filename="Survey Form.pdf">
-            <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Form.pdf' author="Martin Simon" allowSplitting="20" >
+            <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Form' author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20" >
                 <pageTemplate id="first">
                     <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
                     <pageGraphics>

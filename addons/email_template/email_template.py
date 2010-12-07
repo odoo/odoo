@@ -23,9 +23,8 @@
 import base64
 import random
 import netsvc
+import logging
 import re
-
-LOGGER = netsvc.Logger()
 
 TEMPLATE_ENGINES = []
 
@@ -35,12 +34,9 @@ from tools.translate import _
 try:
     from mako.template import Template as MakoTemplate
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Mako templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Mako templates not installed")
+    
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -49,12 +45,8 @@ try:
     settings.configure()
     #Workaround ends
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Django templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Django templates not installed")
 
 import tools
 import pooler
@@ -267,7 +259,7 @@ This is useful for CRM leads for example"),
     }
 
     _sql_constraints = [
-        ('name', 'unique (name)', _('The template name must be unique !'))
+        ('name', 'unique (name)','The template name must be unique !')
     ]
 
     def create_action(self, cr, uid, ids, context):

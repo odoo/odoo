@@ -3,18 +3,27 @@
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_timesheet_invoice
+#
+# Mongolian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:38+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-25 19:13+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -26,7 +35,7 @@ msgstr "Цаг бүртгэлийг хэрэглэгчээр харах"
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Type of invoicing"
-msgstr "Нэхэмжлэхийн төрөл"
+msgstr "Нэхэмжлэх төрөл"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -48,6 +57,13 @@ msgstr "Эцсийн цаг бүртгэлээс нэхэмжлэх үүсгэх
 #: view:hr.timesheet.invoice.create:0
 msgid "Force to use a specific product"
 msgstr "Тодорхой бүтээгдэхүүнийг хэрэглэхийг тулгах"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
+msgid ""
+"This lists show you every task work you can invoice to the customer. Select "
+"the lines in order to generate the invoices automatically."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -126,7 +142,7 @@ msgstr "Өдөр"
 #: field:random.timesheet.lines,uom_id:0
 #: field:report.account.analytic.line.to.invoice,product_uom_id:0
 msgid "UoM"
-msgstr "Хэмжих нэгж"
+msgstr "Х.н"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -152,6 +168,19 @@ msgstr "Тооцооны хэмжээтэй нэхэмжлээгүй бичлэ�
 #: view:random.timesheet.lines:0
 msgid "Random Timesheets Lines"
 msgstr "Гэнэтийн цаг бүртгэлийн мөрүүд"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
@@ -195,10 +224,19 @@ msgid "Analytic account to close"
 msgstr "Хаах шаардлагатай аналитик данс"
 
 #. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+msgid ""
+"OpenERP allows you to create default invoicing types. You could need to "
+"regularly make discounts based on a specific contract or agreement with a "
+"customer. From this menu, you can create additional default types of "
+"invoicing that will speed up your invoicing."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:random.timesheet.lines:0
 #: view:report.timesheet.line:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -237,7 +275,7 @@ msgstr "Аналитик данс"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,date_deadline:0
 msgid "Deadline"
-msgstr "Тов"
+msgstr "Тогтсон өдөр"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_my_account
@@ -270,18 +308,6 @@ msgid "hr.timesheet.analytic.cost.ledger"
 msgstr "Цаг бүртгэлийн аналитик үнийн дэвтэр"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid ""
-"Please fill in the Partner or Customer and Sale Pricelist fields in the "
-"Analytic Account:\n"
-"%s"
-msgstr ""
-"Аналитик данс маягтын 'Харилцагч' буюу 'Үйлчлүүлэгч', 'Борлуулалтын үнийн "
-"санал' талбарыг бөглөнө үү:\n"
-"%s"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
 msgid "Final Invoice"
 msgstr "Эцсийн нэхэмжлэл"
@@ -308,6 +334,11 @@ msgstr "Нэхэмжлэх үнийн дүн"
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
 msgstr "Аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -349,6 +380,11 @@ msgstr ""
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
 msgstr "Нэр"
+
+#. module: hr_timesheet_invoice
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
@@ -418,7 +454,7 @@ msgstr "Хэвлэсэн огноо"
 #. module: hr_timesheet_invoice
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн xml алдаатай"
+msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -431,17 +467,6 @@ msgstr "Тооцооны даалгаврын ажлууд"
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
 msgstr "Нэхэмжлэх төрлүүд"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field '\n"
-"                        'in the analytic account:\n"
-"%s"
-msgstr ""
-"Дараах аналитик данс дээрх харилцагч, үнийн саналыг бөглөнө үү! \n"
-"%s"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -521,17 +546,9 @@ msgid "Currency"
 msgstr "Валют"
 
 #. module: hr_timesheet_invoice
-#: view:random.timesheet.lines:0
-#: field:random.timesheet.lines,user_id:0
-#: field:report.random.timesheet,user_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Хэрэглэгч"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -612,7 +629,7 @@ msgstr "Үнийн дэвтэр"
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -666,7 +683,7 @@ msgstr "11 сар"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Extended Filters..."
-msgstr "Нэмэлт шүүлтүүрүүд..."
+msgstr "Өргөтгөсөн хайлт..."
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,amount_invoice:0
@@ -707,6 +724,14 @@ msgstr "1 сар"
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Credit"
 msgstr "Кредит"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
@@ -829,10 +854,24 @@ msgid "Billing Data"
 msgstr "Тооцооны өгөгдөл"
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid ""
+"Please fill in the Partner or Customer and Sale Pricelist fields in the "
+"Analytic Account:\n"
+"%s"
+msgstr ""
+"Аналитик данс маягтын 'Харилцагч' буюу 'Үйлчлүүлэгч', 'Борлуулалтын үнийн "
+"санал' талбарыг бөглөнө үү:\n"
+"%s"
+
+#. module: hr_timesheet_invoice
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "Обьектын нэр нь x_-ээр эхэлж ямар ч тусгай тэмдэгт агуулах ёсгүй."
+msgstr ""
+"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+"болохгүй!"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account:0
@@ -931,7 +970,7 @@ msgstr "Тооцооны үнэ бүхий нэхэмжлээгүй мөрүүд
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: hr_timesheet_invoice
 #: field:random.timesheet.lines,to_invoice:0
@@ -1112,3 +1151,12 @@ msgstr "Өртөг"
 #: view:random.timesheet.lines:0
 msgid "Search Timesheet Lines"
 msgstr "Цаг бүртгэлийн мөрийг хайх"
+
+#, python-format
+#~ msgid ""
+#~ "Please fill in the partner and pricelist field '\n"
+#~ "                        'in the analytic account:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Дараах аналитик данс дээрх харилцагч, үнийн саналыг бөглөнө үү! \n"
+#~ "%s"

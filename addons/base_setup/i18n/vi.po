@@ -7,51 +7,57 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-02 14:38+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-24 09:29+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-11-25 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr ""
+msgstr "Thành phố"
 
 #. module: base_setup
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Tên đối tượng phải bắt đầu với x_ và không chứa bất kỳ ký tự đặc biệt nào!"
 
 #. module: base_setup
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Hóa đơn"
 
 #. module: base_setup
 #: field:base.setup.company,name:0
 msgid "Company Name"
-msgstr ""
+msgstr "Tên công ty"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
-msgstr ""
+msgstr "Thư điện tử"
+
+#. module: base_setup
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr ""
+msgstr "Số tài khoản ngân hàng"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
@@ -78,7 +84,7 @@ msgstr ""
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr ""
+msgstr "CSDL của bạn đã được tạo"
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
@@ -98,10 +104,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
 msgstr ""
 
 #. module: base_setup
@@ -119,7 +124,7 @@ msgstr ""
 #: field:base.setup.company,currency:0
 #: model:ir.model,name:base_setup.model_res_currency
 msgid "Currency"
-msgstr ""
+msgstr "Loại tiền"
 
 #. module: base_setup
 #: field:base.setup.company,state_id:0
@@ -134,18 +139,25 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Công ty"
 
 #. module: base_setup
 #: field:base.setup.installer,sale:0
 msgid "Sales Management"
-msgstr ""
+msgstr "Quản lý bán hàng"
 
 #. module: base_setup
 #: help:base.setup.installer,profile_tools:0
 msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
 msgstr ""
 
 #. module: base_setup
@@ -156,7 +168,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "Điện thoại"
 
 #. module: base_setup
 #: view:base.setup.company:0
@@ -166,17 +178,17 @@ msgstr ""
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr ""
+msgstr "cách xưng hô"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
-msgstr ""
+msgstr "Quản lý kiến thức"
+
+#. module: base_setup
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Tên của mô đun phải duy nhất !"
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -201,6 +213,11 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr ""
+
+#. module: base_setup
 #: help:base.setup.installer,hr:0
 msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
@@ -222,7 +239,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,hr:0
 msgid "Human Resources"
-msgstr ""
+msgstr "Quản trị Nhân lực"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -252,17 +269,17 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Quốc gia"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup
 msgid "Setup"
-msgstr ""
+msgstr "Cài đặt"
 
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Kế toán & Tài chính"
 
 #. module: base_setup
 #: field:base.setup.installer,auction:0
@@ -272,7 +289,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,zip:0
 msgid "Zip Code"
-msgstr ""
+msgstr "Mã bưu điện"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -314,7 +331,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr ""
+msgstr "Quản lý dự án"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
@@ -456,7 +473,6 @@ msgid "base.setup.config"
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""

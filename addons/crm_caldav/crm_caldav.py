@@ -45,11 +45,6 @@ class crm_meeting(osv.osv):
         ical = event_obj.export_cal(cr, uid, event_data, context=context)
         return ical.serialize()
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if "write_date" in vals:
-            del vals['write_date']
-        return super(crm_meeting, self).write(cr, uid, ids, vals, context=context)
-
 
     def import_cal(self, cr, uid, data, data_id=None, context=None):
         """

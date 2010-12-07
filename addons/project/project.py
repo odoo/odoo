@@ -86,7 +86,7 @@ class project(osv.osv):
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
-                project_task 
+                project_task
             WHERE
                 project_id in %s AND
                 state<>'cancelled'
@@ -476,7 +476,7 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
     ]
     #
     # Override view according to the company definition

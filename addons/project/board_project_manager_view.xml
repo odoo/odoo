@@ -15,7 +15,13 @@
             res_model="project.project" view_mode="tree,form" 
             view_type="form"/>
 
-        <act_window domain="[('user_id','=',uid),('state','&lt;&gt;','close')]" id="act_my_account" name="My accounts to invoice" res_model="account.analytic.account" view_id="view_account_analytic_simplified" view_mode="tree,form" view_type="form"/>
+        <act_window 
+            id="act_my_account"
+            name="My accounts to invoice"
+            res_model="account.analytic.account"
+            domain="[('user_id','=',uid),('state','&lt;&gt;','close')]"
+            view_mode="tree,form"
+            view_type="form"/>
 
     </data>
 </openerp>

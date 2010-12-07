@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 00:09+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2010-11-29 07:13+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-11-30 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -108,6 +107,8 @@ msgid ""
 "This is the list of all delivery orders that must be prepared, according to "
 "your different sales orders and your logistics rules."
 msgstr ""
+"Esta es la lista de todas las órdenes de entrega que deben ser preparadas, "
+"de acuerdo con sus distintos pedidos de ventas y sus reglas logísticas."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -226,6 +227,9 @@ msgid ""
 "if you really want to change it '             #                        'for "
 "this product: \"%s\" (id: %d)"
 msgstr ""
+"La línea de movimiento actual ya está asignada a un albarán, elimínela "
+"primero si realmente quiere cambiarla ' # 'para este este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_inventory:0
@@ -270,7 +274,7 @@ msgstr "Referencia"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Productos a procesar"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -285,6 +289,15 @@ msgid ""
 "products from the Supplier location into the Stock location. Each report can "
 "be performed on physicals, partners or virtual locations."
 msgstr ""
+"Defina sus ubicaciones para reflejar la organización y la estructura de su "
+"almacén. OpenERP puede gestionar ubicaciones físicas (almacenes, "
+"estanterías, ubicaciones, etc.), ubicaciones de empresas externas (clientes, "
+"proveedores) y ubicaciones virtuales que son la contra-partida de "
+"operaciones como el consumo de órdenes de producción, inventarios, etc. Cada "
+"movimiento de stock en OpenERP mueve un producto de una ubicación a otra. "
+"Por ejemplo, si recibe productos de un proveedor, OpenERP moverá los "
+"productos de la ubicación Proveedor a la ubicación Stock. Cada informe "
+"informe puede realizarse sobre ubicaciones físicas, externas o virtuales."
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -303,6 +316,10 @@ msgid ""
 "inventory or, once you need it, to correct the current stock level of a "
 "product."
 msgstr ""
+"Los inventarios periódicos son utilizados para contar el número de productos "
+"disponibles en cada ubicación. Lo puede utilizar, una vez por año, para "
+"relaizar el inventario general, o, cuando sea necesario, para corregir el "
+"nivel de stock actual de un producto."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -360,7 +377,7 @@ msgstr "Empresa"
 #. module: stock
 #: help:stock.move.memory,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Moneda en la que se expresa el coste unidad."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -474,7 +491,7 @@ msgstr "Albarán de salida"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr ""
+msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -727,6 +744,9 @@ msgid ""
 "customers. You can process the deliveries directly from this list, line by "
 "or line or through the Delivery Orders menu."
 msgstr ""
+"El menú \"Enviar productos\" muestra todos los productos que tiene que "
+"enviar a sus clientes. Puede porcesar los envíos directamente desde esta "
+"lista, línea por línea, o a través del menú órdenes de envío."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1086,7 +1106,7 @@ msgstr "Padre izquierdo"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "Información de envío"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1114,6 +1134,8 @@ msgstr "Cantidad por lote"
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"No se ha definido una cuenta de salida de stock para este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -1655,13 +1677,13 @@ msgstr "¡Acción no válida!"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Receive Information"
-msgstr ""
+msgstr "Información de recepción"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Resumen inventario ubicación"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
@@ -1692,7 +1714,7 @@ msgstr "OpenERP S.A."
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Receive"
-msgstr ""
+msgstr "Recibir"
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1831,7 +1853,7 @@ msgstr "Moneda"
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr "Lotes seguimiento fabricación"
+msgstr "Lotes seguimiento de fabricación"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
@@ -2056,7 +2078,7 @@ msgstr "Tablero almacén"
 #. module: stock
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2188,6 +2210,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
+"El análisis de movimientos el permite analizar y verificar fácilmente los "
+"movimientos de stock de su compañía. Utilice este informe cuando quiera "
+"analizar las diferentes rutas tomadas por sus productos y el rendimiento de "
+"su inventario."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2252,7 +2278,7 @@ msgstr "STOCK_HARDDISK"
 #. module: stock
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -2351,7 +2377,7 @@ msgstr "]"
 #. module: stock
 #: field:stock.move.memory,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Asistente"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2371,6 +2397,9 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements made on the product."
 msgstr ""
+"Este menú le indica la trazabilidad completa de operaciones de inventario "
+"realizadas sobre un producto. Puede filtrar sobre un producto para ver todos "
+"los movimientos, futuros y pasados, realizados sobre el producto."
 
 #. module: stock
 #: help:stock.location,chained_journal_id:0
@@ -2385,7 +2414,7 @@ msgstr ""
 #. module: stock
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no son soportadas en objetos osv_memory!"
+msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
 
 #. module: stock
 #: view:board.board:0
@@ -2401,7 +2430,7 @@ msgstr "Creación"
 #. module: stock
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "¡El nombre del diario debe ser único por compañía!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2551,6 +2580,13 @@ msgid ""
 "your pre-configured logistics rules but you can also record manual stock "
 "operations."
 msgstr ""
+"Los movimientos internos muestran todas las operaciones de inventario que "
+"debe realizar en su almacén. Todas las operaciones pueden ser categorizadas "
+"en diarios de inventario, para que cada empleado tenga su propia lista de "
+"operaciones a realizar en su propio diario. La mayoría de operaciones son "
+"preparadas automáticamente por OpenERP en función de las reglas logísticas "
+"preconfiguradas, pero puede igualmente crear operaciones de stock "
+"manualmente."
 
 #. module: stock
 #: view:product.product:0
@@ -2728,12 +2764,12 @@ msgstr "STOCK_ITALIC"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr ""
+msgstr "Retraso (días)"
 
 #. module: stock
 #: field:stock.move.memory,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Movimiento"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2785,6 +2821,9 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
+"El análisis de inventario le permite verificar y analizar fácilmente los "
+"niveles de stock de su compañia. Ordene y agrupe por criterios de selección "
+"para analizar y gestionar mejor las actividades de su empresa."
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2901,6 +2940,9 @@ msgid ""
 "After having selected a lot, you can get the up-stream or down-stream "
 "traceability of the products contained in lot."
 msgstr ""
+"Esta es la lista de todos los lotes de producción (números de serie) que ha "
+"creado. Después de seleccionar un lote, puede obtener la trazabilidad "
+"(ascendente o descendente) de los productos de dicho lote."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2945,6 +2987,10 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Muestra los últimos inventarios realizados sobre sus productos y los ordena "
+"fácilmente con filtros específicos. Si realiza inventarios parciales "
+"frecuentemente, necesita este informe para asegurar que el stock de cada "
+"producto ha sido controlado al menos una vez al año."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3101,6 +3147,8 @@ msgstr "Pedidos pendientes"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"No se ha definido una cuenta de entrada de stock para este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3354,7 +3402,7 @@ msgstr "Cambiar precio estándar"
 #. module: stock
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
-msgstr ""
+msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -3521,7 +3569,7 @@ msgstr "Consumir productos"
 #: field:stock.move.scrap,product_uom:0
 #, python-format
 msgid "Product UOM"
-msgstr "UdM producto"
+msgstr "UdM del producto"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3635,7 +3683,7 @@ msgstr "STOCK_MEDIA_PAUSE"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
@@ -3754,6 +3802,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"El sistema de diarios de stock permite asignar cada operación de stock a un "
+"diario específico dependiendo del tipo de operación a realizar o el empleado "
+"/ equipo que debe de realizar la operación. Algunos ejemplos de diarios de "
+"stock: control calidad, lista de preparación, embalaje, etc"
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3795,9 +3847,16 @@ msgstr "Clientes no europeos"
 #: code:addons/stock/product.py:0
 #: code:addons/stock/stock.py:0
 #: code:addons/stock/wizard/stock_splitinto.py:0
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Stock Inventory is done"
+msgstr "Inventario de stock realizado"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3869,7 +3928,7 @@ msgstr "STOCK_MEDIA_PLAY"
 #. module: stock
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "¡El código del diario debe ser único por compañía!"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_tree
@@ -3878,6 +3937,9 @@ msgid ""
 "click on a location in order to get the list of the products and their stock "
 "level in this particular location and all its children."
 msgstr ""
+"Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
+"hacer clic en una ubicación para obtener la lista de productos y su nivel de "
+"stock para esta ubicación en particular y todos sus hijos."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -3986,7 +4048,7 @@ msgstr "Coste unidad para esta línea de producto"
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr "Categoría producto"
+msgstr "Categoría de producto"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -4022,6 +4084,9 @@ msgid ""
 "get the up-stream or down-stream traceability of the products contained in "
 "the pack."
 msgstr ""
+"Esta es la lista de todos sus paquetes. Después de haber seleccionado un "
+"paquete, puede obtener la trazabilidad para arriba y para abajo de los "
+"productos contenidos en el paquete."
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -4058,7 +4123,7 @@ msgstr "Diario encadenamiento"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr ""
+msgstr "No suficiente stock, no ha sido posible reservar los productos."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -4085,6 +4150,11 @@ msgid ""
 "can confirm all products received using the buttons on the right of each "
 "line."
 msgstr ""
+"Encontrará aquí la lista de todos los productos que está esperando, en "
+"función de las órdenes de compra realizadas anteriormente. Cuando reciba un "
+"pedido, puede filtrar por el nombre del proveedor o por la referencia del "
+"pedido. Entonces puede confirmar los productos recibidos gracias a los "
+"botones situados a la derecha de cada línea."
 
 #. module: stock
 #: view:stock.inventory.line:0
@@ -4158,6 +4228,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"La lista de envíos entrantes contiene todos los pedidos que va a recibir de "
+"su proveedor. Un envío entrante contiene la lista de productos a recibir en "
+"función del pedido de compra original. Puede validar el envío totalmente o "
+"parcialmente ."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -4173,7 +4247,7 @@ msgstr "Plantilla producto"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Facturas"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -4292,7 +4366,7 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Retraso productos de salida"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
@@ -4302,7 +4376,7 @@ msgstr "Lote existente"
 #. module: stock
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "¡El nombre del grupo debe ser único!"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -4516,6 +4590,8 @@ msgid ""
 "Total quantity after split exceeds the quantity to split for this product: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Cantidad total después de que la división exceda la cantidad para dividir "
+"para este producto: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.move:0
@@ -4533,7 +4609,7 @@ msgstr "Ubicación destino"
 #. module: stock
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -4552,7 +4628,7 @@ msgstr "cantidad."
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory
 msgid "stock.move.memory"
-msgstr ""
+msgstr "stock.movimiento.memoria"
 
 #. module: stock
 #: view:stock.move:0
@@ -4612,7 +4688,7 @@ msgstr "STOCK_DIALOG_AUTHENTICATION"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Enviar"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -4717,7 +4793,7 @@ msgstr "¡Aviso!"
 #. module: stock
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr ""
+msgstr "¡Sólo se puede definir un valor para cada uso dado!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output

@@ -129,9 +129,9 @@ class product_pricelist(osv.osv):
     #def price_get_multi(self, cr, uid, product_ids, context=None):
     def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
-           @param pricelist_ids: 
-           @param products_by_qty: 
-           @param partner: 
+           @param pricelist_ids:
+           @param products_by_qty:
+           @param partner:
            @param context: {
              'date': Date of the pricelist (%Y-%m-%d),}
            @return: a dict of dict with product_id as key and a dict 'price by pricelist' as value
@@ -234,7 +234,7 @@ class product_pricelist(osv.osv):
                             else:
                                 price_tmp = self.price_get(cr, uid,
                                         [res['base_pricelist_id']], product_id,
-                                        qty)[res['base_pricelist_id']]
+                                        qty, context=context)[res['base_pricelist_id']]
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
                                 price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp, round=False)
                         elif res['base'] == -2:
@@ -371,7 +371,7 @@ class product_pricelist(osv.osv):
                 'ORDER BY sequence',
                 (tmpl_id, prod_id, plversion['id'], qty))
             res1 = cr.dictfetchall()
-            
+
             for res in res1:
                 item_id = 0
                 if res:
@@ -386,7 +386,7 @@ class product_pricelist(osv.osv):
                                     res['base_pricelist_id']).currency_id.id
                             price = currency_obj.compute(cr, uid, ptype_src,
                                     res['currency_id'], price_tmp, round=False)
-                            break    
+                            break
                     elif res['base'] == -2:
                         where = []
                         if partner:
@@ -413,7 +413,7 @@ class product_pricelist(osv.osv):
 
                     if price:
                         price_limit = price
-        
+
                         price = price * (1.0+(res['price_discount'] or 0.0))
                         price = rounding(price, res['price_round'])
                         price += (res['price_surcharge'] or 0.0)
@@ -422,14 +422,14 @@ class product_pricelist(osv.osv):
                         if res['price_max_margin']:
                             price = min(price, price_limit+res['price_max_margin'])
                         item_id = res['id']
-                        break    
+                        break
 
                 else:
                     # False means no valid line found ! But we may not raise an
                     # exception here because it breaks the search
                     price = False
             result[id] = price
-            result['item_id'] = {id: item_id}    
+            result['item_id'] = {id: item_id}
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)
                 uom = product.uos_id or product.uom_id
@@ -559,7 +559,7 @@ class product_pricelist_item(osv.osv):
     }
 
     _constraints = [
-        (_check_recursion, _('Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!'), ['base_pricelist_id'])
+        (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id'])
     ]
 
     def product_id_change(self, cr, uid, ids, product_id, context={}):

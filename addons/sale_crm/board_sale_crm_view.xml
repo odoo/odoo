@@ -62,28 +62,17 @@
             </field>
         </record>
 
-         <record model="ir.ui.view" id="board_crm_form_inherit_child2">
-            <field name="name">board.crm.form.inherit.child2</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.board_crm_form"/>
-            <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="after">
-		            <action
-		                string="Monthly Turnover"
-		                name="%(action_turnover_by_month)d"
-		                colspan="4"/>
-	            </xpath>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="board_crm_form_inherit_replace1">
+      <record model="ir.ui.view" id="board_crm_form_inherit_replace1">
             <field name="name">board.crm.form.inherit.replace1</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.board_crm_form"/>
             <field name="arch" type="xml">
 	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="replace">
+	                <action
+		                string="Monthly Turnover"
+		                name="%(action_turnover_by_month)d"
+		                colspan="4"/>
 	            </xpath>
             </field>
         </record>

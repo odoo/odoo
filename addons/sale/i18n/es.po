@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 00:08+0000\n"
+"PO-Revision-Date: 2010-11-29 07:25+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-11-30 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -213,6 +213,10 @@ msgid ""
 "this list if you invoice based on the delivery orders or if you invoice "
 "sales totally."
 msgstr ""
+"Aquí tiene una lista de todas las líneas de pedidos de venta que deben ser "
+"facturadas. Esta vista le permite facturar parcialmente pedidos de venta, "
+"por líneas. No necesita esta lista si factura basándose en albaranes de "
+"entrega o si factura las ventas integralmente."
 
 #. module: sale
 #: constraint:product.template:0
@@ -781,6 +785,8 @@ msgid ""
 "You cannot make an advance on a sale order                              that "
 "is defined as 'Automatic Invoice after delivery'."
 msgstr ""
+"No puede realizar un avance de factura de un pedido de venta definido como "
+"'Factura automática después envío'."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -1566,7 +1572,7 @@ msgstr "Ventas por comercial"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Logistic"
+msgid "Logistics"
 msgstr "Logística"
 
 #. module: sale
@@ -2081,6 +2087,11 @@ msgid ""
 "or sale order, it has to be linked to a shop. The shop also defines the "
 "warehouse from which the products will be delivered for each particular sale."
 msgstr ""
+"Si tiene más de una tienda que vende los productos de su empresa, puede "
+"crearlas y gestionarlas desde aquí. Cuando cree un nuevo presupuesto o "
+"pedido de venta, deb ser relacionado con una tienda. La tienda define "
+"también el almacén desde el cual los productos serán enviados para cada "
+"venta."
 
 #. module: sale
 #: report:sale.order:0
@@ -2197,9 +2208,6 @@ msgstr "Facturar desde albaranes"
 
 #~ msgid "In progress"
 #~ msgstr "En progreso"
-
-#~ msgid "Configure Sale Order Logistic"
-#~ msgstr "Configurar la logística de los pedidos de venta"
 
 #~ msgid "Recreate Procurement"
 #~ msgstr "Recrear abastecimiento"
@@ -2657,6 +2665,9 @@ msgstr "Facturar desde albaranes"
 #~ "comercial. En función del control de facturación del pedido de venta, la "
 #~ "factura se basa en las cantidades enviadas o en las ordenadas."
 
+#~ msgid "Logistic"
+#~ msgstr "Logística"
+
 #, python-format
 #~ msgid ""
 #~ "You cannot make an advance on a sale order \\n                             "
@@ -2664,3 +2675,6 @@ msgstr "Facturar desde albaranes"
 #~ msgstr ""
 #~ "No se puede hacer un anticipo de un pedido de venta \\n que esté defino como "
 #~ "'Facturar pedido después del envío'."
+
+#~ msgid "Configure Sale Order Logistics"
+#~ msgstr "Configurar la logística de los pedidos de venta"

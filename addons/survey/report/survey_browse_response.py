@@ -52,7 +52,7 @@ class survey_browse_response(report_rml):
         _frame_height = tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.90))+'cm'
         _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
         rml ="""<document filename="Survey Answer Report.pdf">
-                <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Answer.pdf' author="Martin Simon" allowSplitting="20" >
+                <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Answer' author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20" >
                     <pageTemplate id="first">
                         <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
                         <pageGraphics>

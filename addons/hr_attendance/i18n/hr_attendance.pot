@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:05+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:05+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:35+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,11 +23,6 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: hr_attendance
@@ -67,10 +62,8 @@ msgid "The sign-out date must be in the past"
 msgstr ""
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
 msgstr ""
 
 #. module: hr_attendance
@@ -108,6 +101,11 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
+msgstr ""
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
 
 #. module: hr_attendance
@@ -174,19 +172,9 @@ msgid "Max. Delay (Min)"
 msgstr ""
 
 #. module: hr_attendance
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 msgid "Print"
-msgstr ""
-
-#. module: hr_attendance
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_attendance
@@ -214,11 +202,6 @@ msgstr ""
 #: field:hr.attendance.error,init_date:0
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: hr_attendance
@@ -298,11 +281,6 @@ msgid "hr.sign.out.ask"
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "August"
 msgstr ""
@@ -339,6 +317,11 @@ msgid "November"
 msgstr ""
 
 #. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr ""
@@ -354,8 +337,10 @@ msgid "January"
 msgstr ""
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign in"
 msgstr ""
 
 #. module: hr_attendance
@@ -385,12 +370,6 @@ msgid "If you need your staff to sign in when they arrive at work and sign out a
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
-#, python-format
-msgid "No records found for your selection!"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr ""
@@ -402,26 +381,11 @@ msgid "Empoyee ID"
 msgstr ""
 
 #. module: hr_attendance
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
-msgstr ""
-
-#. module: hr_attendance
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_attendance
@@ -544,8 +508,9 @@ msgid "Bellow this delay, the error is considered to be voluntary"
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
 msgstr ""
 
 #. module: hr_attendance

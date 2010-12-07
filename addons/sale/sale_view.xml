@@ -138,7 +138,7 @@
                                                 <field groups="product.group_uos" name="product_uos_qty"/>
                                                 <field groups="product.group_uos" name="product_uos"/>
                                             <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)" domain="[('category_id','=', product_id.uom_id.category_id.id)]"/>
                                             <field
                                                 name="product_packaging"
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
@@ -218,7 +218,7 @@
                             </group>
                         </page>
                         <page string="Other Information">
-                            <group colspan="2" col="2" groups="base.group_extended" name="logistic">
+                            <group colspan="2" col="2" groups="base.group_extended" name="logistics">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm" widget="selection"/>
                                 <field name="picking_policy" required="True"/>
@@ -540,7 +540,7 @@
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string">Configure Sales Order Logistic</attribute>
+                <attribute name="string">Configure Sales Order Logistics</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>

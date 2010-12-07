@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="Yearly Salary Details.pdf">
-  <template pageSize="(1120.0,770.0)" title="Yearly Salary Details" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(842.0,595.0)" title="Yearly Salary Details" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="28.0" y1="28.0" width="1064" height="714"/>
+      <frame id="first" x1="28.0" y1="57.0" width="786" height="481"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -137,9 +137,55 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_header_Centre">
-      <font color="white"> </font>
-    </para>
+	<pto>
+	<pto_header>
+	<blockTable colWidths="117.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,57.0" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Name</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[0] != 'None' and m[0] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[1] != 'None' and m[1] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[2] != 'None' and m[2] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[3] != 'None' and m[3] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[4] != 'None' and m[4] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[5] != 'None' and m[5] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[6] != 'None' and m[6] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[7] != 'None' and m[7] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[8] != 'None' and m[8] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[9] != 'None' and m[9] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[10] != 'None' and m[10] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[11] != 'None' and m[11] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Total</para>
+          </td>
+        </tr>
+      </blockTable>
+	</pto_header>
     <para style="terp_header_Centre">Yearly Salary Details </para>
     <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
     <para style="terp_default_space">
@@ -147,7 +193,7 @@
     </para>
     <section>
       <para style="terp_default_1">[[ repeatIn(get_periods(data['form']),'m') ]]</para>
-      <blockTable colWidths="99.0,73.0,69.0,74.0,71.0,73.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table4">
+      <blockTable colWidths="117.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,57.0" style="Table4">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Name</para>
@@ -195,7 +241,7 @@
       </blockTable>
       <section>
         <para style="terp_default_1">[[ repeatIn(get_employee(data['form']),'e') ]]</para>
-        <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table1">
+        <blockTable colWidths="117.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,57.0" style="Table1">
           <tr>
             <td>
               <para style="terp_default_9">[[ e[0] ]]</para>
@@ -269,7 +315,7 @@
     </section>
     <section>
       <para style="terp_default_1">[[ repeatIn(get_months_tol(),'t') ]]</para>
-      <blockTable colWidths="99.0,73.0,69.0,74.0,70.0,75.0,74.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table6">
+      <blockTable colWidths="117.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,51.0,57.0" style="Table6">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Total</para>
@@ -315,9 +361,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
     </section>
+    </pto>
   </story>
 </document>

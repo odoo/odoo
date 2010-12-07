@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-22 07:54+0000\n"
+"PO-Revision-Date: 2010-12-01 09:43+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -223,7 +223,7 @@ msgstr "Stück"
 #. module: product
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: product
 #: view:product.template:0
@@ -415,7 +415,7 @@ msgstr "IT Komponenten"
 #. module: product
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -533,7 +533,7 @@ msgstr "Metallwaren"
 msgid ""
 "No active version for the selected pricelist !\n"
 "Please create or activate one."
-msgstr ""
+msgstr "Keine aktive Version der ausgewählten Preisliste verfügbar!"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -971,6 +971,14 @@ msgid ""
 "version has several rules. Example: the customer price of this category of "
 "product will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"Eine Preisliste besteht aus Regeln die genutzt werden, um den Einkaufs- oder "
+"Verkaufspreis für alle Partner oder Produkte (oder deren Kategorien) die der "
+"Liste zugeordnet sind zu berechnen. Preislisten können aus mehreren "
+"Versionen (2010, 2011, Promotion Februar 2010, etc.) bestehen und jede "
+"Version hat eigene Regeln. \r\n"
+"Beispiel: Der Verkaufspreis für Produkte der Produktkategorie "
+"\"Büromaterial\" basiert auf dem Einkaufspreis multipliziert mit 1.80 und "
+"gilt nur für Kunden der Kategorie \"Norddeutschland\"."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1012,6 +1020,11 @@ msgid ""
 "contains a detailed information of your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Alle Produkte, die Sie ein- oder verkaufen, müssen definiert werden. "
+"Produkte können Rohstoffe, Lagerprodukte, Verbrauchswaren oder "
+"Dienstleistungen sein. Das Eingabeformular für die Erstellung von Produkten "
+"beinhaltet detaillierte Informationen z.B. über die Beschaffung, Preise, "
+"Kategoriezuordnung, Lieferanten, Lieferzeiten etc."
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -1048,7 +1061,7 @@ msgstr "Preisliste Einzelpositionen"
 #. module: product
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Die Verknüpfung existiert bereits für dieses Menü!"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1082,6 +1095,10 @@ msgid ""
 "You can define a conversion rate to be used between the several Unit of "
 "Measure within the same category."
 msgstr ""
+"Erstellen und verwalten Sie Mengeneinheiten, die Sie in Ihrem System nutzen "
+"wollen. Sie können Umrechnungsfaktoren definieren, die eine Umrechnung "
+"zwischen Einheiten derselben Kategorie ermöglicht. \r\n"
+"Beispiel: m --> km Faktor 1000"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1266,7 +1283,7 @@ msgstr "Partner"
 #. module: product
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1286,6 +1303,11 @@ msgid ""
 "be converted within each other. For example, in the unit of measure category "
 "\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
+"Erstellen und verwalten Sie Mengeneinheiten, die Sie in Ihrem System nutzen "
+"wollen. Existieren mehrere Megeneinheiten zu einer Kategorie können diese "
+"über Faktoren umgerechnet werden.\r\n"
+"Für die Kategorie \"Zeit\" beispielsweise könnten Sie folgende Einheiten "
+"anlegen: Minuten, Stunden, Tage,..."
 
 #. module: product
 #: view:product.product:0
@@ -1304,7 +1326,7 @@ msgstr "Wood Lintel 4m"
 #: model:ir.ui.menu,name:product.next_id_16
 #: view:product.uom:0
 msgid "Units of Measure"
-msgstr "Mengeneinheit"
+msgstr "Mengeneinheiten"
 
 #. module: product
 #: field:product.supplierinfo,min_qty:0
@@ -1339,7 +1361,7 @@ msgstr "Preisliste Version"
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "Verbrauchswaren"
+msgstr "Verbrauchsware"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -1442,14 +1464,14 @@ msgstr "cm"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Mengeneinheit (ME)"
+msgstr "Produkt Mengeneinheit (ME)"
 
 #. module: product
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Fehler: Die Standard Mengeneinheit sowie die Beschaffungs ME muss in "
+"Fehler: Die Standard Mengeneinheit sowie die Einkauf Mengeneinheit muss in "
 "derselben Kategorie sein."
 
 #. module: product
@@ -1702,7 +1724,7 @@ msgstr "Box 30x40x60"
 #. module: product
 #: selection:product.template,type:0
 msgid "Service"
-msgstr "Service"
+msgstr "Dienstleistung"
 
 #. module: product
 #: help:product.packaging,height:0

@@ -111,6 +111,31 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="49.0,204.0,45.0,80.0,53.0,91.0" style="Table_hr_expense_line_header">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Ref.</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Qty</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Total Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
@@ -272,5 +297,6 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">This document must be dated and signed for reimbursement</para>
+  </pto>
   </story>
 </document>
