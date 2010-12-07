@@ -35,6 +35,9 @@ import urllib
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 from cache import memoize
 from tools import misc
+
+from webdav import mk_lock_response
+
 try:
     from tools.dict_tools import dict_merge2
 except ImportError:
@@ -209,18 +212,20 @@ class openerp_dav_handler(dav_interface):
             self.parent.log_error("Cannot %s: %s", opname, err.strerror)
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc(err.strerror)
-        except Exception,e:
+        except Exception, e:
             import traceback
             if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc("Operation failed")
 
-    #def _get_dav_lockdiscovery(self, uri):
-    #    raise DAV_NotFound
+    def _get_dav_lockdiscovery(self, uri):
+        """ We raise that so that the node API is used """
+        raise DAV_NotFound
 
-    #def A_get_dav_supportedlock(self, uri):
-    #    raise DAV_NotFound
+    def _get_dav_supportedlock(self, uri):
+        """ We raise that so that the node API is used """
+        raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):
         if self.M_NS.has_key(ns):
@@ -910,6 +915,91 @@ class openerp_dav_handler(dav_interface):
             pass
         cr.close()
         return result
+
+    def unlock(self, uri, token):
+        """ Unlock a resource from that token 
+        
+        @return True if unlocked, False if no lock existed, Exceptions
+        """
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not dbname:
+            if cr: cr.close()
+            raise DAV_Error, 409
+
+        node = self.uri2object(cr, uid, pool, uri2)
+        try:
+            node_fn = node.dav_unlock
+        except AttributeError:
+            # perhaps the node doesn't support locks
+            cr.close()
+            raise DAV_Error(400, 'No locks for this resource')
+
+        res = self._try_function(node_fn, (cr, token), "unlock %s" % uri, cr=cr)
+        cr.commit()
+        cr.close()
+        return res
+
+    def lock(self, uri, lock_data):
+        """ Lock (may create) resource.
+            Data is a dict, may contain:
+                depth, token, refresh, lockscope, locktype, owner
+        """
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        created = False
+        if not dbname:
+            if cr: cr.close()
+            raise DAV_Error, 409
+
+        try:
+            node = self.uri2object(cr, uid, pool, uri2[:])
+        except Exception:
+            node = False
+        
+        objname = misc.ustr(uri2[-1])
+        
+        if not node:
+            dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
+            if not dir_node:
+                cr.close()
+                raise DAV_NotFound('Parent folder not found')
+
+            # We create a new node (file) but with empty data=None,
+            # as in RFC4918 p. 9.10.4
+            node = self._try_function(dir_node.create_child, (cr, objname, None),
+                    "create %s" % objname, cr=cr)
+            if not node:
+                cr.commit()
+                cr.close()
+                raise DAV_Error(400, "Failed to create resource")
+            
+            created = True
+
+        try:
+            node_fn = node.dav_lock
+        except AttributeError:
+            # perhaps the node doesn't support locks
+            cr.close()
+            raise DAV_Error(400, 'No locks for this resource')
+
+        # Obtain the lock on the node
+        lres, pid, token = self._try_function(node_fn, (cr, lock_data), "lock %s" % objname, cr=cr)
+
+        if not lres:
+            cr.commit()
+            cr.close()
+            raise DAV_Error(423, "Resource already locked")
+        
+        assert isinstance(lres, list), 'lres: %s' % repr(lres)
+        
+        try:
+            data = mk_lock_response(self, uri, lres)
+            cr.commit()
+        except Exception:
+            cr.close()
+            raise
+
+        cr.close()
+        return created, data, token
 
     @memoize(CACHE_SIZE)
     def is_collection(self, uri):
