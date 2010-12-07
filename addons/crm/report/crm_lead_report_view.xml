@@ -134,7 +134,8 @@
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
-                            context="{'group_by':'company_id'}" />
+                            context="{'group_by':'company_id'}" 
+                            groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />

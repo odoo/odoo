@@ -87,7 +87,7 @@
                                 help="My Sales Team(s)" />
 
                         </field>
-                        <field name="company_id">
+                        <field name="company_id" groups="base.group_multi_company">
                             <filter icon="terp-go-home"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id.company_id','=',uid)]"
