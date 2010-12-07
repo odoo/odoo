@@ -119,11 +119,11 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'priority': lambda *a: '1',
+        'state': 'draft',
+        'priority': '1',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'close_move': lambda *a: 0,
-        'procure_method': lambda *a: 'make_to_order',
+        'close_move': 0,
+        'procure_method': 'make_to_order',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
