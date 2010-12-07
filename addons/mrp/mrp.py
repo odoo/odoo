@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Product'),
+        'product_id': fields.many2one('product.product','Workcenter Product', help="Fill this product to track easily your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
@@ -111,8 +111,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of operations this workcenter can do."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for doing one cycle."),
+            help="Number of iterations this workcenter has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this workcenter to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -760,7 +760,7 @@ class mrp_production(osv.osv):
                         'journal_id': wc.costs_journal_id.id,
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
-                        'unit_amount': wc.costs_hour * wc.time_cycle,
+                        'unit_amount': wc_line.hour,
                         'product_uom_id': wc.product_id.uom_id.id
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
@@ -776,7 +776,7 @@ class mrp_production(osv.osv):
                         'journal_id': wc.costs_journal_id.id,
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
-                        'unit_amount': wc.costs_hour * wc.time_cycle,
+                        'unit_amount': wc_line.cycle,
                         'product_uom_id': wc.product_id.uom_id.id
                     } )
         return amount
