@@ -106,7 +106,7 @@
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
                         </field>
-                        <field name="company_id">
+                        <field name="company_id" groups="base.group_multi_company">
                             <filter icon="terp-go-home"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id.company_id','=',uid)]"
@@ -147,8 +147,9 @@
                         <separator orientation="vertical" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
+                            groups="base.group_multi_company"
                             context="{'group_by':'company_id'}" />
-                        <separator orientation="vertical" />
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Day" icon="terp-go-today"
                             domain="[]" context="{'group_by':'day'}"
                             help="Date of fundraising"/>
