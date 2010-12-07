@@ -2857,7 +2857,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
-                'type': 'other',
+                'type': 'liquidity',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
@@ -2879,7 +2879,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
-            vals_journal['type'] = 'cash'
+            vals_journal['type'] = line.account_type == 'cash' and 'cash' or 'bank'
             vals_journal['company_id'] =  company_id
             vals_journal['analytic_journal_id'] = analitical_journal_bank
 
