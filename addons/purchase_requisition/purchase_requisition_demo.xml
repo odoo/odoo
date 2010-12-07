@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_purchase_requisition_user'))]" name="groups_id"/>
+        </record>
+
     <!--Resource: purchase.requisition-->
-    	
+
 		<record id="order_purchase_requisition1" model="purchase.requisition">
             <field name="name">TE0001</field>
             <field name="user_id" model="res.users"/>
             <field name="exclusive">multiple</field>
             <field name="date_start">2010/09/16 15:56:14</field>
-            <field name="warehouse_id" model="stock.warehouse"/>
+            <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
 		</record>
-        
+
         <!--Resource: purchase.requisition.line-->
-        
+
         <record id="line_purchase_requisition1" model="purchase.requisition.line">
             <field name="requisition_id" ref="order_purchase_requisition1"/>
-            <field name="product_id" ref="product.product_product_pc3"/> 
+            <field name="product_id" ref="product.product_product_pc3"/>
             <field name="product_uom_id" model="product.uom" search="[]"/>
             <field name="product_qty">5</field>
         </record>
-        
-        
+
+
     </data>
 </openerp>
-    

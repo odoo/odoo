@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:50+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:50+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:21+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,6 @@ msgid "Provide path for Remote Calendar"
 msgstr ""
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_import
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
 msgid "Import .ics File"
 msgstr ""
@@ -50,6 +49,11 @@ msgstr ""
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Attendee"
+msgstr ""
+
+#. module: caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
 msgstr ""
 
 #. module: caldav
@@ -94,6 +98,7 @@ msgstr ""
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/wizard/calendar_event_import.py:0
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -161,11 +166,6 @@ msgid "Error! You can not create recursive Directories."
 msgstr ""
 
 #. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: caldav
 #: field:basic.calendar,type:0
 #: field:basic.calendar.attributes,type:0
 #: field:basic.calendar.fields,type_id:0
@@ -176,11 +176,6 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar,description:0
 msgid "description"
-msgstr ""
-
-#. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: caldav
@@ -197,11 +192,6 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: caldav
@@ -243,8 +233,15 @@ msgid "Calendar"
 msgstr ""
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/wizard/calendar_event_import.py:0
+#, python-format
+msgid "Invalid format of the ics, file can not be imported"
 msgstr ""
 
 #. module: caldav
@@ -263,21 +260,6 @@ msgid "Message..."
 msgstr ""
 
 #. module: caldav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: caldav
-#: model:ir.model,name:caldav.model_basic_calendar
-msgid "basic.calendar"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
@@ -292,6 +274,7 @@ msgstr ""
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
 msgstr ""
@@ -357,13 +340,8 @@ msgid "Fields Mapping"
 msgstr ""
 
 #. module: caldav
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:caldav.model_basic_calendar
+msgid "basic.calendar"
 msgstr ""
 
 #. module: caldav
@@ -456,9 +434,19 @@ msgid "Attendee must have an Email Id"
 msgstr ""
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_export
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid "vobject Import Error!"
+msgstr ""
+
+#. module: caldav
+#: view:basic.calendar:0
+msgid "MY"
 msgstr ""
 
 #. module: caldav
@@ -483,7 +471,7 @@ msgstr ""
 
 #. module: caldav
 #: view:basic.calendar:0
-msgid "MY"
+msgid "Todo"
 msgstr ""
 
 #. module: caldav

@@ -60,11 +60,7 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
-        if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
-        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
 
         self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
@@ -83,12 +79,7 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
-        value = {}
-        if stage_id:
-            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
-            value['stage_id'] = stage_id
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
 
         res = self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):

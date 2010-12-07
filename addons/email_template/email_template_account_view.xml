@@ -3,7 +3,7 @@
     <data>
 
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"
-            groups="marketing.group_marketing_user"/>
+            groups="marketing.group_marketing_user,marketing.group_marketing_manager"/>
         <menuitem name="Emails" id="base.menu_emails" parent="base.marketing_menu" sequence="5"/>
         <menuitem name="Email Template" id="menu_email_template" parent="base.menu_emails"/>
 
@@ -106,10 +106,6 @@
         <menuitem name="Email Template" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
 
         <menuitem name="Email Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all"/>
-
-        <!-- Email Template account menu in Tools -->
-
-        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
 
         <menuitem name="Configuration" parent="base.menu_tools"
               id="base.menu_lunch_survey_root" sequence="20" />

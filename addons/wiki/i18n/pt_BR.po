@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2009-09-08 12:08+0000\n"
-"Last-Translator: Aldo Giovani <aldogiovani@gmail.com>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 19:23+0000\n"
+"Last-Translator: Nédio Batista Marques <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -30,19 +30,6 @@ msgstr "Páginas do Wiki"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: wiki
@@ -71,11 +58,6 @@ msgstr "Seção"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Fazer Seção ?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -116,8 +98,8 @@ msgid "Parent Menu"
 msgstr "Menu Superior(pai)"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -145,24 +127,24 @@ msgstr "Linhas de Histórico"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Page Content"
-msgstr ""
+msgstr "Conteúdo da Página"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Atenção !"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "There are no changes in revisions"
-msgstr ""
+msgstr "Não há alterações nas revisões"
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
-msgstr ""
+msgstr "Gerenciamento de Documentos - Wiki"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_name:0
@@ -195,7 +177,7 @@ msgstr "Menu de Informação"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "Page History"
-msgstr ""
+msgstr "Página do Histórico"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -216,7 +198,7 @@ msgstr ""
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Atenção"
 
 #. module: wiki
 #: help:wiki.groups,home:0
@@ -238,17 +220,17 @@ msgstr "Quer criar um índice em páginas selecionadas? "
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
 #: view:wizard.wiki.history.show_diff:0
 msgid "Difference"
-msgstr ""
+msgstr "Diferença"
 
 #. module: wiki
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
-msgstr "Páginas"
+msgstr "P&aacute;ginas"
 
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Group Description"
-msgstr ""
+msgstr "Descrição do grupo"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -261,9 +243,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Fazer Seção ?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -310,7 +292,7 @@ msgstr "Todas as Páginas de Históricos"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: help:wiki.groups,method:0
@@ -349,11 +331,6 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
-
-#. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
@@ -386,6 +363,15 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -465,6 +451,12 @@ msgstr ""
 msgid "Search Page"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
 #~ msgid "Wiki Groups Links"
 #~ msgstr "Links dos Grupos do Wiki"
 
@@ -491,6 +483,9 @@ msgstr ""
 
 #~ msgid "Document Management"
 #~ msgstr "Gerenciamento de Documentos"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
 
 #~ msgid "Parent Group"
 #~ msgstr "Grupo Superior(pai)"

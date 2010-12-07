@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:52+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:52+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:15+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,20 +26,13 @@ msgid "Number of Layers"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
 msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
-msgstr ""
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: product
@@ -197,11 +190,6 @@ msgid "PCE"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: product
 #: view:product.template:0
 msgid "Miscelleanous"
 msgstr ""
@@ -354,6 +342,7 @@ msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr ""
 
@@ -365,11 +354,6 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
-msgstr ""
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: product
@@ -477,6 +461,11 @@ msgid "Working Time"
 msgstr ""
 
 #. module: product
+#: help:product.product,active:0
+msgid "If the active field is set to False, it will allow you to hide the product without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr ""
@@ -549,6 +538,7 @@ msgid "Restaurant Expenses"
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr ""
@@ -611,11 +601,6 @@ msgstr ""
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
-msgstr ""
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid "If the active field is set to true, it will allow you to hide the pricelist without removing it."
 msgstr ""
 
 #. module: product
@@ -739,11 +724,6 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: product
@@ -946,11 +926,6 @@ msgid "Price List Items"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr ""
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr ""
@@ -1004,13 +979,13 @@ msgid "Stockable"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
 msgstr ""
 
 #. module: product
@@ -1142,8 +1117,8 @@ msgid "Partners"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: product
@@ -1163,8 +1138,9 @@ msgid "Second UoM"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: product
@@ -1257,6 +1233,12 @@ msgid "Regular processor config"
 msgstr ""
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM m to Default UoM PCE is not possible as they both belong to different Category!."
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr ""
@@ -1274,6 +1256,11 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
+msgstr ""
+
+#. module: product
+#: help:product.pricelist,active:0
+msgid "If the active field is set to False, it will allow you to hide the pricelist without removing it."
 msgstr ""
 
 #. module: product
@@ -1297,8 +1284,13 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr ""
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
 msgstr ""
 
 #. module: product
@@ -1408,11 +1400,6 @@ msgid "Onsite Intervention"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr ""
@@ -1425,11 +1412,6 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: product
@@ -1557,11 +1539,6 @@ msgid "Company"
 msgstr ""
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr ""
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr ""
@@ -1675,11 +1652,6 @@ msgid "Supplier Product UoM."
 msgstr ""
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr ""
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1735,11 +1707,6 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr ""
-
-#. module: product
-#: help:product.product,active:0
-msgid "If the active field is set to true, it will allow you to hide the product without removing it."
 msgstr ""
 
 #. module: product
@@ -1842,6 +1809,11 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Weigths"
+msgstr ""
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: product
@@ -1949,11 +1921,6 @@ msgid "RAM on demand"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr ""
@@ -2053,11 +2020,6 @@ msgstr ""
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Palletization"
-msgstr ""
-
-#. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
 msgstr ""
 
 #. module: product

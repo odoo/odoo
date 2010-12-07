@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:32+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:32+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:57+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,53 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_lu
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: l10n_lu
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_equity
-msgid "Equity"
-msgstr ""
-
-#. module: l10n_lu
-#: model:ir.ui.menu,name:l10n_lu.legal_lu
-msgid "Luxembourg"
-msgstr ""
-
-#. module: l10n_lu
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_asset
-msgid "Asset"
-msgstr ""
-
-#. module: l10n_lu
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_income
-msgid "Income"
-msgstr ""
-
-#. module: l10n_lu
 #: view:vat.declaration.report:0
 msgid "Print Tax Statements"
 msgstr ""
 
 #. module: l10n_lu
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
+#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
+#: model:ir.model,name:l10n_lu.model_vat_declaration_report
+msgid "VAT Declaration Report"
 msgstr ""
 
 #. module: l10n_lu
@@ -71,8 +32,23 @@ msgid "Company"
 msgstr ""
 
 #. module: l10n_lu
-#: model:ir.ui.menu,name:l10n_lu.legal_lu_vat
-msgid "VAT Declaration"
+#: model:account.account.type,name:l10n_lu.account_type_income
+msgid "Income"
+msgstr ""
+
+#. module: l10n_lu
+#: model:account.account.type,name:l10n_lu.account_type_cash_moves
+msgid "Cash"
+msgstr ""
+
+#. module: l10n_lu
+#: model:ir.ui.menu,name:l10n_lu.legal_lu
+msgid "Luxembourg"
+msgstr ""
+
+#. module: l10n_lu
+#: field:vat.declaration.report,period_id:0
+msgid "Period"
 msgstr ""
 
 #. module: l10n_lu
@@ -81,23 +57,35 @@ msgid "Liability"
 msgstr ""
 
 #. module: l10n_lu
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
+#: code:addons/l10n_lu/wizard/print_vat.py:0
+#, python-format
+msgid "pdf not created !"
 msgstr ""
 
 #. module: l10n_lu
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: model:ir.ui.menu,name:l10n_lu.legal_lu_vat
+msgid "VAT Declaration"
 msgstr ""
 
 #. module: l10n_lu
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:account.account.type,name:l10n_lu.account_type_asset
+msgid "Asset"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_moves
-msgid "Cash"
+#: code:addons/l10n_lu/wizard/print_vat.py:0
+#, python-format
+msgid "Please check if package pdftk is installed!"
+msgstr ""
+
+#. module: l10n_lu
+#: model:account.account.type,name:l10n_lu.account_type_cash_equity
+msgid "Equity"
+msgstr ""
+
+#. module: l10n_lu
+#: view:vat.declaration.report:0
+msgid "Cancel"
 msgstr ""
 
 #. module: l10n_lu
@@ -111,45 +99,12 @@ msgid "Expense"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_root
-msgid "View"
-msgstr ""
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
-#, python-format
-msgid "pdf not created !"
-msgstr ""
-
-#. module: l10n_lu
-#: field:vat.declaration.report,period_id:0
-msgid "Period"
-msgstr ""
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
-#, python-format
-msgid "Please check if package pdftk is installed!"
-msgstr ""
-
-#. module: l10n_lu
-#: view:vat.declaration.report:0
-msgid "Cancel"
-msgstr ""
-
-#. module: l10n_lu
-#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
-#: model:ir.model,name:l10n_lu.model_vat_declaration_report
-msgid "VAT Declaration Report"
-msgstr ""
-
-#. module: l10n_lu
 #: model:account.account.type,name:l10n_lu.account_type_creances
 msgid "Créances"
 msgstr ""
 
 #. module: l10n_lu
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:account.account.type,name:l10n_lu.account_type_root
+msgid "View"
 msgstr ""
 

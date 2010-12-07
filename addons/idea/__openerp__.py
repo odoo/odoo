@@ -33,7 +33,7 @@
     Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['base'],
+    'depends': ['base_tools'],
     'init_xml': [],
     'update_xml': [
         'security/idea_security.xml',
