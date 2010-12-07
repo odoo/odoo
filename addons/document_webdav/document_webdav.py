@@ -80,6 +80,10 @@ class dav_dir_property(osv.osv):
     _name = 'document.webdav.dir.property'
     
     _columns = {
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'write_date': fields.datetime('Date Modified', readonly=True),
+        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'dir_id': fields.many2one('document.directory', 'Directory', required=False, select=1),
         'namespace': fields.char('Namespace', size=127, required=True),
         'name': fields.char('Name', size=64, required=True),
@@ -92,5 +96,35 @@ class dav_dir_property(osv.osv):
         }
         
 dav_dir_property()
+
+class dav_file_property(osv.osv):
+    """ Arbitrary WebDAV properties, attached to ir.attachments.
+    
+    A special case is the locks that can be applied on file nodes.
+    
+    There _can_ be properties without a file (RFC?), which means that they
+    globally apply to all the attachments of the present database.
+    
+    TODO access permissions, per property.
+    """
+    _name = 'document.webdav.file.property'
+    
+    _columns = {
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'write_date': fields.datetime('Date Modified', readonly=True),
+        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'file_id': fields.many2one('ir.attachment', 'Document', required=False, select=1),
+        'namespace': fields.char('Namespace', size=127, required=True),
+        'name': fields.char('Name', size=64, required=True),
+        'value': fields.text('Value'),
+        'do_subst': fields.boolean('Substitute', required=True),
+        }
+        
+    _defaults = {
+        'do_subst': False,
+        }
+        
+dav_file_property()
 
 #eof
