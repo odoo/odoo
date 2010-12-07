@@ -150,6 +150,7 @@ class email_server(osv.osv):
         context.update({'get_server': True})
         for server in self.browse(cr, uid, ids, context):
             count = 0
+            user = server.user_id.id or uid
             try:
                 if server.type == 'imap':
                     imap_server = self.button_confirm_login(cr, uid, [server.id], context=context)
@@ -157,7 +158,7 @@ class email_server(osv.osv):
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
@@ -174,7 +175,7 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, msg, attach=server.attach, context=context)
+                        res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
