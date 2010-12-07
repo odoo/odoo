@@ -40,8 +40,10 @@ def make_default(val):
 def _get_returns(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     pick_obj=pool.get('stock.picking')
-    pick=pick_obj.browse(cr, uid, [data['id']])[0]
-    res={}
+    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    if pick.state != 'done':
+        raise wizard.except_wizard(_('Warning'),_('You cannot return a packing which is not completed yet! Make sure the packing is in "done" state!'))
+    res = {}
     fields.clear()
     arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
     for m in [line for line in pick.move_lines]:
