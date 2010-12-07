@@ -346,7 +346,7 @@ class openerp_dav_handler(dav_interface):
         """ Return the base URI of this request, or even join it with the
             ajoin path elements
         """
-        return self.baseuri+ '/'.join(ajoin)
+        return self.parent.get_baseuri(self) + '/'.join(ajoin)
 
     @memoize(4)
     def db_list(self):
