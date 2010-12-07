@@ -2201,13 +2201,13 @@
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group>
-                    <field name="property_account_receivable"/>
-                    <field name="property_account_payable"/>
-                    <field name="property_account_expense_categ" />
-                    <field name="property_account_income_categ"/>
-                    <field name="property_account_expense"/>
-                    <field name="property_account_income"/>
-                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
+                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
