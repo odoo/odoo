@@ -164,6 +164,7 @@ class rml_parse(object):
             'lang' : user.company_id.partner_id.lang,
             'translate' : self._translate,
             'setHtmlImage' : self.set_html_image,
+            'strip_name' : self._strip_name,
             'time' : time
         }
         self.localcontext.update(context)
@@ -183,6 +184,14 @@ class rml_parse(object):
 
     def setTag(self, oldtag, newtag, attrs=None):
         return newtag, attrs
+
+    def _ellipsis(self, char, size=100, truncation_str='...'):
+        if len(char) <= size:
+            return char
+        return char[:size-len(truncation_str)] + truncation_str
+
+    def _strip_name(self, name, maxlen=50):
+        return self._ellipsis(name, maxlen)
 
     def format(self, text, oldtag=None):
         return text.strip()
@@ -204,13 +213,10 @@ class rml_parse(object):
                 return res['datas']
             else :
                 return ''
-        except Exception,e:
+        except Exception:
             return ''
 
     def setLang(self, lang):
-        if not lang or self.default_lang.has_key(lang):
-            if not lang:
-                key = 'en_US'
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
@@ -519,7 +525,6 @@ class report_sxw(report_rml, preprocess.report):
                               xml_declaration=True)
 
         rml_dom =  etree.XML(rml)
-        body = rml_dom[-1]
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"]+"p"
         key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"

@@ -28,6 +28,7 @@ from psycopg2.psycopg1 import cursor as psycopg1cursor
 from psycopg2.pool import PoolError
 
 import psycopg2.extensions
+import warnings
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -51,11 +52,11 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 import tools
-from tools.func import wraps
+from tools.func import wraps, frame_codeinfo
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
-from inspect import stack
+from inspect import currentframe
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
@@ -71,7 +72,7 @@ class Cursor(object):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if self.__closed:
-                raise psycopg2.ProgrammingError('Unable to use the cursor after having closed it')
+                raise psycopg2.OperationalError('Unable to use the cursor after having closed it')
             return f(self, *args, **kwargs)
         return wrapper
 
@@ -93,7 +94,10 @@ class Cursor(object):
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.__closed = False   # real initialisation value
         self.autocommit(False)
-        self.__caller = tuple(stack()[2][1:3])
+        if self.sql_log:
+            self.__caller = frame_codeinfo(currentframe(),2)
+        else:
+            self.__caller = False
 
     def __del__(self):
         if not self.__closed:
@@ -102,9 +106,12 @@ class Cursor(object):
             # but the database connection is not put back into the connection
             # pool, preventing some operation on the database like dropping it.
             # This can also lead to a server overload.
-            msg = "Cursor not closed explicitly\n"  \
-                  "Cursor was created at %s:%s"
-            self.__logger.warn(msg, *self.__caller)
+            msg = "Cursor not closed explicitly\n"
+            if self.__caller:
+                msg += "Cursor was created at %s:%s" % self.__caller
+            else:
+                msg += "Please enable sql debugging to trace the caller."
+            self.__logger.warn(msg)
             self._close(True)
 
     @check
@@ -290,7 +297,11 @@ class ConnectionPool(object):
                 # note: this code is called only if the for loop has completed (no break)
                 raise PoolError('The Connection Pool Is Full')
 
-        result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
+        try:
+            result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
+        except psycopg2.Error, e:
+            self.__logger.exception('Connection to the database failed')
+            raise
         self._connections.append((result, True))
         self._debug('Create new connection')
         return result
@@ -337,10 +348,12 @@ class Connection(object):
     def __nonzero__(self):
         """Check if connection is possible"""
         try:
+            warnings.warn("You use an expensive function to test a connection.",
+                      DeprecationWarning, stacklevel=1)
             cr = self.cursor()
             cr.close()
             return True
-        except:
+        except Exception:
             return False
 
 

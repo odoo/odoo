@@ -1,0 +1,46 @@
+-
+    Testing that some domain expressions work
+-
+    !python {model: res.partner.address }: |
+        ids = self.search(cr, uid, [('partner_id','=','Agrolait')])
+        assert len(ids) >= 1, ids
+-
+    Trying the "in" operator, for scalar value
+-
+    !python {model: res.partner.address }: |
+        ids = self.search(cr, uid, [('partner_id','in','Agrolait')])
+        assert len(ids) >= 1, ids
+-
+    Trying the "in" operator for list value
+-
+    !python {model: res.partner.address }: |
+        ids = self.search(cr, uid, [('partner_id','in',['Agrolait','ASUStek'])])
+        assert len(ids) >= 1, ids
+-
+    Check we can use "in" operator for plain fields.
+-
+    !python {model: ir.ui.menu }: |
+        ids = self.search(cr, uid, [('sequence','in',[1, 2, 10, 20])])
+        assert len(ids) >= 1, ids
+-
+    Test one2many operator with empty search list
+-
+    !assert {model: res.partner, search: "[('address', 'in', [])]", count: 0, string: "Ids should be empty"}
+-
+    Test one2many operator with False
+-
+    !assert {model: res.partner, search: "[('address', '=', False)]"}:
+        - address in (False, None, [])
+-
+    Test many2many operator with empty search list
+-
+    !assert {model: res.partner, search: "[('category_id', 'in', [])]", count: 0, string: "Ids should be empty"}
+-
+    Test many2many operator with False
+-
+    !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
+        - category_id in (False, None, [])
+- 
+    Filtering on invalid value across x2many relationship should return an empty set
+-
+    !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}

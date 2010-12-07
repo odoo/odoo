@@ -33,6 +33,7 @@ import time
 class groups(osv.osv):
     _name = "res.groups"
     _order = 'name'
+    _description = "Access Groups"
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
@@ -45,7 +46,7 @@ class groups(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
     ]
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': _('%s (copy)')%group_name})
         return super(groups, self).copy(cr, uid, id, default, context)
@@ -82,14 +83,14 @@ class groups(osv.osv):
 
 groups()
 
-def _lang_get(self, cr, uid, context={}):
+def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context)
+    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
     res = [(r['code'], r['name']) for r in res]
     return res
 
-def _tz_get(self,cr,uid, context={}):
+def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
 
 class users(osv.osv):
@@ -234,9 +235,10 @@ class users(osv.osv):
 
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {
-            'value': {
-                'warning' : _("Please keep in mind that data currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close the forms before switching to a different company (you can click on Cancel now)"),
-            }
+                'warning' : {
+                    'title': _("Company Switch Warning"),
+                    'message': _("Please keep in mind that documents currently displayed may not be relevant after switching to another company. If you have unsaved changes, please make sure to save and close all forms before switching to a different company. (You can click on Cancel in the User Preferences now)"),
+                }
         }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -263,7 +265,7 @@ class users(osv.osv):
     ]
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
+        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
 
     def _get_email_from(self, cr, uid, ids, context=None):
@@ -313,9 +315,9 @@ class users(osv.osv):
         return result
 
     _defaults = {
-        'password' : lambda *a : '',
-        'context_lang': lambda *args: 'en_US',
-        'active' : lambda *a: True,
+        'password' : '',
+        'context_lang': 'en_US',
+        'active' : True,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
@@ -371,7 +373,7 @@ class users(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids)
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
         if default is None:
             default = {}
@@ -393,25 +395,28 @@ class users(osv.osv):
                 result[k[8:]] = res or False
         return result
 
-    def action_get(self, cr, uid, context={}):
+    def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
-        return dataobj.browse(cr, uid, data_id, context).res_id
+        return dataobj.browse(cr, uid, data_id, context=context).res_id
 
 
     def login(self, db, login, password):
         if not password:
             return False
         cr = pooler.get_db(db).cursor()
-        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
-        res = cr.fetchone()
-        result = False
-        if res:
-            cr.execute("update res_users set date=%s where id=%s", (time.strftime('%Y-%m-%d %H:%M:%S'),res[0]))
+        try:
+            cr.execute('UPDATE res_users SET date=now() WHERE login=%s AND password=%s AND active RETURNING id',
+                    (tools.ustr(login), tools.ustr(password)))
+            res = cr.fetchone()
             cr.commit()
-            result = res[0]
-        cr.close()
-        return result
+            if res:
+                return res[0]
+            else:
+                return False
+        finally:
+            cr.close()
+
     def check_super(self, passwd):
         if passwd == tools.config['admin_passwd']:
             return True
@@ -425,29 +430,34 @@ class users(osv.osv):
         if (cached_pass is not None) and cached_pass == passwd:
             return True
         cr = pooler.get_db(db).cursor()
-        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
-        res = cr.fetchone()[0]
-        cr.close()
-        if not bool(res):
-            raise security.ExceptionNoTb('AccessDenied')
-        if res:
-            if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
-                ulist[uid] = passwd
-            else:
-                self._uid_cache[db] = {uid:passwd}
-        return bool(res)
+        try:
+            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s', 
+                        (int(uid), passwd, True))
+            res = cr.fetchone()[0]
+            if not bool(res):
+                raise security.ExceptionNoTb('AccessDenied')
+            if res:
+                if self._uid_cache.has_key(db):
+                    ulist = self._uid_cache[db]
+                    ulist[uid] = passwd
+                else:
+                    self._uid_cache[db] = {uid:passwd}
+            return bool(res)
+        finally:
+            cr.close()
 
     def access(self, db, uid, passwd, sec_level, ids):
         if not passwd:
             return False
         cr = pooler.get_db(db).cursor()
-        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
-        res = cr.fetchone()
-        cr.close()
-        if not res:
-            raise security.ExceptionNoTb('Bad username or password')
-        return res[0]
+        try:
+            cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
+            res = cr.fetchone()
+            if not res:
+                raise security.ExceptionNoTb('Bad username or password')
+            return res[0]
+        finally:
+            cr.close()
 
 users()
 
@@ -510,9 +520,19 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     }
 
     def unlink(self, cr, uid, ids, context=None):
+        group_users = []
         for record in self.read(cr, uid, ids, ['users'], context=context):
             if record['users']:
-                raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+                group_users.extend(record['users'])
+
+        if group_users:
+            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            if len(user_names) >= 5:
+                user_names = user_names[:5]
+                user_names += '...'
+            raise osv.except_osv(_('Warning !'), 
+                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
+                            ', '.join(user_names))
         return super(groups2, self).unlink(cr, uid, ids, context=context)
 
 groups2()

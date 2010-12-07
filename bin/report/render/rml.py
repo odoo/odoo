@@ -55,7 +55,7 @@ class rml2txt(render.render):
     def __init__(self, rml, localcontext= None, datas={}):
         super(rml2txt, self).__init__(datas)
         self.rml = rml
-	self.localcontext = localcontext
+        self.localcontext = localcontext
         self.output_type = 'txt'
 
     def _render(self):
