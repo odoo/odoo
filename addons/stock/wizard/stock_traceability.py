@@ -43,14 +43,10 @@ class action_traceability(osv.osv_memory):
         field = context['field'] or 'tracking_id'
         obj = self.pool.get('stock.move')
         ids = obj.search(cr, uid, [(field, 'in',lot_id)])
-        if type1 == 'move_history_ids2':
-            new_id = ids[1]
-        else:
-            new_id = ids[0]
         cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
         view_id = cr.fetchone()[0]
         value = {
-            'domain': "[('id','in',["+','.join(map(str, [new_id]))+"])]",
+            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
             'name': ((type1=='move_history_ids2') and 'Upstream Traceability') or 'Downstream Traceability',
             'view_type': 'tree',
             'res_model': 'stock.move',
