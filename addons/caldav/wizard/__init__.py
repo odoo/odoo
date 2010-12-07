@@ -22,6 +22,4 @@
 import calendar_event_export
 import calendar_event_import
 import calendar_event_subscribe
-import caldav_browse
-import caldav_configuration
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

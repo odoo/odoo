@@ -56,8 +56,6 @@
                     'wizard/calendar_event_export_view.xml',
                     'wizard/calendar_event_import_view.xml',
                     'wizard/calendar_event_subscribe_view.xml',
-                    'wizard/caldav_browse_view.xml',
-                    'wizard/caldav_configuration_view.xml',
                     'caldav_view.xml',
                     'caldav_setup.xml'
                     ], 
