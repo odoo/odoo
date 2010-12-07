@@ -730,8 +730,8 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                       <filter icon="terp-document-new" string="Draft"
-                           domain="[('state','=','draft')]"
+                       <filter icon="terp-camera_test" string="Ready"
+                           domain="[('state','=','ready')]"
                            help="Non confirmed manufacturing orders"/>
                        <filter icon="terp-check" string="Current" name="current"
                            default="1"
