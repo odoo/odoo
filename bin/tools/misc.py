@@ -141,15 +141,15 @@ def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    args2 = (os.path.basename(prog),) + args
+    args2 = (prog,) + args
     
-    return subprocess.call(args2, executable=prog)
+    return subprocess.call(args2)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+    pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
     return (pop.stdin, pop.stdout)
 
@@ -157,7 +157,7 @@ def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    pop = subprocess.Popen(args, executable=prog, shell=True, bufsize= -1,
+    pop = subprocess.Popen((prog,) + args, bufsize= -1,
           stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
     return (pop.stdin, pop.stdout)
 
