@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:00+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:00+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:30+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,11 +23,6 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.content,object_id:0
 msgid "Object"
-msgstr ""
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: document_ics
@@ -57,12 +52,12 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
+msgid "dtstamp"
 msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid "The field of the                         object used in the filename. Has to be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -83,11 +78,6 @@ msgstr ""
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
-msgstr ""
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: document_ics
@@ -176,11 +166,6 @@ msgid "ICS Calendar"
 msgstr ""
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
 msgstr ""
@@ -191,23 +176,13 @@ msgid "Expression as constant"
 msgstr ""
 
 #. module: document_ics
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr ""
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "location"
 msgstr ""
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
 msgstr ""
 
 #. module: document_ics
@@ -353,20 +328,5 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,opportunity:0
 msgid "Business Opportunities"
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
-
-#. module: document_ics
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid "The field of the                         object used in the filename. Has to be a unique identifier."
 msgstr ""
 

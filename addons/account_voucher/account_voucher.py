@@ -109,6 +109,11 @@ class account_voucher(osv.osv):
     def _get_narration(self, cr, uid, context={}):
         return context.get('narration', False)
 
+    def _get_amount(self, cr, uid, context=None):
+        if context is None:
+            context= {}
+        return context.get('amount', 0.0)
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
@@ -221,6 +226,7 @@ class account_voucher(osv.osv):
         'currency_id': _get_currency,
         'reference': _get_reference,
         'narration':_get_narration,
+        'amount': _get_amount,
         'type':_get_type,
         'state': 'draft',
         'pay_now': 'pay_later',

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-24 09:41+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-04 09:23+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -27,7 +27,7 @@ msgstr "Bleu"
 #: field:hr.holidays,allocation_type:0
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
-msgstr ""
+msgstr "Type d'attribution"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -51,34 +51,11 @@ msgid "Leaves Management"
 msgstr "Gestion des congés"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
-"uid, [record.holiday_status_id.id], record.category_id.id, "
-"False)[record.holiday_status_id.id]['remaining_leaves']\n"
-"                    if leaves_rest < leave_asked:\n"
-"                        raise osv.except_osv(_('Warning!"
-msgstr ""
-
-#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
 #: view:hr.holidays.status:0
 msgid "Group By..."
-msgstr "Regrouper par..."
-
-#. module: hr_holidays
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Grouper par..."
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
@@ -229,6 +206,14 @@ msgstr ""
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement !"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for category %s while there are too few remaining "
+"leave days."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -416,11 +401,6 @@ msgid "Leaves by Type"
 msgstr "Congés par type"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Saumon clair"
@@ -429,6 +409,11 @@ msgstr "Saumon clair"
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Blé"
+
+#. module: hr_holidays
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -459,11 +444,6 @@ msgid "July"
 msgstr "Juillet"
 
 #. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
 "If its True then its Allocation/Request have to be validated by second "
@@ -490,6 +470,14 @@ msgstr " Mois "
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Leaves By Month"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for employee %s while there are too few remaining "
+"leave days."
 msgstr ""
 
 #. module: hr_holidays
@@ -607,11 +595,6 @@ msgid "Black"
 msgstr "Noir"
 
 #. module: hr_holidays
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr "Vacances"
@@ -620,29 +603,6 @@ msgstr "Vacances"
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Leaves Allowed"
 msgstr "Nombre maximum de congés permis"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.category_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            else:\n"
-"                nb = record.number_of_days_temp\n"
-"\n"
-"            if record.holiday_type == 'employee' and record.employee_id:\n"
-"                user_id = record.employee_id.user_id and "
-"record.employee_id.user_id.id or uid\n"
-"\n"
-"            self.write(cr, uid, [record.id], {'state':'confirm', "
-"'number_of_days': nb, 'user_id': user_id })\n"
-"        return True\n"
-"\n"
-"    def holidays_refuse(self, cr, uid, ids, *args):\n"
-"        vals = {'state': 'refuse'}\n"
-"        ids2 = self.pool.get('hr.employee"
-msgstr ""
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
@@ -765,11 +725,6 @@ msgid "Request Type"
 msgstr "Type de demande"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr_holidays
 #: help:hr.holidays.status,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
@@ -806,11 +761,6 @@ msgid "Leaves Analysis"
 msgstr "Analyse des congés"
 
 #. module: hr_holidays
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
@@ -836,23 +786,10 @@ msgid "Validated"
 msgstr "Validé"
 
 #. module: hr_holidays
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Demande d'attribution"
-
-#. module: hr_holidays
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -1020,11 +957,6 @@ msgid "Linked Requests"
 msgstr "Demandes associées"
 
 #. module: hr_holidays
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -1076,8 +1008,17 @@ msgstr ""
 "Vous ne pouvez pas valider cette demande de congés car le nombre de jours "
 "disponibles n'est pas suffisant."
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
 #~ msgid "Validate"
 #~ msgstr "Valider"
 
 #~ msgid "All Holidays Requests"
 #~ msgstr "Toutes les Demandes de Vacances"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"

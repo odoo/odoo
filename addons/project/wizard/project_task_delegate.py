@@ -21,6 +21,7 @@
 
 from lxml import etree
 
+import tools
 from tools.translate import _
 from osv import fields, osv
 
@@ -48,20 +49,21 @@ class project_task_delegate(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
         task = task_pool.browse(cr, uid, record_id, context=context)
+        task_name =tools.ustr(task.name)
 
         if 'name' in fields:
-            if task.name.startswith(_('CHECK: ')):
-                newname = str(task.name).replace(_('CHECK: '), '')
+            if task_name.startswith(_('CHECK: ')):
+                newname = str(task_name).replace(_('CHECK: '), '')
             else:
-                newname = task.name or ''
+                newname = task_name or ''
             res.update({'name': newname})
         if 'planned_hours' in fields:
             res.update({'planned_hours': task.remaining_hours or 0.0})
         if 'prefix' in fields:
-            if task.name.startswith(_('CHECK: ')):
-                newname = str(task.name).replace(_('CHECK: '), '')
+            if task_name.startswith(_('CHECK: ')):
+                newname = str(task_name).replace(_('CHECK: '), '')
             else:
-                newname = task.name or ''
+                newname = task_name or ''
             prefix = _('CHECK: ') + newname
             res.update({'prefix': prefix})
         if 'new_task_description' in fields:
@@ -103,6 +105,7 @@ class project_task_delegate(osv.osv_memory):
         task_id = context.get('active_id', False)
         task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
+        delegate_data['name'] = tools.ustr(delegate_data['name'])
         task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
         return {}
 

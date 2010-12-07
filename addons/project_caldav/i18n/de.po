@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-16 08:55+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-01 07:23+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_caldav
@@ -71,6 +72,11 @@ msgstr "Öffentlich"
 #: field:project.task,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "Caldav URL"
+
+#. module: project_caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
+msgstr "Kann kein Feld mehr als einmal verbinden"
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -174,6 +180,11 @@ msgid "Sun"
 msgstr "Son"
 
 #. module: project_caldav
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr "Tag im Monat"
@@ -194,6 +205,11 @@ msgid "Weeks"
 msgstr "Wochen"
 
 #. module: project_caldav
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: project_caldav
 #: field:project.task,select1:0
 msgid "Option"
 msgstr "Option"
@@ -206,7 +222,7 @@ msgstr "Vertraulich"
 #. module: project_caldav
 #: selection:project.task,freq:0
 msgid "Seconds"
-msgstr ""
+msgstr "Sekunden"
 
 #. module: project_caldav
 #: selection:project.task,freq:0
@@ -246,12 +262,18 @@ msgstr "Markiere als"
 #. module: project_caldav
 #: help:project.task,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Termin wird automatisch in diesem Intervall wiederholt"
 
 #. module: project_caldav
 #: selection:project.task,byday:0
 msgid "First"
 msgstr "1ster"
+
+#. module: project_caldav
+#: code:addons/project_caldav/project_caldav.py:0
+#, python-format
+msgid "Tasks"
+msgstr "Aufgaben"
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -286,7 +308,7 @@ msgstr "Wähle Daten für Regel"
 #. module: project_caldav
 #: help:project.task,count:0
 msgid "Repeat max that times"
-msgstr ""
+msgstr "Max. Wiederholungen"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -404,6 +426,11 @@ msgid "of"
 msgstr "von"
 
 #. module: project_caldav
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: project_caldav
 #: selection:project.task,show_as:0
 msgid "Busy"
 msgstr "Beschäftigt"
@@ -453,6 +480,8 @@ msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
+"Definiert Regel für den Ausschluß von Daten und Zeiten zu automatisch "
+"wiederkehrenden Vorgängen."
 
 #. module: project_caldav
 #: selection:project.task,freq:0

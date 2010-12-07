@@ -198,6 +198,8 @@ class audittrail_objects_proxy(osv_pool):
         """
         if not context:
             context = {}
+        if field_name in('__last_update','id'):
+            return values            
         pool = pooler.get_pool(cr.dbname)
         field_pool = pool.get('ir.model.fields')
         model_pool = pool.get('ir.model')
@@ -248,6 +250,8 @@ class audittrail_objects_proxy(osv_pool):
         log_line_pool = pool.get('audittrail.log.line')
         #start Loop
         for line in lines:
+            if line['name'] in('__last_update','id'):
+                continue                
             if obj_pool._inherits:
                 inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
                 field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', (model.id, inherits_ids[0]))])
@@ -279,6 +283,7 @@ class audittrail_objects_proxy(osv_pool):
                     "field_description": field['field_description']
                     }
             line_id = log_line_pool.create(cr, uid, vals)
+            cr.commit()
         #End Loop
         return True
 
@@ -361,7 +366,7 @@ class audittrail_objects_proxy(osv_pool):
                     lines.append(line)
 
                 self.create_log_line(cr, uid, log_id, model, lines)
-
+            cr.commit()
             cr.close()
             return res
 

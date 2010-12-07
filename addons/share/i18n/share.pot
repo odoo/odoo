@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13:11+0000\n"
-"PO-Revision-Date: 2010-11-18 16:13:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:32+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,16 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: share
-#: field:share.wizard.result.line,newly_created:0
-msgid "Newly created"
+#: code:addons/share/web/editors.py:0
+#, python-format
+msgid "Sharing"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "This additional data has been automatically added to your current access.\n"
+""
 msgstr ""
 
 #. module: share
@@ -31,8 +39,19 @@ msgid "Group created to set access rights for sharing data with some users."
 msgstr ""
 
 #. module: share
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Sharing Wizard - Step 1"
 msgstr ""
 
 #. module: share
@@ -66,11 +85,6 @@ msgid "Next"
 msgstr ""
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: share
 #: help:share.wizard,action_id:0
 msgid "The action that opens the screen containing the data you wish to share."
 msgstr ""
@@ -93,8 +107,8 @@ msgid "(Copy for sharing)"
 msgstr ""
 
 #. module: share
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
 msgstr ""
 
 #. module: share
@@ -134,8 +148,10 @@ msgid "Share wizard: step 1"
 msgstr ""
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: code:addons/share/wizard/share_wizard.py:0
+#: field:share.wizard.result.line,login:0
+#, python-format
+msgid "Username"
 msgstr ""
 
 #. module: share
@@ -174,27 +190,13 @@ msgstr ""
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
-#: field:share.wizard.result.line,login:0
-#, python-format
-msgid "Username"
-msgstr ""
-
-#. module: share
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:0
 #, python-format
 msgid "%s (Shared)"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "This additional data has been automatically added to your current access.\n"
-""
+#: selection:share.wizard,user_type:0
+msgid "New users (emails required)"
 msgstr ""
 
 #. module: share
@@ -208,8 +210,9 @@ msgid "Sharing Tools"
 msgstr ""
 
 #. module: share
-#: selection:share.wizard,user_type:0
-msgid "New users (emails required)"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Database"
 msgstr ""
 
 #. module: share
@@ -254,16 +257,6 @@ msgstr ""
 #. module: share
 #: view:share.wizard:0
 msgid "Send Email Notification(s)"
-msgstr ""
-
-#. module: share
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: share
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: share
@@ -371,9 +364,9 @@ msgid "Action to share"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
+#: code:addons/share/web/editors.py:0
 #, python-format
-msgid "Sharing Wizard - Step 1"
+msgid "Share"
 msgstr ""
 
 #. module: share
