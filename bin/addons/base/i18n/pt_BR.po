@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-04 08:23+0000\n"
+"PO-Revision-Date: 2010-12-06 18:57+0000\n"
 "Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-07 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -1092,6 +1092,19 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"Data : %(date)s\n"
+"\n"
+"Prezado(a) %(partner_name)s,\n"
+"\n"
+"Em anexo encontra-se um resumo de todas as suas faturas em aberto, para um "
+"total devido de:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Sem mais,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1193,7 +1206,7 @@ msgstr "Parceiros"
 #: model:ir.actions.act_window,name:base.res_widget_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_act_window
 msgid "Homepage Widgets"
-msgstr ""
+msgstr "Widgets de Página Web"
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1261,7 +1274,7 @@ msgstr "Malawi"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (cópia)"
 
 #. module: base
 #: field:res.partner.address,type:0
@@ -1782,6 +1795,9 @@ msgid ""
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
 msgstr ""
+"Mostra e gerencia a lista de todos os países que podem ser informados nos "
+"seus registros de parceiros. Você pode criar ou apagar países para assegurar-"
+"se de que os que são utilizados serão mantidos."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -2416,6 +2432,9 @@ msgid ""
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
 msgstr ""
+"Se você precisa de um outro idioma diferente dos disponíveis oficialmente, "
+"você pode importar pacotes de idiomas aqui. Outros idiomas diferentes dos "
+"oficiais podem ser encontrados no launchpad."
 
 #. module: base
 #: view:ir.module.module:0
@@ -4399,7 +4418,7 @@ msgstr "Senha"
 #. module: base
 #: field:ir.ui.menu,web_icon:0
 msgid "Icon File"
-msgstr ""
+msgstr "Arquivo de Ícone"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -4445,6 +4464,10 @@ msgid ""
 "channels that will be maintained at the creation of a document in the "
 "system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
 msgstr ""
+"Rastreie por onde entram suas indicações e oportunidades criando canais "
+"específicos que serão atualizados na criação de documentos no sistema. "
+"Alguns exemplos de canais podem ser: Página na Internet, Chamada Telefônica, "
+"Revendedor, etc."
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4630,6 +4653,8 @@ msgid ""
 "If specified, this action will be opened at logon for this user, in addition "
 "to the standard menu."
 msgstr ""
+"Se especificada, esta ação será aberta cada vez que o usuário autenticar-se, "
+"em adição ao menu padrão."
 
 #. module: base
 #: view:ir.values:0

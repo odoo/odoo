@@ -20,8 +20,8 @@
 ##############################################################################
 
 import pooler
-import wizard
 from osv import osv, fields
+from tools.translate import _
 
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
