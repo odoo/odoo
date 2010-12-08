@@ -144,7 +144,8 @@ class ir_cron(osv.osv, netsvc.Agent):
 
     def restart(self, dbname):
         self.cancel(dbname)
-        self._poolJobs(dbname)
+        # Reschedule cron processing job asap, but not in the current thread
+        self.setAlarm(self._poolJobs, time.time(), dbname, dbname)
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
