@@ -91,7 +91,7 @@
             <field name="model">publisher_warranty.contract.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Register a contract">
+                <form string="Register a Contract">
 					<group col="8">
                         <group colspan="3" col="1">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -103,7 +103,7 @@
                         </group>
                         <separator orientation="vertical" rowspan="5"/>
                         <group colspan="4">
-                            <separator string="Register a contract" colspan="4"/>
+                            <separator string="Register a Contract" colspan="4"/>
                             <group states="draft" col="4">
                                 <label string="Please enter the serial key provided in your contract document:" colspan="4"/>
                                 <field name="name" colspan="4"/>
@@ -129,7 +129,7 @@
         </record>
 
         <record id="action_publisher_warranty_contract_add_wizard" model="ir.actions.act_window">
-            <field name="name">Register a contract</field>
+            <field name="name">Register a Contract</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">publisher_warranty.contract.wizard</field>
             <field name="view_type">form</field>
