@@ -159,7 +159,7 @@ class product_uom(osv.osv):
             return price
         amount = price * from_unit.factor
         if to_uom_id:
-            amount = amount / to_unit.factor
+            amount = amount / to_unit.factor_inv
         return amount
 
     def onchange_type(self, cursor, user, ids, value):
