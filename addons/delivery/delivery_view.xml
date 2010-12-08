@@ -126,7 +126,7 @@
             <field name="arch" type="xml">
                 <separator string="Notes" position="before">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id': active_id}"/>
+                    <field name="carrier_id" context="{'order_id': active_id or False}"/>
                 </separator>
             </field>
         </record>
