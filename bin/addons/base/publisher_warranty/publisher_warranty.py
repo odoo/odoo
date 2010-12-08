@@ -180,9 +180,8 @@ class publisher_warranty_contract(osv.osv):
                         context=context
                 )
         except:
-            _logger.debug("Exception while interpreting the result of a logs message", exc_info=1)
             if cron_mode:
-                return False # same as before
+                return False # we don't want to see any stack trace in cron
             else:
                 raise
         return True
