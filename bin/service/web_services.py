@@ -588,8 +588,10 @@ class objects_proxy(netsvc.ExportService):
     def dispatch(self, method, auth, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
-        if method not in ['execute','exec_workflow','obj_list']:
-            raise KeyError("Method not supported %s" % method)
+        if method == 'obj_list':
+            raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
+        if method not in ['execute','exec_workflow']:
+            raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         ls = netsvc.LocalService('object_proxy')
         fn = getattr(ls, method)
