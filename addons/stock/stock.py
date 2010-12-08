@@ -114,8 +114,11 @@ class stock_location(osv.osv):
 
         product_product_obj = self.pool.get('product.product')
 
-        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s or location_dest_id in %s', (tuple(ids), tuple(ids)))
-        res_products_by_location = sorted(cr.dictfetchall(), key=itemgetter('location_id'))
+        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
+        dict1 = cr.dictfetchall()
+        cr.execute('select distinct product_id, location_dest_id as location_id from stock_move where location_dest_id in %s', (tuple(ids), ))
+        dict2 = cr.dictfetchall()
+        res_products_by_location = sorted(dict1+dict2, key=itemgetter('location_id'))
         products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
 
         result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
