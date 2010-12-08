@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 14:52+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-02 07:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Diensten op urenverantwoording"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -42,17 +42,25 @@ msgstr "Geen werknemer gedefinieerd voor uw gebruiker!"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
+"Medewerkers kunnen gewerkte tijd boeken op verschillende projecten. Een "
+"project is een kostenplaats en de gewerkte tijd op een project genereert "
+"kosten op de kostenplaats. Dit kenmerk laat tegelijkertijd de aanwezigheid "
+"en de urenverantwoording vastleggen."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Today"
-msgstr ""
+msgstr "Vandaag"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -100,10 +108,17 @@ msgid "Sign in"
 msgstr "Inklokken"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "april"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
+"Medewerkers kunnen gewerkte tijd boeken op verschillende projecten waaraan "
+"ze zijn toegewezen. Een project is een kostenplaats en de gewerkte tijd op "
+"een project genereet kosten op de kostenplaats. Dit kenmerk laat "
+"tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -113,7 +128,7 @@ msgstr "Minimum analytisch bedrag"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr ""
+msgstr "Maandelijkse urenverantwoording medewerker"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -135,18 +150,18 @@ msgstr "Huidige status"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Naam medewerker"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr ""
+msgstr "Urenverantwoording medewerker afdrukken"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Waarschuwing !"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
@@ -176,7 +191,7 @@ msgstr "Kostenplaats"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
@@ -187,7 +202,7 @@ msgstr "Personeelszaken (Invoer urenstaat)"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out By Project"
-msgstr ""
+msgstr "In-/Uitklokken per project"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -197,11 +212,28 @@ msgid "Sat"
 msgstr "Zat"
 
 #. module: hr_timesheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Zon"
+
+#. module: hr_timesheet
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
+msgstr ""
+"Gewerkte uren laat u dagelijks uw gewerkte uren per project vastleggen."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -210,9 +242,9 @@ msgid "Print"
 msgstr "Afdrukken"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -228,7 +260,7 @@ msgstr "juli"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr ""
+msgstr "Maandelijkse urenverantwoording medewerker"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -246,7 +278,7 @@ msgstr "Begindatum"
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Categorieën"
 
 #. module: hr_timesheet
 #: constraint:ir.ui.view:0
@@ -300,7 +332,7 @@ msgstr "December"
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "medewerkers"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -352,6 +384,17 @@ msgstr ""
 "categorie liggen."
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
+msgstr ""
+"Er is geen kostenplaats gedefinieerd voor medewerker %s \n"
+"Definieer een medewerker voor de geselecteerde gebruiker en wijs een "
+"kostenplaats toe !"
+
+#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
 msgstr "(Laat leeg voor huidige tijd)"
@@ -364,12 +407,13 @@ msgstr "Urenstaten"
 #. module: hr_timesheet
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr ""
+"Specificeert de naam van de medewerker als product van het type 'dienst'."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -405,7 +449,7 @@ msgstr "maart"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -425,17 +469,6 @@ msgstr "Afsluitdatum"
 #, python-format
 msgid "October"
 msgstr "Oktober"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
-"Geen kostenplaats gedefinieerd op het project.\n"
-"A.u.b. een kostenplaats selecteren, anders kan de urenstaat niet automatisch "
-"ingevuld worden."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -464,13 +497,13 @@ msgstr "Analyse-statistieken"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
+msgstr "Medewerker urenverantwoording & Mijn urenverantwoording afdrukken"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "Medewerker ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -480,7 +513,7 @@ msgstr "Algemene informatie"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
 msgid "My Timesheet"
-msgstr ""
+msgstr "Mijn urenverantwoording"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -510,9 +543,14 @@ msgid "février"
 msgstr "februari"
 
 #. module: hr_timesheet
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
+msgstr "Informatie"
 
 #. module: hr_timesheet
 #: constraint:ir.model:0
@@ -525,7 +563,13 @@ msgstr ""
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Medewerker"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "april"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -536,7 +580,7 @@ msgstr "Huidige datum"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
-msgstr ""
+msgstr "Kostenplaats"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
@@ -546,7 +590,7 @@ msgstr "Regel urenstaat"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "Deze assistent drukt maandelijkse urenverntwoording af"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -557,7 +601,7 @@ msgstr "Product"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturatie"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -592,7 +636,7 @@ msgstr "Werkuren"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Inklokken op project"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -607,22 +651,14 @@ msgid "Analytic line"
 msgstr "Kostenplaatsboeking"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
-msgstr ""
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
+msgstr "Uitklokken op project"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
-msgstr ""
+msgstr "Medewerkers"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -636,6 +672,17 @@ msgstr "oktober"
 #, python-format
 msgid "April"
 msgstr "April"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
+msgstr ""
+"Geen kostenplaats gedefinieerd op het project.\n"
+"A.u.b. een kostenplaats selecteren, anders kan de urenstaat niet automatisch "
+"ingevuld worden."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -668,7 +715,7 @@ msgstr "Statistieken per gebruiker"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
 #, python-format
 msgid "No employee defined for this user"
-msgstr ""
+msgstr "Geen medewerker gedefinieerd voor deze gebruiker"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -679,12 +726,12 @@ msgstr "Jaar"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
-msgstr ""
+msgstr "Financieel"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner Id"
-msgstr ""
+msgstr "Relatie Id"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

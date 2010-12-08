@@ -251,7 +251,6 @@ class procurement_order(osv.osv):
                             for proc in procure_list:
                                 if to_generate >= proc:
                                     wf_service.trg_validate(uid, 'procurement.order', procure_qty[proc], 'button_confirm', cr)
-                                    wf_service.trg_validate(uid, 'procurement.order', procure_qty[proc], 'button_check', cr)
                                     procurement_obj.write(cr, uid, [procure_qty[proc]],  {'origin': op.name}, context=context)
                                     to_generate -= proc
                                 if not to_generate:

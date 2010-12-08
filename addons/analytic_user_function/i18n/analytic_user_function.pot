@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:23+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:23+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:57+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: analytic_user_function
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
 msgstr ""
 
 #. module: analytic_user_function
@@ -37,24 +32,9 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
-
-#. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: analytic_user_function
@@ -80,13 +60,13 @@ msgid "Relation table between users and products on a analytic account"
 msgstr ""
 
 #. module: analytic_user_function
-#: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
-msgid "Analytic User Function"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: analytic_user_function
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
+msgid "Analytic User Function"
 msgstr ""
 
 #. module: analytic_user_function

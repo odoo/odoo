@@ -52,10 +52,10 @@ class stock_location_path(osv.osv):
             ),
     }
     _defaults = {
-        'auto': lambda *arg: 'auto',
-        'delay': lambda *arg: 1,
-        'invoice_state': lambda *args: 'none',
-        'picking_type':lambda *args:'internal',
+        'auto': 'auto',
+        'delay': 1,
+        'invoice_state': 'none',
+        'picking_type': 'internal',
     }
 stock_location_path()
 

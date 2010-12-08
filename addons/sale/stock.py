@@ -188,7 +188,7 @@ class stock_picking(osv.osv):
                     })
         return result
 
-    def action_cancel(self, cr, uid, ids, context={}):
+    def action_cancel(self, cr, uid, ids, context=None):
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
         for pick in self.browse(cr, uid, ids, context):
             call_ship_end = True
