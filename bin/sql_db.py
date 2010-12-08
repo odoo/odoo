@@ -297,7 +297,11 @@ class ConnectionPool(object):
                 # note: this code is called only if the for loop has completed (no break)
                 raise PoolError('The Connection Pool Is Full')
 
-        result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
+        try:
+            result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
+        except psycopg2.Error, e:
+            self.__logger.exception('Connection to the database failed')
+            raise
         self._connections.append((result, True))
         self._debug('Create new connection')
         return result

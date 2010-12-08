@@ -34,6 +34,7 @@ import tools
 import zipfile
 import common
 from osv.fields import float as float_class, function as function_class
+from osv.orm import browse_record
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -153,25 +154,24 @@ class rml_parse(object):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         self.localcontext = {
             'user': user,
-            'company': user.company_id,
+            'setCompany': self.setCompany,
             'repeatIn': self.repeatIn,
             'setLang': self.setLang,
             'setTag': self.setTag,
             'removeParentNode': self.removeParentNode,
             'format': self.format,
             'formatLang': self.formatLang,
-            'logo' : user.company_id.logo,
             'lang' : user.company_id.partner_id.lang,
             'translate' : self._translate,
             'setHtmlImage' : self.set_html_image,
             'strip_name' : self._strip_name,
-            'time' : time
+            'time' : time,
+            # more context members are setup in setCompany() below:
+            #  - company_id
+            #  - logo
         }
+        self.setCompany(user.company_id)
         self.localcontext.update(context)
-        self.rml_header = user.company_id.rml_header
-        self.rml_header2 = user.company_id.rml_header2
-        self.rml_header3 = user.company_id.rml_header3
-        self.logo = user.company_id.logo
         self.name = name
         self._node = None
         self.parents = parents
@@ -189,6 +189,15 @@ class rml_parse(object):
         if len(char) <= size:
             return char
         return char[:size-len(truncation_str)] + truncation_str
+
+    def setCompany(self, company_id):
+        if company_id:
+            self.localcontext['company'] = company_id
+            self.localcontext['logo'] = company_id.logo
+            self.rml_header = company_id.rml_header
+            self.rml_header2 = company_id.rml_header2
+            self.rml_header3 = company_id.rml_header3
+            self.logo = company_id.logo
 
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen)
@@ -356,6 +365,13 @@ class rml_parse(object):
                 self.localcontext.update({'name_space' :common.odt_namespace})
             else:
                 self.localcontext.update({'name_space' :common.sxw_namespace})
+
+        if objects and len(objects) == 1 and \
+            'company_id' in objects[0] and objects[0].company_id:
+            # When we print only one record, we can auto-set the correct
+            # company in the localcontext. For other cases the report
+            # will have to call setCompany() inside the main repeatIn loop.
+            self.setCompany(objects[0].company_id)
 
 class report_sxw(report_rml, preprocess.report):
     def __init__(self, name, table, rml=False, parser=rml_parse, header='external', store=False):

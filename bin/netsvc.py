@@ -132,8 +132,8 @@ class ExportService(object):
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG_SQL = 'debug_sql'
-LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
+LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
 LOG_TEST = 'test'
 LOG_INFO = 'info'

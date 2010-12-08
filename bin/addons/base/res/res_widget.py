@@ -20,6 +20,8 @@
 ##############################################################################
 
 from osv import fields,osv
+
+
 class res_widget(osv.osv):
     _name = "res.widget"
     _rec_name = "title"
@@ -27,7 +29,9 @@ class res_widget(osv.osv):
         'title' : fields.char('Title', size=64, required=True, translate=True),
         'content': fields.text('Content', required=True),
     }
+
 res_widget()
+
 
 class res_widget_user(osv.osv):
     _name="res.widget.user"
@@ -37,7 +41,17 @@ class res_widget_user(osv.osv):
         'user_id': fields.many2one('res.users','User', select=1),
         'widget_id': fields.many2one('res.widget','Widget',required=True),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        existing = self.search(cr, uid, [('user_id', '=', vals.get('user_id')), ('widget_id', '=', vals.get('widget_id'))], context=context)
+        if existing:
+            res = existing[0]
+        else:
+            res = super(res_widget_user, self).create(cr, uid, vals, context=context)
+        return res
+
 res_widget_user()
+
 
 class res_widget_wizard(osv.osv_memory):
     _name = "res.widget.wizard"
@@ -58,4 +72,6 @@ class res_widget_wizard(osv.osv_memory):
             self.pool.get('res.widget.user').create(
                 cr, uid, {'user_id':uid, 'widget_id':wiz_id}, context=context)
         return {'type': 'ir.actions.act_window_close'}
+
 res_widget_wizard()
+

@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 P. Christeas, Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP SA. (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +20,22 @@
 #
 ##############################################################################
 
-from reportlab import rl_config
-import os
+import glob
 import logging
+import os
+import platform
+from reportlab import rl_config
+
+from tools import config
 
 """This module allows the mapping of some system-available TTF fonts to
 the reportlab engine.
 
 This file could be customized per distro (although most Linux/Unix ones)
 should have the same filenames, only need the code below).
+
+Due to an awful configuration that ships with reportlab at many Linux 
+and Ubuntu distros, we have to override the search path, too.
 """
 
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
@@ -42,16 +50,41 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Times-Roman',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
         ('Times-Roman',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
         ('Times-Roman',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
-        ('ZapfDingbats',"DejaVu Serif", "DejaVuSerif.ttf", 'normal'),
-        ('ZapfDingbats',"DejaVu Serif Bold", "DejaVuSerif-Bold.ttf", 'bold'),
-        ('ZapfDingbats',"DejaVu Serif Italic", "DejaVuSerif-Italic.ttf", 'italic'),
-        ('ZapfDingbats',"DejaVu Serif BoldItalic", "DejaVuSerif-BoldItalic.ttf", 'bolditalic'),
         ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
         ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
-__foundFonts = []
+
+TTFSearchPath_Linux = ( 
+            '/usr/share/fonts/truetype', # SuSE
+            '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
+            '/usr/share/fonts/truetype/*', # Ubuntu,
+            '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            )
+
+TTFSearchPath_Windows = ( 
+            'c:/winnt/fonts',
+            'c:/windows/fonts'
+            )
+
+TTFSearchPath_Darwin = ( 
+            #mac os X - from
+            #http://developer.apple.com/technotes/tn/tn2024.html
+            '~/Library/Fonts',
+            '/Library/Fonts',
+            '/Network/Library/Fonts',
+            '/System/Library/Fonts',
+            )
+
+TTFSearchPathMap = {
+    'Darwin': TTFSearchPath_Darwin,
+    'Windows': TTFSearchPath_Windows,
+    'Linux': TTFSearchPath_Linux,
+}
+
+# ----- The code below is less distro-specific, please avoid editing! -------
+__foundFonts = None
 
 def FindCustomFonts():
     """Fill the __foundFonts list with those filenames, whose fonts
@@ -64,22 +97,37 @@ def FindCustomFonts():
     dirpath =  []
     log = logging.getLogger('report.fonts')
     global __foundFonts
-    for dirname in rl_config.TTFSearchPath:
-        abp = os.path.abspath(dirname)
-        if os.path.isdir(abp):
-            dirpath.append(abp)
-        
-    for k, (name, font, fname, mode) in enumerate(CustomTTFonts):
-        if fname in __foundFonts:
+    __foundFonts = {}
+    searchpath = []
+
+    if config.get('fonts_search_path'):
+        searchpath += map(str.strip, config.get('fonts_search_path').split(','))
+
+    local_platform = platform.system()
+    if local_platform in TTFSearchPathMap:
+        searchpath += TTFSearchPathMap[local_platform]
+
+    # Append the original search path of reportlab (at the end)
+    searchpath += rl_config.TTFSearchPath
+
+    # Perform the search for font files ourselves, as reportlab's
+    # TTFOpenFile is not very good at it.
+    for dirglob in searchpath:
+        dirglob = os.path.expanduser(dirglob)
+        for dirname in glob.iglob(dirglob):
+            abp = os.path.abspath(dirname)
+            if os.path.isdir(abp):
+                dirpath.append(abp)
+
+    for k, (name, font, filename, mode) in enumerate(CustomTTFonts):
+        if filename in __foundFonts:
             continue
         for d in dirpath:
-            if os.path.exists(os.path.join(d, fname)):
-                log.debug("Found font %s in %s as %s", fname, d, name)
-                __foundFonts.append(fname)
+            abs_filename = os.path.join(d, filename)
+            if os.path.exists(abs_filename):
+                log.debug("Found font %s at %s", filename, abs_filename)
+                __foundFonts[filename] = abs_filename
                 break
-                
-    # print "Found fonts:", __foundFonts
-
 
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts
@@ -90,11 +138,13 @@ def SetCustomFonts(rmldoc):
         avoid system-wide processing (cache it, instead).
     """
     global __foundFonts
-    if not len(__foundFonts):
+    if __foundFonts is None:
         FindCustomFonts()
-    for name, font, fname, mode in CustomTTFonts:
-        if os.path.isabs(fname) or fname in __foundFonts:
-            rmldoc.setTTFontMapping(name, font, fname, mode)
+    for name, font, filename, mode in CustomTTFonts:
+        if os.path.isabs(filename) and os.path.exists(filename):
+            rmldoc.setTTFontMapping(name, font, filename, mode)
+        elif filename in __foundFonts:
+            rmldoc.setTTFontMapping(name, font, __foundFonts[filename], mode)
     return True
 
 #eof

@@ -288,6 +288,7 @@ CREATE TABLE ir_module_module (
     description text,
     demo boolean default False,
     web boolean DEFAULT FALSE,
+    license character varying(32),
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);
