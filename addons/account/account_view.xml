@@ -946,7 +946,14 @@
                                   <field groups="base.group_extended" name="child_depend"/>
                                   <field groups="base.group_extended" name="sequence"/>
                                   <field groups="base.group_extended" name="include_base_amount"/>
-                                  <field groups="base.group_extended" colspan="4" name="child_ids"/>
+                                  <field groups="base.group_extended" colspan="4" name="child_ids">
+                                      <tree string="Account Tax">
+                                          <field name="sequence"/>
+					                      <field name="name"/>
+					                      <field name="price_include" groups="base.group_extended"/>
+					                      <field name="description"/>
+					                 </tree>
+					             </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
@@ -2153,7 +2160,8 @@
                         <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
                          <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                          <separator orientation="vertical"/>
-                         <field name="code"/>
+                        <field name="code"/>
+                        <field name="name"/>
                         <field name="parent_id"/>
                         <field name="type"/>
                         <field name="user_type"/>
@@ -2194,13 +2202,13 @@
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group>
-                    <field name="property_account_receivable"/>
-                    <field name="property_account_payable"/>
-                    <field name="property_account_expense_categ" />
-                    <field name="property_account_income_categ"/>
-                    <field name="property_account_expense"/>
-                    <field name="property_account_income"/>
-                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
+                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
