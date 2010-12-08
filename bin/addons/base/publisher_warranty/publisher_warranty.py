@@ -27,12 +27,14 @@ from osv import osv, fields
 import logging
 from tools.translate import _
 import urllib
+import urllib2
 from tools.safe_eval import safe_eval
 import pooler
 from tools.config import config
 import release
 import datetime
 from tools import misc
+import sys
 
 _logger = logging.getLogger(__name__)
 
@@ -91,8 +93,10 @@ class publisher_warranty_contract(osv.osv):
                 'dbuuid': dbuuid,
                 'db_create_date': db_create_date}
             
-            uo = urllib.urlopen(config.get("publisher_warranty_url"),
-                                    urllib.urlencode({'arg0': msg, "action": "send",}))
+            
+            add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
+            uo = urllib2.urlopen(config.get("publisher_warranty_url"),
+                                    urllib.urlencode({'arg0': msg, "action": "send",}),**add_arg)
             try:
                 submit_result = uo.read()
             finally:
@@ -181,7 +185,6 @@ class publisher_warranty_contract(osv.osv):
                 return False # same as before
             else:
                 raise
-            
         return True
     
     def get_last_user_messages(self, cr, uid, limit, context={}):
@@ -302,8 +305,9 @@ def get_sys_logs(cr, uid):
         "language": user.context_lang,
     }
     
-    uo = urllib.urlopen(config.get("publisher_warranty_url"),
-                        urllib.urlencode({'arg0': msg, "action": "update",}))
+    add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
+    uo = urllib2.urlopen(config.get("publisher_warranty_url"),
+                        urllib.urlencode({'arg0': msg, "action": "update",}), **add_arg)
     try:
         submit_result = uo.read()
     finally:
