@@ -162,7 +162,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
-                                <field name="invoice_id" readonly="1" groups="base.group_extended"/>
+                                <field name="invoice_id" groups="base.group_extended" context="{'journal_type':'purchase'}"/>
                                 <field name="fiscal_position" widget="selection"/>
                             </group>
                             <newline/>
