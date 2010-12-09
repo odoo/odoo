@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 09:58+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-06 11:49+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -25,33 +25,22 @@ msgstr ""
 "Número de horas que podem ser facturadas mais as que já foram facturadas."
 
 #. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
-
-#. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção."
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
-"Processado usando a fórmula: Preço Máximo da Factura - Montante Facturado"
+"Processado ao utilizar a fórmula: Preço Máximo da Factura - Montante "
+"Facturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr "Processado usando a fórmula: Quantidade Máxima - Horas Totais."
+msgstr "Processado ao utilizar a fórmula: Quantidade Máxima - Horas Totais."
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "Erro de acesso"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -59,34 +48,29 @@ msgid "Theorical Revenue"
 msgstr "Rendimento Teórico"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Data da última factura"
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
 msgstr "Data da última factura criada para esta conta analítica."
 
 #. module: account_analytic_analysis
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Data da última factura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr "Processado usando a fórmula: Rendimento Teórico - Custo Total"
+msgstr "Processado ao utilizar a fórmula: Rendimento Teórico - Custo Total"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theorical Margin"
-msgstr "Margem teórico"
+msgstr "Margem Teórica"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Margem real da taxa (%)"
+msgstr "Margem Real da Taxa (%)"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -94,23 +78,23 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Se facturado sobre os custos, esta é a data do ultimo trabalho ou custo que "
-"foi facturado."
+"Se facturado dos custos, esta é a data do último trabalho ou dos custos que "
+"foram facturados."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "Faturação"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "Data do ultimo custo/trabalho"
+msgstr "Data do Último Custo/Trabalho"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr "Custos totais"
+msgstr "Custos Totais"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -118,8 +102,8 @@ msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
 msgstr ""
-"Número de horas que você passou no conta analítica (da folha de horas). É "
-"processado em todo o jornal do tipo 'general'."
+"Número de horas que passou na conta analítica (da folha de horas). É "
+"processado em todo o diário de tipo 'geral'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
@@ -133,9 +117,9 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Baseado nos custos você teve no projecto, o que seria o rendimento se todos "
-"estes custos fossem facturados ao preço normal da venda fornecidos pela "
-"tabela de preço."
+"Baseado nos custos que teve no projecto, qual é que seria o rendimento se "
+"todos estes custos fossem facturados ao preço normal da venda fornecidos "
+"pela tabela de preço."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -146,27 +130,22 @@ msgstr "Utilizador"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Montante Facturado"
+msgstr "Montante não Facturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Processado usando a fórmula: Montante Facturado - Custo Total."
+msgstr "Processado ao utilizar a fórmula: Montante Facturado - Custo Total."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
-msgstr "Horas não facturadas"
+msgstr "Horas não Facturadas"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
 msgstr "Data do último trabalho feito nesta conta"
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista!"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
@@ -176,7 +155,7 @@ msgstr "report_account_analytic"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Resumo de horas por utilizador"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -187,13 +166,12 @@ msgstr "Montante Facturado"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
-"Você esta tentando contornar uma régra do acesso (Tipo de documento: %s)."
+msgstr "Esta a tentar contornar uma regra de acesso (Tipo de documento: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Data do último custo facturado"
+msgstr "Data do Último Custo Facturado"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -218,7 +196,8 @@ msgstr "Resumo de horas por mês"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Processado usando a fórmula: (Margem Real / Custos Total) * 100."
+msgstr ""
+"Processado ao utilizar a fórmula: (Margem Real / Custos Total) * 100."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -226,13 +205,13 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
-"Número de horas (do diário de tipo 'geral') que pode ser facturado se você "
-"factura baseado em conta analítica."
+"Número de horas (do diário de tipo 'geral') que pode ser facturada se a "
+"factura basear na conta analítica."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic accounts"
-msgstr "Contas da Contabilidade Analítica"
+msgstr "Contas Analítica"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -245,24 +224,24 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Se facturado por conta analítica, a quantidade restante que você pode "
+"Se facturado a partir da conta analítica, o montante restante que pode "
 "facturar ao cliente baseado nos custos totais."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr "Processado usando a fórmula: Montante Facturado / Horas Totais."
+msgstr "Processado ao utilizar a fórmula: Montante Facturado / Horas Totais."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Hours (real)"
-msgstr "Receitas por hora (real)"
+msgstr "Receitas por Hora (real)"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr "Tempo total"
+msgstr "Tempo Total"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -275,7 +254,7 @@ msgstr "Mês"
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Conta da Contabilidade Analítica"
+msgstr "Conta Analítica"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
@@ -287,12 +266,17 @@ msgstr "Contas Excedidas"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr "Todas as entradas não facturadas"
+msgstr "Todas os Movimentos não Facturados"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Hours Tot"
-msgstr "Total de horas"
+msgstr "Total de Horas"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Erro! Não pode criar contas analíticas recursivamente"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -300,50 +284,38 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-"Total de custos para esta conta. Inclui custos reais (das facturas) e custos "
-"indirectos, como o tempo passado em folha de horas."
-
-#~ msgid "All Analytic Accounts"
-#~ msgstr "Todas as contas de contabilidade analítica"
-
-#~ msgid "New Analytic Account"
-#~ msgstr "Nova conta da contabilidade analítica"
-
-#~ msgid "Current Analytic Accounts"
-#~ msgstr "Conta analíticas correntes"
+"Total de custos para esta conta. Que inclui custos reais (das facturas) e "
+"custos indirectos, como o tempo gasto em folha de horas."
 
 #~ msgid "Invoicing"
 #~ msgstr "Facturação"
 
-#~ msgid "Analytic Accounts"
-#~ msgstr "Contas da contabilidade analítica"
-
 #~ msgid "Hours summary by user"
 #~ msgstr "Resumo de horas por utilizador"
 
-#~ msgid "My Current Accounts"
-#~ msgstr "As minhas contas correntes"
-
-#~ msgid "My Accounts"
-#~ msgstr "As minhas contas"
-
-#~ msgid "My Pending Accounts"
-#~ msgstr "As minhas contas pendentes"
-
-#~ msgid "My Uninvoiced Entries"
-#~ msgstr "As minhas entradas não facturadas"
-
-#~ msgid "Pending Analytic Accounts"
-#~ msgstr "Contabilidade analítica contas pendentes"
-
-#~ msgid ""
-#~ "Modify account analytic view to show\n"
-#~ "important data for project manager of services companies.\n"
-#~ "Add menu to show relevant information for each manager."
-#~ msgstr ""
-#~ "Modificar a vista da conta analítica para mostrar\n"
-#~ "dados importantes para o gestor de projecto das empresas de serviços.\n"
-#~ "Adicione menu para mostrar as informações relevantes para cada gerente."
-
 #~ msgid "Financial Project Management"
 #~ msgstr "Gestão do Projecto Financeiro"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Não pode criar menus recursivos"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"

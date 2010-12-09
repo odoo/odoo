@@ -1,165 +1,165 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
+    <data noupdate="1">
 
-<!--		Event Attribute mapping for Calendar-->
+<!--        Event Attribute mapping for Calendar-->
 
         <record model="basic.calendar" id="caldav.basic_calendar1">
-			<field name="name">Meetings</field>
+            <field name="name">Meetings</field>
             <field name="collection_id" ref="document.dir_calendars"></field>
             <field name="type">vevent</field>
-		</record>
+        </record>
 
         <record model="basic.calendar.lines" id="base_calendar.calendar_lines_event">
-			<field name="name">vevent</field>
-			<field name="calendar_id" ref="caldav.basic_calendar1" />
-			<field name="object_id" search="[('model','=','crm.meeting')]" />
+            <field name="name">vevent</field>
+            <field name="calendar_id" ref="caldav.basic_calendar1" />
+            <field name="object_id" search="[('model','=','crm.meeting')]" />
             <field name="domain">[('user_id','=', uid)]</field>
-		</record>
+        </record>
 
         <record model="basic.calendar.lines" id="base_calendar.calendar_lines_alarm">
-			<field name="name">valarm</field>
-			<field name="calendar_id" ref="caldav.basic_calendar1" />
-			<field name="object_id" search="[('model','=','calendar.alarm')]" />
-		</record>
+            <field name="name">valarm</field>
+            <field name="calendar_id" ref="caldav.basic_calendar1" />
+            <field name="object_id" search="[('model','=','calendar.alarm')]" />
+        </record>
 
-		<record model="basic.calendar.lines" id="base_calendar.calendar_lines_attendee">
-			<field name="name">attendee</field>
-			<field name="calendar_id" ref="caldav.basic_calendar1" />
-			<field name="object_id" search="[('model','=','calendar.attendee')]" />
-		</record>
+        <record model="basic.calendar.lines" id="base_calendar.calendar_lines_attendee">
+            <field name="name">attendee</field>
+            <field name="calendar_id" ref="caldav.basic_calendar1" />
+            <field name="object_id" search="[('model','=','calendar.attendee')]" />
+        </record>
 
         <record model="basic.calendar.fields" id="map_event_0">
             <field name="name" ref="caldav.field_event_organizer"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','organizer'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','organizer'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_1">
             <field name="name" ref="caldav.field_event_uid"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','id'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','id'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_2">
             <field name="name" ref="caldav.field_event_recurrence-id"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','recurrent_id'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','recurrent_id'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_3">
             <field name="name" ref="caldav.field_event_vtimezone"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_4">
-			<field name="name" ref="caldav.field_event_attendee" />
-			<field name="type_id" ref="base_calendar.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','crm.meeting')]" />
-			<field name="fn">field</field>
-		</record>
+            <field name="name" ref="caldav.field_event_attendee" />
+            <field name="type_id" ref="base_calendar.calendar_lines_event" />
+            <field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','crm.meeting')]" />
+            <field name="fn">field</field>
+        </record>
 
         <record model="basic.calendar.fields" id="map_event_5">
             <field name="name" ref="caldav.field_event_rrule"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','rrule'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','rrule'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_6">
             <field name="name" ref="caldav.field_event_dtend"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','date_deadline'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','date_deadline'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_7">
             <field name="name" ref="caldav.field_event_valarm"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','base_calendar_alarm_id'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','base_calendar_alarm_id'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_9">
             <field name="name" ref="caldav.field_event_location"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','location'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','location'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_10">
             <field name="name" ref="caldav.field_event_exrule"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_11">
-			<field name="name" ref="caldav.field_event_status"/>
-		    <field name="type_id" ref="base_calendar.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','state'),('model_id.model','=','crm.meeting')]" />
-			<field name="mapping">{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}</field>
-		    <field name="fn">field</field>
-		</record>
+            <field name="name" ref="caldav.field_event_status"/>
+            <field name="type_id" ref="base_calendar.calendar_lines_event" />
+            <field name="field_id" search="[('name','=','state'),('model_id.model','=','crm.meeting')]" />
+            <field name="mapping">{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}</field>
+            <field name="fn">field</field>
+        </record>
 
         <record model="basic.calendar.fields" id="map_event_12">
             <field name="name" ref="caldav.field_event_exdate"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','exdate'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','exdate'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_13">
             <field name="name" ref="caldav.field_event_dtstamp"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_14">
             <field name="name" ref="caldav.field_event_description"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_15">
             <field name="name" ref="caldav.field_event_dtstart"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_16">
             <field name="name" ref="caldav.field_event_class"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','class'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','class'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_18">
             <field name="name" ref="caldav.field_event_created"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','create_date'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','create_date'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_19">
             <field name="name" ref="caldav.field_event_url"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','base_calendar_url'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','base_calendar_url'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_event_20">
             <field name="name" ref="caldav.field_event_summary"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />
-	        <field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.event')]" />
+            <field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
@@ -168,77 +168,77 @@
         <record model="basic.calendar.fields" id="map_alarm_1">
             <field name="name" ref="caldav.field_alarm_attendee"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.alarm')]" />
+            <field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_2">
             <field name="name" ref="caldav.field_alarm_trigger_duration"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','trigger_duration'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','trigger_duration'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_3">
             <field name="name" ref="caldav.field_alarm_description"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.alarm')]" />
+            <field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_4">
             <field name="name" ref="caldav.field_alarm_attach"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','attach'),('model_id.model','=','calendar.alarm')]" />
+            <field name="field_id" search="[('name','=','attach'),('model_id.model','=','calendar.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_5">
             <field name="name" ref="caldav.field_alarm_trigger_occurs"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','trigger_occurs'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','trigger_occurs'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_6">
             <field name="name" ref="caldav.field_alarm_trigger_interval"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','trigger_interval'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','trigger_interval'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_7">
             <field name="name" ref="caldav.field_alarm_summary"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.alarm')]" />
+            <field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_8">
             <field name="name" ref="caldav.field_alarm_duration"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','duration'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','duration'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_9">
             <field name="name" ref="caldav.field_alarm_repeat"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','repeat'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','repeat'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_10">
             <field name="name" ref="caldav.field_alarm_action"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','action'),('model_id.model','=','calendar.alarm')]" />
+            <field name="field_id" search="[('name','=','action'),('model_id.model','=','calendar.alarm')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_alarm_11">
             <field name="name" ref="caldav.field_alarm_trigger_related"/>
             <field name="type_id" ref="base_calendar.calendar_lines_alarm" />
-	        <field name="field_id" search="[('name','=','trigger_related'),('model_id.model','=','res.alarm')]" />
+            <field name="field_id" search="[('name','=','trigger_related'),('model_id.model','=','res.alarm')]" />
             <field name="fn">field</field>
         </record>
 
@@ -246,81 +246,79 @@
         <record model="basic.calendar.fields" id="map_attendee_1">
             <field name="name" ref="caldav.field_attendee_cn"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','cn'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','cn'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_2">
             <field name="name" ref="caldav.field_attendee_sent-by"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','sent_by'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','sent_by'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_3">
             <field name="name" ref="caldav.field_attendee_language"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','language'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','language'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_4">
             <field name="name" ref="caldav.field_attendee_delegated-from"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','delegated_from'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','delegated_from'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_5">
             <field name="name" ref="caldav.field_attendee_member"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','member'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','member'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_6">
             <field name="name" ref="caldav.field_attendee_cutype"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','cutype'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','cutype'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_7">
             <field name="name" ref="caldav.field_attendee_role"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','role'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','role'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_8">
             <field name="name" ref="caldav.field_attendee_partstat"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_9">
             <field name="name" ref="caldav.field_attendee_delegated-to"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','delegated_to'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','delegated_to'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_10">
             <field name="name" ref="caldav.field_attendee_dir"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','dir'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','dir'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
         <record model="basic.calendar.fields" id="map_attendee_11">
             <field name="name" ref="caldav.field_attendee_rsvp"/>
             <field name="type_id" ref="base_calendar.calendar_lines_attendee" />
-	        <field name="field_id" search="[('name','=','rsvp'),('model_id.model','=','calendar.attendee')]" />
+            <field name="field_id" search="[('name','=','rsvp'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
 
-
-
-	</data>
+    </data>
 </openerp>

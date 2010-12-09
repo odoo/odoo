@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 17:25+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-06 08:24+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -25,15 +24,10 @@ msgid "Bank Journal"
 msgstr "Journal de banque"
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "Historique"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
@@ -61,11 +55,6 @@ msgid "Import Date"
 msgstr "Date d'import"
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr "Historique d'import"
@@ -81,21 +70,10 @@ msgid "Coda import"
 msgstr "Import du CODA"
 
 #. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
-msgstr "Historique"
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: account_coda
 #: code:addons/account_coda/account_coda.py:0
 #, python-format
 msgid "Coda file not found for bank statement !!"
-msgstr ""
+msgstr "Fichier coda non trouvé pour le relvé de banque !!"
 
 #. module: account_coda
 #: help:account.coda.import,awaiting_account:0
@@ -144,11 +122,6 @@ msgid "Coda Import Logs"
 msgstr "Historique des imports du CODA"
 
 #. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
 msgid "coda for an Account"
 msgstr "CODA pour un compte"
@@ -159,9 +132,9 @@ msgid "Default Payable Account"
 msgstr "Compte à payer par défaut"
 
 #. module: account_coda
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr "Stocker le détail des relevés bancaires"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -172,11 +145,6 @@ msgstr "Annuler"
 #: view:account.coda.import:0
 msgid "Open Statements"
 msgstr "Relevés de compte ouverts"
-
-#. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
-msgstr "Stocker le détail des relevés bancaires"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
@@ -198,22 +166,12 @@ msgstr "Importer les relevés de compte du CODA"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Statements"
-msgstr "Relevés de compte"
-
-#. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Relevés"
 
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
 msgstr "CODA"
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -291,11 +249,6 @@ msgstr "Configurer votre journal et votre compte :"
 #: view:account.coda:0
 msgid "Coda Import"
 msgstr "Importer le CODA"
-
-#. module: account_coda
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: account_coda
 #: view:account.coda:0

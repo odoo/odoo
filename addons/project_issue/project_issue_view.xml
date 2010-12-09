@@ -210,7 +210,7 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check" default="1"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>

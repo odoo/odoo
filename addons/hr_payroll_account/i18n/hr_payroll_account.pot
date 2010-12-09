@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:12+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:40+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,21 +24,6 @@ msgstr ""
 #: field:hr.payroll.register,bank_journal_id:0
 #: field:hr.payslip,bank_journal_id:0
 msgid "Bank Journal"
-msgstr ""
-
-#. module: hr_payroll_account
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: hr_payroll_account
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_payroll_account
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -80,11 +65,6 @@ msgstr ""
 #. module: hr_payroll_account
 #: field:hr.employee,salary_account:0
 msgid "Salary Account"
-msgstr ""
-
-#. module: hr_payroll_account
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -153,8 +133,8 @@ msgid "Expanse account when Salary Expanse will be recorded"
 msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register,yearly_total_by_emp:0
-msgid "Total By Employee"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_payroll_account
@@ -198,6 +178,11 @@ msgid "Accounting Vouchers"
 msgstr ""
 
 #. module: hr_payroll_account
+#: constraint:hr.employee:0
+msgid "Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_payroll_account
 #: help:hr.payroll.register,period_id:0
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
@@ -235,13 +220,13 @@ msgid "General Account"
 msgstr ""
 
 #. module: hr_payroll_account
-#: field:hr.payslip.account.move,sequence:0
-msgid "Sequence"
+#: field:hr.contibution.register,yearly_total_by_emp:0
+msgid "Total By Employee"
 msgstr ""
 
 #. module: hr_payroll_account
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: field:hr.payslip.account.move,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: hr_payroll_account

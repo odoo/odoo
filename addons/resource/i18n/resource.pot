@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13:06+0000\n"
-"PO-Revision-Date: 2010-11-18 16:13:06+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:28+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,18 +21,8 @@ msgid "If empty, this is a generic holiday for the company. If a resource is set
 msgstr ""
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
 msgstr ""
 
 #. module: resource
@@ -60,11 +50,6 @@ msgid "Working Time"
 msgstr ""
 
 #. module: resource
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr ""
@@ -78,11 +63,6 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: resource
@@ -102,8 +82,8 @@ msgid "Resources"
 msgstr ""
 
 #. module: resource
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: field:resource.calendar,manager:0
+msgid "Workgroup manager"
 msgstr ""
 
 #. module: resource
@@ -112,8 +92,8 @@ msgid "Search Working Period"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
 #. module: resource
@@ -131,8 +111,8 @@ msgid "Company"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
 msgstr ""
 
 #. module: resource
@@ -200,11 +180,6 @@ msgid "Name"
 msgstr ""
 
 #. module: resource
-#: help:resource.resource,active:0
-msgid "If the active field is set to true, it will allow you to hide the resource record without removing it."
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr ""
@@ -226,6 +201,11 @@ msgid "Active"
 msgstr ""
 
 #. module: resource
+#: help:resource.resource,active:0
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
 msgstr ""
@@ -241,11 +221,6 @@ msgid "Define the schedule of resource"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_to:0
-msgid "Work to"
-msgstr ""
-
-#. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
 msgstr ""
@@ -256,8 +231,13 @@ msgid "Code"
 msgstr ""
 
 #. module: resource
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
 msgstr ""
 
 #. module: resource
@@ -268,11 +248,6 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr ""
-
-#. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup manager"
 msgstr ""
 
 #. module: resource
@@ -332,10 +307,5 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr ""
-
-#. module: resource
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

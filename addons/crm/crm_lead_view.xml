@@ -289,7 +289,7 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    default="1" name="current" help="Draft and Open Leads"
+                    name="current" help="Draft and Open Leads"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
@@ -315,7 +315,7 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
-                <field name="section_id" default="context.get('section_id', False)" widget="selection"
+                <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"

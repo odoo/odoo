@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:11+0000\n"
+"PO-Revision-Date: 2010-11-30 16:04+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
@@ -120,6 +120,11 @@ msgid ""
 "automatically and you can record the customer payment related to this sales "
 "receipt."
 msgstr ""
+"Wenn Sie ein Produkt an einen Kunden verkaufen, können Sie ihm eine "
+"Zahlungsaufforderung oder eine Rechnung geben. Wenn Sie eine "
+"Zahlungsaufforderung bestätigen, wird ein Buchungseintrag im Journal "
+"automatisch bereits erzeugt. Die Einzahlung selbst können Sie dann zur "
+"Zahlungsaufforderung erfassen."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -198,6 +203,11 @@ msgid ""
 "to you automatically the reconciliation of this payment with the open "
 "invoices or sales receipts."
 msgstr ""
+"Die Rechnungsbezahlung ermöglicht Ihnen eine Registrierung der Zahlung durch "
+"einen Kunden. Um eine Einzahlung zu erfassen, sollten Sie den Kunden "
+"eingeben, das Journal zur Zahlungsmethode sowie den gezahlten Betrag. "
+"OpenERP schlägt dann automatisch einen Ausgleich mit vorhandenen Rechnungen "
+"oder Belegen einer Zahlungsaufforderungen vor."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -345,7 +355,7 @@ msgstr "Periode"
 #. module: account_voucher
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -361,7 +371,7 @@ msgstr "Zahlungsbeleg Buchungen"
 #. module: account_voucher
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -532,6 +542,11 @@ msgid ""
 "the payment, OpenERP will propose to reconcile your payment with the open "
 "supplier invoices or bills."
 msgstr ""
+"Die Lieferantenbezahlung ermöglicht die Erfassung und Rückverfolgung unerer "
+"Zahlungen an Lieferanten für Eingangsrechnungen. Wenn Sie einen Lieferanten "
+"auswählen, eine Zahlungsmethode und den Zahlbetrag kann OpenERP einen "
+"Vorschlag für den Ausgleich von einzelnen offenen Rechnungen oder "
+"Abrechnungen vornehmen."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -577,7 +592,7 @@ msgstr "Buchen"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Erweiterter Filter..."
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -692,6 +707,8 @@ msgstr "Rechnung"
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
 msgstr ""
+"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+"vorhanden sein !"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -709,7 +726,7 @@ msgstr "Pro-forma"
 #. module: account_voucher
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: account_voucher
 #: view:account.voucher:0

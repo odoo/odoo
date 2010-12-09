@@ -7,52 +7,67 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-29 11:26+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-12-02 09:20+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,digits:0
 msgid "Digits"
-msgstr "Нэг оронтой тоо"
+msgstr "Оронгууд"
+
+#. module: decimal_precision
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Модулын сертификат ID давхардах ёсгүй !"
 
 #. module: decimal_precision
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Архитектур харахад зориулсан алдаатай XML"
+msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: decimal_precision
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "Объектын нэр нь х_ болон онцгой тэмдэгтийн хослол байх ёстой"
+msgstr "Обьектын нэр нь x_-ээр эхэлж ямар ч тусгай тэмдэгт агуулах ёсгүй."
 
 #. module: decimal_precision
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Алдаатай моделийн нэр дэх үйлдлийн тодорхойлолт"
+msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
 
 #. module: decimal_precision
 #: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
 msgid "Decimal Precision Configuration"
-msgstr "Аравтын нарийвчлалын тохируулгууд"
+msgstr "Бутархай тоон оронгийн нарийвчлалын тохиргоо"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
 msgid "Decimal Accuracy"
-msgstr ""
+msgstr "Бутархай тоон оронгийн нарийвчлал"
+
+#. module: decimal_precision
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Модулийн нэр давхардах ёсгүй !"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+msgid "decimal.precision"
+msgstr "оронгийн нарийвчлал"
 
 #. module: decimal_precision
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Та рекурсив цэс үүсгэхгүй."
+msgstr "Алдаа! Та рекурсив цэс үүсгэж болохгүй."
 
 #. module: decimal_precision
 #: field:decimal.precision,name:0
@@ -62,12 +77,12 @@ msgstr "Хэрэглээ"
 #. module: decimal_precision
 #: view:decimal.precision:0
 msgid "Decimal Precision"
-msgstr "Аравтын нарийвчлал"
+msgstr "Оронгийн нарийвчлал"
 
 #. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
-msgstr "Аравтын нарийвчлал"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
 
 #~ msgid "Decimal Accuracy Definitions"
 #~ msgstr "Аравтын нарийвчлалын тодорхойлолт"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:19+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-08 20:23+0000\n"
+"Last-Translator: Magnus Brandt, Aspirix AB <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -33,8 +33,8 @@ msgid "Budgetary Positions"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
 msgstr ""
 
 #. module: account_budget
@@ -61,11 +61,6 @@ msgid "Validate User"
 msgstr "Validera användare"
 
 #. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
 msgstr "Summering"
@@ -87,7 +82,7 @@ msgstr "Periodens slut"
 #: view:crossovered.budget:0
 #: selection:crossovered.budget,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Utkast"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -95,21 +90,16 @@ msgid "at"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Skriv ut budgetar"
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgstr "Valuta:"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -119,60 +109,60 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Validerad"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
 msgid "Percentage"
-msgstr ""
+msgstr "Procent"
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "till"
 
 #. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
-msgstr ""
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr ""
+msgstr "Status"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Total :"
-msgstr ""
+msgstr "Totalt:"
 
 #. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Företag"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr ""
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Att godkänna"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Återställ till utkast"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -191,7 +181,7 @@ msgstr ""
 #: view:crossovered.budget:0
 #: selection:crossovered.budget,state:0
 msgid "Done"
-msgstr ""
+msgstr "Klar"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -210,12 +200,7 @@ msgstr ""
 #: field:crossovered.budget,date_to:0
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Slutdatum"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
@@ -228,7 +213,7 @@ msgstr ""
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
-msgstr ""
+msgstr "Teoretisk summa"
 
 #. module: account_budget
 #: field:account.budget.post,name:0
@@ -255,7 +240,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 msgid "Budget"
-msgstr ""
+msgstr "Budget"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -266,19 +251,19 @@ msgstr "Utskriven vid"
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fel!"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
 #: field:crossovered.budget,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Guiden används för att skriva ut budgeten"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -301,17 +286,18 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Avbruten"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Godkänn"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr ""
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Startdatum"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -329,13 +315,6 @@ msgid "Start of period"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr ""
@@ -347,11 +326,6 @@ msgid "Theoretical Amt"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -360,17 +334,12 @@ msgid "Select Dates Period"
 msgstr ""
 
 #. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 #. module: account_budget
 #: model:ir.module.module,description:account_budget.module_meta_information
@@ -410,7 +379,7 @@ msgstr ""
 #. module: account_budget
 #: report:account.budget:0
 msgid "Budget :"
-msgstr ""
+msgstr "Budget :"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -436,12 +405,7 @@ msgstr "Konton"
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 msgid "Budget Lines"
-msgstr ""
-
-#. module: account_budget
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
+msgstr "Budgetrader"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -450,7 +414,7 @@ msgstr ""
 #: view:account.budget.report:0
 #: view:crossovered.budget:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account_budget
 #: model:ir.module.module,shortdesc:account_budget.module_meta_information
@@ -458,9 +422,8 @@ msgid "Budget Management"
 msgstr ""
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: account_budget
@@ -469,10 +432,10 @@ msgstr ""
 msgid "Analysis from"
 msgstr ""
 
-#. module: account_budget
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #~ msgid ""
 #~ "This module allows accountants to manage analytic and crossovered budgets.\n"
@@ -526,3 +489,15 @@ msgstr ""
 #~ "gives the spreading, for the selected Analytic Accounts, of the Master "
 #~ "Budgets per Budgets.\n"
 #~ "\n"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modell i händelsedefinitionen."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"

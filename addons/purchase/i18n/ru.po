@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-22 06:56+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 20:06+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -35,11 +35,6 @@ msgstr "Вы не можете подтвердить заказ на закуп
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
 msgstr "Счета получены и оплачены"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "С уважением,"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -78,11 +73,6 @@ msgstr "Адрес назначения"
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Утверждено"
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -508,16 +498,14 @@ msgid "Invoice Control"
 msgstr "Управление счетами"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
-msgstr "Запрос цен"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "ЗЦ"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr "Ссылка на поставщика"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -597,11 +585,6 @@ msgid "To be Invoiced"
 msgstr "Счет будет выставлен"
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Адрес контакта"
@@ -651,11 +634,6 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Нельзя иметь 2 перекрывающиеся версии каталога!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -731,9 +709,10 @@ msgid "Validated by"
 msgstr "Проверил(а)"
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "ЗЦ"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
@@ -759,11 +738,6 @@ msgstr "    Месяц-1    "
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Журнал закупок не определен для этой компании:  \"%s\" (id:%d)"
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -872,22 +846,10 @@ msgid "Month"
 msgstr "Месяц"
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
-msgstr ""
-"Состояние заказа на закупку или запроса предложения. Предложение - это заказ "
-"на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, "
-"статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ "
-"для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и "
-"получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе "
-"расчетов или поставки товаров, состояние устанавливается в 'Исключительная "
-"ситуация'."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
+msgstr "Ожидание"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -904,11 +866,6 @@ msgstr "Заказ на закупку в ожидании утверждени�
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
 msgstr "Итого без налога"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
-msgstr "Продавец утвердил заказ на закупку"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -992,6 +949,11 @@ msgid "Purchase Order Line"
 msgstr "Позиция заказа на закупку"
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Вид календаря"
@@ -1002,12 +964,11 @@ msgid "Purchase Order Merge"
 msgstr "Объединить заказ на закупку"
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "С уважением,"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1055,6 +1016,11 @@ msgid "Qty. per product"
 msgstr "Кол-во на ТМЦ"
 
 #. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
+
+#. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
 msgstr "Дата на которую этот документ был создан."
@@ -1068,11 +1034,6 @@ msgstr "Продажи и Закупки"
 #: selection:purchase.report,month:0
 msgid "June"
 msgstr "Июнь"
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Название группы должно быть уникальным !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1167,9 +1128,9 @@ msgid "Cancel Purchase Order"
 msgstr "Отмена заказа на закупку"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
-msgstr "Ссылка на поставщика"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Вы должны назначить партию изделий для данной ТМЦ"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1186,15 +1147,6 @@ msgstr "Панель"
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Ошибка ! Нельзя определить Главный Каталог как Другой Каталог в объекте "
-"Каталог!"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1235,9 +1187,22 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr "Ссылка на документ из которого был создан этот заказ на закупку."
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
+"Состояние заказа на закупку или запроса предложения. Предложение - это заказ "
+"на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, "
+"статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ "
+"для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и "
+"получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе "
+"расчетов или поставки товаров, состояние устанавливается в 'Исключительная "
+"ситуация'."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1314,9 +1279,9 @@ msgid "Purchase Order Lines"
 msgstr "Позиции заказа на закупку"
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr "Продавец утвердил заказ на закупку"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1335,14 +1300,6 @@ msgstr "Документ источник"
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr "Объединить заказы"
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1397,6 +1354,12 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr "Запрос цен"
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr "Дата заказа"
@@ -1412,12 +1375,6 @@ msgstr "Дата утверждения"
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Не удалось отменить этот заказ на закупку"
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
-msgstr "Ожидание"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1683,11 +1640,6 @@ msgid "Addresses"
 msgstr "Адреса"
 
 #. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Правила не поддерживаются в объектах osv_memory !"
-
-#. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
 msgstr "Вы уверены, что хотите объединить данные заказы?"
@@ -1787,6 +1739,9 @@ msgstr "Панель закупок"
 #~ msgid "Merge purchases"
 #~ msgstr "Объединить закупки"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
 #~ msgid "Purchase orders"
 #~ msgstr "Заказы на закупку"
 
@@ -1810,6 +1765,12 @@ msgstr "Панель закупок"
 
 #~ msgid "Order Ref"
 #~ msgstr "Ссылка на заказ"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
 
 #~ msgid "Create invoice from product recept"
 #~ msgstr "Создать счет из принятого товара"
@@ -1874,8 +1835,18 @@ msgstr "Панель закупок"
 #~ msgid "Approved Purchase"
 #~ msgstr "Утвержденная закупка"
 
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Нельзя иметь 2 перекрывающиеся версии каталога!"
+
 #~ msgid "Date"
 #~ msgstr "Дата"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Ошибка ! Нельзя определить Главный Каталог как Другой Каталог в объекте "
+#~ "Каталог!"
 
 #~ msgid "Create Packing list"
 #~ msgstr "Создать упаковочный лист"
@@ -1891,6 +1862,9 @@ msgstr "Панель закупок"
 
 #~ msgid "Purchase Invoice"
 #~ msgstr "Счет на закупку"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
 
 #~ msgid "Invoice from Packing list"
 #~ msgstr "Счет из упаковочного листа"
@@ -1955,3 +1929,24 @@ msgstr "Панель закупок"
 
 #~ msgid "Product Receipt"
 #~ msgstr "Получение ТМЦ"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Название группы должно быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Правила не поддерживаются в объектах osv_memory !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
