@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:57+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:57+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:27+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,11 +38,6 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Group By..."
-msgstr ""
-
-#. module: crm_partner_assign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: crm_partner_assign
@@ -143,14 +138,6 @@ msgid "Gives the probability to assign a lead to this partner. (0 means no assig
 msgstr ""
 
 #. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr ""
-
-#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
@@ -192,10 +179,11 @@ msgid "From"
 msgstr ""
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: field:res.partner,grade_id:0
+#: view:res.partner.grade:0
+msgid "Partner Grade"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -212,11 +200,6 @@ msgstr ""
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
-msgstr ""
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -289,11 +272,6 @@ msgstr ""
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,stage_id:0
 msgid "Stage"
-msgstr ""
-
-#. module: crm_partner_assign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -407,6 +385,11 @@ msgid "Partner Geo-Localisation"
 msgstr ""
 
 #. module: crm_partner_assign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Draft"
@@ -418,8 +401,10 @@ msgid "Low"
 msgstr ""
 
 #. module: crm_partner_assign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: selection:crm.lead.forward.to.partner,state:0
+#: view:crm.lead.report.assign:0
+#: selection:crm.lead.report.assign,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: crm_partner_assign
@@ -564,16 +549,6 @@ msgid "Open"
 msgstr ""
 
 #. module: crm_partner_assign
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: crm_partner_assign
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: crm_partner_assign
 #: field:res.partner,date_localization:0
 msgid "Geo Localization Date"
 msgstr ""
@@ -627,11 +602,6 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
 msgid "Customer"
-msgstr ""
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: crm_partner_assign

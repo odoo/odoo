@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-10 08:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 15:26+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-11 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -202,6 +203,11 @@ msgid "ICS Calendar"
 msgstr "ICS-Kalender"
 
 #. module: document_ics
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
 msgstr "ICS Wert"
@@ -212,9 +218,19 @@ msgid "Expression as constant"
 msgstr "Ausdruck (Expression) als Konstante"
 
 #. module: document_ics
+#: sql_constraint:crm.case.section:0
+msgid "The code of the sales team must be unique !"
+msgstr "Die Kurzbezeichnung für das Vertriebsteam sollte eindeutig sein !"
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "location"
 msgstr "Verzeichnis"
+
+#. module: document_ics
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: document_ics
 #: constraint:ir.ui.view:0
@@ -329,6 +345,8 @@ msgid ""
 "If set, a separate                         instance will be created for each "
 "record of Object"
 msgstr ""
+"Durch Definition erfolgt eine Anlage einer separaten Instanz für jeden "
+"Datensatz zu diesem Objekt"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -376,11 +394,18 @@ msgid "dtstamp"
 msgstr "dtstamp"
 
 #. module: document_ics
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#. module: document_ics
 #: help:document.directory.content,fname_field:0
 msgid ""
 "The field of the                         object used in the filename. Has to "
 "be a unique identifier."
 msgstr ""
+"Das Feld welches für die Vergabe eines Dateinamens genutzt wird. Es sollte "
+"eine eindeutige Bezeichnung aufweisen."
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Fehler! Sie können keine rekursiven Ordner erzeugen."

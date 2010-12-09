@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2009-11-17 10:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 09:36+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -31,19 +32,6 @@ msgstr "Pages du wiki"
 #: field:wiki.groups,method:0
 msgid "Display Method"
 msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -71,11 +59,6 @@ msgstr "Section"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Faire une section ?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -116,8 +99,8 @@ msgid "Parent Menu"
 msgstr "Menu Parent"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -216,7 +199,7 @@ msgstr ""
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avertissement"
 
 #. module: wiki
 #: help:wiki.groups,home:0
@@ -261,9 +244,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Faire une section ?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -349,11 +332,6 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
-
-#. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
@@ -382,10 +360,21 @@ msgstr "Créer un index"
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
 msgstr ""
+"Vous devez sélectionner au minimum 1 ou au maximum 2 révisions de "
+"l'historique !"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -465,6 +454,12 @@ msgstr ""
 msgid "Search Page"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
 #~ msgid "Wiki Groups Links"
 #~ msgstr "Groupes de liens wiki"
 
@@ -486,6 +481,9 @@ msgstr ""
 #~ msgid "Document Management"
 #~ msgstr "Gestion des Documents"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "Parent Group"
 #~ msgstr "Groupes parent"
 
@@ -497,6 +495,9 @@ msgstr ""
 
 #~ msgid "Tags"
 #~ msgstr "Balises"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom du Modèle non valide dans la définition de l'action."
 
 #~ msgid "Group Home Page"
 #~ msgstr "Page d'accueil du Groupe"

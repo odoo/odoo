@@ -185,7 +185,7 @@ class board_note_type(osv.osv):
     Board note Type
     """
     _name = 'board.note.type'
-    _description = "NOte Type"
+    _description = "Note Type"
 
     _columns = {
         'name': fields.char('Note Type', size=64, required=True),

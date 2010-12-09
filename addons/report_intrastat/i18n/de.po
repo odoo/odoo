@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 10:29+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-12-01 09:42+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
@@ -57,7 +58,7 @@ msgstr "Preis pro Einheit"
 #. module: report_intrastat
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -85,19 +86,24 @@ msgid "Taxes:"
 msgstr "Steuern:"
 
 #. module: report_intrastat
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "March"
-msgstr ""
+msgstr "März"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: report_intrastat
 #: field:report.intrastat,type:0
@@ -135,14 +141,14 @@ msgid "Base"
 msgstr "Grundlage"
 
 #. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr ""
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -152,7 +158,7 @@ msgstr "Steuer"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
@@ -180,12 +186,12 @@ msgstr "Summe (inkl. MwST)"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
@@ -200,12 +206,12 @@ msgstr "Rechnung"
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -215,7 +221,7 @@ msgstr "Steuern"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -252,7 +258,7 @@ msgstr "Beschaffungs Einheiten"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -268,7 +274,7 @@ msgstr "Gutschrift"
 #. module: report_intrastat
 #: field:report.intrastat,ref:0
 msgid "Source document"
-msgstr ""
+msgstr "Belegreferenz"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -279,7 +285,7 @@ msgstr "Gewicht"
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produkt Vorlage"
 
 #. module: report_intrastat
 #: field:res.country,intrastat:0
@@ -289,17 +295,22 @@ msgstr "Intrastat Mitglied"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezember"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: report_intrastat
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Ländercode"
+
+#. module: report_intrastat
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr "Aktuelles Jahr"
 
 #. module: report_intrastat
 #: field:report.intrastat,month:0
@@ -324,7 +335,7 @@ msgstr "Fax"
 #. module: report_intrastat
 #: field:report.intrastat,name:0
 msgid "Year"
-msgstr ""
+msgstr "Jahr"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -340,6 +351,11 @@ msgstr "Summe (exkl. USt.)"
 #: report:account.invoice.intrastat:0
 msgid "Price"
 msgstr "Preis"
+
+#. module: report_intrastat
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree

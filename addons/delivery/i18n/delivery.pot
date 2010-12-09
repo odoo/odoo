@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:58+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:58+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:28+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,6 +36,11 @@ msgid "Net weight"
 msgstr ""
 
 #. module: delivery
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
@@ -44,11 +49,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: delivery
@@ -124,11 +124,6 @@ msgid "Delivery Method"
 msgstr ""
 
 #. module: delivery
-#: help:delivery.grid,active:0
-msgid "If the active field is set to true, it will allow you to hide the delivery grid without removing it."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr ""
@@ -150,8 +145,9 @@ msgid "Net Weight"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: delivery
@@ -175,13 +171,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: delivery
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
 msgstr ""
 
 #. module: delivery
@@ -200,11 +191,6 @@ msgid "Make Delievery"
 msgstr ""
 
 #. module: delivery
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
 msgid "Allows you to add delivery methods in sale orders and picking.\n"
 "     You can define your own carrier and delivery grids for prices.\n"
@@ -214,9 +200,8 @@ msgid "Allows you to add delivery methods in sale orders and picking.\n"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
 msgstr ""
 
 #. module: delivery
@@ -225,18 +210,13 @@ msgid "Grid"
 msgstr ""
 
 #. module: delivery
+#: help:delivery.grid,active:0
+msgid "If the active field is set to False, it will allow you to hide the delivery grid without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
-
-#. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: delivery
@@ -269,6 +249,11 @@ msgid "Weight"
 msgstr ""
 
 #. module: delivery
+#: help:delivery.carrier,active:0
+msgid "If the active field is set to False, it will allow you to hide the delivery carrier without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr ""
@@ -282,11 +267,6 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: delivery
@@ -306,8 +286,8 @@ msgid "Lot"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: delivery
@@ -334,6 +314,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Create and manage the delivery method(s) you want your sales to be processed with. Each delivery method can be assigned to a pricelist which computes the price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: delivery
@@ -365,16 +350,6 @@ msgstr ""
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
-
-#. module: delivery
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: delivery
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: delivery
@@ -460,11 +435,6 @@ msgid "Name"
 msgstr ""
 
 #. module: delivery
-#: help:delivery.carrier,active:0
-msgid "If the active field is set to true, it will allow you to hide the delivery carrier without removing it."
-msgstr ""
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
@@ -514,11 +484,6 @@ msgstr ""
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr ""
-
-#. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: delivery

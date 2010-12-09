@@ -6,32 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 11:13+0000\n"
-"Last-Translator: Daniel Stenlöv (XCLUDE) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-08 19:46+0000\n"
+"Last-Translator: Magnus Brandt, Aspirix AB <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
 msgstr "Ort"
-
-#. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Felaktigt namn för modell i händelsedefinitionen."
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -49,11 +37,6 @@ msgid "E-mail"
 msgstr "E-post"
 
 #. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
 msgstr "Bankkonto nr"
@@ -61,7 +44,7 @@ msgstr "Bankkonto nr"
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr ""
+msgstr "Extra verktyg"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
@@ -80,22 +63,22 @@ msgstr ""
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
+msgstr "Hjälper dig att hantera marknadsföringskampanjer steg för steg"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr ""
+msgstr "Din databas är nu skapad"
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Försäljningsställen"
 
 #. module: base_setup
 #: field:base.setup.installer,association:0
 msgid "Associations"
-msgstr ""
+msgstr "Associationer"
 
 #. module: base_setup
 #: help:base.setup.installer,account_accountant:0
@@ -103,18 +86,20 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing "
 msgstr ""
+"Hjälper dig att hantera dina bokföringsbehov. Om du inte jobbar med "
+"redovisning rekommenderar vi dig att enbart installera faktureringsmodulen "
 
 #. module: base_setup
 #: code:addons/base_setup/__init__.py:0
 #, python-format
 msgid "The following users have been installed : \n"
-msgstr ""
+msgstr "Följande användere har nu blivit installerade \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Konfigurationsförlopp"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
@@ -135,12 +120,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,marketing:0
 msgid "Marketing"
-msgstr ""
+msgstr "Marknadsföring"
 
 #. module: base_setup
 #: field:base.setup.company,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Företag"
 
 #. module: base_setup
 #: field:base.setup.installer,sale:0
@@ -160,11 +145,13 @@ msgid ""
 "You can start configuring the system or connect directly to the database as "
 "an administrator."
 msgstr ""
+"Du kan börja konfigurera systemet eller koppla dig direkt till databasen som "
+"en administratör."
 
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Avancerad rapportering"
 
 #. module: base_setup
 #: field:base.setup.company,phone:0
@@ -174,21 +161,16 @@ msgstr "Telefon"
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
+msgstr "titel"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
-msgstr ""
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: base_setup
@@ -216,7 +198,7 @@ msgstr ""
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Skip Configuration Wizards"
-msgstr ""
+msgstr "Hoppa över konfigureringsguide"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -231,11 +213,6 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
-
-#. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
 
 #. module: base_setup
 #: field:base.setup.installer,hr:0
@@ -263,12 +240,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,street2:0
 msgid "Street 2"
-msgstr ""
+msgstr "Gata 2"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_installer
 msgid "base.setup.installer"
-msgstr ""
+msgstr "base.setup.installer"
 
 #. module: base_setup
 #: field:base.setup.company,country_id:0
@@ -283,7 +260,7 @@ msgstr "Ställ in"
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Bokföring och finans"
 
 #. module: base_setup
 #: field:base.setup.installer,auction:0
@@ -293,7 +270,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,zip:0
 msgid "Zip Code"
-msgstr ""
+msgstr "Postnummer"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -310,7 +287,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
-msgstr ""
+msgstr "Företagskonfiguration"
 
 #. module: base_setup
 #: field:base.setup.company,logo:0
@@ -320,7 +297,7 @@ msgstr "Logga"
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
-msgstr ""
+msgstr "Inköpshantering"
 
 #. module: base_setup
 #: help:base.setup.installer,sale:0
@@ -335,17 +312,17 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr ""
+msgstr "Projekthantering"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
 msgid "Installed Users"
-msgstr ""
+msgstr "Installerade användare"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "New Database"
-msgstr ""
+msgstr "Ny databas"
 
 #. module: base_setup
 #: field:base.setup.installer,crm:0
@@ -385,24 +362,24 @@ msgstr "Rapporthuvud"
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Information about your new database"
-msgstr ""
+msgstr "Information om din nya databas"
 
 #. module: base_setup
 #: field:base.setup.company,config_logo:0
 #: field:base.setup.config,config_logo:0
 #: field:base.setup.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 #. module: base_setup
 #: field:base.setup.installer,product_expiry:0
 msgid "Food Industry"
-msgstr ""
+msgstr "Matindustri"
 
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
 msgid "Manufacturing"
-msgstr ""
+msgstr "Tillverkning"
 
 #. module: base_setup
 #: view:base.setup.company:0
@@ -423,7 +400,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,website:0
 msgid "Company Website"
-msgstr ""
+msgstr "Företagets hemsida"
 
 #. module: base_setup
 #: view:base.setup.installer:0
@@ -438,17 +415,17 @@ msgstr "Gata"
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_company
 msgid "base.setup.company"
-msgstr ""
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
 msgid "Example: http://openerp.com"
-msgstr ""
+msgstr "Exempel: http://openerp.com"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
-msgstr ""
+msgstr "Installera applikationer"
 
 #. module: base_setup
 #: help:base.setup.installer,crm:0
@@ -480,12 +457,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "base.setup.config"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -559,3 +531,17 @@ msgstr ""
 
 #~ msgid "Previous"
 #~ msgstr "Föregårende"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modell i händelsedefinitionen."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"

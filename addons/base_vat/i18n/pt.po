@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:16+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-06 11:48+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_vat
@@ -23,51 +23,58 @@ msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
 msgstr ""
-
-#. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
-
-#. module: base_vat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+"O NIF não parece estar correto. Deve indicar um número do seguinte tipo: %s"
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "Base VAT - Para verificar a estrutura do NIF"
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erro! Não pode criar membros associados recursivamente."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "O NIF está inválido porque deve começar com o código do país."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
 msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
-msgstr ""
+msgstr "Carregue aqui se o terceiro estiver sujeito a IVA."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Terceiro"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "Declaração Legal do IVA"
 
-#~ msgid ""
-#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
-#~ msgstr ""
-#~ "Active o NIF (Número de Identificação Fiscal) para o parceiro verificando a "
-#~ "sua validade"
-
 #~ msgid "VAT"
 #~ msgstr "IVA"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"

@@ -29,8 +29,8 @@
 
     """,
     "version": "0.1",
-    "depends": ["base"],
-    "category" : "Generic Modules/Others",
+    "depends": ["base_tools"],
+    "category" : "Tools",
     'description': """
     The base module to manage lunch
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:59+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:59+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:29+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,11 +63,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr ""
@@ -95,6 +90,12 @@ msgid "March"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr ""
@@ -239,11 +240,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr ""
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr ""
@@ -279,11 +275,6 @@ msgstr ""
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
-msgstr ""
-
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: document
@@ -326,11 +317,6 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "July"
-msgstr ""
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: document
@@ -517,6 +503,11 @@ msgid "Check this field if you want that the name of the file to contain the rec
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr ""
@@ -527,8 +518,8 @@ msgid "Attachment"
 msgstr ""
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
 msgstr ""
 
 #. module: document
@@ -693,11 +684,6 @@ msgid "Prefix"
 msgstr ""
 
 #. module: document
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr ""
@@ -708,8 +694,8 @@ msgid "File Name"
 msgstr ""
 
 #. module: document
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: view:document.configuration:0
+msgid "res_config_contents"
 msgstr ""
 
 #. module: document
@@ -720,11 +706,6 @@ msgstr ""
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
-
-#. module: document
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: document
@@ -926,11 +907,6 @@ msgid "Mime Type"
 msgstr ""
 
 #. module: document
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -990,10 +966,5 @@ msgstr ""
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
-msgstr ""
-
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 

@@ -6,33 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 13:16+0000\n"
-"Last-Translator: Fabio Graziosi <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-05 05:21+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Elenco delle Domande"
-
-#. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
-
-#. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome di modulo non valido nella definizione dell'azione."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -47,24 +34,29 @@ msgid "Open Questionnaire"
 msgstr "Questionario Aperto"
 
 #. module: crm_profiling
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico!"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+"E' possibile creare uno specifico questionario correlato che verrà usato per "
+"guidare il (o i) team, nel ciclo di vendita, aiutandoli a porre le giuste "
+"domande. Usando il tool di segmentazione, è così possible assegnare "
+"automaticamente i partner alla loro corretta categoria, basandosi sulle "
+"risposte ai differenti questionari."
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Profili figli"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Errore! Non è possibile creare dei membri associati ricorsivi."
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
 msgstr "Segmentazione Partner"
-
-#. module: crm_profiling
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore ! Non puoi creare un menù ricorsivo"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -116,16 +108,6 @@ msgid "Use a questionnaire"
 msgstr "Utilizza un Questionario"
 
 #. module: crm_profiling
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID certificato del modulo deve essere unico!"
-
-#. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -159,24 +141,14 @@ msgid "Avalaible answers"
 msgstr "Risposte Disponibili"
 
 #. module: crm_profiling
-#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
-msgid ""
-"You can create specific topic related questionnaires that will be used to "
-"guide your team(s) in the sales cycle by helping them to ask the right "
-"questions. Using the segmentation tool, you will be able to automatically "
-"assign a partner to a category based on his answers to the different "
-"questionnaires."
-msgstr ""
-"E' possibile creare uno specifico questionario correlato che verrà usato per "
-"guidare il (o i) team, nel ciclo di vendita, aiutandoli a porre le giuste "
-"domande. Usando il tool di segmentazione, è così possible assegnare "
-"automaticamente i partner alla loro corretta categoria, basandosi sulle "
-"risposte ai differenti questionari."
-
-#. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Includi Risposte"
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Profili figli"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -221,10 +193,17 @@ msgstr "Utilizzare un Questionario"
 msgid "Save Data"
 msgstr "Salva Dati"
 
-#. module: crm_profiling
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome di modulo non valido nella definizione dell'azione."
 
 #~ msgid "crm_profiling management"
 #~ msgstr "Gestione crm_profiling"
@@ -236,3 +215,15 @@ msgstr "La dimensione del campo non può mai essere minore di 1!"
 #~ "Seleziona questa casella se si desidera utilizzare questa scheda come parte "
 #~ "della regola di segmentazione. Se non è selezionata, i criteri di sotto "
 #~ "verranno ignorati"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore ! Non puoi creare un menù ricorsivo"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"

@@ -47,7 +47,7 @@ class pos_discount(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         order = self.pool.get('pos.order').browse(cr, uid, record_id, context=context)
         if not order.lines:
-                raise osv.except_osv('Error!','No Order Lines ')
+                raise osv.except_osv(_('Error!'), _('No Order Lines'))
         True
 
     def apply_discount(self, cr, uid, ids, context=None):

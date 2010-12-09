@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-08 08:28+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-12-01 09:32+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
@@ -27,8 +28,8 @@ msgstr "Zwischensumme"
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen \r\n"
-"beinhalten"
+"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+"beinhalten."
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -44,6 +45,11 @@ msgstr "Rabatt (%)"
 #: selection:sale.order.line,layout_type:0
 msgid "Note"
 msgstr "Notiz"
+
+#. module: sale_layout
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -73,12 +79,22 @@ msgstr "Layout Typ"
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order_line
 msgid "Sale Order Line"
-msgstr "Verkaufsauftragszeile"
+msgstr "Verkaufsauftragsposition"
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Seq."
 msgstr "Seq."
+
+#. module: sale_layout
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "UoM"
+msgstr "ME"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -113,7 +129,7 @@ msgstr "Rechnungszeilen"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quantity"
-msgstr "Menge"
+msgstr "Anzahl"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -178,12 +194,12 @@ msgstr "Lieferanschrift:"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Taxes"
-msgstr "Steuern"
+msgstr "Umsatzsteuer"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Net Total :"
-msgstr "Gesamt Netto:"
+msgstr "Nettobetrag:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -193,7 +209,7 @@ msgstr "Tel.:"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Total :"
-msgstr "Summe :"
+msgstr "Bruttobetrag:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -203,7 +219,7 @@ msgstr "Zahlungsbedingungen"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "History"
-msgstr "Verlauf"
+msgstr "Historie"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -221,24 +237,29 @@ msgid "Your Reference"
 msgstr "Ihre Referenz"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
-msgstr "Auftragspositionen"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Qty"
-msgstr "Menge"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "States"
-msgstr "Zustände"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr "Datum Angebot"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "TVA :"
 msgstr "USt.:"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "Qty"
+msgstr "Anzahl"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "States"
+msgstr "Status"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "Sales order lines"
+msgstr "Auftragspositionen"
 
 #. module: sale_layout
 #: model:ir.actions.report.xml,name:sale_layout.sale_order_1
@@ -251,9 +272,9 @@ msgid "Extra Info"
 msgstr "Zusatzinfo"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
-msgstr "ME"
+#: report:sale.order.layout:0
+msgid "Taxes :"
+msgstr "Umsatzsteuer:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -271,14 +292,14 @@ msgid "Price"
 msgstr "Preis"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Taxes :"
-msgstr "Steuern:"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr "Lagerbuchungen"
+msgstr "Lieferaufträge"
 
 #~ msgid "sale_layout"
 #~ msgstr "sale_layout"

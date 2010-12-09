@@ -74,7 +74,7 @@
     ids = [x.id for x in sale_id.picking_ids]
     wiz_id = self.create(cr, uid, {'invoice_date': '2010-07-17', 'journal_id': ref('account.sales_journal')},
       {'active_ids': ids})
-    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
   I verify whether the invoice has been generated for SO
 -

@@ -50,12 +50,14 @@ def GetConn():
     d=Dispatch("Python.OpenERP.XMLRpcConn")
     return d
 class Configuration:
+
     def OnClick(self, button, cancel):
+        import win32ui
         try:
             mngr = manager.GetManager()
             mngr.ShowManager()
         except Exception,e:
-        	win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
+            win32ui.MessageBox("Fail to Initialize dialog.\n"+str(e),"OpenERP Configuration", win32con.MB_ICONERROR)
         return cancel
 #
 class ViewPartners:
@@ -63,7 +65,7 @@ class ViewPartners:
         from win32com.client import Dispatch
         import win32con
         mngr = manager.GetManager()
-        data=mngr.LoadConfig()
+        data = mngr.LoadConfig()
         outlook = Dispatch("Outlook.Application")
         ex = outlook.ActiveExplorer()
         if ex:
@@ -78,31 +80,31 @@ class ViewPartners:
         return cancel
 #
 class OpenPartner:
-	def OnClick(self, button, cancel):
-		mngr = manager.GetManager()
-		data=mngr.LoadConfig()
-		outlook = Dispatch("Outlook.Application")
-		ex = outlook.ActiveExplorer()
-		if ex:
-			is_login = str(data['login'])
-			if is_login == 'False':
-				win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
-			elif ex.Selection.Count == 1:
-				mngr = manager.GetManager()
-				mngr.ShowManager("IDD_OPEN_PARTNER_DIALOG")
-			elif ex.Selection.Count == 0:
-				win32ui.MessageBox("No mail selected to push to OpenERP","Push to OpenERP",win32con.MB_ICONINFORMATION)
-			elif ex.Selection.Count > 1:
-				win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Push to OpenERP",win32con.MB_ICONINFORMATION)
-		return cancel
+    def OnClick(self, button, cancel):
+        import win32ui
+        mngr = manager.GetManager()
+        data = mngr.LoadConfig()
+        outlook = Dispatch("Outlook.Application")
+        ex = outlook.ActiveExplorer()
+        if ex:
+            is_login = str(data['login'])
+            if is_login == 'False':
+                win32ui.MessageBox("Please login to the database first", "OpenERP Connection", win32con.MB_ICONEXCLAMATION)
+            elif ex.Selection.Count == 1:
+                mngr = manager.GetManager()
+                mngr.ShowManager("IDD_OPEN_PARTNER_DIALOG")
+            elif ex.Selection.Count == 0:
+                win32ui.MessageBox("No mail selected to push to OpenERP","Push to OpenERP",win32con.MB_ICONINFORMATION)
+            elif ex.Selection.Count > 1:
+                win32ui.MessageBox("Multiple selection not allowed. Please select only one mail at a time.","Push to OpenERP",win32con.MB_ICONINFORMATION)
+        return cancel
 #
 class OpenDocument:
     def OnClick(self, button, cancel):
         from win32com.client import Dispatch
         import win32con
-        import win32ui
         mngr = manager.GetManager()
-        data=mngr.LoadConfig()
+        data = mngr.LoadConfig()
         outlook = Dispatch("Outlook.Application")
         ex = outlook.ActiveExplorer()
         if ex:
@@ -222,18 +224,18 @@ class OutlookAddin:
             item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 
-
     def OnDisconnection(self, mode, custom):
+        self.item.close()
         mngr = manager.GetManager()
         mngr.config['login'] = False
         mngr.SaveConfig()
-        print "OnDisconnection"
+        pass
     def OnAddInsUpdate(self, custom):
-        print "OnAddInsUpdate", custom
+        pass
     def OnStartupComplete(self, custom):
-        print "OnStartupComplete", custom
+        pass
     def OnBeginShutdown(self, custom):
-        print "OnBeginShutdown", custom
+        pass
     def GetAppDataPath(self):
         mngr = manager.GetManager()
         return mngr.data_directory

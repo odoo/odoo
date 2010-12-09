@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 22:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 21:11+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -38,11 +38,6 @@ msgstr "Socio pagado"
 #: view:report.membership:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -190,9 +185,11 @@ msgid "From"
 msgstr "Desde"
 
 #. module: membership
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr ""
+"Error, este producto para socios está caducado (intervalo de fechas "
+"desfasado)"
 
 #. module: membership
 #: help:res.partner,membership_state:0
@@ -218,30 +215,15 @@ msgid "Create"
 msgstr "Crear"
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "Socio facturado puede ser un socio beneficiario."
-
-#. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Member line"
 msgstr "Línea de socio"
-
-#. module: membership
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: membership
 #: help:report.membership,date_from:0
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Fecha inicio afiliación"
-
-#. module: membership
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: membership
 #: code:addons/membership/membership.py:0
@@ -299,6 +281,8 @@ msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Un miembro con el que desea asociar su afiliación. Se tendrá en cuenta el "
+"estado de socio de los miembros asociados."
 
 #. module: membership
 #: field:membership.membership_line,membership_id:0
@@ -313,9 +297,9 @@ msgid "Define product for membership."
 msgstr "Definir producto para socios."
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr "Socio facturado puede ser un socio beneficiario."
 
 #. module: membership
 #: view:membership.invoice:0
@@ -376,7 +360,7 @@ msgstr "Plantilla producto"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr "Setiembre"
+msgstr "Septiembre"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -505,14 +489,14 @@ msgid "Member"
 msgstr "Miembro"
 
 #. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivos."
+
+#. module: membership
 #: view:product.product:0
 msgid "Date From"
 msgstr "Fecha desde"
-
-#. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -623,15 +607,6 @@ msgid "Membership Fee"
 msgstr "Cuota socio"
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"¡Error!  No puede asignar la tarifa principal como otra tarifa en un "
-"elemento de la tarifa."
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "Importe socio"
@@ -721,14 +696,6 @@ msgid "Categorization"
 msgstr "Categorización"
 
 #. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr "Factura borrador para socio."
@@ -765,11 +732,6 @@ msgstr "Socio gratis"
 #: selection:report.membership,month:0
 msgid "May"
 msgstr "Mayo"
-
-#. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "¡No puede tener 2 versiones de tarifa que se solapen!"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
@@ -865,13 +827,11 @@ msgstr "Ingreso realizado"
 #~ msgid "Free members"
 #~ msgstr "Socios gratis"
 
-#~ msgid "Error, this membership product is out of date"
-#~ msgstr ""
-#~ "Error, este producto para socios está caducado (intervalo de fechas "
-#~ "desfasado)"
-
 #~ msgid "Confirm"
 #~ msgstr "Confirmar"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid "State"
 #~ msgstr "Estado"
@@ -933,6 +893,12 @@ msgstr "Ingreso realizado"
 #~ msgid "Paid members"
 #~ msgstr "Socios pagados"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Canceled Member"
 #~ msgstr "Socio cancelado"
 
@@ -954,8 +920,33 @@ msgstr "Ingreso realizado"
 #~ msgid "Error: Invalid Bvr Number (wrong checksum)."
 #~ msgstr "Error: Número BVR no válido (checksum erróneo)."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "¡No puede tener 2 versiones de tarifa que se solapen!"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "¡Error!  No puede asignar la tarifa principal como otra tarifa en un "
+#~ "elemento de la tarifa."
+
 #~ msgid "Active Membership since this date"
 #~ msgstr "Socio activo desde esta fecha."
 
 #~ msgid "Expired date of Membership"
 #~ msgstr "Fecha expiración de socio."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

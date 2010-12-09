@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-22 07:37+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-11-30 14:33+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -29,7 +30,7 @@ msgstr "Partner Währung"
 #. module: account_payment
 #: sql_constraint:ir.module.module:0
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -66,6 +67,10 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Wenn ein Zahlungsauftrag erstellt wird ist der Status 'Entwurf'.\n"
+" Durch Bestätigung wechselt der Status in 'Bestätigt'.\n"
+" Durch die tatsächliche Freigabe zu Zahlung wechselt der Status auf "
+"'Erledigt'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -99,7 +104,7 @@ msgstr "Buchungen nach Journal"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Verwendetes Konto"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -121,7 +126,7 @@ msgstr "_Add to payment order"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Beleg zu Zahlungsvorschlag"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -198,7 +203,7 @@ msgstr "Zahlungsvorschlag Positionen"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Zahlungstyp"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -208,7 +213,7 @@ msgstr "Strukturiert"
 #. module: account_payment
 #: sql_constraint:ir.module.module:0
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -272,7 +277,7 @@ msgstr "Datum Ausführung"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Bank oder Barkasse Journal für den Zahlungsmodus"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -293,7 +298,7 @@ msgstr "Konto Zahlungsempfänger"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Suche Zahlungsaufträge"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
@@ -309,6 +314,8 @@ msgstr "Erzeugt"
 #: sql_constraint:ir.rule:0
 msgid "Rule must have at least one checked access right !"
 msgstr ""
+"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+"vorhanden sein !"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -333,7 +340,7 @@ msgstr "Zahlungsvorschläge"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Bankauszug Positionen"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -371,7 +378,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Beleg Zahlungsvorschlag"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -381,7 +388,7 @@ msgstr "Zahlungsmodus"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Datum Wertstellung"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -402,7 +409,7 @@ msgstr "Entwurf"
 #. module: account_payment
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -423,12 +430,12 @@ msgstr "Adresse des Auftraggebers"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Zahlungsvorschlag:"
 
 #. module: account_payment
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -449,7 +456,7 @@ msgstr "Buchungszeilen"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Journaleinträge"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -507,7 +514,7 @@ msgstr "Der Auftraggeber / Kunde"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Zahlungsdurchführung"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -562,7 +569,7 @@ msgstr "Abbrechen"
 #. module: account_payment
 #: sql_constraint:ir.model.fields:0
 msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -612,7 +619,7 @@ msgstr "Konto Zahlungsempfänger"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie die Zahlung freigeben wollen?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -706,17 +713,21 @@ msgid ""
 "payment orders that should be done, keep track of all payment orders and "
 "mention the invoice reference and the partner the payment should be done for."
 msgstr ""
+"Ein Zahlungsvorschlag ist eine Anweisung an Ihre Bank für die Bezahlung von "
+"Eingangsrechnungen oder zur Rückzahlung von Kundengutschriften. Hier können "
+"Sie alle einzelnen zu überweisenden Zahlungspositionen bestätigen und diese "
+"über die Rechnung und den Partner rückverfolgen."
 
 #. module: account_payment
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Bezahlung"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
