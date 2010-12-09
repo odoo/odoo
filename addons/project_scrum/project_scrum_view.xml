@@ -130,7 +130,7 @@
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
                     <group col="10" colspan="4">
-                        <filter default="1"
+                        <filter
                             icon="terp-check"
                             string="Current"
                             name="current"
@@ -429,7 +429,7 @@
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
-                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
+                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>

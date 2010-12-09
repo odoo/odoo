@@ -72,7 +72,6 @@
                         domain="[('state','=','cancel')]" />
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
                             <filter icon="terp-personal+" groups="base.group_extended"
                             context="{'invisible_section': False}"
@@ -99,8 +98,7 @@
                     <newline/>
                     <group expand="1" string="Group By...">
                         <filter string="Salesman" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}"
-                            default="1" />
+                            domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
