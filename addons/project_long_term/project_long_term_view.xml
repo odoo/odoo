@@ -377,7 +377,7 @@
         src_model="project.phase"
         view_mode="tree,form"
         context="{'search_default_phase_id': [active_id]}"
-        domain="[('phase_id', '=', active_id)]"
+        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
         />
 
     <act_window

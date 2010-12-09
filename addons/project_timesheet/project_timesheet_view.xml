@@ -19,6 +19,18 @@
             </field>
         </record>
 
+	<record id="project_invoice_form_cutomer" model="ir.ui.view">
+            <field name="name">Inherit project form : Customer</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project_invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                </field>
+            </field>
+        </record>
+
         <record id="project_invoice_search" model="ir.ui.view">
             <field name="name">Inherit project search view : Invoicing Data</field>
             <field name="model">project.project</field>
