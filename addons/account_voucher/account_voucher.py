@@ -449,6 +449,16 @@ class account_voucher(osv.osv):
         ids.reverse()
         moves = move_line_pool.browse(cr, uid, ids)
 
+        priority_moves = []
+        unpriority_moves = []
+        for line in moves:
+            original_amount = line.credit or line.debit or 0.0
+            if original_amount == price:
+                priority_moves.append(line)
+            else:
+                unpriority_moves.append(line)
+        moves = priority_moves + unpriority_moves
+
         company_currency = journal.company_id.currency_id.id
         if company_currency != currency_id and ttype == 'payment':
             total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit)
@@ -469,13 +479,13 @@ class account_voucher(osv.osv):
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
 
-            orignal_amount = line.credit or line.debit or 0.0
+            original_amount = line.credit or line.debit or 0.0
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
-                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, orignal_amount),
+                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, original_amount),
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled':currency_pool.compute(cr, uid, company_currency, currency_id, line.amount_unreconciled)
@@ -499,7 +509,6 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
-
         return default
 
     def onchange_date(self, cr, user, ids, date, context={}):

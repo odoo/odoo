@@ -6,21 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-29 07:25+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 22:49+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -42,12 +37,6 @@ msgstr "Día"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Cancelar pedido"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Ventas por empresa"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -165,11 +154,6 @@ msgid "Total Price"
 msgstr "Precio total"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr "Marque esta opción para agrupar las facturas de los mismos clientes."
@@ -178,6 +162,13 @@ msgstr "Marque esta opción para agrupar las facturas de los mismos clientes."
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Cantidades ordenadas"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr "Ventas por comercial"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -217,11 +208,6 @@ msgstr ""
 "facturadas. Esta vista le permite facturar parcialmente pedidos de venta, "
 "por líneas. No necesita esta lista si factura basándose en albaranes de "
 "entrega o si factura las ventas integralmente."
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -312,6 +298,11 @@ msgstr "Agosto"
 #, python-format
 msgid "EAN: "
 msgstr "EAN: "
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -538,6 +529,11 @@ msgstr ""
 "¡No se puede eliminar pedido(s) de venta que ya está(n) confirmado(s)!"
 
 #. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr "Ventas por cliente"
+
+#. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
 msgstr "Dirección factura"
@@ -678,11 +674,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr "Indica que una factura ha sido pagada."
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr "Fecha pedido"
@@ -742,8 +733,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "¿Desea crear la(s) factura(s)?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Ventas por mes"
@@ -779,14 +768,9 @@ msgid "Exception"
 msgstr "Excepción"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"No puede realizar un avance de factura de un pedido de venta definido como "
-"'Factura automática después envío'."
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Envío directo"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -936,6 +920,12 @@ msgstr ""
 "serie de términos de venta que se utilizan en la transacción comercial."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr "Ventas por empresa"
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Contacto que realiza el pedido"
@@ -1015,11 +1005,6 @@ msgstr "Tarifas de venta"
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
 msgstr "Crear orden de entrega"
-
-#. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no son soportadas en objetos osv_memory!"
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -1116,8 +1101,8 @@ msgstr "Fecha pedido"
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
-"This is the list of picking list that have been generated for this invoice"
-msgstr "Ésta es la lista de albaranes que se han generado para esta factura"
+"This is a list of picking that has been generated for this sale order"
+msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1240,11 +1225,6 @@ msgid "Shipped Quantities"
 msgstr "Cantidades enviadas"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Factura basada en pedidos de venta"
@@ -1255,9 +1235,13 @@ msgid "Picking List"
 msgstr "Albarán"
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "desde stock"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
+"El comercial confirma el presupuesto. El estado del pedido de venta se "
+"convierte en 'En progreso' o 'Manual en progreso'."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1331,22 +1315,9 @@ msgid "Create invoices"
 msgstr "Crear facturas"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
-"categoría."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr "Venta Línea_pedido Realizar_factura"
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1460,11 +1431,6 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1474,14 +1440,6 @@ msgstr "¡Podría no cancelar la línea de pedido de venta!"
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr "Albarán y Orden de entrega"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1564,15 +1522,8 @@ msgid "Product UoM"
 msgstr "UdM del producto"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Ventas por comercial"
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr "Logística"
 
 #. module: sale
@@ -1751,6 +1702,12 @@ msgid "Warning"
 msgstr "Aviso"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr "Ventas por mes"
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Pedido de venta"
@@ -1775,6 +1732,11 @@ msgstr "Confirmado"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Confirmar"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1970,9 +1932,14 @@ msgid "Payment Terms"
 msgstr "Plazos de pago"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Envío directo"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
+"No puede realizar un avance de factura de un pedido de venta definido como "
+"'Factura automática después envío'."
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -2034,13 +2001,9 @@ msgid "Date Order"
 msgstr "Fecha pedido"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
-"El comercial confirma el presupuesto. El estado del pedido de venta se "
-"convierte en 'En progreso' o 'Manual en progreso'."
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "desde stock"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -2049,19 +2012,9 @@ msgid "Sale Shop"
 msgstr "Tienda de ventas"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Ventas por cliente"
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Cerrar"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2073,6 +2026,11 @@ msgstr "Entregado"
 #, python-format
 msgid "Not enough stock !"
 msgstr "¡No hay stock suficiente!"
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: sale
 #: view:sale.order:0
@@ -2299,6 +2257,12 @@ msgstr "Facturar desde albaranes"
 #~ msgid "Packing"
 #~ msgstr "Empaquetado/Albarán"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
+
 #~ msgid "Sales orders"
 #~ msgstr "Pedidos de ventas"
 
@@ -2338,6 +2302,12 @@ msgstr "Facturar desde albaranes"
 
 #~ msgid "Sales Process"
 #~ msgstr "Proceso de ventas"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Error: La UdM por defecto y la UdM de compra deben estar en la misma "
+#~ "categoría."
 
 #~ msgid "My sales in shipping exception"
 #~ msgstr "Mis ventas en excepción de envío"
@@ -2392,6 +2362,12 @@ msgstr "Facturar desde albaranes"
 
 #~ msgid "Advance Payment"
 #~ msgstr "Pago anticipado"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Confirm sale order and Create invoice."
 #~ msgstr "Confirmar pedido de venta y crear factura."
@@ -2466,6 +2442,9 @@ msgstr "Facturar desde albaranes"
 
 #~ msgid "Related Packing"
 #~ msgstr "Albarán relacionado"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
 
 #~ msgid "Invoice from the Packing"
 #~ msgstr "Facturar desde el albarán"
@@ -2641,6 +2620,9 @@ msgstr "Facturar desde albaranes"
 #~ msgid "Sales by State"
 #~ msgstr "Ventas por estado"
 
+#~ msgid "Sales By Partner"
+#~ msgstr "Ventas por empresa"
+
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
 #~ "products to the customer"
@@ -2665,8 +2647,11 @@ msgstr "Facturar desde albaranes"
 #~ "comercial. En función del control de facturación del pedido de venta, la "
 #~ "factura se basa en las cantidades enviadas o en las ordenadas."
 
-#~ msgid "Logistic"
-#~ msgstr "Logística"
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Sales By Salesman"
+#~ msgstr "Ventas por comercial"
 
 #, python-format
 #~ msgid ""
@@ -2676,5 +2661,26 @@ msgstr "Facturar desde albaranes"
 #~ "No se puede hacer un anticipo de un pedido de venta \\n que esté defino como "
 #~ "'Facturar pedido después del envío'."
 
+#~ msgid "Sales By Customer"
+#~ msgstr "Ventas por cliente"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "¡Las reglas no son soportadas en objetos osv_memory!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
 #~ msgid "Configure Sale Order Logistics"
 #~ msgstr "Configurar la logística de los pedidos de venta"
+
+#~ msgid "Logistics"
+#~ msgstr "Logística"

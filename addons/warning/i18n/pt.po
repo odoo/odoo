@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-27 04:51+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-06 12:45+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -21,14 +21,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Linha de Ordem de Compra"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
-"especial !"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -41,9 +33,9 @@ msgid "Message for Purchase Order Line"
 msgstr "Mensagem para Linha de Ordem de Compra"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erro! Não pode criar membros associados recursivamente."
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
@@ -62,11 +54,6 @@ msgid "Warning when Purchasing this Product"
 msgstr "Atenção quando Adquerir este Produto"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Produto"
@@ -76,6 +63,16 @@ msgstr "Produto"
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Avisos"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Aviso"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -103,11 +100,6 @@ msgid "No Message"
 msgstr "Sem Mensagem"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML Inválido para a Arquitectura de Vista!"
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
@@ -130,9 +122,9 @@ msgid "Sale Order"
 msgstr "Ordem de Venda"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Recolha de Stock"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Mensagem para Factura"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -169,9 +161,9 @@ msgstr ""
 "blqueio de fluxo. A mensagem tem de ser escrita no próximo campo."
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Mensagem para Factura"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Recolha de Stock"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
@@ -200,14 +192,9 @@ msgid "Warning on the Sale Order"
 msgstr "Aviso na Ordem de Venda"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Aviso"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erro: Código EAN inválido"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -219,7 +206,20 @@ msgstr "Mensagem para Recolha de Stock"
 msgid "Partner"
 msgstr "Terceiro"
 
-#. module: warning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"

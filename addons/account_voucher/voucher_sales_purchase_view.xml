@@ -133,7 +133,7 @@
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
@@ -240,7 +240,7 @@
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all'))]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" groups="base.group_extended" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" groups="base.group_extended" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label string="" colspan="1"/><field name="amount" string="Total"/>
                                 </group>
                             </group>
@@ -259,7 +259,9 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','!=','pay_now'), ('state','!=','posted')]}"/>
+                        <group attrs="{'invisible':[('state','!=','posted')]}">
+                            <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
+                        </group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
