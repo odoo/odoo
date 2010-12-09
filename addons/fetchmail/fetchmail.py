@@ -82,7 +82,7 @@ class email_server(osv.osv):
         return True
 
     def check_model(self, cr, uid, ids, context = None):
-        if not context:
+        if context is None:
             context = {}
         current_rec = self.read(cr, uid, ids, context)[0]
         if current_rec:
@@ -93,7 +93,7 @@ class email_server(osv.osv):
 
     _constraints = [
         (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
-        (check_model, 'Warning! Record for slected Model can not be created\nPlease choose valid Model', ['object_id'])
+        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
