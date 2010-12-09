@@ -671,6 +671,8 @@ class sale_order(osv.osv):
     def action_ship_create(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         picking_id = False
+        move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('procurement.order')
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
             proc_ids = []
@@ -722,6 +724,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
+                    
                 if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
@@ -742,6 +745,16 @@ class sale_order(osv.osv):
                     })
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
+                    
+                    if order.state == 'shipping_except':
+                        for pick in order.picking_ids:
+                            for move in pick.move_lines:
+                                if move.state == 'cancel':
+                                    mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
+                                    if mov_ids:
+                                        for mov in move_obj.browse(cr, uid, mov_ids):
+                                            move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+                                            proc_obj.write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
 
             val = {}
             for proc_id in proc_ids:
@@ -749,9 +762,10 @@ class sale_order(osv.osv):
 
             if picking_id:
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-
+            
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
+                val['shipped'] = False
 
                 if (order.order_policy == 'manual'):
                     for line in order.order_line:
