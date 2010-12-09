@@ -81,8 +81,8 @@ class ir_model(osv.osv):
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
     
-    def _check_model_name(self, cr, uid, ids):
-        for model in self.browse(cr, uid, ids):
+    def _check_model_name(self, cr, uid, ids, context=None):
+        for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
                 if not model.model.startswith('x_'):
                     return False

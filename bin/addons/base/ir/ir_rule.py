@@ -47,7 +47,7 @@ class ir_rule(osv.osv):
                 res[rule.id] = False
         return res
 
-    def _check_model_obj(self, cr, uid, ids, context={}):
+    def _check_model_obj(self, cr, uid, ids, context=None):
         return not any(isinstance(self.pool.get(rule.model_id.model), osv.osv_memory) for rule in self.browse(cr, uid, ids, context))
 
     _columns = {

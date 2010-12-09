@@ -257,16 +257,6 @@ class ir_ui_menu(osv.osv):
             return {}
         return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from ir_ui_menu where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     def read_image(self, path):
         path_info = path.split(',')
         icon_path = addons.get_module_resource(path_info[0],path_info[1])
@@ -318,7 +308,7 @@ class ir_ui_menu(osv.osv):
         return _('Error ! You can not create recursive Menu.')
 
     _constraints = [
-        (_check_recursion, _rec_message , ['parent_id'])
+        (osv.osv._check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
         'icon' : 'STOCK_OPEN',

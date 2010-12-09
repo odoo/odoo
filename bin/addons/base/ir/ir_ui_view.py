@@ -28,7 +28,7 @@ import netsvc
 import os
 import logging
 
-def _check_xml(self, cr, uid, ids, context={}):
+def _check_xml(self, cr, uid, ids, context=None):
     logger = logging.getLogger('init')
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
