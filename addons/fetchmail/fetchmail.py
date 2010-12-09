@@ -57,9 +57,8 @@ class email_server(osv.osv):
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'note': fields.text('Description'),
-        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]", 
-                                    help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
-        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model."),
+        'action_id':fields.many2one('ir.actions.server', 'Email Server Action', required=False, domain="[('state','=','email')]", help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
+        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
         'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
@@ -82,8 +81,19 @@ class email_server(osv.osv):
                 return False
         return True
 
+    def check_model(self, cr, uid, ids, context = None):
+        if context is None:
+            context = {}
+        current_rec = self.read(cr, uid, ids, context)[0]
+        if current_rec:
+            model = self.pool.get(current_rec.get('object_id')[1])
+            if hasattr(model, 'message_new'):
+                return True
+        return False
+
     _constraints = [
-        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password'])
+        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
+        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -150,6 +160,7 @@ class email_server(osv.osv):
         context.update({'get_server': True})
         for server in self.browse(cr, uid, ids, context):
             count = 0
+            user = server.user_id.id or uid
             try:
                 if server.type == 'imap':
                     imap_server = self.button_confirm_login(cr, uid, [server.id], context=context)
@@ -157,7 +168,7 @@ class email_server(osv.osv):
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
@@ -174,7 +185,7 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, msg, attach=server.attach, context=context)
+                        res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 

@@ -78,7 +78,6 @@
 
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
 
                             <filter icon="terp-personal+" groups="base.group_extended"
@@ -87,7 +86,7 @@
                                 help="My Sales Team(s)" />
 
                         </field>
-                        <field name="company_id">
+                        <field name="company_id" groups="base.group_multi_company">
                             <filter icon="terp-go-home"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id.company_id','=',uid)]"

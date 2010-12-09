@@ -7,7 +7,7 @@
             <field name="model">email.server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('wating');gray:state in('done')" string="POP/IMAP Servers">
+                <tree colors="blue:state in ('draft');black:state in ('waiting');gray:state in('done')" string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="user"/>
@@ -48,6 +48,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Auto Reply?" colspan="2"/>
                                 <field name="action_id"/>
+                                <field name="user_id"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Process Parameter" colspan="2"/>
