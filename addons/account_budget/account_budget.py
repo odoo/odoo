@@ -177,7 +177,7 @@ class crossovered_budget_lines(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids):
             if line.theoritical_amount <> 0.00:
-                res[line.id] = float(line.practical_amount or 0.0 / line.theoritical_amount) * 100
+                res[line.id] = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
             else:
                 res[line.id] = 0.00
         return res
