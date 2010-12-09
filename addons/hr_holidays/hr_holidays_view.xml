@@ -9,8 +9,7 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"
-                            default="context.get('report', False)"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
@@ -24,7 +23,7 @@
                                 domain="[('employee_id.user_id','=', uid)]"
                                 help="My Leaves" />
                         </field>
-                        <field name="department_id" widget="selection" default="context.get('department_id', False)" >
+                        <field name="department_id" widget="selection">
                             <filter icon="terp-personal+" help="My Department Holidays"
                                 domain="[('department_id.manager_id','=',uid)]" />
                         </field>
@@ -41,8 +40,7 @@
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
                         <separator orientation="vertical"/>
-                        <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"
-                            default="context.get('report', False)"/>
+                        <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
@@ -449,7 +447,7 @@
             context="{'search_default_employee_id': [active_id]}"
             res_model="hr.holidays"
             src_model="hr.employee"
-            view_id ="eval('edit_holiday_new')"
+            view_id ="edit_holiday_new"
             id="act_hr_employee_holiday_request"/>
 
     </data>

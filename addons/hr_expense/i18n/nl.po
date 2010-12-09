@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 07:44+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-02 07:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -60,11 +60,6 @@ msgstr "Ongeldige modelnaam in de actie-definitie."
 #: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Afdeling"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Extended filters..."
-msgstr "Uitgebreide filters..."
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -272,6 +267,11 @@ msgstr "Aantal"
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Totaalprijs"
+
+#. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -523,6 +523,11 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: hr_expense
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: hr_expense
 #: report:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
@@ -533,6 +538,11 @@ msgstr "Datum"
 #: selection:hr.expense.report,month:0
 msgid "November"
 msgstr "November"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
+msgstr "Uitgebreide filters..."
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -604,9 +614,19 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: hr_expense
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Doorbelasten"
+
+#. module: hr_expense
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: hr_expense
 #: view:board.board:0
@@ -718,6 +738,23 @@ msgstr "Ref."
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
 msgstr "Naam medewerker"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on "
+"projects/analytic accounts. The accountant validates the proposed entries "
+"and the employee can be reimbursed. You can also reinvoice the customer at "
+"the end of the flow."
+msgstr ""
+"De OpenERP declaraties beheer module laat u het hele proces volgen. Elke "
+"maand voeren medewerkers hun declaraties in. Aan het einde van de maand "
+"controleren hun managers de declaraties die kosten op "
+"projecten/kostenplaatsen maken. De boekhouder controleert de voorgestelde "
+"verwerking en de medewerker krijgt zijn vergoeding. U kunt ook aan de klant "
+"doorberekenen aan het einde van het proces."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -911,3 +948,6 @@ msgstr "Doorbelasten"
 
 #~ msgid "Draft expenses"
 #~ msgstr "Conceptdeclaraties"
+
+#~ msgid "Extended filters..."
+#~ msgstr "Uitgebreide filters..."

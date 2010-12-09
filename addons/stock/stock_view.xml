@@ -2,7 +2,10 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" groups="group_stock_manager,group_stock_user" sequence="5"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"
+                  groups="group_stock_manager,group_stock_user" sequence="5"
+                  web_icon="images/warehouse.png"
+                  web_icon_hover="images/warehouse-hover.png"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="base.group_extended"/>
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
@@ -648,7 +651,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="product_uos" groups="product.product_uos"/>
+                                    <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -667,15 +670,15 @@
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         icon="terp-stock_effects-object-colorize"
                                         groups="base.group_extended"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_expected" string="Date Expected"/>
@@ -692,7 +695,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                                         <field name="product_uom" string="Unit Of Measure" colspan="4"/>
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
@@ -716,14 +719,14 @@
                                         <button name="%(split_into)d" string="New pack" type="action"
                                               groups="base.group_extended"
                                               icon="terp-stock_effects-object-colorize"
-                                              states="draft,assigned,confirmed,done"  colspan="1"/>
+                                              states="draft,assigned,confirmed"  colspan="1"/>
                                         <field name="prodlot_id" groups="base.group_extended"
                                             context="{'location_id':location_id, 'product_id':product_id}"
                                             domain="[('product_id','=?',product_id)]"
                                             on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"  colspan="3"/>
                                         <button name="%(track_line)d"
                                             groups="base.group_extended"
-                                            states="draft,waiting,confirmed,assigned,done"
+                                            states="draft,waiting,confirmed,assigned"
                                             string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1" />
                                     </group>
                                     <label string="" colspan="4"/>
@@ -847,7 +850,7 @@
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
-                                    <field name="product_uos" groups="product.product_uos"/>
+                                    <field name="product_uos" groups="product.group_uos"/>
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -856,18 +859,18 @@
                                     <field name="prodlot_id" groups="base.group_extended"/>
                                     <button name="%(track_line)d" string="Split in production lots" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
-                                        states="draft,assigned,confirmed,done"
+                                        states="draft,assigned,confirmed"
                                         groups="base.group_extended"/>
                                     <field name="tracking_id" groups="base.group_extended"/>
                                     <button name="setlast_tracking" string="Put in current pack" type="object"
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         icon="terp-stock_effects-object-colorize"
                                         groups="base.group_extended"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <field name="location_id"/>
                                     <field name="date"/>
                                     <field name="state"/>
@@ -885,7 +888,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1" groups="base.group_extended"/>
                                         <field name="product_uom" string="Unit Of Measure" colspan="4" />
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4" />
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4" />
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4" />
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4" />
                                     </group>
@@ -909,14 +912,14 @@
                                           <button name="%(split_into)d" string="New pack" type="action"
                                               groups="base.group_extended"
                                               icon="terp-stock_effects-object-colorize"
-                                              states="draft,assigned,confirmed,done" colspan="1"/>
+                                              states="draft,assigned,confirmed" colspan="1"/>
                                         <field name="prodlot_id" groups="base.group_extended"
                                             context="{'location_id':location_id, 'product_id':product_id}"
                                             domain="[('product_id','=?',product_id)]"
                                             on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
                                         <button name="%(track_line)d"
                                               groups="base.group_extended"
-                                              states="draft,waiting,confirmed,assigned,done"
+                                              states="draft,waiting,confirmed,assigned"
                                               string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1" />
                                     </group>
                                     <label string="" colspan="4"/>
@@ -1086,7 +1089,7 @@
                                     <button name="setlast_tracking" string="Put in current pack" type="object"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed"/>
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
@@ -1105,7 +1108,7 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned" colspan="1"/>
                                         <field name="product_uom" string="Unit Of Measure" colspan="4"/>
-                                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
+                                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                                         <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" colspan="4"/>
                                         <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]" colspan="4"/>
                                     </group>
@@ -1129,14 +1132,14 @@
                                         <button name="%(split_into)d" string="New pack" type="action"
                                               groups="base.group_extended"
                                               icon="terp-stock_effects-object-colorize"
-                                              states="draft,assigned,confirmed,done" colspan="1"/>
+                                              states="draft,assigned,confirmed" colspan="1"/>
                                         <field name="prodlot_id" groups="base.group_extended"
                                             context="{'location_id':location_id, 'product_id':product_id}"
                                             domain="[('product_id','=?',product_id)]"
                                             on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
                                         <button name="%(track_line)d"
                                               groups="base.group_extended"
-                                              states="draft,waiting,confirmed,assigned,done"
+                                              states="draft,waiting,confirmed,assigned"
                                               string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1" />
                                     </group>
                                     <label string="" colspan="4"/>
@@ -1316,7 +1319,7 @@
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="UoM"/>
-                    <field name="product_uos" groups="product.product_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
                         string="Scrap Products" type="action"
                         icon="gtk-convert" context="{'scrap': True}"
@@ -1373,7 +1376,7 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.group_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
                         <field name="product_uos" groups="product.group_uos" colspan="4"/>
                     </group>
 
@@ -1396,14 +1399,14 @@
                         <button name="%(split_into)d" string="New pack" type="action"
                               groups="base.group_extended"
                               icon="terp-stock_effects-object-colorize"
-                              states="draft,assigned,confirmed,done" colspan="1"/>
+                              states="draft,assigned,confirmed" colspan="1"/>
                         <field name="prodlot_id" groups="base.group_extended"
                             context="{'location_id':location_id, 'product_id':product_id}"
                             domain="[('product_id','=?',product_id)]"
                             on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
                         <button name="%(track_line)d"
                               groups="base.group_extended"
-                              states="draft,waiting,confirmed,assigned,done"
+                              states="draft,waiting,confirmed,assigned"
                               string="Split" type="action" icon="terp-stock_effects-object-colorize" colspan="1"/>
                     </group>
 
@@ -1569,8 +1572,8 @@
                     <group colspan="2" col="2">
                         <separator colspan="2" string="Move Information"/>
                         <field name="name" string="Reason"/>
-                        <field name="product_uos_qty" groups="product.product_uos" colspan="4"/>
-                        <field name="product_uos" groups="product.product_uos" colspan="4"/>
+                        <field name="product_uos_qty" groups="product.group_uos"  on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" colspan="4"/>
+                        <field name="product_uos" groups="product.group_uos" colspan="4"/>
                     </group>
 
                     <group colspan="2" col="2">
@@ -1755,7 +1758,7 @@
             src_model="stock.location"/>
 
         <act_window
-            context="{'location': active_id, 'search_default_done': 1,'search_default_product_id': [active_id]}"
+            context="{'search_default_done': 1,'search_default_product_id': [active_id]}"
             id="act_product_stock_move_open"
             name="Stock Moves"
             res_model="stock.move"
@@ -1769,7 +1772,7 @@
             src_model="stock.move"/>
 
         <act_window
-            context="{'location': active_id, 'search_default_future': 1,'search_default_product_id': [active_id]}"
+            context="{'search_default_future': 1,'search_default_product_id': [active_id]}"
             domain="[('state','in',('waiting','confirmed','assigned'))]"
             id="act_product_stock_move_futur_open"
             name="Future Stock Moves"

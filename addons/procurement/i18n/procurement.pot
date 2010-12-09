@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12:50+0000\n"
-"PO-Revision-Date: 2010-11-18 16:12:50+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:13+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,11 +44,6 @@ msgstr ""
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: procurement
@@ -197,18 +192,13 @@ msgid "Reference of the document that created this Procurement.\n"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: procurement
@@ -249,11 +239,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: procurement
@@ -316,13 +301,8 @@ msgid "Configuration"
 msgstr ""
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
@@ -331,18 +311,8 @@ msgid "If you encode manually a Procurement, you probably want to use a make to 
 msgstr ""
 
 #. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistics Scheduler"
-msgstr ""
-
-#. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr ""
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
 msgstr ""
 
 #. module: procurement
@@ -425,6 +395,11 @@ msgid "Please check the Quantity in Procurement Order(s), it should not be less 
 msgstr ""
 
 #. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid "If the active field is set to False, it will allow you to hide the orderpoint without removing it."
+msgstr ""
+
+#. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 msgid "When the virtual stock goes belong the Max Quantity, OpenERP generates a procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
@@ -456,13 +431,8 @@ msgid "Draft"
 msgstr ""
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: procurement
@@ -486,13 +456,8 @@ msgid "Normal"
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr ""
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid "If the active field is set to true, it will allow you to hide the orderpoint without removing it."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
@@ -527,8 +492,8 @@ msgid "Automatic Order Point"
 msgstr ""
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
 msgstr ""
 
 #. module: procurement
@@ -544,6 +509,11 @@ msgstr ""
 #. module: procurement
 #: help:procurement.order,name:0
 msgid "Procurement name."
+msgstr ""
+
+#. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: procurement
@@ -624,8 +594,8 @@ msgid "Done"
 msgstr ""
 
 #. module: procurement
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
 msgstr ""
 
 #. module: procurement
@@ -636,11 +606,6 @@ msgstr ""
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: procurement
@@ -781,6 +746,11 @@ msgid "This wizard will plan the procurement for this product. This procurement 
 msgstr ""
 
 #. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -837,11 +807,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Details"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: procurement

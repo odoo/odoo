@@ -23,9 +23,8 @@
 import base64
 import random
 import netsvc
+import logging
 import re
-
-LOGGER = netsvc.Logger()
 
 TEMPLATE_ENGINES = []
 
@@ -35,12 +34,9 @@ from tools.translate import _
 try:
     from mako.template import Template as MakoTemplate
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Mako templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Mako templates not installed")
+    
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -49,12 +45,8 @@ try:
     settings.configure()
     #Workaround ends
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Django templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Django templates not installed")
 
 import tools
 import pooler
@@ -731,7 +723,7 @@ class email_template_preview(osv.osv_memory):
             ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             model_obj = self.pool.get(ref_obj_name)
-            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id desc', context=context)
+            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id', context=context)
             if not ref_obj_ids:
                 ref_obj_ids = []
 

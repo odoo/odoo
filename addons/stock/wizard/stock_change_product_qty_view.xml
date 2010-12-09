@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_change_product_quantity" model="ir.ui.view">
+            <field name="name">Change Product Quantity</field>
+            <field name="model">stock.change.product.qty</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Change Product Quantity">
+                    <separator string="Select Quantity" colspan="4"/>
+                    <newline/>
+                    <field name="new_quantity" />
+                    <newline/>
+                    <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
+                    <field name="location_id" />
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="change_product_qty" string="_Apply" type="object" icon="gtk-apply"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_change_product_quantity" model="ir.actions.act_window">
+            <field name="name">Change Product Quantity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.change.product.qty</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_product_quantity"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
+

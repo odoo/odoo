@@ -6,68 +6,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-24 14:52+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-04 09:26+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-05 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: association
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
-"spécial !"
-
-#. module: association
-#: help:profile.association.config.install_modules_wizard,event_project:0
-msgid "Helps you to manage and organize your events."
-msgstr ""
-
-#. module: association
-#: help:profile.association.config.install_modules_wizard,project_gtd:0
-msgid ""
-"GTD is a methodology to efficiently organise yourself and your tasks. This "
-"module fully integrates GTD principle with OpenERP's project management."
-msgstr ""
-"GTD est une méthodologie vous permettant de vous organiser et d'organiser "
-"vos tâches efficacement. Ce module intègre complètement les principes GTD "
-"avec la gestion de projets d'OpenERP."
-
-#. module: association
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Le nom du module doit être unique !"
-
-#. module: association
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle incorrect pour la définition de l'action"
-
-#. module: association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "Resources Management"
-msgstr "Gestion des ressources"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,event_project:0
-msgid "Events"
-msgstr "Évènements"
-
-#. module: association
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID du certificat du module doit être unique !"
+#: field:profile.association.config.install_modules_wizard,wiki:0
+msgid "Wiki"
+msgstr "Wiki"
 
 #. module: association
 #: view:profile.association.config.install_modules_wizard:0
 msgid "Event Management"
-msgstr ""
+msgstr "Gestion des évènements"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,project_gtd:0
+msgid "Getting Things Done"
+msgstr "Méthode \"Getting Things Done\""
+
+#. module: association
+#: model:ir.module.module,description:association.module_meta_information
+msgid "This module is to create Profile for Associates"
+msgstr "Ce module ajoute le profil pour les associations"
 
 #. module: association
 #: field:profile.association.config.install_modules_wizard,progress:0
@@ -80,31 +48,38 @@ msgid "title"
 msgstr "titre"
 
 #. module: association
+#: help:profile.association.config.install_modules_wizard,event_project:0
+msgid "Helps you to manage and organize your events."
+msgstr "Permet de gérer et d'organiser vos événements"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,config_logo:0
+msgid "Image"
+msgstr "Image"
+
+#. module: association
 #: help:profile.association.config.install_modules_wizard,hr_expense:0
 msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
 msgstr ""
+"Suit et gère les notes de frais des employés, et peut automatiquement "
+"refacturer aux clients si les dépenses sont liées à un projet."
+
+#. module: association
+#: help:profile.association.config.install_modules_wizard,project_gtd:0
+msgid ""
+"GTD is a methodology to efficiently organise yourself and your tasks. This "
+"module fully integrates GTD principle with OpenERP's project management."
+msgstr ""
+"GTD est une méthodologie qui permet de vous organiser, vous et vos tâches. "
+"Ce module intégre pleinement les principes GTD avec la gestion de projets "
+"d'OpenERP."
 
 #. module: association
 #: model:ir.module.module,shortdesc:association.module_meta_information
 msgid "Association profile"
 msgstr "Profil pour les associations"
-
-#. module: association
-#: model:ir.module.module,description:association.module_meta_information
-msgid "This module is to create Profile for Associates"
-msgstr ""
-
-#. module: association
-#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
-msgid "profile.association.config.install_modules_wizard"
-msgstr "profile.association.config.install_modules_wizard"
-
-#. module: association
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML incorrect pour l'architecture de la vue !"
 
 #. module: association
 #: field:profile.association.config.install_modules_wizard,hr_expense:0
@@ -113,19 +88,17 @@ msgstr "Suivi des frais"
 
 #. module: association
 #: view:profile.association.config.install_modules_wizard:0
-#: field:profile.association.config.install_modules_wizard,project:0
-msgid "Project Management"
-msgstr "Gestion de projets"
+msgid "Resources Management"
+msgstr "Gestion des ressources"
 
 #. module: association
-#: field:profile.association.config.install_modules_wizard,wiki:0
-msgid "Wiki"
-msgstr "Wiki"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,project_gtd:0
-msgid "Getting Things Done"
-msgstr "Méthode \"Getting Things Done\""
+#: help:profile.association.config.install_modules_wizard,wiki:0
+msgid ""
+"Lets you create wiki pages and page groups in order to keep track of "
+"business knowledge and share it with and  between your employees."
+msgstr ""
+"Permet de créer des pages wiki et des groupes de pages pour conserver la "
+"connaissance du métier et de les partager avec les employés."
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,project:0
@@ -137,21 +110,20 @@ msgstr ""
 "des plannings, etc..."
 
 #. module: association
-#: field:profile.association.config.install_modules_wizard,config_logo:0
-msgid "Image"
-msgstr "Image"
+#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
+msgid "profile.association.config.install_modules_wizard"
+msgstr "profile.association.config.install_modules_wizard"
 
 #. module: association
-#: help:profile.association.config.install_modules_wizard,wiki:0
-msgid ""
-"Lets you create wiki pages and page groups in order to keep track of "
-"business knowledge and share it with and  between your employees."
-msgstr ""
+#: field:profile.association.config.install_modules_wizard,event_project:0
+msgid "Events"
+msgstr "Évènements"
 
 #. module: association
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La taille du champ ne peut jamais être inférieure à 1 !"
+#: view:profile.association.config.install_modules_wizard:0
+#: field:profile.association.config.install_modules_wizard,project:0
+msgid "Project Management"
+msgstr "Gestion de projets"
 
 #~ msgid "Relationship Management"
 #~ msgstr "Gestion de la relation"
@@ -207,3 +179,21 @@ msgstr "La taille du champ ne peut jamais être inférieure à 1 !"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuler"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID du certificat du module doit être unique !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
+#~ "spécial !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Le nom du module doit être unique !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML incorrect pour l'architecture de la vue !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La taille du champ ne peut jamais être inférieure à 1 !"
