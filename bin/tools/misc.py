@@ -954,6 +954,7 @@ def get_languages():
         'fr_FR': u'French / Français',
         'gl_ES': u'Galician / Galego',
         'gu_IN': u'Gujarati / ગુજરાતી',
+        'he_IL': u'Hebrew / עִבְרִי',
         'hi_IN': u'Hindi / हिंदी',
         'hr_HR': u'Croatian / hrvatski jezik',
         'hu_HU': u'Hungarian / Magyar',
