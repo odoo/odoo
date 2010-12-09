@@ -81,10 +81,10 @@ class lang(osv.osv):
             context = {}
         languages = self.read(cr, uid, ids, ['code','active'], context=context)
         for language in languages:
-            lang = context.get('lang')
+            ctx_lang = context.get('lang')
             if language['code']=='en_US':
                 raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted !"))
-            if lang and (language['code']==lang):
+            if ctx_lang and (language['code']==ctx_lang):
                 raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language !"))
             if language['active']:
                 raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active !\nPlease de-activate the language first."))
