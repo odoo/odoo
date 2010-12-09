@@ -1,8 +1,14 @@
 # -*- encoding: utf-8 -*-
 
 #
-# Copyright P. Christeas <p_christ@hol.gr> 2008,2009
+# Copyright P. Christeas <p_christ@hol.gr> 2008-2010
 #
+# Disclaimer: Many of the functions below borrow code from the
+#   python-webdav library (http://code.google.com/p/pywebdav/ ),
+#   which they import and override to suit OpenERP functionality.
+# python-webdav was written by: Simon Pamies <s.pamies@banality.de>
+#                               Christian Scholz <mrtopf@webdav.de>
+#                               Vince Spicer <vince@vince.ca>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
