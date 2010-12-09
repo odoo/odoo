@@ -265,7 +265,7 @@
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1" default="1">
+                        <field name="responsible_id" select="1">
                             <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
@@ -1098,7 +1098,7 @@
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection" select="1"/>
                         <field name="email" select="1"/>
-                        <field name="user_id" select="1" default="1">
+                        <field name="user_id" select="1">
                         <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                     </group>
