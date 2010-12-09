@@ -7,25 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-14 08:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 16:23+0000\n"
+"Last-Translator: Fabio Graziosi <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: users_ldap
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per la struttura della vista!"
-
-#. module: users_ldap
-#: view:res.company:0
-msgid "LDAP Configuration"
-msgstr "Configurazione LDAP"
 
 #. module: users_ldap
 #: constraint:ir.model:0
@@ -36,9 +26,29 @@ msgstr ""
 "speciale!"
 
 #. module: users_ldap
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere univoco!"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "Parametri LDAP"
+
+#. module: users_ldap
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID del certificato del modulo deve essere unico!"
+
+#. module: users_ldap
+#: view:res.company:0
+msgid "LDAP Configuration"
+msgstr "Configurazione LDAP"
+
+#. module: users_ldap
 #: field:res.company.ldap,ldap_binddn:0
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: users_ldap
 #: help:res.company.ldap,create_user:0
@@ -61,49 +71,9 @@ msgid "LDAP Server address"
 msgstr "Indirizzo server LDAP"
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: users_ldap
-#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
-msgid "Authenticate users with ldap server"
-msgstr "Autentica utenti con server LDAP"
-
-#. module: users_ldap
 #: field:res.company.ldap,ldap_server_port:0
 msgid "LDAP Server port"
 msgstr "Porta server LDAP"
-
-#. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"
-
-#. module: users_ldap
-#: field:res.company.ldap,ldap_password:0
-msgid "LDAP password"
-msgstr "Password LDAP"
-
-#. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
-msgstr "Parametri LDAP"
-
-#. module: users_ldap
-#: field:res.company.ldap,user:0
-msgid "Model User"
-msgstr "Utente modello"
-
-#. module: users_ldap
-#: field:res.company.ldap,sequence:0
-msgid "Sequence"
-msgstr "Sequenza"
-
-#. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_users
-msgid "res.users"
-msgstr "res.users"
 
 #. module: users_ldap
 #: field:res.company.ldap,ldap_base:0
@@ -111,11 +81,56 @@ msgid "LDAP base"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company.ldap,ldap_filter:0
-msgid "LDAP filter"
-msgstr "Filtro LDAP"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valido per la struttura della vista!"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "Password LDAP"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Sequenza"
+
+#. module: users_ldap
+#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
+msgid "Authenticate users with ldap server"
+msgstr "Autentica utenti con server LDAP"
 
 #. module: users_ldap
 #: field:res.company.ldap,create_user:0
 msgid "Create user"
 msgstr "Crea utente"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "Utente modello"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "Filtro LDAP"
+
+#. module: users_ldap
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere inferiore ad 1!"
