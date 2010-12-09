@@ -889,7 +889,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Exception\' state is set when the related sale order is set as exception. \
                     \n* The \'Done\' state is set when the sale order line has been picked. \
                     \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
-        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
@@ -1067,11 +1067,14 @@ class sale_order_line(osv.osv):
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
             if qty and (q and not (qty % q) == 0):
-                ean = pack.ean
+                ean = pack.ean or _('(n/a)')
                 qty_pack = pack.qty
                 type_ul = pack.ul
-                warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
-                warn_msg = warn_msg + "\n\n" + _("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
+                warn_msg = _("You selected a quantity of %d Units.\n"
+                            "But it's not compatible with the selected packaging.\n"
+                            "Here is a proposition of quantities according to the packaging:\n\n"
+                            "EAN: %s Quantity: %s Type of ul: %s") % \
+                                (qty, ean, qty_pack, type_ul.name)
                 warning = {
                     'title': _('Picking Information !'),
                     'message': warn_msg
