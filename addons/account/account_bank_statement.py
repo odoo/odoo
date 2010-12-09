@@ -298,23 +298,13 @@ class account_bank_statement(osv.osv):
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
         return st_number + '/' + str(st_line.sequence)
 
-#    def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
-#        st = self.browse(cr, uid, st_id, context)
-#        if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
-#            raise osv.except_osv(_('Error !'),
-#                    _('The statement balance is incorrect !\n') +
-#                    _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
-#        return True
-
-    def _balance_check(self, cr, uid, ids, context=None):
-        for st in self.browse(cr, uid, ids):
-            if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
-                return False
+    def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
+        st = self.browse(cr, uid, st_id, context)
+        if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
+            raise osv.except_osv(_('Error !'),
+                    _('The statement balance is incorrect !\n') +
+                    _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
         return True
-
-    _constraints = [
-        (_balance_check, 'The statement balance is incorrect !\n The expected balance is different than the computed one.', ['balance_end','balance_end_real']),
-    ]
 
     def statement_close(self, cr, uid, ids, journal_type='bank', context=None):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
@@ -334,7 +324,7 @@ class account_bank_statement(osv.osv):
             if not self.check_status_condition(cr, uid, st.state, journal_type=j_type):
                 continue
 
-#            self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
+            self.balance_check(cr, uid, st.id, journal_type=j_type, context=context)
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
                 raise osv.except_osv(_('Configuration Error !'),
