@@ -837,7 +837,9 @@ class node_res_dir(node_class):
             where.append(('id','=',self.resm_id))
 
         if name:
-            where.append((self.namefield,'=',name))
+            # The =like character will match underscores against any characters
+            # including the special ones that couldn't exist in a FTP/DAV request
+            where.append((self.namefield,'=like',name.replace('\\','\\\\')))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
@@ -858,12 +860,22 @@ class node_res_dir(node_class):
         for bo in obj.browse(cr, uid, resids, context=ctx):
             if not bo:
                 continue
-            name = getattr(bo, self.namefield)
-            if not name:
+            res_name = getattr(bo, self.namefield)
+            if not res_name:
                 continue
                 # Yes! we can't do better but skip nameless records.
+            
+            # Escape the name for characters not supported in filenames
+            res_name = res_name.replace('/','_') # any other weird char?
+            
+            if name and (res_name != name):
+                # we have matched _ to any character, but we only meant to match
+                # the special ones.
+                # Eg. 'a_c' will find 'abc', 'a/c', 'a_c', may only
+                # return 'a/c' and 'a_c'
+                continue
 
-            res.append(self.res_obj_class(name, self.dir_id, self, self.context, self.res_model, bo))
+            res.append(self.res_obj_class(res_name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
     def _get_ttag(self,cr):
@@ -1016,8 +1028,10 @@ class node_res_obj(node_class):
         # Directory Structure display in tree structure
         if self.res_id and directory.ressource_tree:
             where1 = []
+            if name:
+                where1.append(('name','=like',name.replace('\\','\\\\')))
             if obj._parent_name in obj.fields_get(cr, uid):
-                where1 = where + [(obj._parent_name, '=', self.res_id)]
+                where1.append((obj._parent_name, '=', self.res_id))
             namefield = directory.resource_field.name or 'name'
             resids = obj.search(cr, uid, where1, context=ctx)
             for bo in obj.browse(cr, uid, resids, context=ctx):
@@ -1025,6 +1039,9 @@ class node_res_obj(node_class):
                     continue
                 res_name = getattr(bo, namefield)
                 if not res_name:
+                    continue
+                res_name = res_name.replace('/', '_')
+                if name and (res_name != name):
                     continue
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)
@@ -1034,6 +1051,8 @@ class node_res_obj(node_class):
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            if name and (name != dirr.name):
+                continue
             if dirr.type == 'directory':
                 klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
                 res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
