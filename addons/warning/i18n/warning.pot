@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:06+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:06+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:40+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,11 +22,6 @@ msgid "Purchase Order Line"
 msgstr ""
 
 #. module: warning
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: warning
 #: field:product.product,sale_line_warn_msg:0
 msgid "Message for Sale Order Line"
 msgstr ""
@@ -34,6 +29,11 @@ msgstr ""
 #. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: warning
@@ -70,6 +70,16 @@ msgstr ""
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr ""
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr ""
 
@@ -86,11 +96,6 @@ msgstr ""
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
-msgstr ""
-
-#. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: warning
@@ -116,8 +121,8 @@ msgid "Sale Order"
 msgstr ""
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
 msgstr ""
 
 #. module: warning
@@ -149,8 +154,8 @@ msgid "Selecting the \"Warning\" option will notify user with the message, Selec
 msgstr ""
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
 msgstr ""
 
 #. module: warning
@@ -180,13 +185,8 @@ msgid "Warning on the Sale Order"
 msgstr ""
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: warning

@@ -19,12 +19,8 @@
 #
 ##############################################################################
 
-import time
-import ir
-from osv import osv,fields
+from osv import osv
 import base64
-import netsvc
-from tools.translate import _
 import email
 import tools
 import binascii
@@ -152,6 +148,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
+        mail = msg
         msg = self.pool.get('email.server.tools').parse_message(msg)
         server_tools_pool = self.pool.get('email.server.tools')
         message_id = msg.get('message-id', False)
@@ -159,6 +156,7 @@ class thunderbird_partner(osv.osv_memory):
         msg_ids = []
         res = {}
         res_ids = []
+        obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
         for ref_id in ref_ids:
             msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
@@ -168,6 +166,31 @@ class thunderbird_partner(osv.osv_memory):
                 msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
                 if msg_ids and len(msg_ids):
                     continue
+            if model not in obj_list:
+                res={}
+                obj_attch = self.pool.get('ir.attachment')
+                ls = ['*', '/', '\\', '<', '>', ':', '?', '"', '|', '\t', '\n',':','~']
+                sub = msg.get('subject','NO-SUBJECT').replace(' ','')
+                if sub.strip() == '':
+                   sub = 'NO SBUJECT'
+                fn = sub
+                for c in ls:
+                   fn = fn.replace(c,'')
+                if len(fn) > 64:
+                   l = 64 - len(fn)
+                   f = fn.split('-')
+                   fn = '-'.join(f[1:])
+                   if len(fn) > 64:
+                      l = 64 - len(fn)
+                      f = fn.split('.')
+                      fn = f[0][0:l] + '.' + f[-1]
+                fn = fn[:-4]+'.eml'
+                res['res_model'] = model
+                res['name'] = msg.get('subject','NO-SUBJECT')+".eml"
+                res['datas_fname'] = fn
+                res['datas'] = base64.b64encode(mail)
+                res['res_id'] = res_id
+                obj_attch.create(cr, uid, res)
             server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
             res_ids.append(res_id)
         return len(res_ids)
@@ -181,8 +204,15 @@ class thunderbird_partner(osv.osv_memory):
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
         #@return model,res_id
+        references = []
         dictcreate = dict(message)
-        message_id = dictcreate.get('message_id')
+        msg = dictcreate.get('message')
+        msg = self.pool.get('email.server.tools').parse_message(msg)
+        message_id = msg.get('message-id')
+        refs =  msg.get('references',False)
+        references = False
+        if refs:
+            references = refs.split()
         msg_pool = self.pool.get('mailgate.message')
         model = ''
         res_id = 0
@@ -192,6 +222,13 @@ class thunderbird_partner(osv.osv_memory):
                 msg = msg_pool.browse(cr, uid, msg_ids[0])
                 model = msg.model
                 res_id = msg.res_id
+            else:
+                if references :
+                    msg_ids = msg_pool.search(cr, uid, [('message_id','in',references)])
+                    if msg_ids and len(msg_ids):
+                        msg = msg_pool.browse(cr, uid, msg_ids[0])
+                        model = msg.model
+                        res_id = msg.res_id
         return (model,res_id)
 
 
@@ -299,11 +336,8 @@ class thunderbird_partner(osv.osv_memory):
             name_get.append('error')
             name_get.append(er_val)
         return name_get
-
-
-
     def list_alldocument(self,cr,user,vals):
-        obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
+        obj_list= [('crm.lead','CRM Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Applicant')]
         object=[]
         model_obj = self.pool.get('ir.model')
         for obj in obj_list:

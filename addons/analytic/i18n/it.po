@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:23+0000\n"
-"Last-Translator: Andrea Amoroso <andrea.amoroso@alice.it>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 07:27+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
@@ -48,6 +48,11 @@ msgid ""
 msgstr ""
 "Modulo per definire gli oggetti dei conti analitici\n"
 "    "
+
+#. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere unico!"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -90,6 +95,11 @@ msgid "Pending"
 msgstr "In sospeso"
 
 #. module: analytic
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Linea conto analitico"
@@ -110,6 +120,11 @@ msgstr "Normale"
 #: field:account.analytic.line,company_id:0
 msgid "Company"
 msgstr "Compagnia"
+
+#. module: analytic
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Il nome del gruppo deve essere unico!"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
@@ -223,6 +238,11 @@ msgid "View"
 msgstr "Visualizza"
 
 #. module: analytic
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "La regola deve avere almento un diritto di accesso spuntato!"
+
+#. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -241,6 +261,11 @@ msgstr "Aperto"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Voci Conto Analitico"
+
+#. module: analytic
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #~ msgid ""
 #~ "* When an account is created its in 'Draft' state.                           "

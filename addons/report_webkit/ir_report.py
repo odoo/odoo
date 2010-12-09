@@ -38,8 +38,12 @@ def register_report(name, model, tmpl_path, parser=rml_parse):
     "Register the report into the services"
     name = 'report.%s' % name
     if netsvc.Service._services.get(name, False):
-        if hasattr(netsvc.Service._services[name], 'parser'):
-            parser = netsvc.Service._services[name].parser
+        service = netsvc.Service._services[name]
+        if isinstance(service, WebKitParser):
+            #already instantiated properly, skip it
+            return
+        if hasattr(service, 'parser'):
+            parser = service.parser
         del netsvc.Service._services[name]
     WebKitParser(name, model, tmpl_path, parser=parser)
 

@@ -399,7 +399,7 @@ property or property parameter."),
         res = None
         def ics_datetime(idate, short=False):
             if idate:
-                if short:
+                if short or len(idate)<=10:
                     return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
                 else:
                     return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
@@ -454,16 +454,16 @@ property or property parameter."),
             if interval == 'minutes':
                 delta = timedelta(minutes=duration)
             trigger.value = delta
-
             # Compute other details
             valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
-
+                
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
             attendee_add.params['ROLE'] = [str(attendee.role)]
             attendee_add.params['RSVP'] = [str(attendee.rsvp)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
+            
         res = cal.serialize()
         return res
 
@@ -1089,9 +1089,9 @@ class calendar_event(osv.osv):
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
                 elif datas.get('rrule_type') == 'custom':
                     if datas.get('interval', 0) < 0:
-                        raise osv.except_osv('Warning!', 'Interval can not be Negative')
+                        raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
                     if datas.get('count', 0) < 0:
-                        raise osv.except_osv('Warning!', 'Count can not be Negative')
+                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
                     rrule_custom = self.compute_rule_string(cr, uid, datas, \
                                                          context=context)
                     result[event] = rrule_custom

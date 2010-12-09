@@ -263,7 +263,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, help="Link to the automatically generated Journal Items."),
+        'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, select=1, help="Link to the automatically generated Journal Items."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute=dp.get_precision('Account'), string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -326,17 +326,22 @@ class account_invoice(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')
-        if context.get('active_model','') in ['res.partner']:
-            partner = self.pool.get(context['active_model']).read(cr,uid,context['active_ids'],['supplier','customer'])[0]
+        if context is None:
+            context = {}
+        if context.get('active_model', '') in ['res.partner'] and context.get('active_ids', False) and context['active_ids']:
+            partner = self.pool.get(context['active_model']).read(cr, uid, context['active_ids'], ['supplier','customer'])[0]
             if not view_type:
-                view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.tree')])[0]
+                view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'account.invoice.tree')])
                 view_type = 'tree'
             if view_type == 'form':
                 if partner['supplier'] and not partner['customer']:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.supplier.form')])[0]
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.supplier.form')])
                 else:
-                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.form')])[0]
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name', '=', 'account.invoice.form')])
+        if view_id and isinstance(view_id, (list, tuple)):
+            view_id = view_id[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+
         type = context.get('journal_type', 'sale')
         for field in res['fields']:
             if field == 'journal_id':
@@ -380,7 +385,7 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise orm.except_orm(_('UnknownError'), str(e))
+                raise orm.except_orm(_('Unknown Error'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
@@ -596,6 +601,7 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
+            wf_service.trg_delete(uid, 'account.invoice', inv_id, cr)
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
 
@@ -657,7 +663,7 @@ class account_invoice(osv.osv):
         ctx = context.copy()
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
-            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
+            cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (id,))
             partner = self.browse(cr, uid, id, context=ctx).partner_id
             if partner.lang:
                 ctx.update({'lang': partner.lang})
@@ -1232,7 +1238,7 @@ class account_invoice(osv.osv):
         if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
-            code = invoice.currency_id.code
+            code = invoice.currency_id.symbol
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)

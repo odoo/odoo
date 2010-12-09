@@ -112,6 +112,22 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="375.0,71.0,84.0" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description [[ requisition.line_ids==[] and removeParentNode('blockTable') ]]</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Qty</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Product UoM</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'requisition') ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
@@ -218,5 +234,6 @@
         </tr>
       </blockTable>
     </section>
+  </pto>
   </story>
 </document>

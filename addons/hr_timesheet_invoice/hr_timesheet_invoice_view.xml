@@ -84,6 +84,7 @@
                 </filter>
             </field>
         </record>
+	
 
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
@@ -96,8 +97,7 @@
                 </field>
             </field>
         </record>
-
-        <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
+          <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
@@ -174,7 +174,7 @@
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
             id="hr_timesheet_invoice_factor_view"
-            parent="account.menu_low_level"/>
+            parent="account.menu_configuration_misc" sequence="25"/>
 
     </data>
 </openerp>

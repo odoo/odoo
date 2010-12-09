@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:23+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:23+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:26+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,13 +37,8 @@ msgid "Avg. Probability"
 msgstr ""
 
 #. module: crm_fundraising
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Funds Form"
+#: selection:crm.fundraising.report,month:0
+msgid "March"
 msgstr ""
 
 #. module: crm_fundraising
@@ -177,17 +172,12 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Estimates"
+msgid "Misc"
 msgstr ""
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,section_id:0
 msgid "Section"
-msgstr ""
-
-#. module: crm_fundraising
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: crm_fundraising
@@ -235,13 +225,6 @@ msgstr ""
 #. module: crm_fundraising
 #: field:crm.fundraising,create_date:0
 msgid "Creation Date"
-msgstr ""
-
-#. module: crm_fundraising
-#: field:crm.fundraising,date_closed:0
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Closed"
 msgstr ""
 
 #. module: crm_fundraising
@@ -296,8 +279,8 @@ msgid "Contact"
 msgstr ""
 
 #. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "March"
+#: view:crm.fundraising:0
+msgid "Funds Form"
 msgstr ""
 
 #. module: crm_fundraising
@@ -319,6 +302,11 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.action_report_crm_fundraising
+msgid "Have a general overview of all fund raising activities by sorting them with specific criteria such as the estimated revenue, average success probability and delay to close."
 msgstr ""
 
 #. module: crm_fundraising
@@ -386,6 +374,11 @@ msgid "Category"
 msgstr ""
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
+msgid "If you need to support your organization or a campaign, with 'Fund Raising' you can track all you fund raising activities. The search list allows you to filter by funds description, email, history and probability of success."
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising.report:0
 msgid "  Year  "
 msgstr ""
@@ -415,8 +408,10 @@ msgid "Low"
 msgstr ""
 
 #. module: crm_fundraising
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:crm.fundraising,date_closed:0
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: crm_fundraising
@@ -509,6 +504,11 @@ msgid "Cheque"
 msgstr ""
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
+msgid "Manage and define the fund raising categories you want to be maintained in the system."
+msgstr ""
+
+#. module: crm_fundraising
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr ""
@@ -535,7 +535,7 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Misc"
+msgid "Estimates"
 msgstr ""
 
 #. module: crm_fundraising
@@ -569,11 +569,6 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
-msgstr ""
-
-#. module: crm_fundraising
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: crm_fundraising
@@ -611,6 +606,11 @@ msgstr ""
 #: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,amount_revenue_prob:0
 msgid "Est. Rev*Prob."
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
+msgid "Create and manage fund raising activity categories you want to be maintained in the system."
 msgstr ""
 
 #. module: crm_fundraising

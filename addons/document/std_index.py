@@ -96,8 +96,13 @@ class DocIndex(indexer):
 
     def _doIndexFile(self,fname):
         fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
-        return _to_unicode(fp.read())
-
+        try:
+            file_data = _to_unicode(fp.read())
+        finally:
+            fp.close()
+            
+        return file_data
+    
 cntIndex.register(DocIndex())
 
 class DocxIndex(indexer):
@@ -158,7 +163,12 @@ class PdfIndex(indexer):
 
     def _doIndexFile(self,fname):
         fp = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', fname, '-'], shell=False, stdout=PIPE).stdout
-        return _to_unicode( fp.read())
+        try:
+           file_data = _to_unicode( fp.read())
+        finally:
+            fp.close()
+                 
+        return file_data
 
 cntIndex.register(PdfIndex())
 

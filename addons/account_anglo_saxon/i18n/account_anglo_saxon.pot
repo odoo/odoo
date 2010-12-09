@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:03+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:03+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:51+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_anglo_saxon
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
 msgid "Product Category"
 msgstr ""
 
 #. module: account_anglo_saxon
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: account_anglo_saxon

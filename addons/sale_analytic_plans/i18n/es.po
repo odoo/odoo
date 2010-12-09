@@ -6,21 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:28+0000\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 09:44+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_analytic_plans
-#: field:sale.order.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "Distribución Analítica"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#. module: sale_analytic_plans
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: sale_analytic_plans
 #: constraint:ir.model:0
@@ -31,9 +36,19 @@ msgstr ""
 "especial!"
 
 #. module: sale_analytic_plans
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: field:sale.order.line,analytics_id:0
+msgid "Analytic Distribution"
+msgstr "Distribución Analítica"
+
+#. module: sale_analytic_plans
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "¡El nombre del módulo debe ser único!"
+
+#. module: sale_analytic_plans
+#: model:ir.model,name:sale_analytic_plans.model_sale_order_line
+msgid "Sale Order Line"
+msgstr "Línea pedido venta"
 
 #. module: sale_analytic_plans
 #: model:ir.module.module,shortdesc:sale_analytic_plans.module_meta_information
@@ -41,6 +56,6 @@ msgid "Sales Analytic Distribution Management"
 msgstr "Administracion de distribución analítica de ventas"
 
 #. module: sale_analytic_plans
-#: model:ir.model,name:sale_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Línea pedido venta"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

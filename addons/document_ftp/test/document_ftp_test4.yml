@@ -82,7 +82,7 @@
 -
     I create an ir.attachment, attached (not related) to Partner1
 -
-    !record {model: ir.attachment, id: file_test1 }:
+    !record {model: ir.attachment, id: file_test1}:
         name: File of pat1
         res_model: res.partner
         res_id:  !eval ref("tpartner1")
@@ -114,14 +114,65 @@
       - res_model == 'res.partner'
       - res_id !=  False
 -
+    I try to create a file directly under the Partners Testing folder
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        import ftplib
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing')
+        fdata = StringIO('abcd')
+        try:
+            ftp.storbinary('STOR stray.txt', fdata)
+            assert False, "We should't be able to create files here"
+        except ftplib.error_perm:
+            # That's what should happen
+            pass
+-
+    I try to create a folder directly under the Partners Testing folder
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        import ftplib
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing')
+        try:
+            ftp.mkd('Weird folder')
+            assert False, "We should't be able to create folders here"
+        except ftplib.error_perm:
+            # That's what should happen
+            pass
+-
     I check that all/Partner1 also has the file
 - |
     Bonus Piste:
     I create a 'Partner3' under 'all'
+    
 -
-    I delete the Partners Testing folder
+   I delete "pat1-dynamic.txt" File.
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing/Pat 1/Partners of Test/Partner 1')
+        ftp.delete('pat1-dynamic.txt')
+        ftp.close()        
+    
+-
+    I delete the Partners Testing folder,  "File of pat1" file, Partner and Partner category.
 -
     !python {model: document.directory}: |
+        attach_pool = self.pool.get('ir.attachment')
+        partner_categ_pool = self.pool.get('res.partner.category')
+        partner_pool =  self.pool.get('res.partner')
+        
         self.unlink(cr, uid, [ref('dir_tests2')])
         self.unlink(cr, uid, [ref('dir_respart1')])
-        cr.commit()
+        attach_pool.unlink(cr, uid, [ref('file_test1')])
+        partner_categ_pool.unlink(cr, uid, [ref('tpat_categ_none')])
+        partner_categ_pool.unlink(cr, uid, [ref('tpat_categ_pat1')])
+        partner_categ_pool.unlink(cr, uid, [ref('tpat_categ_all')])
+        partner_pool.unlink(cr, uid, [ref('tpartner1')])
+        partner_pool.unlink(cr, uid, [ref('tpartner_2')])
+        cr.commit()    
+    

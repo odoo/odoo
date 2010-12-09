@@ -138,8 +138,8 @@ class report_account_analytic_planning(osv.osv):
         'total_free': fields.function(_get_total_free, method=True, string='Total Free'),
     }
     _defaults = {
-        'date_from': time.strftime('%Y-%m-01'),
-        'date_to': (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'date_to': lambda *a: (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,
@@ -434,7 +434,7 @@ class report_account_analytic_planning_account(osv.osv):
                     SELECT id
                     FROM report_account_analytic_planning_line
                     WHERE planning_id = %s AND account_id=%s
-                )""", (line.planning_id.id,line.account_id.id ))
+                )""", (line.planning_id.id, line.account_id and line.account_id.id or None))
             result[line.id] = cr.fetchall()[0][0] / div * div2
         return result
 
@@ -452,7 +452,7 @@ class report_account_analytic_planning_account(osv.osv):
             cr.execute("""
                 SELECT SUM(unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id.id, ))
+                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id and line.account_id.id or None))
             res = cr.fetchall()[0][0]
             if res:
                 result[line.id] = res * div2
@@ -526,9 +526,9 @@ class report_account_analytic_planning_stat(osv.osv):
             if line.user_id:
                 cr.execute('''SELECT sum(acc.unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
             else:
-                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
 
         sum = cr.fetchone()
         if sum and sum[0]:
@@ -563,7 +563,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                     project_id IN (select id from project_project where analytic_account_id=%s) AND
                     date_end>=%s AND
                     date_end<=%s''', (
-                line.account_id.id,
+                line.account_id and line.account_id.id or None,
                 line.planning_id.date_from,
                 line.planning_id.date_to)
             )

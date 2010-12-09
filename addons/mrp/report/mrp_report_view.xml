@@ -22,7 +22,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Work Center load" type="bar">
-                    <field group="True" name="name"/>
+                    <field name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
                     <field group="True" name="workcenter_id"/>

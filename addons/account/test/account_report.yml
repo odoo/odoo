@@ -16,7 +16,7 @@
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.account_invoice_customer0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 
@@ -39,51 +39,12 @@
         file(os.path.join(tools.config['test_report_directory'], 'account-voucher-report.'+format), 'wb+').write(data)
 
 -
-  Demo data for Account tax code
--
-  !record {model: account.tax.code, id: account_tax_code_0}:
-    name : Tax Code Test
-    sign : 10.00
--
- Print Tax Code entries report
--
-  !python {model: account.tax.code}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.tax.code.entries').create(cr, uid, [ref('account_tax_code_0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-tax-code-entries.'+format), 'wb+').write(data)
-
-
--
-  Print Vat Declaration Report
--
-   !python {model: account.tax.code}: |
-    import netsvc, tools, os
-    data_dict = {'model': 'ir.ui.menu', 'form': {'based_on': 'invoices','company_id':ref('base.main_company'),'periods':[]}}
-    (data, format) = netsvc.LocalService('report.account.vat.declaration').create(cr, uid, [ref("account_move_0")], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-vat-declaration.'+format), 'wb+').write(data)
-
--
-  In order to test the PDF reports defined on an invoice, we will print an invoice
--
-  !python {model: account.invoice}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('test_invoice_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
-
--
   Print the Aged Partner Balance Report
 -
   !python {model: res.partner}: |
-    import netsvc, tools, os, time
+    import time
     from datetime import datetime
     from dateutil.relativedelta import relativedelta
-    import warnings
-    import md5
-    import hashlib
-    warnings.filterwarnings('ignore',".*struct integer overflow masking is deprecated*")
     start = datetime.fromtimestamp(time.mktime(time.strptime(time.strftime('%Y-%m-%d'), "%Y-%m-%d")))
     start = datetime(int(start.year), int(start.month), int(start.day))
     res = {}
@@ -106,12 +67,18 @@
 
     query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
 
-    data_dict = {'model': 'ir.ui.menu', 'form': {'chart_account_id':ref('account.chart0'),'initial_balance': 1, 'periods': period_list,'journal_ids':journal_ids, 'page_split': 0, 'date_from': time.strftime('%Y-%m-%d'), 'period_length': 30, 'amount_currency': 0,'query_line' : query_line, 'result_selection': 'customer','direction_selection': 'past','fiscalyear_id':fy_id}}
+    data_dict = {'model': 'ir.ui.menu', 'form': \
+            {'chart_account_id':ref('account.chart0'),
+             'initial_balance': 1, 'periods': period_list,
+             'journal_ids':journal_ids, 'page_split': 0, 
+             'date_from': time.strftime('%Y-%m-%d'),
+             'period_length': 30, 'amount_currency': 0,
+             'query_line' : query_line, 'result_selection': 
+             'customer','direction_selection': 
+             'past','fiscalyear_id':fy_id } }
     data_dict['form'].update(res)
-    (data, format) = netsvc.LocalService('report.account.aged_trial_balance').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-aged_partner_balance.'+format), 'wb+').write(data)
-
+    from tools.test_reports import try_report
+    try_report(cr, uid, 'report.account.aged_trial_balance', [], data_dict, context={})
 -
   Print the Account Balance Sheet in Horizontal mode
 -

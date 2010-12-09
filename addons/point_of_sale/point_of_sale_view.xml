@@ -3,7 +3,9 @@
     <data>
         <menuitem name="Point of Sale" id="menu_point_root" sequence="21"
             icon="terp-partner"
-            groups="group_pos_manager,group_pos_user"/>
+            groups="group_pos_manager,group_pos_user"
+            web_icon="images/pos.png"
+            web_icon_hover="images/pos-hover.png"/>
 
         <record model="ir.ui.view" id="view_pos_pos_form">
             <field name="name">pos.order</field>
@@ -48,8 +50,9 @@
                             </group>
 
                             <separator colspan="4"/>
-                            <group colspan="4" col="6">
+                            <group colspan="4" col="8">
                                 <field name="state" />
+                                <button name="%(action_add_product)d" string="Add product" type="action" icon="gtk-ok" states="draft"/>
                                 <button name="%(action_pos_payment)d" string="Make Payment" icon="terp-dolar" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />

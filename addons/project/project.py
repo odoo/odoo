@@ -86,7 +86,7 @@ class project(osv.osv):
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
-                project_task 
+                project_task
             WHERE
                 project_id in %s AND
                 state<>'cancelled'
@@ -127,7 +127,7 @@ class project(osv.osv):
 
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
@@ -153,6 +153,7 @@ class project(osv.osv):
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
+                'project.task.work': (_get_project_work, ['hours'], 10),
             }),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -475,7 +476,7 @@ class task(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
     ]
     #
     # Override view according to the company definition
@@ -703,7 +704,7 @@ class project_work(osv.osv):
 
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
-        'date': time.strftime('%Y-%m-%d %H:%M:%S')
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
 
     _order = "date desc"

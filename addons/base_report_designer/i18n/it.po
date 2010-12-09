@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-11 11:52+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-22 07:25+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-12 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
@@ -45,6 +45,11 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valido per la struttura della vista!"
 
 #. module: base_report_designer
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere unico!"
+
+#. module: base_report_designer
 #: view:base.report.file.sxw:0
 msgid "The .SXW report"
 msgstr "Report .SXW"
@@ -62,27 +67,32 @@ msgstr "base_report_designer.installer"
 #. module: base_report_designer
 #: field:base_report_designer.installer,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "_Close"
-msgstr ""
+msgstr "_Chiuso"
 
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "The RML report"
-msgstr ""
+msgstr "Il report RML"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "title"
 msgstr "titolo"
+
+#. module: base_report_designer
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Il nome del gruppo deve essere unico!"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
@@ -96,23 +106,14 @@ msgid "base.report.rml.save"
 msgstr "base.report.rml.save"
 
 #. module: base_report_designer
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
+
+#. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
 msgid "Report Designer"
 msgstr "Report Designer"
-
-#. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid ""
-"This is the template of your requested report.\n"
-"Save it as a .SXW file and open it with OpenOffice.\n"
-"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
-"Once it is modified, re-upload it in OpenERP using this wizard."
-msgstr ""
-"Questo è il modello del vostro Report richiesto\n"
-"Salvatelo come un file: .SXW e apritelo con OpenOffice.\n"
-"Non dimenticate di installare il pacchetto OpenERP SA OpenOffice per "
-"modificarlo.\n"
-"Una volta modificato, ricaricatelo in OpenERP utilizzando il wizard."
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,name:0
@@ -176,6 +177,20 @@ msgid "Configuration Progress"
 msgstr ""
 
 #. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid ""
+"This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+"Questo è il modello del vostro Report richiesto\n"
+"Salvatelo come un file: .SXW e apritelo con OpenOffice.\n"
+"Non dimenticate di installare il pacchetto OpenERP SA OpenOffice per "
+"modificarlo.\n"
+"Una volta modificato, ricaricatelo in OpenERP utilizzando il wizard."
+
+#. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Skip"
 msgstr "Salta"
@@ -183,7 +198,7 @@ msgstr "Salta"
 #. module: base_report_designer
 #: field:base_report_designer.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Imagine"
 
 #. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
@@ -201,6 +216,11 @@ msgid "OpenObject Report Designer Plug-in"
 msgstr "Plug in di OpenObject Report Designer"
 
 #. module: base_report_designer
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
 msgstr "Installazione di OpenObject Report Designer"
@@ -213,9 +233,9 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0

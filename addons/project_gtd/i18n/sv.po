@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-04-10 10:14+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-22 20:11+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:38+0000\n"
+"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_gtd
@@ -69,7 +69,7 @@ msgstr ""
 #. module: project_gtd
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
@@ -164,7 +164,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "Add to Timebox"
-msgstr ""
+msgstr "Add to Timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -238,7 +238,7 @@ msgstr ""
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
-msgid "STOCK_GO_BACK"
+msgid "STOCK_MEDIA_PREVIOUS"
 msgstr ""
 
 #. module: project_gtd
@@ -259,6 +259,11 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Next"
+msgstr ""
+
+#. module: project_gtd
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: project_gtd
@@ -289,7 +294,7 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.module.module,shortdesc:project_gtd.module_meta_information
 msgid "Getting Things Done - Time Management Module"
-msgstr ""
+msgstr "Få saker gjorda - Tidsplaneringsmodulen"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
@@ -299,13 +304,13 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
-msgstr ""
+msgstr "Set to Timebox"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -380,7 +385,7 @@ msgstr ""
 #. module: project_gtd
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Invalid XML for View Architecture!"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -408,9 +413,8 @@ msgid "STOCK_DND"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
-#: view:project.timebox.fill.plan:0
-msgid "Plannify Timebox"
+#: selection:project.gtd.timebox,icon:0
+msgid "STOCK_CLEAR"
 msgstr ""
 
 #. module: project_gtd
@@ -434,9 +438,10 @@ msgid "terp-locked"
 msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,icon:0
-msgid "STOCK_CLEAR"
-msgstr ""
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
+#: view:project.timebox.fill.plan:0
+msgid "Plannify Timebox"
+msgstr "Plannify Timebox"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -491,7 +496,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Timebox Definition"
-msgstr ""
+msgstr "Timebox Definition"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -556,7 +561,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.fill.plan,task_ids:0
 msgid "Tasks selection"
-msgstr ""
+msgstr "Tasks selection"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -584,9 +589,9 @@ msgid "terp-gtk-jump-to-rtl"
 msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,icon:0
-msgid "STOCK_MEDIA_PREVIOUS"
-msgstr ""
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "project.gtd.timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -624,14 +629,24 @@ msgid "STOCK_DND_MULTIPLE"
 msgstr ""
 
 #. module: project_gtd
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
 #: view:project.timebox.empty:0
 msgid "Empty Timebox"
-msgstr ""
+msgstr "Empty Timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-folder-blue"
+msgstr ""
+
+#. module: project_gtd
+#: selection:project.gtd.timebox,icon:0
+msgid "STOCK_GO_BACK"
 msgstr ""
 
 #. module: project_gtd
@@ -671,7 +686,7 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
-msgstr ""
+msgstr "Timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -708,7 +723,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
 msgid "Timeboxes"
-msgstr ""
+msgstr "Tidsboxar"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -739,7 +754,7 @@ msgstr ""
 #: code:addons/project_gtd/project_gtd.py:0
 #, python-format
 msgid "Getting Things Done"
-msgstr ""
+msgstr "Getting Things Done"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -784,6 +799,11 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "STOCK_GOTO_FIRST"
+msgstr ""
+
+#. module: project_gtd
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: project_gtd
@@ -832,7 +852,7 @@ msgstr ""
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:0
 #, python-format
 msgid "No timebox child of this one !"
-msgstr ""
+msgstr "No timebox child of this one !"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -847,6 +867,14 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. It defines "
+"a period of time in order to categorize your tasks: today, this week, this "
+"month, long term."
 msgstr ""
 
 #. module: project_gtd
@@ -905,6 +933,11 @@ msgid "Project Timebox Fill"
 msgstr ""
 
 #. module: project_gtd
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
 msgstr ""
@@ -918,12 +951,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 msgid "Contexts"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_timebox
-msgid "project.gtd.timebox"
-msgstr ""
+msgstr "Contexts"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -936,7 +964,7 @@ msgstr ""
 #: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
-msgstr ""
+msgstr "Sammanhang"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -962,7 +990,7 @@ msgstr ""
 #: field:project.gtd.context,sequence:0
 #: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -977,6 +1005,14 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
 msgid "terp-stage"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at office, at home, when I take my car, etc."
 msgstr ""
 
 #. module: project_gtd
@@ -1013,7 +1049,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
-msgstr ""
+msgstr "Get from Timebox"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,icon:0
@@ -1025,5 +1061,118 @@ msgstr ""
 msgid "terp-gdu-smart-failing"
 msgstr ""
 
+#, python-format
+#~ msgid "No timebox of the type \"%s\" defined !"
+#~ msgstr "No timebox of the type \"%s\" defined !"
+
+#, python-format
+#~ msgid "Eff. Hours"
+#~ msgstr "Eff. Hours"
+
+#~ msgid "Visible Columns"
+#~ msgstr "Visible Columns"
+
+#~ msgid "My Deadlines"
+#~ msgstr "My Deadlines"
+
+#~ msgid "Monthly"
+#~ msgstr "Monthly"
+
+#~ msgid "Parent Timebox"
+#~ msgstr "Parent Timebox"
+
+#~ msgid "Priority"
+#~ msgstr "Priority"
+
+#~ msgid "My Inbox"
+#~ msgstr "Min Inbox"
+
+#~ msgid "Default Project"
+#~ msgstr "Default Project"
+
+#~ msgid "Context 4"
+#~ msgstr "Context 4"
+
+#~ msgid "Type"
+#~ msgstr "Type"
+
+#~ msgid "Effective Hours"
+#~ msgstr "Effective Hours"
+
+#~ msgid "Timebox Tasks"
+#~ msgstr "Timebox Tasks"
+
+#~ msgid "Timebox tasks selection"
+#~ msgstr "Timebox tasks selection"
+
+#~ msgid "My Pending Tasks"
+#~ msgstr "Mina väntande aktiviteter"
+
+#~ msgid "User"
+#~ msgstr "User"
+
+#~ msgid "My Daily Timebox"
+#~ msgstr "Min dagliga tidsbox"
+
+#~ msgid "Context 1"
+#~ msgstr "Context 1"
+
+#~ msgid "Context 2"
+#~ msgstr "Context 2"
+
+#~ msgid "Context 3"
+#~ msgstr "Context 3"
+
+#~ msgid "Context 5"
+#~ msgstr "Context 5"
+
+#~ msgid "Context 6"
+#~ msgstr "Context 6"
+
+#~ msgid "Daily"
+#~ msgstr "Daily"
+
+#~ msgid "Project"
+#~ msgstr "Project"
+
+#~ msgid "My Timeboxes"
+#~ msgstr "Mina tidsboxar"
+
+#~ msgid "Planned"
+#~ msgstr "Planned"
+
+#~ msgid "My Open Tasks"
+#~ msgstr "Mina öppna aktiviteter"
+
+#~ msgid "Time Management"
+#~ msgstr "Tidsplanering"
+
 #~ msgid "Tasks"
-#~ msgstr "Uppgifter"
+#~ msgstr "Aktiviteter"
+
+#~ msgid "TimeBox"
+#~ msgstr "TimeBox"
+
+#~ msgid "Child Timeboxes"
+#~ msgstr "Child Timeboxes"
+
+#~ msgid "Other"
+#~ msgstr "Other"
+
+#~ msgid "Deadline"
+#~ msgstr "Deadline"
+
+#~ msgid "TimeBox Configuration"
+#~ msgstr "TimeBox Configuration"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancel"
+
+#~ msgid "Date Start"
+#~ msgstr "Date Start"
+
+#~ msgid "Planned Hours"
+#~ msgstr "Planned Hours"
+
+#~ msgid "Weekly"
+#~ msgstr "Weekly"

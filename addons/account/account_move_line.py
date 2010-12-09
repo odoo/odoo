@@ -47,11 +47,8 @@ class account_move_line(osv.osv):
         if not context.get('fiscalyear', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         else:
-            if initial_bal:
-                fiscalyear_date_start = fiscalyear_obj.read(cr, uid, context['fiscalyear'], ['date_start'])['date_start']
-                fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('date_stop', '<', fiscalyear_date_start), ('state', '=', 'draft')], context=context)
-            else:
-                fiscalyear_ids = [context['fiscalyear']]
+            #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
+            fiscalyear_ids = [context['fiscalyear']]
 
         fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         state = context.get('state', False)
@@ -85,7 +82,7 @@ class account_move_line(osv.osv):
                     periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
                     periods = ','.join([str(x) for x in periods])
                     if periods:
-                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) OR id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
+                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
@@ -303,19 +300,15 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = [
-            """SELECT l2.id, SUM(l1.debit-l1.credit) FROM account_move_line l1, account_move_line l2""",
-            """WHERE l2.account_id = l1.account_id""",
-            """AND""",
-            """l1.id <= l2.id""",
-            """AND""",
-            """l2.id IN %s""",
-            """AND""",
-            self._query_get(cr, uid, obj='l1', context=c),
-            """ GROUP BY l2.id""",
-        ]
+        sql = """SELECT l2.id, SUM(l1.debit-l1.credit) 
+                    FROM account_move_line l1, account_move_line l2
+                    WHERE l2.account_id = l1.account_id
+                      AND l1.id <= l2.id
+                      AND l2.id IN %%s AND """ + \
+                self._query_get(cr, uid, obj='l1', context=c) + \
+                " GROUP BY l2.id"
 
-        cr.execute('\n'.join(sql), [tuple(ids)])
+        cr.execute(sql, [tuple(ids)])
         res = dict(cr.fetchall())
         return res
 
@@ -436,7 +429,7 @@ class account_move_line(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
                                 store = {
@@ -492,6 +485,7 @@ class account_move_line(osv.osv):
         'state': 'draft',
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
+        'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
@@ -543,7 +537,9 @@ class account_move_line(osv.osv):
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
-    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False):
+    def onchange_currency(self, cr, uid, ids, account_id, amount, currency_id, date=False, journal=False, context=None):
+        if context is None:
+            context = {}
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
         currency_obj = self.pool.get('res.currency')
@@ -554,7 +550,8 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc)
+        context.update({'date': date})
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0

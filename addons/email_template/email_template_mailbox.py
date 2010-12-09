@@ -43,9 +43,9 @@ class email_template_mailbox(osv.osv):
             self.send_all_mail(cursor, user, context)
         except Exception, e:
             LOGGER.notifyChannel(
-                                 _("Email Template"),
+                                 "Email Template",
                                  netsvc.LOG_ERROR,
-                                 _("Error sending mail: %s" % str(e)))
+                                 _("Error sending mail: %s") % e)
         
     def send_all_mail(self, cr, uid, ids=None, context=None):
         if ids is None:

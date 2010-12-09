@@ -95,7 +95,7 @@
                    <field name="partner_id"/>
                    <field name="user_id" />
                    <field name="date" string="Invoice Date"/>
-                   <field name="categ_id" />
+                   <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">

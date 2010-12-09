@@ -163,7 +163,9 @@ class hr_holidays(osv.osv):
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Category", help='Category Of employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category', required=True),
-        'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
+        'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)'),
+        # Todo: Add below field in view?
+        'category_holiday_id': fields.many2one('hr.holidays', 'Holiday', help='For allocation By Employee Category (Link between Employee Category holiday and related holidays for employees of that category)')
     }
 
     _defaults = {
@@ -174,6 +176,14 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
     }
+
+    def _get_category_leave_ids(self, cr, uid, ids):
+        """Returns the leaves taken by the employees of the category if holiday type is 'category'."""
+        leave_ids = []
+        for record in self.browse(cr, uid, ids):
+            if record.holiday_type == 'category' and record.type == 'remove':
+                leave_ids += self.search(cr, uid, [('category_holiday_id', '=', record.id)])
+        return leave_ids
 
     def _create_resource_leave(self, cr, uid, vals, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -263,6 +273,7 @@ class hr_holidays(osv.osv):
         if context is None:
             context = {}
         self._update_user_holidays(cr, uid, ids)
+        ids += self._get_category_leave_ids(cr, uid, ids)
         self._remove_resouce_leave(cr, uid, ids, context=context)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
@@ -307,17 +318,23 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate2(self, cr, uid, ids, *args):
+        obj_emp = self.pool.get('hr.employee')
+        wf_service = netsvc.LocalService("workflow")
         vals = {'state':'validate1'}
         self.check_holidays(cr, uid, ids)
-        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)])
+        ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         if ids2:
             vals['manager_id'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
+        # Second Time Validate all the leave requests of the category
+        for leave_id in self._get_category_leave_ids(cr, uid, ids):
+            wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         return self.write(cr, uid, ids, vals)
 
     def holidays_validate(self, cr, uid, ids, *args):
         obj_emp = self.pool.get('hr.employee')
+        wf_service = netsvc.LocalService("workflow")
         data_holiday = self.browse(cr, uid, ids)
         self.check_holidays(cr, uid, ids)
         vals = {'state':'validate'}
@@ -354,50 +371,84 @@ class hr_holidays(osv.osv):
                        'resource_id': emp.resource_id.id,
                        'holiday_id':record.id
                          }
-                    self._create_resource_leave(cr, uid, vals)
+#                    self._create_resource_leave(cr, uid, vals)
+                # Validate all the leave requests of the category
+                for leave_id in self.search(cr, uid, [('category_holiday_id', '=', record.id)]):
+                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
         obj_hr_holiday_status = self.pool.get('hr.holidays.status')
+        obj_emp = self.pool.get('hr.employee')
+        wf_service = netsvc.LocalService("workflow")
         for record in self.browse(cr, uid, ids):
             user_id = False
             leave_asked = record.number_of_days_temp
+            leave_ids = []
             if record.holiday_type == 'employee' and record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
-                    leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                    leaves_rest = obj_hr_holiday_status.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.employee_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for employee %s while there are too few remaining leave days.') % (record.employee_id.name))
                 nb = -(record.number_of_days_temp)
             elif record.holiday_type == 'category' and record.type == 'remove':
                 if record.category_id and not record.holiday_status_id.limit:
                     leaves_rest = obj_hr_holiday_status.get_days_cat( cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.category_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for category %s while there are too few remaining leave days.') % (record.category_id.name))
                 nb = -(record.number_of_days_temp)
+                # Create leave request for employees in the category
+                emp_ids = obj_emp.search(cr, uid, [('category_ids', '=', record.category_id.id)])
+                for emp in obj_emp.browse(cr, uid, emp_ids):
+                    vals = {
+                    'name': record.name,
+                    'holiday_status_id': record.holiday_status_id.id,
+                    'date_from': record.date_from,
+                    'date_to': record.date_to,
+                    'notes': record.notes,
+                    'number_of_days_temp': record.number_of_days_temp,
+                    'category_holiday_id': record.id,
+                    'employee_id': emp.id
+                }
+                    leave_ids.append(self.create(cr, uid, vals, context=None))
+                # Confirm all the leave requests of the category
+                for leave_id in leave_ids:
+                    wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
             else:
                 nb = record.number_of_days_temp
 
             if record.holiday_type == 'employee' and record.employee_id:
                 user_id = record.employee_id.user_id and record.employee_id.user_id.id or uid
 
-            self.write(cr, uid, [record.id], {'state':'confirm', 'number_of_days': nb, 'user_id': user_id })
+            self.write(cr, uid, [record.id], {'state':'confirm', 'number_of_days': nb, 'user_id': user_id})
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
+        obj_emp = self.pool.get('hr.employee')
+        wf_service = netsvc.LocalService("workflow")
         vals = {'state': 'refuse'}
-        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        ids2 = obj_emp.search(cr, uid, [('user_id','=', uid)])
         if ids2:
             vals['manager_id'] = ids2[0]
+        # Refuse all the leave requests of the category
+        for leave_id in self._get_category_leave_ids(cr, uid, ids):
+            wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'refuse', cr)
         self.write(cr, uid, ids, vals)
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
         self._update_user_holidays(cr, uid, ids)
-        self.write(cr, uid, ids, {'state': 'cancel'})
         self._remove_resouce_leave(cr, uid, ids)
+        self.write(cr, uid, ids, {'state': 'cancel'})
+        leave_ids = self._get_category_leave_ids(cr, uid, ids)
+        if leave_ids:
+            self.unlink(cr, uid, leave_ids) # unlink all the leave requests of the category
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
+        wf_service = netsvc.LocalService("workflow")
+        for leave_id in self._get_category_leave_ids(cr, uid, ids):
+            wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'draft', cr)
         return self.write(cr, uid, ids, {'state': 'draft'})
 
     def check_holidays(self, cr, uid, ids):

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:39+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:39+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:02+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,11 +33,6 @@ msgid "From"
 msgstr ""
 
 #. module: mail_gateway
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: mail_gateway
 #: view:mailgate.message:0
 msgid "Open Attachments"
 msgstr ""
@@ -53,8 +48,8 @@ msgid "Message Id"
 msgstr ""
 
 #. module: mail_gateway
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:mailgate.message,ref_id:0
+msgid "Reference Id"
 msgstr ""
 
 #. module: mail_gateway
@@ -74,6 +69,11 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mail_gateway
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: mail_gateway
 #: help:mailgate.message,message_id:0
 msgid "Message Id on Email."
 msgstr ""
@@ -89,18 +89,8 @@ msgid "Details"
 msgstr ""
 
 #. module: mail_gateway
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: mail_gateway
 #: view:mailgate.thread:0
 msgid "Mailgate History"
-msgstr ""
-
-#. module: mail_gateway
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: mail_gateway
@@ -164,6 +154,11 @@ msgid "Partner Name"
 msgstr ""
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
+msgid "Mailgateway Threads"
+msgstr ""
+
+#. module: mail_gateway
 #: code:addons/mail_gateway/mail_gateway.py:0
 #, python-format
 msgid "Opportunity"
@@ -175,6 +170,12 @@ msgstr ""
 #: view:mailgate.message:0
 #: field:res.partner,emails:0
 msgid "Emails"
+msgstr ""
+
+#. module: mail_gateway
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Stage"
 msgstr ""
 
 #. module: mail_gateway
@@ -198,6 +199,7 @@ msgid "Mailgateway Message"
 msgstr ""
 
 #. module: mail_gateway
+#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
 #: field:mailgate.thread,message_ids:0
 msgid "Messages"
 msgstr ""
@@ -226,11 +228,6 @@ msgstr ""
 #. module: mail_gateway
 #: help:mailgate.message,email_bcc:0
 msgid "Blind Carbon Copy Email Recipients"
-msgstr ""
-
-#. module: mail_gateway
-#: field:mailgate.message,ref_id:0
-msgid "Reference Id"
 msgstr ""
 
 #. module: mail_gateway
@@ -326,13 +323,12 @@ msgid "Owner"
 msgstr ""
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mailgate_thread
-msgid "Mailgateway Threads"
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid "Changed Stage to: "
 msgstr ""
 
 #. module: mail_gateway
-#: model:ir.actions.act_window,name:mail_gateway.action_view_mail_message
-#: model:ir.ui.menu,name:mail_gateway.menu_email_gateway_form
 #: view:mailgate.message:0
 msgid "Message"
 msgstr ""

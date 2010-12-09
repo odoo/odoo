@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:04+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:04+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:53+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,13 +22,9 @@ msgid "Bank Journal"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
 msgstr ""
 
 #. module: account_coda
@@ -57,11 +53,6 @@ msgid "Import Date"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr ""
@@ -77,9 +68,9 @@ msgid "Coda import"
 msgstr ""
 
 #. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
+#: code:addons/account_coda/account_coda.py:0
+#, python-format
+msgid "Coda file not found for bank statement !!"
 msgstr ""
 
 #. module: account_coda
@@ -121,11 +112,6 @@ msgid "Coda Import Logs"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
 msgid "coda for an Account"
 msgstr ""
@@ -151,6 +137,13 @@ msgid "Open Statements"
 msgstr ""
 
 #. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+""
+msgstr ""
+
+#. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
 msgid "Import Coda Statements"
 msgstr ""
@@ -164,11 +157,6 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda:0
 msgid "Statements"
-msgstr ""
-
-#. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: account_coda
@@ -246,12 +234,6 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda Import"
-msgstr ""
-
-#. module: account_coda
-#: code:addons/account_coda/wizard/account_coda_import.py:0
-#, python-format
-msgid "The bank account %s is not defined for the partner %s.\n"
 msgstr ""
 
 #. module: account_coda

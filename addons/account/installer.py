@@ -188,7 +188,8 @@ class account_installer(osv.osv_memory):
                 'include_base_amount': tax.include_base_amount,
                 'description': tax.description,
                 'company_id': company_id.id,
-                'type_tax_use': tax.type_tax_use
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
             }
             new_tax = obj_acc_tax.create(cr, uid, vals_tax, context=context)
             #as the accounts have not been created yet, we have to wait before filling these fields

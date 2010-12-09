@@ -46,15 +46,16 @@
 		<field name="invoice_id" ref="v11_invoice"/>
 	</record>
 
-
+<!--
 	<record model="account.journal" id="account.sales_journal">
 		<field name="default_debit_account_id" ref="account.a_recv"/>
 	</record>
-
+-->
 
 
 
   <!-- Define a payment mode -->
+
   <record model="payment.mode" id="payment_mode_dta">
 	<field name="name">DTA</field>
 	<field name="bank_id" ref="main_bank"/>

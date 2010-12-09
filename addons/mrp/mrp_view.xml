@@ -3,7 +3,9 @@
     <data>
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" parent="" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="8"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="8"
+            web_icon="images/manufacturing.png"
+            web_icon_hover="images/manufacturing-hover.png"/>
 
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
@@ -583,8 +585,8 @@
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1" widget="selection"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)" widget="selection"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
@@ -593,7 +595,7 @@
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM" widget="selection"/>
-                                    <field name="location_id"  string="Source Loc." widget="selection"/>
+                                    <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -612,7 +614,7 @@
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM" widget="selection"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -647,7 +649,7 @@
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM" widget="selection"/>
-                                    <field name="location_id"  string="Source Loc." widget="selection"/>
+                                    <field name="location_id"  string="Source Loc." />
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.action_partial_move)d" 
                                         string="Partial" 
@@ -724,7 +726,6 @@
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
                        <filter icon="terp-check" string="Current" name="current"
-                           default="1"
                            domain="[('state','in',('confirmed','ready','exception','in_production'))]"
                            help="Manufacturing Orders which are waiting for raw materials, confirmed, ready to start or currently in production."/>
                        <separator orientation="vertical"/>

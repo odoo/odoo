@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-04-10 09:42+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 14:08+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
 msgid "Audit Trail"
-msgstr ""
+msgstr "Audit Trail"
 
 #. module: audittrail
 #: constraint:ir.model:0
@@ -31,11 +31,16 @@ msgstr ""
 #. module: audittrail
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Felaktigt namn för modell i händelsedefinitionen."
 
 #. module: audittrail
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
+msgstr ""
+
+#. module: audittrail
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: audittrail
@@ -46,7 +51,13 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
+msgstr ""
+
+#. module: audittrail
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: audittrail
@@ -67,7 +78,7 @@ msgstr ""
 #. module: audittrail
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fel! Ni kan inte skapa rekursiva menyer"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -84,7 +95,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log,method:0
 msgid "Method"
-msgstr ""
+msgstr "Metod"
 
 #. module: audittrail
 #: field:audittrail.view.log,from:0
@@ -94,7 +105,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
 msgid "Log"
-msgstr ""
+msgstr "Logg"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -228,16 +239,6 @@ msgid "Log lines"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' Model does not exist...\" %(model))\n"
-"        model = model_pool.browse(cr, uid, model_id)\n"
-"\n"
-"        if method in ('create"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
 msgstr ""
@@ -281,6 +282,11 @@ msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
 
 #. module: audittrail
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr ""
@@ -288,32 +294,6 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr ""
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
-"\n"
-"        field = field_pool.read(cr, uid, field_id)\n"
-"        relation_model = field['relation']\n"
-"        relation_model_pool = relation_model and pool.get(relation_model) or "
-"False\n"
-"\n"
-"        if field['ttype'] == 'many2one':\n"
-"            res = False\n"
-"            relation_id = False\n"
-"            if values and type(values) == tuple:\n"
-"                relation_id = values[0]\n"
-"                if relation_id and relation_model_pool:\n"
-"                    relation_model_object = relation_model_pool.read(cr, "
-"uid, relation_id, [relation_model_pool._rec_name])\n"
-"                    res = "
-"relation_model_object[relation_model_pool._rec_name]\n"
-"            return res\n"
-"\n"
-"        elif field['ttype'] in ('many2many','one2many"
 msgstr ""
 
 #. module: audittrail
@@ -337,18 +317,8 @@ msgid "Rule Name"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
-msgstr ""
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "Log Line"
 msgstr ""
 
 #. module: audittrail
@@ -378,6 +348,13 @@ msgid "New Value : "
 msgstr ""
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
 msgstr ""
@@ -393,57 +370,8 @@ msgid "View Log"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
-"\n"
-"            field = field_pool.read(cr, uid, field_id)\n"
-"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
-"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
-"            old_value_text = 'old_value_text' in line and  "
-"line['old_value_text'] or ''\n"
-"            new_value_text = 'new_value_text' in line and  "
-"line['new_value_text'] or ''\n"
-"\n"
-"            if old_value_text == new_value_text:\n"
-"                continue\n"
-"            if field['ttype'] == 'many2one':\n"
-"                if type(old_value) == tuple:\n"
-"                    old_value = old_value[0]\n"
-"                if type(new_value) == tuple:\n"
-"                    new_value = new_value[0]\n"
-"            vals = {\n"
-"                    \"log_id\": log_id,\n"
-"                    \"field_id\": field_id,\n"
-"                    \"old_value\": old_value,\n"
-"                    \"new_value\": new_value,\n"
-"                    \"old_value_text\": old_value_text,\n"
-"                    \"new_value_text\": new_value_text,\n"
-"                    \"field_description\": field['field_description']\n"
-"                    }\n"
-"            line_id = log_line_pool.create(cr, uid, vals)\n"
-"        #End Loop\n"
-"        return True\n"
-"\n"
-"\n"
-"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
-"        \"\"\"\n"
-"        Logging function: This function is performs logging oprations "
-"according to method\n"
-"        @param db: the current database\n"
-"        @param uid: the current user’s ID for security checks,\n"
-"        @param object: Object who's values are being changed\n"
-"        @param method: method to log: create, read, write, unlink\n"
-"        @param fct_src: execute method of Object proxy\n"
-"\n"
-"        @return: Returns result as per method of Object proxy\n"
-"        \"\"\"\n"
-"        res2 = args\n"
-"        pool = pooler.get_pool(db)\n"
-"        cr = pooler.get_db(db).cursor()\n"
-"        resource_pool = pool.get(model)\n"
-"        log_pool = pool.get('audittrail.log"
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
 msgstr ""
 
 #. module: audittrail

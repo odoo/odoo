@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:38+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:38+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:54+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_receivable
 msgid "Receivable"
-msgstr ""
-
-#. module: l10n_fr
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: l10n_fr
@@ -52,11 +47,6 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_asset
 msgid "Asset"
-msgstr ""
-
-#. module: l10n_fr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: l10n_fr
@@ -91,8 +81,8 @@ msgid "Account CDR Report"
 msgstr ""
 
 #. module: l10n_fr
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
+#: model:account.account.type,name:l10n_fr.account_type_provision
+msgid "Provisions"
 msgstr ""
 
 #. module: l10n_fr
@@ -111,8 +101,8 @@ msgid "Report"
 msgstr ""
 
 #. module: l10n_fr
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
+#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
+msgid "Hors Euro"
 msgstr ""
 
 #. module: l10n_fr
@@ -133,11 +123,6 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
-msgstr ""
-
-#. module: l10n_fr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: l10n_fr
@@ -172,6 +157,11 @@ msgid "Comptes spéciaux"
 msgstr ""
 
 #. module: l10n_fr
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
+msgstr ""
+
+#. module: l10n_fr
 #: field:account.bilan.report,fiscalyear_id:0
 #: field:account.cdr.report,fiscalyear_id:0
 msgid "Fiscal Year"
@@ -188,18 +178,18 @@ msgid "Dettes long terme"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
-msgid "Hors Euro"
+#: model:account.account.type,name:l10n_fr.account_type_view
+msgid "View"
+msgstr ""
+
+#. module: l10n_fr
+#: sql_constraint:l10n.fr.line:0
+msgid "The variable name must be unique !"
 msgstr ""
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_stocks
 msgid "Actif circulant"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
 msgstr ""
 
 #. module: l10n_fr
@@ -226,11 +216,6 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_3
 msgid "DOM-TOM"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
 msgstr ""
 
 #. module: l10n_fr

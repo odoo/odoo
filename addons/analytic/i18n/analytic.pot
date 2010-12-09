@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:06+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:06+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:56+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: analytic
@@ -170,6 +165,11 @@ msgid "Balance"
 msgstr ""
 
 #. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,type:0
 msgid "If you select the View Type, it means you won't allow to create journal entries using that account."
 msgstr ""
@@ -177,11 +177,6 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr ""
-
-#. module: analytic
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: analytic

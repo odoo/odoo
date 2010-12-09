@@ -7,8 +7,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close states of Fiscal year and periods">
-						<label string ="This wizard will definitelly close a fiscal year and its related periods. That means that no one will be able to create or modify journal entries in it." colspan="4"/>
-						<separator colspan="4" />
+                        <separator string="Close states of Fiscal year and periods" colspan="4" />
+						<label string ="If no additional entries should be recorded on a fiscal year, you can close it from here. It will close all opened periods in this year that will make impossible any new entry record. Close a fiscal year when you need to finalize your end of year results definitive " colspan="4"/>
+						<newline/>
 						<field name="fy_id"  domain = "[('state','=','draft')]" colspan="4"/>
 						<separator colspan="4" />
 						<group colspan="4" col="6">
@@ -26,7 +27,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_fiscalyear_close_state"/>
             <field name="target">new</field>
-            <field name="help">If no additional entries should be recorded on a fiscal year, you can close it from here. It will close all opened periods in this year that will make impossible any new entry record. Close a fiscal year when you need to finalize your end of year results definitive.</field>
         </record>
 
         <menuitem action="action_account_fiscalyear_close_state"

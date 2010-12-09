@@ -20,12 +20,10 @@
 ##############################################################################
 
 import time
-
-import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
 
-class aged_trial_report(rml_parse.rml_parse, common_report_header):
+class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context):
         super(aged_trial_report, self).__init__(cr, uid, name, context=context)
@@ -61,15 +59,23 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
 
     def _get_lines(self, form):
         res = []
+        move_state = ['draft','posted']
+        if self.target_move == 'posted':
+            move_state = ['posted']
         self.cr.execute('SELECT DISTINCT res_partner.id AS id,\
                     res_partner.name AS name \
-                FROM res_partner,account_move_line AS l, account_account\
+                FROM res_partner,account_move_line AS l, account_account, account_move am\
                 WHERE (l.account_id=account_account.id) \
+                    AND (l.move_id=am.id) \
+                    AND (am.state IN %s)\
+                    AND (account_account.type IN %s)\
+                    AND account_account.active\
                     AND ((reconcile_id IS NULL)\
-                    OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
+                       OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND (l.partner_id=res_partner.id)\
+                    AND (l.date <= %s)\
                     AND ' + self.query + ' \
-                ORDER BY res_partner.name', (self.date_from,))
+                ORDER BY res_partner.name', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
         partners = self.cr.dictfetchall()
         ## mise a 0 du total
         for i in range(7):
@@ -80,9 +86,6 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
         if not partner_ids:
             return []
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
-        move_state = ['draft','posted']
-        if self.target_move == 'posted':
-            move_state = ['posted']
 
         totals = {}
         self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
@@ -95,7 +98,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND ' + self.query + '\
                     AND account_account.active\
-                    GROUP BY l.partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from))
+                    AND (l.date <= %s)\
+                    GROUP BY l.partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from, self.date_from,))
         t = self.cr.fetchall()
         for i in t:
             totals[i[0]] = i[1]
@@ -114,7 +118,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                         AND '+ self.query + '\
                         AND account_account.active\
-                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from))
+                    AND (l.date <= %s)\
+                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from, self.date_from,))
             t = self.cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
@@ -130,7 +135,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                         OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                         AND '+ self.query + '\
                         AND account_account.active\
-                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from))
+                    AND (l.date <= %s)\
+                        GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from, self.date_from,))
             t = self.cr.fetchall()
             for i in t:
                 future_past[i[0]] = i[1]
@@ -150,19 +156,20 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             else:
                 dates_query += ' < %s)'
                 args_list += (form[str(i)]['stop'],)
-
-            self.cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit)\
-                    FROM account_move_line AS l, account_account, account_move am \
-                    WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
-                        AND (am.state IN %s)\
-                        AND (account_account.type IN %s)\
-                        AND (l.partner_id IN %s)\
-                        AND ((l.reconcile_id IS NULL)\
-                        OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
-                        AND '+ self.query + '\
-                        AND account_account.active\
-                        AND ' + dates_query + '\
-                    GROUP BY l.partner_id', args_list)
+            args_list += (self.date_from,)
+            self.cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit)
+                    FROM account_move_line AS l, account_account, account_move am 
+                    WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)
+                        AND (am.state IN %s)
+                        AND (account_account.type IN %s)
+                        AND (l.partner_id IN %s)
+                        AND ((l.reconcile_id IS NULL)
+                          OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
+                        AND ''' + self.query + '''
+                        AND account_account.active
+                        AND ''' + dates_query + '''
+                    AND (l.date <= %s)
+                    GROUP BY l.partner_id''', args_list)
             t = self.cr.fetchall()
             d = {}
             for i in t:
@@ -203,8 +210,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
             values['name'] = partner['name']
 
-            if values['total']:
-                res.append(values)
+            res.append(values)
 
         total = 0.0
         totals = {}
@@ -234,7 +240,8 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                     AND ((l.reconcile_id IS NULL) \
                     OR (l.reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))\
                     AND ' + self.query + '\
-                    AND account_account.active ',(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from))
+                    AND (l.date <= %s)\
+                    AND account_account.active ',(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, self.date_from,))
         t = self.cr.fetchall()
         for i in t:
             totals['Unknown Partner'] = i[0]
@@ -283,7 +290,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
             else:
                 dates_query += ' < %s)'
                 args_list += (form[str(i)]['stop'],)
-
+            args_list += (self.date_from,)
             self.cr.execute('SELECT SUM(l.debit-l.credit)\
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
@@ -295,6 +302,7 @@ class aged_trial_report(rml_parse.rml_parse, common_report_header):
                         AND '+ self.query + '\
                         AND account_account.active\
                         AND ' + dates_query + '\
+                    AND (l.date <= %s)\
                     GROUP BY l.partner_id', args_list)
             t = self.cr.fetchall()
             d = {}

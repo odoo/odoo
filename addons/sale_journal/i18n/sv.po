@@ -4,32 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 06:01+0000\n"
-"Last-Translator: Anders Eriksson (Mobila System) <ae@mobilasystem.se>\n"
+"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"PO-Revision-Date: 2010-11-23 09:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Notering"
-
-#. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sale Order"
-msgstr ""
 
 #. module: sale_journal
 #: constraint:ir.model:0
@@ -39,8 +24,8 @@ msgstr ""
 "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale_journal
@@ -49,14 +34,9 @@ msgid "Sales & Purchases"
 msgstr "Kundorder och inköp"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
 msgstr ""
-
-#. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
-msgstr "Fakturametod"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -64,16 +44,9 @@ msgid "The type of journal used for sales and picking."
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Fakturatyper"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr ""
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Notering"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -81,13 +54,8 @@ msgid "Grouped"
 msgstr "Grupperad"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Fakturametod"
-
-#. module: sale_journal
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: sale_journal
@@ -99,18 +67,43 @@ msgid "Invoice Type"
 msgstr "Fakturatyp"
 
 #. module: sale_journal
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to true, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
+
+#. module: sale_journal
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used on partners, sales order and delivery orders. You can "
+"create journal to group your invoicing according to customer's needs: daily, "
+"each wednesday, monthly, etc."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Fakturametod"
+
+#. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
 msgstr "Aktiva"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_res_partner
-msgid "Partner"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: sale_journal
@@ -119,157 +112,43 @@ msgid "Notes"
 msgstr "Anteckningar"
 
 #. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the invoice "
-"type without removing it."
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
 msgstr ""
 
-#~ msgid "Sale Stats"
-#~ msgstr "Försäljningsstatistik"
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Method"
+msgstr "Fakturametod"
 
-#~ msgid "Sale Journal"
-#~ msgstr "Faktureringsjournal"
+#. module: sale_journal
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
-#~ msgid "to be invoiced"
-#~ msgstr "skall faktureras"
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Fakturatyper"
 
-#~ msgid "Monthly sales"
-#~ msgstr "Försäljning per månad"
+#. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Managing sales and deliveries by journal"
 
-#~ msgid "Set to Draft"
-#~ msgstr "Sätt till preliminär"
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_res_partner
+msgid "Partner"
+msgstr ""
 
-#~ msgid "waiting"
-#~ msgstr "väntar"
-
-#~ msgid "Journal date"
-#~ msgstr "Journaldatum"
-
-#~ msgid "My open journals"
-#~ msgstr "Mina öppna journaler"
-
-#~ msgid "# of Lines"
-#~ msgstr "antal rader"
-
-#~ msgid "done"
-#~ msgstr "klar"
-
-#~ msgid "Average Price"
-#~ msgstr "Snittpris"
-
-#~ msgid "State"
-#~ msgstr "Delstat"
-
-#~ msgid "Total Price"
-#~ msgstr "Totalt belopp"
-
-#~ msgid "All Months"
-#~ msgstr "Alla månader"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Kundorder per journal"
-
-#~ msgid "Open journals"
-#~ msgstr "Öppna journaler"
-
-#~ msgid "None"
-#~ msgstr "Ingen"
-
-#~ msgid "In progress"
-#~ msgstr "Pågående"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Försäljning per journal (denna månad)"
-
-#~ msgid "Draft"
-#~ msgstr "Preliminär"
-
-#~ msgid "Validation date"
-#~ msgstr "Valideringsdatum"
-
-#~ msgid "Month"
-#~ msgstr "Månad"
-
-#~ msgid "Invoice state"
-#~ msgstr "Fakturastatus"
-
-#~ msgid "cancel"
-#~ msgstr "avbryt"
-
-#~ msgid "Order State"
-#~ msgstr "Kundorderstatus"
-
-#~ msgid "Code"
-#~ msgstr "Kod"
-
-#~ msgid "draft"
-#~ msgstr "preliminär"
-
-#~ msgid "Draft sales"
-#~ msgstr "Preliminär kundorder"
-
-#~ msgid "Quotation"
-#~ msgstr "Offert"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Kundorderjournaler"
-
-#~ msgid "Creation date"
-#~ msgstr "Skapad datum"
-
-#~ msgid "Responsible"
-#~ msgstr "Ansvarig"
-
-#~ msgid "Open"
-#~ msgstr "Öppna"
-
-#~ msgid "Sales"
-#~ msgstr "Kundorder"
-
-#~ msgid "Open Journal"
-#~ msgstr "Öppna journal"
-
-#~ msgid "Done"
-#~ msgstr "Klar"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Journalstatus"
-
-#~ msgid "Cancel"
-#~ msgstr "Avbryt"
-
-#~ msgid "Journal"
-#~ msgstr "Journal"
-
-#~ msgid "invoiced"
-#~ msgstr "fakturerad"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Mina öppna journaler"
-
-#~ msgid "confirmed"
-#~ msgstr "godkänd"
-
-#~ msgid "Quantities"
-#~ msgstr "Antal"
-
-#~ msgid "States"
-#~ msgstr "Stater"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Fakturametoder"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Kundorder per journal"
-
-#~ msgid "This Month"
-#~ msgstr "Denna månad"
-
-#~ msgid "Journal Information"
-#~ msgstr "Journalinformation"
+#. module: sale_journal
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""

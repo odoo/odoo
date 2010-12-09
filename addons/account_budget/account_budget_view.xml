@@ -45,7 +45,7 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="5"/>
+        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="6"/>
         <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="20"/>
         <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="20"/>
 
@@ -172,7 +172,7 @@
            <field name="arch" type="xml">
                <search string="Budget">
                    <group col="20" colspan="4">
-                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
+                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>
                        <field name="name" select="1"/>

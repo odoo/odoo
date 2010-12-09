@@ -32,7 +32,7 @@ class outlook_installer(osv.osv_memory):
     def default_get(self, cr, uid, fields, context={}):
         data = super(outlook_installer, self).default_get(cr, uid, fields, context)
         data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
-        file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-plugin.zip'), 'r')
+        file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-addin.exe'), 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
 
@@ -47,7 +47,7 @@ class outlook_installer(osv.osv_memory):
 
     _defaults = {
         'outlook' : True,
-        'name' : 'OpenERP-Outlook-PlugIn.zip',
+        'name' : 'Openerp-Outlook-Addin.exe',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
         'description' : """
 * Save the Outlook plug­-in.
@@ -58,15 +58,10 @@ Pre-requirements :
     3. If you are using MS Outlook 2007 than you are required to install "Microsoft Exchange Server MAPI Client and Collaboration Data Objects 1.2.1 (CDO 1.21)".
 
 How to install openerp-outlook plug-in?
-    1. Extract zip file  “openerp-outlook-plugin.zip” .
-    2. Open the folder openerp-outlook-plugin.
-    3. Run “Register-plugin.bat” file.
-    4. Run Outlook and Check addon has been registered.
-    5. Tools->OpenERP Configuration and test your connection.
-    6. See User Guide for more information.
-    7. Keep All extratced files in some safe places
-        (e.g. python installation Directory "C:\pythonXX\" or Windows installation Directory "C:\Program Files\"  ).
-
+    1. Save the executable plug-in file.
+    2. Close Outlook Application if Running.
+    3. Run executable plug-in file and the folllow the instruction.
+    
 Note :
     Please refer README file for dependecies external link, openobject-addons/outlook/README.
 """

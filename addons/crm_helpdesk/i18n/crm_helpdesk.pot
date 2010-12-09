@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:23+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:23+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:26+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,11 +32,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: crm_helpdesk
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Today"
 msgstr ""
@@ -56,11 +51,6 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -147,13 +137,6 @@ msgid "Partner"
 msgstr ""
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Estimates"
 msgstr ""
@@ -161,11 +144,6 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
-msgstr ""
-
-#. module: crm_helpdesk
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -370,8 +348,10 @@ msgid "Low"
 msgstr ""
 
 #. module: crm_helpdesk
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:crm.helpdesk,date_closed:0
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: crm_helpdesk
@@ -537,11 +517,6 @@ msgid "Categorization"
 msgstr ""
 
 #. module: crm_helpdesk
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
@@ -570,6 +545,11 @@ msgid "Reply"
 msgstr ""
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid "Create and manage helpdesk categories to better manage and classify your support request."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr ""
@@ -580,6 +560,11 @@ msgid "May"
 msgstr ""
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid "'Helpdesk and Support' allows you to track your interventions. Select a customer, add notes and categorize interventions with partners if necessary and assign a priority level. Depending on your need, you may consider using the issues system of OpenERP to manage your support activities."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
 msgstr ""
@@ -587,6 +572,11 @@ msgstr ""
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
 msgid "# Emails"
+msgstr ""
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid "Have a general overview of all support requests by sorting them with specific criteria such as the processing time, number of requests answered, emails sent and costs."
 msgstr ""
 
 #. module: crm_helpdesk

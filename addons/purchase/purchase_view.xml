@@ -2,7 +2,9 @@
 <openerp>
     <data>
        <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3"
-           groups="group_purchase_manager,group_purchase_user"/>
+           groups="group_purchase_manager,group_purchase_user"
+           web_icon="images/purchases.png"
+           web_icon_hover="images/purchases-hover.png"/>
        <menuitem id="menu_procurement_management" name="Purchase Management"
             parent="base.menu_purchase_root" sequence="1" />
 
@@ -160,7 +162,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
-                                <field name="invoice_id" readonly="1" groups="base.group_extended"/>
+                                <field name="invoice_id" groups="base.group_extended" context="{'journal_type':'purchase', 'type':'in_invoice'}"/>
                                 <field name="fiscal_position" widget="selection"/>
                             </group>
                             <newline/>
@@ -310,12 +312,12 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom"/>                    
+                    <field name="product_uom"/>
                     <field name="price_subtotal"/>
                     <field name="date_planned"  widget="date" width="135"/>
-                    
-                   
-                    
+
+
+
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>
                 </tree>
@@ -373,7 +375,7 @@
                         <field name="order_id"/>
                         <field name="product_id"/>
                         <field name="partner_id"  string="Supplier"/>
-                        </group> 
+                        </group>
                         <newline/>
                         <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />

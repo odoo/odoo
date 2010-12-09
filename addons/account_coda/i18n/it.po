@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:27+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-21 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-22 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -49,7 +49,7 @@ msgstr "File CODA"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Group By..."
-msgstr ""
+msgstr "Raggruppa per..."
 
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
@@ -64,7 +64,7 @@ msgstr "Importa data"
 #. module: account_coda
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Errore! Non è possibile creare un menù ricorsivo."
 
 #. module: account_coda
 #: field:account.coda,note:0
@@ -86,6 +86,17 @@ msgstr "Importa CODA"
 #: field:account.coda.import,note:0
 msgid "Log"
 msgstr "Log"
+
+#. module: account_coda
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "L'ID certificato del modulo deve essere unico!"
+
+#. module: account_coda
+#: code:addons/account_coda/account_coda.py:0
+#, python-format
+msgid "Coda file not found for bank statement !!"
+msgstr ""
 
 #. module: account_coda
 #: help:account.coda.import,awaiting_account:0
@@ -145,19 +156,30 @@ msgid "Default Payable Account"
 msgstr ""
 
 #. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
-msgstr ""
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "La regola deve avere almeno un diritto di accesso spuntato!"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
 msgstr ""
+
+#. module: account_coda
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+msgstr "Il conto \"Banca\" %s non è definito per il partner %s.\n"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
@@ -178,12 +200,17 @@ msgstr ""
 #. module: account_coda
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
 
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
 msgstr "CODA"
+
+#. module: account_coda
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Il nome del modulo deve essere unico!"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -222,12 +249,12 @@ msgstr ""
 #: code:addons/account_coda/wizard/account_coda_import.py:0
 #, python-format
 msgid "Result"
-msgstr ""
+msgstr "Risultato"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Click on 'New' to select your file :"
-msgstr ""
+msgstr "Clicca su \"Nuovo\" per selezioanre il tuo file:"
 
 #. module: account_coda
 #: field:account.coda.import,def_receivable:0
@@ -237,7 +264,7 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: account_coda
 #: field:account.coda,statement_ids:0
@@ -252,7 +279,7 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Configure Your Journal and Account :"
-msgstr ""
+msgstr "Configura il Giornale e i conti:"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -260,9 +287,8 @@ msgid "Coda Import"
 msgstr ""
 
 #. module: account_coda
-#: code:addons/account_coda/wizard/account_coda_import.py:0
-#, python-format
-msgid "The bank account %s is not defined for the partner %s.\n"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: account_coda

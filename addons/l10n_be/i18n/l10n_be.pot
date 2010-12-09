@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:35+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:35+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:46+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,11 +29,6 @@ msgstr ""
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
 msgid "Régime Intra-Communautaire"
-msgstr ""
-
-#. module: l10n_be
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: l10n_be
@@ -126,8 +121,8 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
-#: help:partner.vat.intra,period_ids:0
-msgid "Select here the period(s) you want to include in your intracom declaration"
+#: view:partner.vat.list:0
+msgid "XML File has been Created."
 msgstr ""
 
 #. module: l10n_be
@@ -152,13 +147,14 @@ msgid "Régime National"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
-msgid "Régime Extra-Communautaire"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_view
-msgid "Vue"
+#: help:partner.vat,test_xml:0
+#: help:partner.vat.intra,test_xml:0
+msgid "Sets the XML output as test file"
 msgstr ""
 
 #. module: l10n_be
@@ -180,11 +176,6 @@ msgid "Save"
 msgstr ""
 
 #. module: l10n_be
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr ""
-
-#. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "General Information"
 msgstr ""
@@ -202,13 +193,8 @@ msgid "Select Fiscal Year"
 msgstr ""
 
 #. module: l10n_be
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
-
-#. module: l10n_be
-#: field:partner.vat.intra,period_code:0
-msgid "Period Code"
+#: help:partner.vat.intra,period_ids:0
+msgid "Select here the period(s) you want to include in your intracom declaration"
 msgstr ""
 
 #. module: l10n_be
@@ -227,8 +213,9 @@ msgid "Tick this case only if it concerns only the last statement on the civil o
 msgstr ""
 
 #. module: l10n_be
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:partner.vat.list:0
+#: field:partner.vat.list,partner_ids:0
+msgid "Clients"
 msgstr ""
 
 #. module: l10n_be
@@ -256,11 +243,6 @@ msgstr ""
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
-msgstr ""
-
-#. module: l10n_be
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: l10n_be
@@ -313,6 +295,11 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
 msgid "Companies"
+msgstr ""
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
+msgid "Régime Extra-Communautaire"
 msgstr ""
 
 #. module: l10n_be
@@ -379,16 +366,6 @@ msgstr ""
 #. module: l10n_be
 #: field:vat.listing.clients,name:0
 msgid "Client Name"
-msgstr ""
-
-#. module: l10n_be
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-msgid "XML File has been Created."
 msgstr ""
 
 #. module: l10n_be
@@ -459,15 +436,8 @@ msgid "Periodical VAT Declaration"
 msgstr ""
 
 #. module: l10n_be
-#: help:partner.vat,test_xml:0
-#: help:partner.vat.intra,test_xml:0
-msgid "Sets the XML output as test file"
-msgstr ""
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-#: field:partner.vat.list,partner_ids:0
-msgid "Clients"
+#: model:account.account.type,name:l10n_be.user_type_view
+msgid "Vue"
 msgstr ""
 
 #. module: l10n_be
@@ -518,6 +488,11 @@ msgstr ""
 #: field:partner.vat.intra,name:0
 #: field:partner.vat.list,name:0
 msgid "File Name"
+msgstr ""
+
+#. module: l10n_be
+#: field:partner.vat.intra,period_code:0
+msgid "Period Code"
 msgstr ""
 
 #. module: l10n_be

@@ -88,7 +88,7 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Supplier"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
@@ -106,7 +106,7 @@
                     <notebook colspan="4">
                         <page string="Payment Information">
                             <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
-                                <tree string="Open Vendor Journal Entries" editable="bottom">
+                                <tree string="Open Supplier Journal Entries" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
@@ -151,7 +151,7 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Vendor"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" context="{'invoice_currency':currency_id}" string="Supplier"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
@@ -169,7 +169,7 @@
                     <notebook colspan="4">
                         <page string="Payment Information">
                             <field name="line_dr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
-                                <tree string="Vendor Invoices and Outstanding transactions" editable="bottom">
+                                <tree string="Supplier Invoices and Outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
@@ -196,10 +196,29 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                  <field name="date" select="1" on_change="onchange_date(date)"/>
+                                  <field name="currency_id" invisible="True"/>
+                                  <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -217,14 +236,14 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="do_check" type="object" string="Validate" states="draft" icon="gtk-go-forward"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
         </record>
 
         <record id="action_vendor_payment" model="ir.actions.act_window">
-            <field name="name">Vendor Payment</field>
+            <field name="name">Supplier Payment</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','payment')]</field>
@@ -304,10 +323,29 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                    <field name="date" select="1" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" invisible="True"/>
+                                    <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -325,7 +363,7 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="do_check" type="object" string="Validate" states="draft" icon="gtk-go-forward"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>

@@ -69,6 +69,22 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="371.0,98.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Expected Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Qty</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_9">[[repeatIn(objects,'order')]]</para>
     <para style="terp_default_9">[[ setLang(order.partner_id.lang) ]]</para>
     <blockTable colWidths="250.0,59.0,221.0" style="Table_Address_Detail">
@@ -162,5 +178,6 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
+  </pto>
   </story>
 </document>

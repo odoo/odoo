@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
+<document filename="Overdue Payments.pdf">
   <template pageSize="(595.0,842.0)" title="Overdue Payments" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="42.0" y1="28.0" width="511" height="786"/>
@@ -89,6 +89,37 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="57.0,136.0,51.0,72.0,54.0,56.0,66.0,18.0" style="Table1">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Ref</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Maturity date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Due</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Paid</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Maturity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Li.</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.lang) ]]</para>
     <blockTable colWidths="286.0,224.0" style="Tableau2">
@@ -126,7 +157,6 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">Exception made of a mistake of our side, it seems that the following bills stay unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days.</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -253,5 +283,6 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

@@ -74,7 +74,7 @@ class document_file(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
-        'res_model': fields.char('Attached Model', size=64, readonly=True),
+        'res_model': fields.char('Attached Model', size=64, readonly=True, change_default=True),
         'res_id': fields.integer('Attached ID', readonly=True),
 
         # If ir.attachment contained any data before document is installed, preserve
@@ -86,7 +86,7 @@ class document_file(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         # 'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
-        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
+        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True, change_default=True),
         'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
         'file_size': fields.integer('File Size', required=True),
@@ -245,7 +245,7 @@ class document_file(osv.osv):
         # files to be unlinked, update the db (safer to do first, can be
         # rolled back) and then unlink the files. The list wouldn't exist
         # after we discard the objects
-
+        ids = self.search(cr, uid, [('id','in',ids)])
         for f in self.browse(cr, uid, ids, context):
             # TODO: update the node cache
             par = f.parent_id

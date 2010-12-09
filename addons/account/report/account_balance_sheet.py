@@ -22,13 +22,12 @@
 import time
 
 import pooler
-import rml_parse
 from report import report_sxw
 from account.report import account_profit_loss
 from common_report_header import common_report_header
 from tools.translate import _
 
-class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
+class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
         self.obj_pl = account_profit_loss.report_pl_account_horizontal(cr, uid, name, context=context)

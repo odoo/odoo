@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:04+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:04+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:36+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_no_autopicking
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: stock_no_autopicking
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -36,17 +31,22 @@ msgid "Auto Picking"
 msgstr ""
 
 #. module: stock_no_autopicking
-#: model:ir.model,name:stock_no_autopicking.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: stock_no_autopicking
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
 msgstr ""
 
 #. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: stock_no_autopicking
 #: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
 msgid "Stock No Auto-Picking"
+msgstr ""
+
+#. module: stock_no_autopicking
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
 msgstr ""
 

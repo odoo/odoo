@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 08:37+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-03 22:21+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -24,19 +25,6 @@ msgid ""
 msgstr ""
 "Nombre d'heures qui peuvent être facturées plus celles qui ont déjà été "
 "facturées."
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
-
-#. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du modèle invalide dans la définition de l'action."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -53,17 +41,12 @@ msgstr "Calculé selon la formule : Quantité maximum - Total des heures"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "Erreur d'accès"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theorical Revenue"
 msgstr "Revenu théorique"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Date de la dernière facture"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -74,9 +57,9 @@ msgstr ""
 "de produits)"
 
 #. module: account_analytic_analysis
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Date de la dernière facture"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -106,7 +89,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "Facturation"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -170,11 +153,6 @@ msgid "Date of the latest work done on this account."
 msgstr "Date de la dernière prestation effectuée sur ce compte analytique"
 
 #. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
 msgstr "report_account_analytic"
@@ -182,7 +160,7 @@ msgstr "report_account_analytic"
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Total d'heures par utilisateur"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
@@ -300,6 +278,11 @@ msgid "Hours Tot"
 msgstr "Total des heures"
 
 #. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -316,6 +299,9 @@ msgstr ""
 
 #~ msgid "My Current Accounts"
 #~ msgstr "Mes comptes gérés"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
 
 #~ msgid "New Analytic Account"
 #~ msgstr "Nouveau Compte Analytique"
@@ -353,3 +339,12 @@ msgstr ""
 #~ "les données importantes pour le gestionnaire de projets des sociétés de "
 #~ "service.\n"
 #~ "Ajoute un menu pour montrer les informations utiles à chaque gestionnaire."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer un Menu récursif."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
+#~ "spécial !"

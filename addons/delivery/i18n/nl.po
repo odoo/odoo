@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:29+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-12-01 07:20+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -188,6 +188,11 @@ msgid "Error ! You can not create recursive Menu."
 msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: delivery
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
 msgstr "Gefactureerd aan"
@@ -201,6 +206,11 @@ msgstr "Verzamellijst"
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
 msgstr "Maak aflevering"
+
+#. module: delivery
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -342,9 +352,15 @@ msgid "Condition"
 msgstr "Voorwaarde"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Kostprijs"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+"Maakt en beheert de aflever methode(s) waarmee u uw order mee wilt laten "
+"verwerken. Elke aflevermethode kan worden toegewezen aan een prijslijst die "
+"de prijs van de levering berekent voor de verkochte of geleverde producten."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -382,6 +398,11 @@ msgstr ""
 "verzamelopdracht."
 
 #. module: delivery
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: delivery
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -397,6 +418,25 @@ msgstr "Vervoerder"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Verkopen & Inkopen"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+"De afleverprijslijst laat u de kost- en verkoopprijs berekenen van de "
+"aflevering gebaseerd op het gewicht van de producten en andere criteria. U "
+"kunt verschillende prijslijsten definiëren voor een aflevermethode, voor "
+"elke regio zoals landen of zones in een specifiek land, gedefinieerd door "
+"een postcode bereik."
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Kostprijs"
 
 #. module: delivery
 #: view:delivery.sale.order:0

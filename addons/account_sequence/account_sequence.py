@@ -26,18 +26,18 @@ class account_move(osv.osv):
     _inherit = 'account.move'
 
     _columns = {
-        'internal_sequence_number': fields.char('Internal Sequence Number', size=64, readonly=True),
+        'internal_sequence_number': fields.char('Internal Number', size=64, readonly=True, help='Internal Sequence Number'),
     }
 
     def post(self, cr, uid, ids, context=None):
         obj_sequence = self.pool.get('ir.sequence')
         res = super(account_move, self).post(cr, uid, ids, context=context)
         seq_no = False
-        for line in self.browse(cr, uid, ids):
-            if line.journal_id.internal_sequence:
-                seq_no = obj_sequence.get_id(cr, uid, line.journal_id.internal_sequence.id, context=context)
+        for move in self.browse(cr, uid, ids, context):
+            if move.journal_id.internal_sequence_id:
+                seq_no = obj_sequence.get_id(cr, uid, move.journal_id.internal_sequence_id.id, context=context)
             if seq_no:
-                self.write(cr, uid, [line.id], {'internal_sequence_number': seq_no})
+                self.write(cr, uid, [move.id], {'internal_sequence_number': seq_no})
         return res
 
 account_move()
@@ -46,8 +46,18 @@ class account_journal(osv.osv):
     _inherit = "account.journal"
 
     _columns = {
-        'internal_sequence': fields.many2one('ir.sequence', 'Internal Sequence'),
+        'internal_sequence_id': fields.many2one('ir.sequence', 'Internal Sequence', help="This sequence will be used to maintain the internal number for the journal entries related to this journal."),
     }
+
 account_journal()
+
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    _columns = {
+        'internal_sequence_number': fields.related('move_id','internal_sequence_number', type='char', relation='account.move', help='Internal Sequence Number', string='Internal Number'),
+    }
+
+account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

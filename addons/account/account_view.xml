@@ -79,7 +79,7 @@
             <field name="view_mode">tree,form,search</field>
             <field name="help">Define your company's fiscal year depending on the period you have chosen to follow. A fiscal year is a 1 year period over which a company budgets its spending. It may run over any period of 12 months. The fiscal year is referred to by the date in which it ends. For example, if a company's fiscal year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. Not using the actual calendar year gives many companies an advantage, allowing them to close their books at a time which is most convenient for them.</field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting"/>
+        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting" sequence="8" />
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
@@ -357,7 +357,7 @@
             <field name="help">Here you can personalize and create each view of your financial journals by selecting the fields you want to appear and the sequence they will appear.</field>
         </record>
 
-        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_low_level"/>
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals"/>
 
         <!--
     # Account Journal
@@ -384,7 +384,7 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                     <group>
-                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-sale"/>
+                    <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
                     <filter domain="['|', ('type', '=', 'general'), ('type', '=', 'situation')]" string="Others" icon="terp-stock"/>
@@ -469,7 +469,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage your company's financial journals from this menu. A journal is a business diary in which all financial data related to the day to day business transactions of your company is recorded using double-entry book keeping system. Depending on the nature of its activities and number of daily transactions, a company may keep several  types of specialized journals such as a cash journal, purchases journal, and sales journal.</field>
         </record>
-        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu"/>
+        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="menu_journals"/>
 
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
@@ -609,16 +609,29 @@
                     <group col="7" colspan="4">
                         <field name="name" select="1"/>
                         <field name="date" select="1" on_change="onchange_date(date)"/>
-                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" select="1"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <newline/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
+                        <field name="account_id" invisible="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries">
-                            <field colspan="4" name="move_line_ids" nolabel="1" widget="many2many"/>
+                            <field colspan="4" name="move_line_ids" nolabel="1" widget="many2many" domain="[('account_id','=',account_id),('statement_id', '=', False)]">
+                                <tree string="Statement lines">
+                                    <field name="date"/>
+                                    <field name="period_id"/>
+                                    <field name="journal_id"/>
+                                    <field name="ref"/>
+                                    <field name="name"/>
+                                    <field name="account_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
@@ -749,7 +762,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is a name or code given to an account that indicates its purpose. For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need to be used for your company management.</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" id="menu_action_account_type_form" parent="menu_low_level"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
         <!--
     Entries
     -->
@@ -863,7 +876,7 @@
             <field name="help">A tax code is a reference of a tax that will be taken out of a gross income depending on the country and sometimes industry sector. OpenERP allows you to define and manage them from this menu.</field>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
-       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="menu_low_level" sequence="12"/>
+       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
 
 
         <!--
@@ -933,7 +946,14 @@
                                   <field groups="base.group_extended" name="child_depend"/>
                                   <field groups="base.group_extended" name="sequence"/>
                                   <field groups="base.group_extended" name="include_base_amount"/>
-                                  <field groups="base.group_extended" colspan="4" name="child_ids"/>
+                                  <field groups="base.group_extended" colspan="4" name="child_ids">
+                                      <tree string="Account Tax">
+                                          <field name="sequence"/>
+					                      <field name="name"/>
+					                      <field name="price_include" groups="base.group_extended"/>
+					                      <field name="description"/>
+					                 </tree>
+					             </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
@@ -1155,7 +1175,7 @@
                         <filter
                             icon="terp-dolar_ok!"
                             string="Unreconciled"
-                            domain="[('reconcile_id','=',False), ('account_id.type','in',['receivable', 'payable'])]" help="Unreconciled Journal Items"
+                            domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items"
                             name="unreconciled"/>
                         <separator orientation="vertical"/>
                         <field name="move_id" select="1" string="Number (Move)"/>
@@ -1236,6 +1256,7 @@
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('account_id', 'child_of', active_id)]</field>
+            <field name="context">{'account_id':active_id}</field>
         </record>
 
         <record id="ir_account_move_line_select" model="ir.values">
@@ -1696,7 +1717,7 @@
             <field name="arch" type="xml">
                 <search string="Journal Entry Model">
                   <group>
-                    <filter string="Sale" icon="terp-sale" domain="[('journal_id.type', '=', 'sale')]"/>
+                    <filter string="Sale" icon="terp-camera_test" domain="[('journal_id.type', '=', 'sale')]"/>
                     <filter string="Purchase" icon="terp-purchase" domain="[('journal_id.type', '=', 'purchase')]"/>
                     <separator orientation="vertical"/>
                       <field name="name"/>
@@ -2139,7 +2160,8 @@
                         <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
                          <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                          <separator orientation="vertical"/>
-                         <field name="code"/>
+                        <field name="code"/>
+                        <field name="name"/>
                         <field name="parent_id"/>
                         <field name="type"/>
                         <field name="user_type"/>
@@ -2180,13 +2202,13 @@
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group>
-                    <field name="property_account_receivable"/>
-                    <field name="property_account_payable"/>
-                    <field name="property_account_expense_categ" />
-                    <field name="property_account_income_categ"/>
-                    <field name="property_account_expense"/>
-                    <field name="property_account_income"/>
-                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
+                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
@@ -2257,6 +2279,7 @@
                         <field name="chart_template_id"/>
                         <field name="type"/>
                         <field name="type_tax_use"/>
+                        <field name="price_include"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Tax Definition">
@@ -2729,6 +2752,20 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
             groups="group_account_user,group_account_manager"/>
+
+        <record id="action_partner_all" model="ir.actions.act_window">
+            <field name="name">Partners</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <menuitem id="menu_partners_partners"
+                name="Partners"
+                parent="menu_partners"
+                action="action_partner_all"
+                sequence="1"/>
 
     </data>
 </openerp>

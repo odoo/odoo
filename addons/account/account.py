@@ -54,7 +54,7 @@ class account_payment_term(osv.osv):
     _description = "Payment Term"
     _columns = {
         'name': fields.char('Payment Term', size=64, translate=True, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the payment term without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
     }
@@ -122,7 +122,7 @@ class account_payment_term_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% ', ['value_amount']),
     ]
 
 account_payment_term_line()
@@ -312,7 +312,7 @@ class account_account(osv.osv):
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
+            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
         return result
 
     def _get_child_ids(self, cr, uid, ids, field_name, arg, context={}):
@@ -344,7 +344,7 @@ class account_account(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64, required=True),
+        'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
             ('view', 'View'),
             ('other', 'Regular'),
@@ -374,7 +374,7 @@ class account_account(osv.osv):
         'note': fields.text('Note'),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'active': fields.boolean('Active', select=2, help="If the active field is set to true, it will allow you to hide the account without removing it."),
+        'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
@@ -585,7 +585,7 @@ class account_journal(osv.osv):
     _description = "Journal"
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
+        'code': fields.char('Code', size=5, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
@@ -959,7 +959,7 @@ class account_journal_period(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='char', size=32),
-        'active': fields.boolean('Active', required=True, help="If the active field is set to true, it will allow you to hide the journal period without removing it."),
+        'active': fields.boolean('Active', required=True, help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
@@ -1389,7 +1389,7 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
+                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""") % (line.account_id.code, line.account_id.name))
 
             if abs(amount) < 10 ** -4:
                 # If the move is balanced
@@ -1669,7 +1669,7 @@ class account_tax(osv.osv):
         'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tax without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
         'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
@@ -1726,7 +1726,12 @@ class account_tax(osv.osv):
         if not context:
             context = {}
         ids = []
-        ids = self.search(cr, user, args, limit=limit, context=context)
+        if name:
+            ids = self.search(cr, user, [('description', '=', name)] + args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context or {})
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -2082,8 +2087,8 @@ class account_model(osv.osv):
                 date_maturity = time.strftime('%Y-%m-%d')
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
-                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term! \
-                    \nPlease define partner on it!"%(line.name, model.name)))
+                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
+                                                                "\nPlease define partner on it!")%(line.name, model.name))
                     if line.partner_id.property_payment_term:
                         payment_term_id = line.partner_id.property_payment_term.id
                         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_maturity)
@@ -2254,7 +2259,7 @@ class account_account_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64),
+        'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([
             ('receivable','Receivable'),
             ('payable','Payable'),
@@ -2454,7 +2459,8 @@ class account_tax_template(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name', size=32),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,)
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
+        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }
 
     def name_get(self, cr, uid, ids, context={}):
@@ -2485,6 +2491,7 @@ class account_tax_template(osv.osv):
         'base_sign': 1,
         'include_base_amount': False,
         'type_tax_use': 'all',
+        'price_include': 0,
     }
     _order = 'sequence'
 
@@ -2658,7 +2665,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'include_base_amount': tax.include_base_amount,
                 'description':tax.description,
                 'company_id': company_id,
-                'type_tax_use': tax.type_tax_use
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
             }
             new_tax = obj_acc_tax.create(cr, uid, vals_tax)
             tax_template_to_tax[tax.id] = new_tax
@@ -2707,8 +2715,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
-                    'account_collected_id': acc_template_ref[value['account_collected_id']],
-                    'account_paid_id': acc_template_ref[value['account_paid_id']],
+                    'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
+                    'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
 
         # Creating Journals Sales and Purchase

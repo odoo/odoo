@@ -43,7 +43,7 @@ project_scrum_project()
 class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
-    _order = 'date_start'
+    _order = 'date_start desc'
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -123,7 +123,7 @@ class project_scrum_sprint(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'date_start' : time.strftime('%Y-%m-%d'),
+        'date_start' : lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -330,7 +330,7 @@ class project_scrum_meeting(osv.osv):
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
             if not res:
-                raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
+                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the scrum master %s') % meeting_id.sprint_id.scrum_master_id.name)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
@@ -343,7 +343,7 @@ class project_scrum_meeting(osv.osv):
         if meeting_id.sprint_id.product_owner_id.user_email:
             res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
             if not res:
-                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
+                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the product owner %s') % meeting_id.sprint_id.product_owner_id.name)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True
@@ -358,7 +358,7 @@ class project_scrum_meeting(osv.osv):
         body = _('Hello ') + meeting_id.sprint_id.scrum_master_id.name + ",\n" + " \n" +_('I am sending you Daily Meeting Details of date')+ ' %s ' % (meeting_id.date)+ _('for the Sprint')+ ' %s\n' % (meeting_id.sprint_id.name)
         body += "\n"+ _('*Tasks since yesterday:')+ '\n_______________________%s' % (meeting_id.question_yesterday) + '\n' +_("*Task for Today:")+ '\n_______________________ %s\n' % (meeting_id.question_today )+ '\n' +_('*Blocks encountered:') +'\n_______________________ %s' % (meeting_id.question_blocks or _('No Blocks'))
         body += "\n\n"+_('Thank you')+",\n"+ user.name
-        sub_name = meeting_id.name or _('Scrum Meeting of')+ "%s" %meeting_id.date
+        sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
             return False
