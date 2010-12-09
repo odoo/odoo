@@ -889,7 +889,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Exception\' state is set when the related sale order is set as exception. \
                     \n* The \'Done\' state is set when the sale order line has been picked. \
                     \n* The \'Cancelled\' state is set when a user cancel the sale order related.'),
-        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
