@@ -75,6 +75,6 @@
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0064392144797',
+    'certificate': None # was '0064392144797', TODO: reissue new number
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
