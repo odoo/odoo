@@ -46,16 +46,8 @@
                     <group colspan="2" col="4" >
                            <field name="rrule_type" string="Recurrency"
                                 colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
-                           <button string="Edit All"
-                               help="Edit all Ourrences of recurrent Meeting"
-                               attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                               name="open_meeting" icon="gtk-edit"
-                               type="object" />
-                           <button string="Exclude range" groups="base.group_extended"
-                                help="Add Exception Rule"
-                                name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
-                                context="{'model' : 'crm.meeting'}"
-                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
+                           <field name="edit_all" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+                                on_change="onchange_edit_all(rrule_type,edit_all)"/>
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
