@@ -157,7 +157,9 @@ class procurement_order(osv.osv):
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
 
-        cr.execute('select id from product_product')
+        cr.execute('select p.id from product_product p \
+                        join product_template t on (p.product_tmpl_id=t.id) \
+                        where p.active=True and t.purchase_ok=True')
         products_id = [x for x, in cr.fetchall()]
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
