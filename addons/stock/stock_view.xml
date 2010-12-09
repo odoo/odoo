@@ -9,10 +9,30 @@
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1" groups="base.group_extended"/>
         <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
+        <menuitem name="Products by Category" id="menu_product_by_category_stock_form" action="product.product_category_action"
+           parent="stock.menu_stock_product" sequence="0"/> 
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
         <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="group_stock_manager"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
+        <menuitem 
+            id="menu_product_in_config_stock" name="Products"
+            parent="stock.menu_stock_configuration" sequence="2"/>
+        <menuitem
+            action="product.product_category_action_form" id="menu_product_category_config_stock"
+            parent="stock.menu_product_in_config_stock" sequence="0"/>
+        <menuitem
+            action="product.product_ul_form_action" groups="base.group_extended"
+            id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="1"/>
+         <menuitem 
+            id="menu_stock_unit_meauser_stock" name="Units of Measure"
+            parent="stock.menu_product_in_config_stock"  sequence="2"/>
+         <menuitem
+             action="product.product_uom_categ_form_action" id="menu_stock_uom_categ_form_action"
+             parent="stock.menu_stock_unit_meauser_stock" sequence="0"/>
+         <menuitem
+              action="product.product_uom_form_action" id="menu_stock_uom_form_action"
+              parent="stock.menu_stock_unit_meauser_stock" sequence="1"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
