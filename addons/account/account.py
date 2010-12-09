@@ -2715,8 +2715,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
-                    'account_collected_id': acc_template_ref[value['account_collected_id']],
-                    'account_paid_id': acc_template_ref[value['account_paid_id']],
+                    'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
+                    'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
 
         # Creating Journals Sales and Purchase
