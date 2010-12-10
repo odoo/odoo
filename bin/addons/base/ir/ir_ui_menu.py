@@ -97,22 +97,15 @@ class ir_ui_menu(osv.osv):
         self._cache[key] = True
         return action_id
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-               context=None, count=False):
-
-        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
-            limit=None, order=order, context=context, count=False)
-
-        if not ids:
-            if count:
-                return 0
-            return []
-
-
+    def _filter_visible_menus(self, cr, uid, ids, context=None):
+        """Filters the give menu ids to only keep the menu items that should be
+           visible in the menu hierarchy of the current user.
+           Uses a cache for speeding up the computation.
+        """
         modelaccess = self.pool.get('ir.model.access')
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         result = []
-        for menu in self.browse(cr, uid, ids):
+        for menu in self.browse(cr, uid, ids, context=context):
             # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
             key = (cr.dbname, menu.id, tuple(user_groups))
             if key in self._cache:
@@ -153,6 +146,25 @@ class ir_ui_menu(osv.osv):
 
             result.append(menu.id)
             self._cache[key] = True
+        return result
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
+            limit=None, order=order, context=context, count=False)
+
+        if not ids:
+            if count:
+                return 0
+            return []
+
+        # menu filtering is done only on main menu tree, not other menu lists
+        if context.get('ir.ui.menu.full_list'):
+            result = ids
+        else:
+            result = self._filter_visible_menus(cr, uid, ids, context=context)
 
         if offset:
             result = result[long(offset):]
@@ -177,6 +189,10 @@ class ir_ui_menu(osv.osv):
         else:
             parent_path = ''
         return parent_path + menu.name
+
+    def create(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).create(*args, **kwargs)
 
     def write(self, *args, **kwargs):
         self.clear_cache()
