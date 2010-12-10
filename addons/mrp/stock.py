@@ -113,6 +113,9 @@ class StockMove(osv.osv):
                     production_obj.force_production(cr, uid, [prod.id])
                 wf_service.trg_validate(uid, 'mrp.production', prod.id, 'button_produce', cr)
             for new_move in new_moves:
+                if new_move == move.id:
+                    #This move is already there in move lines of production order
+                    continue
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
         return res

@@ -1312,6 +1312,7 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
+                    <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="create_date" invisible="1"/>
