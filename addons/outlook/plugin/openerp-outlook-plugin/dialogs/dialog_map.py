@@ -843,6 +843,7 @@ def CreateContact(btnProcessor,*args):
         win32ui.MessageBox("Contact name or Email id is Missing\nPlease fill those information", "Create Contact", flag_error)
         return
     try:
+        NewConn.CreateContact(str(res))
         if not partner:
             msg="New contact created."
         else:
@@ -1405,8 +1406,14 @@ def OpenPartnerForm(txtProcessor,*args):
     	txtProcessor.init_done=True
     	return
     try:
-    	linktopartner = "http:\\\\"+web_server+":"+str(web_server_port)+"\\openerp\\form\\view?model=res.partner&id="+str(vals)
-    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, linktopartner)
+        linktopartner = "http://"+web_server+":"+str(web_server_port)+"/openerp/form/view?model=res.partner&id="+str(vals)
+
+        win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, str(linktopartner))
+#        import urllib
+#        encode = urllib.urlencode('/openerp/form/view?model=res.partner&id='+str(vals))
+#        weburl = 'http://'+web_server+':'+str(web_server_port)
+#        linktopartner = weburl + "?next=" + encode
+#    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, linktopartner)
     except Exception,e:
     	win32ui.MessageBox("Error While Opening Partner.\n"+str(e),"Open Partner", flag_error)
     webbrowser.open_new(linktopartner)
