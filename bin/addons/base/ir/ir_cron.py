@@ -42,6 +42,7 @@ _intervalTypes = {
 
 class ir_cron(osv.osv, netsvc.Agent):
     _name = "ir.cron"
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=60, required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),

@@ -72,6 +72,7 @@ multi_company_default()
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
+    _order = 'name'
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),

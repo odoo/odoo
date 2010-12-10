@@ -29,6 +29,7 @@ from tools.translate import _
 class res_payterm(osv.osv):
     _description = 'Payment term'
     _name = 'res.payterm'
+    _order = 'name'
     _columns = {
         'name': fields.char('Payment Term (short name)', size=64),
     }
@@ -254,6 +255,7 @@ res_partner()
 class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
+    _order = 'name'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
@@ -327,6 +329,7 @@ res_partner_address()
 class res_partner_bank_type(osv.osv):
     _description='Bank Account Type'
     _name = 'res.partner.bank.type'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=64, required=True),
@@ -337,6 +340,7 @@ res_partner_bank_type()
 class res_partner_bank_type_fields(osv.osv):
     _description='Bank type fields'
     _name = 'res.partner.bank.type.field'
+    _order = 'name'
     _columns = {
         'name': fields.char('Field Name', size=64, required=True, translate=True),
         'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank Type', required=True, ondelete='cascade'),
@@ -352,7 +356,7 @@ class res_partner_bank(osv.osv):
     _name = "res.partner.bank"
     _rec_name = "acc_number"
     _description = __doc__
-    _order = 'sequence'
+    _order = 'sequence,name'
 
     def _bank_type_get(self, cr, uid, context=None):
         bank_type_obj = self.pool.get('res.partner.bank.type')

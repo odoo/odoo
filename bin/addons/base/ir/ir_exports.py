@@ -24,6 +24,7 @@ from osv import fields,osv
 
 class ir_exports(osv.osv):
     _name = "ir.exports"
+    _order = 'name'
     _columns = {
         'name': fields.char('Export Name', size=128),
         'resource': fields.char('Resource', size=128, select=True),
@@ -35,6 +36,7 @@ ir_exports()
 
 class ir_exports_line(osv.osv):
     _name = 'ir.exports.line'
+    _order = 'sequence,name'
     _columns = {
         'name': fields.char('Field Name', size=64),
         'export_id': fields.many2one('ir.exports', 'Export', select=True, ondelete='cascade'),

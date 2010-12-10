@@ -43,7 +43,7 @@ def _get_fields_type(self, cr, uid, context=None):
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
-    _rec_name = 'name'
+    _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids, context=context)
@@ -184,7 +184,7 @@ class ir_model_fields(osv.osv):
         'field_description': lambda *a: '',
         'selectable': lambda *a: 1,
     }
-    _order = "id"
+    _order = "name"
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 1 !')
 
@@ -376,6 +376,7 @@ ir_model_access()
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
+    _order = 'module,model,name'
     _columns = {
         'name': fields.char('XML Identifier', required=True, size=128, select=1),
         'model': fields.char('Object', required=True, size=64, select=1),

@@ -25,6 +25,7 @@ import pooler
 
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name',size=64, required=True),
         'code': fields.char('Code',size=32, required=True),
@@ -37,6 +38,7 @@ def _code_get(self, cr, uid, context={}):
 
 class ir_sequence(osv.osv):
     _name = 'ir.sequence'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name',size=64, required=True),
         'code': fields.selection(_code_get, 'Code',size=64, required=True),

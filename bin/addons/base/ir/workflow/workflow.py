@@ -26,6 +26,7 @@ import netsvc
 class workflow(osv.osv):
     _name = "workflow"
     _table = "wkf"
+    _order = "name"
   #  _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -115,6 +116,7 @@ workflow()
 class wkf_activity(osv.osv):
     _name = "workflow.activity"
     _table = "wkf_activity"
+    _order = "name"
    # _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
