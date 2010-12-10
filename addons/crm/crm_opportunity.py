@@ -50,7 +50,9 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
      }
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -100,7 +102,7 @@ class crm_opportunity(osv.osv):
                 message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
-
+    
     def case_cancel(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting probability
         @param self: The object pointer

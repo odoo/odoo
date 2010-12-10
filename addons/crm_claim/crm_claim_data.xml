@@ -45,22 +45,22 @@
         <record model="crm.case.stage" id="stage_claim1">
             <field name="name">Accepted as Claim</field>
             <field name="sequence">1</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+            <field name="type">claim</field> 
         </record>
         <record model="crm.case.stage" id="stage_claim5">
             <field name="name">Actions Defined</field>
             <field name="sequence">2</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+            <field name="type">claim</field> 
         </record>
         <record model="crm.case.stage" id="stage_claim2">
             <field name="name">Actions Done</field>
             <field name="sequence">10</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+            <field name="type">claim</field> 
         </record>
         <record model="crm.case.stage" id="stage_claim3">
             <field name="name">Won't fix</field>
             <field name="sequence">11</field>
-            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+            <field name="type">claim</field> 
         </record>
         
 

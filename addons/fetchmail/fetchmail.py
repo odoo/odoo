@@ -170,7 +170,7 @@ class email_server(osv.osv):
                         result, data = imap_server.fetch(num, '(RFC822)')
                         res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                             imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
@@ -187,7 +187,7 @@ class email_server(osv.osv):
                         msg = '\n'.join(msges)
                         res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
 
