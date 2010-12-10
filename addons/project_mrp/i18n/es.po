@@ -6,21 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 09:51+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 21:23+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: project_mrp
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -28,9 +23,9 @@ msgid "For each product, on type service and on order"
 msgstr "Para cada producto, sobre tipo servicio y sobre orden"
 
 #. module: project_mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la estructura de la vista!"
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Tarea abastecimiento"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
@@ -41,22 +36,19 @@ msgid "Task"
 msgstr "Tarea"
 
 #. module: project_mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
 msgstr "Tipo de producto es servicio, luego se crea la tarea."
 
 #. module: project_mrp
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "si tipo de producto es 'servicio' entonces se crea la tarea."
+
+#. module: project_mrp
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "¡Error! No puede crear tareas recursivas."
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -64,9 +56,9 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
-msgstr "Tarea abastecimiento"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Código EAN no válido"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -116,16 +108,6 @@ msgstr "Integración de abastecimientos y gestión de proyectos"
 msgid "In case you sell services on sale order"
 msgstr "En caso que venda servicios sobre pedido de venta"
 
-#. module: project_mrp
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_procuretask0
-msgid "if product type is 'service' then it creates the task."
-msgstr "si tipo de producto es 'servicio' entonces se crea la tarea."
-
 #~ msgid "If procure method is Make to order and supply method is produce"
 #~ msgstr ""
 #~ "si método de abastecimiento es Fabricar bajo pedido y método de suministro "
@@ -136,3 +118,21 @@ msgstr "si tipo de producto es 'servicio' entonces se crea la tarea."
 
 #~ msgid "Project Management - MRP and Sale Integration"
 #~ msgstr "Gestión de proyectos - Integración con MRP y ventas"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la estructura de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

@@ -257,7 +257,7 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check" default="1"/>
+	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
