@@ -38,8 +38,9 @@ class account_common_report(osv.osv_memory):
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
         'date_from': fields.date("Start Date"),
         'date_to': fields.date("End Date"),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
+        'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                         ('all', 'All Entries'),
+                                        ], 'Target Moves', required=True),
 
         }
 
@@ -101,7 +102,7 @@ class account_common_report(osv.osv_memory):
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
-            'target_move': 'all',
+            'target_move': 'posted',
     }
 
     def _build_contexts(self, cr, uid, ids, data, context=None):
