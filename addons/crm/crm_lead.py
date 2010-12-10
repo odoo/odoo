@@ -158,9 +158,11 @@ class crm_lead(crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        type = context and context.get('stage_type', '') or ''
+        if context is None:
+            context = {}
+        type = context and context.get('stage_type', '')
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
-        return stage_ids and stage_ids[0]
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'active': lambda *a: 1,

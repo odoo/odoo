@@ -146,7 +146,7 @@ class crm_case(object):
         if not context:
             context = {}
         stage_pool = self.pool.get('crm.case.stage')
-        stage_type = context and context.get('stage_type','lead') or self._name.split('.')[1]
+        stage_type = context and context.get('stage_type','')
         current_seq = False
         for case in self.browse(cr, uid, ids, context):
             next_stage = False
@@ -184,7 +184,7 @@ class crm_case(object):
         if not context:
             context = {}
         stage_pool = self.pool.get('crm.case.stage')
-        stage_type = context and context.get('stage_type','lead') or self._name.split('.')[1]
+        stage_type = context and context.get('stage_type','')
         for case in self.browse(cr, uid, ids, context):
             prev_stage = False
             data = {}
