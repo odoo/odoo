@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 08:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-06 12:17+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -34,19 +35,9 @@ msgid "Paid Member"
 msgstr "Zahlende Mitglieder"
 
 #. module: membership
-#: help:product.product,membership_date_from:0
-msgid "Active Membership since this date"
-msgstr "Aktives Mitglied seit"
-
-#. module: membership
 #: view:report.membership:0
 msgid "Group By..."
 msgstr "Gruppierung..."
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -152,6 +143,11 @@ msgid "# Invoiced"
 msgstr "# Berechnet"
 
 #. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr "Analyse Mitglieder"
+
+#. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr "Ende Mitgliedschaft am"
@@ -189,14 +185,40 @@ msgid "From"
 msgstr "Von"
 
 #. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "Fehler, das Mitgliedschaft Produkt ist abgelaufen"
+
+#. module: membership
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A member who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+"Gibt Auskunft über den Mitgliedsstatus\n"
+" -Kein Mitglied: Ein Mitglied das für keine Mitgliedschaft eingetragen ist.\n"
+" -Ausgetretenes Mitglied: Mitglied das seine Mitgliedschaft gekündigt hat.\n"
+" -Altes Mitglied: Mitglied dessen Mitgliedschaft abgelaufen ist.\n"
+" -Wartendes Mitglied: Mitglied das sich angemeldet hat und nun auf die "
+"Erstellung der Rechnung wartet.\n"
+" -Abgerechnetes Mitglied: Mitglied dessen Rechnung erstellt wurde.\n"
+" -Bezahltes Mitglied: Mitglied das seinen Beitrag bezahlt hat."
+
+#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "Erzeuge"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "in Rechnung gestelltes Mitglied kann aufgenommenes Mitglied werden"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -260,9 +282,13 @@ msgid "Golden Membership"
 msgstr "Gold Mitglied"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
-msgstr "Analyse Mitglieder"
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Mitglied, dem Sie eine Mitgliedschaft zuordnen wollen. Dies wird im "
+"Mitgliedsstatus berücksichtigt."
 
 #. module: membership
 #: field:membership.membership_line,membership_id:0
@@ -277,9 +303,9 @@ msgid "Define product for membership."
 msgstr "Definiere Produkt für Mitgliedschaft"
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr "in Rechnung gestelltes Mitglied kann aufgenommenes Mitglied werden"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -287,10 +313,10 @@ msgid "Join"
 msgstr "Beitritt"
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
-msgstr "Rechnung"
+#: help:product.product,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
+msgstr "Datum bis die Mitgliedschaft abläuft."
 
 #. module: membership
 #: constraint:product.template:0
@@ -310,6 +336,11 @@ msgid "Join Date"
 msgstr "Datum Beitritt"
 
 #. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give membership free of cost."
+msgstr "Bitte auswählen, ob die Mitgliedschaft kostenfrei sein soll."
+
+#. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
 msgid "Set association"
 msgstr "Setze Mitgliedschaft"
@@ -323,6 +354,11 @@ msgstr " Mitgliedschaft Status"
 #: view:res.partner:0
 msgid "Memberships"
 msgstr "Mitgliedschaft"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
+msgstr "Mitgleidschaft bezahlt."
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -343,6 +379,32 @@ msgstr "Dezember"
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Rechnungszeile"
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership state.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+"Gibt Auskunft über den Mitgliedsstatus\n"
+" -Kein Mitglied: Ein Mitglied das für keine Mitgliedschaft eingetragen ist.\n"
+" -Ausgetretenes Mitglied: Mitglied das seine Mitgliedschaft gekündigt hat.\n"
+" -Altes Mitglied: Mitglied dessen Mitgliedschaft abgelaufen ist.\n"
+" -Wartendes Mitglied: Mitglied das sich angemeldet hat und nun auf die "
+"Erstellung der Rechnung wartet.\n"
+" -Abgerechnetes Mitglied: Mitglied dessen Rechnung erstellt wurde\n"
+" -Bezahltes Mitglied: Mitglied das seinen Beitrag bezahlt hat."
 
 #. module: membership
 #: view:report.membership:0
@@ -373,6 +435,12 @@ msgid "Associate Member"
 msgstr "Verbundenes Mitglied"
 
 #. module: membership
+#: help:product.product,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr "Datum ab wann die Mitgliedschaft gilt."
+
+#. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
 msgstr "Zugehöriger Partner"
@@ -401,6 +469,12 @@ msgid "Category"
 msgstr "Kategorie"
 
 #. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -413,22 +487,12 @@ msgid "Member Sale Pricelist Version"
 msgstr "MItglieder Verkaufspreisliste Version"
 
 #. module: membership
-#: help:product.product,membership_date_to:0
-msgid "Expired date of Membership"
-msgstr "Mitgliedschaft abgelaufen am"
-
-#. module: membership
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 "Fehler: Die Standard Mengeneinheit sowie die Beschaffungs Mengeneinheit muss "
 "in derselben Kategorie sein."
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negociated by the partner"
-msgstr "Vom Partner ausgehandelter Preis"
 
 #. module: membership
 #: view:report.membership:0
@@ -441,14 +505,14 @@ msgid "Member"
 msgstr "Mitglied"
 
 #. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: membership
 #: view:product.product:0
 msgid "Date From"
 msgstr "Von Datum"
-
-#. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -488,18 +552,6 @@ msgid "June"
 msgstr "Juni"
 
 #. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr "Mitgleidschaft bezahlt."
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Invoiced Member"
-msgstr "Abrechnung Mitglieder"
-
-#. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
@@ -512,9 +564,16 @@ msgid "Membership"
 msgstr "Mitgliedschaft"
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Specify if this product is a membership product"
-msgstr "Spezifiere Mitgliedschaft Produkt"
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "Abrechnung Mitglieder"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Eintrittsdatum des Mitglied"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -564,22 +623,24 @@ msgid "Membership Fee"
 msgstr "Mitgliedsbetrag"
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Fehler ! Sie können nicht die Basispreisliste als andere Preisliste zuweisen."
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "Mitgliedsbetrag"
 
 #. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr "Der vom Partner verhandelte Preis."
+
+#. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
 msgstr "Basis Mitglied"
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Select if a product is a membership product."
+msgstr "Auswählen ob ein Produkt für die Mitgliedverwaltung verwendet wird."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -651,14 +712,6 @@ msgid "Categorization"
 msgstr "Kategorisierung"
 
 #. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr "Rechnungsentwurf für Mitgliedschaft"
@@ -697,11 +750,6 @@ msgid "May"
 msgstr "Mai"
 
 #. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Preislisten Versionen dürfen sich nicht überschneiden"
-
-#. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
 msgstr "Silber Mitglied"
@@ -733,6 +781,11 @@ msgid "April"
 msgstr "April"
 
 #. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr "Datum an dem die Mitgliedschaft gekündigt wurde."
+
+#. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
 msgstr "Ende Datum"
@@ -752,6 +805,11 @@ msgstr "Von Datum"
 #: model:process.node,name:membership.process_node_membershipproduct0
 msgid "Membership product"
 msgstr "Mitgliedschaft Produkt"
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr "Beitrittsbetrag"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -785,11 +843,11 @@ msgstr "Generierter Umsatz"
 #~ msgid "Free members"
 #~ msgstr "Freie Mitglieder"
 
-#~ msgid "Error, this membership product is out of date"
-#~ msgstr "Fehler, das Mitgliedschaft Produkt ist abgelaufen"
-
 #~ msgid "Confirm"
 #~ msgstr "Bestätige"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "State"
 #~ msgstr "Status"
@@ -818,8 +876,14 @@ msgstr "Generierter Umsatz"
 #~ msgid "Invoiced"
 #~ msgstr "Berechnet"
 
+#~ msgid "The price negociated by the partner"
+#~ msgstr "Vom Partner ausgehandelter Preis"
+
 #~ msgid "Paid"
 #~ msgstr "Bezahlt"
+
+#~ msgid "Specify if this product is a membership product"
+#~ msgstr "Spezifiere Mitgliedschaft Produkt"
 
 #~ msgid "Invoiced members"
 #~ msgstr "Abgerechnete Mitglieder"
@@ -845,6 +909,12 @@ msgstr "Generierter Umsatz"
 #~ msgid "Paid members"
 #~ msgstr "Zahlende Mitglieder"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
 #~ msgid "Canceled Member"
 #~ msgstr "Beendete Mitgliedschaft"
 
@@ -865,3 +935,24 @@ msgstr "Generierter Umsatz"
 
 #~ msgid "Error: Invalid Bvr Number (wrong checksum)."
 #~ msgstr "Ungültige Prüfsumme"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Preislisten Versionen dürfen sich nicht überschneiden"
+
+#~ msgid "Active Membership since this date"
+#~ msgstr "Aktives Mitglied seit"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Expired date of Membership"
+#~ msgstr "Mitgliedschaft abgelaufen am"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Fehler ! Sie können nicht die Basispreisliste als andere Preisliste zuweisen."
