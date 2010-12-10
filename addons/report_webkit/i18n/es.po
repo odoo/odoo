@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-29 07:48+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 22:46+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_webkit
@@ -42,11 +43,6 @@ msgstr "Imagen cabecera"
 #: field:res.company,lib_path:0
 msgid "Webkit Executable Path"
 msgstr "Ruta ejecutable WebKit"
-
-#. module: report_webkit
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -164,9 +160,9 @@ msgid "B2  17  500 x 707 mm"
 msgstr "B2 17 500 x 707 mm"
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_header_img
-msgid "ir.header_img"
-msgstr ""
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -179,11 +175,6 @@ msgid "C5E 24  163 x 229 mm"
 msgstr "C5E 24 163 x 229 mm"
 
 #. module: report_webkit
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: report_webkit
 #: field:ir.header_img,type:0
 msgid "Type"
 msgstr "Tipo"
@@ -193,11 +184,6 @@ msgstr "Tipo"
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Conexiones acciones cliente"
-
-#. module: report_webkit
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: report_webkit
 #: field:res.company,header_image:0
@@ -297,11 +283,6 @@ msgid "Content and styling"
 msgstr "Contenido y estilo"
 
 #. module: report_webkit
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la estructura de la vista!"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A7  11  74 x 105 mm"
 msgstr "A7 11 74 x 105 mm"
@@ -383,9 +364,9 @@ msgid "Portrait"
 msgstr "Horizontal"
 
 #. module: report_webkit
-#: selection:ir.header_webkit,orientation:0
-msgid "Landscape"
-msgstr "Apaisado"
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.acciones.informe.xml"
 
 #. module: report_webkit
 #: view:ir.header_webkit:0
@@ -396,11 +377,6 @@ msgstr "configuración página"
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr "B8 22 62 x 88 mm"
-
-#. module: report_webkit
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear un menú recursivo"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -458,9 +434,9 @@ msgid "Set Webkit Report Header"
 msgstr "Establecer cabecera informe Webkit"
 
 #. module: report_webkit
-#: field:ir.header_webkit,format:0
-msgid "Paper size"
-msgstr "Tamaño del papel"
+#: model:ir.model,name:report_webkit.model_ir_header_img
+msgid "ir.header_img"
+msgstr "ir.cabecera_img"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -473,22 +449,9 @@ msgid "Header CSS"
 msgstr "Cabecera CSS"
 
 #. module: report_webkit
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B4  19  250 x 353 mm"
 msgstr "B4 19 250 x 353 mm"
-
-#. module: report_webkit
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -558,6 +521,11 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E 25 105 x 241 mm, Sobre U.S. Común 10"
 
 #. module: report_webkit
+#: field:ir.header_webkit,format:0
+msgid "Paper size"
+msgstr "Tamaño del papel"
+
+#. module: report_webkit
 #: code:addons/report_webkit/webkit_report.py:0
 #, python-format
 msgid "Webkit Report template not found !"
@@ -584,6 +552,30 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr ""
+#: selection:ir.header_webkit,orientation:0
+msgid "Landscape"
+msgstr "Apaisado"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la estructura de la vista!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear un menú recursivo"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

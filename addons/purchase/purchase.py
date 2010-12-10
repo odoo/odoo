@@ -559,6 +559,7 @@ class purchase_order(osv.osv):
 
 
         allorders = []
+        orders_info = {}
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:
@@ -573,13 +574,14 @@ class purchase_order(osv.osv):
 
             # create the new order
             neworder_id = self.create(cr, uid, order_data)
+            orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
 
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
-        return allorders
+        return orders_info
 
 purchase_order()
 

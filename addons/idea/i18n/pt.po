@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 08:18+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-06 15:39+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
@@ -57,11 +57,6 @@ msgstr "Análise de ideias"
 #: view:report.vote:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção."
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
@@ -116,19 +111,19 @@ msgstr ""
 #. module: idea
 #: view:idea.category:0
 msgid "Category of ideas"
-msgstr "Categorias de Ideias"
+msgstr "Categoria de ideias"
 
 #. module: idea
 #: code:addons/idea/idea.py:0
 #: code:addons/idea/wizard/idea_post_vote.py:0
 #, python-format
 msgid "Warning !"
-msgstr "Alerta!"
+msgstr "Atenção!"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Your comment"
-msgstr "Seu comentário"
+msgstr "O seu comentário"
 
 #. module: idea
 #: view:report.vote:0
@@ -156,13 +151,13 @@ msgstr "Muito Mau"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr "Votação em Ideias"
+msgstr "Votação em ideias"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,nbr:0
 msgid "# of Lines"
-msgstr "Nº de linhas"
+msgstr "Número de linhas"
 
 #. module: idea
 #: code:addons/idea/wizard/idea_post_vote.py:0
@@ -173,17 +168,17 @@ msgstr "Não se pode votar nesta Ideia mais do que %s vezes"
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr "Categorias de Ideias"
+msgstr "Categorias de ideias"
 
 #. module: idea
 #: help:idea.idea,description:0
 msgid "Content of the idea"
-msgstr "Conteudo da ideia"
+msgstr "Conteúdo da ideia"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr "Categoria da Ideia"
+msgstr "Categoria da ideia"
 
 #. module: idea
 #: view:idea.idea:0
@@ -197,7 +192,7 @@ msgstr "Estatísticas"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Not Voted"
-msgstr "Não  Votado"
+msgstr "Sem votos"
 
 #. module: idea
 #: sql_constraint:idea.category:0
@@ -207,7 +202,7 @@ msgstr "O nome da categoria deve ser único"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
-msgstr "Selecionar Ideia"
+msgstr "Selecionar ideia"
 
 #. module: idea
 #: view:idea.stat:0
@@ -225,22 +220,12 @@ msgid "Next"
 msgstr ""
 
 #. module: idea
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
-
-#. module: idea
 #: view:idea.idea:0
 #: field:idea.idea,state:0
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
 msgstr "Estado"
-
-#. module: idea
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -276,7 +261,7 @@ msgstr ""
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
-msgstr "Abrir a Ideia?"
+msgstr "Abrir a ideia?"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -298,14 +283,9 @@ msgid "Categories"
 msgstr "Categorias"
 
 #. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML Inválido para a Arquitectura de Vista!"
-
-#. module: idea
 #: view:report.vote:0
 msgid "    Month-1    "
-msgstr "    Mês-1    "
+msgstr "    Month-1    "
 
 #. module: idea
 #: field:idea.idea,open_date:0
@@ -422,11 +402,6 @@ msgid "Draft"
 msgstr "Rascunho"
 
 #. module: idea
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Não pode criar menus recursivos."
-
-#. module: idea
 #: selection:report.vote,month:0
 msgid "August"
 msgstr "Agosto"
@@ -476,7 +451,7 @@ msgstr "Publicar"
 #. module: idea
 #: field:idea.idea,my_vote:0
 msgid "My Vote"
-msgstr "Meu voto"
+msgstr "O meu voto"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -497,7 +472,7 @@ msgstr "Janeiro"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
 msgid "idea.idea"
-msgstr "Ideia.ideia"
+msgstr "idea.idea"
 
 #. module: idea
 #: field:idea.category,summary:0
@@ -534,13 +509,13 @@ msgstr ""
 #: field:idea.idea,user_id:0
 #: view:report.vote:0
 msgid "Creator"
-msgstr "Criador"
+msgstr "Autor"
 
 #. module: idea
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Dar voto"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
@@ -562,19 +537,6 @@ msgstr "Fechar"
 #: view:report.vote:0
 msgid "Open"
 msgstr "Abrir"
-
-#. module: idea
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
-"especial !"
 
 #. module: idea
 #: view:report.vote:0
@@ -731,3 +693,27 @@ msgstr "Selecionar Ideia para votar"
 
 #~ msgid "Canceled"
 #~ msgstr "Cancelado"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+#~ "especial !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
