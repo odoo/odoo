@@ -1515,24 +1515,29 @@ class orm_template(object):
         return arch
 
     def __get_default_search_view(self, cr, uid, context=None):
+        form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
+        tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
-
-        view = self.fields_view_get(cr, uid, False, 'form', context=context)
-
-        root = etree.fromstring(encode(view['arch']))
-        res = etree.XML("""<search string="%s"></search>""" % root.get("string", ""))
-        node = etree.Element("group")
-        res.append(node)
-
-        fields = root.xpath("//field[@select=1]")
+        fields_to_search = set()
+        fields = self.fields_get(cr, uid, context=context)
         for field in fields:
-            node.append(field)
+            if fields[field].get('select'):
+                fields_to_search.add(field)
+        for view in (form_view, tree_view):
+            view_root = etree.fromstring(view['arch'])
+            # Only care about select=1 in xpath below, because select=2 is covered
+            # by the custom advanced search in clients
+            fields_to_search = fields_to_search.union(view_root.xpath("//field[@select=1]/@name"))
 
-        return etree.tostring(res, encoding="utf-8").replace('\t', '')
+        tree_view_root = view_root # as provided by loop above
+        search_view = etree.Element("search", attrib={'string': tree_view_root.get("string", "")})
+        field_group = etree.Element("group")
+        search_view.append(field_group)
+
+        for field_name in fields_to_search:
+            field_group.append(etree.Element("field", attrib={'name': field_name}))
+
+        return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
 
     #
     # if view_id, view_type is not required
