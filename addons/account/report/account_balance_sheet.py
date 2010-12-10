@@ -60,6 +60,13 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         })
         self.context = context
 
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
+
     def sum_dr(self):
         if self.res_bl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_bl['balance']*-1
