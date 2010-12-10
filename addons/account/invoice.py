@@ -1312,6 +1312,7 @@ class account_invoice_line(osv.osv):
         if context is None:
             context = {}
         company_id = context.get('company_id',False)
+        tax_obj = self.pool.get('account.tax')
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
@@ -1399,21 +1400,21 @@ class account_invoice_line(osv.osv):
         a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
-        
-        tax_ids = self.pool.get('account.tax').search(cr, uid, [('company_id', '=', company_id)])
+
+        tax_ids = tax_obj.search(cr, uid, [('company_id', '=', company_id)])
         if type in ('out_invoice', 'out_refund'):
             sale_taxes_def = map(lambda x: x.id, res.taxes_id)
             sale_tax_ids = [tax for tax in tax_ids if tax in sale_taxes_def]
-            sale_taxes = self.pool.get('account.tax').browse(cr, uid, sale_tax_ids)
+            sale_taxes = tax_obj.browse(cr, uid, sale_tax_ids)
             sale_taxes_all = sale_taxes and sale_taxes or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, sale_taxes_all)
         else:
             pur_taxes_def = map(lambda x: x.id, res.supplier_taxes_id)
             pur_tax_ids = [tax for tax in tax_ids if tax in pur_taxes_def]
-            pur_taxes = self.pool.get('account.tax').browse(cr, uid, pur_tax_ids)
+            pur_taxes = tax_obj.browse(cr, uid, pur_tax_ids)
             pur_taxes_all = pur_taxes and pur_taxes or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
             tax_id = fpos_obj.map_tax(cr, uid, fpos, pur_taxes_all)
-            
+
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
@@ -1427,7 +1428,7 @@ class account_invoice_line(osv.osv):
             res2 = res.uom_id.category_id.id
             if res2:
                 domain = {'uos_id':[('category_id','=',res2 )]}
-                
+
         result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
 
