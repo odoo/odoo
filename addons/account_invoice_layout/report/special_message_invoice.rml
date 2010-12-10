@@ -250,7 +250,7 @@
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Partner Ref.</para>
+          <para style="terp_tblheader_General_Centre">Your Reference</para>
         </td>
       </tr>
     </blockTable>
@@ -382,7 +382,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="395.0,59.0,85.0" style="Tableau3">
+    <blockTable colWidths="390.0,64.0,85.0" style="Tableau3">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -390,14 +390,14 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Net Total:</para>
+          <para style="terp_default_9">Net Total : </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="395.0,59.0,85.0" style="Table4">
+    <blockTable colWidths="390.0,64.0,85.0" style="Table4">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -405,14 +405,14 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">Taxes:</para>
+          <para style="terp_default_9">Taxes : </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="395.0,59.0,85.0" style="Table6">
+    <blockTable colWidths="390.0,64.0,85.0" style="Table6">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -420,7 +420,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Total:</para>
+          <para style="terp_default_Bold_9">Total : </para>
         </td>
         <td>
           <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
