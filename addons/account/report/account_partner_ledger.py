@@ -51,8 +51,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
             'get_target_move': self._get_target_move,
-            'get_currency': self._get_currency,
-            'sum_currency_amount_account': self._sum_currency_amount_account
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -162,10 +160,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             r['progress'] = sum
             full_account.append(r)
         return full_account
-
-    def _get_currency(self):
-        self.cr.execute("select distinct currency_id from account_invoice")
-        return self.cr.fetchall()
 
     def _get_intial_balance(self, partner):
         move_state = ['draft','posted']
@@ -396,27 +390,16 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return 'Receivable and Payable Accounts'
         return ''
 
-#    def _set_get_account_currency_code(self, account_id):
-#        self.cr.execute("SELECT c.symbol AS code "\
-#                        "FROM res_currency c, account_account AS ac "\
-#                        "WHERE ac.id = %s AND ac.currency_id = c.id" % (account_id))
-#        result = self.cr.fetchone()
-#        if result:
-#            self.account_currency = result[0]
-#        else:
-#            self.account_currency = False
-
-    def _sum_currency_amount_account(self, account):
-#        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s" %(account.id))
+    def _sum_currency_amount_account(self, account, form):
+        self._set_get_account_currency_code(account.id)
+        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
         total = self.cr.fetchone()
-        return total[0] or 0.0
-#        if self.amount_currency:
-#            return_field = total[0] + self.amount_currency
-#            return return_field
-#        else:
-#            currency_total = self.tot_currency = 0.0
-#            return currency_total
+        if self.account_currency:
+            return_field = str(total[0]) + self.account_currency
+            return return_field
+        else:
+            currency_total = self.tot_currency = 0.0
+            return currency_total
 
     def _display_initial_balance(self, data):
          if self.initial_balance:

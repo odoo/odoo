@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-29 07:57+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 22:54+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_margin
@@ -28,27 +29,9 @@ msgid "Customer Refund"
 msgstr "Factura de abono de cliente"
 
 #. module: sale_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: sale_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
-
-#. module: sale_margin
 #: selection:report.account.invoice.product,type:0
 msgid "Customer Invoice"
 msgstr "Factura de cliente"
-
-#. module: sale_margin
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
@@ -86,11 +69,6 @@ msgstr "Borrador"
 #: selection:report.account.invoice.product,state:0
 msgid "Paid"
 msgstr "Pagado"
-
-#. module: sale_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Error! No puede crear un menú recursivo."
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_stock_picking
@@ -160,9 +138,9 @@ msgid "Search Margin"
 msgstr "Buscar margen"
 
 #. module: sale_margin
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: view:report.account.invoice.product:0
+msgid "This Year"
+msgstr "Este año"
 
 #. module: sale_margin
 #: field:report.account.invoice.product,date:0
@@ -218,11 +196,6 @@ msgstr "Octubre"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
-msgid "This Year"
-msgstr "Este año"
-
-#. module: sale_margin
-#: view:report.account.invoice.product:0
 #: field:report.account.invoice.product,year:0
 msgid "Year"
 msgstr "Año"
@@ -256,11 +229,6 @@ msgstr "Importe"
 #: selection:report.account.invoice.product,type:0
 msgid "Supplier Refund"
 msgstr "Factura de abono de proveedor"
-
-#. module: sale_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
@@ -327,6 +295,9 @@ msgid ""
 "system. You can sort and group your results by specific selection criteria "
 "to quickly find what you are looking for."
 msgstr ""
+"Este informe ofrece una visión general de todas las facturas generadas por "
+"el sistema. Puede ordenar y agrupar los resultados por criterios específicos "
+"de selección para encontrar rápidamente lo que busca."
 
 #. module: sale_margin
 #: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
@@ -364,10 +335,11 @@ msgstr "Abierta"
 msgid "Invoice Analysis"
 msgstr "Análisis de facturas"
 
-#. module: sale_margin
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "report.account.invoice.partner.product"
 #~ msgstr "informe.contabilidad.factura.empresa.producto"
@@ -381,6 +353,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 #~ msgid "Create invoices"
 #~ msgstr "Crear facturas"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "All Months"
 #~ msgstr "Todos los meses"
 
@@ -389,6 +364,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "report.account.invoice.partner.product.tree"
 #~ msgstr "informe.contabilidad.factura.empresa.producto.árbol"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #~ msgid "Supplier Invoices"
 #~ msgstr "Facturas de proveedor"
@@ -446,3 +424,15 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Invoiced date"
 #~ msgstr "fecha facturada"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Error! No puede crear un menú recursivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

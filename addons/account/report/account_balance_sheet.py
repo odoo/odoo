@@ -60,6 +60,13 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         })
         self.context = context
 
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
+
     def sum_dr(self):
         if self.res_bl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_bl['balance']*-1
@@ -129,15 +136,16 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'level': account.level,
                         'balance':account.balance,
                     }
+                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0:
+                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if account.balance != 0:
+                        if round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)
