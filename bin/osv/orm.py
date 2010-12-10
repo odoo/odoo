@@ -1563,7 +1563,14 @@ class orm_template(object):
                 return s.encode('utf8')
             return s
 
-        def _inherit_apply(src, inherit):
+        def raise_view_error(error_msg, child_view_id):
+            view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
+            raise AttributeError(("View definition error for inherited view '%(xml_id)s' on '%(model)s' model: " + error_msg)
+                                 %  { 'xml_id': child_view.xml_id,
+                                      'parent_xml_id': view.xml_id,
+                                      'model': self._name, })
+
+        def _inherit_apply(src, inherit, inherit_id=None):
             def _find(node, node2):
                 if node2.tag == 'xpath':
                     res = node.xpath(node2.get('expr'))
@@ -1636,7 +1643,7 @@ class orm_template(object):
                             elif pos == 'before':
                                 node.addprevious(child)
                             else:
-                                raise AttributeError(_('Unknown position in inherited view %s !') % pos)
+                                raise_view_error("Invalid position value: '%s'" % pos, inherit_id)
                 else:
                     attrs = ''.join([
                         ' %s="%s"' % (attr, node2.get(attr))
@@ -1644,7 +1651,7 @@ class orm_template(object):
                         if attr != 'position'
                     ])
                     tag = "<%s%s>" % (node2.tag, attrs)
-                    raise AttributeError(_("Couldn't find tag '%s' in parent view !") % tag)
+                    raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
             return src
         # End: _inherit_apply(src, inherit)
 
@@ -1700,7 +1707,7 @@ class orm_template(object):
                 cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
                 sql_inherit = cr.fetchall()
                 for (inherit, id) in sql_inherit:
-                    result = _inherit_apply(result, inherit)
+                    result = _inherit_apply(result, inherit, id)
                     result = _inherit_apply_rec(result, id)
                 return result
 
