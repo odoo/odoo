@@ -6,33 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 08:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 17:02+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#. module: stock_no_autopicking
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: stock_no_autopicking
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
+msgstr "ТМЦ"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_mrp_production
@@ -45,19 +32,14 @@ msgid "Auto Picking"
 msgstr "Авто комплектование"
 
 #. module: stock_no_autopicking
-#: model:ir.model,name:stock_no_autopicking.model_product_product
-msgid "Product"
-msgstr "ТМЦ"
-
-#. module: stock_no_autopicking
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
 msgstr "Авто комплектация для сырья производственных заказов."
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Ошибка: Неправильный штрих-код"
 
 #. module: stock_no_autopicking
 #: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
@@ -65,6 +47,24 @@ msgid "Stock No Auto-Picking"
 msgstr "Запасы без авто-комплектации"
 
 #. module: stock_no_autopicking
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr "Количество в заказе не может быть отрицательным или нулевым !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
