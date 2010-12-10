@@ -97,7 +97,6 @@
 
                         <separator orientation="vertical" />
                         <field name="section_id"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
                             <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
@@ -112,7 +111,7 @@
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
+                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
                         <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>
@@ -134,7 +133,8 @@
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
-                            context="{'group_by':'company_id'}" />
+                            context="{'group_by':'company_id'}" 
+                            groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />

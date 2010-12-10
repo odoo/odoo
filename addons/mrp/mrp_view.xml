@@ -726,7 +726,6 @@
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
                        <filter icon="terp-check" string="Current" name="current"
-                           default="1"
                            domain="[('state','in',('confirmed','ready','exception','in_production'))]"
                            help="Manufacturing Orders which are waiting for raw materials, confirmed, ready to start or currently in production."/>
                        <separator orientation="vertical"/>

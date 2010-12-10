@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-30 18:18+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-06 12:35+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -149,17 +149,6 @@ msgid "Object Test"
 msgstr "Objekt Test"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"Error in Read method:\" + str(e))]\n"
-"                else:\n"
-"                    if size < 5:\n"
-"                        speed_list = [obj, size, code_base_complexity, "
-"code_half_complexity, code_size_complexity, _(\"Warning! Not enough demo data"
-msgstr ""
-
-#. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Save Report"
 msgstr "Bericht speichern"
@@ -202,11 +191,6 @@ msgid "Result of pep8_test in %"
 msgstr "Ergebnis pep8_test in %"
 
 #. module: base_module_quality
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
 msgstr "Status"
@@ -238,11 +222,6 @@ msgstr ""
 "Gewichtung in Gesamtergebnis"
 
 #. module: base_module_quality
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
@@ -270,11 +249,6 @@ msgstr "Keine Daten"
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
 msgid "module.quality.detail"
 msgstr "module.quality.detail"
-
-#. module: base_module_quality
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
@@ -469,6 +443,10 @@ msgid ""
 "of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
 " "
 msgstr ""
+"Dieser Test nutzt Pylint und  prüft ob ein Modul die Programmierrichlinien "
+"von Python einhält. Siehe  http://www.logilab.org/project/name/pylint für "
+"weitere Informationen.\n"
+" "
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
@@ -493,22 +471,9 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: base_module_quality
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
 msgstr "Endergebnis (%)"
-
-#. module: base_module_quality
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -545,6 +510,10 @@ msgid ""
 "'unit_test/test.py' is needed in module.\n"
 "\n"
 msgstr ""
+"\n"
+"Dieser Test überprüft die Unit Test (pyUnit) Fälle des Moduls. Beachten Sie "
+"das 'unit_test/test.py' im Modul vorhanden sein muss.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
@@ -554,11 +523,20 @@ msgid ""
 "This test checks if the module classes are raising exception when calling "
 "basic methods or not.\n"
 msgstr ""
+"\n"
+"Dieser Test prüft ob die Modulklassen einen Fehler auslösen wenn sie eine "
+"Basismethode aufrufen.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
 msgid "Details"
 msgstr "Details"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Warning! Not enough demo data"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -620,6 +598,21 @@ msgid ""
 "using it, otherwise it may crash.\n"
 "    "
 msgstr ""
+"\n"
+"Der Zweck dieses Moduls ist es, die Qualität anderer Module zu überprüfen.\n"
+"\n"
+"Es stellt einen Assistenten auf Basis der Module in OpenERP zur Verfügung, "
+"der es Ihnen erlaubt, verschiedene Kriterien zu prüfen. Zum Beispiel: "
+"Einhaltung der Programmierrichtlinien von OpenERP, Effizienz des Codes...\n"
+"\n"
+"Das Modul stellt außerdem ein Framework zum erstellen eigener Tests zur "
+"Verfügung. Für weitere Informationen lesen Sie bitte  base_module_quality\\"
+"README.txt.\n"
+"\n"
+"\n"
+"Achtung: Dieses Modul kann nicht als ZIP-Datei funktionieren. Es muss vor "
+"der Benutzung entpackt werden, da es sonst Abstürzen kann.\n"
+"    "
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -704,6 +697,15 @@ msgstr "Qualität"
 msgid "Feed back About terp file of Module"
 msgstr "Feedback über terp Datei des Moduls"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Base module quality"
 #~ msgstr "Basis Qualtitätsmodul"
 
@@ -787,3 +789,9 @@ msgstr "Feedback über terp Datei des Moduls"
 #~ "Vergleichen Sie http://www.logilab.org/project/name/pylint für weitere "
 #~ "Details.\n"
 #~ " \"\""
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

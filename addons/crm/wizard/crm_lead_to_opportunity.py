@@ -70,6 +70,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 cr, uid, opportunity_view_tree, context=context).res_id
 
         lead = leads.browse(cr, uid, record_id, context=context)
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
 
         for this in self.browse(cr, uid, ids, context=context):
             vals ={
@@ -78,7 +79,8 @@ class crm_lead2opportunity(osv.osv_memory):
                 'name': this.name,
                 'partner_id': this.partner_id.id,
                 'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id),
-                'type': 'opportunity'
+                'type': 'opportunity',
+                'stage_id': stage_ids and stage_ids[0] or False
             }
             lead.write(vals, context=context)
             leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)

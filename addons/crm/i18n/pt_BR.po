@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: renato.lima@akretion.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-02 07:59+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-06 15:45+0000\n"
+"Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -52,11 +52,6 @@ msgstr "Estágio do Caso"
 #: view:crm.meeting:0
 msgid "Visibility"
 msgstr "Visibilidade"
-
-#. module: crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
 
 #. module: crm
 #: field:crm.lead,title:0
@@ -149,7 +144,6 @@ msgid "Resource's Calendar"
 msgstr "Calendário de Recursos"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_partner.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:0
@@ -291,11 +285,6 @@ msgstr "Respostas Excluídas :"
 #: field:crm.case.stage,section_ids:0
 msgid "Sections"
 msgstr "Sessões"
-
-#. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -552,11 +541,6 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: crm
-#: field:crm.segmentation,sales_purchase_active:0
-msgid "Use The Sales Purchase Rules"
-msgstr "Usar as Regras de Compra e Venda"
-
-#. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.lead:0
 #: view:res.partner:0
@@ -665,6 +649,11 @@ msgstr ""
 "Estado emocional padrão para o período que antecede o 'Intervalo Máximo "
 "processado. Este é o estado emocional padrão se o parceiro não tem nenhum "
 "evento."
+
+#. module: crm
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -826,7 +815,6 @@ msgstr "Painel de Estatísticas"
 #: selection:crm.lead.report,type:0
 #: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: view:crm.phonecall:0
 #: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
@@ -1066,6 +1054,14 @@ msgid "Mobile"
 msgstr "Celular"
 
 #. module: crm
+#: code:addons/crm/wizard/crm_merge_opportunities.py:0
+#, python-format
+msgid ""
+"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+msgstr ""
+"Não há outras Oportunidades 'Abertas' ou 'Pendentes' para este parceiro '%s'."
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Next Stage"
 msgstr "Próximo Estágio"
@@ -1284,11 +1280,6 @@ msgid "History Information"
 msgstr "Informação Histórica"
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
-
-#. module: crm
 #: field:base.action.rule,act_mail_to_partner:0
 msgid "Mail to Partner"
 msgstr "Email para Parceiro"
@@ -1329,7 +1320,7 @@ msgstr "Estágios"
 #: field:crm.partner2opportunity,planned_revenue:0
 #: field:crm.phonecall2opportunity,planned_revenue:0
 msgid "Expected Revenue"
-msgstr "Receita Experada"
+msgstr "Receita Esperada"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
@@ -1493,6 +1484,11 @@ msgid "Search"
 msgstr "Pesquisar"
 
 #. module: crm
+#: view:board.board:0
+msgid "Opportunities by Categories"
+msgstr ""
+
+#. module: crm
 #: field:crm.meeting,interval:0
 msgid "Interval"
 msgstr "Intervalo"
@@ -1605,11 +1601,6 @@ msgid "Invite People"
 msgstr "Convidar Pessoas"
 
 #. module: crm
-#: view:board.board:0
-msgid "Opportunities By Categories"
-msgstr "Oportunidades Por Categorias"
-
-#. module: crm
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive Sales team."
 msgstr "Erro ! Você não pode criar um Time de Vends recursivo."
@@ -1696,11 +1687,6 @@ msgstr "O"
 #: field:crm.send.mail.attachment,wizard_id:0
 msgid "Wizard"
 msgstr "Assistente"
-
-#. module: crm
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regras não são suportadas por objetos osv_memory !"
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1935,12 +1921,9 @@ msgid "Select stages for this Sales Team"
 msgstr "Selecione o estágio para este Time de Vendas"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_merge_opportunities.py:0
-#, python-format
-msgid ""
-"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+#: view:board.board:0
+msgid "Opportunities by Stage"
 msgstr ""
-"Não há outras Oportunidades 'Abertas' ou 'Pendentes' para este parceiro '%s'."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -2022,9 +2005,9 @@ msgid "Priority"
 msgstr "Prioridade"
 
 #. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Usar as Regras de Compra e Venda"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2085,7 +2068,7 @@ msgstr "Caldav URL"
 #. module: crm
 #: view:crm.lead:0
 msgid "Expected Revenues"
-msgstr ""
+msgstr "Receitas Esperadas"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead6
@@ -2215,6 +2198,11 @@ msgstr "Voltar para Não Confirmado"
 #, python-format
 msgid "Note"
 msgstr "Nota"
+
+#. module: crm
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2431,11 +2419,6 @@ msgid "Weekly"
 msgstr "Semanal"
 
 #. module: crm
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "O Atalho para este menu já existe!"
-
-#. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
@@ -2467,11 +2450,6 @@ msgstr "Outros"
 #: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Concluído"
-
-#. module: crm
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regra precisa ter ao menos um direito de acesso marcado."
 
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
@@ -2512,14 +2490,6 @@ msgstr "Cidade"
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
 msgstr "Ocupado"
-
-#. module: crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: crm
 #: field:crm.installer,crm_helpdesk:0
@@ -2989,6 +2959,11 @@ msgid "Operator"
 msgstr "Operador"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Chamada Telefônica para Chamada Telefônica"
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Schedule/Log Call"
 msgstr ""
@@ -3009,11 +2984,6 @@ msgid ""
 "These addresses will receive a copy of this email. To modify the permanent "
 "CC list, edit the global CC field of this case"
 msgstr ""
-
-#. module: crm
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Você não pode criar um Menu recursivo."
 
 #. module: crm
 #: view:crm.meeting:0
@@ -3350,6 +3320,11 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm
 #: field:crm.partner2opportunity,probability:0
 #: field:crm.phonecall2opportunity,probability:0
 msgid "Success Probability"
@@ -3447,12 +3422,6 @@ msgid "Delay to Open"
 msgstr "Espera para Abrir"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
-#, python-format
-msgid "There is no stage for won opportunities defined for this Sale Team."
-msgstr ""
-
-#. module: crm
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
@@ -3472,7 +3441,6 @@ msgid "No E-Mail ID Found for your Company address!"
 msgstr "Email ID Não Encontrado para o Endereço da Empresa!"
 
 #. module: crm
-#: view:board.board:0
 #: view:crm.lead.report:0
 msgid "Opportunities By Stage"
 msgstr "Oportunidade por Estágio"
@@ -3517,9 +3485,9 @@ msgid "Need Consulting"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr "Chamada Telefônica para Chamada Telefônica"
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:0
@@ -3540,6 +3508,11 @@ msgid "Recurrent ID date"
 msgstr "ID de data recorrente"
 
 #. module: crm
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 #, python-format
 msgid "Merged into Opportunity: %s"
@@ -3552,11 +3525,6 @@ msgstr "Mesclar na Oportunidade: %s"
 #, python-format
 msgid "Close"
 msgstr "Fechar"
-
-#. module: crm
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
 
 #. module: crm
 #: view:crm.lead:0
@@ -4034,6 +4002,12 @@ msgstr ""
 #~ msgid "Section Code"
 #~ msgstr "Codigo da seção"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
 #~ msgid "General Description"
 #~ msgstr "Descrição geral"
 
@@ -4156,6 +4130,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Não é possível enviar um e-mail com uma mensagem de corpo vazia, escreva a "
 #~ "mensagem"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
 
 #~ msgid ""
 #~ "The generic Open ERP Customer Relationship Management\n"
@@ -4587,6 +4564,9 @@ msgstr ""
 
 #~ msgid "Open cases"
 #~ msgstr "Casos Abertos"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
 
 #~ msgid "Learning And Education"
 #~ msgstr "Conhecimento e Educação"
@@ -5121,3 +5101,27 @@ msgstr ""
 
 #~ msgid "New Jobs"
 #~ msgstr "Novo Trabalho"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "Opportunities By Categories"
+#~ msgstr "Oportunidades Por Categorias"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regras não são suportadas por objetos osv_memory !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regra precisa ter ao menos um direito de acesso marcado."
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "O Atalho para este menu já existe!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Você não pode criar um Menu recursivo."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

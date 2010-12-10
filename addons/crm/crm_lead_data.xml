@@ -8,28 +8,28 @@
             <field name="name">New</field>
             <field eval="'10'" name="probability"/>
             <field eval="'1'" name="sequence"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.stage" id="stage_lead2">
             <field name="name">Qualification</field>
             <field eval="'20'" name="probability"/>
             <field eval="'2'" name="sequence"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.stage" id="stage_lead3">
             <field name="name">Proposition</field>
             <field eval="'40'" name="probability"/>
             <field eval="'3'" name="sequence"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.stage" id="stage_lead4">
             <field name="name">Negotiation</field>
             <field eval="'60'" name="probability"/>
             <field eval="'4'" name="sequence"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.stage" id="stage_lead5">
@@ -37,14 +37,14 @@
             <field eval="'100'" name="probability"/>
             <field eval="'5'" name="sequence"/>
             <field eval="1" name="on_change"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.stage" id="stage_lead6">
             <field name="name">Lost</field>
             <field eval="'0'" name="probability"/>
             <field eval="'6'" name="sequence"/>
-            <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
+            <field name="type">lead</field>
         </record>
 
         <record model="crm.case.section" id="section_sales_department">

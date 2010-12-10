@@ -2,20 +2,19 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -93,9 +92,13 @@ class survey(osv.osv):
     def survey_cancel(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, {'state': 'cancel' })
         return True
-
-    def copy(self, cr, uid, id, default=None,context={}):
-        raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
+        
+    def copy(self, cr, uid, ids, default=None, context={}):
+        vals = {}
+        current_rec = self.read(cr, uid, ids, context=context)
+        title = current_rec.get('title') + ' (Copy)'
+        vals.update({'title':title})
+        return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
@@ -197,8 +200,12 @@ class survey_page(osv.osv):
             'context': context
         }
 
-    def copy(self, cr, uid, id, default=None, context={}):
-        raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
+    def copy(self, cr, uid, ids, default=None, context={}):
+        vals = {}
+        current_rec = self.read(cr, uid, ids, context=context)
+        title = current_rec.get('title') + ' (Copy)'
+        vals.update({'title':title})
+        return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 
 survey_page()
 
