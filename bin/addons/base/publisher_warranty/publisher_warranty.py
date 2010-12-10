@@ -71,7 +71,7 @@ class publisher_warranty_contract(osv.osv):
             'uncovered_modules': list(),
         }
     
-    def send(self, cr, uid, tb, explanations, remarks=None):
+    def send(self, cr, uid, tb, explanations, remarks=None, issue_name=None, email=None):
         """ Method called by the client to send a problem to the publisher warranty server. """
         
         if not remarks:
@@ -92,7 +92,10 @@ class publisher_warranty_contract(osv.osv):
                 'origin': origin,
                 'dbname': cr.dbname,
                 'dbuuid': dbuuid,
-                'db_create_date': db_create_date}
+                'db_create_date': db_create_date,
+                'issue_name': issue_name,
+                'email': email,
+            }
             
             
             add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
@@ -136,6 +139,7 @@ class publisher_warranty_contract(osv.osv):
         if not validated and not validated2:
             raise osv.except_osv(_("Contract validation error"),
                                  _("Please check your publisher warranty contract name and validity."))
+        return True
     
     def get_logs(self, cr, uid, ids, cron_mode=True, context=None):
         """
@@ -238,8 +242,9 @@ class maintenance_contract(osv.osv_memory):
     def status(self, cr, uid):
         return self.pool.get("publisher_warranty.contract").status(cr, uid)
         
-    def send(self, cr, uid, tb, explanations, remarks=None):
-        return self.pool.get("publisher_warranty.contract").send(cr, uid, tb, explanations, remarks)
+    def send(self, cr, uid, tb, explanations, remarks=None, issue_name=None, email=None):
+        return self.pool.get("publisher_warranty.contract").send(cr, uid, tb,
+                        explanations, remarks, issue_name, email)
     
 maintenance_contract()
 
