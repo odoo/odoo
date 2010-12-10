@@ -289,7 +289,7 @@ class hr_timesheet_sheet(osv.osv):
                 'draft': [('readonly', False)],
                 'new': [('readonly', False)]}
             ),
-        'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
+        'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True,),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),
