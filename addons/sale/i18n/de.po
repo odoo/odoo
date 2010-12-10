@@ -7,21 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 09:37+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-06 16:23+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -41,12 +36,6 @@ msgstr "Tag"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Auftrag stornieren"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Verkauf je Partner"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -79,7 +68,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr "Komplett Ausliefern"
+msgstr "Nur Gesamtmenge liefern"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -140,7 +129,7 @@ msgstr "Standard Zahlungsbedingung"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr "Konfiguration der Lieferausführung für diesen Verkaufsauftrag"
+msgstr "Konfiguration der Lieferbedingungen für diesen Verkaufsauftrag"
 
 #. module: sale
 #: view:sale.order:0
@@ -162,11 +151,6 @@ msgid "Total Price"
 msgstr "Gesamtumsatz"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr ""
@@ -177,6 +161,13 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Beauftragte Menge"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -197,7 +188,7 @@ msgstr "Andere Informationen"
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sale order is created"
-msgstr "Datum der Erzeugung dieses Verkaufsauftrages"
+msgstr "Datum der Erstellung dieses Verkaufsauftrags"
 
 #. module: sale
 #: view:sale.order:0
@@ -219,20 +210,13 @@ msgstr ""
 "bevorzugen."
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
-"Mengeneinheit"
-
-#. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
 msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
 "Die Rechnung wird für die Abrechnungsbedingungen \"Rechnung durch "
-"Lieferung\" und \"Rechnung durch Auftrag\"  automatisch erzeugt."
+"Lieferung\" und \" Rechnung durch Auftrag\"  automatisch erzeugt."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -254,7 +238,7 @@ msgstr "Rabatt (%)"
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr "Pinnwand für Verkaufsmanager"
+msgstr "Pinnwand Vertriebsleitung"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -300,8 +284,8 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
-"Kein Erlöskonto für diese Produktkategorie oder eine beim Partner "
-"hinterlegte Steuerzuordnung definiert."
+"Kein Erlöskonto für diese Produktkategorie oder eine beim Partner oder "
+"Auftrag zugewiesene Steuerzuordnung  definiert !"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -313,6 +297,11 @@ msgstr "August"
 #, python-format
 msgid "EAN: "
 msgstr "EAN: "
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -535,6 +524,11 @@ msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Kann keinen Verkaufsauftrag löschen der bereits bestätigt wurde!"
 
 #. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
 msgstr "Rechnungsadresse"
@@ -593,7 +587,7 @@ msgstr "Nettobetrag"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr "Abzurechnende Positionen"
+msgstr "Rechnungserstellung von Lieferpositionen"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
@@ -643,18 +637,16 @@ msgid ""
 "  - The 'Invoice from the picking' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
-"Die Abrechnungsbedingung bestimmt die zeitliche Abfolge von Abrechnung und "
-"Lieferung .\n"
-"  -  Bei 'Zahlung vor Lieferung'  wird die Rechnung automatisch generiert, "
-"dann erst der Lieferauftrag nach Zahlungseingang .\n"
-"  -  Bei 'Auslieferung & Manuelle Rechnung' wird der Lieferauftrag sofort "
-"erzeugt, die Abrechnung muss später manuell erstellt werden.\n"
-"  -  Bei 'Rechnung durch Auftrag nach Lieferung' wird die Abrechnung "
-"automatisch nach vollständiger Lieferung auf Basis des Verkaufsauftrags "
-"erstellt.\n"
-"  -  Bei 'Rechnung durch Auslieferung' erfolgt die Abechnung im "
-"unmittelbaren Anschluss an die Bearbeitung von Lieferaufträgen auf Basis "
-"gelieferter Mengen."
+"Die Abrechnungsbedingung bestimmt die zeitliche Abfolge von "
+"Rechnungsstellung und Lieferung .\n"
+"  - Bei 'Zahlung vor Lieferung'  wird zuerst die Rechnung generiert, dann "
+"erfolgt ein Lieferauftrag aufgrund der Zahlung .\n"
+"  -  Bei 'Lieferung & Manuelle Rechnung' ist der Lieferauftrag unmittelbar "
+"verfügbar. Die Rechnung muss dann noch manuell erzeugt werden.\n"
+"  -  Bei 'Rechnung durch Auftrag' erfolgt eine automatische Rechnung im "
+"Status Entwurf, wenn die Lieferung vollständig abgeschlossen wurde.\n"
+"  - Bei  'Rechnung durch Lieferung' kann bei Abschluss einer Auslieferung "
+"eine Rechnung  gleich mit erstellt werden."
 
 #. module: sale
 #: field:sale.order,pricelist_id:0
@@ -673,11 +665,6 @@ msgstr "Menge"
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
 msgstr "Zeigt an, dass die Rechnung bezahlt wurde"
-
-#. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: sale
 #: view:sale.order:0
@@ -739,8 +726,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Wollen Sie wirklich diese Rechnung erstellen?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Verkäufe nach Monaten"
@@ -776,15 +761,9 @@ msgid "Exception"
 msgstr "Fehlerliste"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Sie können keine Anzahlungsrechnung für einen Verkaufsauftrag erstellen, der "
-"mit der Abrechnungsmethode 'Automatische Rechnung nach Lieferung' erstellt "
-"wurde"
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Teilmengen direkt liefern"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -946,6 +925,12 @@ msgstr ""
 "Lieferbedingungen."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Ansprechpartner Auftrag"
@@ -1032,11 +1017,6 @@ msgid "Create Delivery Order"
 msgstr "Erzeugt Lieferauftrag"
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regeln werden für osv.memory Objekte nicht unterstützt!"
-
-#. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
 msgstr "Lieferkosten"
@@ -1065,7 +1045,7 @@ msgstr "Verkäufe je Produkt Kategorie"
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
-msgstr "Teilmengen direkt liefern"
+msgstr "Lieferung von Teilmenge"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1088,7 +1068,7 @@ msgstr "Wiederherstellung Rechnung"
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Abzurechnende Lieferungen"
+msgstr "Rechnungserstellung von Lieferaufträgen"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1105,7 +1085,7 @@ msgstr "Fehlerhafter Modus für test_state"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr "Dispositionsmethode"
+msgstr "Dispositionsverfahren"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1121,7 +1101,7 @@ msgstr "Kommissionsliste"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from Delivery"
-msgstr "Rechnung durch Auslieferung"
+msgstr "Rechnung durch Lieferung"
 
 #. module: sale
 #: view:sale.order:0
@@ -1137,7 +1117,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr "Beleg für Versand oder Auslieferung"
+msgstr "Beleg für Warenversand oder Auslieferung"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
@@ -1173,7 +1153,7 @@ msgstr "Umsatzsteuer"
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr "Abrechnungsbedingungen"
+msgstr "Abrechnungsbedingung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1221,9 +1201,11 @@ msgstr ""
 "* Es erfolgt ein Wechsel auf den Status 'Bestätigt' bei der "
 "Auftragungsbestätigung .\n"
 "* Der Status 'Fehlermeldung' wird angezeigt, wenn der bezugnehmende Auftrag "
-"nicht korrekt bestätigt werden kann.* Der 'Erledigt' Status wird angezeigt, "
-"wenn der zugehörige Lieferauftrag erledigt wurde.* Der Status 'Abgebrochen' "
-"wird angezeigt, wenn ein Benutzer den Auftrag storniert."
+"nicht korrekt verarbeitet werden kann.\n"
+"* Der 'Erledigt' Status wird angezeigt, wenn der zugehörige Lieferauftrag "
+"erledigt wurde.\n"
+"* Der Status 'Abgebrochen' wird angezeigt, wenn ein Benutzer den Auftrag "
+"storniert hat."
 
 #. module: sale
 #: view:sale.order:0
@@ -1252,11 +1234,6 @@ msgid "Shipped Quantities"
 msgstr "Ausgelieferte Menge"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Rechnung durch Auftrag"
@@ -1267,9 +1244,14 @@ msgid "Picking List"
 msgstr "Lieferschein"
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "Disposition vom Lager"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
+"Der Verkäufer bestätigt das Angebot und erstellt dadurch einen "
+"Verkaufsauftrag mit dem Status \"In Bearbeitung\" oder \"Manuell In "
+"Bearbeitung \""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1301,7 +1283,7 @@ msgstr "Gruppiere Rechnungen"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr "Auslieferung & Manuelle Rechnung"
+msgstr "Lieferung & Manuelle Rechnung"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1343,22 +1325,9 @@ msgid "Create invoices"
 msgstr "Erzeuge Rechnungen"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fehler: Die Standard Mengeneinheit sowie die Mengeneinheit für die "
-"Beschaffung muss in derselben Kategorie sein."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr "Verkaufsauftragszeile Erzeuge Rechnung"
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1428,7 +1397,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Related Invoices"
-msgstr "Rechnungen zu Auftrag"
+msgstr "Rechnungsbezug"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
@@ -1472,11 +1441,6 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1488,14 +1452,6 @@ msgid "Picking List & Delivery Order"
 msgstr "Lieferauftrag & Auslieferung"
 
 #. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: sale
 #: view:sale.order.line:0
 msgid "To Do"
 msgstr "Zu erledigen"
@@ -1503,7 +1459,7 @@ msgstr "Zu erledigen"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr "Lieferausführung"
+msgstr "Auslieferungsbedingung"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1532,7 +1488,7 @@ msgstr "Produkt"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_invoiced
 msgid "Invoicing"
-msgstr "Abrechnung"
+msgstr "Ausgangsrechnungen"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1576,15 +1532,8 @@ msgid "Product UoM"
 msgstr "Produkt ME"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Verkäufe nach Verkäufer"
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr "Logistik"
 
 #. module: sale
@@ -1764,6 +1713,12 @@ msgid "Warning"
 msgstr "Warnung"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
@@ -1790,6 +1745,11 @@ msgid "Confirm"
 msgstr "Bestätigen"
 
 #. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all picking attached to this sale order."
@@ -1806,7 +1766,7 @@ msgstr "Rechnungszeilen"
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Auftragspositionen"
+msgstr "Verkaufsauftragpositionen"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -1828,7 +1788,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr "Rechnung durch Auftrag nach Auslieferung"
+msgstr "Rechnung durch Auftrag"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -1842,7 +1802,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr "Rechnung durch Auslieferung"
+msgstr "Lieferung der Gesamtmenge"
 
 #. module: sale
 #: view:sale.report:0
@@ -1862,7 +1822,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
-msgstr "Belegreferenz"
+msgstr "Referenzbeleg"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1893,7 +1853,8 @@ msgid ""
 "You have to select a customer in the sale form !\n"
 "Please set one customer before choosing a product."
 msgstr ""
-"Bitte Kunden im Verkaufsauftragsformular vor der Produktauswahl auswählen"
+"Bitte Kunden im Verkaufsauftragsformular auswählen !\n"
+"Sie sollten diese Auswahl vor der Produktauswahl durchführen."
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1980,9 +1941,15 @@ msgid "Payment Terms"
 msgstr "Zahlungsbedingungen"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Teilmengen direkt liefern"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
+"Sie können keine Anzahlungsrechnung für einen Verkaufsauftrag erstellen, der "
+"mit der Abrechnungsmethode 'Automatische Rechnung nach Lieferung' erstellt "
+"wurde"
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -2044,14 +2011,9 @@ msgid "Date Order"
 msgstr "Auftragsdatum"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
-"Der Verkäufer bestätigt das Angebot und erstellt dadurch einen "
-"Verkaufsauftrag mit dem Status \"In Bearbeitung\" oder \"Manuell In "
-"Bearbeitung \""
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "Disposition vom Lager"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -2060,19 +2022,9 @@ msgid "Sale Shop"
 msgstr "Verkaufsshop"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Verkauf je Kunde"
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Fertig"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2084,6 +2036,11 @@ msgstr "Ausgeliefert"
 #, python-format
 msgid "Not enough stock !"
 msgstr "Nicht genügend Lagerware!"
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -2196,7 +2153,7 @@ msgstr "Angebot Nr."
 #: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
-msgstr "Verpackt"
+msgstr "Ausgeliefert"
 
 #. module: sale
 #: view:sale.report:0
@@ -2313,6 +2270,9 @@ msgstr "Rechnung durch Lieferung"
 #~ msgid "Packing"
 #~ msgstr "Packliste"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Sales orders"
 #~ msgstr "Verkauf Aufträge"
 
@@ -2413,6 +2373,12 @@ msgstr "Rechnung durch Lieferung"
 
 #~ msgid "Advance Payment"
 #~ msgstr "Weiter Bezahlung"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Confirm sale order and Create invoice."
 #~ msgstr "Bestätige Verkaufsauftrag und Erzeuge Rechnung."
@@ -2649,6 +2615,14 @@ msgstr "Rechnung durch Lieferung"
 #~ msgid "Sales by State"
 #~ msgstr "Verkäufe je Staat"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
+#~ "Mengeneinheit"
+
+#~ msgid "Sales By Partner"
+#~ msgstr "Verkauf je Partner"
+
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
 #~ "products to the customer"
@@ -2662,8 +2636,14 @@ msgstr "Rechnung durch Lieferung"
 #~ "   'for this product: \"%s\" (id:%d)"
 #~ msgstr "Für diesen Produkt \"%s\" ist kein Erlöskonto definiert:  (id:%d)"
 
-#~ msgid "Logistic"
-#~ msgstr "Logistik"
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regeln werden für osv.memory Objekte nicht unterstützt!"
+
+#~ msgid "Sales By Customer"
+#~ msgstr "Verkauf je Kunde"
 
 #, python-format
 #~ msgid ""
@@ -2672,3 +2652,27 @@ msgstr "Rechnung durch Lieferung"
 #~ msgstr ""
 #~ "Für \"automatische Rechnung nach Lieferung\" kann keine Anzahlung gemacht "
 #~ "werden."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fehler: Die Standard Mengeneinheit sowie die Mengeneinheit für die "
+#~ "Beschaffung muss in derselben Kategorie sein."
+
+#~ msgid "Sales By Salesman"
+#~ msgstr "Verkäufe nach Verkäufer"
+
+#~ msgid "Logistics"
+#~ msgstr "Logistik"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 09:33+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-06 14:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -38,11 +38,6 @@ msgstr ""
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
 msgstr "Berechnet & Bezahlt"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Freundliche Gruesse."
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -69,7 +64,7 @@ msgstr "Erstellungsdatum des Belegs"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr "durch Lieferauftrag"
+msgstr "Rechnung durch Lieferung"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -81,11 +76,6 @@ msgstr "Lieferanschrift:"
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Geprüft durch"
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -110,7 +100,7 @@ msgstr "Eingangsrechnungen"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr "Auswertung Beschaffungsaufträge"
+msgstr "Statistik Beschaffungsaufträge"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -225,7 +215,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr "Teillieferung"
+msgstr "Lieferung Teilmenge"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -236,7 +226,7 @@ msgstr "Beschaffungsauftrag '%s' wurde bestätigt."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr "Bestellbestätigung (durch Lieferant)"
+msgstr "Auftragsannahme"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -260,7 +250,7 @@ msgstr "Lagerbuchungen"
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr "Analyse Wareneingang"
+msgstr "Statistik Wareneingang"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -416,7 +406,7 @@ msgid ""
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
 "Wenn Sie beim Beschaffungsauftrag für die Einstellung zur Erstellung einer "
-"Rechnung \"Händische Erstellung\" gewählt haben, können Sie hier "
+"Rechnung \"Manuelle Rechnung\" gewählt haben, können Sie hier "
 "nachvollziehen, für welche Auftragspositionen Sie bislang noch keine "
 "Rechnung von Ihrem Lieferanten bekommen haben. Sobald Sie dann eine "
 "Eingangsrechnung empfangen, können Sie auch eine Eingangsrechnung zunächst "
@@ -455,7 +445,7 @@ msgstr "Warnung"
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr "Einkauf Analyse Planung"
+msgstr "Einkaufsplanung"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
@@ -518,16 +508,14 @@ msgid "Invoice Control"
 msgstr "Rechnungserstellung"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
-msgstr "Angebotsanfrage"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "Angebotsanfrage"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr "Referenz Lieferant"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -555,7 +543,7 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
-"Analyse Wareneingang ermöglicht Ihnen eine Prüfung und Analyse Ihrer zu "
+"Statistik Wareneingang ermöglicht Ihnen eine Prüfung und Analyse Ihrer zu "
 "bearbeitenden Lieferaufträge im Wareneingang sowie auch eine Kontrolle der "
 "Liefertreue von Lieferanten."
 
@@ -608,11 +596,6 @@ msgid "To be Invoiced"
 msgstr "Abzurechnen"
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID sollte eindeutig sein"
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Partner Kontakt Name"
@@ -627,12 +610,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
-"Von Auftrag: Ein Rechnungsentwurf wird vorgeneriert auf Basis des "
+"Rechnung durch Auftrag: Ein Rechnungsentwurf wird vorgeneriert auf Basis des "
 "Beschaffungsauftrags. Der Finanzbuchhalter muss lediglich den Erhalt der "
 "Rechnung prüfen und bestätigen.\n"
-"Von Lieferauftrag: Ein Rechnungsentwurf wird durch bestätigte Wareneingang "
-"erzeugt.\n"
-"Händische Erstellung / Manuell: Sie können die Eingangsrechnung für einzelne "
+"Rechnung durch Lieferung: Ein Rechnungsentwurf wird durch bestätigte "
+"Wareneingänge erzeugt.\n"
+"Manuell Rechnung: Sie können die Eingangsrechnung für einzelne "
 "Auftragspositionen, die als noch nicht bezahlt angezeigt werden indirekt "
 "über den Auftrag ableiten."
 
@@ -670,14 +653,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-"Analyse Beschaffung ermöglicht Ihnen eine Überwachnung aller Vorgänge im "
+"Statistik Beschaffung ermöglicht Ihnen eine Auswertung aller Vorgänge im "
 "Rahmen der Beschaffung sowie eine Prüfung der Produktivität, des "
 "Beschaffungsumfangs sowie auch der Lieferfähigkeit und Termintreue."
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Preislisten Versionen dürfen sich nicht überschneiden"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -757,14 +735,15 @@ msgid "Validated by"
 msgstr "Geprüft durch"
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "Angebotsanfrage"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr "Noch zu erwartende Eingangsrechnungen"
+msgstr "Erwartete Eingangsrechnungen"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -787,13 +766,6 @@ msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
 "Es wurde noch kein Journal für Eingangsrechnungen für dieses Unternehmen "
 "erstellt: \"%s\" (id:%d)"
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-"vorhanden sein !"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -868,7 +840,7 @@ msgstr "Tage b. Liefer."
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr "Wareneingang"
+msgstr "Produktzugänge"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -883,7 +855,7 @@ msgstr "September"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr "Bestätige Beschaffungsaufträge ohne Eingangsrechnung"
+msgstr "Abzurechnende Beschaffungsaufträge"
 
 #. module: purchase
 #: field:purchase.installer,config_logo:0
@@ -902,23 +874,10 @@ msgid "Month"
 msgstr "Monat"
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
-msgstr ""
-"Der Status der Bestellung oder der Anfrage eines Angebot. Eine Anfrage ist "
-"eine Bestellung im Status 'Entwurf' ('Anfrage eines Angebots') ! Bei "
-"Bestätigung durch den Benutzer wechselt der Status zu 'Bestätigt'. Durch die "
-"Auftragsbestätigung des Lieferanten wechselt der Status zu 'Angenommen' . "
-"Wenn der Einkaufsauftrag bezahlt ist und die Ware empfangen wurde, wechselt "
-"der Status auf 'Erledigt' (Done). Falls ein Abbruch auftritt bei der "
-"Rechnungserfassung oder bei der Wareneingangserfassung wechselt der Status "
-"auf 'Fehler' (Exception)."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
+msgstr "Erwarte Auftragsbestätigung"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -934,12 +893,7 @@ msgstr "Erwarte Auftragsbestätigung"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr "Gesamtbetrag Netto"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
-msgstr "Beschaffungsauftrag ist durch Lieferant angenommen."
+msgstr "Nettobetrag"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -974,7 +928,7 @@ msgstr "Zu erneuern durch den Finanzbuchhalter"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "Purchase Lines Not Invoiced"
-msgstr "Noch nicht berechnete Beschaffungsauftragspositionen"
+msgstr "Nicht berechnete Produktzugänge"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1022,6 +976,11 @@ msgid "Purchase Order Line"
 msgstr "Einkaufspositionen"
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Kalenderansicht"
@@ -1032,12 +991,11 @@ msgid "Purchase Order Merge"
 msgstr "Zusammenfassung Beschaffungsaufträge"
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Freundliche Gruesse."
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1093,6 +1051,11 @@ msgid "Qty. per product"
 msgstr "Menge nach Produkt"
 
 #. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
 msgstr "Erstellungsdatum des Belegs"
@@ -1106,11 +1069,6 @@ msgstr "Verkauf & Einkauf"
 #: selection:purchase.report,month:0
 msgid "June"
 msgstr "Juni"
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1214,9 +1172,9 @@ msgid "Cancel Purchase Order"
 msgstr "Storniere Beschaffungsauftrag"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
-msgstr "Referenz Lieferant"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1235,14 +1193,6 @@ msgstr "Pinnwand"
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr "Produktpreis"
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Fehler ! Sie können nicht die Basispreisliste als andere Preisliste zuweisen."
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1275,7 +1225,7 @@ msgstr "Beschaffungsaufträge"
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr "Tage b. Auftragsgen."
+msgstr "Tage b. Bestellung"
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -1283,9 +1233,23 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr "Referenz zu Dokument der Anfrage für diesen Beschaffungsauftrag"
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
+"Der Status der Bestellung oder der Anfrage eines Angebot. Eine Anfrage ist "
+"eine Bestellung im Status 'Entwurf' ('Anfrage eines Angebots') ! Bei "
+"Bestätigung durch den Benutzer wechselt der Status zu 'Bestätigt'. Durch die "
+"Auftragsbestätigung des Lieferanten wechselt der Status zu 'Angenommen' . "
+"Wenn der Einkaufsauftrag bezahlt ist und die Ware empfangen wurde, wechselt "
+"der Status auf 'Erledigt' (Done). Falls ein Abbruch auftritt bei der "
+"Rechnungserfassung oder bei der Wareneingangserfassung wechselt der Status "
+"auf 'Fehler' (Exception)."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1301,7 +1265,7 @@ msgstr "Angebotsanfragen"
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr "Datum der Auftragserteilung"
+msgstr "Datum der Auftragsannahme"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1362,9 +1326,9 @@ msgid "Purchase Order Lines"
 msgstr "Bestellpositionen"
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr "Beschaffungsauftrag ist durch Lieferant angenommen."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1377,20 +1341,12 @@ msgstr "Beschaffungsaufträge"
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr "Ursprungsbeleg"
+msgstr "Referenzbeleg"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr "Zusammenfassung Bestellung"
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1445,6 +1401,12 @@ msgid "Warehouse"
 msgstr "Zentrallager"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr "Angebotsanfrage"
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr "Datum Anfrage"
@@ -1460,12 +1422,6 @@ msgstr "Datum Annahme"
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Konnte den Beschaffungsauftrag nicht abbrechen!"
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
-msgstr "Erwarte Auftragsbestätigung"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1534,7 +1490,7 @@ msgstr "Erwartete Auslieferungsadresse:"
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr "Gesamtbetrag Brutto"
+msgstr "Nettobetrag"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1612,7 +1568,7 @@ msgstr "Februar"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "Analyse Beschaffung"
+msgstr "Statistik Beschaffung"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1700,7 +1656,7 @@ msgstr "Produkt ME"
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr "Einstandspreis"
+msgstr "Diff. zu Standardpreis"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1721,7 +1677,7 @@ msgstr "Bestätige"
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr "Erwarte Lieferantenbestätigung"
+msgstr "Erwarte Auftragsbestätigung"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1765,11 +1721,6 @@ msgid "Addresses"
 msgstr "Adressen"
 
 #. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
-
-#. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
 msgstr ""
@@ -1795,7 +1746,7 @@ msgstr "USt."
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr "Gesamtbetrag"
+msgstr "Gesamt Betrag"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1815,9 +1766,9 @@ msgid ""
 "accountant (Invoice control = Manual)."
 msgstr ""
 "Die Rechnung wird automatisch erstellt, sobald die Konfiguration zur "
-"Rechnungserstellung bei einem Auftrag 'vom Lieferauftrag' ist. Die Rechnung "
-"kann alternativ auch händisch erstellt wird (Rechnungserstellung = Manuelle "
-"Rechnung)."
+"Rechnungserstellung bei einem Auftrag 'Rechnung durch Auftrag' ist. Die "
+"Rechnung kann alternativ auch per Hand erstellt werden (Rechnungserstellung "
+"= Manuelle Rechnung)."
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1833,7 +1784,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr "Teillieferung"
+msgstr "Lieferung Teilmenge"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1923,6 +1874,9 @@ msgstr "Pinnwand Einkauf"
 #~ msgid "When controlling invoice from orders"
 #~ msgstr "Eingangsrechnung durch Bestellung"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Pre-generated supplier invoice to control based on order"
 #~ msgstr "Vorab Eingangsrechnung zur Wareneingangskontrolle"
 
@@ -1997,6 +1951,12 @@ msgstr "Pinnwand Einkauf"
 #~ msgid "Order Ref"
 #~ msgstr "Referenz Auftrag"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
 #~ msgid "New Purchase Order"
 #~ msgstr "Neuer Beschaffungsauftrag"
 
@@ -2039,6 +1999,9 @@ msgstr "Pinnwand Einkauf"
 #~ "Nach Bestätigung des Beschaffungsauftrag wird der Vorgang unter 'Rechnung "
 #~ "Lieferanten' weiter fortgesetzt."
 
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Preislisten Versionen dürfen sich nicht überschneiden"
+
 #~ msgid "Date"
 #~ msgstr "Datum"
 
@@ -2053,3 +2016,35 @@ msgstr "Pinnwand Einkauf"
 
 #~ msgid "Quotation"
 #~ msgstr "Angebot"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID sollte eindeutig sein"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Fehler ! Sie können nicht die Basispreisliste als andere Preisliste zuweisen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"

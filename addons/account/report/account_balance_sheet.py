@@ -129,15 +129,16 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'level': account.level,
                         'balance':account.balance,
                     }
+                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0:
+                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if account.balance != 0:
+                        if round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)

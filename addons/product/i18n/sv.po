@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-24 09:24+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-08 20:06+0000\n"
+"Last-Translator: Magnus Brandt, Aspirix AB <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -27,9 +27,7 @@ msgid "Number of Layers"
 msgstr "Antal lager"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -43,11 +41,6 @@ msgid ""
 msgstr ""
 "Välj en mall om denna regel endast gäller en förlaga av produkten. Håll tomt "
 "för alla produkter"
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -212,11 +205,6 @@ msgstr "Enhet"
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "st"
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
 
 #. module: product
 #: view:product.template:0
@@ -386,6 +374,7 @@ msgstr "Referensenhet för denna kategori"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Publikt pris"
 
@@ -398,11 +387,6 @@ msgstr "Kvantitet-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "IT-komponenter"
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Namned på gruppen måste vara unikt!"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -509,6 +493,15 @@ msgid "Working Time"
 msgstr "Arbetstid"
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+"Om aktivfältet är satt till falskt så kommer produkten inte att visas men "
+"den kommer inte tas bort."
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr ""
@@ -520,6 +513,8 @@ msgid ""
 "No active version for the selected pricelist !\n"
 "Please create or activate one."
 msgstr ""
+"Det  finns ingen aktiv version av prislistan!\n"
+"Skapa en ny eller aktivera en befintlig."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -552,6 +547,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
+"En eller flera leverantör(er) kan länkas rill en produkt. All information  "
+"finnspå produktsidan."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -559,6 +556,8 @@ msgid ""
 "Quantity conversions may happen automatically between Units of Measure in "
 "the same category, according to their respective ratios."
 msgstr ""
+"Antalskonverteringar kan ske automatiskt mellan enheter i samma kategori "
+"beroende på respektive omräkningsfaktor."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -583,9 +582,10 @@ msgstr "Produktmall"
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Resturangutlägg"
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Fel: felaktig EAN-kod"
@@ -657,13 +657,6 @@ msgid "Price Name"
 msgstr "Prisbenämning"
 
 #. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-
-#. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
 msgstr "Processor AMD Athlon XP 2200+"
@@ -686,7 +679,7 @@ msgstr "Leverantörer"
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "Att köpa"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -791,12 +784,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ogiltig XML för Vy-arkitektur!"
+msgstr "Köksdesign projekt"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -816,12 +804,12 @@ msgstr ""
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Ratio & precision"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
@@ -832,7 +820,7 @@ msgstr "IT-komponentpaket"
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -908,7 +896,7 @@ msgstr "Leverantörsinformation"
 #. module: product
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Utökade filter..."
 
 #. module: product
 #: view:product.product:0
@@ -929,6 +917,9 @@ msgid ""
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Ledtid i dagar mellan bekräftelse av inköpsordern och till det dess att ni "
+"tar emot produkterna i ert lager. Används av för att planera automatiska "
+"inköpsorder."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -959,6 +950,7 @@ msgstr "Nr."
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
 msgstr ""
+"Beräkna produktens pris per enhet baserat på aktuell prislisteversion."
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -978,11 +970,15 @@ msgid ""
 "contains a detailed information of your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Du måste definiera en produkt för allt som du köper eller säljer. Det kan "
+"vara råmterial, lagerprodukter, förbrukningsprodukter eller tjänster. "
+"Produktsidan innehåller detaljerad information om dina produkter relaterad "
+"till logistik, försäljningspriser, produktkategorier, leverantörer mm."
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1012,11 +1008,6 @@ msgid "Price List Items"
 msgstr "Element i prislistan"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr ""
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr ""
@@ -1029,7 +1020,7 @@ msgstr "Produkter och prislistor"
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
-msgstr ""
+msgstr "Att säljas"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1048,6 +1039,8 @@ msgid ""
 "You can define a conversion rate to be used between the several Unit of "
 "Measure within the same category."
 msgstr ""
+"Lägg upp och underhåll de enheter som du vill använda i systemet. Du kan "
+"använda omräkningsfaktorer mellan olika enheter med samma kategori."
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1070,17 +1063,17 @@ msgstr "Namn"
 #. module: product
 #: view:product.product:0
 msgid "Stockable"
+msgstr "Lagerförd"
+
+#. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
@@ -1095,7 +1088,7 @@ msgstr "Föråldrad"
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1112,13 +1105,13 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Sorterar artiklarna när de sorteras per produktkategori."
 
 #. module: product
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "Faktor"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1147,17 +1140,17 @@ msgstr "Associerat fält i produktformuläret."
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Enhet"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Anskaffningsmetod"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Utskriftsdatum"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1178,7 +1171,7 @@ msgstr ""
 #. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
+msgstr "Huvudleverantör, den som har högst prioritet i leverantörslistan"
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -1203,7 +1196,7 @@ msgstr "Products"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "Antal lager på en en pall eller i en låda"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1220,7 +1213,7 @@ msgstr "Palldimensioner"
 #: code:addons/product/product.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (kopia)"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1228,9 +1221,9 @@ msgid "Partners"
 msgstr "Alternativa företag"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Du kan inte ja två användare med samma användarid!"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1256,9 +1249,10 @@ msgid "Second UoM"
 msgstr "Altervativ produktenhet"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr ""
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
+msgstr "Fel !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1347,12 +1341,20 @@ msgstr "Leveransmetod"
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Gruppera på..."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
 msgstr "Regular processor config"
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1383,6 +1385,14 @@ msgid "Basic PC"
 msgstr "Bas-PC"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+"Du kan gömma prislistan utan att ta bort den genom att markera denna."
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Verkligt lager"
@@ -1390,7 +1400,7 @@ msgstr "Verkligt lager"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1405,14 +1415,19 @@ msgstr ""
 "Fel: Standardmåttenheten och inköpsmåttenheten måste vara i samma kategori."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "Detta företag är inte tillåtet för den här användaren-"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Noggrannhet vid avrundning"
 
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Enhetsinställningar"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
@@ -1456,7 +1471,7 @@ msgstr "Variantprismarginal"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Omvandlingsfaktorn får inte vara noll!"
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1493,7 +1508,7 @@ msgstr "Standard måttenhet för all lagerhantering."
 #. module: product
 #: model:product.category,name:product.product_category_misc0
 msgid "Misc"
-msgstr ""
+msgstr "Övr"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
@@ -1521,11 +1536,6 @@ msgid "Onsite Intervention"
 msgstr "Åtgärd på plats"
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr "Publik prislista"
@@ -1538,19 +1548,12 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgstr "Leverantörens artikelnummer"
 
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Standard enhet"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1620,7 +1623,7 @@ msgstr ""
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr ""
+msgstr "Standard enhet"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1672,11 +1675,6 @@ msgid "Company"
 msgstr "Företag"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Listpris"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Pristyper"
@@ -1702,7 +1700,7 @@ msgstr "Namn på denna pristyp"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
+msgstr "Totalt antal produkter som får plats på en pall eller i en låda."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1715,6 +1713,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Standardenhet för inköpsorder. Den måste ha samma kategori som "
+"standardenheten."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1729,7 +1729,7 @@ msgstr "Längd"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Längt / distans"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
@@ -1746,17 +1746,17 @@ msgstr "Prislisttyp"
 #. module: product
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
-msgstr ""
+msgstr "Andra produkter"
 
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Karakteristik"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Kan säljas"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1776,7 +1776,7 @@ msgstr "Baserad på"
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
 msgid "Raw Materials"
-msgstr ""
+msgstr "Råmeterial"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -1794,12 +1794,7 @@ msgstr "Prislistenamn"
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "Supplier Product UoM."
-msgstr ""
-
-#. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Noggrannhet vid avrundning"
+msgstr "Leverantörens enhet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1816,7 +1811,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "Vikten för ett fullt paket, pall eller låda.."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -1826,7 +1821,7 @@ msgstr "HDD Seagate 7200.8 120GB"
 #. module: product
 #: model:product.template,name:product.product_product_employee0_product_template
 msgid "Employee"
-msgstr ""
+msgstr "Anställd"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
@@ -1842,12 +1837,12 @@ msgstr "Produktkategori"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Prislistenamn"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Leveransledtid"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1860,13 +1855,6 @@ msgstr ""
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Leverantörens ledtid"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1937,7 +1925,7 @@ msgstr "Mus"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Enhetstyp"
 
 #. module: product
 #: help:product.template,product_manager:0
@@ -1979,9 +1967,14 @@ msgid "Weigths"
 msgstr "Mått"
 
 #. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Hotellutlägg"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -2032,7 +2025,7 @@ msgstr "Variabel"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Kan hyras ut"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -2053,7 +2046,7 @@ msgstr "Bruttovikt"
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
 msgid "Assembly Section"
-msgstr ""
+msgstr "Monteringssektion"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
@@ -2079,7 +2072,7 @@ msgstr ""
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2090,11 +2083,6 @@ msgstr "Element i prislistan"
 #: model:product.template,name:product.product_product_21_product_template
 msgid "RAM on demand"
 msgstr "RAM vid behov"
-
-#. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: product
 #: view:res.partner:0
@@ -2183,7 +2171,7 @@ msgstr "Variant"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Hyllor"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -2209,11 +2197,6 @@ msgstr "Metod för kostpris"
 #: view:product.product:0
 msgid "Palletization"
 msgstr "Palletering"
-
-#. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -2250,7 +2233,7 @@ msgstr "Säljpris"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Kategorityp"
 
 #. module: product
 #: model:product.category,name:product.cat2
@@ -2301,6 +2284,14 @@ msgstr ""
 
 #~ msgid "Can be sold"
 #~ msgstr "Kan säljas"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "List Price"
+#~ msgstr "Listpris"
 
 #~ msgid "Prices Computations"
 #~ msgstr "Prisberäkningar"
@@ -2373,6 +2364,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Den här prislistan används istället för standard,                     vid "
 #~ "order till aktuellt företag"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ogiltig XML för Vy-arkitektur!"
 
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
@@ -2561,3 +2555,12 @@ msgstr ""
 
 #~ msgid "Currency :"
 #~ msgstr "Currency :"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Namned på gruppen måste vara unikt!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
