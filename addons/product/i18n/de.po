@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 09:43+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-06 14:33+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -28,9 +28,7 @@ msgid "Number of Layers"
 msgstr "Anzahl Ebenen"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -46,11 +44,6 @@ msgid ""
 msgstr ""
 "Trage Vorlage ein falls diese Regel nur auf eine bestimmte Produktvorlage "
 "angewendet werden soll. Lasse das Feld leer für alle Produkte."
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -219,11 +212,6 @@ msgstr "ME"
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "Stück"
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: product
 #: view:product.template:0
@@ -399,6 +387,7 @@ msgstr "Grundeinheit für diese Kategorie"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Allgemeiner Preis"
 
@@ -411,11 +400,6 @@ msgstr "Menge-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "IT Komponenten"
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -523,6 +507,13 @@ msgid "Working Time"
 msgstr "Arbeitszeit"
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr "Metallwaren"
@@ -606,6 +597,7 @@ msgid "Restaurant Expenses"
 msgstr "Kosten Verpflegung"
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Fehler: Falscher EAN code"
@@ -675,15 +667,6 @@ msgstr "Kit Keyboard + Mouse"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Preisbezeichnung"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-"Wenn das Aktiv Feld ausgewählt wurde, ermöglicht dieses die Preisliste zu "
-"verbergen, ohne diese gleich zu entfernen."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -818,11 +801,6 @@ msgstr ""
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Projekt Küchendesign"
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -1059,11 +1037,6 @@ msgid "Price List Items"
 msgstr "Preisliste Einzelpositionen"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "Die Verknüpfung existiert bereits für dieses Menü!"
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Grösser als die referenzierte Grundeinheit (ME)"
@@ -1124,14 +1097,14 @@ msgid "Stockable"
 msgstr "Lagerprodukt"
 
 #. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr "Wood Lintel 4m"
+
+#. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
 msgstr "kg"
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
@@ -1281,9 +1254,9 @@ msgid "Partners"
 msgstr "Partner"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1316,9 +1289,10 @@ msgid "Second UoM"
 msgstr "Weitere ME"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr "Wood Lintel 4m"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1392,7 +1366,7 @@ msgstr "Rack"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr "Mengeneinheit (ME)"
+msgstr "Einkauf Mengeneinheit"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1401,6 +1375,9 @@ msgid ""
 "a category to get the list of all products linked to this category or to a "
 "child of this category."
 msgstr ""
+"Sie finden hier Ihre Produkte nach Kategorien zusammengefasst. Sie können "
+"eine Kategorie auswählen und erhalten eine Liste aller Produkte, die zu "
+"dieser Kategorie oder einer der Unterkategorien gehören."
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1416,6 +1393,14 @@ msgstr "Gruppierung ..."
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
 msgstr "Regular processor config"
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1452,6 +1437,13 @@ msgid "Basic PC"
 msgstr "Basic PC"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Bestand"
@@ -1475,9 +1467,14 @@ msgstr ""
 "derselben Kategorie sein."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Rundungsgenauigkeit"
 
 #. module: product
 #: view:product.uom:0
@@ -1526,7 +1523,7 @@ msgstr "Variante Preis Marge"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Der Umrechnungefaktor eine Mengeneinheit kann nicht 0 sein!"
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1586,17 +1583,16 @@ msgid ""
 "information on your  products related to procurement logistics, sales price, "
 "product category, suppliers and so on."
 msgstr ""
+"Produkte können ge- und/oder verkauft werden. Produkte können Rohstoffe, "
+"Lagerprodukte, Verbrauchswaren, oder Dienstleistungen sein. Die Produktmaske "
+"enthält detailierte Informationen über Ihre Produkte. Zum Beispiel: "
+"Verkaufspreis, Produktkategorie, Lieferant(en) und so weiter.."
 
 #. module: product
 #: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
 msgstr "Onsite Intervention"
-
-#. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -1612,14 +1608,6 @@ msgstr "Handelswaren"
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
 msgstr "Kurzbezeichnung bei Partner"
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: product
 #: view:product.product:0
@@ -1746,11 +1734,6 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Verkaufspreis"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Preistypen"
@@ -1790,8 +1773,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Standard Mengeneinheit (ME) wird genutzt für Beschaffungsauftrag. Diese "
-"sollte in der gleichen Kategorie  sein, wie z.B. die Standard Mengeneinheit."
+"Einkauf Mengeneinheit (ME) wird genutzt für Beschaffungsauftrag. Diese "
+"sollte in der gleichen Kategorie  sein, wie die Standard Mengeneinheit (ME)."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1878,11 +1861,6 @@ msgid "Supplier Product UoM."
 msgstr "Mengeneinheit beim Lieferanten."
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Rundungsgenauigkeit"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1945,15 +1923,6 @@ msgid "Supplier Lead Time"
 msgstr "Lieferzeit des Lieferanten"
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"Wenn dieses Feld aktiviert ist , kann ein Produkt ausgeblendet werden, ohne "
-"es vollständig zu entfernen."
-
-#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr "Box"
@@ -1964,6 +1933,8 @@ msgid ""
 "Create and manage your packaging dimensions and types you want to be "
 "maintained in your system."
 msgstr ""
+"Erstellen und Verwalten Sie die Verpackungsgrößen und -typen die Sie in "
+"Ihrem System verwenden wollen."
 
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
@@ -2065,6 +2036,11 @@ msgstr "Complete PC With Peripherals"
 #: view:product.template:0
 msgid "Weigths"
 msgstr "Gewichte"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2190,11 +2166,6 @@ msgid "RAM on demand"
 msgstr "RAM on demand"
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "Verkauf Eigenschaften"
@@ -2243,6 +2214,8 @@ msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
 "products!"
 msgstr ""
+"Die Produktkategorie kann nicht aufgelöst werden, Sie haben einen "
+"Zirkelbezug für diese Produkategorie definiert!"
 
 #. module: product
 #: view:product.template:0
@@ -2307,11 +2280,6 @@ msgstr "Methode Kalkulation"
 #: view:product.product:0
 msgid "Palletization"
 msgstr "Pallettierung"
-
-#. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -2384,6 +2352,10 @@ msgid ""
 "versions of a pricelist, you can do it and manage them from here. Some "
 "examples of versions: 2010, 2011, Promotion of February 2010, etc."
 msgstr ""
+"Es kann mehr als eine Version einer Preisliste geben. Wenn Sie weitere "
+"Versionen einer Preisliste benötigen, können Sie hier erstellen und "
+"Verwalten. \r\n"
+"Ein paar Beispiele: 2010, 2011, Promotion Februar 2010, etc."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
@@ -2450,6 +2422,9 @@ msgstr ""
 #~ "Diese Preisliste wir anstelle der Standard Preisliste verwendet für den "
 #~ "Verkauf an den aktuellen Kunden (Partner)."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
 #~ "selection from a sale order line."
@@ -2502,6 +2477,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Die Gesamtanzahl der Produkte die auf eine Palette (in eine Box) gepackt "
 #~ "werden kann."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
@@ -2642,6 +2623,9 @@ msgstr ""
 #~ msgid "Purchase UoM"
 #~ msgstr "Einkauf Menge (ME)"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
 #, python-format
 #~ msgid ""
 #~ "Could not resolve product category, ' \\n                                    "
@@ -2651,6 +2635,13 @@ msgstr ""
 #~ "Konnte die Produktkategorie nicht auflösen, ' \\n                            "
 #~ "' die sie innerhalb von regelmässigen zyklischen Abläufen definiert haben!"
 
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Wenn das Aktiv Feld ausgewählt wurde, ermöglicht dieses die Preisliste zu "
+#~ "verbergen, ohne diese gleich zu entfernen."
+
 #, python-format
 #~ msgid ""
 #~ "No active version for the selected pricelist !\n"
@@ -2659,3 +2650,31 @@ msgstr ""
 #~ "Ausgewählte Preisliste ist zur Zeit nicht aktiviert !\n"
 #~ "' \\n                                'Bitte erzeugen oder aktivieren Sie "
 #~ "eine Preisliste."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "List Price"
+#~ msgstr "Verkaufspreis"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the product "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Wenn dieses Feld aktiviert ist , kann ein Produkt ausgeblendet werden, ohne "
+#~ "es vollständig zu entfernen."
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "Die Verknüpfung existiert bereits für dieses Menü!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

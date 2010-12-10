@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-30 16:22+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-08 22:02+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -35,14 +35,8 @@ msgid "Partner Category"
 msgstr "Catégorie de partenaire"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
 msgstr ""
 
 #. module: base_action_rule
@@ -58,7 +52,7 @@ msgstr "Objet"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_email:0
 msgid "Mail to these Emails"
-msgstr ""
+msgstr "Envoyer un e-mail à ces adresses"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_state:0
@@ -73,7 +67,7 @@ msgstr "e-mail provenant de"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Body"
-msgstr ""
+msgstr "Corps du message"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -148,32 +142,22 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Reminders"
-msgstr ""
+msgstr "E-mails de rappel"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Special Keywords to Be Used in The Body"
-msgstr ""
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Mots-clés spéciaux à utiliser dans le corps du texte"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
-msgstr "État"
+msgstr "Status"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr ""
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Identité courriel de la personne à qui le message va être envoyé"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -204,7 +188,7 @@ msgstr "Heures"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_id)s = Object ID"
-msgstr ""
+msgstr "%(object_id)s = Object ID"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -214,12 +198,12 @@ msgstr "Délai après la date de déclenchement"
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
 msgid "Remind with Attachment"
-msgstr ""
+msgstr "Envoyer un rappel avec pièce jointe"
 
 #. module: base_action_rule
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
-msgstr ""
+msgstr "Arguments non valides"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
@@ -229,7 +213,7 @@ msgstr "Attribuer la responsabilité à"
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "None"
-msgstr ""
+msgstr "Aucun(e)"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_email_to:0
@@ -237,11 +221,13 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'To' field of the header"
 msgstr ""
+"Utilisez une expression Python pour définir le champ qui sera utilisé en "
+"tant que destinataire (champ \"À\" de l'entête)"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_phone)s = Responsible phone"
-msgstr ""
+msgstr "%(object_user_phone)s = Responsible phone"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -256,11 +242,6 @@ msgid "Delay type"
 msgstr "Type de délai"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -272,7 +253,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_method:0
 msgid "Call Object Method"
-msgstr ""
+msgstr "Appel de la Méthode Objet"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_email_to:0
@@ -289,12 +270,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(partner)s = Partner name"
-msgstr ""
+msgstr "%(partner)s = Nom du partenaire"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Note"
-msgstr ""
+msgstr "Remarque"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_email_from:0
@@ -304,19 +285,14 @@ msgid ""
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Délai après la date de déclenchement"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Conditions"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -325,11 +301,14 @@ msgid ""
 "need a delay before the trigger date, like sending a reminder 15 minutes "
 "before a meeting."
 msgstr ""
+"Délai après la date de déclenchement. Ce nombre peut être négatif si vous "
+"avez besoin d'un délai avant la date de déclenchement,  par exemple envoyer "
+"un rappel 15 minutes avant une réunion."
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:0
@@ -340,7 +319,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
 msgid "Remind Responsible"
-msgstr ""
+msgstr "Envoyer un rappel au Responsable"
 
 #. module: base_action_rule
 #: model:ir.module.module,description:base_action_rule.module_meta_information
@@ -351,21 +330,22 @@ msgstr ""
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
 msgstr ""
+"Donne l'ordre de la séquence lors de l'affichage d'une liste de règles."
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
-msgstr ""
+msgstr "Mois"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #. module: base_action_rule
 #: help:base.action.rule,server_action_id:0
@@ -373,6 +353,8 @@ msgid ""
 "Describes the action name.\n"
 "eg:on which object which action to be taken on basis of which condition"
 msgstr ""
+"Décrit le nom de l'action.\n"
+"C.à d. : quelle action réaliser, sur quel objet, sur quelle condition"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_ir_cron
@@ -382,17 +364,17 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_description)s = Object description"
-msgstr ""
+msgstr "%(object_description)s = Object description"
+
+#. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr "Erreur : email mal formé."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
-msgstr ""
-
-#. module: base_action_rule
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+msgstr "Actions e-mail"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -400,25 +382,19 @@ msgid "Email Information"
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "Règles d'action"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_body:0
 msgid "Content of mail"
-msgstr ""
+msgstr "Contenu de l'e-mail"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -433,22 +409,25 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_body:0
 msgid "Mail body"
-msgstr ""
+msgstr "Corps de l'e-mail"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
 msgstr ""
+"Cochez cette case si vous voulez que cette règle envoie un rappel par e-mail "
+"à l'utilisateur"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server Action to be Triggered"
-msgstr ""
+msgstr "Action Serveur à déclencher"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_user:0
 msgid "Mail to Responsible"
-msgstr ""
+msgstr "Envoyer un e-mail au responsable"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_email_cc:0
@@ -458,13 +437,13 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Fields"
-msgstr ""
+msgstr "Conditions sur les champs du Modèle"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "Actions automatisées"
 
 #. module: base_action_rule
 #: field:base.action.rule,server_action_id:0
@@ -474,7 +453,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,regex_name:0
 msgid "Regex on Resource Name"
-msgstr ""
+msgstr "Expression régulière sur le nom de la ressource"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_remind_attach:0
@@ -491,12 +470,12 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Séquence"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Actions"
-msgstr ""
+msgstr "Actions"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
@@ -508,12 +487,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user)s = Responsible name"
-msgstr ""
+msgstr "%(object_user)s = Responsible name"
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Date de création"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -523,4 +502,4 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Date de déclenchement"

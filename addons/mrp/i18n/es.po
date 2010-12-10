@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-04 23:14+0000\n"
+"PO-Revision-Date: 2010-12-08 21:07+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -320,7 +320,7 @@ msgstr "Agosto"
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
@@ -506,7 +506,7 @@ msgstr ""
 #. module: mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Código EAN no válido"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -614,6 +614,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar la ruta sin eliminarla."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -631,7 +632,7 @@ msgstr "Productos consumidos"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr "¡Error! No puede crear Listas de Material recursivas"
+msgstr "¡Error! No puede crear Listas de Material recursivas."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
@@ -1482,8 +1483,8 @@ msgid ""
 "products on BoMs !"
 msgstr ""
 "Todas las cantidades de producto deben de ser superiores a cero.\n"
-"Debe instalar el módulo mrp_subproduct si quiere gestionar productos extra "
-"en las LdM"
+"¡Debe instalar el módulo mrp_subproduct si quiere gestionar productos extra "
+"en las LdM!"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1920,7 +1921,7 @@ msgstr "Eficiencia de la producción"
 #. module: mrp
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -1928,6 +1929,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar las listas de material sin "
+"eliminarlas."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -2182,7 +2185,7 @@ msgstr "Error"
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Seleccionar cantidad"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -2267,7 +2270,7 @@ msgstr ""
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: mrp
 #: view:mrp.production.order:0

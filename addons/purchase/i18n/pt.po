@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-26 15:44+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-07 12:34+0000\n"
+"Last-Translator: Paulino Ascenção <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -33,11 +33,6 @@ msgstr "Não pode confirmar uma ordem de compra sem linhas."
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
 msgstr "Facturado & Pago"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Cumprimentos,"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -77,11 +72,6 @@ msgid "Validated By"
 msgstr "Validado por"
 
 #. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
-
-#. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,partner_id:0
 #: view:purchase.order.line:0
@@ -110,7 +100,7 @@ msgstr "Estatísticas de ordens de compra."
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "A partir das receções"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -310,7 +300,7 @@ msgstr "Artigos"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr ""
+msgstr "Quantidades e valores por mês"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -498,16 +488,14 @@ msgid "Invoice Control"
 msgstr "Contolo de facturas"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
-msgstr "Pedido de cotações"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erro! Não pode criar empresas recursivamente."
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "Cotação"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr "Código do fornecedor"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -584,11 +572,6 @@ msgid "To be Invoiced"
 msgstr "A ser facturado"
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Nome do contacto no endereço"
@@ -638,11 +621,6 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Não pode ter duas versões de listas de preços que se sobreponham."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -718,9 +696,10 @@ msgid "Validated by"
 msgstr "Validado por"
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura da vista!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "Cotação"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
@@ -747,11 +726,6 @@ msgstr "    Mês-1    "
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
 "Não há um diário de compras definido para esta companhia: \"%s\" (id:%d)"
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "A regra tem de ter pelo menos um direito de acesso marcado!"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -860,21 +834,10 @@ msgid "Month"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
 msgstr ""
-"O estado da ordem de compra ou do pedido de cotação. Uma cotação é uma ordem "
-"de compra em estado 'rascunho'. Depois de a ordem confirmada pelo "
-"utilizador, o estado muda para ' Confirmado'. Então o fornecedor deve "
-"confirmar a ordem para mudar o estado para ' Aprovado'. Quando ordem é paga "
-"e recebida, o estado passa 'Concluído'. Se uma acção de cancelamento ocorre "
-"na factura ou na recepção dos bens, o estado passa a \"Excepção\"."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -890,11 +853,6 @@ msgstr "Ordem de compra aguardando aprovação"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
@@ -978,6 +936,11 @@ msgid "Purchase Order Line"
 msgstr "Linha de ordem de compra"
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Vista do calendário"
@@ -988,12 +951,11 @@ msgid "Purchase Order Merge"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Cumprimentos,"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1041,6 +1003,11 @@ msgid "Qty. per product"
 msgstr ""
 
 #. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
 msgstr "Data de criação deste documento."
@@ -1053,11 +1020,6 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: purchase
@@ -1154,8 +1116,8 @@ msgid "Cancel Purchase Order"
 msgstr "Cancelar ordem de compra"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: purchase
@@ -1173,15 +1135,6 @@ msgstr ""
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Erro ! Não pode atribuir a Lista de Preço Principal como Outra Lista de "
-"Preço em Lista de Preço do Item !"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1222,9 +1175,21 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr "Referencia do documento que gerou a cotação de ordem de compra."
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
 msgstr ""
+"O estado da ordem de compra ou do pedido de cotação. Uma cotação é uma ordem "
+"de compra em estado 'rascunho'. Depois de a ordem confirmada pelo "
+"utilizador, o estado muda para ' Confirmado'. Então o fornecedor deve "
+"confirmar a ordem para mudar o estado para ' Aprovado'. Quando ordem é paga "
+"e recebida, o estado passa 'Concluído'. Se uma acção de cancelamento ocorre "
+"na factura ou na recepção dos bens, o estado passa a \"Excepção\"."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1301,8 +1266,8 @@ msgid "Purchase Order Lines"
 msgstr "Linhas de Ordem de Compra"
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
@@ -1322,14 +1287,6 @@ msgstr ""
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr "Fundir ordens"
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
-"especial !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1384,6 +1341,12 @@ msgid "Warehouse"
 msgstr "Armazem"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr "Pedido de cotações"
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr "Data cotação"
@@ -1399,12 +1362,6 @@ msgstr "Data de aprovação"
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Não é possivel cancelar esta ordem de compra !"
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
-msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1670,11 +1627,6 @@ msgid "Addresses"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
 msgstr "Tem certeza que quer fundir estas ordens?"
@@ -1814,6 +1766,9 @@ msgstr ""
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Factura do fornecedor pré-gerada nas recepções para controlo"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção"
+
 #~ msgid "Create invoice from product recept"
 #~ msgstr "Criar factura pela recepção do artigo."
 
@@ -1893,6 +1848,12 @@ msgstr ""
 #~ msgid "New Purchase Order"
 #~ msgstr "Nova ordem de compra"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
+#~ "especial !"
+
 #~ msgid "Out Packing"
 #~ msgstr "Pacote a sair"
 
@@ -1914,3 +1875,22 @@ msgstr ""
 
 #~ msgid "Request For Quotations"
 #~ msgstr "Pedidos de cotação"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Erro ! Não pode atribuir a Lista de Preço Principal como Outra Lista de "
+#~ "Preço em Lista de Preço do Item !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Não pode ter duas versões de listas de preços que se sobreponham."
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "A regra tem de ter pelo menos um direito de acesso marcado!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitectura da vista!"
