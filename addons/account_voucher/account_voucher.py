@@ -964,14 +964,14 @@ class account_bank_statement_line(osv.osv):
         return res
 
     def _check_amount(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
                 if not (obj.amount == obj.voucher_id.amount):
                     return False
         return True
 
     _constraints = [
-        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['statement_id']),
+        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['amount']),
     ]
 
     _columns = {
