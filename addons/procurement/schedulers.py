@@ -239,22 +239,17 @@ class procurement_order(osv.osv):
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
-                        # Check draft procurement related to this order point
                         if op.procurement_draft_ids:
-                            procure_qty = {}
-                            #Compute list of draft procurement attached to Orderpoint
-                            for pro_data in op.procurement_draft_ids:
-                                procure_qty.update({pro_data.product_qty: pro_data.id })
-                            procure_list = procure_qty.keys()
-                            procure_list.sort()
-                            procure_list.reverse()
-
+                        # Check draft procurement related to this order point
+                            pro_ids = map(lambda x:x.id, op.procurement_draft_ids or [])
+                            cr.execute('select id, product_qty from procurement_order where id in %s order by product_qty desc', (tuple(pro_ids), ))
+                            procure_datas = cr.dictfetchall()
                             to_generate = qty
-                            for proc in procure_list:
-                                if to_generate >= proc:
-                                    wf_service.trg_validate(uid, 'procurement.order', procure_qty[proc], 'button_confirm', cr)
-                                    procurement_obj.write(cr, uid, [procure_qty[proc]],  {'origin': op.name}, context=context)
-                                    to_generate -= proc
+                            for proc_data in procure_datas:
+                                if to_generate >= proc_data['product_qty']:
+                                    wf_service.trg_validate(uid, 'procurement.order', proc_data['id'], 'button_confirm', cr)
+                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
+                                    to_generate -= proc_data['product_qty']
                                 if not to_generate:
                                     break
                             qty = to_generate
