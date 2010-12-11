@@ -2468,11 +2468,17 @@ class orm(orm_template):
                                             self._table)
                         self.__schema.debug("Table '%s': added column '%s' with definition=%s",
                                             self._table, 'parent_left', 'INTEGER')
+                    elif not self._columns['parent_left'].select:
+                        self.__logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
+                                            self._table)
                     if 'parent_right' not in self._columns:
                         self.__logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
                                             self._table)
                         self.__schema.debug("Table '%s': added column '%s' with definition=%s",
                                             self._table, 'parent_right', 'INTEGER')
+                    elif not self._columns['parent_right'].select:
+                        self.__logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
+                                            self._table)
                     if self._columns[self._parent_name].ondelete != 'cascade':
                         self.__logger.error("The column %s on object %s must be set as ondelete='cascade'",
                                             self._parent_name, self._name)
