@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-11-22 07:19+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_webkit
@@ -42,11 +42,6 @@ msgstr ""
 #: field:res.company,lib_path:0
 msgid "Webkit Executable Path"
 msgstr ""
-
-#. module: report_webkit
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -83,6 +78,12 @@ msgstr ""
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B7  21  88 x 125 mm"
+msgstr ""
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:0
+#, python-format
+msgid "Webkit render"
 msgstr ""
 
 #. module: report_webkit
@@ -159,6 +160,11 @@ msgid "ir.header_img"
 msgstr "ir.header_img"
 
 #. module: report_webkit
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A0  5   841 x 1189 mm"
 msgstr ""
@@ -167,11 +173,6 @@ msgstr ""
 #: selection:ir.header_webkit,format:0
 msgid "C5E 24  163 x 229 mm"
 msgstr ""
-
-#. module: report_webkit
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
 
 #. module: report_webkit
 #: field:ir.header_img,type:0
@@ -183,11 +184,6 @@ msgstr "Тип"
 #, python-format
 msgid "Client Actions Connections"
 msgstr ""
-
-#. module: report_webkit
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: report_webkit
 #: field:res.company,header_image:0
@@ -286,11 +282,6 @@ msgid "Content and styling"
 msgstr ""
 
 #. module: report_webkit
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A7  11  74 x 105 mm"
 msgstr ""
@@ -366,9 +357,9 @@ msgid "Portrait"
 msgstr "Портрет"
 
 #. module: report_webkit
-#: selection:ir.header_webkit,orientation:0
-msgid "Landscape"
-msgstr "Альбом"
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: report_webkit
 #: view:ir.header_webkit:0
@@ -379,11 +370,6 @@ msgstr ""
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr ""
-
-#. module: report_webkit
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -456,22 +442,9 @@ msgid "Header CSS"
 msgstr ""
 
 #. module: report_webkit
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B4  19  250 x 353 mm"
 msgstr ""
-
-#. module: report_webkit
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -567,6 +540,30 @@ msgid "B9  23  33 x 62 mm"
 msgstr ""
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: selection:ir.header_webkit,orientation:0
+msgid "Landscape"
+msgstr "Альбом"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"

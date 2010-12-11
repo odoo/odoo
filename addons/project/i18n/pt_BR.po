@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 15:33+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 19:51+0000\n"
+"Last-Translator: Alexsandro Haag <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -38,11 +38,6 @@ msgstr "A tarefa '%s' foi atríbuida para %s."
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 "A empresa escolhida não está entre as empresas habilitadas para este usuário"
-
-#. module: project
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Não é permitido criar dois usuários com o mesmo login!"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -112,12 +107,12 @@ msgstr "A tarefa '%s' está concluída"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr "Erro! A data inicial do projeto precisar ser menor que a data final."
+msgstr "Erro! A data inicial do projeto precisa ser menor que a data final."
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr "Reavaliação de Tarefas"
+msgstr "Tarefa de Reavaliação"
 
 #. module: project
 #: field:project.project,members:0
@@ -159,9 +154,7 @@ msgid "My Tasks"
 msgstr "Minhas Tarefas"
 
 #. module: project
-#: code:addons/project/project.py:0
 #: constraint:project.task:0
-#, python-format
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Erro! Você não pode criar tarefas recursivas."
 
@@ -425,13 +418,14 @@ msgid "res.users"
 msgstr "res.users"
 
 #. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the project "
-"without removing it."
-msgstr ""
-"Se o campo ativo é definido como verdadeiro, permite a você esconder o "
-"projeto sem removê-lo."
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
+msgstr "Em teste"
+
+#. module: project
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr "Tempo Estimado para o usuário concluir esta tarefa a ele atribuída"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -535,9 +529,9 @@ msgid "Date Stop: %(date)s"
 msgstr "Data de Parada: %(date)s"
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
-msgstr "Em teste"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Não é permitido criar dois usuários com o mesmo login!"
 
 #. module: project
 #: view:project.project:0
@@ -545,9 +539,9 @@ msgid "Reset as Project"
 msgstr "Reiniciar como Projeto"
 
 #. module: project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
+#: selection:project.vs.hours,state:0
+msgid "Template"
+msgstr "Modelo"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -560,9 +554,9 @@ msgid "My projects"
 msgstr "Meus projetos"
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -573,11 +567,6 @@ msgstr "Próximo"
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
 msgstr "Do estado Rascunho, mudará para o estado Aberto."
-
-#. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -676,11 +665,6 @@ msgstr "Atraso Superado"
 #: selection:report.project.task.user,priority:0
 msgid "Medium"
 msgstr "Médio"
-
-#. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
-msgstr "Modelo"
 
 #. module: project
 #: view:project.task:0
@@ -856,9 +840,9 @@ msgid "Project"
 msgstr "Projeto"
 
 #. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
+#: view:project.task.reevaluate:0
+msgid "_Evaluate"
+msgstr "_Avaliar"
 
 #. module: project
 #: view:board.board:0
@@ -1059,9 +1043,9 @@ msgid "Project Tasks"
 msgstr "Tarefas do Projeto"
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
-msgstr "Tempo Estimado para o usuário concluir esta tarefa a ele atribuída"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1079,11 +1063,6 @@ msgstr "Rascunho"
 #: selection:report.project.task.user,priority:0
 msgid "Low"
 msgstr "Baixo"
-
-#. module: project
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Você não pode criar um Menu recursivo."
 
 #. module: project
 #: view:project.project:0
@@ -1159,11 +1138,6 @@ msgstr ""
 "metodologia SCRUM."
 
 #. module: project
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "O nome do grupo precisa ser único!"
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
@@ -1232,9 +1206,11 @@ msgid "Manager Email"
 msgstr "Email do Gerente"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
-msgstr "Janeiro"
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1417,11 +1393,6 @@ msgid "Done"
 msgstr "Concluído"
 
 #. module: project
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regra precisa ter ao menos um direito de acesso marcado."
-
-#. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.project:0
@@ -1439,11 +1410,6 @@ msgstr "Concluir"
 #: selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Abrir"
-
-#. module: project
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1464,14 +1430,6 @@ msgstr "ID: %(task_id)s"
 #: selection:task.by.days,state:0
 msgid "In Progress"
 msgstr "Em andamento"
-
-#. module: project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:0
@@ -1572,11 +1530,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
 msgstr "Reavaliar Tarefa"
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
-msgstr "_Avaliar"
 
 #. module: project
 #: help:project.installer,project_long_term:0
@@ -1687,6 +1640,11 @@ msgstr "Tempo Gasto"
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Minhas contas a faturar"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
+msgstr "Janeiro"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1811,6 +1769,11 @@ msgid "Project Time Unit"
 msgstr "Unidade de Tempo do Projeto"
 
 #. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' is pending."
@@ -1843,11 +1806,6 @@ msgstr "Usuários"
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
 msgstr "Tarefas Atrasadas"
-
-#. module: project
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regras não são suportadas por objetos osv_memory !"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -2001,6 +1959,12 @@ msgstr "Orçamentos"
 
 #~ msgid "Delegate this task to a user"
 #~ msgstr "Delegar esta tarefa ao usuário"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
 
 #~ msgid "Projects Structure"
 #~ msgstr "Estruturas dos Projetos"
@@ -2199,6 +2163,9 @@ msgstr "Orçamentos"
 #~ msgid "All Attachments"
 #~ msgstr "Todos os anexos"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
 #~ msgid "User you want to delegate this task to."
 #~ msgstr "Usuário ao qual deseja-se delegar esta tarefa"
 
@@ -2331,3 +2298,34 @@ msgstr "Orçamentos"
 
 #~ msgid "Project manager board"
 #~ msgstr "Quadro de Gestão do Projeto"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the project "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Se o campo ativo é definido como verdadeiro, permite a você esconder o "
+#~ "projeto sem removê-lo."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Você não pode criar um Menu recursivo."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "O nome do grupo precisa ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regra precisa ter ao menos um direito de acesso marcado."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regras não são suportadas por objetos osv_memory !"

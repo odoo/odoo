@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-10-30 13:11+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -46,6 +46,13 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Force to use a specific product"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
+msgid ""
+"This lists show you every task work you can invoice to the customer. Select "
+"the lines in order to generate the invoices automatically."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -167,6 +174,11 @@ msgid "Amount"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: view:board.board:0
+msgid "Uninvoice Lines With Billing Rate"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
 msgid "The detail of each work done will be displayed on the invoice"
 msgstr ""
@@ -192,9 +204,23 @@ msgid "Analytic account to close"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+msgid ""
+"OpenERP allows you to create default invoicing types. You could need to "
+"regularly make discounts based on a specific contract or agreement with a "
+"customer. From this menu, you can create additional default types of "
+"invoicing that will speed up your invoicing."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:random.timesheet.lines:0
 #: view:report.timesheet.line:0
 msgid "Group By..."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -247,6 +273,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
 msgid "The time of each work done will be displayed on the invoice"
 msgstr ""
@@ -267,23 +298,9 @@ msgid "hr.timesheet.analytic.cost.ledger"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid ""
-"Please fill in the Partner or Customer and Sale Pricelist fields in the "
-"Analytic Account:\n"
-"%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
 msgid "Final Invoice"
 msgstr "Končni račun"
-
-#. module: hr_timesheet_invoice
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Napačno ime modela v definiciji dejanja."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
@@ -405,11 +422,6 @@ msgid "Printing date"
 msgstr "Datum izpisa"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
 msgid "Bill Tasks Works"
@@ -420,15 +432,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
 msgstr "Načini zaračunavanja"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field '\n"
-"                        'in the analytic account:\n"
-"%s"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -553,14 +556,19 @@ msgid "Invoice rate by user"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
 msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
 msgid "From"
 msgstr "Od"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
@@ -693,6 +701,14 @@ msgid "Credit"
 msgstr "Dobro"
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Error"
@@ -813,15 +829,12 @@ msgid "Billing Data"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.model:0
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
+"Please fill in the Partner or Customer and Sale Pricelist fields in the "
+"Analytic Account:\n"
+"%s"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -908,7 +921,6 @@ msgid "Product"
 msgstr "Proizvod"
 
 #. module: hr_timesheet_invoice
-#: view:board.board:0
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
 msgid "Uninvoice lines with billing rate"
 msgstr ""
@@ -1098,6 +1110,14 @@ msgstr "Strošek"
 msgid "Search Timesheet Lines"
 msgstr ""
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
 #~ msgid "Select period"
 #~ msgstr "Izberi obdobje"
 
@@ -1118,6 +1138,9 @@ msgstr ""
 
 #~ msgid "Visible name"
 #~ msgstr "Prikazano ime"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Napačno ime modela v definiciji dejanja."
 
 #~ msgid "My Uninvoiced Entries"
 #~ msgstr "Moji nezaračunani vnosi"

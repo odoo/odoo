@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-02 07:42+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-09 18:17+0000\n"
+"Last-Translator: Alexsandro Haag <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -44,10 +44,10 @@ msgstr ""
 "de calendário recorrente."
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Fuso horário"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"A empresa escolhida não está entre as empresas habilitadas para este usuário"
 
 #. module: base_calendar
 #: field:calendar.event.edit.all,name:0
@@ -258,11 +258,10 @@ msgid "Days"
 msgstr "Dias"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
-msgstr "Não Repetir"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
+msgstr "Detalhes do Convite"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:0
@@ -435,11 +434,6 @@ msgid "Attendees"
 msgstr "Participantes"
 
 #. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirm"
 msgstr "Confirmar"
@@ -465,11 +459,6 @@ msgstr "Tipo de Convite"
 #: view:res.alarm:0
 msgid "Reminder details"
 msgstr "Detalhes do Lembrete"
-
-#. module: base_calendar
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
 
 #. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
@@ -507,11 +496,6 @@ msgstr "Email"
 #: view:calendar.attendee:0
 msgid "Event Detail"
 msgstr "Detalhes do Evento"
-
-#. module: base_calendar
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -590,19 +574,9 @@ msgid "Delegrated To"
 msgstr "Delegado para"
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Argumentos Inválidos"
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Solicitar Resposta"
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -692,6 +666,12 @@ msgstr "Primeiro"
 #: view:calendar.event:0
 msgid "Privacy"
 msgstr "Privacidade"
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Fuso horário"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -809,10 +789,10 @@ msgid "Fri"
 msgstr "Sex"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
-msgstr "Detalhes do Convite"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
+msgstr "Contador não pode ser Negativo"
 
 #. module: base_calendar
 #: field:calendar.attendee,member:0
@@ -842,22 +822,9 @@ msgid "Attachment"
 msgstr "Anexo"
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro ! Você não pode criar Menu recursivo."
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr "Convidado por"
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-"especial!"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -996,6 +963,13 @@ msgid "Count"
 msgstr "Contagem"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr "Não Repetir"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1047,6 +1021,12 @@ msgstr "Intervalo"
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
 msgstr "Quarta"
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr "Intervalo não pode ser Negativo"
 
 #. module: base_calendar
 #: field:calendar.alarm,name:0
@@ -1135,6 +1115,11 @@ msgid "Recurrent ID date"
 msgstr "ID de data recorrente"
 
 #. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Não é permitido criar dois usuários com o mesmo login!"
+
+#. module: base_calendar
 #: field:calendar.alarm,state:0
 #: view:calendar.attendee:0
 #: field:calendar.attendee,state:0
@@ -1196,11 +1181,6 @@ msgstr "res.users"
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
 msgstr "Terça"
-
-#. module: base_calendar
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -1637,3 +1617,30 @@ msgstr "Sábado"
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "Quinta"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Argumentos Inválidos"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar Menu recursivo."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

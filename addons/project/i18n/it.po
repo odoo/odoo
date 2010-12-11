@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-08 14:01+0000\n"
+"PO-Revision-Date: 2010-12-10 18:17+0000\n"
 "Last-Translator: Lorenzo Battistini - agilebg.com "
 "<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -201,7 +201,7 @@ msgstr "Imposta a 'In Sospeso'"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Giorni per l'apertura"
 
 #. module: project
 #: view:project.task:0
@@ -1142,13 +1142,13 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Giorni per la chiusura"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.ui.menu,name:project.menu_board_project
 msgid "Project Dashboard"
-msgstr "Dashboard Progetto"
+msgstr "Dashboard Progetti"
 
 #. module: project
 #: view:project.project:0
@@ -1366,6 +1366,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Questo report permette di analizzare la performance dei progetti e degli "
+"utenti. E' possibile analizzare le quantità di attività, le ore impiegate "
+"paragonate alle ore pianificate, il numero medio di giorni per aprire o "
+"chiudere un'attività, ecc."
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1532,11 +1536,13 @@ msgid ""
 "Computed as difference of the time estimated by the project manager and the "
 "real time to close the task."
 msgstr ""
+"Calcolato come la differenza fra il tempo stimato dal project manager ed il "
+"tempo reale impiegato per concludere l'attività."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
-msgstr ""
+msgstr "Rivaluta l'attività"
 
 #. module: project
 #: help:project.installer,project_long_term:0
@@ -1544,16 +1550,18 @@ msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
 "resource allocation handling."
 msgstr ""
+"Abilita il tracciamente dei progettia lungo termine, inclusi progetti a "
+"multi-fase e gestione allocazione risorse."
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
 msgid "Development"
-msgstr ""
+msgstr "Sviluppo"
 
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "Fatturazione delle ore sulle attività"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1565,11 +1573,18 @@ msgid ""
 "his default project in his own preferences, in order to filter automatically "
 "the tasks or issues he usually works on."
 msgstr ""
+"Un progetto contiene un insieme di attività o problemi che saranno eseguite "
+"dalle risorse assegnategli. Un progetto può essere messo in una gerarchia, "
+"come figlio di un progetto genitore. Questo permetto di progettare un'ampia "
+"struttura di progetto con diverse fasi spalmate sul ciclo di durata del "
+"progetto. Ogni utente può impostare il proprio progetto di default nelle "
+"proprie preferenze, al fine di filtrare automaticamente le attività o i "
+"problemi su cui lavora solitamente."
 
 #. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
-msgstr ""
+msgstr "Le mie ore residue rispetto al progetto"
 
 #. module: project
 #: field:project.task,description:0
@@ -1621,7 +1636,7 @@ msgstr "Attività: %(name)s"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
 msgid "Project Application Configuration"
-msgstr ""
+msgstr "Configurazione modulo Project"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -1670,7 +1685,7 @@ msgstr ""
 #. module: project
 #: help:project.task.close,manager_email:0
 msgid "Email Address of Project's Manager"
-msgstr ""
+msgstr "Indirizzo email del Project Manager"
 
 #. module: project
 #: view:project.project:0
@@ -1711,7 +1726,7 @@ msgstr "Avvisa cliente"
 #. module: project
 #: view:project.task:0
 msgid "Edit"
-msgstr ""
+msgstr "Modifica"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -1727,7 +1742,7 @@ msgstr "Anno"
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr ""
+msgstr "Numero di giorni per chiudere l'attività"
 
 #. module: project
 #: view:board.board:0

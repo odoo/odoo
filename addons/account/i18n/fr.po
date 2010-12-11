@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-06 13:41+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-09 10:19+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1364,6 +1364,11 @@ msgid "Overdue Payments"
 msgstr "Retard de règlement"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Erreur: la référence BVR est requise."
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1553,11 +1558,6 @@ msgstr "Écritures récurrentes"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Modèle de régime fiscal"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr "Code de taxe de test"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -6550,6 +6550,15 @@ msgid "Taxes:"
 msgstr "Taxes :"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Le compte bancaire du partenaire pour le paiement\n"
+"Laissez vide pour utiliser celui par défaut"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6772,13 +6781,6 @@ msgstr "Taxe d'achat par défaut"
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Confirmé"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -8028,6 +8030,11 @@ msgstr "Forcer la période"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -10687,9 +10694,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 #~ msgid "Date or Code"
 #~ msgstr "Date ou Code"
 
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
-
 #~ msgid "Statement Entries"
 #~ msgstr "Écritures du relevé"
 
@@ -10733,9 +10737,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Journal de Banque CHF"
 #~ msgstr "Journal de Banque CHF"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Erreur: la référence BVR est requise."
 
 #~ msgid ""
 #~ "All draft account entries in this journal and period will be validated. It "
@@ -10886,13 +10887,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Close Fiscal Year with new entries"
 #~ msgstr "Clôturer l'exercice fiscal avec de nouvelles écritures"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Le compte bancaire du partenaire pour le paiement\n"
-#~ "Laissez vide pour utiliser celui par défaut"
 
 #~ msgid ""
 #~ "Check this box if you don't want new account moves to pass through the "
@@ -11139,6 +11133,9 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Low Level"
 #~ msgstr "Bas niveau"
+
+#~ msgid "Tax Code Test"
+#~ msgstr "Code de taxe de test"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."

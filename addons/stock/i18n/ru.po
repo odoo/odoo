@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-05 19:59+0000\n"
+"PO-Revision-Date: 2010-12-09 13:26+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -81,6 +81,8 @@ msgid ""
 "This is the list of all delivery orders that must be prepared, according to "
 "your different sales orders and your logistics rules."
 msgstr ""
+"Это список всех заказов на доставку, которые должны быть подготовлены в "
+"соответствии с вашими заказами на продажу и логистическими правилами."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -335,7 +337,7 @@ msgstr "Партнер"
 #. module: stock
 #: help:stock.move.memory,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Валюта в которой выражена стоимость единицы"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -732,6 +734,8 @@ msgid ""
 "Check this option to select existing lots in the list below, otherwise you "
 "should enter new ones line by line."
 msgstr ""
+"Отметьте эту опцию для выбора существующих партий из списка, иначе вы должны "
+"ввести новые строка за строкой"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1202,7 +1206,7 @@ msgstr "Тип сцепления"
 #: code:addons/stock/wizard/stock_return_picking.py:0
 #, python-format
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "Будет возвращено / выставлено в счете"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1253,6 +1257,7 @@ msgstr "От"
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
+"Вы можете вернуть комплектование, которое подтверждено, доступно или сделано!"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2828,7 +2833,7 @@ msgstr "Потребляемые ТМЦ"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "Недостаточно ТМЦ в партии !"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -2891,7 +2896,7 @@ msgstr "Заказ"
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
-msgstr ""
+msgstr "Ссылка на упаковку"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3231,7 +3236,7 @@ msgstr " для "
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to leave in the current pack"
-msgstr ""
+msgstr "Количество, оставляемое в текущей упаковки"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -3277,7 +3282,7 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr ""
+msgstr "Не хватает остатка, нельзя зарезервировать ТМЦ."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -3476,7 +3481,7 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Задержка исходящих ТМЦ"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
@@ -3593,7 +3598,7 @@ msgstr ""
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Stock"
-msgstr ""
+msgstr "Будущие остатки"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3746,7 +3751,7 @@ msgstr "Май"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Доставка"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -3830,14 +3835,14 @@ msgstr "Будущее"
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr ""
+msgstr "Дата выставления счета"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking:0
 msgid "Outgoing Deliveries"
-msgstr ""
+msgstr "Исходящие доставки"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
