@@ -1643,6 +1643,7 @@ class orm_template(object):
                             elif pos == 'after':
                                 if sib is None:
                                     node.addnext(child)
+                                    node = child
                                 else:
                                     sib.addprevious(child)
                             elif pos == 'before':
