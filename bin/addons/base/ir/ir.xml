@@ -819,20 +819,18 @@
                     <filter icon="terp-stock_zoom"
                         string="Search"
                         domain="[('type', '=', 'search')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="gtk-indent"
                         string="Tree"
                         domain="[('type', '=', 'tree')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="gtk-new"
                         string="Form"
                         domain="[('type', '=','form')]"/>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
-                    <field name="inherit_id"/>
                     <field name="xml_id"/>
+                    <field name="inherit_id"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
