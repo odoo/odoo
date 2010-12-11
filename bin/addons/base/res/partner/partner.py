@@ -56,10 +56,12 @@ class res_partner_category(osv.osv):
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
-        'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
+        'parent_left' : fields.integer('Left parent', select=True),
+        'parent_right' : fields.integer('Right parent', select=True),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -67,7 +69,9 @@ class res_partner_category(osv.osv):
     _defaults = {
         'active' : lambda *a: 1,
     }
-    _order = 'parent_id,name'
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
 res_partner_category()
 
 class res_partner_title(osv.osv):
