@@ -9,8 +9,8 @@
         <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-        <field name="context">{'object_id':'crm.lead'}</field>
+        <field name="domain">[('type', '=', 'lead')]</field>
+        <field name="context">{'type':'lead'}</field>
         <field name="help">Create specific stages that will help your sales better organise their sales pipeline by maintaining them to their leads and sales opportunities. It will allow them to easily track how is positioned a specific lead or opportunity in the sales cycle.</field>
     </record>
 
@@ -57,11 +57,11 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
+                    <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]"/>
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
-                            icon="gtk-go-back" />
+                            icon="gtk-go-back" context="{'stage_type': 'lead'}"/>
                         <button name="stage_next" string=""
                             states="open,pending,draft" type="object"
                             icon="gtk-go-forward" />
@@ -329,7 +329,7 @@
                 <newline/>
 
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]"/>
                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="country_id" context="{'invisible_country': False}">

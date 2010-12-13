@@ -7,6 +7,9 @@
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
+        
+        <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
+            parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_sale_config_sales" name="Sales"
             parent="base.menu_base_config" sequence="0" groups="base.group_sale_manager"/>
@@ -119,7 +122,7 @@
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                    <field name="object_id" invisible="1" />
+                    <field name="type" invisible="1" />
                     <field name="sequence"/>
                     <field name="probability"/>
                     <field name="on_change"/>

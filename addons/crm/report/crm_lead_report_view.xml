@@ -111,7 +111,7 @@
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
+                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
                         <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>

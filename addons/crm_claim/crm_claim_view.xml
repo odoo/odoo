@@ -29,8 +29,8 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-            <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="domain">[('type', '=', 'claim')]</field>
+            <field name="context">{'type':'claim'}</field>
             <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
 
@@ -78,8 +78,7 @@
                         <field name="user_id"/>
                         <field name="priority"/>
                         <group colspan="2" col="4">
-                            <field name="stage_id"
-                                domain="[('object_id.model', '=', 'crm.claim'), ('section_ids', '=', section_id)]" />
+                            <field name="stage_id" domain="[('type','=','claim')]"/>
                             <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
