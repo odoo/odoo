@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-12-04 09:22+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr "Επιτρέπει τον υπολογισμό του κόστους μεταφοράς στις προσφορές σου"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -279,20 +284,14 @@ msgid "August"
 msgstr "Αύγουστος"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr "Επιτρέπει τον υπολογισμό του κόστους μεταφοράς στις προσφορές σου"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Όλες οι προσφορές"
 
 #. module: sale
 #: report:sale.order:0
@@ -401,6 +400,12 @@ msgstr "Σε Εξέλιξη"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Λογιστική"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -651,9 +656,10 @@ msgid "Shipped"
 msgstr "Απεσταλμένο"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Όλες οι προσφορές"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "άκυρη κατάσταση για test_state"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -825,15 +831,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -845,10 +842,13 @@ msgid "Sale Order Line"
 msgstr "Γραμμή Εντολής Πώλησης"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Τιμή Μονάδας"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Δημιουργία Τιμολογίου"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -1018,12 +1018,6 @@ msgstr ""
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Χρονοδιάγραμμα Αναμονής"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "άκυρη κατάσταση για test_state"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1227,12 +1221,6 @@ msgid "Sales Management"
 msgstr "Διαχείριση Πωλήσεων"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Ποσότητα: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1329,13 +1317,10 @@ msgid "Sales"
 msgstr "Πωλήσεις"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Δημιουργία Τιμολογίου"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Τιμή Μονάδας"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1625,6 +1610,17 @@ msgid "Sales by Month"
 msgstr "Πωλήσεις ανά Μήνα"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Παραγγελία Πώλησης"
@@ -1633,12 +1629,6 @@ msgstr "Παραγγελία Πώλησης"
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
 msgstr "Ποσότητα (ΜοΠ)"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2604,6 +2594,10 @@ msgstr "Τιμολόγηση Βασισμένη Σε Παραδόσεις"
 #~ msgid "Sales by State"
 #~ msgstr "Πωλήσεις κατα Κατάσταση"
 
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Ποσότητα: "
+
 #~ msgid "Sales By Salesman"
 #~ msgstr "Πωλήσεις ανά Πωλητή"
 
@@ -2615,3 +2609,7 @@ msgstr "Τιμολόγηση Βασισμένη Σε Παραδόσεις"
 
 #~ msgid "Sales By Customer"
 #~ msgstr "Πωλήσεις ανά πελάτη"
+
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
