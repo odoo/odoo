@@ -101,6 +101,8 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        if context is None:
+            context = {}
         res = False
         if type(ids) in (int, long,):
             ids = [ids]
