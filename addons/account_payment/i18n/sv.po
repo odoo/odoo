@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:47+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-12 00:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -25,11 +25,6 @@ msgstr "Scheduled date if fixed"
 #: field:payment.line,currency:0
 msgid "Partner Currency"
 msgstr "Partner Currency"
-
-#. module: account_payment
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -48,9 +43,9 @@ msgid "Group By..."
 msgstr "Gruppera"
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Payment lines"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -79,7 +74,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Företag"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -89,7 +84,7 @@ msgstr "Preferred date"
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr "Free"
+msgstr "Gratis"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
@@ -105,7 +100,12 @@ msgstr "Used Account"
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr "Due Date"
+msgstr "Förfallodatum"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr "Du kan inte skapa transaktioner för ett avslutat konto."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -130,6 +130,11 @@ msgid "Amount"
 msgstr "Amount"
 
 #. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
 msgstr "Total in Company Currency"
@@ -151,6 +156,11 @@ msgid "Reference"
 msgstr "Reference"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -160,6 +170,11 @@ msgstr "Betalorder"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Directly"
+
+#. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "Betalradens namn måste vara unikt!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -181,19 +196,9 @@ msgid "Confirmed"
 msgstr "Confirmed"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Select Invoices to Pay"
-
-#. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Invoice Effective Date"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Payment lines"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -203,12 +208,7 @@ msgstr "Execution Type"
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr "Structured"
-
-#. module: account_payment
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Strukturerad"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -256,7 +256,7 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr "Error !"
+msgstr "Fel!"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -292,12 +292,14 @@ msgstr "Desitination Account"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Sök betalorder"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+"Du kan inte skapa en transaktion på en ett konto utan en kund/leverantör"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -305,9 +307,9 @@ msgid "Created"
 msgstr "Created"
 
 #. module: account_payment
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Select Invoices to Pay"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -332,7 +334,7 @@ msgstr "Payment Management"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Kontoutdragsrad"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -347,12 +349,12 @@ msgstr "Amount to be paid"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -381,7 +383,7 @@ msgstr "Mode of Payment"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Värdedatum"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -400,8 +402,8 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_payment
@@ -426,9 +428,9 @@ msgid "Populate Statement:"
 msgstr ""
 
 #. module: account_payment
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Total credit"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
@@ -449,7 +451,12 @@ msgstr "Payment Lines"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Journalrader"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr "Företaget måste vara samma för relaterade konton och perioder."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -463,7 +470,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Sök"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -483,7 +490,7 @@ msgstr "Creation date"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "Lägg till"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -513,7 +520,7 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Fakturaref"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -545,7 +552,7 @@ msgstr "Done"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -561,22 +568,10 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #. module: account_payment
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
 msgstr "Information"
-
-#. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
@@ -612,7 +607,7 @@ msgstr "Destination Bank account"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Är du säker på att du vill genomföra betalningen?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -668,14 +663,9 @@ msgid "Name"
 msgstr "Name"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Total credit"
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankkonto"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -686,7 +676,7 @@ msgstr "Entry Information"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "ayment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -708,15 +698,10 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Skapa betalning"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -734,6 +719,19 @@ msgstr ""
 msgid "Bank Account for the Payment Mode"
 msgstr "Bank Account for the Payment Mode"
 
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr "Du kan inte skapa transaktioner på visa-konton."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Select the Payment Type for the Payment Mode."
 
@@ -745,6 +743,9 @@ msgstr "Bank Account for the Payment Mode"
 
 #~ msgid "Amount in currency"
 #~ msgstr "Amount in currency"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Cancel"
