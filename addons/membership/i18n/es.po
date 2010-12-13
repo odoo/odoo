@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-08 21:11+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"PO-Revision-Date: 2010-12-09 08:24+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -162,6 +162,11 @@ msgstr "Fecha desde"
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Empresa no tiene una dirección para realizar la factura."
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Error: La referencia BVR es necesaria."
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -507,6 +512,11 @@ msgstr "Socio beneficiario"
 #: view:product.product:0
 msgid "Accounting Info"
 msgstr "Información contable"
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Error: Número BVR no válido (checksum erróneo)."
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -913,12 +923,6 @@ msgstr "Ingreso realizado"
 
 #~ msgid "Current membership state"
 #~ msgstr "Estado actual del socio"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Error: La referencia BVR es necesaria."
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Error: Número BVR no válido (checksum erróneo)."
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
