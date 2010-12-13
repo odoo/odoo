@@ -198,9 +198,9 @@
                                 <field name="sequence"/>
                             </group>
                            <separator colspan="4" string="Previous Phases"/>
-                           <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                           <field colspan="4" name="previous_phase_ids" nolabel="1" domain="[('id','!=',active_id)]"/>
                            <separator colspan="4" string="Next Phases"/>
-                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1" domain="[('id','!=',active_id)]"/>
                         </page>
                     </notebook>
                     <newline/>
