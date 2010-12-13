@@ -599,8 +599,19 @@ class MigrationManager(object):
 
 log = logging.getLogger('init')
 
-def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
-
+def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=False, **kwargs):
+    """Migrates+Updates or Installs all module nodes from ``graph``
+       :param graph: graph of module nodes to load
+       :param status: status dictionary for keeping track of progress
+       :param perform_checks: whether module descriptors should be checked for validity (prints warnings
+                              for same cases, and even raise osv_except if certificate is invalid)
+       :param skip_cleanup: whether the auto-cleanup of records should be executed (unlinks any object that
+                            appears to be from one of the updated modules, but have not been loaded during
+                            last loading (i.e. records that seem to have been removed from the module).
+                            This is best left disabled when loading stand-alone modules that could contain
+                            records from dependent modules (i.e. other modules have put records in their
+                            namespace)
+    """
     def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
@@ -762,7 +773,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
 
-    pool.get('ir.model.data')._process_end(cr, 1, package_todo)
+    if not skip_cleanup:
+        # Cleanup orphan records
+        pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
 
     return has_updates
@@ -806,7 +819,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+        has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report, skip_cleanup=True)
 
         if update_module:
             modobj = pool.get('ir.module.module')
