@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 09:34+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 11:28+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -62,11 +62,6 @@ msgid ""
 msgstr ""
 "Ein prognostiz. Umsatz wird konvertiert in die Produkt Menge durch "
 "einfachePreisumrechnung für das Produkt."
-
-#. module: stock_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung für diese Aktion"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -345,15 +340,16 @@ msgid "Procure Incoming Left"
 msgstr "Berechne Bedarfsmenge"
 
 #. module: stock_planning
-#: view:stock.period:0
-msgid "Closed"
-msgstr "Beendet"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid "    Incoming Left: "
+msgstr "    Bedarfsmenge "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "Pick List "
-msgstr "Pack Liste "
+msgstr "Lieferschein "
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -370,11 +366,6 @@ msgid "Master Procurement Schedule"
 msgstr "Masterplan Beschaffung (MPS)"
 
 #. module: stock_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "  Creation Date: "
@@ -387,11 +378,6 @@ msgstr "  Datum Erstellung "
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
 msgstr "Periode"
-
-#. module: stock_planning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -451,11 +437,6 @@ msgstr "Wähle Option um Verkäufe d. gesamten Unternehmens zu sehen."
 #: field:stock.sale.forecast,name:0
 msgid "Name"
 msgstr "Bezeichnung"
-
-#. module: stock_planning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -554,12 +535,6 @@ msgstr "Sie müssen Zentrallager als Quelle wählen !"
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
 msgstr "Erzeuge Prognosepositionen für ausgew. Periode u. Zentrallager."
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "Kann bereits genehmigte Verkaufsprognose nicht löschen !"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
@@ -690,20 +665,15 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: stock_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erzeugen"
+#: view:stock.period:0
+msgid "Closed"
+msgstr "Beendet"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
 msgstr "Zentrallager "
-
-#. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period5_per_dept:0
-msgid "This Dept Period5"
-msgstr "Diese Abteilung Periode5"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -727,10 +697,11 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
-"Erfasse Prognose für den Warenabgang des Zentrallagers innerhalb der ausgew. "
-"Periodeu. f. die ausgew. Produkte. Für die Planung können Sie den bereits "
-"best. Abgang sowie die Verkaufsprognose heranziehen. Der Wert sollte >= des "
-"bereits bestät. Abgangs sein."
+"Erfassen den geplanten Abgang des ausgewählten Zentrallagers für die "
+"selektierten Perioden und Produkte. Vergleichen Sie für die Eingabe mit den "
+"Wert der bereits bestätigten Abgänge oder des Prognosewerts für den Verkauf. "
+"Der einzutragende Wert sollte größer oder gleich dem bereits bestätigten "
+"Abgang sein."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -1208,8 +1179,8 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid "    Incoming Left: "
-msgstr "    Bedarfsmenge "
+msgid "Cannot delete Validated Sale Forecasts !"
+msgstr "Kann bereits genehmigte Verkaufsprognose nicht löschen !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -1464,11 +1435,6 @@ msgid "Copy quantities from last Stock and Sale Forecast."
 msgstr "Kopiere Mengen von letztmaligem Bestand und Verkauf Prognose"
 
 #. module: stock_planning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
 msgstr "Diese Abteilung Periode1"
@@ -1484,12 +1450,9 @@ msgid "This Dept Period2"
 msgstr "Diese Abteilung Periode2"
 
 #. module: stock_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
-"Sonderzeichen haben !"
+#: field:stock.sale.forecast,analyzed_period5_per_dept:0
+msgid "This Dept Period5"
+msgstr "Diese Abteilung Periode5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
@@ -1514,7 +1477,7 @@ msgstr "Bestät. Abgang"
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr "Verantwortl."
+msgstr "Verantwortlich"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1812,3 +1775,27 @@ msgstr "Anfangsbestand"
 #~ msgstr ""
 #~ "\n"
 #~ " Bereits Abgegangen: "
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung für diese Aktion"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
+#~ "Sonderzeichen haben !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

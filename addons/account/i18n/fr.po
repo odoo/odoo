@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-04 09:51+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-11 21:23+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -173,6 +173,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Le rapport des pertes et profits résume sur un seul document les bénéfices "
+"et les pertes de votre société."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -616,7 +618,7 @@ msgstr "Cible parent"
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr ""
+msgstr "Compte utilisé dans ce journal"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -1041,7 +1043,7 @@ msgstr "Relevé bancaire"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Ligne de mouvement"
+msgstr "Ligne d'écriture"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -1362,6 +1364,11 @@ msgid "Overdue Payments"
 msgstr "Retard de règlement"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Erreur: la référence BVR est requise."
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1551,11 +1558,6 @@ msgstr "Écritures récurrentes"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Modèle de régime fiscal"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr "Code de taxe de test"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1914,7 +1916,7 @@ msgstr "Analyse de trésorerie"
 #. module: account
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Erreur! Vous ne pouvez pas créer de sociétés récursives"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2026,7 +2028,7 @@ msgstr "Comptes clients créditeurs"
 #. module: account
 #: report:account.move.voucher:0
 msgid "Canceled"
-msgstr ""
+msgstr "Annulé(e)"
 
 #. module: account
 #: view:account.invoice:0
@@ -3312,7 +3314,7 @@ msgstr ""
 #. module: account
 #: report:account.general.ledger:0
 msgid "Counterpart"
-msgstr ""
+msgstr "Contrepartie"
 
 #. module: account
 #: view:account.journal:0
@@ -3682,6 +3684,10 @@ msgid ""
 "part of it. You can easily generate refunds and reconcile them from the "
 "invoice form."
 msgstr ""
+"Les avoirs clients vous permettent de gérer les avoirs générés ou à générer "
+"pour vos clients. Une facture d'avoir est un document qui annule la facture "
+"pour tout ou partie. Vous pouvez facilement générer des avoirs et les "
+"rapprocher avec la facture."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
@@ -3769,6 +3775,9 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Ce rapport vous permet d'avoir une vue globale des montants facturés à un "
+"client et des délais de paiement. Cet assistant de recherche peut être "
+"utilisé pour personnaliser vos rapports et adapter l'analyse à vos besoins."
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -3895,6 +3904,9 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Les coûts analytiques (feuilles de temps, dépenses, achats, ...) proviennent "
+"des comptes analytiques. Cela permet d'éditer des factures fournisseurs en "
+"état \"brouillon\"."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4321,6 +4333,9 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
+"Le système n'a pas pu créer d'écritures avec une devise différente de la "
+"devise secondaire du compte \"%s - %s\". Supprimer la devise secondaire du "
+"compte pour accepter toutes les devises"
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4771,7 +4786,7 @@ msgstr "Résultat du lettrage"
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
 msgid "Balance Sheet"
-msgstr ""
+msgstr "Bilan"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -4865,6 +4880,8 @@ msgstr "Taxe sur les objets fils"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Vous ne pouvez pas créer de lignes d'écritures sur un compte de tiers sans "
+"partenaire."
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -6548,6 +6565,15 @@ msgid "Taxes:"
 msgstr "Taxes :"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Le compte bancaire du partenaire pour le paiement\n"
+"Laissez vide pour utiliser celui par défaut"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6770,13 +6796,6 @@ msgstr "Taxe d'achat par défaut"
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Confirmé"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -8028,6 +8047,11 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
+
+#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr ""
@@ -8991,7 +9015,7 @@ msgstr "Période"
 #. module: account
 #: view:account.subscription:0
 msgid "Remove Lines"
-msgstr "Supprimer lignes"
+msgstr "Supprimer des lignes"
 
 #. module: account
 #: view:account.report.general.ledger:0
@@ -9589,7 +9613,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr ""
+msgstr "Valider les lignes d'écriture"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
@@ -10685,9 +10709,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 #~ msgid "Date or Code"
 #~ msgstr "Date ou Code"
 
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
-
 #~ msgid "Statement Entries"
 #~ msgstr "Écritures du relevé"
 
@@ -10731,9 +10752,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Journal de Banque CHF"
 #~ msgstr "Journal de Banque CHF"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Erreur: la référence BVR est requise."
 
 #~ msgid ""
 #~ "All draft account entries in this journal and period will be validated. It "
@@ -10884,13 +10902,6 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Close Fiscal Year with new entries"
 #~ msgstr "Clôturer l'exercice fiscal avec de nouvelles écritures"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Le compte bancaire du partenaire pour le paiement\n"
-#~ "Laissez vide pour utiliser celui par défaut"
 
 #~ msgid ""
 #~ "Check this box if you don't want new account moves to pass through the "
@@ -11137,6 +11148,9 @@ msgstr "Impossible de supprimer un compte qui contient des écritures ! "
 
 #~ msgid "Low Level"
 #~ msgstr "Bas niveau"
+
+#~ msgid "Tax Code Test"
+#~ msgstr "Code de taxe de test"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."

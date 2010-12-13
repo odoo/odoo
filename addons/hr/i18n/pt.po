@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-27 06:29+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-09 10:58+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -62,11 +62,6 @@ msgstr "Agrupar Por..."
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr "E-mail Trabalho"
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de módulo inválido na definição da acção"
 
 #. module: hr
 #: view:hr.employee:0
@@ -259,11 +254,6 @@ msgid "Job Description"
 msgstr "Descrição do Cargo"
 
 #. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
-
-#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "Localização do Escritório"
@@ -287,19 +277,9 @@ msgid "Other information"
 msgstr "Outra Informação"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Endereço de Trabalho"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
 msgstr "Configuração da Aplicação de Gestão de Recursos Humanos"
-
-#. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -348,11 +328,6 @@ msgstr "Categorias"
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
 msgstr "Empregados Esperados"
-
-#. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista !"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -430,11 +405,6 @@ msgid "hr.department"
 msgstr "hr.department"
 
 #. module: hr
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
 msgstr "Está associado com o gestor do departamento"
@@ -490,14 +460,21 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"A empresa escolhida não faz parte das possíveis de serem selecionadas para "
+"este utilizador"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Informações do Contacto"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Não pode criar menus recursivos."
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Endereço de Trabalho"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -586,6 +563,11 @@ msgid "Status Description"
 msgstr "Descrição do Estado"
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Não se pode ter dois utilizadores com os mesmos dados de acesso"
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -629,14 +611,6 @@ msgstr "Contabilidade do Processamento de Salários"
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Informação Pessoal"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
-"especial!"
 
 #. module: hr
 #: view:res.users:0
@@ -880,3 +854,27 @@ msgstr "Subordinados"
 
 #~ msgid "Parents"
 #~ msgstr "Ascendentes"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de módulo inválido na definição da acção"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitectura de vista !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+#~ "especial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"

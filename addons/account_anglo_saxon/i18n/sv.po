@@ -7,35 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-24 09:40+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-11 23:57+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: account_anglo_saxon
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
-
-#. module: account_anglo_saxon
-#: help:product.category,property_account_creditor_price_difference_categ:0
-#: help:product.template,property_account_creditor_price_difference:0
-msgid ""
-"This account will be used to value price difference between purchase price "
-"and cost price."
-msgstr ""
-"Detta konto kommer att användas för att värdera prisskillnaden mellan "
-"inköpspris och självkostnadspris."
-
-#. module: account_anglo_saxon
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ogiltig XML för Vy-arkitektur!"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
@@ -43,16 +23,22 @@ msgid "Product Category"
 msgstr "Produktkategori"
 
 #. module: account_anglo_saxon
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+"Fel: Säljmåttenheten måste tillhöra en annan kategori än standardmåttenheten"
 
 #. module: account_anglo_saxon
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Namnet på modulen måste vara unikt!"
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Fel ! Du kan inte skapa rekursiva kategorier."
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Fel: Standardmåttenheten och inköpsmåttenheten måste vara i samma kategori."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -125,6 +111,28 @@ msgstr ""
 "konto"
 
 #. module: account_anglo_saxon
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Fältstorleken kan inte vara mindre än ett!"
+#: help:product.category,property_account_creditor_price_difference_categ:0
+#: help:product.template,property_account_creditor_price_difference:0
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr ""
+"Detta konto kommer att användas för att värdera prisskillnaden mellan "
+"inköpspris och självkostnadspris."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ogiltig XML för Vy-arkitektur!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Fältstorleken kan inte vara mindre än ett!"

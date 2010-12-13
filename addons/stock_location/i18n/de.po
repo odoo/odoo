@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 09:32+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 09:26+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -30,9 +30,9 @@ msgid "Pulled Paths"
 msgstr "Pfade durch Pull Regeln"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flow"
-msgstr ""
+#: selection:product.pulled.flow,type_proc:0
+msgid "Move"
+msgstr "Buchung"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -42,7 +42,7 @@ msgstr "Warenfluss durch Push Regeln"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automatisch kein neuer Lieferschein"
+msgstr "Automatische Erstellung Lieferauftrag ohne Beleg"
 
 #. module: stock_location
 #: view:product.product:0
@@ -68,19 +68,14 @@ msgid "Pulled Flows"
 msgstr "Warenfluss durch Pull Regeln"
 
 #. module: stock_location
-#: field:product.pulled.flow,type_proc:0
-msgid "Type of Procurement"
-msgstr "Beschaffungstyp"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Lagerort (Ziel)"
-
-#. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -109,20 +104,6 @@ msgstr "Lagerort"
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
 msgstr "Status Rechnung"
-
-#. module: stock_location
-#: selection:product.pulled.flow,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-msgid "Not from Picking"
-msgstr "Rechnung nicht durch Lieferung"
-
-#. module: stock_location
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -155,9 +136,9 @@ msgid "Pack Zone"
 msgstr "Packzone"
 
 #. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: field:product.pulled.flow,name:0
+msgid "Name"
+msgstr "Bezeichnung"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -177,7 +158,7 @@ msgstr "Einkaufen"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr "Push Warenfluss Regel"
+msgstr "Push Warenfluss"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
@@ -187,12 +168,12 @@ msgstr "Versandzone"
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr "Warenfluss im Hauptlager"
+msgstr "Lieferketten im Zentrallager"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr "Steuern des Warenfluss durch Pull Regeln"
+msgstr "Pull Warenfluss"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
@@ -230,7 +211,7 @@ msgstr "Disponiere von Auftrag"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Dosponiere vom Lager"
+msgstr "Disponiere vom Lager"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -254,9 +235,9 @@ msgid "This field will fill the packing Origin and the name of its moves"
 msgstr "Verweis auf Lieferauftrag und Lieferscheine"
 
 #. module: stock_location
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: field:product.pulled.flow,type_proc:0
+msgid "Type of Procurement"
+msgstr "Beschaffungstyp"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -265,9 +246,9 @@ msgstr ""
 "Unternehmen zu dem diese Lieferaufträge und Bestandsbuchungen gehören"
 
 #. module: stock_location
-#: field:product.pulled.flow,name:0
-msgid "Name"
-msgstr "Bezeichnung"
+#: view:product.product:0
+msgid "Logistics Flow"
+msgstr ""
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -304,20 +285,15 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Disponiere vom Lager' - wenn benötigt den Lagerbestand verwenden oder auf "
-"neue Lieferungen warten.\r\n"
-"'Disponiere von Auftrag' - wenn benötigt, einkaufen oder produzieren der "
-"Waren, die für die Erledigung erforerlich sind."
+"'Disponiere vom Lager' bedeutet: Wenn benötigt den Lagerbestand verwenden "
+"oder auf neue Lieferungen warten.\r\n"
+"'Disponiere von Auftrag'  bedeutet: Wenn benötigt, einkaufen oder "
+"produzieren der Waren, die für die Erledigung erforderlich sind."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
 msgstr "Lagerort (Ziel), das beliefert werden muss"
-
-#. module: stock_location
-#: sql_constraint:stock.warehouse.orderpoint:0
-msgid "Qty Multiple must be greater than zero."
-msgstr "Multiple Menge muss grösser 0 sein."
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -336,9 +312,15 @@ msgid "Quality Control"
 msgstr "Qualitätskontrolle"
 
 #. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Not Applicable"
+msgstr ""
+
+#. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr "Zeitverzug (Tage)"
+msgstr "Zeitverzögerung  (Tage)"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:0
@@ -363,9 +345,14 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-"Bestandsbuchung für Bezug unter Berücksichtigung einer vorhandenen Pull "
+"Bestandsbewertung für Bezug unter Berücksichtigung einer vorhandenen Pull "
 "Regel vom ursprünglichen Lager %s, mit Pull Regel %s und  ursprünglichem "
 "Beschaffungauftrag %s (#%d)"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -395,14 +382,9 @@ msgid "Action Type"
 msgstr "Aktionstyp"
 
 #. module: stock_location
-#: selection:product.pulled.flow,type_proc:0
-msgid "Move"
-msgstr "Buchung"
-
-#. module: stock_location
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -447,8 +429,17 @@ msgstr "Storno Kaskade"
 msgid "Invoiced"
 msgstr "Abgerechnet"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Stock Location Paths"
 #~ msgstr "Lagerort Standorte"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "stock.location.path"
 #~ msgstr "stock.location.path"
@@ -458,3 +449,18 @@ msgstr "Abgerechnet"
 
 #~ msgid "Logistic Flow"
 #~ msgstr "Warenfluss"
+
+#~ msgid "Not from Picking"
+#~ msgstr "Rechnung nicht durch Lieferung"
+
+#~ msgid "Qty Multiple must be greater than zero."
+#~ msgstr "Multiple Menge muss grösser 0 sein."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 14:14+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-09 08:28+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -53,11 +52,6 @@ msgstr "Kein Mitarbeiter für diesen Benutzer definiert!"
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr "Gruppierung..."
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -240,12 +234,12 @@ msgstr "Analytisches Konto"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Project Timesheet"
-msgstr "Projektbezogene Zeiterfassung"
+msgstr "Projektzeit"
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "#Anz."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -283,13 +277,13 @@ msgstr "Bestätigt"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
 msgid "Attendance"
-msgstr "Teilnahme"
+msgstr "Anwesenheit"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
 msgid "Confirm"
-msgstr "Gebucht"
+msgstr "Bestätigen"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
@@ -297,9 +291,9 @@ msgid "Timesheet lines"
 msgstr "Zeiterfassung Positionen"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -323,11 +317,6 @@ msgstr "Mitarbeiter"
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "Neu"
-
-#. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -361,6 +350,13 @@ msgstr "Stunden"
 #: field:timesheet.report,cost:0
 msgid "#Cost"
 msgstr "#Kosten"
+
+#. module: hr_timesheet_sheet
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+"Fehler: Anmeldung (bzw. Abmeldung) muss auf eine Abmeldung (bzw. Anmeldung) "
+"folgen"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -400,11 +396,6 @@ msgstr ""
 "Benutzer erfassen !"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
 msgid "Work on Task"
 msgstr "Arbeit an Aufgabe"
@@ -418,13 +409,13 @@ msgstr "Tagesbericht"
 #: view:timesheet.report:0
 #: field:timesheet.report,quantity:0
 msgid "#Quantity"
-msgstr "#Anzahl"
+msgstr "#Stunden"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
 msgid "Total Timesheet"
-msgstr "Gesamte Zeiterfassung"
+msgstr "Gesamte Projektzeit"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -440,7 +431,7 @@ msgstr "Sign In"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr "# Anzahl Zeiterfassung"
+msgstr "# Projektstunden"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -450,7 +441,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Go to:"
-msgstr "Zuweisung an:"
+msgstr "Wähle Datum:"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -482,7 +473,7 @@ msgstr "Monat"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr "# Gesamtabweichung"
+msgstr "# Abweichung"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -492,7 +483,7 @@ msgstr "In Entwurf"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Sign in/out"
-msgstr "Einschreiben/Ausschreiben"
+msgstr "Anmelden / Abmelden"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -541,11 +532,6 @@ msgid "Timesheet allowed difference(Hours)"
 msgstr "Erlaubte Abweichung in Stunden"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign out from an other date than today"
@@ -556,7 +542,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
-msgstr "Die Rechnung wird auf Basis der Zeiterfassung generiert,"
+msgstr "Die Rechnung wird auf Basis der Zeiterfassung generiert."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
@@ -678,7 +664,7 @@ msgstr "Unternehmen"
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
 msgid "Quantity"
-msgstr "Anzahl"
+msgstr "Stunden"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -687,12 +673,6 @@ msgstr "Anzahl"
 #: field:timesheet.report,general_account_id:0
 msgid "General Account"
 msgstr "Sachkonto"
-
-#. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr "Abrechnungstyp"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
@@ -736,13 +716,6 @@ msgid "State is 'draft'."
 msgstr "Status ist Entwurf"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-"vorhanden sein !"
-
-#. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "Cancel"
 msgstr "Abrechen"
@@ -758,22 +731,9 @@ msgid "Open"
 msgstr "Öffnen"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Zeiterfassung nach Konten"
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -808,7 +768,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr "Statistik Zeiterfassung"
+msgstr "Statistik Arbeitszeit"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -958,15 +918,16 @@ msgid "Analytic accounts"
 msgstr "Analytische Konten"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+#: view:timesheet.report:0
+#: field:timesheet.report,to_invoice:0
+msgid "Type of Invoicing"
+msgstr "Abrechnungstyp"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr "#Gesamtanwesenheit"
+msgstr "#Anwesenheit"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -975,10 +936,11 @@ msgid ""
 "You can also encode time spent on a project that is an analytic account and "
 "the time spent on a project generate costs on the analytic account."
 msgstr ""
-"Diese Ansicht ermöglicht die Zeiterfassung zu einer vorgegebenen zeitlichen "
-"Abfolge. Sie können hier ausserdem eine Eingabe des Zeitaufwands für "
-"Projekte vornehmen, die durch analytische Konten repräsentiert werden und "
-"über diesen Weg Kosten für dieses Konto buchen."
+"Diese Ansicht ermöglicht die Zeiterfassung innerhalb eines durch das "
+"Unternehmen vorgegebenen Zeitraum für die Zeiterfassung (z.B. Woche oder "
+"Monat). Sie können hier ausserdem eine Eingabe des Zeitaufwands für Projekte "
+"vornehmen, die durch analytische Konten repräsentiert werden und über diesen "
+"Weg Kosten für dieses Konto buchen."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
@@ -1097,6 +1059,9 @@ msgstr "Journal"
 #~ msgid "Confirmed Timesheet"
 #~ msgstr "Drucke Zeiterfassung"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Timesheets by period"
 #~ msgstr "Zeiterfassung nach Perioden"
 
@@ -1141,6 +1106,12 @@ msgstr "Journal"
 
 #~ msgid "Creates your analytic cost accoording to quantity"
 #~ msgstr "Erzeuge analytische Kostenbuchung in Abhängigkeit von der Menge"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Timesheet is validate by project manager."
 #~ msgstr ""
@@ -1187,3 +1158,26 @@ msgstr "Journal"
 
 #~ msgid "My Department's Timesheet to Validate"
 #~ msgstr "Meine Abteilung Zeiterfassung (zu bestätigen)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"

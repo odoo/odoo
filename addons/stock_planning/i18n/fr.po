@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-02 09:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 11:36+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -55,11 +55,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
@@ -76,7 +71,7 @@ msgstr ""
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:0
 #, python-format
 msgid "No products in selected category !"
-msgstr ""
+msgstr "Pas de produit dans la catégorie sélectionnée !"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -137,6 +132,8 @@ msgid ""
 "\n"
 " Initial Stock: "
 msgstr ""
+"\n"
+" Stock initial: "
 
 #. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
@@ -314,8 +311,9 @@ msgid "Procure Incoming Left"
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.period:0
-msgid "Closed"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid "    Incoming Left: "
 msgstr ""
 
 #. module: stock_planning
@@ -339,11 +337,6 @@ msgid "Master Procurement Schedule"
 msgstr ""
 
 #. module: stock_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "  Creation Date: "
@@ -356,11 +349,6 @@ msgstr "  Date de création: "
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
 msgstr "Période"
-
-#. module: stock_planning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -413,11 +401,6 @@ msgstr ""
 #: field:stock.sale.forecast,name:0
 msgid "Name"
 msgstr "Nom"
-
-#. module: stock_planning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -513,12 +496,6 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
-msgstr ""
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid "Cannot delete Validated Sale Forecasts !"
 msgstr ""
 
 #. module: stock_planning
@@ -644,19 +621,14 @@ msgid "Draft"
 msgstr "Brouilon"
 
 #. module: stock_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:stock.period:0
+msgid "Closed"
 msgstr ""
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
-msgstr ""
-
-#. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period5_per_dept:0
-msgid "This Dept Period5"
 msgstr ""
 
 #. module: stock_planning
@@ -916,7 +888,7 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid "    Incoming Left: "
+msgid "Cannot delete Validated Sale Forecasts !"
 msgstr ""
 
 #. module: stock_planning
@@ -1162,11 +1134,6 @@ msgid "Copy quantities from last Stock and Sale Forecast."
 msgstr ""
 
 #. module: stock_planning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
 msgstr ""
@@ -1182,9 +1149,8 @@ msgid "This Dept Period2"
 msgstr ""
 
 #. module: stock_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:stock.sale.forecast,analyzed_period5_per_dept:0
+msgid "This Dept Period5"
 msgstr ""
 
 #. module: stock_planning

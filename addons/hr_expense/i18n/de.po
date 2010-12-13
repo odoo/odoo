@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 09:12+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-09 11:24+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -47,11 +48,6 @@ msgstr "Gruppierung..."
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
 msgid "Air Ticket"
 msgstr "Flugticket"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -91,7 +87,7 @@ msgstr "Zu Bezahlen"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
-msgstr "Statistik Mitarbeiterausgaben"
+msgstr "Statistik Personalspesen"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -111,7 +107,7 @@ msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
 msgstr ""
-"Empfangsdatum der Mitarbeiterausgabenerfassung. Das Feld wird ausgefüllt bei "
+"Empfangsdatum der Personalspesenerfassung. Das Feld wird ausgefüllt bei "
 "einem Klick auf Empfangen."
 
 #. module: hr_expense
@@ -122,7 +118,7 @@ msgstr "Bemerkungen"
 #. module: hr_expense
 #: field:hr.expense.expense,invoice_id:0
 msgid "Employee's Invoice"
-msgstr "Mitarbeiterabrechnung"
+msgstr "Spesenabrechnung Mitarbeiter"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -167,8 +163,8 @@ msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
 msgstr ""
-"Bestätigungsdatum der Mitarbeiteraufwandserfassung. Wird automatisch "
-"ausgefüllt, wenn auf Bestätigen geklickt wird."
+"Bestätigungsdatum der Spesenerfassung. Wird automatisch ausgefüllt, wenn auf "
+"Bestätigen geklickt wird."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -215,7 +211,7 @@ msgstr "Zeit f. Genehmig."
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr "Reihenfolge für die Ansichtsliste der Mitarbeiterausgaben."
+msgstr "Reihenfolge für die Ansichtsliste der Personalspesen."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:0
@@ -268,11 +264,6 @@ msgid "Total Price"
 msgstr "Gesamtpreis"
 
 #. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
 msgstr "Einige Aufwendungen können an Kunde weiterberechnet werden"
@@ -297,7 +288,7 @@ msgstr "Erstellung am"
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.hr_expenses
 msgid "HR expenses"
-msgstr "Personalkosten"
+msgstr "Personalspesen"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
@@ -337,18 +328,6 @@ msgid "Reimbursement"
 msgstr "Erstattung"
 
 #. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: hr_expense
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Fehler: Verkaufseinheit sollte in einer anderen Kategorie sein als "
-"Mengeneinheit (ME)"
-
-#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr "    Monat-1    "
@@ -364,7 +343,7 @@ msgstr "Genehmigungsdatum"
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
 msgid "Expenses Analysis"
-msgstr "Analyse Mitarbeiterausgaben"
+msgstr "Statistik Personalspesen"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -443,14 +422,6 @@ msgid "  Year  "
 msgstr "  Jahr  "
 
 #. module: hr_expense
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fehler: Die Standard Mengeneinheit sowie die Beschaffungs ME muss in "
-"derselben Kategorie sein."
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -472,11 +443,6 @@ msgstr "Erzeuge Ausgangsrechnung"
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Entwurf"
-
-#. module: hr_expense
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -523,11 +489,6 @@ msgstr "Kundenprojekt"
 #: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "Benutzer"
-
-#. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -618,35 +579,15 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: hr_expense
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-"vorhanden sein !"
-
-#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Weiterberechnung"
 
 #. module: hr_expense
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: hr_expense
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
-msgstr "Alle Mitarbeiterausgaben"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+msgstr "Alle Personalspesen"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -656,7 +597,7 @@ msgstr "Weitere Info"
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is invoiced"
-msgstr "Journal bei Abrechnungsbuchung v. Mitarbeiterausgaben"
+msgstr "Journal bei Abrechnungsbuchung v. Personalspesen"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -707,7 +648,7 @@ msgstr "Produkt"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses of My Department"
-msgstr "Ausgaben meiner Abteilung"
+msgstr "Spesen meiner Abteilung"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -829,13 +770,13 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
-"Bei initialer Erstellung eines Formulars zur Erfassung von "
-"Mitarbeiterausgaben ist der aktuelle Status zunächst 'Entwurf'.\n"
+"Bei initialer Erstellung eines Formulars zur Erfassung von Personalspesen "
+"ist der aktuelle Status zunächst 'Entwurf'.\n"
 " Das Formular wird durch den Benutzer bestätigt und zwecks Prüfung  an den "
-"Vorgesetzten gesendet , der Status wechselt hierdurch auf 'Erwarte Prüfung'. "
-"           \n"
+"Vorgesetzten gesendet , der Status wechselt hierdurch auf 'Erwarte "
+"Genehmigung'.            \n"
 "Wenn der Vorgesetzte die erfassten Ausgaben prüft und akzeptiert, wechselt "
-"der Status auf 'Akzeptiert'.\n"
+"der Status auf 'Genehmigt'.\n"
 " Wenn dann noch eine richtige Abrechnung erstellt wird, wechselt der Status "
 "auf 'Abgerechnet'.\n"
 " Nach Bezahlung bzw. Erstattung wechselt der Status auf , 'Ausgaben "
@@ -844,18 +785,13 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Approve"
-msgstr "Bestätige"
+msgstr "Genehmigen"
 
 #. module: hr_expense
 #: view:hr.expense.line:0
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Betrag gesamt"
-
-#. module: hr_expense
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -889,7 +825,7 @@ msgstr "Jahr"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "To Approve"
-msgstr "Erwarte Prüfung"
+msgstr "Erwarte Genehmigung"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
@@ -897,7 +833,7 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from an HR expense sheet line."
 msgstr ""
-"Legt fest, ob dieses Produkt im Bereich Personalausgaben auswählbar ist"
+"Legt fest, ob dieses Produkt im Bereich Personalspesen auswählbar ist"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
@@ -921,6 +857,15 @@ msgstr "Weiterberechnung"
 
 #~ msgid "New Expenses Sheet"
 #~ msgstr "Neue Eingabe Ausgaben"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Account Move"
 #~ msgstr "Belegnummer"
@@ -961,5 +906,39 @@ msgstr "Weiterberechnung"
 #~ msgid "Date Validated"
 #~ msgstr "Datum Validierung"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
 #~ msgid "Extended filters..."
 #~ msgstr "Erweiterter Filter..."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Fehler: Verkaufseinheit sollte in einer anderen Kategorie sein als "
+#~ "Mengeneinheit (ME)"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fehler: Die Standard Mengeneinheit sowie die Beschaffungs ME muss in "
+#~ "derselben Kategorie sein."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-05 00:10+0000\n"
+"PO-Revision-Date: 2010-12-09 11:11+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -108,7 +108,7 @@ msgstr "Tarea '%s' cerrada"
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
-"¡Error! Fecha de inicio del proyecto debe ser inferior que la fecha final "
+"¡Error! La fecha de inicio del proyecto debe ser anterior a la fecha final "
 "del proyecto."
 
 #. module: project
@@ -490,7 +490,7 @@ msgstr "Empresa"
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "¡Error! No puede crear menús recursivos."
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -558,7 +558,7 @@ msgstr "Mis proyectos"
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: project
 #: view:project.task:0
@@ -1046,7 +1046,7 @@ msgstr "Tareas de proyecto"
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivos."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1212,6 +1212,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar el proyecto sin eliminarlo."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1782,7 +1783,7 @@ msgstr "Unidad de tiempo proyecto"
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Horas consumidas"
 
 #. module: project
 #: code:addons/project/project.py:0

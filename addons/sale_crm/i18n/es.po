@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 09:29+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 11:28+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
@@ -23,28 +23,15 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: sale_crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: sale_crm
-#: view:account.invoice.report:0
-#: view:board.board:0
-msgid "Monthly Turnover"
-msgstr "Volumen mensual"
-
-#. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
 msgstr "Convertir a presupuesto"
 
 #. module: sale_crm
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "is converted to Quotation."
+msgstr "se ha convertido a presupuesto."
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
@@ -59,14 +46,9 @@ msgid "Customer has no addresses defined!"
 msgstr "¡El cliente no tiene definidas direcciones!"
 
 #. module: sale_crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
-
-#. module: sale_crm
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
+#: view:crm.make.sale:0
+msgid "_Create"
+msgstr "_Crear"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
@@ -82,14 +64,10 @@ msgid "Convert to Quote"
 msgstr "Convertir a presupuesto"
 
 #. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Crear"
-
-#. module: sale_crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: view:account.invoice.report:0
+#: view:board.board:0
+msgid "Monthly Turnover"
+msgstr "Volumen mensual"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
@@ -98,9 +76,9 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr "Convertido a presupuesto de venta (id: %s)."
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
-msgstr "Realizar venta"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
+msgstr "Realizar un presupuesto"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
@@ -140,12 +118,6 @@ msgid "My Quotations"
 msgstr "Mis presupuestos"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
-#, python-format
-msgid "is converted to Quotation."
-msgstr "se ha convertido a presupuesto."
-
-#. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Close Opportunity"
 msgstr "Cerrar oportunidad"
@@ -154,22 +126,17 @@ msgstr "Cerrar oportunidad"
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
-msgstr "Equipo ventas"
+msgstr "Equipo de ventas"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Realizar un presupuesto"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sale"
+msgstr "Realizar venta"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: sale_crm
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "All at once"
 #~ msgstr "Todo junto"
@@ -185,6 +152,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Create"
 #~ msgstr "Crear"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid "Opportunity goes into the quotation"
 #~ msgstr "Oportunidad se convierte en presupuesto"
@@ -265,3 +235,21 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Sale CRM Stuff"
 #~ msgstr "Herramientas CRM para ventas"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 09:43+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 10:59+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -56,11 +56,6 @@ msgid "No supplier defined for this product !"
 msgstr "Kein Lieferant für dieses Produkt definiert!"
 
 #. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung bei dieser Aktion."
-
-#. module: procurement
 #: field:make.procurement,uom_id:0
 msgid "Unit of Measure"
 msgstr "Mengeneinheit"
@@ -68,7 +63,7 @@ msgstr "Mengeneinheit"
 #. module: procurement
 #: field:procurement.order,procure_method:0
 msgid "Procurement Method"
-msgstr "Beschaffungsmethode"
+msgstr "Dispositionsverfahren"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -134,7 +129,7 @@ msgstr "Nicht genutzt für die Berechnung, nur zu Informationszwecken"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "Letzt. Beschaffungsv."
+msgstr "Letzter Beschaffungsvorschlag"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -181,14 +176,14 @@ msgid ""
 "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
-"Wenn der virtuelle Bestand unter den Meldebestand sinkt, erzeugt "
-"OpenERPautomatisch einen  Bestellvorschlag der den Bestand auf die Max. "
-"Menge wiederauffüllt."
+"Wenn der fiktive Bestand unter den Meldebestand sinkt, erzeugt OpenERP "
+"automatisch einen  Bestellvorschlag der den Bestand auf die Max. Menge "
+"wiederauffüllt."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
 msgid "Scheduler Parameters"
-msgstr "Parameter Autom. Beschaffung"
+msgstr "Parameter Automatische Beschaffung"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_move
@@ -241,19 +236,14 @@ msgstr ""
 "Der Vorgang wird durch OpenERP automatisch vorgenommen."
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Meldebestandregel"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
 msgstr "Priorität"
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -307,11 +297,6 @@ msgstr "Günstigster Preis (noch nicht aktiviert!)"
 #: view:procurement.order:0
 msgid "Product & Location"
 msgstr "Produkt & Lagerort"
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
@@ -373,14 +358,9 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Fehlerhafte Argumente"
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Multiple Menge"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -388,23 +368,13 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Wenn Sie per Hand Beschaffungsaufträge erfassen, kann es sinnvoll sein "
-"dieBeschaffungsmethode 'Beschaffe von Auftrag' beim Produkt zu konfigurieren."
-
-#. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistics Scheduler"
-msgstr "Beschaffungsdisposition"
+"Wenn Sie per Hand Beschaffungsaufträge erfassen, kann es sinnvoll sein das "
+"Dispositionsverfahren 'Disponiere von Auftrag' beim Produkt zu konfigurieren."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
 msgstr "Automatische Beschaffung"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -490,20 +460,27 @@ msgstr ""
 "geringer als 1 sein!"
 
 #. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"orderpoint without removing it."
+msgstr ""
+
+#. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 msgid ""
 "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
-"Wenn der virtuelle Bestand unter die Max Menge sinkt, erzeugt OpenERP autom. "
-"einen Beschaffungsvorschlag, um den virtuellen Bestand wieder auf die Max "
+"Wenn der fiktive Bestand unter die Max Menge sinkt, erzeugt OpenERP autom. "
+"einen Beschaffungsvorschlag, um den fiktiven Bestand wieder auf die Max "
 "Menge aufzufüllen."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
 msgstr ""
-"Wenn der Bestand eines Produktes unter O ist interpretiert OpenERP einen "
+"Wenn der Bestand eines Produktes unter 0 ist, interpretiert OpenERP einen "
 "Bestellpunkt"
 
 #. module: procurement
@@ -542,17 +519,9 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: procurement
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit einem x_ starten und darf keine Sonderzeichen "
-"haben!"
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
+msgstr "Dieser Assistent berechnet automatisch Beschaffungsaufträge"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -602,18 +571,9 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr "Dieser Assistent berechnet automatisch Beschaffungsaufträge"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the orderpoint "
-"without removing it."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
-"Wenn dieses Feld aktiviert wird kann die Beschaffungsregel verborgen werden "
-"ohne die Regel komplett zu löschen."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -647,9 +607,9 @@ msgid "Automatic Order Point"
 msgstr "Automatischer Bestellpunkt"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Multiple Menge"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Meldebestandregel"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -665,6 +625,11 @@ msgstr "Extra Informationen"
 #: help:procurement.order,name:0
 msgid "Procurement name."
 msgstr "Beschaffung Bezeichnung"
+
+#. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
@@ -727,7 +692,7 @@ msgstr "Lagerorte"
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 msgid "from stock"
-msgstr "vom Lager"
+msgstr "Disposition vom Lager"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -745,9 +710,9 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: procurement
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
+msgstr "Die Beschaffungsmenge wird auf dieses Vielfache gerundet"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -758,11 +723,6 @@ msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Abbrechen"
-
-#. module: procurement
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -825,7 +785,7 @@ msgstr "Abschluss Warenfluss"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Scheduled Date"
-msgstr "geplantes Datum"
+msgstr "Geplantes Datum"
 
 #. module: procurement
 #: field:make.procurement,product_id:0
@@ -869,7 +829,7 @@ msgstr "Produkt ME"
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
 msgid "Make to Order"
-msgstr "Beschaffe von Auftrag"
+msgstr "Disponiere von Auftrag"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -907,6 +867,11 @@ msgstr ""
 "Dieser Assistent prüft die Beschaffung für dieses Produktes. Eine "
 "Beschaffung kann eine Aufgabe, Fertigungsauftrag oder Bestellung an "
 "Lieferanten auslösen."
+
+#. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr "Beschaffungsdisposition"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -971,15 +936,50 @@ msgid "Procurement Details"
 msgstr "Details zur Beschaffung"
 
 #. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
-
-#. module: procurement
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "SCHEDULER"
 msgstr "DISPOSITION"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung bei dieser Aktion."
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Fehlerhafte Argumente"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
 #~ msgid "MRP & Logistic Scheduler"
 #~ msgstr "Assitent Beschaffungsvorschlag"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "haben!"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the orderpoint "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Wenn dieses Feld aktiviert wird kann die Beschaffungsregel verborgen werden "
+#~ "ohne die Regel komplett zu löschen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
