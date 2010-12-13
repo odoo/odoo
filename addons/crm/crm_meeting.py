@@ -73,6 +73,7 @@ class crm_meeting(crm_case, osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Done')], 'State', \
                                     size=16, readonly=True),
+        'recurrency': fields.boolean('Recurrency', help="Recurrent Meeting"),                                    
         'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),         
     }
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
