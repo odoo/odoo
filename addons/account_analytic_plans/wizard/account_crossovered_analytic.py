@@ -31,7 +31,7 @@ class account_crossovered_analytic(osv.osv_memory):
         'date1': fields.date('Start Date', required=True),
         'date2': fields.date('End Date', required=True),
         'journal_ids': fields.many2many('account.analytic.journal', 'crossovered_journal_rel', 'crossover_id', 'journal_id', 'Analytic Journal'),
-        'ref': fields.many2one('account.analytic.account', 'Analytic Account Reference', required=False),
+        'ref': fields.many2one('account.analytic.account', 'Analytic Account Reference', required=True),
         'empty_line': fields.boolean('Dont show empty lines'),
     }
     _defaults = {
