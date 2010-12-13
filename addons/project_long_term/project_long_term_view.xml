@@ -151,6 +151,7 @@
                         <page string="Task Detail">
                             <field colspan="4" name="task_ids" context="{'default_project_id' :project_id}" nolabel="1">
                                  <tree editable="bottom" string="Project's Tasks">
+                                    <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="planned_hours" widget="float_time"/>
