@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-06 12:17+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"PO-Revision-Date: 2010-12-09 10:49+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -162,6 +162,11 @@ msgstr "Von"
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Partner hat keine vollständige Anschrift für Rechnung"
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Fehler: Bank Beleg nummer ist notwendig"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -523,6 +528,11 @@ msgstr "augenommenes MItglied"
 #: view:product.product:0
 msgid "Accounting Info"
 msgstr "Finanzen Information"
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Ungültige Prüfsumme"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -929,12 +939,6 @@ msgstr "Generierter Umsatz"
 
 #~ msgid "Current membership state"
 #~ msgstr "Aktueller Mitgliedschaft Status"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Fehler: Bank Beleg nummer ist notwendig"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Ungültige Prüfsumme"
 
 #~ msgid "You cannot have 2 pricelist versions that overlap!"
 #~ msgstr "Preislisten Versionen dürfen sich nicht überschneiden"
