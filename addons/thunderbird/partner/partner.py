@@ -131,11 +131,11 @@ email_server_tools()
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
-    _description="Thunderbid mails"
+    _description="Thunderbid Plugin Tools"
 
     def create_contact(self,cr,user,vals):
         dictcreate = dict(vals)
-        # Set False value if 'undefined'. Thunerbird set 'undefined' if user did not set any value.
+        # Set False value if 'undefined' for record. Id User does not spicify the values, Thunerbird set 'undefined' by default for new contact.
         for key in dictcreate:
             if dictcreate[key] == 'undefined':
                 dictcreate[key] = False
