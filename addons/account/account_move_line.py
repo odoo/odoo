@@ -761,7 +761,7 @@ class account_move_line(osv.osv):
             if 'comment' in context and context['comment']:
                 libelle = context['comment']
             else:
-                libelle = 'Write-Off'
+                libelle = _('Write-Off')
             writeoff_lines = [
                 (0, 0, {
                     'name': libelle,
