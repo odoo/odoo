@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-07-20 22:42+0000\n"
-"Last-Translator: Paulius Sladkevičius <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-11-28 19:22+0000\n"
+"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:28+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -35,15 +30,6 @@ msgstr ""
 "Jeigu Jūs neturite pakankamai atsargų ar pritariate daliniam vežimui?"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
@@ -53,13 +39,7 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr "Nutraukti užsakymą"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr ""
+msgstr "Atšaukti užsakymą"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -179,6 +159,13 @@ msgid "Ordered Quantities"
 msgstr "Užsakyti kiekiai"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
+
+#. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
 msgstr "Atsargų judėjimas"
@@ -205,10 +192,13 @@ msgid "Dates"
 msgstr ""
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"Here is a list of each sales order line to be invoiced. This view allows you "
+"to invoice sales orders partially, by lines of sales order. You don't need "
+"this list if you invoice based on the delivery orders or if you invoice "
+"sales totally."
 msgstr ""
-"Klaida: Numat. Mat. Vnt. turi būti kitos kategorijos negu Pardavimo Mat. Vnt."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -220,6 +210,11 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sale order"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Packing"
 msgstr ""
 
 #. module: sale
@@ -268,11 +263,6 @@ msgstr "Padaryti juodraščiu"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Procurement Corrected"
-msgstr "Planinių užsakymų ištaisymas"
-
-#. module: sale
-#: view:sale.order:0
 msgid "Conditions"
 msgstr ""
 
@@ -290,15 +280,14 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
-msgstr "Visi juodraščiai"
+msgstr "Visi pasiūlymai"
 
 #. module: sale
 #: report:sale.order:0
@@ -329,6 +318,16 @@ msgid "Quotations"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sale Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sale Order Line is Invoiced!"
+msgstr ""
+
+#. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
 msgid "Quantity"
@@ -343,6 +342,13 @@ msgstr "Tik pristatymo užsakymas"
 #: report:sale.order:0
 msgid "TVA :"
 msgstr "PVM :"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -364,14 +370,6 @@ msgstr "Fiskalinė pozicija"
 #: view:sale.order.line:0
 msgid "UoM"
 msgstr "Mato vnt."
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You have to select a customer in the sale form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
 
 #. module: sale
 #: field:sale.order.line,number_packages:0
@@ -396,6 +394,12 @@ msgstr "Vykdomas"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Sąskaita"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -435,19 +439,6 @@ msgid "Purchase Pricelists"
 msgstr "Pirkimų kainoraštis"
 
 #. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the the shipping of the "
-"products to the customer"
-msgstr ""
-"Dienų skaičius nuo užsakymo patvirtinimo iki produkto pristatymo klientui"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Invoice Corrected"
-msgstr "Sąskaita faktūra pataisyta"
-
-#. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount"
 msgstr ""
@@ -465,7 +456,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Neapmokestinama suma"
+msgstr "Suma be mokesčių"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -498,14 +489,6 @@ msgid "March"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"There is no income account defined ' \\n                                     "
-"   'for this product: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Tarpinė suma"
@@ -520,6 +503,11 @@ msgstr "Sąskaitos adresas :"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Negalima ištrinti pardavimo užsakymo, kuri yra patvirtinta!"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -572,7 +560,7 @@ msgstr "Užsakymo eilutės"
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr "Neapmokestinama suma"
+msgstr "Suma be mokesčių"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -646,11 +634,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr ""
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros struktūrai!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr ""
@@ -711,8 +694,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr ""
@@ -725,6 +706,11 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Create Final Invoice"
 msgstr ""
 
 #. module: sale
@@ -741,6 +727,11 @@ msgstr ""
 #: selection:sale.order.line,state:0
 msgid "Exception"
 msgstr "Išimtis"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Tiesioginis pristatymas"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -769,6 +760,19 @@ msgid ""
 "same time as the procurement order. It represents the assignment of parts to "
 "the sale order. There is 1 pick list by sale order line which evolves with "
 "the availability of parts."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"Sales Orders helps you manage quotations and orders done with your "
+"customers. OpenERP suggests that you to start by creating a quotation. Once "
+"the order is confirmed, the quotation is converted into a Sale Order. "
+"OpenERP can handle several types of products so that a sales order can "
+"trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
+"Based on the configuration of the sale order, a draft invoice will be "
+"generated so that you just have to confirm it when you want to bill your "
+"customer."
 msgstr ""
 
 #. module: sale
@@ -831,7 +835,6 @@ msgstr "Pardavimų užsakymo eilutės"
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Sukurti sąskaitą faktūrą"
@@ -859,6 +862,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Užsakymo kontaktas"
@@ -867,6 +876,15 @@ msgstr "Užsakymo kontaktas"
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sale order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sale order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
 msgstr ""
 
 #. module: sale
@@ -931,22 +949,13 @@ msgid "Create Delivery Order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "The sale order '%s' has been set in draft state."
+#: view:sale.order:0
+msgid "Total Tax Included"
 msgstr ""
 
 #. module: sale
@@ -971,14 +980,9 @@ msgid "Partial Delivery"
 msgstr "Dalinis pristatymas"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Recreate Procurement"
-msgstr "Perkurti planinį užsakymą"
-
-#. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr "Patvirtinti užsakymą"
+msgstr "Patvirtinti pasiūlymą"
 
 #. module: sale
 #: view:sale.order:0
@@ -1033,8 +1037,8 @@ msgstr ""
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
-"This is the list of picking list that have been generated for this invoice"
-msgstr "Tai yra sąrašas važtaraščių, sugeneruotų šiai sąskaitai faktūrai."
+"This is a list of picking that has been generated for this sale order"
+msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1071,14 +1075,6 @@ msgstr "Pardavimo užsakymas"
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Mokesčiai"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"A sale order generates an invoice, as soon as it is confirmed by the "
-"salesman. Depending on the Invoicing control of the sale order, the invoice "
-"is based on delivered or on ordered quantities."
-msgstr ""
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -1214,12 +1210,6 @@ msgid "Sales Management"
 msgstr "Pardavimų valdymas"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1236,21 +1226,8 @@ msgid "Create invoices"
 msgstr "Sukurti sąskaitas faktūras"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Klaida: Numatytasis mat. vnt. ir pirkimo mat. vnt. turi būti tos pačios "
-"kategorijos."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale
@@ -1294,7 +1271,7 @@ msgstr "Ypatybės"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
-msgstr "Juodraštis"
+msgstr "Pasiūlymas"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1322,7 +1299,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-#: model:ir.ui.menu,name:sale.menu_config_sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1364,13 +1340,6 @@ msgstr ""
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1453,13 +1422,6 @@ msgid "Product UoM"
 msgstr "Produkto mat. vnt."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
 msgid "Logistic"
 msgstr ""
@@ -1470,8 +1432,27 @@ msgid "Order"
 msgstr "Užsakymas"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
 msgstr ""
 
 #. module: sale
@@ -1612,6 +1593,23 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1622,12 +1620,6 @@ msgid "Quantity (UoS)"
 msgstr "Kiekis (Mat. vnt.)"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Patvirtinta"
@@ -1636,6 +1628,11 @@ msgstr "Patvirtinta"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Patvirtinti"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1729,6 +1726,14 @@ msgid "Image"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
+
+#. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax"
 msgstr ""
@@ -1813,9 +1818,12 @@ msgid "Payment Terms"
 msgstr "Mokėjimo terminas"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Tiesioginis pristatymas"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1842,16 +1850,6 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:0
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sale Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sale Order Line is Invoiced!"
 msgstr ""
 
 #. module: sale
@@ -1882,11 +1880,6 @@ msgid "Assign"
 msgstr "Priskirti"
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
 msgstr ""
@@ -1901,11 +1894,6 @@ msgstr "Iš sandėlio"
 #: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Parduotuvė"
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr ""
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -1924,23 +1912,29 @@ msgid "Not enough stock !"
 msgstr ""
 
 #. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
 msgstr "Pardavimo užsakymo eilutės"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"If you have more than one shops reselling your company products, you can "
+"create and manage them from here. Whenever you will record a new quotation "
+"or sale order, it has to be linked to a shop. The shop also defines the "
+"warehouse from which the products will be delivered for each particular sale."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 #: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Aprašymas"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order \\n                             "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1972,13 +1966,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Picking Default Policy"
+msgstr ""
+
+#. module: sale
 #: selection:sale.report,month:0
 msgid "April"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been set in draft state."
 msgstr ""
 
 #. module: sale
@@ -2002,14 +2002,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: field:sale.config.picking_policy,picking_policy:0
-msgid "Picking Default Policy"
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
 msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr "Užsakymo Nr."
+msgstr "Pasiūlymo Nr."
 
 #. module: sale
 #: field:sale.order,picked_rate:0
@@ -2055,6 +2060,9 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Sales order"
 #~ msgstr "Pardavimų užsakymas"
 
+#~ msgid "Recreate Procurement"
+#~ msgstr "Perkurti planinį užsakymą"
+
 #~ msgid "You invoice has been successfully created !"
 #~ msgstr "Jūsų sąskaita faktūra buvo sukurta!"
 
@@ -2070,13 +2078,6 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 
 #~ msgid "After confirming order, Create the invoice."
 #~ msgstr "Patvirtinę užsakymą, sukurkite sąskaitą faktūrą."
-
-#~ msgid ""
-#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
-#~ "is, quotation is moved to  sale order."
-#~ msgstr ""
-#~ "Kai paspaudžiamas patvirtinimo mygtukas, juodraščio būsena yra perkeliama į "
-#~ "patvirtintą. Tai yra, juodraštis yra perkeliamas į pardavimo užsakymą."
 
 #~ msgid "Manual Designation"
 #~ msgstr "Rankinis deklaravimas"
@@ -2153,11 +2154,18 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Packing"
 #~ msgstr "Važtaraštis"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros struktūrai!"
+
 #~ msgid "Related Packing"
 #~ msgstr "Susiję važtaraščiai"
 
 #~ msgid "Payment Accounts"
 #~ msgstr "Mokėjimo sąskaitos"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Klaida: Numat. Mat. Vnt. turi būti kitos kategorijos negu Pardavimo Mat. Vnt."
 
 #~ msgid "Customer Ref"
 #~ msgstr "Kliento nuoroda"
@@ -2178,9 +2186,6 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 
 #~ msgid "Procurement for each line"
 #~ msgstr "Planiniai užsakymai eilutėms"
-
-#~ msgid "My Quotations"
-#~ msgstr "Mano juodraščiai"
 
 #~ msgid "Packing Default Policy"
 #~ msgstr "Važtaraščių numatytosios taisyklės"
@@ -2226,17 +2231,23 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Sales Process"
 #~ msgstr "Pardavimų vykdymas"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Klaida: Numatytasis mat. vnt. ir pirkimo mat. vnt. turi būti tos pačios "
+#~ "kategorijos."
+
 #~ msgid "My sales in shipping exception"
 #~ msgstr "Pardavimai laukiantys pristatymo"
 
 #~ msgid "Sales Configuration"
 #~ msgstr "Pardavimų konfigūracija"
 
+#~ msgid "Procurement Corrected"
+#~ msgstr "Planinių užsakymų ištaisymas"
+
 #~ msgid "Sale Procurement"
 #~ msgstr "Planiniai užsakymai"
-
-#~ msgid "Configure Sale Order Logistic"
-#~ msgstr "Konfigūruoti pardavimo užsakymo logistiką"
 
 #~ msgid "Packing Policy"
 #~ msgstr "Važtaraščių taisyklės"
@@ -2285,11 +2296,22 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Advance Payment"
 #~ msgstr "Avansinis apmokėjimas"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
+
 #~ msgid "Confirm sale order and Create invoice."
 #~ msgstr "Patvirtinti pardavimo užsakymą ir sukurti sąskaitą faktūrą."
 
 #~ msgid "Packing List & Delivery Order"
 #~ msgstr "Važtaraštis ir pristatymo užsakymas"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the the shipping of the "
+#~ "products to the customer"
+#~ msgstr ""
+#~ "Dienų skaičius nuo užsakymo patvirtinimo iki produkto pristatymo klientui"
 
 #~ msgid "Do you really want to create the invoices ?"
 #~ msgstr "Ar jūs tikrai norite sukurti sąskaitas faktūras?"
@@ -2299,9 +2321,6 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 
 #~ msgid "Set Default"
 #~ msgstr "Nustatyti numatytąją reikšmę"
-
-#~ msgid "Quotation (A sale order in draft state)"
-#~ msgstr "Juodraštis (Pardavimo užsakymas juodraščio būsenoje)."
 
 #~ msgid "Sale Invoice"
 #~ msgstr "Užpajamuoti pardavimą"
@@ -2322,9 +2341,6 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Nurodomas adresas iš partnerio kortelės."
 
-#~ msgid "New Quotation"
-#~ msgstr "Naujas užsakymas"
-
 #~ msgid "Total amount"
 #~ msgstr "Iš viso"
 
@@ -2342,6 +2358,9 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Konfigūruoti važtaraščio taisykles paradavimo užsakymuose"
 
+#~ msgid "Invoice Corrected"
+#~ msgstr "Sąskaita faktūra pataisyta"
+
 #~ msgid "Delivery Delay"
 #~ msgstr "Pristatymo užlaikymas"
 
@@ -2353,3 +2372,6 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 
 #~ msgid "Sale Order line"
 #~ msgstr "Pardavimo užsakymo eilutė"
+
+#~ msgid "Configure Sale Order Logistics"
+#~ msgstr "Konfigūruoti pardavimo užsakymo logistiką"

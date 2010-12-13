@@ -110,6 +110,11 @@ class account_voucher(osv.osv):
     def _get_narration(self, cr, uid, context={}):
         return context.get('narration', False)
 
+    def _get_amount(self, cr, uid, context=None):
+        if context is None:
+            context= {}
+        return context.get('amount', 0.0)
+
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
@@ -232,6 +237,7 @@ class account_voucher(osv.osv):
         'currency_id': _get_currency,
         'reference': _get_reference,
         'narration':_get_narration,
+        'amount': _get_amount,
         'type':_get_type,
         'state': 'draft',
         'pay_now': 'pay_later',
@@ -471,13 +477,13 @@ class account_voucher(osv.osv):
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
 
-            orignal_amount = line.credit or line.debit or 0.0
+            original_amount = line.credit or line.debit or 0.0
             rs = {
                 'name':line.move_id.name,
                 'type': line.credit and 'dr' or 'cr',
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
-                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, orignal_amount),
+                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, original_amount),
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled':currency_pool.compute(cr, uid, company_currency, currency_id, line.amount_unreconciled)
@@ -826,7 +832,6 @@ class account_voucher_line(osv.osv):
     _defaults = {
         'name': ''
     }
-
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context={}):
         """
         Returns a dict that contains new values and context
@@ -948,6 +953,17 @@ class account_bank_statement_line(osv.osv):
             else:
                 res[line.id] = 0.0
         return res
+
+    def _check_amount(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.voucher_id:
+                if not (obj.amount == obj.voucher_id.amount):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_amount, 'The amount of the voucher must be the same amount as the one on the statement line', ['amount']),
+    ]
 
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,

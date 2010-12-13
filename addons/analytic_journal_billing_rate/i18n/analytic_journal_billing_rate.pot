@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:22+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:22+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14:53+0000\n"
+"PO-Revision-Date: 2010-12-10 17:14:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,23 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: analytic_journal_billing_rate
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: analytic_journal_billing_rate
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
 msgid "Analytic Journal"
 msgstr ""
 
 #. module: analytic_journal_billing_rate
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: analytic_journal_billing_rate
@@ -44,11 +39,6 @@ msgstr ""
 #: field:analytic_journal_rate_grid,account_id:0
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
-
-#. module: analytic_journal_billing_rate
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: analytic_journal_billing_rate
@@ -77,12 +67,12 @@ msgid "Invoicing Rate"
 msgstr ""
 
 #. module: analytic_journal_billing_rate
-#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
-msgid "Timesheet Line"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: analytic_journal_billing_rate
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 

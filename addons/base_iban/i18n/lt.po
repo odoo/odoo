@@ -6,30 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-08 12:39+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"PO-Revision-Date: 2010-12-11 14:05+0000\n"
 "Last-Translator: Donatas Stonys TeraxIT <donatelonow@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
 
 #. module: base_iban
 #: model:ir.module.module,shortdesc:base_iban.module_meta_information
 msgid "Create IBAN bank accounts"
-msgstr ""
-
-#. module: base_iban
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: base_iban
@@ -43,12 +32,12 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
 msgid "zip"
-msgstr ""
+msgstr "zip"
 
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
-msgstr ""
+msgstr "Tarptautinis banko sąskaitos numeris"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -58,17 +47,17 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
 msgid "country_id"
-msgstr ""
+msgstr "country_id"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bic"
-msgstr ""
+msgstr "bic"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
 msgid "iban"
-msgstr ""
+msgstr "iban"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
@@ -79,14 +68,19 @@ msgstr ""
 #. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: sql_constraint:res.partner.bank:0
+msgid "The BVR adherent number must be unique !"
 msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
-msgstr ""
+msgstr "IBAN sąskaita"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
 msgid "acc_number"
-msgstr ""
+msgstr "acc_number"

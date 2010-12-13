@@ -3,7 +3,9 @@
     <data>
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
-            groups="base.group_hr_manager,base.group_hr_user"/>
+            groups="base.group_hr_manager,base.group_hr_user"
+            web_icon="images/hr.png"
+            web_icon_hover="images/hr-hover.png"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0" groups="base.group_hr_manager"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
@@ -54,7 +56,7 @@
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
                                 <field name="partner_id" invisible="1" />
-                                <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]"/>
                                 <field name="work_phone"/>
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
@@ -338,7 +340,7 @@
                             <field name="requirements" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Employee">
-                            <field name="employee_ids" colspan='4' nolabel="1"  mode="tree,form"/>
+                            <field name="employee_ids" colspan='4' nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">

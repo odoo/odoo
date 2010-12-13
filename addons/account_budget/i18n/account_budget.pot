@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:17+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:17+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:52+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,8 +32,8 @@ msgid "Budgetary Positions"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
 msgstr ""
 
 #. module: account_budget
@@ -49,11 +49,6 @@ msgstr ""
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr ""
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_budget
@@ -86,18 +81,15 @@ msgid "at"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
 msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: account_budget
@@ -116,13 +108,13 @@ msgid "Percentage"
 msgstr ""
 
 #. module: account_budget
-#: field:crossovered.budget,state:0
-msgid "Status"
+#: report:crossovered.budget.report:0
+msgid "to"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
+#: field:crossovered.budget,state:0
+msgid "Status"
 msgstr ""
 
 #. module: account_budget
@@ -154,8 +146,8 @@ msgid "Company"
 msgstr ""
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
+#: view:crossovered.budget:0
+msgid "To Approve"
 msgstr ""
 
 #. module: account_budget
@@ -199,11 +191,6 @@ msgstr ""
 #: field:crossovered.budget,date_to:0
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_budget
@@ -298,8 +285,9 @@ msgid "Approve"
 msgstr ""
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
 msgstr ""
 
 #. module: account_budget
@@ -318,13 +306,6 @@ msgid "Start of period"
 msgstr ""
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr ""
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr ""
@@ -336,21 +317,11 @@ msgid "Theoretical Amt"
 msgstr ""
 
 #. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Select Dates Period"
-msgstr ""
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: account_budget
@@ -421,11 +392,6 @@ msgid "Budget Lines"
 msgstr ""
 
 #. module: account_budget
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -440,19 +406,13 @@ msgid "Budget Management"
 msgstr ""
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
-msgstr ""
-
-#. module: account_budget
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 

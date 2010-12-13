@@ -135,7 +135,7 @@ class crm_lead(crm_case, osv.osv):
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -150,6 +150,19 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+    
+    def _get_stage_id(self, cr, uid, context=None):
+        """Finds type of stage according to object.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        type = context and context.get('stage_type', '')
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -160,6 +173,7 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'stage_id': _get_stage_id,
     }
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -192,7 +206,6 @@ class crm_lead(crm_case, osv.osv):
             if not old_stage_id:
                 stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
                 if stage_id:
-                    value.update({'stage_id': stage_id})
                     value.update(self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value'])
             value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, value)
@@ -282,10 +295,12 @@ class crm_lead(crm_case, osv.osv):
                         }
         return value
 
-    def stage_next(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+    def write(self, cr, uid, ids, vals, context={}):
+        if 'date_closed' in vals:
+            return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            
+        if 'stage_id' in vals and vals['stage_id']:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead':
@@ -293,22 +308,15 @@ class crm_lead(crm_case, osv.osv):
                 elif case.type == 'opportunity':
                     message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
                 self.log(cr, uid, case.id, message)
+        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+    
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             if stage_obj.on_change:
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
-        return stage
-    
-    def stage_previous(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-            for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
-                elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
-                self.log(cr, uid, case.id, message)
         return stage
     
     def message_new(self, cr, uid, msg, context):

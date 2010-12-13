@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-25 19:05+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 07:04+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -27,9 +27,7 @@ msgid "Number of Layers"
 msgstr "Количество уровней"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -45,11 +43,6 @@ msgid ""
 msgstr ""
 "Установите шаблон, если правило применяется только для шаблона продукции. "
 "Оставьте пустым для всей продукции."
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -217,11 +210,6 @@ msgstr "Ед. изм."
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "шт."
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: product
 #: view:product.template:0
@@ -393,6 +381,7 @@ msgstr "Ссылка на ед. езм. для этой категории"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Открытый каталог"
 
@@ -405,11 +394,6 @@ msgstr "Количество-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "ИТ компоненты"
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Название группы должно быть уникальным !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -516,6 +500,13 @@ msgid "Working Time"
 msgstr "Время работы"
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr "Металлические зажимы"
@@ -597,6 +588,7 @@ msgid "Restaurant Expenses"
 msgstr "Расходы ресторана"
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Ошибка: Неправильный штрих-код"
@@ -663,15 +655,6 @@ msgstr "Комплект мыши и клавиатуры"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Название цены"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-"если поле \"Активно\" установлено в \"истина\", то это позволит вам скрыть "
-"каталог без его удаления."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -806,11 +789,6 @@ msgstr ""
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Проект дизайна кухни"
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -1029,11 +1007,6 @@ msgid "Price List Items"
 msgstr "Элементы каталога"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "Закладка для этого меню уже существует !"
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Больший чем ед. изм. ссылки"
@@ -1090,14 +1063,14 @@ msgid "Stockable"
 msgstr "Хранимое"
 
 #. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr ""
+
+#. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
 msgstr "кг"
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Для объектов osv_memory правила не поддерживаются !"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
@@ -1245,9 +1218,9 @@ msgid "Partners"
 msgstr "Партнеры"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Вы не можете иметь двух одинаковых пользователей !"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1275,9 +1248,10 @@ msgid "Second UoM"
 msgstr "Вторая ед. езм."
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr ""
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
+msgstr "Ошибка !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1376,6 +1350,14 @@ msgid "Regular processor config"
 msgstr "Типовая конфигурация процессора"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr "Дата начала"
@@ -1404,6 +1386,13 @@ msgid "Basic PC"
 msgstr "Базовый ПК"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Доступные запасы"
@@ -1427,9 +1416,14 @@ msgstr ""
 "категорию."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Точность округления"
 
 #. module: product
 #: view:product.uom:0
@@ -1545,11 +1539,6 @@ msgid "Onsite Intervention"
 msgstr "Вмешательство на месте"
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr "Открытый каталог"
@@ -1563,14 +1552,6 @@ msgstr ""
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
 msgstr "Код ТМЦ поставщика"
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: product
 #: view:product.product:0
@@ -1695,11 +1676,6 @@ msgstr "Каталог продукции"
 #: field:product.template,company_id:0
 msgid "Company"
 msgstr "Компания"
-
-#. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Цена по каталогу"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
@@ -1829,11 +1805,6 @@ msgid "Supplier Product UoM."
 msgstr "Ед. изм. ТМЦ поставщика."
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Точность округления"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1894,15 +1865,6 @@ msgstr ""
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Время поставки"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-"если поле \"Активно\" установлено в \"истина\", то это позволит вам скрыть "
-"ТМЦ без ее удаления."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2013,6 +1975,11 @@ msgstr "Комплектовать ПК периферией"
 #: view:product.template:0
 msgid "Weigths"
 msgstr "Вес"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2133,11 +2100,6 @@ msgid "RAM on demand"
 msgstr "ОЗУ по требованию"
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "Свойства продажи"
@@ -2185,6 +2147,8 @@ msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
 "products!"
 msgstr ""
+"Невозможно определить категорию ТМЦ, вы определили зацикленные категории ТМЦ "
+"!"
 
 #. module: product
 #: view:product.template:0
@@ -2251,11 +2215,6 @@ msgid "Palletization"
 msgstr "Укладка на паллеты"
 
 #. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
-
-#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Конец жизненного цикла"
@@ -2295,7 +2254,7 @@ msgstr "Тип категории"
 #. module: product
 #: model:product.category,name:product.cat2
 msgid "Private"
-msgstr ""
+msgstr "Личное"
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -2348,6 +2307,9 @@ msgstr ""
 #~ msgid "Customer Price"
 #~ msgstr "Цена клиента"
 
+#~ msgid "List Price"
+#~ msgstr "Цена по каталогу"
+
 #~ msgid "Configuration"
 #~ msgstr "Настройки"
 
@@ -2367,6 +2329,9 @@ msgstr ""
 #~ "При продаже данному партнеру будет использован не каталог по умолчанию, а "
 #~ "этот каталог."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
 #~ msgid "Can be sold"
 #~ msgstr "Можно продавать"
 
@@ -2376,8 +2341,17 @@ msgstr ""
 #~ msgid "Price list"
 #~ msgstr "Прайс"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
 #~ msgid "Price type"
 #~ msgstr "Тип цены"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
 
 #~ msgid ""
 #~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
@@ -2459,6 +2433,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Не удается определить категорию ТМЦ, '\\n' вы зациклили категории ' \\n 'ТМЦ!"
 
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Для объектов osv_memory правила не поддерживаются !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
 #, python-format
 #~ msgid ""
 #~ "No active version for the selected pricelist !\n"
@@ -2466,3 +2446,32 @@ msgstr ""
 #~ msgstr ""
 #~ "Нет активной версии для выбранного каталога!\n"
 #~ "' \\n 'Пожалуйста, создайте или активируйте каталог."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the product "
+#~ "without removing it."
+#~ msgstr ""
+#~ "если поле \"Активно\" установлено в \"истина\", то это позволит вам скрыть "
+#~ "ТМЦ без ее удаления."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr ""
+#~ "если поле \"Активно\" установлено в \"истина\", то это позволит вам скрыть "
+#~ "каталог без его удаления."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Название группы должно быть уникальным !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "Закладка для этого меню уже существует !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-25 20:02+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 09:31+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -42,11 +42,6 @@ msgstr "Aplicar descuento"
 #: view:pos.order:0
 msgid "Set to draft"
 msgstr "Cambiar a borrador"
-
-#. module: point_of_sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -79,8 +74,8 @@ msgid "All Cashboxes Of the day :"
 msgstr "Todas las cajas de efectivo del día:"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_box_out
-msgid "Pos Box Out"
+#: view:pos.box.entries:0
+msgid "Put Money"
 msgstr ""
 
 #. module: point_of_sale
@@ -245,11 +240,6 @@ msgid "Total Price"
 msgstr "Precio total"
 
 #. module: point_of_sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#. module: point_of_sale
 #: view:product.product:0
 msgid "Miscelleanous"
 msgstr "Varios"
@@ -259,6 +249,12 @@ msgstr "Varios"
 #: report:pos.sales.user:0
 msgid "Sales Report"
 msgstr "Informe de ventas"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
+#, python-format
+msgid "No Order Lines"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -324,6 +320,14 @@ msgid "Sales by user monthly"
 msgstr "Ventas mensuales por usuario"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
+#, python-format
+msgid ""
+"You can not open a Cashbox for \"%s\".\n"
+"Please close its related cash register."
+msgstr ""
+
+#. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
 msgid "User who is logged into the system."
 msgstr "Usuario conectado al sistema"
@@ -361,26 +365,6 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related cash register.' %(journal.name)))\n"
-"\n"
-"            number = \n"
-"            if journal.sequence_id:\n"
-"                number = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"            else:\n"
-"                number = sequence_obj.get(cr, uid, 'account.cash.statement"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Intenta asignar un lote que no pertenece al mismo producto"
-
-#. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "June"
@@ -390,16 +374,6 @@ msgstr "Junio"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
 msgstr "Ventas mensuales por usuario"
-
-#. module: point_of_sale
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "¡El nombre del grupo debe ser único!"
-
-#. module: point_of_sale
-#: view:product.product:0
-msgid "Product Description"
-msgstr "Descripción del producto"
 
 #. module: point_of_sale
 #: field:pos.order,date_payment:0
@@ -575,9 +549,9 @@ msgid "Cash registers are already closed."
 msgstr "Registros de caja ya están cerrados."
 
 #. module: point_of_sale
-#: field:report.cash.register,date:0
-msgid "Create Date"
-msgstr "Fecha creación"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -784,11 +758,6 @@ msgid "# of Qty"
 msgstr "Nº de ctdad"
 
 #. module: point_of_sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
 msgid "Point of sale return"
 msgstr ""
@@ -831,7 +800,7 @@ msgstr "Ventas para el usuario actual"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Comentario Situacion Fiscal"
+msgstr "Observación posición fiscal :"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -1033,6 +1002,11 @@ msgid "POS"
 msgstr "TPV"
 
 #. module: point_of_sale
+#: field:report.cash.register,date:0
+msgid "Create Date"
+msgstr "Fecha creación"
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Output Operations"
 msgstr "Operaciones de salida"
@@ -1211,11 +1185,6 @@ msgid "Print the receipt of the sale"
 msgstr "Imprimir ticket de la venta"
 
 #. module: point_of_sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
 msgid "Picking List"
 msgstr "Albarán"
@@ -1298,7 +1267,7 @@ msgstr "Pago punto de venta"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
-msgid "Sortie de caisse"
+msgid "Output Operation"
 msgstr "Salidas de caja"
 
 #. module: point_of_sale
@@ -1347,11 +1316,6 @@ msgid "Statement Name"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order.line,price_subtotal:0
-msgid "Subtotal w/o Tax"
-msgstr "Subtotal neto"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: model:ir.ui.menu,name:point_of_sale.menu_cash_register
 #: field:pos.box.entries,journal_id:0
@@ -1395,11 +1359,6 @@ msgstr "No se han añadido líneas en esta venta."
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: point_of_sale
@@ -1502,14 +1461,6 @@ msgstr "Ref. venta"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment_report_date
 msgid "Sales lines Report"
 msgstr ""
-
-#. module: point_of_sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
@@ -1626,9 +1577,9 @@ msgid "Mode of Taxes"
 msgstr "Modo de impuestos"
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_cash_journal
-msgid "Cash Journal"
-msgstr ""
+#: view:product.product:0
+msgid "Product Description"
+msgstr "Descripción del producto"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -1747,6 +1698,7 @@ msgid "Pos order"
 msgstr "Venta TPV"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Error!"
@@ -1859,6 +1811,11 @@ msgid "Sales Lines"
 msgstr ""
 
 #. module: point_of_sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.discount,discount:0
 msgid "Discount "
 msgstr "Descuento "
@@ -1900,8 +1857,8 @@ msgid "Today's Sales by Current User"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.box.entries:0
-msgid "Put Money"
+#: model:ir.model,name:point_of_sale.model_pos_box_out
+msgid "Pos Box Out"
 msgstr ""
 
 #. module: point_of_sale
@@ -2170,14 +2127,14 @@ msgid "Order lines"
 msgstr "Líneas de venta"
 
 #. module: point_of_sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#: field:pos.order.line,price_subtotal:0
+msgid "Subtotal w/o Tax"
+msgstr "Subtotal neto"
 
 #. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Debe asignar un lote de producción para este producto"
+#: view:pos.order:0
+msgid "Add product"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2419,6 +2376,9 @@ msgstr ""
 #~ msgid "Get From Order"
 #~ msgstr "Importar pedido venta"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "POS Lines of the day"
 #~ msgstr "Líneas TPV del día"
 
@@ -2479,6 +2439,12 @@ msgstr ""
 #~ msgid "Refund order :"
 #~ msgstr "Devolución :"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Pos Payment"
 #~ msgstr "Pago TPV"
 
@@ -2524,6 +2490,9 @@ msgstr ""
 #~ msgid "Piece Number"
 #~ msgstr "Número ref."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
 #~ msgid "Logged in User"
 #~ msgstr "Usuario conectado"
 
@@ -2538,3 +2507,18 @@ msgstr ""
 
 #~ msgid "This is the salesman actually making the order."
 #~ msgstr "Este es el vendedor actualmente preparando la orden."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Intenta asignar un lote que no pertenece al mismo producto"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "¡El nombre del grupo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Debe asignar un lote de producción para este producto"

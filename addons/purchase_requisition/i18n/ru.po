@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-25 19:04+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 08:01+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase_requisition
@@ -24,17 +24,10 @@ msgid "In Progress"
 msgstr "В процессе"
 
 #. module: purchase_requisition
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_ и не должно содержать специальных "
-"символов !"
-
-#. module: purchase_requisition
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "No Product in Tender"
+msgstr "Нет ТМЦ в тендере"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -73,11 +66,6 @@ msgstr "Состояние"
 #: selection:purchase.requisition,state:0
 msgid "Draft"
 msgstr "Черновик"
-
-#. module: purchase_requisition
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -159,9 +147,9 @@ msgid "Request a Quotation"
 msgstr "Запрос цен"
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Multiple Requisitions"
-msgstr "Несколько запросов"
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
+msgstr "Создать предложение цен"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -203,11 +191,6 @@ msgstr "Запросы на закупку"
 #: view:purchase.requisition:0
 msgid "End Date"
 msgstr "Дата окончания"
-
-#. module: purchase_requisition
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -266,9 +249,10 @@ msgid "Purchase Order"
 msgstr "Заказ на закупку"
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
-msgid "Procurement"
-msgstr "Снабжение"
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "Error!"
+msgstr "Ошибка !"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -290,11 +274,6 @@ msgstr "Дата заказа"
 #: selection:purchase.requisition,state:0
 msgid "Cancelled"
 msgstr "Отменено"
-
-#. module: purchase_requisition
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -339,9 +318,9 @@ msgid "Reference"
 msgstr "Ссылка"
 
 #. module: purchase_requisition
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
+#: model:ir.model,name:purchase_requisition.model_procurement_order
+msgid "Procurement"
+msgstr "Снабжение"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
@@ -364,14 +343,14 @@ msgid "Purchase Requisition (exclusive)"
 msgstr "Запрос на закупку (исключительный)"
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
-msgstr "Создать предложение цен"
+#: selection:purchase.requisition,exclusive:0
+msgid "Multiple Requisitions"
+msgstr "Несколько запросов"
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
-msgstr "Запрос"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Ошибка: Неправильный штрих-код"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -410,11 +389,35 @@ msgid "Unassigned"
 msgstr "Не назначенный"
 
 #. module: purchase_requisition
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
+#: view:purchase.order:0
+msgid "Requisition"
+msgstr "Запрос"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Заказы на закупку"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_ и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"

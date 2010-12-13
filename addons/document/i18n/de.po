@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-08 08:26+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-30 16:28+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -295,6 +296,11 @@ msgstr "Berichtsinhalt"
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Typ"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -597,10 +603,22 @@ msgid "Security"
 msgstr "Sicherheit"
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
 msgstr "August"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Das Verzeichnis kann nicht sich selbst übergeordnet werden"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -636,6 +654,19 @@ msgstr "November"
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Persönliche Daten"
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+"Wenn Sie hier ein Objekt eintragen, wird diese Verzeichnisvorlage unterhalb "
+"aller einzelnen Objekte auftauchen. Solche Verzeichnisse sind angehängt an "
+"das Datenmodell oder den Datensatz, exakt wie klassische Anhänge. Tragen Sie "
+"kein Hauptverzeichnis ein, wenn Sie ein Hauptverzeichnis definieren."
 
 #. module: document
 #: view:document.directory:0
@@ -699,20 +730,15 @@ msgid "Expression"
 msgstr "Ausdruck"
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Das Verzeichnis muss eindeutig sein"
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Urheber"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Falls Sie hier ein Objekt eintragen, wird dieses Verzeichnis unterhalb aller "
-"dieser Objekte auftauchen. Tragen Sie kein (Ober-) Verzeichnis ein falls Sie "
-"ein Hauptverzeichnis definieren wollen.alle"
 
 #. module: document
 #: view:board.board:0
@@ -733,6 +759,13 @@ msgid "Prefix"
 msgstr "Prefix"
 
 #. module: document
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr ""
+"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+"vorhanden sein !"
+
+#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr "Letzte Aktualisierung"
@@ -741,6 +774,11 @@ msgstr "Letzte Aktualisierung"
 #: field:report.document.user,datas_fname:0
 msgid "File Name"
 msgstr "Dokumentenbezeichnung"
+
+#. module: document
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -839,6 +877,15 @@ msgid "Users that did not inserted documents since one month"
 msgstr "Benutzer die keine Dokumente erzeugt haben in diesem Monat"
 
 #. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
+msgstr ""
+"Das Dokumentenrepository ermöglicht einen Zugriff auf alle Anhänge, wie z.B. "
+"Emails, Projekt Dokumente, Rechnungsbelege etc."
+
+#. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
@@ -932,6 +979,11 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr "Der Speicherpfad muss eindeutig sein!"
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr "Felder"
@@ -977,6 +1029,11 @@ msgid "Mime Type"
 msgstr "Mime Typ"
 
 #. module: document
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr "Sequenz"
@@ -996,6 +1053,13 @@ msgstr "Datei muss eindeutig benannt sein!"
 #: selection:document.storage,type:0
 msgid "Internal File storage"
 msgstr "Interner Dateispeicher"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+"Das Verzeichnis muss ein Hauptverzeichnis oder einen Speicher zugewiesen "
+"haben"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1032,6 +1096,11 @@ msgstr "Suche Dokumentenspeicher"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Dokumententyp"
+
+#. module: document
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #~ msgid ""
 #~ "Select an object here and Open ERP will create a mapping for each of these "
@@ -1113,6 +1182,14 @@ msgstr "Dokumententyp"
 
 #~ msgid "History"
 #~ msgstr "Historie"
+
+#~ msgid ""
+#~ "If you put an object here, this directory template will appear bellow all of "
+#~ "these objects. Don't put a parent directory if you select a parent model."
+#~ msgstr ""
+#~ "Falls Sie hier ein Objekt eintragen, wird dieses Verzeichnis unterhalb aller "
+#~ "dieser Objekte auftauchen. Tragen Sie kein (Ober-) Verzeichnis ein falls Sie "
+#~ "ein Hauptverzeichnis definieren wollen.alle"
 
 #~ msgid "Auto-Generated Files"
 #~ msgstr "Automatisch erzeugte Dokumente"

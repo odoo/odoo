@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 08:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-11-27 14:47+0000\n"
+"Last-Translator: Phong Nguyen <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -97,6 +97,13 @@ msgid "Include Reconciled Entries"
 msgstr "Include Reconciled Entries"
 
 #. module: account
+#: view:account.pl.report:0
+msgid ""
+"The Profit and Loss report gives you an overview of your company profit and "
+"loss in a single document"
+msgstr ""
+
+#. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
 msgstr "Import from invoice or payment"
@@ -160,6 +167,13 @@ msgstr "Tham chiếu"
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
 msgstr "Chọn năm tài chính "
+
+#. module: account
+#: help:account.payment.term,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the payment "
+"term without removing it."
+msgstr ""
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -365,7 +379,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr "Tháng 6"
+msgstr "Tháng Sáu"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_bank
@@ -500,6 +514,7 @@ msgstr ""
 #: report:account.central.journal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,journal_id:0
+#: report:account.general.ledger:0
 #: view:account.invoice:0
 #: field:account.invoice,journal_id:0
 #: view:account.invoice.report:0
@@ -517,6 +532,7 @@ msgstr ""
 #: report:account.third_party_ledger_other:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
+#: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
@@ -531,6 +547,11 @@ msgstr "Confirm the selected invoices"
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
 msgstr "Parent target"
+
+#. module: account
+#: field:account.bank.statement,account_id:0
+msgid "Account used in this journal"
+msgstr ""
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -649,6 +670,11 @@ msgstr "Taxes Mapping"
 #: report:account.central.journal:0
 msgid "Centralized Journal"
 msgstr "Centralized Journal"
+
+#. module: account
+#: sql_constraint:account.sequence.fiscalyear:0
+msgid "Main Sequence must be different from current !"
+msgstr ""
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -788,11 +814,6 @@ msgid "Unreconciliation"
 msgstr "Unreconciliation"
 
 #. module: account
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
-
-#. module: account
 #: model:ir.model,name:account.model_account_analytic_Journal_report
 msgid "Account Analytic Journal"
 msgstr "Account Analytic Journal"
@@ -819,7 +840,7 @@ msgstr "J.C./Move name"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "September"
-msgstr "Tháng 9"
+msgstr "Tháng Chín"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -939,6 +960,11 @@ msgid "Extended Filters..."
 msgstr "Extended Filters..."
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_central_journal
+msgid "Centralizing Journal"
+msgstr ""
+
+#. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
 msgstr "Sale Refund"
@@ -1003,6 +1029,7 @@ msgstr "No Analytic Journal !"
 
 #. module: account
 #: report:account.partner.balance:0
+#: view:account.partner.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_balance
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
@@ -1031,11 +1058,6 @@ msgstr "Week of Year"
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
 msgstr "Landscape Mode"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_liability
-msgid "Bilanzkonten - Passiva - Kapitalkonten"
-msgstr ""
 
 #. module: account
 #: view:board.board:0
@@ -1080,7 +1102,6 @@ msgstr "Profit & Loss (Expense Accounts)"
 
 #. module: account
 #: report:account.analytic.account.journal:0
-#: report:account.journal.period.print:0
 #: report:account.move.voucher:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1183,12 +1204,6 @@ msgid "Others"
 msgstr "Others"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "UnknownError"
-msgstr "UnknownError"
-
-#. module: account
 #: view:account.account:0
 #: report:account.account.balance:0
 #: view:account.analytic.line:0
@@ -1200,6 +1215,7 @@ msgstr "UnknownError"
 #: field:account.invoice.line,account_id:0
 #: field:account.invoice.report,account_id:0
 #: field:account.journal,account_control_ids:0
+#: report:account.journal.period.print:0
 #: field:account.model.line,account_id:0
 #: view:account.move.line:0
 #: field:account.move.line,account_id:0
@@ -1234,6 +1250,7 @@ msgstr "Level"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
+#: view:account.invoice.line:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -1273,6 +1290,11 @@ msgstr "Reconcile Entries"
 #: view:res.company:0
 msgid "Overdue Payments"
 msgstr "Overdue Payments"
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -1326,11 +1348,9 @@ msgid "Account Receivable"
 msgstr "Account Receivable"
 
 #. module: account
-#: field:account.installer,config_logo:0
-#: field:account.installer.modules,config_logo:0
-#: field:wizard.multi.charts.accounts,config_logo:0
-msgid "Image"
-msgstr "Image"
+#: model:ir.actions.report.xml,name:account.account_central_journal
+msgid "Central Journal"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -1472,11 +1492,6 @@ msgid "Template for Fiscal Position"
 msgstr "Template for Fiscal Position"
 
 #. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
 msgstr "Reconciled transactions"
@@ -1516,6 +1531,12 @@ msgstr "Go to next partner"
 #: view:account.bank.statement:0
 msgid "Search Bank Statements"
 msgstr "Search Bank Statements"
+
+#. module: account
+#: sql_constraint:account.model.line:0
+msgid ""
+"Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -1560,7 +1581,7 @@ msgstr "Payable Limit"
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
 msgid "Invoice"
-msgstr "Invoice"
+msgstr "Hóa đơn"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
@@ -1577,13 +1598,6 @@ msgstr "Fiscal Year Sequence"
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
 msgstr "Separated Journal Sequences"
-
-#. module: account
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"The Object name must start with x_ and not contain any special character !"
 
 #. module: account
 #: view:account.invoice:0
@@ -1612,7 +1626,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "Invoicing"
+msgstr "Hóa đơn"
 
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
@@ -1666,6 +1680,13 @@ msgstr "The account is not defined to be reconciled !"
 #: field:account.cashbox.line,pieces:0
 msgid "Values"
 msgstr "Values"
+
+#. module: account
+#: help:account.journal.period,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the journal "
+"period without removing it."
+msgstr ""
 
 #. module: account
 #: view:res.partner:0
@@ -1751,6 +1772,11 @@ msgid "Credit amount"
 msgstr "Credit amount"
 
 #. module: account
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid ""
@@ -1766,16 +1792,16 @@ msgid "Reserve And Profit/Loss Account"
 msgstr "Reserve And Profit/Loss Account"
 
 #. module: account
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account
 #: view:account.invoice.report:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
 msgstr "Invoices Analysis"
-
-#. module: account
-#: report:account.journal.period.print:0
-msgid "A/c No."
-msgstr "A/c No."
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -1817,6 +1843,11 @@ msgstr "Sub Total"
 #: view:account.account:0
 msgid "Treasury Analysis"
 msgstr "Treasury Analysis"
+
+#. module: account
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1907,14 +1938,11 @@ msgid "Account Profit And Loss"
 msgstr "Account Profit And Loss"
 
 #. module: account
-#: view:account.account:0
-#: view:account.account.template:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-msgid "Payable Accounts"
-msgstr "Các tài khoản phải trả"
+#: field:account.installer,config_logo:0
+#: field:account.installer.modules,config_logo:0
+#: field:wizard.multi.charts.accounts,config_logo:0
+msgid "Image"
+msgstr "Image"
 
 #. module: account
 #: view:account.account:0
@@ -1936,6 +1964,13 @@ msgstr "Đã hủy"
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
 msgstr "Tài khoản không đánh thuế"
+
+#. module: account
+#: help:account.tax,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the tax "
+"without removing it."
+msgstr ""
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -1974,10 +2009,10 @@ msgstr "Open Entries"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
 msgid ""
-"A vendor refund is a credit note from your supplier indicating that he "
+"A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
-"A vendor refund is a credit note from your supplier indicating that he "
+"A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 
 #. module: account
@@ -2002,7 +2037,7 @@ msgstr "Import from invoice"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "January"
-msgstr "Tháng 1"
+msgstr "Tháng Một"
 
 #. module: account
 #: view:account.journal:0
@@ -2128,7 +2163,6 @@ msgid "Accounting Properties"
 msgstr "Accounting Properties"
 
 #. module: account
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
@@ -2390,6 +2424,17 @@ msgstr ""
 "partner."
 
 #. module: account
+#: view:account.print.journal:0
+msgid ""
+"This report gives you an overview of the situation of a specific journal"
+msgstr ""
+
+#. module: account
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
+
+#. module: account
 #: model:account.account.type,name:account.account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
@@ -2448,6 +2493,11 @@ msgstr ""
 "Entry Lines"
 
 #. module: account
+#: report:account.journal.period.print:0
+msgid "Label"
+msgstr ""
+
+#. module: account
 #: view:account.tax:0
 msgid "Accounting Information"
 msgstr "Thông tin tài chính"
@@ -2471,7 +2521,10 @@ msgstr "Chiết khấu.(%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.journal.period.print:0
 #: report:account.overdue:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
 msgid "Ref"
 msgstr "Tham chiếu"
 
@@ -2479,11 +2532,6 @@ msgstr "Tham chiếu"
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
 msgstr "The Account can either be a base tax code or a tax code account."
-
-#. module: account
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -2548,6 +2596,13 @@ msgid "Accounting entries"
 msgstr "Accounting entries"
 
 #. module: account
+#: report:account.journal.period.print:0
+msgid ""
+"given a period and a journal, the sum of debit will always be equal to the "
+"sum of credit, so there is no point to display it"
+msgstr ""
+
+#. module: account
 #: field:account.invoice.line,discount:0
 msgid "Discount (%)"
 msgstr "Chiết khấu (%)"
@@ -2592,11 +2647,6 @@ msgid "No sequence defined on the journal !"
 msgstr "No sequence defined on the journal !"
 
 #. module: account
-#: report:account.invoice:0
-msgid "Cancelled Invoice"
-msgstr "Cancelled Invoice"
-
-#. module: account
 #: code:addons/account/account.py:0
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_move_line.py:0
@@ -2616,7 +2666,7 @@ msgstr "Tax codes"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_receivables
 msgid "Customers"
-msgstr "Customers"
+msgstr "Các khách hàng"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -2632,7 +2682,7 @@ msgstr "Kỳ đến"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "August"
-msgstr "August"
+msgstr "Tháng Tám"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -2664,7 +2714,7 @@ msgstr "Reference Number"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "October"
-msgstr "October"
+msgstr "Tháng Mười"
 
 #. module: account
 #: help:account.move.line,quantity:0
@@ -2699,14 +2749,15 @@ msgstr ""
 "Giữ sản phẩm nào để sử dụng khoảng thời gian xác nhận của (hoá đơn) ngày"
 
 #. module: account
+#: help:account.bank.statement,account_id:0
+msgid ""
+"used in statement reconciliation domain, but shouldn't be used elswhere."
+msgstr ""
+
+#. module: account
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr "Base Code Amount"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_view
-msgid "Ansicht"
-msgstr ""
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -2730,6 +2781,7 @@ msgid "Financial Accounting"
 msgstr "Financial Accounting"
 
 #. module: account
+#: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
 msgid "Profit And Loss"
 msgstr "Profit And Loss"
@@ -3013,20 +3065,20 @@ msgstr "Keep empty to use the expense account"
 #: field:account.common.report,journal_ids:0
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
-#: report:account.general.ledger:0
 #: view:account.journal.period:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
+#: view:account.print.journal:0
 #: field:account.print.journal,journal_ids:0
 #: field:account.report.general.ledger,journal_ids:0
 #: field:account.vat.declaration,journal_ids:0
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
-#: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.ui.menu,name:account.menu_account_print_journal
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
 msgstr "Journals"
@@ -3239,6 +3291,16 @@ msgid ""
 msgstr ""
 "You cannot change the type of account from '%s' to '%s' type as it contains "
 "account entries!"
+
+#. module: account
+#: report:account.general.ledger:0
+msgid "Counterpart"
+msgstr ""
+
+#. module: account
+#: view:account.journal:0
+msgid "Invoicing Data"
+msgstr "Invoicing Data"
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -3470,11 +3532,6 @@ msgid "Qty"
 msgstr "Qty"
 
 #. module: account
-#: report:account.journal.period.print:0
-msgid "Move/Entry label"
-msgstr "Move/Entry label"
-
-#. module: account
 #: field:account.invoice.report,address_contact_id:0
 msgid "Contact Address Name"
 msgstr "Contact Address Name"
@@ -3633,11 +3690,6 @@ msgstr ""
 "company currency"
 
 #. module: account
-#: report:account.journal.period.print:0
-msgid "Entry No"
-msgstr "Entry No"
-
-#. module: account
 #: view:account.analytic.line:0
 msgid "General Accounting"
 msgstr "General Accounting"
@@ -3684,6 +3736,11 @@ msgstr "Display Partners"
 #: view:account.invoice:0
 msgid "Validate"
 msgstr "Validate"
+
+#. module: account
+#: sql_constraint:account.model.line:0
+msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -3746,6 +3803,7 @@ msgstr "Cấu hình"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
+#: model:account.payment.term,note:account.account_payment_term
 msgid "30 Days End of Month"
 msgstr "30 Days End of Month"
 
@@ -3761,6 +3819,13 @@ msgstr "Analytic Balance"
 #, python-format
 msgid "Net Loss"
 msgstr "Net Loss"
+
+#. module: account
+#: help:account.account,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
+msgstr ""
 
 #. module: account
 #: view:account.tax.template:0
@@ -3790,6 +3855,7 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: view:account.balance.report:0
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
@@ -4022,14 +4088,10 @@ msgid "Reconcile Writeoff"
 msgstr "Reconcile Writeoff"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"Tax base different !\n"
-"Click on compute to update tax base"
-msgstr ""
-"Tax base different !\n"
-"Click on compute to update tax base"
+#: field:account.model.line,date_maturity:0
+#: report:account.overdue:0
+msgid "Maturity date"
+msgstr "Maturity date"
 
 #. module: account
 #: view:account.account.template:0
@@ -4118,6 +4180,7 @@ msgstr "Based On"
 
 #. module: account
 #: field:account.tax,price_include:0
+#: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
 msgstr "Tax Included in Price"
 
@@ -4233,9 +4296,9 @@ msgid "Confirmed"
 msgstr "Confirmed"
 
 #. module: account
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Error ! You can not create recursive Menu."
+#: report:account.invoice:0
+msgid "Cancelled Invoice"
+msgstr "Cancelled Invoice"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -4251,15 +4314,6 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
-
-#. module: account
-#: help:account.payment.term,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the payment "
-"term without removing it."
-msgstr ""
-"If the active field is set to true, it will allow you to hide the payment "
-"term without removing it."
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4432,6 +4486,7 @@ msgstr "Third Party (Country)"
 
 #. module: account
 #: code:addons/account/account.py:0
+#: code:addons/account/account_cash_statement.py:0
 #: code:addons/account/account_move_line.py:0
 #: code:addons/account/report/common_report_header.py:0
 #: code:addons/account/wizard/account_change_currency.py:0
@@ -4642,6 +4697,12 @@ msgid "Column Name"
 msgstr "Column Name"
 
 #. module: account
+#: view:account.general.journal:0
+msgid ""
+"This report gives you an overview of the situation of your general journals"
+msgstr ""
+
+#. module: account
 #: field:account.entries.report,year:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,year:0
@@ -4690,11 +4751,6 @@ msgid "Description on invoices"
 msgstr "Miêu tả trên hóa đơn"
 
 #. module: account
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Tên mẫu không hợp lệ khi định nghĩa hành động"
-
-#. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
 msgstr "Next Partner to Reconcile"
@@ -4711,6 +4767,7 @@ msgid "Reconciliation result"
 msgstr "Kết quả đối soát"
 
 #. module: account
+#: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
 msgid "Balance Sheet"
@@ -4810,6 +4867,12 @@ msgid "Tax on Children"
 msgstr "thuế của các chi nhánh"
 
 #. module: account
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+
+#. module: account
 #: code:addons/account/account.py:0
 #: code:addons/account/wizard/account_use_model.py:0
 #, python-format
@@ -4891,9 +4954,9 @@ msgid "Bank Journal "
 msgstr "Bank Journal "
 
 #. module: account
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Rule must have at least one checked access right !"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
 
 #. module: account
 #: view:account.journal:0
@@ -5191,9 +5254,9 @@ msgid "Valid Up to"
 msgstr "Valid Up to"
 
 #. module: account
-#: view:account.journal:0
-msgid "Invoicing Data"
-msgstr "Invoicing Data"
+#: view:board.board:0
+msgid "Aged Receivables"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -5289,7 +5352,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "March"
-msgstr "March"
+msgstr "Tháng Ba"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -5430,15 +5493,6 @@ msgstr "You can not use an inactive account!"
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
 msgstr "Entries are not of the same account or already reconciled ! "
-
-#. module: account
-#: help:account.tax,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the tax "
-"without removing it."
-msgstr ""
-"If the active field is set to true, it will allow you to hide the tax "
-"without removing it."
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5659,6 +5713,11 @@ msgid "Reporting Configuration"
 msgstr "Reporting Configuration"
 
 #. module: account
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account
 #: field:account.tax,type:0
 #: field:account.tax.template,type:0
 msgid "Tax Type"
@@ -5827,7 +5886,7 @@ msgstr "Vốn chủ sở hữu"
 #. module: account
 #: selection:account.tax,type:0
 msgid "Percentage"
-msgstr "Percentage"
+msgstr "Phần trăm"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -5985,15 +6044,6 @@ msgid "Dashboard"
 msgstr "Dashboard"
 
 #. module: account
-#: help:account.journal.period,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the journal "
-"period without removing it."
-msgstr ""
-"If the active field is set to true, it will allow you to hide the journal "
-"period without removing it."
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Entry lines"
@@ -6042,8 +6092,6 @@ msgstr "Unit of Measure"
 
 #. module: account
 #: constraint:account.payment.term.line:0
-#: code:addons/account/account.py:0
-#, python-format
 msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
 "2% "
@@ -6097,11 +6145,6 @@ msgstr "Cash Transactions"
 #, python-format
 msgid "Invoice is already reconciled"
 msgstr "Invoice is already reconciled"
-
-#. module: account
-#: view:board.board:0
-msgid "Aged receivables"
-msgstr "Aged receivables"
 
 #. module: account
 #: view:account.account:0
@@ -6241,6 +6284,14 @@ msgid "Error !"
 msgstr "Error !"
 
 #. module: account
+#: report:account.journal.period.print:0
+msgid ""
+"o.journal_id.currency and formatLang((sum_debit(o.period_id.id, "
+"o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ "
+"o.journal_id.currency and o.journal_id.currency.symbol"
+msgstr ""
+
+#. module: account
 #: view:account.vat.declaration:0
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 #: model:ir.ui.menu,name:account.menu_account_vat_declaration
@@ -6293,9 +6344,12 @@ msgid "Display Ledger Report with One partner per page"
 msgstr "Display Ledger Report with One partner per page"
 
 #. module: account
-#: view:account.state.open:0
-msgid "Yes"
-msgstr "Yes"
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+msgid ""
+"This report is an analysis done by a partner. It is a PDF report containing "
+"one line per partner representing the cumulative credit balance"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
@@ -6328,6 +6382,12 @@ msgid "All Entries"
 msgstr "All Entries"
 
 #. module: account
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
 msgstr "Journal Select"
@@ -6350,6 +6410,7 @@ msgstr "Taxes Fiscal Position"
 
 #. module: account
 #: report:account.general.ledger:0
+#: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
 #: model:ir.ui.menu,name:account.menu_general_ledger
@@ -6360,6 +6421,15 @@ msgstr "General Ledger"
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 msgid "The payment order is sent to the bank."
 msgstr "The payment order is sent to the bank."
+
+#. module: account
+#: view:account.balance.report:0
+#: view:account.bs.report:0
+msgid ""
+"This report allows you to print or generate a pdf of your trial balance "
+"allowing you to quickly check the balance of each of your accounts in a "
+"single report"
+msgstr ""
 
 #. module: account
 #: help:account.move,to_check:0
@@ -6448,7 +6518,7 @@ msgstr "Data Insufficient !"
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Customer Invoices"
+msgstr "Các hóa đơn cho khách hàng"
 
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
@@ -6458,7 +6528,7 @@ msgstr "Write-Off amount"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Sales"
-msgstr "Sales"
+msgstr "Bán hàng"
 
 #. module: account
 #: model:account.journal,name:account.cash_journal
@@ -6471,7 +6541,7 @@ msgstr "Cash Journal - (test)"
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr "Done"
+msgstr "Hoàn tất"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
@@ -6508,7 +6578,7 @@ msgstr ""
 #: field:account.invoice,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
-msgstr "Source Document"
+msgstr "Tài liệu gốc"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -6538,7 +6608,14 @@ msgstr "Statements Reconciliation"
 #. module: account
 #: report:account.invoice:0
 msgid "Taxes:"
-msgstr "Taxes:"
+msgstr "Thuế:"
+
+#. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
 
 #. module: account
 #: help:account.tax,amount:0
@@ -6574,7 +6651,7 @@ msgstr "Period length (days)"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr "Monthly Turnover"
+msgstr "Doanh số hàng tháng"
 
 #. module: account
 #: view:account.move:0
@@ -6634,12 +6711,6 @@ msgstr "Are you sure you want to open Journal Entries?"
 #: view:account.state.open:0
 msgid "Are you sure you want to open this invoice ?"
 msgstr "Are you sure you want to open this invoice ?"
-
-#. module: account
-#: model:ir.actions.report.xml,name:account.account_central_journal
-#: model:ir.ui.menu,name:account.menu_account_central_journal
-msgid "Central Journals"
-msgstr "Central Journals"
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -6716,7 +6787,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "Invoice Date"
+msgstr "Ngày Hóa đơn"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -6781,7 +6852,7 @@ msgstr "Bank Statement Line"
 #. module: account
 #: field:account.automatic.reconcile,date2:0
 msgid "Ending Date"
-msgstr "Ending Date"
+msgstr "Ngày kết thúc"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -6797,15 +6868,6 @@ msgstr "Default Purchase Tax"
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Xác nhận"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
 
 #. module: account
 #: help:account.tax,domain:0
@@ -6873,13 +6935,13 @@ msgstr ""
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
 msgid "Comment"
-msgstr "Comment"
+msgstr "Ghi chú"
 
 #. module: account
 #: field:account.tax,domain:0
 #: field:account.tax.template,domain:0
 msgid "Domain"
-msgstr "Domain"
+msgstr "Vùng"
 
 #. module: account
 #: model:ir.model,name:account.model_account_use_model
@@ -6942,6 +7004,11 @@ msgstr "You can not have two open register for the same journal"
 #: view:account.payment.term.line:0
 msgid "  day of the month= -1"
 msgstr "  day of the month= -1"
+
+#. module: account
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: account
 #: help:account.journal,type:0
@@ -7052,11 +7119,6 @@ msgid "Expenses Journal - (test)"
 msgstr "Expenses Journal - (test)"
 
 #. module: account
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Độ dài trường dữ liệu không thể nhỏ hơn 1 !"
-
-#. module: account
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
@@ -7076,7 +7138,7 @@ msgstr "Total amount due:"
 #: field:account.analytic.chart,to_date:0
 #: field:project.account.analytic.line,to_date:0
 msgid "To"
-msgstr "To"
+msgstr "Đến"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
@@ -7097,7 +7159,17 @@ msgstr "Cancel Selected Invoices"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "May"
-msgstr "May"
+msgstr "Tháng Năm"
+
+#. module: account
+#: view:account.account:0
+#: view:account.account.template:0
+#: selection:account.aged.trial.balance,result_selection:0
+#: selection:account.common.partner.report,result_selection:0
+#: selection:account.partner.balance,result_selection:0
+#: selection:account.partner.ledger,result_selection:0
+msgid "Payable Accounts"
+msgstr "Các tài khoản phải trả"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -7165,12 +7237,18 @@ msgstr "Account Balance Sheet Report"
 
 #. module: account
 #: help:account.tax,price_include:0
+#: help:account.tax.template,price_include:0
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
+
+#. module: account
+#: view:account.state.open:0
+msgid "Yes"
+msgstr "Yes"
 
 #. module: account
 #: view:report.account_type.sales:0
@@ -7246,9 +7324,11 @@ msgid "CashBox Line"
 msgstr "CashBox Line"
 
 #. module: account
+#: view:account.partner.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
+#: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
 msgstr "Partner Ledger"
@@ -7320,11 +7400,6 @@ msgstr ""
 #: field:report.invoice.created,partner_id:0
 msgid "Partner"
 msgstr "Partner"
-
-#. module: account
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Error! You can not create recursive analytic accounts."
 
 #. module: account
 #: help:account.change.currency,currency_id:0
@@ -7415,6 +7490,11 @@ msgstr "Invoice '%s' is paid."
 #: model:process.node,note:account.process_node_electronicfile0
 msgid "Automatic entry"
 msgstr "Automatic entry"
+
+#. module: account
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
+msgstr ""
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7510,11 +7590,6 @@ msgstr "Invoice's state is Open"
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
 msgstr "Cost Ledger"
-
-#. module: account
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Tên nhóm phải duy nhất !"
 
 #. module: account
 #: view:account.invoice:0
@@ -7788,10 +7863,7 @@ msgstr "Refund Journal"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 msgid "Filter By"
 msgstr "Filter By"
 
@@ -8099,6 +8171,11 @@ msgstr "Force period"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr "Print Account Partner Balance"
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -8417,11 +8494,6 @@ msgid "Best regards."
 msgstr "Best regards."
 
 #. module: account
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules are not supported for osv_memory objects !"
-
-#. module: account
 #: view:account.invoice:0
 msgid "Unpaid"
 msgstr "Unpaid"
@@ -8441,6 +8513,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
 msgstr "Document: Customer account statement"
+
+#. module: account
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:0
@@ -8488,7 +8565,6 @@ msgstr "Để trống để sử dụng tài khoản thu nhập"
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
-#: report:account.journal.period.print:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8507,7 +8583,6 @@ msgstr "Manually or automatically entered in the system"
 
 #. module: account
 #: report:account.account.balance:0
-#: report:account.general.ledger:0
 msgid "Display Account"
 msgstr "Display Account"
 
@@ -8604,7 +8679,10 @@ msgid "Receiver's Signature"
 msgstr "Receiver's Signature"
 
 #. module: account
+#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
 msgid "Filters By"
 msgstr "Filters By"
 
@@ -8616,6 +8694,7 @@ msgstr "Manual entry"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.journal.period.print:0
 #: field:account.move.line,move_id:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
@@ -8643,11 +8722,6 @@ msgid ""
 "Creates an account with the selected template under this existing parent."
 msgstr ""
 "Creates an account with the selected template under this existing parent."
-
-#. module: account
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Tên của mô đun phải duy nhất !"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -8702,7 +8776,7 @@ msgstr "Payment entries"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "July"
-msgstr "July"
+msgstr "Tháng Bảy"
 
 #. module: account
 #: view:account.account:0
@@ -8767,10 +8841,14 @@ msgid "Account Subscription"
 msgstr "Account Subscription"
 
 #. module: account
-#: field:account.model.line,date_maturity:0
-#: report:account.overdue:0
-msgid "Maturity date"
-msgstr "Maturity date"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"Tax base different !\n"
+"Click on compute to update tax base"
+msgstr ""
+"Tax base different !\n"
+"Click on compute to update tax base"
 
 #. module: account
 #: view:account.subscription:0
@@ -8805,7 +8883,7 @@ msgstr "Entry Subscription"
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,date_from:0
 msgid "Start Date"
-msgstr "Start Date"
+msgstr "Ngày bắt đầu"
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
@@ -8866,15 +8944,6 @@ msgid "Suppliers Payment Management"
 msgstr "Suppliers Payment Management"
 
 #. module: account
-#: help:account.analytic.journal,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the analytic "
-"journal without removing it."
-msgstr ""
-"If the active field is set to true, it will allow you to hide the analytic "
-"journal without removing it."
-
-#. module: account
 #: field:account.period,name:0
 msgid "Period Name"
 msgstr "Period Name"
@@ -8892,6 +8961,12 @@ msgstr "Code/Date"
 #: field:account.tax,active:0
 msgid "Active"
 msgstr "Active"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Unknown Error"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -8972,7 +9047,7 @@ msgid "Through :"
 msgstr "Through :"
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_general_journal
+#: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr "General Journals"
@@ -9052,7 +9127,7 @@ msgstr "For Value percent enter % ratio between 0-1."
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "April"
-msgstr "April"
+msgstr "Tháng Tư"
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -9132,6 +9207,13 @@ msgstr "Account period"
 #: view:account.subscription:0
 msgid "Remove Lines"
 msgstr "Remove Lines"
+
+#. module: account
+#: view:account.report.general.ledger:0
+msgid ""
+"This report allows you to print or generate a pdf of your general ledger "
+"with details of all your account journals"
+msgstr ""
 
 #. module: account
 #: selection:account.account,type:0
@@ -9216,6 +9298,7 @@ msgstr "End Date"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
 msgstr "Cancel Opening Entries"
 
@@ -9254,11 +9337,7 @@ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
-msgid "Partner Other Ledger"
-msgstr "Partner Other Ledger"
-
-#. module: account
+#: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "JNRL"
@@ -9292,15 +9371,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
-#: help:account.account,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the account "
-"without removing it."
-msgstr ""
-"If the active field is set to true, it will allow you to hide the account "
-"without removing it."
-
-#. module: account
 #: field:account.account,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.bank.statement,company_id:0
@@ -9328,7 +9398,7 @@ msgstr ""
 #: field:analytic.entries.report,company_id:0
 #: field:wizard.multi.charts.accounts,company_id:0
 msgid "Company"
-msgstr "Company"
+msgstr "Công ty"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -9498,6 +9568,11 @@ msgstr ""
 "product category"
 
 #. module: account
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
+msgstr ""
+
+#. module: account
 #: view:account.subscription:0
 msgid "Recurring"
 msgstr "Recurring"
@@ -9568,7 +9643,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "December"
-msgstr "December"
+msgstr "Tháng Mười hai"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree
@@ -9665,7 +9740,7 @@ msgstr "Invoice '%s' is waiting for validation."
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "November"
-msgstr "Tháng 11"
+msgstr "Tháng Mười một"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -9690,6 +9765,7 @@ msgstr "Number of Periods"
 
 #. module: account
 #: report:account.general.journal:0
+#: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
 msgstr "General Journal"
 
@@ -9724,7 +9800,7 @@ msgstr "Total Receivable"
 #: view:account.journal:0
 #: view:account.move.line:0
 msgid "General Information"
-msgstr "General Information"
+msgstr "Thông tin chung"
 
 #. module: account
 #: view:account.move:0
@@ -9764,11 +9840,6 @@ msgid "Manual Invoice Taxes"
 msgstr "Manual Invoice Taxes"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_low_level
-msgid "Low Level"
-msgstr "Low Level"
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -9791,6 +9862,7 @@ msgstr "account.addtmpl.wizard"
 #. module: account
 #: field:account.aged.trial.balance,result_selection:0
 #: field:account.common.partner.report,result_selection:0
+#: report:account.general.ledger:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,result_selection:0
 #: field:account.partner.ledger,result_selection:0
@@ -9807,9 +9879,14 @@ msgid "Fiscal Years"
 msgstr "Fiscal Years"
 
 #. module: account
+#: help:account.analytic.journal,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the analytic "
+"journal without removing it."
+msgstr ""
+
+#. module: account
 #: field:account.analytic.line,ref:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 msgid "Ref."
 msgstr "Ref."
 
@@ -9826,7 +9903,7 @@ msgstr "Account Model"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr "February"
+msgstr "Tháng Hai"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -10044,6 +10121,18 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "Liability"
 #~ msgstr "Liability"
 
+#, python-format
+#~ msgid "UnknownError"
+#~ msgstr "UnknownError"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "The Object name must start with x_ and not contain any special character !"
+
+#~ msgid "A/c No."
+#~ msgstr "A/c No."
+
 #~ msgid "Select recurring to create a manualy recurring accounting entries"
 #~ msgstr "Select recurring to create a manualy recurring accounting entries"
 
@@ -10118,8 +10207,30 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ "There is no income account defined ' \\n                                'for "
 #~ "this product: \"%s\" (id:%d)"
 
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
+
 #~ msgid "Options"
 #~ msgstr "Options"
+
+#~ msgid "Move/Entry label"
+#~ msgstr "Move/Entry label"
+
+#~ msgid "Entry No"
+#~ msgstr "Entry No"
+
+#~ msgid "Aged receivables"
+#~ msgstr "Aged receivables"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the payment "
+#~ "term without removing it."
+#~ msgstr ""
+#~ "If the active field is set to true, it will allow you to hide the payment "
+#~ "term without removing it."
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Rule must have at least one checked access right !"
 
 #~ msgid "Generate entries before:"
 #~ msgstr "Generate entries before:"
@@ -10138,9 +10249,39 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "Income"
 #~ msgstr "Income"
 
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the tax "
+#~ "without removing it."
+#~ msgstr ""
+#~ "If the active field is set to true, it will allow you to hide the tax "
+#~ "without removing it."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the journal "
+#~ "period without removing it."
+#~ msgstr ""
+#~ "If the active field is set to true, it will allow you to hide the journal "
+#~ "period without removing it."
+
+#~ msgid "Central Journals"
+#~ msgstr "Central Journals"
+
+#~ msgid ""
+#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
+#~ "refund, otherwise Partner bank account number."
+#~ msgstr ""
+#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
+#~ "refund, otherwise Partner bank account number."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Độ dài trường dữ liệu không thể nhỏ hơn 1 !"
+
 #~ msgid "    7 Days    "
 #~ msgstr "    7 Days    "
 
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Error! You can not create recursive analytic accounts."
+
 #~ msgid ""
 #~ "For an invoice to be considered as paid, the invoice entries must be "
 #~ "reconciled with counterparts, usually payments. With the automatic "
@@ -10162,6 +10303,9 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ "This wizard will definitelly close a fiscal year and its related periods. "
 #~ "That means that no one will be able to create or modify journal entries in "
 #~ "it."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Tên nhóm phải duy nhất !"
 
 #~ msgid ""
 #~ "Maturity date of entry line generated by model line '%s' is based on partner "
@@ -10183,12 +10327,35 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "Expense"
 #~ msgstr "Chi phí"
 
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules are not supported for osv_memory objects !"
+
 #~ msgid ""
 #~ "You have to define \\nthe bank account\n"
 #~ "in the journal definition for reconciliation."
 #~ msgstr ""
 #~ "You have to define \\nthe bank account\n"
 #~ "in the journal definition for reconciliation."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Tên của mô đun phải duy nhất !"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the analytic "
+#~ "journal without removing it."
+#~ msgstr ""
+#~ "If the active field is set to true, it will allow you to hide the analytic "
+#~ "journal without removing it."
+
+#~ msgid "Partner Other Ledger"
+#~ msgstr "Partner Other Ledger"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the account "
+#~ "without removing it."
+#~ msgstr ""
+#~ "If the active field is set to true, it will allow you to hide the account "
+#~ "without removing it."
 
 #~ msgid ""
 #~ "The best practice here is to use a journal dedicated to contain the opening "
@@ -10198,6 +10365,18 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ "The best practice here is to use a journal dedicated to contain the opening "
 #~ "entries of all fiscal years. Note that you should define it with default "
 #~ "debit/credit accounts and with a centralized counterpart."
+
+#~ msgid "Low Level"
+#~ msgstr "Low Level"
 
 #~ msgid "account.move.line"
 #~ msgstr "account.move.line"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML không hợp lệ cho Kiến trúc Xem!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Lỗi ! Bạn không thể tạo trình đơn đệ quy."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Tên mô hình không hợp lệ khi định nghĩa hành động"

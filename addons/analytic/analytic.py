@@ -153,7 +153,7 @@ class account_analytic_account(osv.osv):
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
-        return super(account_analytic_account, self).check_recursion(cr, uid, ids, parent=parent)
+        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
     _order = 'date_start desc,parent_id desc,code'
     _constraints = [
@@ -206,7 +206,7 @@ class account_analytic_line(osv.osv):
         'date': fields.date('Date', required=True, select=1),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True, domain=[('type','<>','view')]),
         'user_id': fields.many2one('res.users', 'User'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 

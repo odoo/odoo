@@ -24,7 +24,7 @@ from osv import osv, fields
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale Order Line', ondelete='set null', select=True, readonly=True),
+        'sale_line_id': fields.many2one('sale.order.line', 'Sales Order Line', ondelete='set null', select=True, readonly=True),
     }
 
     def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
@@ -37,7 +37,7 @@ stock_move()
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
-        'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True),
+        'sale_id': fields.many2one('sale.order', 'Sales Order', ondelete='set null', select=True),
     }
     _defaults = {
         'sale_id': False
@@ -69,6 +69,13 @@ class stock_picking(osv.osv):
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.sale_line_id and move_line.sale_line_id.product_id.id == move_line.product_id.id:
+            uom_id = move_line.product_id.uom_id.id
+            uos_id = move_line.product_id.uos_id and move_line.product_id.uos_id.id or False
+            price = move_line.sale_line_id.price_unit
+            coeff = move_line.product_id.uos_coeff
+            if uom_id != uos_id  and coeff != 0:
+                price_unit = price / coeff
+                return price_unit
             return move_line.sale_line_id.price_unit
         return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
 
@@ -90,7 +97,7 @@ class stock_picking(osv.osv):
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
         sale_line_obj = self.pool.get('sale.order.line')
         if move_line.sale_line_id:
-            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id], 
+            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id],
                                     {
                                         'invoiced': True,
                                         'invoice_lines': [(4, invoice_line_id)],
@@ -181,7 +188,7 @@ class stock_picking(osv.osv):
                     })
         return result
 
-    def action_cancel(self, cr, uid, ids, context={}):
+    def action_cancel(self, cr, uid, ids, context=None):
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
         for pick in self.browse(cr, uid, ids, context):
             call_ship_end = True

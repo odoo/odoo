@@ -312,7 +312,7 @@ class hr_contract(osv.osv):
     _description = 'Employee Contract'
     _columns = {
         'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
+        'passport_id': fields.many2one('hr.passport', 'Passport No', required=False),
         'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
@@ -1472,7 +1472,7 @@ class hr_employee(osv.osv):
         return vals
 
     _columns = {
-        'passport_id':fields.many2one('hr.passport', 'Passport', required=False, domain="[('employee_id','=',active_id), ('address_id','=',address_home_id)]", help="Employee Passport Information"),
+        'passport_id':fields.many2one('hr.passport', 'Passport No', required=False, domain="[('employee_id','=',active_id), ('address_id','=',address_home_id)]", help="Employee Passport Information"),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'otherid': fields.char('Other Id', size=64),

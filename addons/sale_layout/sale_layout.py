@@ -32,7 +32,7 @@ class sale_order_line(osv.osv):
             if line.layout_type == 'article':
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
         return res
-    
+
     def invoice_line_create(self, cr, uid, ids, context={}):
         new_ids = []
         list_seq = []
@@ -102,7 +102,7 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
     _order = "order_id, sequence asc"
-    _description = "Sale Order line"
+    _description = "Sales Order line"
     _inherit = "sale.order.line"
     _columns = {
         'layout_type': fields.selection([

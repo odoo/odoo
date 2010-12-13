@@ -64,7 +64,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price"),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()
@@ -94,13 +94,13 @@ class account_invoice_line(osv.osv):
     _columns = {
         'cost_price': fields.float('Cost Price', digits=(16, 2)),
     }
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if vals.get('product_id', False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).write(cr, uid, ids, vals, context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         if vals.get('product_id',False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']

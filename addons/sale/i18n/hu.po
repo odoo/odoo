@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-07 08:23+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-11 23:48+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:28+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -32,15 +27,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
+"Ha az Ön raktárkészlete nem elegendő ahhoz, hogy egyszerre leszállítson "
+"mindent, elfogadja a részleges szállításokat vagy nem?"
 
 #. module: sale
 #: view:sale.report:0
@@ -55,15 +43,9 @@ msgid "Cancel Order"
 msgstr "Rendelés megszakítása"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr ""
-
-#. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Fizetés szállítás előtt"
 
 #. module: sale
 #: help:sale.order,origin:0
@@ -79,7 +61,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "VAT"
-msgstr ""
+msgstr "ÁFA"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -90,7 +72,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Mindet egyszerre"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -98,7 +80,7 @@ msgstr ""
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Projekt"
+msgstr "Analitikus számla"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -114,7 +96,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Order Line"
-msgstr ""
+msgstr "Rendelési tétel"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -141,7 +123,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr ""
+msgstr "Alapértelmezett fizetési határidő"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -159,7 +141,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Kedv.(%)"
 
 #. module: sale
 #: view:sale.report:0
@@ -175,18 +157,25 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
+msgstr "Rendelt mennyiségek"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
 msgstr ""
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Készlet mozgások"
 
 #. module: sale
 #: field:sale.order,name:0
 #: field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Rendelés hivatkozása"
 
 #. module: sale
 #: view:sale.order:0
@@ -204,8 +193,12 @@ msgid "Dates"
 msgstr ""
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"Here is a list of each sales order line to be invoiced. This view allows you "
+"to invoice sales orders partially, by lines of sales order. You don't need "
+"this list if you invoice based on the delivery orders or if you invoice "
+"sales totally."
 msgstr ""
 
 #. module: sale
@@ -221,9 +214,14 @@ msgid "From a sale order"
 msgstr ""
 
 #. module: sale
+#: view:sale.order:0
+msgid "Recreate Packing"
+msgstr ""
+
+#. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr ""
+msgstr "Kedvezmény (%)"
 
 #. module: sale
 #: view:board.board:0
@@ -236,38 +234,33 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order !"
-msgstr ""
+msgstr "Nem sikerült törölni a vásárlói megrendelést !"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Csomagolás"
 
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Bolt neve"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Vásárló nincs megadva!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
-msgstr ""
+msgstr "Vásárlói megrendelés folyamatban"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
 msgstr "Piszkozat"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Procurement Corrected"
-msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -288,20 +281,19 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
-msgstr ""
+msgstr "Összes mennyiség"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Our Salesman"
-msgstr ""
+msgstr "A mi eladónk"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -327,19 +319,36 @@ msgid "Quotations"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sale Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sale Order Line is Invoiced!"
+msgstr ""
+
+#. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
 msgid "Quantity"
-msgstr ""
+msgstr "Mennyiség"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Delivery Order Only"
-msgstr ""
+msgstr "Csak megrendelés szállítása"
 
 #. module: sale
 #: report:sale.order:0
 msgid "TVA :"
+msgstr "ÁFA:"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
 msgstr ""
 
 #. module: sale
@@ -355,26 +364,18 @@ msgstr ""
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Kurzorpozíció"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "UoM"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You have to select a customer in the sale form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
+msgstr "ME"
 
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Csomagok száma"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -386,11 +387,17 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Folyamatban"
 
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
+msgstr "Könyvelés"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
 msgstr ""
 
 #. module: sale
@@ -403,13 +410,13 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel this sale order !"
-msgstr ""
+msgstr "Ez a vásárlói megrendelés nem törölhető !"
 
 #. module: sale
 #: view:sale.order:0
@@ -428,19 +435,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr ""
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the the shipping of the "
-"products to the customer"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Invoice Corrected"
-msgstr ""
+msgstr "Beszerzési árlisták"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -450,7 +445,7 @@ msgstr ""
 #. module: sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Hiba: Érvénytelen EAN kód"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -460,7 +455,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Adómentes összeg"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -475,7 +470,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Rendelés szállítása"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -485,7 +480,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "Elosztási partner"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -493,33 +488,31 @@ msgid "March"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"There is no income account defined ' \\n                                     "
-"   'for this product: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Összesen"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Invoice address :"
-msgstr ""
+msgstr "Számlázási cím :"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr ""
+"Nem törölhető(k) az(ok) a megrendelés(ek), amelyik már vissza lett igazolva !"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Számlázási cím"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -536,7 +529,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Árajánlat / Megrendelés"
 
 #. module: sale
 #: view:sale.report:0
@@ -552,22 +545,22 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Raktár"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "Megrendelés N°"
 
 #. module: sale
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Rendelési tételek"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Adómentes összeg"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -578,7 +571,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Mennyiség (UoM)"
 
 #. module: sale
 #: help:sale.installer,sale_layout:0
@@ -589,12 +582,12 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr ""
+msgstr "Ki nem számlázott és szállított tételek"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Összesen :"
 
 #. module: sale
 #: view:sale.report:0
@@ -605,7 +598,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Érvénytelen művelet !"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -627,7 +620,7 @@ msgstr ""
 #: field:sale.report,pricelist_id:0
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Árlista"
 
 #. module: sale
 #: view:sale.report:0
@@ -638,11 +631,6 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: sale
@@ -681,12 +669,12 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Adók :"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Készletmozgás"
 
 #. module: sale
 #: view:sale.report:0
@@ -697,7 +685,7 @@ msgstr ""
 #: field:sale.order,state:0
 #: field:sale.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "Rendelés állapota"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -706,8 +694,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr ""
@@ -723,9 +709,14 @@ msgid "Procurement of sold material"
 msgstr ""
 
 #. module: sale
+#: view:sale.order:0
+msgid "Create Final Invoice"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr ""
+msgstr "Szállítási cím"
 
 #. module: sale
 #: view:sale.report:0
@@ -735,7 +726,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Egyidejűségi hiba"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Közvetlen szállítás"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -755,7 +751,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "History"
-msgstr ""
+msgstr "Történet"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -767,9 +763,22 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"Sales Orders helps you manage quotations and orders done with your "
+"customers. OpenERP suggests that you to start by creating a quotation. Once "
+"the order is confirmed, the quotation is converted into a Sale Order. "
+"OpenERP can handle several types of products so that a sales order can "
+"trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
+"Based on the configuration of the sale order, a draft invoice will be "
+"generated so that you just have to confirm it when you want to bill your "
+"customer."
+msgstr ""
+
+#. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Az Ön referenciái"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
@@ -787,7 +796,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
-msgstr ""
+msgstr "Menny"
 
 #. module: sale
 #: view:sale.order:0
@@ -803,7 +812,7 @@ msgstr ""
 #: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -819,14 +828,13 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Rendelési tétel"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Számla készítése"
@@ -854,9 +862,15 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
-msgstr ""
+msgstr "Megrendelés kapcsolattartója"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
@@ -865,10 +879,19 @@ msgid "Open Invoice"
 msgstr ""
 
 #. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sale order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sale order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
+msgstr ""
+
+#. module: sale
 #: report:sale.order:0
 #: view:sale.order.line:0
 msgid "Price"
-msgstr ""
+msgstr "Ár"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
@@ -878,12 +901,12 @@ msgstr ""
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "IPv4 kényszerítése"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr ""
+msgstr "rendelésre"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -898,12 +921,12 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,name:0
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Szállítási cím :"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
@@ -918,19 +941,11 @@ msgstr ""
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr ""
+msgstr "Akciós árlista"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
 msgstr ""
 
 #. module: sale
@@ -939,9 +954,8 @@ msgid "Delivery Costs"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "The sale order '%s' has been set in draft state."
+#: view:sale.order:0
+msgid "Total Tax Included"
 msgstr ""
 
 #. module: sale
@@ -963,17 +977,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Procurement"
-msgstr ""
+msgstr "Részleges Szállítás"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "Ajánlat visszaigazolása"
 
 #. module: sale
 #: view:sale.order:0
@@ -997,7 +1006,7 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "Ütemezés beállítása"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1029,7 +1038,7 @@ msgstr ""
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr ""
+msgstr "Ez a kivétek listája, ami ehhez a számlához lett létrehozva"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1039,7 +1048,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "Jóváhagyás"
 
 #. module: sale
 #: view:sale.order:0
@@ -1058,27 +1067,19 @@ msgstr ""
 #: model:res.request.link,name:sale.req_link_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Rendelés"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
-msgstr ""
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"A sale order generates an invoice, as soon as it is confirmed by the "
-"salesman. Depending on the Invoicing control of the sale order, the invoice "
-"is based on delivered or on ordered quantities."
-msgstr ""
+msgstr "Adók"
 
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Szállítási Politika"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1119,12 +1120,12 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Extra Info"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
@@ -1140,12 +1141,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr ""
+msgstr "Szállított mennyiségek"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "Számla a megrendelések alapján"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
@@ -1163,7 +1164,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hiba !"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1173,23 +1174,23 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "Beszerzés"
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Szállítási kivétel"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr ""
+msgstr "Számlák csoportosítása"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr ""
+msgstr "Szállítás és Kézi számla"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1206,13 +1207,7 @@ msgstr ""
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
 msgid "Sales Management"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
+msgstr "Értékesítési menedzsment"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1228,22 +1223,11 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Create invoices"
-msgstr ""
-
-#. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Számlák létrehozása"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale
@@ -1263,7 +1247,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr ""
+msgstr "Fizetve"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1280,14 +1264,14 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "Tulajdonságok"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Árajánlat"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1315,7 +1299,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-#: model:ir.ui.menu,name:sale.menu_config_sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1326,7 +1309,7 @@ msgstr "Eladás"
 #: report:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Egységár"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1334,7 +1317,7 @@ msgstr ""
 #: selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Kész"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_installer
@@ -1345,7 +1328,7 @@ msgstr ""
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Invoice"
-msgstr ""
+msgstr "Számla"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1356,12 +1339,6 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: sale
@@ -1382,12 +1359,12 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
-msgstr ""
+msgstr "Szállítás alapértelmezett politikája"
 
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr ""
+msgstr "Nemzetközi Kereskedelmi Feltételek"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1396,7 +1373,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_invoiced
@@ -1411,45 +1388,38 @@ msgstr ""
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr ""
+msgstr "Számla sztornó"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr ""
+msgstr "sale.config.picking_policy"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "Számlázás"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Rendelés dátuma"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Termék ÉE"
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Művelet folyamatban van"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr ""
+msgstr "Termék ME"
 
 #. module: sale
 #: view:sale.order:0
@@ -1459,6 +1429,17 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Order"
+msgstr "Rendelés"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Ignore Exception"
 msgstr ""
 
 #. module: sale
@@ -1467,9 +1448,17 @@ msgid "Shipping address for current sale order"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "States"
-msgstr ""
+msgstr "Állapotok"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1485,7 +1474,7 @@ msgstr ""
 #: field:sale.order,amount_total:0
 #: view:sale.order.line:0
 msgid "Total"
-msgstr ""
+msgstr "Összesen"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -1518,7 +1507,7 @@ msgstr ""
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr ""
+msgstr "Megrendelés szállításának lépései"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1543,7 +1532,7 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Számla kifogás"
 
 #. module: sale
 #: help:sale.installer,sale_margin:0
@@ -1557,11 +1546,12 @@ msgstr ""
 #, python-format
 msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
+"Először törölnie kell a vásárlói megrendeléshez csatolt összes számlát."
 
 #. module: sale
 #: report:sale.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Nettó összesen:"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1577,7 +1567,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Bolt"
 
 #. module: sale
 #: view:sale.report:0
@@ -1602,6 +1592,23 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1609,22 +1616,21 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
+msgstr "Mennyiség (UoS)"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Megerősítve"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
+msgstr "Megerősítés"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: sale
@@ -1637,13 +1643,13 @@ msgstr ""
 #: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Tételek"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "Vevői rendelés tételei"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -1653,7 +1659,7 @@ msgstr ""
 #. module: sale
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Beállítások"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1664,7 +1670,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr ""
+msgstr "Számla a rendelésről a szállítás után"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -1676,7 +1682,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Szállítás teljesítése"
 
 #. module: sale
 #: view:sale.report:0
@@ -1699,13 +1705,13 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,th_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Súly"
 
 #. module: sale
 #: view:sale.open.invoice:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Számlák"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1717,6 +1723,16 @@ msgstr ""
 #: field:sale.installer,config_logo:0
 msgid "Image"
 msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
+"Válasszon ki egy vásárlót az értékesítési űrlapon !\n"
+"Kérem, állítson be egy vásárlót, mielőtt kiválasztana egy terméket."
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1736,7 +1752,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Eladó"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1745,12 +1761,15 @@ msgid ""
 "The same sale order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
+"Az a számlák listája, ami ehhez a vásárlói megrendeléshez lett létrehozva. "
+"Lehet, hogy ugyanaz a megrendelés többször ki lett számlázva (a példa "
+"szerint)."
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Számlázva"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -1759,7 +1778,7 @@ msgstr ""
 #: view:sale.order:0
 #, python-format
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Előzetes számla"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
@@ -1769,7 +1788,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Tervezet"
 
 #. module: sale
 #: field:sale.config.picking_policy,progress:0
@@ -1780,7 +1799,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 msgid "Product sales"
-msgstr ""
+msgstr "Termék értékesítés"
 
 #. module: sale
 #: field:sale.order,date_order:0
@@ -1792,16 +1811,19 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
-msgstr ""
+msgstr "Megrendelések"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Fizetési Feltételek"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
 msgstr ""
 
 #. module: sale
@@ -1813,7 +1835,7 @@ msgstr ""
 #: model:product.template,name:sale.advance_product_0_product_template
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
-msgstr ""
+msgstr "Termékváltozat"
 
 #. module: sale
 #: view:sale.report:0
@@ -1832,19 +1854,9 @@ msgid "January"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:0
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sale Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sale Order Line is Invoiced!"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
-msgstr ""
+msgstr "Vásárlói megrendelés folyamatban"
 
 #. module: sale
 #: field:sale.installer,sale_layout:0
@@ -1855,7 +1867,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Hiba"
 
 #. module: sale
 #: view:sale.report:0
@@ -1866,12 +1878,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Engedélyez"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1881,23 +1888,18 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr ""
+msgstr "készletből"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sale Shop"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr ""
+msgstr "Értékesítő bolt"
 
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Bezárás"
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -1911,23 +1913,29 @@ msgid "Not enough stock !"
 msgstr ""
 
 #. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
+msgstr "Rendelési tételek"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"If you have more than one shops reselling your company products, you can "
+"create and manage them from here. Whenever you will record a new quotation "
+"or sale order, it has to be linked to a shop. The shop also defines the "
+"warehouse from which the products will be delivered for each particular sale."
 msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 #: field:sale.order.line,name:0
 msgid "Description"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order \\n                             "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+msgstr "Leírás"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1944,7 +1952,7 @@ msgstr ""
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Vásárló"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1959,13 +1967,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Picking Default Policy"
+msgstr ""
+
+#. module: sale
 #: selection:sale.report,month:0
 msgid "April"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been set in draft state."
 msgstr ""
 
 #. module: sale
@@ -1977,7 +1991,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Fizetési feltétel"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
@@ -1989,14 +2003,19 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: field:sale.config.picking_policy,picking_policy:0
-msgid "Picking Default Policy"
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
 msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "Árajánlat N°"
 
 #. module: sale
 #: field:sale.order,picked_rate:0
@@ -2013,7 +2032,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr ""
+msgstr "Számla a szállítások alapján"
 
 #~ msgid "In progress"
 #~ msgstr "Folyamatban"

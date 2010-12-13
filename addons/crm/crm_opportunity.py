@@ -50,7 +50,9 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
      }
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -60,11 +62,13 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
-        if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
-        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead5')
+        stage_id = data_obj.browse(cr, uid, data_id).res_id
+        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id}
+        if stage_obj.on_change:
+            value.update({'probability': stage_obj.probability})
 
         self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
@@ -83,21 +87,22 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
-        value = {}
-        if stage_id:
-            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
-            value['stage_id'] = stage_id
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead6')
+        stage_id = data_obj.browse(cr, uid, data_id).res_id
+        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id}
+        if stage_obj.on_change:
+            value.update({'probability': stage_obj.probability})
 
-        res = self.write(cr, uid, ids, value)
+        self.write(cr, uid, ids, value)
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
                 message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
-
+    
     def case_cancel(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting probability
         @param self: The object pointer
@@ -119,7 +124,7 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'stage_id': False})
+        self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
         return res
    
  
