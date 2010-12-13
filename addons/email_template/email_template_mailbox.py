@@ -40,7 +40,7 @@ class email_template_mailbox(osv.osv):
         to periodically send emails
         """
         try:
-            self.send_all_mail(cursor, user, context)
+            self.send_all_mail(cursor, user, context=context)
         except Exception, e:
             LOGGER.notifyChannel(
                                  "Email Template",

@@ -78,8 +78,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        if context is None:
-            context = {}
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -143,8 +141,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def _get_issue_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         issues = []
         issue_pool = self.pool.get('project.issue')
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
@@ -152,8 +148,6 @@ class project_issue(crm.crm_case, osv.osv):
         return issues
 
     def _get_issue_work(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         issues = []
         issue_pool = self.pool.get('project.issue')
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
@@ -339,8 +333,6 @@ class project_issue(crm.crm_case, osv.osv):
 
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        if context is None:
-            context = {}
         result = {}
         if not task_id:
             return {'value':{}}
@@ -378,7 +370,8 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject') or _('No Title')
@@ -418,8 +411,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        if context is None:
-            context = {}
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

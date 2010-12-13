@@ -104,16 +104,12 @@ class project(osv.osv):
         return res
 
     def _get_project_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
     def _get_project_work(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
@@ -382,8 +378,6 @@ class task(osv.osv):
         return res
 
     def _get_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
@@ -537,8 +531,6 @@ class task(osv.osv):
         """
         Close Task
         """
-        if context is None:
-            context = {}
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
@@ -569,8 +561,6 @@ class task(osv.osv):
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         request = self.pool.get('res.request')
 
         for task in self.browse(cr, uid, ids, context=context):
@@ -629,8 +619,6 @@ class task(osv.osv):
         """
         Delegate Task to another users.
         """
-        if context is None:
-            context = {}
         task = self.browse(cr, uid, task_id, context=context)
         new_task_id = self.copy(cr, uid, task.id, {
             'name': delegate_data['name'],

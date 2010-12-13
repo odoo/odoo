@@ -38,8 +38,6 @@ class hr_action_reason(osv.osv):
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
-    if context is None:
-        context = {}
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
     return ids and ids[0] or False
 
@@ -48,8 +46,6 @@ class hr_attendance(osv.osv):
     _description = "Attendance"
 
     def _day_compute(self, cr, uid, ids, fieldnames, args, context=None):
-        if context is None:
-            context = {}
         res = dict.fromkeys(ids, '')
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
@@ -93,8 +89,6 @@ class hr_employee(osv.osv):
     _description = "Employee"
 
     def _state(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         result = {}
         if not ids:
             return result
@@ -120,16 +114,12 @@ class hr_employee(osv.osv):
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
-        if context is None:
-            context = {}
         cr.execute('SELECT MAX(name) FROM hr_attendance WHERE employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
     def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
         obj_attendance = self.pool.get('hr.attendance')
-        if context is None:
-            context = {}
         id = False
         warning_sign = 'sign'
         res = {}

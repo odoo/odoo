@@ -50,7 +50,6 @@ class account_move_line(osv.osv):
     def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
             return []
-        if context is None: context = {}
         line_obj = self.pool.get('account.move.line')
         query = line_obj._query_get(cr, uid, context={})
         where = ' and '.join(map(lambda x: '''(SELECT
@@ -89,7 +88,6 @@ class account_move_line(osv.osv):
         """
         payment_mode_obj = self.pool.get('payment.mode')
         line2bank = {}
-        if context is None: context = {}
         if not ids:
             return {}
         bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,

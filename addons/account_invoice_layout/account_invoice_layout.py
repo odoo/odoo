@@ -127,13 +127,11 @@ class account_invoice_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None: context = {}
         default['state'] = self.browse(cr, uid, id, context=context).state
         return super(account_invoice_line, self).copy_data(cr, uid, id, default, context)
 
     def _fnct(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if context is None: context = {}
         lines = self.browse(cr, uid, ids, context=context)
         account_ids = [line.account_id.id for line in lines]
         account_names = dict(self.pool.get('account.account').name_get(cr, uid, account_ids, context=context))

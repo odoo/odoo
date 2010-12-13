@@ -48,7 +48,7 @@ class auction_lots_sms_send(osv.osv_memory):
         lot_obj = self.pool.get('auction.lots')
         partner_obj = self.pool.get('res.partner')
         partner_address_obj = self.pool.get('res.partner.address')
-        for data in self.read(cr, uid, ids):
+        for data in self.read(cr, uid, ids, context=context):
             lots = lot_obj.read(cr, uid, context.get('active_ids', []), ['obj_num','obj_price','ach_uid'])
             res = partner_obj.read(cr, uid, [l['ach_uid'][0] for l in lots if l['ach_uid']], ['gsm'], context)
             

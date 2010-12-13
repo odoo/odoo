@@ -46,7 +46,8 @@ class auction_lots_invoice(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         res = super(auction_lots_invoice, self).default_get(cr, uid, fields, context=context)
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids', []))
@@ -102,7 +103,8 @@ class auction_lots_invoice(osv.osv_memory):
         @param ids: List of Auction lots make invoice buyer’s IDs
         @return: dictionary of  account invoice form.
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         service = netsvc.LocalService("object_proxy")
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number','ach_uid'])

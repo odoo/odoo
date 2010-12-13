@@ -53,7 +53,8 @@ class auction_catalog_flagey(osv.osv_memory):
         """
         lots_obj = self.pool.get('auction.lots')
         auc_dates_obj = self.pool.get('auction.dates')
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         current_auction = auc_dates_obj.browse(cr, uid, context.get('active_ids', []))
         v_lots = lots_obj.search(cr, uid, [('auction_id','=',current_auction.id)])
         v_ids = lots_obj.browse(cr, uid, v_lots, context=context)
@@ -72,7 +73,8 @@ class auction_catalog_flagey(osv.osv_memory):
          @param context: A standard dictionary 
          @return: Report  
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         datas = {'ids': context.get('active_ids',[])}
         return {
             'type': 'ir.actions.report.xml',

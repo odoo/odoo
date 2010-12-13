@@ -104,8 +104,6 @@ class event_event(osv.osv):
         res = False
         if type(ids) in (int, long,):
             ids = [ids]
-        if context is None:
-            context = {}
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
         for event in self.browse(cr, uid, ids, context=context):
@@ -267,8 +265,6 @@ class event_event(osv.osv):
         """
         if not team_id:
             return {}
-        if context is None:
-            context = {}
         team_pool = self.pool.get('crm.case.section')
         res = {}
         team = team_pool.browse(cr, uid, team_id, context=context)
@@ -287,7 +283,6 @@ class event_registration(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
         res = {}
-        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.unit_price * line.nb_register
             pricelist = line.event_id.pricelist_id or line.partner_invoice_id.property_product_pricelist
@@ -490,8 +485,6 @@ class event_registration(osv.osv):
         """
         data_pool = self.pool.get('ir.model.data')
         unclosed_ids = []
-        if context is None:
-            context = {}
         for registration in self.browse(cr, uid, ids, context=context):
             if registration.tobe_invoiced and not registration.invoice_id:
                 unclosed_ids.append(registration.id)

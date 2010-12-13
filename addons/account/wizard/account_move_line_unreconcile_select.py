@@ -28,8 +28,6 @@ class account_move_line_unreconcile_select(osv.osv_memory):
        'account_id': fields.many2one('account.account','Account',required=True),
     }
     def action_open_window(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         return {
                 'domain': "[('account_id','=',%d),('reconcile_id','<>',False),('state','<>','draft')]" % data['account_id'],

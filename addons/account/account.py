@@ -30,7 +30,7 @@ from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
 
-def check_cycle(self, cr, uid, ids):
+def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
     until it can't find any more parent(s)
 
@@ -194,7 +194,7 @@ class account_account(osv.osv):
                 if not args[pos][2]:
                     del args[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2])
+                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
                 if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
                     args[pos] = ('type','not in',('consolidation','view'))
                     continue
@@ -207,7 +207,7 @@ class account_account(osv.osv):
         if context and context.has_key('consolidate_childs'): #add consolidated childs of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
-            for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
+            for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
                 ids.append(consolidate_child.id)
             return ids
 
@@ -681,7 +681,7 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
-        result = self.browse(cr, user, ids, context)
+        result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
             name = rs.name
@@ -729,7 +729,7 @@ class account_journal(osv.osv):
             view_id = 'account_journal_bank_view_multi'
 
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
 
         res.update({
             'centralisation':type == 'situation',
@@ -2059,7 +2059,7 @@ class account_model(osv.osv):
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
 
-        for model in self.browse(cr, uid, ids, context):
+        for model in self.browse(cr, uid, ids, context=context):
             entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
@@ -2721,7 +2721,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # Creating Journals Sales and Purchase
         vals_journal={}
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
         view_id = data.res_id
 
         seq_id = obj_sequence.search(cr, uid, [('name','=','Account Journal')])[0]

@@ -31,7 +31,6 @@ class Invoice(osv.osv):
         if not ids:
             return {}
         res = {}
-        if context is None: context = {}
         for invoice in self.browse(cursor, user, ids, context=context):
             res[invoice.id] = 0.0
             if invoice.move_id:

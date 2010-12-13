@@ -59,7 +59,7 @@ class auction_dates(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
+        reads = self.read(cr, uid, ids, ['name', 'auction1'], context=context)
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
 
@@ -193,7 +193,7 @@ class aie_category(osv.osv):
         res = []
         if not ids:
             return res
-        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         for record in reads:
             name = record['name']
             if record['parent_id']:

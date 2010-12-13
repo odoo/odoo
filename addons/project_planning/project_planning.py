@@ -50,8 +50,6 @@ class report_account_analytic_planning(osv.osv):
     _description = "Planning"
 
     def _child_compute(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         obj_dept = self.pool.get('hr.department')
         obj_user = self.pool.get('res.users')
         result = {}
@@ -100,8 +98,6 @@ class report_account_analytic_planning(osv.osv):
         return result
 
     def _check_planning_responsible(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for obj_plan in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT id FROM report_account_analytic_planning plan
@@ -149,26 +145,18 @@ class report_account_analytic_planning(osv.osv):
     ]
 
     def action_open(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'open'}, context=context)
         return True
 
     def action_cancel(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'cancel'}, context=context)
         return True
 
     def action_draft(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'draft'}, context=context)
         return True
 
     def action_done(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'done'}, context=context)
         return True
 
@@ -180,8 +168,6 @@ class report_account_analytic_planning_line(osv.osv):
     _rec_name = 'user_id'
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['user_id', 'planning_id', 'note'], context=context)
@@ -198,8 +184,6 @@ class report_account_analytic_planning_line(osv.osv):
         return res
 
     def _amount_base_uom(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
@@ -262,8 +246,6 @@ class report_account_analytic_planning_user(osv.osv):
     _auto = False
 
     def _get_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
@@ -288,8 +270,6 @@ class report_account_analytic_planning_user(osv.osv):
         return result
 
     def _get_free(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         result = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.user_id:
@@ -299,8 +279,6 @@ class report_account_analytic_planning_user(osv.osv):
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
@@ -410,8 +388,6 @@ class report_account_analytic_planning_account(osv.osv):
     _auto = False
 
     def _get_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
@@ -437,8 +413,6 @@ class report_account_analytic_planning_account(osv.osv):
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
@@ -511,8 +485,6 @@ class report_account_analytic_planning_stat(osv.osv):
     _order = 'planning_id,user_id'
 
     def _sum_amount_real(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
@@ -534,8 +506,6 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         return result
 
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id

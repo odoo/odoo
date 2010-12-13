@@ -281,9 +281,9 @@ class crm_lead(crm_case, osv.osv):
                         }
         return value
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'date_closed' in vals:
-            return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
             
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
@@ -297,7 +297,7 @@ class crm_lead(crm_case, osv.osv):
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     
     def stage_next(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             if stage_obj.on_change:

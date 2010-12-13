@@ -33,8 +33,6 @@ class account_move_journal(osv.osv_memory):
         """
         Return  default account period value
         """
-        if context is None:
-            context = {}
         account_period_obj = self.pool.get('account.period')
         ids = account_period_obj.find(cr, uid, context=context)
         period_id = False
@@ -48,8 +46,6 @@ class account_move_journal(osv.osv_memory):
         """
 
         journal_id = False
-        if context is None:
-            context = {}
 
         journal_pool = self.pool.get('account.journal')
         if context.get('journal_type', False):
@@ -142,8 +138,8 @@ class account_move_journal(osv.osv_memory):
             ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)], context=context)
 
             if not ids:
-                journal = journal_pool.browse(cr, uid, journal_id)
-                period = account_period_obj.browse(cr, uid, period_id)
+                journal = journal_pool.browse(cr, uid, journal_id, context=context)
+                period = account_period_obj.browse(cr, uid, period_id, context=context)
 
                 name = journal.name
                 state = period.state

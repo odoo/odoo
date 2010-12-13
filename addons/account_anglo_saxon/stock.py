@@ -31,7 +31,6 @@ class stock_picking(osv.osv):
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         '''Return ids of created invoices for the pickings'''
-        if context is None: context = {}
         res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type, context=context)
         if type == 'in_refund':
             for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):

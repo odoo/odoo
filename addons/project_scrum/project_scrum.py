@@ -70,20 +70,14 @@ class project_scrum_sprint(osv.osv):
         return res
 
     def button_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def button_open(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The sprint '%s' has been opened.") % (name,)
@@ -91,8 +85,6 @@ class project_scrum_sprint(osv.osv):
         return True
 
     def button_close(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The sprint '%s' has been closed.") % (name,)
@@ -100,8 +92,6 @@ class project_scrum_sprint(osv.osv):
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
@@ -134,8 +124,6 @@ class project_scrum_sprint(osv.osv):
         @param ids: List of case’s IDs
         @param context: A standard dictionary for contextual values
         """
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default.update({'backlog_ids': [], 'meeting_ids': []})
@@ -171,8 +159,6 @@ class project_scrum_product_backlog(osv.osv):
         progress = {}
         if not ids:
             return res
-        if context is None:
-            context = {}
         for backlog in self.browse(cr, uid, ids, context=context):
             tot = 0.0
             prog = 0.0
@@ -195,28 +181,20 @@ class project_scrum_product_backlog(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         obj_project_task = self.pool.get('project.task')
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def button_open(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         obj_project_task = self.pool.get('project.task')
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
@@ -224,14 +202,10 @@ class project_scrum_product_backlog(osv.osv):
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
     def button_postpone(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for product in self.browse(cr, uid, ids, context=context):
             tasks_id = []
             for task in product.tasks_id:
@@ -276,8 +250,6 @@ class project_scrum_task(osv.osv):
 
     def _get_task(self, cr, uid, ids, context=None):
         result = {}
-        if context is None:
-            context = {}
         for line in self.pool.get('project.scrum.product.backlog').browse(cr, uid, ids, context=context):
             for task in line.tasks_id:
                 result[task.id] = True
@@ -322,8 +294,6 @@ class project_scrum_meeting(osv.osv):
     }
 
     def button_send_to_master(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
@@ -347,8 +317,6 @@ class project_scrum_meeting(osv.osv):
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
-        if context is None:
-            context = {}
         email_from = tools.config.get('email_from', False)
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)

@@ -117,8 +117,6 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        if context is None:
-            context = {}
 
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,

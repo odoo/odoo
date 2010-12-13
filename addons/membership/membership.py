@@ -385,8 +385,6 @@ class Partner(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
         default = default.copy()
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context=context)
@@ -401,8 +399,6 @@ class Partner(osv.osv):
         invoice_tax_obj = self.pool.get('account.invoice.tax')
         product_id = product_id or datas.get('membership_product_id', False)
         amount = datas.get('amount', 0.0)
-        if context is None:
-            context={}
         invoice_list = []
         if type(ids) in (int, long,):
             ids = [ids]
@@ -513,8 +509,6 @@ class account_invoice_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         """Overrides orm write method
         """
-        if context is None:
-            context={}
         member_line_obj = self.pool.get('membership.membership_line')
         res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         for line in self.browse(cr, uid, ids, context=context):
@@ -543,8 +537,6 @@ class account_invoice_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         """Remove Membership Line Record for Account Invoice Line
         """
-        if context is None:
-            context={}
         member_line_obj = self.pool.get('membership.membership_line')
         for id in ids:
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', id)], context=context)

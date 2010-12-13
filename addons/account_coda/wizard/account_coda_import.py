@@ -72,7 +72,7 @@ class account_coda_import(osv.osv_memory):
         data = self.read(cr, uid, ids)[0]
 
         codafile = data['coda']
-        journal_code = journal_obj.browse(cr, uid, data['journal_id'], context).code
+        journal_code = journal_obj.browse(cr, uid, data['journal_id'], context=context).code
 
         period = account_period_obj.find(cr, uid, context=context)[0]
         def_pay_acc = data['def_payable']

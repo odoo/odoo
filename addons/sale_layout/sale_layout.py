@@ -27,7 +27,6 @@ class sale_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)

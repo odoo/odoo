@@ -176,8 +176,6 @@ class res_users(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
         user_id = super(res_users, self).create(cr, uid, data, context=context)
         data_obj = self.pool.get('ir.model.data')
         try:

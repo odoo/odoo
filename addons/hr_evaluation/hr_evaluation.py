@@ -106,8 +106,6 @@ class hr_employee(osv.osv):
 
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         obj_evaluation = self.pool.get('hr_evaluation.evaluation')
-        if context is None:
-            context = {}
         for id in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
             if id.evaluation_plan_id and id.evaluation_date:
                 if (parser.parse(id.evaluation_date) + relativedelta(months = int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
@@ -116,8 +114,6 @@ class hr_employee(osv.osv):
         return True
 
     def onchange_evaluation_plan_id(self, cr, uid, ids, evaluation_plan_id, evaluation_date, context=None):
-        if context is None:
-            context = {}
         if evaluation_plan_id:
             evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
             obj_evaluation = self.pool.get('hr_evaluation.evaluation')
@@ -135,8 +131,6 @@ class hr_employee(osv.osv):
         return {'value': {'evaluation_date': evaluation_date}}
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
         id = super(hr_employee, self).create(cr, uid, vals, context=context)
         if vals.get('evaluation_plan_id', False):
             self.pool.get('hr_evaluation.evaluation').create(cr, uid, {'employee_id': id, 'plan_id': vals['evaluation_plan_id']}, context=context)
@@ -180,8 +174,6 @@ class hr_evaluation(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not ids:
             return []
         reads = self.browse(cr, uid, ids, context=context)
@@ -192,8 +184,6 @@ class hr_evaluation(osv.osv):
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        if context is None:
-            context = {}
         evaluation_plan_id=False
         if employee_id:
             employee_obj=self.pool.get('hr.employee')
@@ -246,8 +236,6 @@ class hr_evaluation(osv.osv):
 
     def button_final_validation(self, cr, uid, ids, context=None):
         request_obj = self.pool.get('hr.evaluation.interview')
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for id in self.browse(cr, uid, ids, context=context):
             if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', '=', 'done')], context=context)):
@@ -255,21 +243,15 @@ class hr_evaluation(osv.osv):
         return True
 
     def button_done(self,cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids,{'progress': 1 * 100}, context=context)
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
         if 'date' in vals:
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
@@ -306,8 +288,6 @@ class hr_evaluation_interview(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not ids:
             return []
         reads = self.browse(cr, uid, ids, context=context)
@@ -318,15 +298,11 @@ class hr_evaluation_interview(osv.osv):
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
         hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
-        if context is None:
-            context = {}
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
@@ -349,14 +325,10 @@ class hr_evaluation_interview(osv.osv):
         return True
 
     def survey_req_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, { 'state': 'draft'}, context=context)
         return True
 
     def survey_req_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, { 'state': 'cancel'}, context=context)
         return True
 

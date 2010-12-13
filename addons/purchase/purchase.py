@@ -223,7 +223,7 @@ class purchase_order(osv.osv):
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
-        purchase_orders = self.read(cr, uid, ids, ['state'])
+        purchase_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in purchase_orders:
             if s['state'] in ['draft','cancel']:

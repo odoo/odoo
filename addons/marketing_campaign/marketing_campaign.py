@@ -562,8 +562,6 @@ class marketing_campaign_workitem(osv.osv):
 
     def _resource_search(self, cr, uid, obj, name, args, domain=None, context=None):
         """Returns id of workitem whose resource_name matches  with the given name"""
-        if context is None:
-            context = {}
         if not len(args):
             return []
 

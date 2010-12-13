@@ -67,7 +67,6 @@ class payment_order(osv.osv):
         if not ids:
             return {}
         res = {}
-        if context is None: context = {}
         for order in self.browse(cursor, user, ids, context=context):
             if order.line_ids:
                 res[order.id] = reduce(lambda x, y: x + y.amount, order.line_ids, 0.0)
@@ -128,7 +127,6 @@ class payment_order(osv.osv):
         return True
 
     def copy(self, cr, uid, id, default={}, context=None):
-        if context is None: context = {}
         default.update({
             'state': 'draft',
             'line_ids': [],
@@ -272,7 +270,6 @@ class payment_line(osv.osv):
     def _get_currency(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         currency_obj = self.pool.get('res.currency')
-        if context is None: context = {}
         user = user_obj.browse(cr, uid, uid, context=context)
 
         if user.company_id:
@@ -367,7 +364,7 @@ class payment_line(osv.osv):
         data['amount_currency'] = data['communication'] = data['partner_id'] = data['reference'] = data['date_created'] = data['bank_id'] = data['amount'] = False
 
         if move_line_id:
-            line = move_line_obj.browse(cr, uid, move_line_id)
+            line = move_line_obj.browse(cr, uid, move_line_id, context=context)
             data['amount_currency'] = line.amount_to_pay
 
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
@@ -410,7 +407,6 @@ class payment_line(osv.osv):
 
     def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data = {}
-        if context is None: context = {}
         partner_zip_obj = self.pool.get('res.partner.zip')
         partner_obj = self.pool.get('res.partner')
         payment_mode_obj = self.pool.get('payment.mode')

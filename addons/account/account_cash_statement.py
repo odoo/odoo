@@ -283,7 +283,7 @@ class account_cash_statement(osv.osv):
         @return: True on success, False otherwise
         """
 
-        super(account_cash_statement, self).write(cr, uid, ids, vals)
+        super(account_cash_statement, self).write(cr, uid, ids, vals, context=context)
         res = self._get_starting_balance(cr, uid, ids)
         for rs in res:
             super(account_cash_statement, self).write(cr, uid, [rs], res.get(rs))
@@ -338,7 +338,7 @@ class account_cash_statement(osv.osv):
                 'state': 'open',
 
             })
-            self.write(cr, uid, [statement.id], vals)
+            self.write(cr, uid, [statement.id], vals, context=context)
         return True
 
     def balance_check(self, cr, uid, cash_id, journal_type='bank', context=None):

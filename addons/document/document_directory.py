@@ -196,7 +196,7 @@ class document_directory(osv.osv):
         else:
             raise ValueError("dir node for %s type", dbro.type)
 
-    def _prepare_context(self, cr, uid, nctx, context):
+    def _prepare_context(self, cr, uid, nctx, context=None):
         """ Fill nctx with properties for this database
         @param nctx instance of nodes.node_context, to be filled
         @param context ORM context (dict) for us
@@ -210,7 +210,7 @@ class document_directory(osv.osv):
         """
         return
 
-    def get_dir_permissions(self, cr, uid, ids, context=None ):
+    def get_dir_permissions(self, cr, uid, ids, context=None):
         """Check what permission user 'uid' has on directory 'id'
         """
         assert len(ids) == 1

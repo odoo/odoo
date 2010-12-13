@@ -41,8 +41,6 @@ class account_analytic_default(osv.osv):
 
     def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context=None):
         domain = []
-        if context is None:
-            context = {}
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
         domain += [('product_id','=', False)]
@@ -106,8 +104,6 @@ class sale_order_line(osv.osv):
 
     # Method overridden to set the analytic account by default on criterion match
     def invoice_line_create(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, context=context)
         if not ids:
             return create_ids

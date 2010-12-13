@@ -552,7 +552,7 @@ class account_move_line(osv.osv):
         if (not currency_id) or (not account_id):
             return {}
         result = {}
-        acc = account_obj.browse(cr, uid, account_id)
+        acc = account_obj.browse(cr, uid, account_id, context=context)
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
@@ -668,7 +668,7 @@ class account_move_line(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
             company_list.append(line.company_id.id)
 
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
@@ -814,8 +814,10 @@ class account_move_line(osv.osv):
                 partner_obj.write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return r_id
 
-    def view_header_get(self, cr, user, view_id, view_type, context):
-        context = self.convert_to_period(cr, user, context)
+    def view_header_get(self, cr, user, view_id, view_type, context=None):
+        if context is None:
+            context = {}
+        context = self.convert_to_period(cr, user, context=context)
         if context.get('account_id', False):
             cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
             res = cr.fetchone()

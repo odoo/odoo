@@ -58,7 +58,7 @@ class subscription_document_fields(osv.osv):
     _defaults = {}
 subscription_document_fields()
 
-def _get_document_types(self, cr, uid, context={}):
+def _get_document_types(self, cr, uid, context=None):
     cr.execute('select m.model, s.name from subscription_document s, ir_model m WHERE s.model = m.id order by s.name')
     return cr.fetchall()
 
@@ -92,7 +92,7 @@ class subscription_subscription(osv.osv):
     }
 
     def set_process(self, cr, uid, ids, context=None):
-        for row in self.read(cr, uid, ids):
+        for row in self.read(cr, uid, ids, context=context):
             mapping = {'name':'name','interval_number':'interval_number','interval_type':'interval_type','exec_init':'numbercall','date_init':'nextcall'}
             res = {'model':'subscription.subscription', 'args': repr([[row['id']]]), 'function':'model_copy', 'priority':6, 'user_id':row['user_id'] and row['user_id'][0]}
             for key,value in mapping.items():
@@ -102,7 +102,7 @@ class subscription_subscription(osv.osv):
         return True
 
     def model_copy(self, cr, uid, ids, context=None):
-        for row in self.read(cr, uid, ids):
+        for row in self.read(cr, uid, ids, context=context):
             if not row.get('cron_id',False):
                 continue
             cron_ids = [row['cron_id'][0]]

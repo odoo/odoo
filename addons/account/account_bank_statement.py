@@ -385,7 +385,7 @@ class account_bank_statement(osv.osv):
         return {'value': {'balance_start': balance_start, 'account_id': account_id}}
 
     def unlink(self, cr, uid, ids, context=None):
-        stat = self.read(cr, uid, ids, ['state'])
+        stat = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for t in stat:
             if t['state'] in ('draft'):

@@ -656,7 +656,7 @@ class Calendar(CalDAV, osv.osv):
         ctx_model = context.get('model', None)
         ctx_res_id = context.get('res_id', None)
         ical = vobject.iCalendar()
-        for cal in self.browse(cr, uid, ids):
+        for cal in self.browse(cr, uid, ids, context=context):
             for line in cal.line_ids:
                 if ctx_model and ctx_model != line.object_id.model:
                     continue
@@ -1124,8 +1124,6 @@ class Alarm(CalDAV, osv.osv_memory):
             @param alarm_id: Get Alarm's Id
             @param context: A standard dictionary for contextual values
         """
-        if context is None:
-            context = {}
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -1159,7 +1157,8 @@ class Alarm(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
@@ -1221,7 +1220,8 @@ class Attendee(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)

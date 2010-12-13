@@ -91,7 +91,6 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
         }
     
     def numerotate(self, cr, uid, ids, context=None):
-        if context is None: context = {}
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         datas = self.read(cr, uid, ids[0], ['bord_vnd_id','lot_num','obj_num'])
@@ -134,7 +133,6 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
         return lots_datas[0]
     
     def test_exist(self, cr, uid, ids, context=None):
-        if context is None: context = {}
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         data_obj = self.pool.get('ir.model.data')

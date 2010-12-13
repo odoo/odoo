@@ -60,7 +60,7 @@ class account_invoice(osv.osv):
         return res and res[0] or False
 
     def _get_currency(self, cr, uid, context=None):
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
             return user.company_id.currency_id.id
         return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=', 1.0)])[0]
@@ -396,7 +396,7 @@ class account_invoice(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        invoices = self.read(cr, uid, ids, ['state'])
+        invoices = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for t in invoices:
             if t['state'] in ('draft', 'cancel'):

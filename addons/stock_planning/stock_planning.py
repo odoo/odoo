@@ -231,7 +231,7 @@ class stock_sale_forecast(osv.osv):
 
     def calculate_sales_history(self, cr, uid, ids, context, *args):
         sales = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],]
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             periods = obj.analyzed_period1_id, obj.analyzed_period2_id, obj.analyzed_period3_id, obj.analyzed_period4_id, obj.analyzed_period5_id
             so_obj = self.pool.get('sale.order')
             so_line_obj = self.pool.get('sale.order.line')
@@ -616,11 +616,11 @@ class stock_planning(osv.osv):
         return uom_qty, uom, uos_qty, uos
 
     def procure_incomming_left(self, cr, uid, ids, context, *args):
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
                 raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'company_id' : obj.company_id.id,
                         'name': _('Manual planning for ') + obj.period_id.name,
@@ -658,7 +658,7 @@ class stock_planning(osv.osv):
         return True
 
     def internal_supply(self, cr, uid, ids, context, *args):
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
                 raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
             if not obj.supply_warehouse_id:

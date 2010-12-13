@@ -110,8 +110,6 @@ class document_directory_content(osv.osv):
         return True
     
     def process_read(self, cr, uid, node, context=None):
-        if context is None:
-            context = {}
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id, context=context)

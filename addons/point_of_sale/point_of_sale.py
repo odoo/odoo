@@ -125,7 +125,7 @@ class pos_order(osv.osv):
         @return: Dictionary of values """
         res = {}
         val = None
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             cr.execute("SELECT date_validation FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None

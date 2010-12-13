@@ -116,8 +116,6 @@ class hr_timesheet_sheet(osv.osv):
 
     def _total_day(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if context is None:
-            context = {}
         cr.execute('SELECT sheet.id, day.total_attendance, day.total_timesheet, day.total_difference\
                 FROM hr_timesheet_sheet_sheet AS sheet \
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
@@ -133,8 +131,6 @@ class hr_timesheet_sheet(osv.osv):
 
     def _total(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if context is None:
-            context = {}
         cr.execute('SELECT s.id, COALESCE(SUM(d.total_attendance),0), COALESCE(SUM(d.total_timesheet),0), COALESCE(SUM(d.total_difference),0) \
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN hr_timesheet_sheet_sheet_day d \
@@ -152,8 +148,6 @@ class hr_timesheet_sheet(osv.osv):
         result = {}
         link_emp = {}
         emp_ids = []
-        if context is None:
-            context = {}
 
         for sheet in self.browse(cr, uid, ids, context=context):
             result[sheet.id] = 'none'
@@ -195,8 +189,6 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             self.check_employee_attendance_state(cr, uid, sheet.id, context)
             di = sheet.user_id.company_id.timesheet_max_difference
@@ -208,8 +200,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def date_today(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             if datetime.today() <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
@@ -220,8 +210,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def date_previous(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
@@ -232,8 +220,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def date_next(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             if datetime.strptime(sheet.date_current, '%Y-%m-%d') >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
@@ -244,8 +230,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def button_dummy(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
@@ -312,8 +296,6 @@ class hr_timesheet_sheet(osv.osv):
     }
 
     def _default_date_from(self,cr, uid, context=None):
-        if context is None:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
@@ -381,8 +363,6 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not len(ids):
             return []
         return [(r['id'], r['date_from'] + ' - ' + r['date_to']) \
@@ -390,8 +370,6 @@ class hr_timesheet_sheet(osv.osv):
                     context=context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         sheets = self.read(cr, uid, ids, ['state','total_attendance'], context=context)
         for sheet in sheets:
             if sheet['state'] in ('confirm', 'done'):
@@ -415,8 +393,6 @@ class hr_timesheet_line(osv.osv):
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        if context is None:
-            context = {}
         cursor.execute('SELECT l.id, COALESCE(MAX(s.id), 0) \
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN (hr_analytic_timesheet l \
@@ -441,8 +417,6 @@ class hr_timesheet_line(osv.osv):
         return res
 
     def _sheet_search(self, cursor, user, obj, name, args, context=None):
-        if context is None:
-            context = {}
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -537,8 +511,6 @@ class hr_attendance(osv.osv):
         return time.strftime('%Y-%m-%d %H:%M:%S')
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
-        if context is None:
-            context = {}
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         cursor.execute("SELECT a.id, COALESCE(MAX(s.id), 0) \
                 FROM hr_timesheet_sheet_sheet s \
@@ -569,8 +541,6 @@ class hr_attendance(osv.osv):
             return []
 
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        if context is None:
-            context = {}
         i = 0
         while i < len(args):
             fargs = args[i][0].split('.', 1)

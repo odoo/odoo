@@ -355,8 +355,6 @@ class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
-        if context is None:
-            context = {}
         res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context=context)
         res['analytics_id'] = x.get('analytics_id', False)
         return res
@@ -425,8 +423,6 @@ class sale_order_line(osv.osv):
 
     # Method overridden to set the analytic account by default on criterion match
     def invoice_line_create(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context=context)
         inv_line_obj = self.pool.get('account.invoice.line')
         acct_anal_def_obj = self.pool.get('account.analytic.default')
@@ -447,8 +443,6 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
-        if context is None:
-            context = {}
         account_move_line_pool = self.pool.get('account.move.line')
         account_bank_statement_line_pool = self.pool.get('account.bank.statement.line')
         st_line = account_bank_statement_line_pool.browse(cr, uid, st_line_id, context=context)
@@ -460,10 +454,8 @@ class account_bank_statement(osv.osv):
         return result
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context):
+        for st in self.browse(cr, uid, ids, context=context):
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:

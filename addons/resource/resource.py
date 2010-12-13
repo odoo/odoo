@@ -250,8 +250,6 @@ class resource_resource(osv.osv):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
-        if context is None:
-            context = {}
         resource_objs = []
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
@@ -281,8 +279,6 @@ class resource_resource(osv.osv):
         @param resource_id : resource working on phase/task
         @param resource_calendar : working calendar of the resource
         """
-        if context is None:
-            context = {}
         resource_calendar_leaves_pool = self.pool.get('resource.calendar.leaves')
         leave_list = []
         if resource_id:
@@ -308,8 +304,6 @@ class resource_resource(osv.osv):
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
         """
-        if context is None:
-            context = {}
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""

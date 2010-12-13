@@ -39,7 +39,7 @@ class base_report_sxw(osv.osv_memory):
 
 
     def get_report(self, cr, uid, ids, context=None):
-        data = self.read(cr,uid,ids)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_sxw')
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
@@ -76,7 +76,7 @@ class base_report_file_sxw(osv.osv_memory):
         """
         res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
         report_id1 = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data=self.pool.get('base.report.sxw').read(cr,uid,report_id1)[0]
+        data = self.pool.get('base.report.sxw').read(cr, uid, report_id1, context=context)[0]
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
         if context is None:
             context={}
@@ -137,7 +137,7 @@ class base_report_rml_save(osv.osv_memory):
         
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
         report_id = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data=self.pool.get('base.report.file.sxw').read(cr,uid,report_id)[0]
+        data = self.pool.get('base.report.file.sxw').read(cr, uid, report_id, context=context)[0]
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
         
         if 'file_rml' in fields:

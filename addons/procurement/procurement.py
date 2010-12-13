@@ -128,7 +128,7 @@ class procurement_order(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        procurements = self.read(cr, uid, ids, ['state'])
+        procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in procurements:
             if s['state'] in ['draft','cancel']:

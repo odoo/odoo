@@ -82,7 +82,8 @@ class base_calendar_set_exrule(osv.osv_memory):
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         event_obj = self.pool.get(context.get('active_model'))
         for event in event_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if not event.rrule:
@@ -103,7 +104,8 @@ class base_calendar_set_exrule(osv.osv_memory):
         weekstring = ''
         monthstring = ''
         yearstring = ''
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         ex_id = base_calendar.base_calendar_id2real_id(context.get('active_id', False))
         model = context.get('model', False)
         model_obj = self.pool.get(model)

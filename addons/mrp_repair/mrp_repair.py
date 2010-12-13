@@ -474,7 +474,7 @@ class mrp_repair(osv.osv):
         """ Writes repair order state to 'Ready' if invoice method is Before repair.
         @return: True
         """
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             val = {}
             if (order.invoice_method == 'b4repair'):
                 val['state'] = 'ready'
@@ -488,7 +488,7 @@ class mrp_repair(osv.osv):
         After repair else state is set to 'Ready'.
         @return: True
         """
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             val = {}
             val['repaired'] = True
             if (not order.invoiced and order.invoice_method=='after_repair'):

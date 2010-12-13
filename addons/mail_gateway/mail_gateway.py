@@ -54,8 +54,6 @@ class mailgate_thread(osv.osv):
         @param default: Dictionary of default values for copy.
         @param context: A standard dictionary for contextual values
         """
-        if context is None:
-            context = {}
         if default is None:
             default = {}
 

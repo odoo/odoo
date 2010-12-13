@@ -42,7 +42,8 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        if context is None: context = {}
+        if context is None: 
+            context = {}
         res = super(wiz_auc_lots_buyer_map,self).default_get(cr, uid, fields, context=context)
         auction_lots_obj = self.pool.get('auction.lots')
         lots_ids = auction_lots_obj.search(cr, uid, [('ach_uid', '=', ''), ('ach_login', '!=', '')])

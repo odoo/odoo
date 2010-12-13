@@ -27,8 +27,6 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     
     def move_line_get(self, cr, uid, invoice_id, context=None):
-        if context is None:
-            context = {}
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         if inv.type in ('out_invoice','out_refund'):
@@ -130,8 +128,6 @@ class account_invoice_line(osv.osv):
         return res   
     
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
-        if context is None:
-            context = {}
         if not product:
             return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
         else:

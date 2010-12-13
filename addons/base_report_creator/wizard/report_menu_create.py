@@ -52,7 +52,7 @@ class report_menu_create(osv.osv_memory):
                 return {}
             data = data[0]
 
-            board = obj_board.browse(cr, uid, context_id)
+            board = obj_board.browse(cr, uid, context_id, context=context)
             view = board.view_type1
             if board.view_type2:
                 view += ',' + board.view_type2

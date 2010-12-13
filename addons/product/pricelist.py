@@ -307,7 +307,8 @@ class product_pricelist(osv.osv):
         '''
         price = False
         item_id = 0
-        context = context or {}
+        if context is None:
+            context = {}
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
         supplierinfo_obj = self.pool.get('product.supplierinfo')

@@ -114,8 +114,6 @@ class hr_payroll_structure(osv.osv):
 
         @return: returns a id of newly created record
         """
-        if context is None:
-            context = {}
         code = self.browse(cr, uid, id, context=context).code
         default = {
             'code':code+"(copy)",
@@ -424,20 +422,14 @@ class payroll_register(osv.osv):
         return True
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def cancel_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
     def verify_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         slip_pool = self.pool.get('hr.payslip')
 
         for id in ids:
@@ -455,8 +447,6 @@ class payroll_register(osv.osv):
         advice_line_pool = self.pool.get('hr.payroll.advice.line')
         sequence_pool = self.pool.get('ir.sequence')
         users_pool = self.pool.get('res.users')
-        if context is None:
-            context = {}
 
         for id in ids:
             sids = slip_pool.search(cr, uid, [('register_id','=',id), ('state','=','hr_check')], context=context)
@@ -533,27 +523,19 @@ class payroll_advice(osv.osv):
     }
 
     def confirm_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def cancel_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
     def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
         res = {}
-        if context is None:
-            context = {}
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             if company.partner_id.bank_ids:
@@ -585,8 +567,6 @@ class payroll_advice_line(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
         vals = {}
         slip_pool = self.pool.get('hr.payslip')
-        if context is None:
-            context = {}
         if employee_id:
             dates = prev_bounds(ddate)
             sids = False
@@ -650,8 +630,6 @@ class contrib_register_line(osv.osv):
     _description = 'Contribution Register Line'
 
     def _total(self, cr, uid, ids, field_names, arg, context=None):
-        if context is None:
-            context = {}
         res={}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.emp_deduction + line.comp_deduction
@@ -763,8 +741,6 @@ class company_contribution(osv.osv):
         uid: user id of current executer
         """
         line_pool = self.pool.get('company.contribution.line')
-        if context is None:
-            context = {}
         res = 0
         ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)], context=context)
         if not ids:
@@ -839,8 +815,6 @@ class hr_payslip(osv.osv):
 
     def _calculate(self, cr, uid, ids, field_names, arg, context=None):
         slip_line_obj = self.pool.get('hr.payslip.line')
-        if context is None:
-            context = {}
         res = {}
         for rs in self.browse(cr, uid, ids, context=context):
             allow = 0.0
@@ -935,8 +909,6 @@ class hr_payslip(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         default = {
             'line_ids': False,
@@ -963,32 +935,22 @@ class hr_payslip(osv.osv):
             slip_move.create(cr, uid, res)
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def cancel_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
     def account_check_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
         return True
 
     def hr_check_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
         return True
 
     def process_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'paid':True, 'state':'done'}, context=context)
         return True
 
@@ -1023,8 +985,6 @@ class hr_payslip(osv.osv):
         return True
 
     def get_contract(self, cr, uid, employee, date, context=None):
-        if context is None:
-            context = {}
         sql_req= '''
             SELECT c.id as id, c.wage as wage, struct_id as function
             FROM hr_contract c
@@ -1055,8 +1015,6 @@ class hr_payslip(osv.osv):
 
         @return: return a result
         """
-        if context is None:
-            context = {}
         result = []
 
         dates = prev_bounds(slip.date)
@@ -1381,8 +1339,6 @@ class hr_payslip_line(osv.osv):
     }
 
     def execute_function(self, cr, uid, id, value, context=None):
-        if context is None:
-            context = {}
         line_pool = self.pool.get('hr.payslip.line.line')
         res = 0
         ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value), ('to_val','>=',value)], context=context)
