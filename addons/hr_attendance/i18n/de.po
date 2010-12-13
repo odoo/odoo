@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-09 08:07+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-09 11:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -27,25 +27,9 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
 msgstr "Heute"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
-"erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
-"Anwesenheitszeiten."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -73,7 +57,7 @@ msgstr "Begründung"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Print Attendance Report Error"
-msgstr "Anwesenheitszeiten"
+msgstr "Ausdruck fehlerhafte Anwesenheit"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
@@ -84,12 +68,12 @@ msgstr "Das Abmeldedatum muss in der Vergangenheit sein"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr "Datum Arbeitsbeginn"
+msgstr "Zeiteintrag"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Attendance reasons"
-msgstr "Abwesenheitsart"
+msgstr "Begründung für An-/Abmeldung"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -105,13 +89,13 @@ msgstr "Anwesend"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
 msgid "Ask for Sign In Out"
-msgstr "Anfrage für Anmeldung oder Abmeldung"
+msgstr "Ask for Sign In Out"
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr "Ausgangsaktion"
+msgstr "Aktionsbegründung"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -121,7 +105,13 @@ msgstr "OK"
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr "Definiere Abwesenheitsgründe"
+msgstr "Definiere Begründungen für An-/Abmeldung"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
@@ -138,7 +128,7 @@ msgstr "Mitarbeitername"
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr "Abwesenheitsgrund"
+msgstr "An-/Abmeldebegründe"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
@@ -182,16 +172,9 @@ msgid "Attendance"
 msgstr "Anwesenheitszeit"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
-"entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
-
-#. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr "Max. Verzögerung"
+msgstr "Max. Zeitabw. (Min)"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -220,7 +203,7 @@ msgstr "Juli"
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
 #: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
 msgid "Attendance Error Report"
-msgstr "Abwesenheit Report"
+msgstr "Fehlerhafte Anwesenheit"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,init_date:0
@@ -229,14 +212,9 @@ msgid "Starting Date"
 msgstr "Anfangsdatum"
 
 #. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr "Min Verzögerung"
+msgstr "Minus Abw."
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -275,14 +253,14 @@ msgstr "Monat"
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
-"(*) Eine negative Abweichung bedeutet, dass der Mitarbeiter länger "
-"gearbeitet hat , im Vergleich zu seiner erfassten Anwesenheitszeit."
+"(*) Eine negative Abweichung bedeutet, daß der Mitarbeiter mehr gearbeitet "
+"hat, als angegeben."
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Begründung für An-/Abmeldung bei Mehrarbeit"
+msgstr "Begründung für An-/Abmeldung  bei Zusatzstunden"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -292,7 +270,7 @@ msgstr "Druck Anwesenheitszeit des Monats"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr "Anmeldung / Abmeldung"
+msgstr "Anmeldung Abmeldung"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
@@ -301,17 +279,24 @@ msgstr "Anmeldung / Abmeldung"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
 #, python-format
 msgid "Sign in / Sign out"
-msgstr "Anmeldung / Abmeldung"
+msgstr "Anmelden / Abmelden"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"Time Tracking functionality aims to manage employee's attendances on the "
+"basis of the actions (Sign in/Sign out) performed by them. You can also link "
+"this to an attendance machine using OpenERP's webservices features."
+msgstr ""
+"Die Funktion der Zeiterfassung ermöglicht auf einfachem Wege durch An- und "
+"Abmelden eine automatische Ermittlung der Anwesenheit von Mitarbeitern. "
+"Diese Funktion ist auch geeignet, um über die Webservices von OpenERP, "
+"externe Zeiterfassungsgeräte anzubinden."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.out.ask"
 msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -334,12 +319,12 @@ msgstr "Juni"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr "Drucke Fehlerfassungen"
+msgstr "Druck fehlerhafte Anwesenheit"
 
 #. module: hr_attendance
 #: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
 msgid "Attendances Of Employees"
-msgstr "Anwesenheitszeiten der Mitarbeiter"
+msgstr "Personal Anwesenheitszeiten"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -352,6 +337,11 @@ msgid "November"
 msgstr "November"
 
 #. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Oktober"
@@ -359,7 +349,7 @@ msgstr "Oktober"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendances"
-msgstr "Meine Anwesenheitszeit"
+msgstr "Meine Anwesenheit"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -371,12 +361,12 @@ msgstr "Januar"
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign in"
-msgstr "Anmeldung"
+msgstr "Anmelden"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Analysis Information"
-msgstr "Analyse Anwesenheitszeiten"
+msgstr "Angaben zur Fehlersuche"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -388,7 +378,7 @@ msgstr ""
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr "Fehler Anwesenheitserfassung"
+msgstr "Fehler Anwesenheitszeit"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
@@ -397,10 +387,18 @@ msgid "Action"
 msgstr "Aktion"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
-#, python-format
-msgid "No records found for your selection!"
-msgstr "Keine Einträge gefunden für Ihre Auswahl !"
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
+msgstr ""
+"Wenn Sie möchten, dass Ihre Mitarbeiter jeweils zu Beginn und Ende der "
+"Arbeit diese Zeit zur Ermittlung der Anwesenheitszeiten festhalten, können "
+"Sie dieses mit diesem Modul realisieren. Durch die Verbindung eines "
+"Benutzers zu einem Mitarbeiter kann die Anwesenheit einfach durch jeweils "
+"einen Anmelde- und Abmeldevorgang umgesetzt werden."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
@@ -422,24 +420,16 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: hr_attendance
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Begründung für eine An- oder Abmeldung"
+msgstr "Begründung für  An-/ Abmeldung"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
-"(*) Eine positive Abweichung bedeutet, daß ihr Mitarbeiter weniger "
+"(*) Eine positive Abweichung bedeutet, daß der Mitarbeiter weniger "
 "gearbeitet hat als angegeben."
 
 #. module: hr_attendance
@@ -463,7 +453,18 @@ msgstr "Zeitabweichung"
 #: view:hr.attendance:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
-msgstr "Mitabeiter"
+msgstr "Mitarbeiter"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+"Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
+"erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
+"Anwesenheitszeiten."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -474,7 +475,7 @@ msgstr "Ihre letzte Abmeldung"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
-msgstr "Datum Aufzeichnung"
+msgstr "Zeitaufzeichnung"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -500,6 +501,19 @@ msgid "Sign Out"
 msgstr "Abmeldung"
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid ""
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
+msgstr ""
+"Anmelden / Abmelden. In bestimmten Unternehmen ist es erforderlich die "
+"Anwesenheit der Mitarbeiter jeweils zu Beginn und Ende des Arbeitstages "
+"festzuhalten. Wenn ein Mitarbeiter einem Benutzer zugewiesen wurde, kann "
+"eine Erfassung sehr einfach durch diesen Button vorgenommen werden."
+
+#. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
 msgstr "Mitarbeiter Name"
@@ -517,7 +531,7 @@ msgstr "Februar"
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action's type"
-msgstr "Art der Aktion"
+msgstr "Aktionstyp"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -537,12 +551,13 @@ msgstr "April"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Melde diese Zeitabweichung, der Fehler ist selbst verschuldet."
+msgstr "Diese Differenzen werden als gewollt angesehen"
 
 #. module: hr_attendance
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
+msgstr "Keine Einträge gefunden für Ihre Auswahl !"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -568,6 +583,15 @@ msgstr ""
 
 #~ msgid "Print Attendance Report"
 #~ msgstr "Bericht Anwesenheitszeiten"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "Employee's name"
 #~ msgstr "Name Mitarbeiter"
@@ -609,3 +633,31 @@ msgstr ""
 
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Wähle Begin- und End Datum"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr ""
+#~ "Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
+#~ "entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

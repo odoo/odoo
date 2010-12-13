@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-21 11:22+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 10:32+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -53,12 +53,10 @@ msgstr "DDR 512Mo PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Nombre de couches"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -74,11 +72,6 @@ msgstr ""
 "produit. Laisser vide si c'est pour tous les produits"
 
 #. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Modèle invalide pour la définition de l'action."
-
-#. module: product
 #: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "En vente"
@@ -91,17 +84,17 @@ msgstr "carte mère ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Ceci est la quantité minimum à acheter au fournisseur principal"
 
 #. module: product
 #: model:product.uom,name:product.uom_day
 msgid "Day"
-msgstr ""
+msgstr "Jour"
 
 #. module: product
 #: view:product.product:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -172,7 +165,7 @@ msgstr "Nom de la règle"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #. module: product
 #: constraint:product.category:0
@@ -249,7 +242,7 @@ msgstr "Divers"
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr ""
+msgstr "Opérateur"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -312,10 +305,10 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Production sur Stock': lorsque nécessaire, prend à partir du stock ou "
-"attend un réapprovisionnement.\r\n"
-"'Production sur Commande': lorsque nécessaire, achète ou produit pour une "
-"demande d'approvisionnement."
+"'Fabrication sur stock' : quand il y a une demande, on prend du stock ou on "
+"attend jusqu'au prochain réapprovisionnement. 'Fabrication à la commande' : "
+"quand il y a une demande, on achète ou on fabrique en lien avec cette "
+"demande."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -335,7 +328,7 @@ msgstr "EAN13"
 #. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
-msgstr ""
+msgstr "Fournisseur principal"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -364,7 +357,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Bois 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -374,21 +367,12 @@ msgstr "Quantité-1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr ""
+msgstr "Le nombre de colis par couche"
 
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
 msgstr "Quantité par colis"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"Could not resolve product category, ' \\n                                    "
-"'you have defined cyclic categories ' \\n                                    "
-"'of products!"
-msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -410,10 +394,11 @@ msgstr "Sortant"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "UdM de référence pour cette catégorie"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Prix public"
 
@@ -435,7 +420,7 @@ msgstr "Responsable produit"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Nom du produit chez le fournisseur"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
@@ -529,11 +514,26 @@ msgstr "Ventes & Achats"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
+msgstr "Temps de travail"
+
+#. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
 msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
+msgstr "Taquets en métal"
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"No active version for the selected pricelist !\n"
+"Please create or activate one."
 msgstr ""
 
 #. module: product
@@ -567,6 +567,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
+"Un ou plusieurs fournisseurs peuvent être associés à un produit. Toutes les "
+"informations figurent dans le formulaire du produit."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -588,12 +590,12 @@ msgstr "Stock virtuel"
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Vue"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr ""
+msgstr "Modèles des produits"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
@@ -601,6 +603,7 @@ msgid "Restaurant Expenses"
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Erreur: code EAN invalide"
@@ -613,7 +616,7 @@ msgstr "Quantité min."
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price Type"
-msgstr ""
+msgstr "Type de prix"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -654,12 +657,12 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,name:0
 msgid "Supplier"
-msgstr ""
+msgstr "Fournisseur"
 
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
 msgid "Side Panel"
-msgstr ""
+msgstr "Panneau latéral"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -670,13 +673,6 @@ msgstr "Kit clavier + souris"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Type de prix"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -696,12 +692,17 @@ msgstr "Liste de prix"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Fournisseurs"
 
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
 msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Carte mère ASUStek A7N8X"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -712,6 +713,8 @@ msgstr "Nouveau prix ="
 #: help:product.pricelist.item,sequence:0
 msgid "Gives the sequence order when displaying a list of pricelist items."
 msgstr ""
+"Indique la séquence d'ordre lors de l'affichage de la liste des listes de "
+"prix d'un article."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -726,7 +729,7 @@ msgstr "Délai de livraison au client"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr ""
+msgstr "Fournisseur du produit"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -777,7 +780,7 @@ msgstr "Réf. client"
 #. module: product
 #: view:product.product:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Divers"
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -801,17 +804,12 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+msgstr "Projet de conception d'une cuisine"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
 msgid "Hour"
-msgstr ""
+msgstr "Heure"
 
 #. module: product
 #: selection:product.template,state:0
@@ -831,7 +829,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
@@ -876,7 +874,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "Délais et Localisations"
+msgstr "Approvisionnement & Emplacements"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -918,7 +916,7 @@ msgstr "Information sur le fournisseur du produit"
 #. module: product
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres étendus..."
 
 #. module: product
 #: view:product.product:0
@@ -939,6 +937,16 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A pricelist contains rules to be evaluated in order to compute the purchase "
+"or sale price for all the partners assigned to a pricelist. Pricelists have "
+"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
+"version has several rules. Example: the customer price of this category of "
+"product will be based on the supplier price multiplied by 1.80."
 msgstr ""
 
 #. module: product
@@ -970,6 +978,20 @@ msgstr "Unité de livraison"
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
 msgstr "Infos partenaire"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. They can be raw "
+"materials, stockable products, consumables or services. The Product form "
+"contains a detailed information of your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
+"Vous devez définir un produit pour chaque chose vendue ou achetée. Les "
+"produits peuvent être des matières premières, des produits stockables, des "
+"consommables ou des services. Le formulaire \"Produit\" contient une "
+"description détaillée en terme de logistique d'approvisionnement, de prix de "
+"vente, de classement de produit, de fournisseurs, etc."
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -1006,7 +1028,7 @@ msgstr "Lignes de liste de prix"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Plus grand que l'UdM de référence"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -1021,7 +1043,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_services0
 msgid "Marketable Services"
-msgstr ""
+msgstr "Services vendables"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1029,9 +1051,12 @@ msgid "Price Surcharge"
 msgstr "Surcharge du prix"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Carte mère ASUStek A7N8X"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate to be used between the several Unit of "
+"Measure within the same category."
+msgstr ""
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1052,32 +1077,24 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"' \\n                                'Please create or activate one."
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Stockable"
+
+#. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr "Linteau en bois de 4m"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1087,7 +1104,7 @@ msgstr "Obsolète"
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1110,7 +1127,7 @@ msgstr ""
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "Ratio"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1139,17 +1156,17 @@ msgstr "Champs associé dans le formulaire du produit"
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Gestion des besoins"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Date d'édition"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1213,12 +1230,17 @@ msgstr "Dimension d'une Palette"
 #: code:addons/product/product.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (copie)"
 
 #. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Autres fournisseurs"
+
+#. module: product
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1229,8 +1251,18 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measures are in the same category, they can "
+"be converted within each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: product
@@ -1257,6 +1289,8 @@ msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Le code du produit chez le fournisseur sera utilisé lors de l'édition d'un "
+"appel d'offre. Laissez le champ vide si vous voulez utiliser le code interne."
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1287,7 +1321,7 @@ msgstr "Le poids brut en Kg."
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "Approvisionnement"
+msgstr "Besoin"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1297,6 +1331,14 @@ msgstr "Rayon"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
+msgstr "Unité de mesure d'achat"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click on "
+"a category to get the list of all products linked to this category or to a "
+"child of this category."
 msgstr ""
 
 #. module: product
@@ -1307,12 +1349,20 @@ msgstr "Méthode de fourniture"
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Regrouper par..."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
 msgstr "Configuration processeur ordinaire"
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1343,6 +1393,13 @@ msgid "Basic PC"
 msgstr "PC Basic"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Quantité disponible"
@@ -1350,7 +1407,7 @@ msgstr "Quantité disponible"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1358,19 +1415,24 @@ msgid "Product Unit of Measure"
 msgstr "Unité de mesure du produit"
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Précision d'arrondi"
 
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Propriétés des unités de mesure"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
 msgid "Rack 200cm"
-msgstr ""
+msgstr "Casier de 200 cm"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1405,6 +1467,11 @@ msgstr "Actif"
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr "Marge de la variante"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1442,7 +1509,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_misc0
 msgid "Misc"
-msgstr ""
+msgstr "Divers"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
@@ -1453,6 +1520,20 @@ msgstr "PC personnalisble"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Prix unitaire"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains a detailed "
+"information on your  products related to procurement logistics, sales price, "
+"product category, suppliers and so on."
+msgstr ""
+"Les produits peuvent être achetés ou vendus. Ils peuvent être des matières "
+"premières, des produits stockables, des consommables ou des services. Le "
+"formulaire \"Produit\" contient une description détaillée en terme de "
+"logistique d'approvisionnement, de prix de vente, de classement de produit, "
+"de fournisseurs, etc."
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1473,20 +1554,12 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgstr "Code du produit chez le fournisseur"
 
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr ""
+msgstr "UdM par défaut"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1551,12 +1624,17 @@ msgstr ""
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr ""
+msgstr "Unité de mesure par défaut"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
 msgstr "Tour ATX Moyenne"
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN13/EAN14"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1598,11 +1676,6 @@ msgid "Company"
 msgstr "Société"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Liste de prix"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Types de prix"
@@ -1630,6 +1703,8 @@ msgstr "Nom de ce type de prix"
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
 msgstr ""
+"Le nombre total de produits que vous pouvez mettre dans une palette ou dans "
+"une boite."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1642,6 +1717,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Unité de mesure par défaut pour les ordres d'achat. Elle doit appartenir à "
+"la même catégorie que l'unité de mesure par défaut."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1673,17 +1750,17 @@ msgstr "Type de liste de prix"
 #. module: product
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
-msgstr ""
+msgstr "Autres produits"
 
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Caractéristiques"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "peut être vendu"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1703,7 +1780,7 @@ msgstr "Basé sur"
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
 msgid "Raw Materials"
-msgstr ""
+msgstr "Matières premières"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -1721,12 +1798,7 @@ msgstr "Nom de la liste de prix"
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "Supplier Product UoM."
-msgstr ""
-
-#. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Précision d'arrondi"
+msgstr "UdM du produit chez le fournisseur."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1753,12 +1825,12 @@ msgstr "DD Seagate 7200.8 120GB"
 #. module: product
 #: model:product.template,name:product.product_product_employee0_product_template
 msgid "Employee"
-msgstr ""
+msgstr "Employé"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
 msgid "Shelf of 100cm"
-msgstr ""
+msgstr "Étagère de 100 cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1769,12 +1841,12 @@ msgstr "Catégorie de produit"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Nom de la liste de prix"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Délai de livraison"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1789,21 +1861,21 @@ msgid "Supplier Lead Time"
 msgstr "Délai d'exécution du fournisseur"
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-
-#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr "Box"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
 msgid "Rear Panel SHE200"
-msgstr ""
+msgstr "Panneau arrière SHE200"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -1822,7 +1894,7 @@ msgstr "HDD Seagate 7200.8 80GB"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
-msgstr ""
+msgstr "Ceci est une quantité qui est convertie dans l'UdM par défaut."
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -1857,7 +1929,7 @@ msgstr "Souris"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Type d'UdM"
 
 #. module: product
 #: help:product.template,product_manager:0
@@ -1885,7 +1957,7 @@ msgstr "Ligne"
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm0_product_template
 msgid "Rear Panel SHE100"
-msgstr ""
+msgstr "Panneau arrière SHE100"
 
 #. module: product
 #: model:product.template,name:product.product_product_23_product_template
@@ -1899,9 +1971,14 @@ msgid "Weigths"
 msgstr "Poids"
 
 #. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Frais d'hôtel"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -1913,7 +1990,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
 msgid "Rack 100cm"
-msgstr ""
+msgstr "Casier de 100 cm"
 
 #. module: product
 #: help:product.packaging,sequence:0
@@ -1952,7 +2029,7 @@ msgstr "Variable"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "peut être loué"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -1973,7 +2050,7 @@ msgstr "Poids brut"
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
 msgid "Assembly Section"
-msgstr ""
+msgstr "Section d'assemblage"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
@@ -2020,7 +2097,7 @@ msgstr "Propriétés des ventes"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "tonne"
 
 #. module: product
 #: view:product.product:0
@@ -2031,7 +2108,7 @@ msgstr "Délais"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Création du produit"
 
 #. module: product
 #: help:product.template,type:0
@@ -2040,9 +2117,9 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
-"Permet de changer la façon dont les approvisionnements sont effectués. Les "
-"consommables sont des produits stockables avec un stock infini, ou à "
-"utiliser quand vous n'avez pas de gestion d'inventaire dans le système."
+"Permet de changer la façon dont les besoins sont gérés. Les consommables "
+"sont des produits physiques avec un stock infini, pour lesquels vous n'avez "
+"pas de gestion de stock dans le système."
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2055,9 +2132,12 @@ msgid "Description"
 msgstr "Description"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN13/EAN14"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"Could not resolve product category, you have defined cyclic categories of "
+"products!"
+msgstr ""
 
 #. module: product
 #: view:product.template:0
@@ -2096,7 +2176,7 @@ msgstr "Variante de produit"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Étagères"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -2158,7 +2238,7 @@ msgstr "Prix de vente"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Type de catégorie"
 
 #. module: product
 #: model:product.category,name:product.cat2
@@ -2183,6 +2263,14 @@ msgid "The volume in m3."
 msgstr "Le volume en m³"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. If you need to create new "
+"versions of a pricelist, you can do it and manage them from here. Some "
+"examples of versions: 2010, 2011, Promotion of February 2010, etc."
+msgstr ""
+
+#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
@@ -2201,6 +2289,9 @@ msgstr ""
 
 #~ msgid "Customer Price"
 #~ msgstr "Prix client"
+
+#~ msgid "List Price"
+#~ msgstr "Liste de prix"
 
 #~ msgid "The number of layer on a palet or box"
 #~ msgstr "Le nombre de couche sur une palette ou dans une boite"
@@ -2238,6 +2329,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Cette liste de prix sera utilisée au lieu de celle par défaut pour les "
 #~ "ventes au partenaire courant."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
 
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
@@ -2279,6 +2373,12 @@ msgstr ""
 #~ msgid "The total number of products you can put by palet or box."
 #~ msgstr ""
 #~ "Le nombre maximum de produit que vous pouvez mettre par palette ou par boite"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
 
 #~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
@@ -2329,6 +2429,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Le coût du produit pour la valorisation comptable du stock. Il peut servir "
 #~ "de base pour le prix fournisseur."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Modèle invalide pour la définition de l'action."
 
 #~ msgid "Suppliers of Product"
 #~ msgstr "Fournisseur du Produit"

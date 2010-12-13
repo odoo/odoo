@@ -6,26 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2009-02-03 06:26+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-11 16:04+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
-msgstr ""
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: warning
@@ -39,8 +33,18 @@ msgid "Message for Purchase Order Line"
 msgstr ""
 
 #. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
+
+#. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: warning
@@ -57,13 +61,23 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
-msgstr ""
+msgstr "Atenționări"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Atenție"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -91,15 +105,10 @@ msgid "No Message"
 msgstr ""
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
-msgstr ""
+msgstr "Factură"
 
 #. module: warning
 #: model:ir.module.module,shortdesc:warning.module_meta_information
@@ -164,6 +173,11 @@ msgid "Module for Warnings form onchange Event."
 msgstr ""
 
 #. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
 msgstr ""
@@ -185,14 +199,9 @@ msgid "Warning on the Sale Order"
 msgstr ""
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr ""
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Eroare : cod EAN invalid"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0

@@ -84,7 +84,8 @@ class purchase_line_invoice(osv.osv_memory):
                     @param orders : The set of orders to add in the invoice
                     @param lines : The list of line's id
                 """
-                journal_id_get = account_jrnl_obj.search(cr,uid,[('type','=','purchase')],context=None)[0]
+                journal_id = account_jrnl_obj.search(cr, uid, [('type', '=', 'purchase')], context=None)
+                journal_id = journal_id and journal_id[0] or False
                 a = partner.property_account_payable.id
                 if partner and partner.property_payment_term.id:
                     pay_term = partner.property_payment_term.id
@@ -94,7 +95,7 @@ class purchase_line_invoice(osv.osv_memory):
                     'name': multiple_order_invoice_name(orders),
                     'origin': multiple_order_invoice_name(orders),
                     'type': 'in_invoice',
-                    'journal_id':journal_id_get,
+                    'journal_id':journal_id,
                     'reference': multiple_order_invoice_reference(partner, orders),
                     'account_id': a,
                     'partner_id': partner.id,

@@ -97,7 +97,7 @@ class product_pricelist(osv.osv):
     _description = "Pricelist"
     _columns = {
         'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pricelist without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the pricelist without removing it."),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),

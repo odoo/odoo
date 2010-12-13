@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:21+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-30 15:30+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign_crm_demo
@@ -37,6 +37,11 @@ msgid "Error! You can not create recursive Directories."
 msgstr "Fehler ! Sie können keine rekursiven Verzeichnisse anlegen."
 
 #. module: marketing_campaign_crm_demo
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "Das Intervall muss positiv oder 0 sein"
+
+#. module: marketing_campaign_crm_demo
 #: model:ir.module.module,description:marketing_campaign_crm_demo.module_meta_information
 msgid "Demo data for the module marketing_campaign."
 msgstr "Demodaten für das Modul marketing_campaign"
@@ -57,6 +62,11 @@ msgstr ""
 "            Viele Grüsse , Ihr OpenERP Team"
 
 #. module: marketing_campaign_crm_demo
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#. module: marketing_campaign_crm_demo
 #: model:email.template,def_subject:marketing_campaign_crm_demo.email_template_2
 msgid "Propose to subscribe to the OpenERP Discovery Day on May 2010"
 msgstr "Vorschlag zur Anmeldung an OpenERP Tag der offenen Tür im Mai 2010"
@@ -73,6 +83,11 @@ msgid "Thanks for showing interest in OpenERP"
 msgstr "Danke für Ihr gezeigtes Interesse an OpenERP"
 
 #. module: marketing_campaign_crm_demo
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#. module: marketing_campaign_crm_demo
 #: model:email.template,def_subject:marketing_campaign_crm_demo.email_template_4
 msgid "Thanks for buying the OpenERP book"
 msgstr "Danke für den Einkauf des OpenERP Buchs"
@@ -81,6 +96,12 @@ msgstr "Danke für den Einkauf des OpenERP Buchs"
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
+"Ein- und ausgehende Verbindungen müssen zur gleichen Kampagne gehören "
+
+#. module: marketing_campaign_crm_demo
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Das Verzeichnis kann nicht sich selbst übergeordnet werden"
 
 #. module: marketing_campaign_crm_demo
 #: model:email.template,def_subject:marketing_campaign_crm_demo.email_template_5
@@ -103,6 +124,11 @@ msgstr ""
 "mitzuteilen.\n"
 "            Wir würden uns über Interesse Ihrerseits freuen.            "
 "Viele Grüsse , Ihr OpenERP Team"
+
+#. module: marketing_campaign_crm_demo
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Das Verzeichnis muss eindeutig sein"
 
 #. module: marketing_campaign_crm_demo
 #: report:crm.lead.demo:0
@@ -131,6 +157,11 @@ msgstr "Danke für Ihre Anmeldung zum technischen Training"
 #: model:email.template,def_subject:marketing_campaign_crm_demo.email_template_3
 msgid "Thanks for subscribing to the OpenERP Discovery Day"
 msgstr "Danke für Ihre Anmeldung zum Tag der offenen Tür"
+
+#. module: marketing_campaign_crm_demo
+#: sql_constraint:email.template:0
+msgid "The template name must be unique !"
+msgstr "Die Vorlage muss eindeutig sein !"
 
 #. module: marketing_campaign_crm_demo
 #: model:email.template,def_body_text:marketing_campaign_crm_demo.email_template_5
@@ -210,6 +241,13 @@ msgid "marketing_campaign_crm_demo"
 msgstr ""
 
 #. module: marketing_campaign_crm_demo
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+"Das Verzeichnis muss ein Hauptverzeichnis oder einen Speicher zugewiesen "
+"haben"
+
+#. module: marketing_campaign_crm_demo
 #: model:email.template,def_subject:marketing_campaign_crm_demo.email_template_7
 msgid "Propose gold partnership to silver partners"
 msgstr "Vorschlag der Gold Partnerschaft für Silber Partner"
@@ -218,3 +256,4 @@ msgstr "Vorschlag der Gold Partnerschaft für Silber Partner"
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
+"Das Modul für den Filter sollte der Ressource für diese Kampagne entsprechen "

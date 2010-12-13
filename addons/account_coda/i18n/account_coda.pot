@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11:18+0000\n"
-"PO-Revision-Date: 2010-11-18 16:11:18+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42:53+0000\n"
+"PO-Revision-Date: 2010-12-03 15:42:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,13 +22,9 @@ msgid "Bank Journal"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
 msgstr ""
 
 #. module: account_coda
@@ -57,11 +53,6 @@ msgid "Import Date"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr ""
@@ -74,17 +65,6 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda import"
-msgstr ""
-
-#. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
-msgstr ""
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_coda
@@ -132,11 +112,6 @@ msgid "Coda Import Logs"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
 msgid "coda for an Account"
 msgstr ""
@@ -147,8 +122,8 @@ msgid "Default Payable Account"
 msgstr ""
 
 #. module: account_coda
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
 msgstr ""
 
 #. module: account_coda
@@ -159,11 +134,6 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr ""
-
-#. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
 msgstr ""
 
 #. module: account_coda
@@ -190,18 +160,8 @@ msgid "Statements"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
-msgstr ""
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: account_coda
@@ -274,11 +234,6 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda Import"
-msgstr ""
-
-#. module: account_coda
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: account_coda

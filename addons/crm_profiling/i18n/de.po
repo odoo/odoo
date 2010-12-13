@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-22 19:06+0000\n"
-"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-26 23:07+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
+msgstr "Fragenliste"
 
 #. module: crm_profiling
 #: constraint:ir.model:0
@@ -47,6 +47,11 @@ msgid "Open Questionnaire"
 msgstr "Offenen Fragen"
 
 #. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "Der Name des Moduls muss eindeutig sein."
+
+#. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
 msgstr "untergeordnete Profile"
@@ -59,7 +64,7 @@ msgstr "Partner Segmente"
 #. module: crm_profiling
 #: constraint:ir.ui.menu:0
 msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -70,7 +75,7 @@ msgstr "Anwtort"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "Partner Segmentierung"
 
 #. module: crm_profiling
 #: view:res.partner:0
@@ -80,7 +85,7 @@ msgstr "Profilerstellung"
 #. module: crm_profiling
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
 msgid "Crm Profiling management - To Perform Segmentation within Partners"
-msgstr ""
+msgstr "CRM Kundenprofile - Segmentierung von Kunden"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -111,6 +116,11 @@ msgid "Use a questionnaire"
 msgstr "Benutze eine Frage"
 
 #. module: crm_profiling
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Die Zertifikat ID sollte eindeutig sein !"
+
+#. module: crm_profiling
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
@@ -129,6 +139,9 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
+"Aktiviere diese Option, wenn Sie die Einstellungen auf diesem Aktenreiter "
+"für die Bildung Ihrer Kundensegmente anwenden möchten. Falls diese Option "
+"nicht aktiv ist, werden die Einstellungen unten ignoriert."
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -145,6 +158,21 @@ msgstr "Benutze die Profileregel"
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
 msgstr "Verfügbare Antwort"
+
+#. module: crm_profiling
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+"Sie können spezielle Fragestellungen zu bestimmten Problemstellungen "
+"definieren, damit Ihr Vertriebsteam diese Fragen aktiv im Verkaufsprozess "
+"nutzen kann. Durch Einsatz des Tools zur Kundensegmentierung werden Sie in "
+"die Lage versetzt, Ihre Kunden gemäss der entsprechenden Antworten "
+"automatisch zu bestimmten Segmenten zuzuweisen."
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
@@ -173,7 +201,7 @@ msgstr "Abbrechen"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/crm_profiling.py:0
@@ -193,6 +221,11 @@ msgstr "Nutze Fragestellung"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Speichere Daten"
+
+#. module: crm_profiling
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"
 
 #~ msgid "crm_profiling management"
 #~ msgstr "CRM Profilierung Management"

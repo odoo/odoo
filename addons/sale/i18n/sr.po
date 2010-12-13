@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-04 08:54+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-11-27 13:18+0000\n"
+"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-06 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcije."
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -37,18 +32,6 @@ msgstr ""
 "parcijalne isporuke ili ne?"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"Selektovao si kolicinu od %d komada.\n"
-"Ali nisu kompatibilni sa selektovanim pakovanjem.\n"
-"Oved su predlozi kolicina za odgovarajuce pakovanje. "
-
-#. module: sale
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
@@ -59,12 +42,6 @@ msgstr "Dan"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Poništite nalog"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Prodaja po Partneru"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -190,6 +167,13 @@ msgid "Ordered Quantities"
 msgstr "Narucene Kolicine"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
+
+#. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
 msgstr "Premeštanje inventara"
@@ -216,11 +200,13 @@ msgid "Dates"
 msgstr "Datumi"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"Here is a list of each sales order line to be invoiced. This view allows you "
+"to invoice sales orders partially, by lines of sales order. You don't need "
+"this list if you invoice based on the delivery orders or if you invoice "
+"sales totally."
 msgstr ""
-"Greska : JU (JedinicaUsluge) mora da bude u razlicitoj kategoriji od JM ( "
-"Jedinica Mera )"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -235,6 +221,11 @@ msgstr ""
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sale order"
 msgstr "Od Prodajnog Naloga"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Packing"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -282,11 +273,6 @@ msgstr "Postavi u Pripremu"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Procurement Corrected"
-msgstr "Ispravljene nabavke"
-
-#. module: sale
-#: view:sale.order:0
 msgid "Conditions"
 msgstr "Uslovi"
 
@@ -306,10 +292,9 @@ msgid "August"
 msgstr "Avgust"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
@@ -345,6 +330,19 @@ msgid "Quotations"
 msgstr "Upiti"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sale Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sale Order Line is Invoiced!"
+msgstr ""
+"Faktura ne moze biti kreirana za ovaj prodajni nalog zbog sledecih razloga:\n"
+"1.Stanje ove prodaje je ili 'U Pripremi' ili 'Otkazano' !\n"
+"2.Prodajni nalog je fakturisan!"
+
+#. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
 msgid "Quantity"
@@ -359,6 +357,13 @@ msgstr "Isključivo nalog za isporuku"
 #: report:sale.order:0
 msgid "TVA :"
 msgstr "TVA:"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -382,16 +387,6 @@ msgid "UoM"
 msgstr "JM"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You have to select a customer in the sale form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
-"Izaberite kupca u formi za prodaju !\n"
-"Izaberite jednog kupca pre nego što izaberete proizvod."
-
-#. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
 msgstr "Broj paketa"
@@ -413,6 +408,12 @@ msgstr "U toku"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Računovodstvo"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -452,18 +453,6 @@ msgstr "Upit '%s' je konvertovan u Prodajni Nalog"
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
 msgstr "Kupovni cenovnik"
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the the shipping of the "
-"products to the customer"
-msgstr "Broj dana izmedju potvrde Narudzbe i dostave proizvoda klijentu."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Invoice Corrected"
-msgstr "Ispravljen račun"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -516,15 +505,6 @@ msgid "March"
 msgstr "Mart"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"There is no income account defined ' \\n                                     "
-"   'for this product: \"%s\" (id:%d)"
-msgstr ""
-"nema ulaznog naloga definisanog kao ' \\n' za proizvod: \"%s\" (id:%d)"
-
-#. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Ukupno"
@@ -539,6 +519,11 @@ msgstr "Adresa računa:"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Ne možete da obrišete nalog(e) za kupovinu koji su već potvrđeni!"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -679,11 +664,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr "Indikator placenih faktura"
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr "Datum Naloga"
@@ -744,8 +724,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Da li stvarno zelis da kreiras fakturu(e) ?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Mesecna Prodaja"
@@ -761,6 +739,11 @@ msgid "Procurement of sold material"
 msgstr "Nabavka Prodatog materijala"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Create Final Invoice"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "Adresa isporuke"
@@ -774,6 +757,11 @@ msgstr "Prosireni Filteri"
 #: selection:sale.order.line,state:0
 msgid "Exception"
 msgstr "Izuzetak"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Direktna isporuka"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -807,6 +795,19 @@ msgstr ""
 "isto vreme kada i nabavni nalog. Reprezentuje pripadnost komponenti za "
 "prodajni nalog. Tamo je 1 izborna lista napravljena iz prodajnog naloga koja "
 "evoluira sa dostupnoscu delova ( komponenti)"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"Sales Orders helps you manage quotations and orders done with your "
+"customers. OpenERP suggests that you to start by creating a quotation. Once "
+"the order is confirmed, the quotation is converted into a Sale Order. "
+"OpenERP can handle several types of products so that a sales order can "
+"trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
+"Based on the configuration of the sale order, a draft invoice will be "
+"generated so that you just have to confirm it when you want to bill your "
+"customer."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -869,7 +870,6 @@ msgstr "Stavke naloga za prodaju"
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Kreiranje računa"
@@ -899,6 +899,12 @@ msgstr ""
 "serija koja je koriscena u komercijalnim transakcijama."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Kontakt pri naručivanju"
@@ -908,6 +914,15 @@ msgstr "Kontakt pri naručivanju"
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
 msgstr "Ovori Fakturu"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sale order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sale order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -971,25 +986,14 @@ msgid "Create Delivery Order"
 msgstr "Kreiraj Dostavni Nalog"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"PLanirao si da prodas %.2f %s ali imas samo %.2f %s dostupno !\n"
-"Stvarni lager je %.2f %s. ( Bez rezervacija)"
-
-#. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
 msgstr "Trosak Dostave"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "The sale order '%s' has been set in draft state."
-msgstr "Prodajni Nalog '%s' je postavljen u stanje 'U Pripremi' ."
+#: view:sale.order:0
+msgid "Total Tax Included"
+msgstr "Ukupno Ukljucenih Poreza"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1011,11 +1015,6 @@ msgstr "Prodaja po kategoriji Proizvoda"
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
 msgstr "Parcijalna isporuka"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Procurement"
-msgstr "Ponovi Nabavku"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1113,17 +1112,6 @@ msgstr "Nalog za prodaju"
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Porezi"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"A sale order generates an invoice, as soon as it is confirmed by the "
-"salesman. Depending on the Invoicing control of the sale order, the invoice "
-"is based on delivered or on ordered quantities."
-msgstr ""
-"Prodajni nalog generise Fakturu, onda kada je potvrdjen od strane prodavca. "
-"Ovisno o kontroli fakturisanja prodajnog naloga, faktura je bazirana na "
-"isporuci ili na porucenim kolicinama."
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -1276,12 +1264,6 @@ msgid "Sales Management"
 msgstr "Menadžment prodaje"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Kolicina: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr "Da bude pregledano od strane racunovodje."
@@ -1298,22 +1280,9 @@ msgid "Create invoices"
 msgstr "Kreiranje računa"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Greška: Podrazumevani UOM i and the kupljeni UOM moraju da budu u istoj "
-"kategoriji."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr "Prodajna linija naloga Napravi_fakturu"
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni Meni."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1392,7 +1361,6 @@ msgstr "Potvrdi Prodajni nalog za Fakturisanje"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-#: model:ir.ui.menu,name:sale.menu_config_sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1434,13 +1402,6 @@ msgstr "Ne mogu otkazati liniju prodajnog naloga!"
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr "Izborna Lista & Nalog Dostave"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1523,13 +1484,6 @@ msgid "Product UoM"
 msgstr "Proizvod UoM"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Prodaja po Prodavcu"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Logistic"
 msgstr "Logistika"
@@ -1540,9 +1494,30 @@ msgid "Order"
 msgstr "Nalog"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
 msgstr "Adresa Isporuke za dati prodajni nalog"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+"PLanirao si da prodas %.2f %s ali imas samo %.2f %s dostupno !\n"
+"Stvarni lager je %.2f %s. ( Bez rezervacija)"
 
 #. module: sale
 #: view:sale.order:0
@@ -1685,6 +1660,23 @@ msgid "Warning"
 msgstr "Upozorenje"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Prodajni Nalog"
@@ -1695,12 +1687,6 @@ msgid "Quantity (UoS)"
 msgstr "Količina (UoS)"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr " Tip ul: "
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Potvrđeno"
@@ -1709,6 +1695,11 @@ msgstr "Potvrđeno"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Potvrda"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1807,6 +1798,16 @@ msgid "Image"
 msgstr "Slika"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
+"Izaberite kupca u formi za prodaju !\n"
+"Izaberite jednog kupca pre nego što izaberete proizvod."
+
+#. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax"
 msgstr "Iznos bez poreza"
@@ -1891,9 +1892,12 @@ msgid "Payment Terms"
 msgstr "Uslovi plaćanja"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Direktna isporuka"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1923,19 +1927,6 @@ msgid "January"
 msgstr "Januar"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:0
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sale Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sale Order Line is Invoiced!"
-msgstr ""
-"Faktura ne moze biti kreirana za ovaj prodajni nalog zbog sledecih razloga:\n"
-"1.Stanje ove prodaje je ili 'U Pripremi' ili 'Otkazano' !\n"
-"2.Prodajni nalog je fakturisan!"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "Nalog za prodaju u toku"
@@ -1963,11 +1954,6 @@ msgid "Assign"
 msgstr "Dodeljivanje"
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
-
-#. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
 msgstr "Naruceno Dana"
@@ -1982,11 +1968,6 @@ msgstr "od akcije"
 #: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Prodavnica"
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Prodaja po Potrosacu"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2005,25 +1986,29 @@ msgid "Not enough stock !"
 msgstr "Nema dovoljno mesta na lageru !"
 
 #. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
 msgstr "Stavke naloga za prodaju"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"If you have more than one shops reselling your company products, you can "
+"create and manage them from here. Whenever you will record a new quotation "
+"or sale order, it has to be linked to a shop. The shop also defines the "
+"warehouse from which the products will be delivered for each particular sale."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 #: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Opis"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order \\n                             "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Ne mozes napraviti napredak u prodajnom nalogu \\n koji je definisan kao ' "
-"Automatska faktura nakon isporuke' ."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2057,14 +2042,20 @@ msgstr ""
 "razlicite tipove faktura: dnevno, nedeljno, etc."
 
 #. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Picking Default Policy"
+msgstr "Podrazumevana Izborna Politika"
+
+#. module: sale
 #: selection:sale.report,month:0
 msgid "April"
 msgstr "April"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "Ukupno Ukljucenih Poreza"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been set in draft state."
+msgstr "Prodajni Nalog '%s' je postavljen u stanje 'U Pripremi' ."
 
 #. module: sale
 #: view:sale.order:0
@@ -2090,9 +2081,14 @@ msgstr ""
 "parametre prodajnog naloga. "
 
 #. module: sale
-#: field:sale.config.picking_policy,picking_policy:0
-msgid "Picking Default Policy"
-msgstr "Podrazumevana Izborna Politika"
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -2223,6 +2219,9 @@ msgstr "Račun na osnovu isporuke"
 #~ msgid "Packing"
 #~ msgstr "Pakovanje"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "Related Packing"
 #~ msgstr "Povezana pakovanja"
 
@@ -2300,11 +2299,17 @@ msgstr "Račun na osnovu isporuke"
 #~ msgid "Sales Process"
 #~ msgstr "Proces prodaje"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Greška: Podrazumevani UOM i and the kupljeni UOM moraju da budu u istoj "
+#~ "kategoriji."
+
 #~ msgid "Sales Configuration"
 #~ msgstr "Konfiguracija prodaje"
 
-#~ msgid "Configure Sale Order Logistics"
-#~ msgstr "Konfigurisanje logistike naloga za prodaju"
+#~ msgid "Procurement Corrected"
+#~ msgstr "Ispravljene nabavke"
 
 #~ msgid "Status"
 #~ msgstr "Status"
@@ -2359,6 +2364,11 @@ msgstr "Račun na osnovu isporuke"
 
 #~ msgid "Advance Payment"
 #~ msgstr "Akontacija"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "Confirm sale order and Create invoice."
 #~ msgstr "Potvrda naloga za prodaju i kreiranje računa."
@@ -2420,6 +2430,9 @@ msgstr "Račun na osnovu isporuke"
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Konfigurišite opcije pakovanja naloga za prodaju"
 
+#~ msgid "Invoice Corrected"
+#~ msgstr "Ispravljen račun"
+
 #~ msgid "Delivery Delay"
 #~ msgstr "Kašnjenje isporuke"
 
@@ -2434,3 +2447,83 @@ msgstr "Račun na osnovu isporuke"
 
 #~ msgid "Make Invoice"
 #~ msgstr "Kreiraj račun"
+
+#~ msgid "Sales By Partner"
+#~ msgstr "Prodaja po Partneru"
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+#~ msgstr ""
+#~ "Selektovao si kolicinu od %d komada.\n"
+#~ "Ali nisu kompatibilni sa selektovanim pakovanjem.\n"
+#~ "Oved su predlozi kolicina za odgovarajuce pakovanje. "
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcije."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Greska : JU (JedinicaUsluge) mora da bude u razlicitoj kategoriji od JM ( "
+#~ "Jedinica Mera )"
+
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the the shipping of the "
+#~ "products to the customer"
+#~ msgstr "Broj dana izmedju potvrde Narudzbe i dostave proizvoda klijentu."
+
+#, python-format
+#~ msgid ""
+#~ "There is no income account defined ' \\n                                     "
+#~ "   'for this product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "nema ulaznog naloga definisanog kao ' \\n' za proizvod: \"%s\" (id:%d)"
+
+#~ msgid "Recreate Procurement"
+#~ msgstr "Ponovi Nabavku"
+
+#~ msgid ""
+#~ "A sale order generates an invoice, as soon as it is confirmed by the "
+#~ "salesman. Depending on the Invoicing control of the sale order, the invoice "
+#~ "is based on delivered or on ordered quantities."
+#~ msgstr ""
+#~ "Prodajni nalog generise Fakturu, onda kada je potvrdjen od strane prodavca. "
+#~ "Ovisno o kontroli fakturisanja prodajnog naloga, faktura je bazirana na "
+#~ "isporuci ili na porucenim kolicinama."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni Meni."
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Kolicina: "
+
+#~ msgid "Sales By Salesman"
+#~ msgstr "Prodaja po Prodavcu"
+
+#, python-format
+#~ msgid " Type of ul: "
+#~ msgstr " Tip ul: "
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order \\n                             "
+#~ "that is defined as 'Automatic Invoice after delivery'."
+#~ msgstr ""
+#~ "Ne mozes napraviti napredak u prodajnom nalogu \\n koji je definisan kao ' "
+#~ "Automatska faktura nakon isporuke' ."
+
+#~ msgid "Sales By Customer"
+#~ msgstr "Prodaja po Potrosacu"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
+
+#~ msgid "Configure Sale Order Logistics"
+#~ msgstr "Konfigurisanje logistike naloga za prodaju"

@@ -6,20 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 13:24+0000\n"
-"Last-Translator: Fabio Graziosi <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-12 03:24+0000\n"
+"Last-Translator: Lorenzo Battistini - agilebg.com "
+"<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Servizio su timesheet"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -37,7 +38,7 @@ msgstr "(lasciare vuoto per ora corrente)"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
 #, python-format
 msgid "No employee defined for your user !"
-msgstr "Nessun dipendente definito per il tuo utente!"
+msgstr "Nessun impiegato definito per il tuo utente!"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -52,6 +53,10 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Gli impiegati possono inserire il loro tempo impiegato sui vari progetti. Un "
+"progetto è un conto analitico ed il tempo impiegato su un progetto genera "
+"costi sul conto analitico. Questa caratteristica permette di memorizzare "
+"contemporaneamente la presenza ed il timesheet."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -72,7 +77,7 @@ msgstr "Fine Lavoro"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
 msgid "Employee Timesheet"
-msgstr "Foglio ore Impiegato"
+msgstr "Timesheet impiegato"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -83,7 +88,7 @@ msgstr "Statistiche Lavoro Svolto"
 #: view:hr.analytic.timesheet:0
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_reporting_timesheet
 msgid "Timesheet"
-msgstr "Orario di Lavoro"
+msgstr "Timesheet"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -127,14 +132,17 @@ msgid "Monthly Employee Timesheet"
 msgstr "Timesheet mensile impiegato"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Entrate/Uscite"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Lavoro Svolto nell'ultimo periodo"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+"Errore ! Non è possibile selezionare un reparto del quale l'impiegato è "
+"manager."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -169,7 +177,7 @@ msgstr "Errore utente"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
 #, python-format
 msgid "No cost unit defined for this employee !"
-msgstr "Nessuna unità di costo definito per questo dipendente!"
+msgstr "Nessuna unità di costo definito per questo impiegato !"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -192,7 +200,7 @@ msgstr "Attenzione"
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
 msgid "Human Resources (Timesheet encoding)"
-msgstr "Risorse Umane (codifica foglio ore"
+msgstr "Risorse Umane (codifica timesheet)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -208,21 +216,11 @@ msgid "Sat"
 msgstr "Sab"
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Dom"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico!"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -239,14 +237,9 @@ msgid "Print"
 msgstr "Stampa"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID certificato del modulo deve essere unico!"
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Lines"
-msgstr "Righe Orari di Lavoro"
+msgstr "Righe timesheet"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -276,18 +269,6 @@ msgstr "Data di inizio"
 #: view:hr.employee:0
 msgid "Categories"
 msgstr "Categorie"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Errore: L'Unità di Vendita deve essere in una categoria diversa da quella "
-"dell'Unità di misura"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -321,11 +302,9 @@ msgid "September"
 msgstr "Settembre"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "Dicembre"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Riga Timesheet"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -357,7 +336,7 @@ msgstr "Da Fatturare"
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
-msgstr "Orari di Lavoro Dipendente"
+msgstr "Timesheet dipendente"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
@@ -374,12 +353,9 @@ msgid "Fri"
 msgstr "Ven"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono "
-"trovarsi nella stessa categoria"
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Entrate/Uscite"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -397,17 +373,13 @@ msgstr "(lasciare vuoto per orario attuale)"
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr "Orari di Lavoro"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore ! Non puoi creare un menù ricorsivo"
+msgstr "Timesheets"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr ""
+"Specifica la designazione dell'impiegato come un prodotto di tipo servizio."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -432,7 +404,7 @@ msgstr "Giugno"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Print My Timesheet"
-msgstr "Stampa il mio foglio ore"
+msgstr "Stampa il mio Timesheet"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -451,6 +423,11 @@ msgstr "Data"
 #, python-format
 msgid "November"
 msgstr "Novembre"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Errore ! Non è possibile creare gerarchie ricorsive di impiegati."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -491,7 +468,7 @@ msgstr "Statistiche Analisi"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr "Stampa timesheet impiegato e il mio personale"
+msgstr "Stampa timesheet impiegato & Stampa il mio timesheet"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
@@ -515,6 +492,13 @@ msgid "Analysis summary"
 msgstr "Riepilogo Analisi"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "Dicembre"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -528,7 +512,7 @@ msgstr "Annulla"
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr "Foglio ore Impiegati"
+msgstr "Timesheet Impiegati"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -537,22 +521,9 @@ msgid "février"
 msgstr "febbraio"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
+msgstr "Informazioni"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
@@ -576,11 +547,6 @@ msgstr "Data corrente"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr "Conto analitico"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Riga Orari di Lavoro"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -653,7 +619,7 @@ msgstr "Uscita per Progetto"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr "Dipendenti"
+msgstr "Impiegati"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -695,11 +661,6 @@ msgstr "Utenti"
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Inizio Lavoro"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Errore: codice EAN non valido"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -754,6 +715,14 @@ msgstr "settembre"
 #~ msgid "Hour"
 #~ msgstr "Ora"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Errore: L'Unità di Vendita deve essere in una categoria diversa da quella "
+#~ "dell'Unità di misura"
+
 #~ msgid "Choose Users"
 #~ msgstr "Definisci Utente"
 
@@ -762,6 +731,12 @@ msgstr "settembre"
 
 #~ msgid "My Working Hours of The Day"
 #~ msgstr "Le Mie Ore di Lavoro del Giorno"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono "
+#~ "trovarsi nella stessa categoria"
 
 #~ msgid "Sign in status"
 #~ msgstr "Stato Entrata"
@@ -775,6 +750,12 @@ msgstr "settembre"
 #~ msgid "Choose your month"
 #~ msgstr "Definisci Mese"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "Working Time"
 #~ msgstr "Orario di Lavoro"
 
@@ -784,8 +765,26 @@ msgstr "settembre"
 #~ msgid "Working Hours of The Day"
 #~ msgstr "Ore Lavorative del Giorno"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Errore: codice EAN non valido"
+
 #~ msgid "Total"
 #~ msgstr "Totale"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."
+
 #~ msgid "Consultancy - Senior Developer"
 #~ msgstr "Consulenza - Sviluppatore Senjor"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore ! Non puoi creare un menù ricorsivo"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"

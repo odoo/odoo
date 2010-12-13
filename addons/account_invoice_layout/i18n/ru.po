@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 15:06+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-11 11:48+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -25,21 +25,19 @@ msgstr "Подитог"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+msgstr "Примечание:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Отмененный счет"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr "Проформа"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -58,6 +56,11 @@ msgstr "Счет-фактура с макетом и сообщением"
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Скидка (%)"
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Печать"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -82,19 +85,15 @@ msgid "Unit Price"
 msgstr "Цена за ед."
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "Be Expert with the Experts..."
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "НДС:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -103,10 +102,9 @@ msgid "Document"
 msgstr "Документ"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "PRO-FORMA"
-msgstr "Проформа"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -131,7 +129,7 @@ msgstr "Продукт"
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
-msgstr ""
+msgstr "Определяет последовательность при выводе списка позиций счета."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -143,7 +141,7 @@ msgstr "Цена"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Дата выставления счета"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -181,7 +179,7 @@ msgstr "Специальное сообщение"
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "Сообщение для печати в конце отчета"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -193,12 +191,7 @@ msgstr "Количество"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+msgstr "Ссылка на партнера"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -211,7 +204,7 @@ msgstr "Счет"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Всего:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -232,7 +225,7 @@ msgstr "Счет-фактура с макетом"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description / Taxes"
-msgstr ""
+msgstr "Описание / Налоги"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -244,7 +237,7 @@ msgstr "Сумма"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Тел. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -281,7 +274,7 @@ msgstr "Разделительная линия"
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Улучшение шаблона счетов"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -290,14 +283,8 @@ msgid "Supplier Invoice"
 msgstr "Счета поставщиков"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Печать"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "VAT :"
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: account_invoice_layout
@@ -309,13 +296,13 @@ msgstr "Налог"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Позиция счета"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Чистый итог:"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -326,7 +313,7 @@ msgstr "Напишите уведомление или пожелание."
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Факс:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -352,6 +339,12 @@ msgstr "Все уведомления"
 #~ msgid "Invoice Date:"
 #~ msgstr "Дата счета:"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
 #~ msgid "Customer Ref:"
 #~ msgstr "Ссылка на клиента:"
 
@@ -360,6 +353,9 @@ msgstr "Все уведомления"
 
 #~ msgid "Tel. :"
 #~ msgstr "Тел. :"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
 
 #~ msgid "VAT :"
 #~ msgstr "НДС :"
@@ -373,5 +369,17 @@ msgstr "Все уведомления"
 #~ msgid "account_invoice_layout"
 #~ msgstr "account_invoice_layout"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
 #~ msgid ")"
 #~ msgstr ")"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля не может быть меньше 1 !"

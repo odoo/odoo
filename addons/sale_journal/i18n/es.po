@@ -6,44 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 09:43+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 09:50+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale_journal
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: sale_journal
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Ventas & Compras"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr "El tipo de diario utilizado para ventas y albaranes."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -51,36 +23,14 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Agrupado"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
+msgstr "El tipo de diario utilizado para ventas y albaranes."
 
 #. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
-
-#. module: sale_journal
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: field:stock.picking,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Tipo de factura"
-
-#. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the invoice "
-"type without removing it."
-msgstr ""
-"Si el campo activo se desmarca, permite ocultar el tipo de factura sin "
-"eliminarlo."
-
-#. module: sale_journal
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sale Order"
+msgstr "Pedido venta"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -99,19 +49,18 @@ msgstr ""
 "según las necesidades del cliente: cada día, cada miércoles, mensuales, ..."
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Método de facturación"
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Ventas & Compras"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Activo"
-
-#. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar el tipo de factura sin "
+"eliminarlo."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -119,24 +68,9 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sale Order"
-msgstr "Pedido venta"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "No agrupado"
-
-#. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
 msgstr "Método de facturación"
-
-#. module: sale_journal
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -146,9 +80,37 @@ msgid "Invoice Types"
 msgstr "Tipos de factura"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Gestionar ventas y entregas por diario"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "No agrupado"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupado"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivos."
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Método de facturación"
+
+#. module: sale_journal
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo de factura"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Activo"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -156,9 +118,14 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: sale_journal
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
+
+#. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Gestionar ventas y entregas por diario"
 
 #~ msgid "Confirmed packing"
 #~ msgstr "Albarán confirmado"
@@ -219,6 +186,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Average Price"
 #~ msgstr "Precio medio"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid "State"
 #~ msgstr "Estado"
@@ -313,6 +283,12 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 #~ msgid "Open"
 #~ msgstr "Abierto"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Responsible"
 #~ msgstr "Responsable"
 
@@ -396,3 +372,25 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Packing to Invoice"
 #~ msgstr "Albaranes a facturar"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the invoice "
+#~ "type without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar el tipo de factura sin "
+#~ "eliminarlo."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

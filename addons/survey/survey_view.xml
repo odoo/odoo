@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
             <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
                  groups="base.group_tool_manager"
@@ -267,7 +265,7 @@
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1" default="1">
+                        <field name="responsible_id" select="1">
                             <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
@@ -1100,7 +1098,7 @@
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection" select="1"/>
                         <field name="email" select="1"/>
-                        <field name="user_id" select="1" default="1">
+                        <field name="user_id" select="1">
                         <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                     </group>

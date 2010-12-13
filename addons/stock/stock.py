@@ -114,8 +114,11 @@ class stock_location(osv.osv):
 
         product_product_obj = self.pool.get('product.product')
 
-        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s or location_dest_id in %s', (tuple(ids), tuple(ids)))
-        res_products_by_location = sorted(cr.dictfetchall(), key=itemgetter('location_id'))
+        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
+        dict1 = cr.dictfetchall()
+        cr.execute('select distinct product_id, location_dest_id as location_id from stock_move where location_dest_id in %s', (tuple(ids), ))
+        dict2 = cr.dictfetchall()
+        res_products_by_location = sorted(dict1+dict2, key=itemgetter('location_id'))
         products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
 
         result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
@@ -123,7 +126,7 @@ class stock_location(osv.osv):
 
         currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         currency_obj = self.pool.get('res.currency')
-        currency = currency_obj.browse(cr, uid, currency_id)
+        currency = currency_obj.browse(cr, uid, currency_id, context=context)
         for loc_id, product_ids in products_by_location.items():
             if prod_id:
                 product_ids = [prod_id]
@@ -1496,8 +1499,8 @@ class stock_move(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
         'address_id': fields.many2one('res.partner.address', 'Destination Address', help="Optional address where goods are to be delivered, specifically used for allotment"),
 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production", select=True),
-        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="Logistical shipping unit: pallet, box, pack ..."),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', states={'done': [('readonly', True)]}, help="Production lot is used to put a serial number on the production", select=True),
+        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
 
         'auto_validate': fields.boolean('Auto Validate'),
 
@@ -1643,6 +1646,32 @@ class stock_move(osv.osv):
 
         return {'value': result}
 
+    def onchange_uos_quantity(self, cr, uid, ids, product_id, product_uos_qty,
+                          product_uos, product_uom):
+        """ On change of product quantity finds UoM and UoS quantities
+        @param product_id: Product id
+        @param product_uos_qty: Changed UoS Quantity of product
+        @param product_uom: Unit of measure of product
+        @param product_uos: Unit of sale of product
+        @return: Dictionary of values
+        """
+        result = {
+                  'product_qty': 0.00
+          }
+
+        if (not product_id) or (product_uos_qty <=0.0):
+            return {'value': result}
+
+        product_obj = self.pool.get('product.product')
+        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+
+        if product_uos and product_uom and (product_uom != product_uos):
+            result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
+        else:
+            result['product_qty'] = product_uos_qty
+
+        return {'value': result}
+    
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, address_id=False):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
@@ -1906,6 +1935,12 @@ class stock_move(osv.osv):
         acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
+        if acc_dest == acc_variation:
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Variant account on category of this product is same.'))
+
+        if acc_src == acc_variation:
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Variant account on category of this product is same.'))
+
         if not acc_src:
             raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
@@ -1996,7 +2031,9 @@ class stock_move(osv.osv):
         """
         partial_datas=''
         picking_ids = []
+        move_ids = []
         partial_obj=self.pool.get('stock.partial.picking')
+        wf_service = netsvc.LocalService("workflow")
         partial_id=partial_obj.search(cr,uid,[])
         if partial_id:
             partial_datas=partial_obj.read(cr,uid,partial_id)[0]
@@ -2011,6 +2048,10 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
 
         for move in self.browse(cr, uid, ids):
+            if move.state in ['done','cancel']:
+                continue
+            move_ids.append(move.id)
+
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
@@ -2018,21 +2059,19 @@ class stock_move(osv.osv):
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                     if move.move_dest_id.picking_id:
-                        wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
-            prodlot_id =partial_datas and  partial_datas.get('move%s_prodlot_id'%(move.id), False)
+            prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
-                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id})
-            self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
 
-        wf_service = netsvc.LocalService("workflow")
+        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        for id in move_ids:
+             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
@@ -2418,6 +2457,12 @@ class stock_inventory(osv.osv):
         return self.pool.get('stock.move').create(cr, uid, move_vals)
 
     def action_done(self, cr, uid, ids, context=None):
+        """ Finished the inventory
+        @return: True
+        """
+
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
             move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
@@ -2425,7 +2470,7 @@ class stock_inventory(osv.osv):
         return True
 
     def action_confirm(self, cr, uid, ids, context=None):
-        """ Finishes the inventory and writes its finished date
+        """ Confirm the inventory and writes its finished date
         @return: True
         """
         if context is None:
@@ -2435,7 +2480,7 @@ class stock_inventory(osv.osv):
         product_context = dict(context, compute_child=False)
 
         location_obj = self.pool.get('stock.location')
-        for inv in self.browse(cr, uid, ids):
+        for inv in self.browse(cr, uid, ids, context=context):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
