@@ -171,8 +171,9 @@
 		                    <separator string=" Recurrency Rule" colspan="8"/>
 		                    <group col="3" colspan="2">
 		                      <field name="freq" string="Recurrency"/>
-		                        <field name="interval" />
-		                        <field name="end_date" />
+		                      <newline/>
+		                      <field name="end_date" />
+		                      <field name="interval" string="Repeat Times"/>
 		                    </group>
 		                    <group col="5" colspan="5" name="Select weekdays"
 		                        attrs="{'invisible' : [('freq','!=','weekly')]}">
@@ -180,6 +181,7 @@
 		                        <field name="tu" colspan="1" />
 		                        <field name="we" colspan="1" />
 		                        <field name="th" colspan="1" />
+		                        <newline/>
 		                        <field name="fr" colspan="1" />
 		                        <field name="sa" colspan="1" />
 		                        <field name="su" colspan="1" />
