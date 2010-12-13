@@ -61,7 +61,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'partner_name2': fields.char('Employee Email', size=64), 
             'partner_phone': fields.char('Phone', size=32), 
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="('object_id.model', '=', 'crm.fundraising')]"), 
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('type', '=', 'fundraising')]"), 
             'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
                              domain="[('section_id','=',section_id)]"), 
             'duration': fields.float('Duration'), 
