@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-08-02 14:32+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -35,18 +35,8 @@ msgid "Paid Member"
 msgstr ""
 
 #. module: membership
-#: help:product.product,membership_date_from:0
-msgid "Active Membership since this date"
-msgstr ""
-
-#. module: membership
 #: view:report.membership:0
 msgid "Group By..."
-msgstr ""
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: membership
@@ -153,6 +143,11 @@ msgid "# Invoiced"
 msgstr ""
 
 #. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr ""
+
+#. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr ""
@@ -166,6 +161,11 @@ msgstr ""
 #: code:addons/membership/membership.py:0
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: membership
@@ -190,13 +190,31 @@ msgid "From"
 msgstr ""
 
 #. module: membership
-#: model:process.transition.action,name:membership.process_transition_action_create0
-msgid "Create"
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
 msgstr ""
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A member who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+
+#. module: membership
+#: model:process.transition.action,name:membership.process_transition_action_create0
+msgid "Create"
 msgstr ""
 
 #. module: membership
@@ -261,8 +279,10 @@ msgid "Golden Membership"
 msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
 msgstr ""
 
 #. module: membership
@@ -278,8 +298,8 @@ msgid "Define product for membership."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
 msgstr ""
 
 #. module: membership
@@ -288,9 +308,9 @@ msgid "Join"
 msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
+#: help:product.product,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
@@ -309,6 +329,11 @@ msgid "Join Date"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give membership free of cost."
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
 msgid "Set association"
 msgstr ""
@@ -321,6 +346,11 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "Memberships"
+msgstr ""
+
+#. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
 msgstr ""
 
 #. module: membership
@@ -341,6 +371,24 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership state.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
 msgstr ""
 
 #. module: membership
@@ -372,6 +420,12 @@ msgid "Associate Member"
 msgstr ""
 
 #. module: membership
+#: help:product.product,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr ""
+
+#. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
 msgstr ""
@@ -400,6 +454,12 @@ msgid "Category"
 msgstr ""
 
 #. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr ""
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -412,19 +472,9 @@ msgid "Member Sale Pricelist Version"
 msgstr ""
 
 #. module: membership
-#: help:product.product,membership_date_to:0
-msgid "Expired date of Membership"
-msgstr ""
-
-#. module: membership
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negociated by the partner"
 msgstr ""
 
 #. module: membership
@@ -438,13 +488,13 @@ msgid "Member"
 msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Date From"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:product.product:0
+msgid "Date From"
 msgstr ""
 
 #. module: membership
@@ -455,6 +505,11 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: membership
@@ -485,18 +540,6 @@ msgid "June"
 msgstr ""
 
 #. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr ""
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Invoiced Member"
-msgstr ""
-
-#. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
@@ -509,8 +552,15 @@ msgid "Membership"
 msgstr ""
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Specify if this product is a membership product"
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
 msgstr ""
 
 #. module: membership
@@ -561,20 +611,23 @@ msgid "Membership Fee"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr ""
+
+#. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
+msgstr ""
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Select if a product is a membership product."
 msgstr ""
 
 #. module: membership
@@ -647,12 +700,6 @@ msgid "Categorization"
 msgstr ""
 
 #. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr ""
@@ -691,11 +738,6 @@ msgid "May"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
-
-#. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
 msgstr ""
@@ -727,6 +769,11 @@ msgid "April"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr ""
+
+#. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
 msgstr ""
@@ -745,6 +792,11 @@ msgstr ""
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
 msgid "Membership product"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
 msgstr ""
 
 #. module: membership

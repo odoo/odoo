@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-08 19:16+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-09 10:21+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1296,6 +1296,11 @@ msgid "Overdue Payments"
 msgstr "Pagos fuera de plazo"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Error: La referencia BVR es necesaria."
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1491,11 +1496,6 @@ msgstr "Asientos recurrentes"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Plantilla para posición fiscal"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr "Test código impuesto"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -6573,6 +6573,15 @@ msgid "Taxes:"
 msgstr "Impuestos:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"La cuenta bancaria de la empresa para pagar\n"
+"Dejarlo vacío para utilizar el valor por defecto"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr "Para impuestos de tipo porcentaj, introduzca valor % entre 0-1."
@@ -6798,16 +6807,6 @@ msgstr "Impuesto de compra por defecto"
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Confirmar"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
-"Número de cuenta bancaria, cuenta bancaria de la compañía si la factura es "
-"un abono de cliente o proveedor, si no cuenta bancaria de la empresa cliente "
-"o proveedor."
 
 #. module: account
 #: help:account.tax,domain:0
@@ -8079,6 +8078,11 @@ msgstr "Forzar período"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr "Imprimir balance contable de empresa"
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Error: Número BVR inválido (checksum erróneo)."
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -10871,13 +10875,6 @@ msgstr "¡No puede eliminar una cuenta que contiene asientos contables! "
 #~ "Si se indica en la empresa un impuesto por defecto sólo anula los impuestos "
 #~ "de las cuentas (o productos) en el mismo grupo."
 
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "La cuenta bancaria de la empresa para pagar\n"
-#~ "Dejarlo vacío para utilizar el valor por defecto"
-
 #~ msgid "Journal d'extourne"
 #~ msgstr "Diario de inversión"
 
@@ -10989,14 +10986,8 @@ msgstr "¡No puede eliminar una cuenta que contiene asientos contables! "
 #~ "Estos tipos se definen de acuerdo a su país. El tipo contiene más "
 #~ "información acerca de la cuenta y sus especificidades."
 
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Error: Número BVR inválido (checksum erróneo)."
-
 #~ msgid "Full Account Name"
 #~ msgstr "Nombre completo de la cuenta"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Error: La referencia BVR es necesaria."
 
 #~ msgid "Draft Supplier Refunds"
 #~ msgstr "Facturas rectificativas (abono) de proveedor en borrador"
@@ -11307,6 +11298,9 @@ msgstr "¡No puede eliminar una cuenta que contiene asientos contables! "
 #~ msgid "Fiscal Mappings"
 #~ msgstr "Mapeos fiscales"
 
+#~ msgid "Tax Code Test"
+#~ msgstr "Test código impuesto"
+
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "¡El ID del certificado del módulo debe ser único!"
 
@@ -11344,6 +11338,14 @@ msgstr "¡No puede eliminar una cuenta que contiene asientos contables! "
 
 #~ msgid "Central Journals"
 #~ msgstr "Diarios centralizados"
+
+#~ msgid ""
+#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
+#~ "refund, otherwise Partner bank account number."
+#~ msgstr ""
+#~ "Número de cuenta bancaria, cuenta bancaria de la compañía si la factura es "
+#~ "un abono de cliente o proveedor, si no cuenta bancaria de la empresa cliente "
+#~ "o proveedor."
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
