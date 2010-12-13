@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-29 07:48+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-08 19:29+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
@@ -28,9 +28,11 @@ msgid "Menu Create"
 msgstr "Crear menú"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Tipo de nota"
 
 #. module: board
 #: view:board.note:0
@@ -53,11 +55,6 @@ msgstr "Últimas conexiones"
 #, python-format
 msgid "User Error!"
 msgstr "¡Error de usuario!"
-
-#. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: board
 #: view:board.board:0
@@ -85,11 +82,6 @@ msgid "Board"
 msgstr "Tablero"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
@@ -100,14 +92,6 @@ msgstr "Actividad global semanal"
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Título"
-
-#. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: board
 #: field:res.log.report,nbr:0
@@ -126,11 +110,6 @@ msgid "Open Dashboard"
 msgstr "Abrir tablero"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr "Tipo nota"
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
@@ -138,14 +117,9 @@ msgid "Monthly Activity per Document"
 msgstr "Actividad mensual por documento"
 
 #. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: board
 #: view:res.log.report:0
 msgid "Log Analysis"
-msgstr ""
+msgstr "Análisis de registros"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -156,12 +130,12 @@ msgstr "Definición tablero"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: board
 #: view:board.board:0
@@ -172,7 +146,7 @@ msgstr "Conexiones de usuario"
 #. module: board
 #: field:res.log.report,creation_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -188,7 +162,7 @@ msgstr "Información del menú"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #. module: board
 #: field:board.note,type:0
@@ -203,7 +177,7 @@ msgstr "Vistas de acciones"
 #. module: board
 #: model:ir.model,name:board.model_res_log_report
 msgid "Log Report"
-msgstr ""
+msgstr "Informe registro"
 
 #. module: board
 #: view:board.note:0
@@ -214,18 +188,18 @@ msgstr "Fecha"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Julio"
 
 #. module: board
 #: view:res.log.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtros extendidos..."
 
 #. module: board
 #: view:res.log.report:0
 #: field:res.log.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Día"
 
 #. module: board
 #: view:board.menu.create:0
@@ -235,12 +209,12 @@ msgstr "Crear menú para tablero"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Febrero"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
@@ -255,7 +229,7 @@ msgstr "Menú padre"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Enero"
 
 #. module: board
 #: view:board.note:0
@@ -265,7 +239,7 @@ msgstr "Notas"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Noviembre"
 
 #. module: board
 #: help:board.board.line,sequence:0
@@ -278,13 +252,8 @@ msgstr ""
 
 #. module: board
 #: selection:res.log.report,month:0
-msgid "September"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: board
 #: view:board.board:0
@@ -303,7 +272,7 @@ msgstr "Módulo base para todos los tableros."
 #. module: board
 #: field:board.board.line,action_id:0
 msgid "Action"
-msgstr ""
+msgstr "Acción"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -313,7 +282,7 @@ msgstr "Posición"
 #. module: board
 #: view:res.log.report:0
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: board
 #: field:board.menu.create,menu_name:0
@@ -325,11 +294,6 @@ msgstr "Nombre menú"
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
 msgstr "Últimas actividades"
-
-#. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -354,7 +318,7 @@ msgstr "Ancho"
 #. module: board
 #: view:res.log.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mes   "
 
 #. module: board
 #: field:board.board.line,sequence:0
@@ -362,15 +326,14 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Tipo de nota"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "Setiembre"
 
 #. module: board
 #: selection:res.log.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Diciembre"
 
 #. module: board
 #: view:board.board:0
@@ -391,18 +354,18 @@ msgstr "Crear menú del tablero"
 #. module: board
 #: selection:res.log.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayo"
 
 #. module: board
 #: field:res.log.report,res_model:0
 msgid "Object"
-msgstr ""
+msgstr "Objeto"
 
 #. module: board
 #: view:res.log.report:0
 #: field:res.log.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Año"
 
 #. module: board
 #: view:board.menu.create:0
@@ -421,15 +384,16 @@ msgid "Please Insert Dashboard View(s) !"
 msgstr "¡Por favor inserte vista(s) de tablero!"
 
 #. module: board
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Asunto"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "board.board"
 #~ msgstr "board.board"
@@ -440,6 +404,9 @@ msgstr "Asunto"
 #~ msgid "Configuration"
 #~ msgstr "Configuración"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "board.note.type"
 #~ msgstr "board.nota.tipo"
 
@@ -448,3 +415,12 @@ msgstr "Asunto"
 
 #~ msgid "board.board.line"
 #~ msgstr "board.board.line"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "NOte Type"
+#~ msgstr "Tipo nota"

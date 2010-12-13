@@ -56,6 +56,13 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         })
         self.context = context
 
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_pl_account_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
+
 
     def final_result(self):
         return self.res_pl
@@ -99,15 +106,16 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
             accounts_temp = []
             for account in accounts:
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
+                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0:
+                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if  account.balance != 0:
+                        if round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)

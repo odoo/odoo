@@ -1170,7 +1170,7 @@
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
+                        <filter name="posted" icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter
                             icon="terp-dolar_ok!"
@@ -1216,6 +1216,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_posted': 1}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account, OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account Payable".</field>
         </record>
@@ -2445,7 +2446,7 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" widget="selection" groups="base.group_extended"/>
                     <field name ="code_digits" groups="base.group_extended"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>

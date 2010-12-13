@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-27 13:04+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-05 20:05+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -41,12 +36,6 @@ msgstr "День"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Отменить заказа"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Продажи по партнеру"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -163,11 +152,6 @@ msgid "Total Price"
 msgstr "Итоговая цена"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr "Отметьте для группирования счетов по заказчикам"
@@ -176,6 +160,13 @@ msgstr "Отметьте для группирования счетов по з�
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Заказанное кол-во"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr "Продажи по менеджеру"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -211,13 +202,6 @@ msgid ""
 "this list if you invoice based on the delivery orders or if you invoice "
 "sales totally."
 msgstr ""
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
-"категориям."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -305,6 +289,11 @@ msgstr "Август"
 #, python-format
 msgid "EAN: "
 msgstr "EAN: "
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -524,6 +513,11 @@ msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Нельзя удалить подтвержденный заказ на продажу !"
 
 #. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr "Продажи по заказчику"
+
+#. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
 msgstr "Адрес выставления счета"
@@ -663,11 +657,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr "Показывает, что счет был оплачен"
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr "Дата заказа"
@@ -727,8 +716,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Вы уверены, что хотите создать счет(а) ?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Продажи по месяцу"
@@ -746,7 +733,7 @@ msgstr "Закупка проданного материала"
 #. module: sale
 #: view:sale.order:0
 msgid "Create Final Invoice"
-msgstr ""
+msgstr "Создать итоговый счет"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -764,12 +751,9 @@ msgid "Exception"
 msgstr "Исключительная ситуация"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Прямая доставка"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -917,6 +901,12 @@ msgstr ""
 "определены заранее в международно признанном документе."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr "Продажи по партнеру"
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Контакт"
@@ -996,11 +986,6 @@ msgstr "Каталоги продаж"
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
 msgstr "Создать заказ на доставку"
-
-#. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Правила не поддерживаются для объектов osv_memory !"
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -1219,11 +1204,6 @@ msgid "Shipped Quantities"
 msgstr "Отправленное количество"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Счет, основанный на заказе на продажу"
@@ -1234,9 +1214,13 @@ msgid "Picking List"
 msgstr "Комплектовочный лист"
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "из запасов"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
+"Менеджер продаж подтверждает предложение. Состояние заказа на продажу "
+"становится \"В процессе\" или \"В процессе вручную\"."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1310,22 +1294,9 @@ msgid "Create invoices"
 msgstr "Создать счета"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Ошибка. ед.изм. по умолчанию и закупочные ед.изм. должны иметь одинаковую "
-"категорию."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1438,11 +1409,6 @@ msgid "Invoice"
 msgstr "Счет"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1452,14 +1418,6 @@ msgstr "Нельзя отменить позицию заказа на прод�
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr "Комплектовочный лист & Заказ на доставку"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1542,15 +1500,8 @@ msgid "Product UoM"
 msgstr "Ед. изм. продукции"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Продажи по менеджеру продаж"
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr "Логистика"
 
 #. module: sale
@@ -1726,6 +1677,12 @@ msgid "Warning"
 msgstr "Внимание"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr "Продажи по месяцу"
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Заказ на продажу"
@@ -1750,6 +1707,11 @@ msgstr "Подтвержден"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Подтвердить"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1942,9 +1904,12 @@ msgid "Payment Terms"
 msgstr "Условия оплаты"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Прямая доставка"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -2006,13 +1971,9 @@ msgid "Date Order"
 msgstr "Дата заказа"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
-"Менеджер продаж подтверждает предложение. Состояние заказа на продажу "
-"становится \"В процессе\" или \"В процессе вручную\"."
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "из запасов"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -2021,19 +1982,9 @@ msgid "Sale Shop"
 msgstr "Магазин"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Продажи по заказчику"
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Закрыть"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2045,6 +1996,11 @@ msgstr "Доставлено"
 #, python-format
 msgid "Not enough stock !"
 msgstr "Запасов не достаточно !"
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Вы должны назначить партию изделий для данной ТМЦ"
 
 #. module: sale
 #: view:sale.order:0
@@ -2186,6 +2142,9 @@ msgstr "Счет основанный на доставках"
 #~ msgid "Net Price"
 #~ msgstr "Цена до налогов"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
 #~ msgid "My Quotations"
 #~ msgstr "Мои предложения"
 
@@ -2206,6 +2165,12 @@ msgstr "Счет основанный на доставках"
 
 #~ msgid "Other data"
 #~ msgstr "Прочие данные"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
 
 #~ msgid "Do you really want to create the invoices ?"
 #~ msgstr "Вы действительно хотите создать эти счета?"
@@ -2247,6 +2212,9 @@ msgstr "Счет основанный на доставках"
 
 #~ msgid "Invoice after delivery"
 #~ msgstr "Счет после доставки"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
 
 #~ msgid "Delivery, from the warehouse to the customer."
 #~ msgstr "Доставка клиенту со склада."
@@ -2309,6 +2277,11 @@ msgstr "Счет основанный на доставках"
 #~ msgid "Payment accounts"
 #~ msgstr "Бух. счета платежа"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+#~ "категориям."
+
 #~ msgid "Sales orders"
 #~ msgstr "Заказы на продажу"
 
@@ -2323,6 +2296,12 @@ msgstr "Счет основанный на доставках"
 
 #~ msgid "Procurement for each line"
 #~ msgstr "Снабжение для каждой позиции"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Ошибка. ед.изм. по умолчанию и закупочные ед.изм. должны иметь одинаковую "
+#~ "категорию."
 
 #~ msgid "Sales Process"
 #~ msgstr "Процесс продаж"
@@ -2353,6 +2332,9 @@ msgstr "Счет основанный на доставках"
 #~ "Вы не можете сделать аванс по заказу на продажу \\n что определяется как "
 #~ "'Автоматически, счет после доставки'."
 
+#~ msgid "Sales By Partner"
+#~ msgstr "Продажи по партнеру"
+
 #~ msgid ""
 #~ "A sale order generates an invoice, as soon as it is confirmed by the "
 #~ "salesman. Depending on the Invoicing control of the sale order, the invoice "
@@ -2361,3 +2343,18 @@ msgstr "Счет основанный на доставках"
 #~ "Заказ на продажу генерирует счет как только он подтверждается менеджером "
 #~ "продаж. В зависимости от режима управления выставлением счетов по заказам на "
 #~ "продажу, счет основан на доставленном или заказанном количестве."
+
+#~ msgid "Sales By Salesman"
+#~ msgstr "Продажи по менеджеру продаж"
+
+#~ msgid "Sales By Customer"
+#~ msgstr "Продажи по заказчику"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Правила не поддерживаются для объектов osv_memory !"
+
+#~ msgid "Logistics"
+#~ msgstr "Логистика"
