@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44:29+0000\n"
-"PO-Revision-Date: 2010-12-03 15:44:29+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16:23+0000\n"
+"PO-Revision-Date: 2010-12-10 17:16:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -258,19 +263,13 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr ""
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
 msgstr ""
 
 #. module: sale
@@ -371,6 +370,12 @@ msgstr ""
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
 msgstr ""
 
 #. module: sale
@@ -606,8 +611,9 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
 msgstr ""
 
 #. module: sale
@@ -766,14 +772,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -785,9 +783,12 @@ msgid "Sale Order Line"
 msgstr ""
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
 msgstr ""
 
 #. module: sale
@@ -951,12 +952,6 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
 msgstr ""
 
 #. module: sale
@@ -1149,12 +1144,6 @@ msgid "Sales Management"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1243,12 +1232,9 @@ msgid "Sales"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
 msgstr ""
 
 #. module: sale
@@ -1529,6 +1515,16 @@ msgid "Sales by Month"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1536,12 +1532,6 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
 msgstr ""
 
 #. module: sale

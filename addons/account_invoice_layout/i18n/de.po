@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-11-30 13:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -29,18 +29,16 @@ msgid "Note:"
 msgstr "Anmerkung:"
 
 #. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
 msgstr "Stornierte Rechnung"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr "PRO-FORMA"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -59,6 +57,11 @@ msgstr "Rechungen mit Layout und Nachricht"
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Rabatt (%)"
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Druck"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -83,19 +86,15 @@ msgid "Unit Price"
 msgstr "Preis pro Einheit"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "Be Expert with the Experts..."
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "USt.:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -104,10 +103,9 @@ msgid "Document"
 msgstr "Dokument"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "PRO-FORMA"
-msgstr "PRO-FORMA"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -196,16 +194,6 @@ msgstr "Menge"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr "Partner Ref."
-
-#. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -297,20 +285,9 @@ msgid "Supplier Invoice"
 msgstr "Lieferantenrechnung"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Druck"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr "USt.:"
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -357,17 +334,18 @@ msgid "Message"
 msgstr "Nachricht"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Zeige alle Meldungen an"
 
 #~ msgid "Invoice Date:"
 #~ msgstr "Rechnungsdatum:"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Kundenreferenz:"
@@ -380,6 +358,9 @@ msgstr "Zeige alle Meldungen an"
 
 #~ msgid "Tel. :"
 #~ msgstr "Tel. :"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "Total"
 #~ msgstr "Gesamt"
@@ -407,3 +388,18 @@ msgstr "Zeige alle Meldungen an"
 
 #~ msgid "Total (Excl. taxes):"
 #~ msgstr "Gesamt (Ohne Steuer)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

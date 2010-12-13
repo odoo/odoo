@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42:49+0000\n"
-"PO-Revision-Date: 2010-12-03 15:42:49+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14:45+0000\n"
+"PO-Revision-Date: 2010-12-10 17:14:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1187,6 +1187,11 @@ msgid "Overdue Payments"
 msgstr ""
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1366,11 +1371,6 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
 msgstr ""
 
 #. module: account
@@ -6012,6 +6012,12 @@ msgid "Taxes:"
 msgstr ""
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid "The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6210,11 +6216,6 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Confirm"
-msgstr ""
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid "Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number."
 msgstr ""
 
 #. module: account
@@ -7365,6 +7366,11 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
+msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account

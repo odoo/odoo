@@ -7,16 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-06 16:23+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-09 08:12+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr "Erlaubt die Kalkulation von Lieferkosten für das Angebot"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -293,20 +298,14 @@ msgid "August"
 msgstr "August"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr "Erlaubt die Kalkulation von Lieferkosten für das Angebot"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Alle Angebote"
 
 #. module: sale
 #: report:sale.order:0
@@ -416,6 +415,12 @@ msgstr "In Bearbeitung"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Finanzbuchhaltung"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -678,9 +683,10 @@ msgid "Shipped"
 msgstr "Ausgeliefert"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Alle Angebote"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "Fehlerhafter Modus für test_state"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -872,18 +878,6 @@ msgid "Pricelist version for current sale order"
 msgstr "Version der Preisliste für den aktuellen Verkaufsauftrag"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"Sie wählten %d Einheiten.\n"
-"Diese sind mit der gewählten Verpackung nicht kompatibel.\n"
-"Hier ist ein Vorschlag für Mengen entsprechend der Verpackung: "
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr "Auftragsdaten"
@@ -895,10 +889,13 @@ msgid "Sale Order Line"
 msgstr "Auftragspositionen"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preis/ME"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Erzeuge Rechnung"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -1075,12 +1072,6 @@ msgstr "Rechnungserstellung von Lieferaufträgen"
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Warteliste"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "Fehlerhafter Modus für test_state"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1303,12 +1294,6 @@ msgid "Sales Management"
 msgstr "Verkauf"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Menge "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr "Vom Rechnungswesen zu überprüfen"
@@ -1413,13 +1398,10 @@ msgid "Sales"
 msgstr "Verkaufsaufträge"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Erzeuge Rechnung"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preis/ME"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1719,6 +1701,17 @@ msgid "Sales by Month"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
@@ -1727,12 +1720,6 @@ msgstr "Verkaufsauftrag"
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
 msgstr "Menge (Verkaufseinheit)"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr " Typ der VE: "
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2620,6 +2607,10 @@ msgstr "Rechnung durch Lieferung"
 #~ "Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
 #~ "Mengeneinheit"
 
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
+
 #~ msgid "Sales By Partner"
 #~ msgstr "Verkauf je Partner"
 
@@ -2635,6 +2626,10 @@ msgstr "Rechnung durch Lieferung"
 #~ "There is no income account defined ' \\n                                     "
 #~ "   'for this product: \"%s\" (id:%d)"
 #~ msgstr "Für diesen Produkt \"%s\" ist kein Erlöskonto definiert:  (id:%d)"
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Menge "
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
@@ -2655,6 +2650,20 @@ msgstr "Rechnung durch Lieferung"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+#~ msgstr ""
+#~ "Sie wählten %d Einheiten.\n"
+#~ "Diese sind mit der gewählten Verpackung nicht kompatibel.\n"
+#~ "Hier ist ein Vorschlag für Mengen entsprechend der Verpackung: "
+
+#, python-format
+#~ msgid " Type of ul: "
+#~ msgstr " Typ der VE: "
 
 #~ msgid ""
 #~ "Error: The default UOM and the purchase UOM must be in the same category."

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-08-03 07:28+0000\n"
 "Last-Translator: Eleanor Chen <chenyueg@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -34,19 +34,9 @@ msgid "Paid Member"
 msgstr "付费会员"
 
 #. module: membership
-#: help:product.product,membership_date_from:0
-msgid "Active Membership since this date"
-msgstr ""
-
-#. module: membership
 #: view:report.membership:0
 msgid "Group By..."
 msgstr ""
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中无效的模块名"
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -152,6 +142,11 @@ msgid "# Invoiced"
 msgstr ""
 
 #. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr ""
+
+#. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr ""
@@ -166,6 +161,11 @@ msgstr "日期格式"
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "错误：需要BVR参照"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -189,14 +189,32 @@ msgid "From"
 msgstr "格式"
 
 #. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr ""
+
+#. module: membership
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A member who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+
+#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "创建"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "已开发票的会员可能是准会员"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -260,8 +278,10 @@ msgid "Golden Membership"
 msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
 msgstr ""
 
 #. module: membership
@@ -277,9 +297,9 @@ msgid "Define product for membership."
 msgstr "定义会员产品"
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr "已开发票的会员可能是准会员"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -287,9 +307,9 @@ msgid "Join"
 msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
+#: help:product.product,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
@@ -308,6 +328,11 @@ msgid "Join Date"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give membership free of cost."
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
 msgid "Set association"
 msgstr "设立协会"
@@ -321,6 +346,11 @@ msgstr ""
 #: view:res.partner:0
 msgid "Memberships"
 msgstr ""
+
+#. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
+msgstr "会员发票支付"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -340,6 +370,24 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership state.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
 msgstr ""
 
 #. module: membership
@@ -371,6 +419,12 @@ msgid "Associate Member"
 msgstr ""
 
 #. module: membership
+#: help:product.product,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr ""
+
+#. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
 msgstr ""
@@ -399,6 +453,12 @@ msgid "Category"
 msgstr ""
 
 #. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr ""
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -411,20 +471,10 @@ msgid "Member Sale Pricelist Version"
 msgstr "会员售价表版本"
 
 #. module: membership
-#: help:product.product,membership_date_to:0
-msgid "Expired date of Membership"
-msgstr ""
-
-#. module: membership
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr "错误:采购单位和计量单位不能是同一类型"
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negociated by the partner"
-msgstr ""
 
 #. module: membership
 #: view:report.membership:0
@@ -437,13 +487,13 @@ msgid "Member"
 msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Date From"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:product.product:0
+msgid "Date From"
 msgstr ""
 
 #. module: membership
@@ -455,6 +505,11 @@ msgstr "准会员"
 #: view:product.product:0
 msgid "Accounting Info"
 msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "错误：无效的Bvr号（错误的检验和）"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -484,18 +539,6 @@ msgid "June"
 msgstr ""
 
 #. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr "会员发票支付"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Invoiced Member"
-msgstr "已开发票的会员"
-
-#. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
@@ -508,9 +551,16 @@ msgid "Membership"
 msgstr "会籍"
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Specify if this product is a membership product"
-msgstr "如果这产品是会籍产品指定"
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "已开发票的会员"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -560,20 +610,23 @@ msgid "Membership Fee"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "会员数"
 
 #. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr ""
+
+#. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
+msgstr ""
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Select if a product is a membership product."
 msgstr ""
 
 #. module: membership
@@ -646,12 +699,6 @@ msgid "Categorization"
 msgstr ""
 
 #. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以x_开头并且不能含特殊的字符"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr "会员草稿发票"
@@ -690,11 +737,6 @@ msgid "May"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "你不能有2个价格表版本"
-
-#. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
 msgstr ""
@@ -726,6 +768,11 @@ msgid "April"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr ""
+
+#. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
 msgstr "取消日期"
@@ -745,6 +792,11 @@ msgstr ""
 #: model:process.node,name:membership.process_node_membershipproduct0
 msgid "Membership product"
 msgstr "会员产品"
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -787,6 +839,9 @@ msgstr ""
 #~ msgid "Cancel"
 #~ msgstr "取消"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在这动作定义中无效的模块名"
+
 #~ msgid "Error ! You can not create recursive accounts."
 #~ msgstr "错误!你不能创建递归的账户"
 
@@ -795,6 +850,9 @@ msgstr ""
 
 #~ msgid "Confirm"
 #~ msgstr "确定"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"
 
 #~ msgid "Membership by Years"
 #~ msgstr "会籍年份"
@@ -817,8 +875,14 @@ msgstr ""
 #~ msgid "Paid"
 #~ msgstr "已付"
 
+#~ msgid "Specify if this product is a membership product"
+#~ msgstr "如果这产品是会籍产品指定"
+
 #~ msgid "Invoiced members"
 #~ msgstr "已开发票的会员"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "你不能有2个价格表版本"
 
 #~ msgid "Old members"
 #~ msgstr "旧会员"
@@ -835,6 +899,10 @@ msgstr ""
 #~ msgid "Paid members"
 #~ msgstr "付费会员"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以x_开头并且不能含特殊的字符"
+
 #~ msgid "Canceled Member"
 #~ msgstr "取消会员"
 
@@ -849,9 +917,3 @@ msgstr ""
 
 #~ msgid "Current membership state"
 #~ msgstr "当前会员状态"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "错误：无效的Bvr号（错误的检验和）"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "错误：需要BVR参照"
