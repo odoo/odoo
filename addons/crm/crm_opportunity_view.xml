@@ -39,14 +39,15 @@
                             </group>
                             <field name="user_id"/>
 
-                            <button name="action_makeMeeting" type="object"
-                            string="Schedule Meeting" icon="gtk-redo" />
+                            <button string="Schedule/Log Call"
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
 
                             <field name="planned_revenue"/>
                             <field name="probability"/>
                             <field name="date_deadline"/>
-                            <button string="Schedule/Log Call"
-                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
+
+                            <button name="action_makeMeeting" type="object"
+                            string="Schedule Meeting" icon="gtk-redo" />
                             <newline/>
                             <field name="date_action"/>
                             <field name="title_action"/>

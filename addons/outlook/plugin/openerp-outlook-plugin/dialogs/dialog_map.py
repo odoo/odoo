@@ -1406,14 +1406,11 @@ def OpenPartnerForm(txtProcessor,*args):
     	txtProcessor.init_done=True
     	return
     try:
-        linktopartner = "http://"+web_server+":"+str(web_server_port)+"/openerp/form/view?model=res.partner&id="+str(vals)
-
+        import urllib
+        next =  urllib.urlencode({'next' : '/openerp/form/view?model=res.partner&id=' +str(vals) })
+        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        linktopartner = weburl + '?' + next
         win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, str(linktopartner))
-#        import urllib
-#        encode = urllib.urlencode('/openerp/form/view?model=res.partner&id='+str(vals))
-#        weburl = 'http://'+web_server+':'+str(web_server_port)
-#        linktopartner = weburl + "?next=" + encode
-#    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, linktopartner)
     except Exception,e:
     	win32ui.MessageBox("Error While Opening Partner.\n"+str(e),"Open Partner", flag_error)
     webbrowser.open_new(linktopartner)
@@ -1469,7 +1466,10 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     try:
-        linktodoc = "http:\\\\" +web_server+ ":"+str(web_server_port)+"\\openerp\\form\\view?model="+vals[0][1]+"&id="+str(vals[1][1])
+        import urllib
+        next =  urllib.urlencode({'next' : '/openerp/form/view?model='+vals[0][1]+'&id='+str(vals[1][1])})
+        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        linktodoc = weburl + '?' + next
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, str(linktodoc))
     except Exception,e:
         win32ui.MessageBox("Error While Opening Document.\n"+str(e),"Open Document", flag_error)
