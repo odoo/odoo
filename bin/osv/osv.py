@@ -27,8 +27,6 @@ import orm
 import netsvc
 import pooler
 import copy
-import sys
-import traceback
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from tools.func import wraps
@@ -46,7 +44,12 @@ class except_osv(Exception):
         self.args = (exc_type, name)
 
 
-class osv_pool(netsvc.Service):
+class object_proxy(netsvc.Service):
+    def __init__(self):
+        self.logger = logging.getLogger('web-services')
+        netsvc.Service.__init__(self, 'object_proxy', audience='')
+        self.exportMethod(self.exec_workflow)
+        self.exportMethod(self.execute)
 
     def check(f):
         @wraps(f)
@@ -151,40 +154,11 @@ class osv_pool(netsvc.Service):
                     self.abortResponse(1, _('Integrity Error'), 'warning', msg)
                 else:
                     self.abortResponse(1, _('Integrity Error'), 'warning', inst[0])
-            except Exception, e:
+            except Exception:
                 self.logger.exception("Uncaught exception")
                 raise
 
         return wrapper
-
-
-    def __init__(self):
-        self._ready = False
-        self.obj_pool = {}
-        self.module_object_list = {}
-        self.created = []
-        self._sql_error = {}
-        self._store_function = {}
-        self._init = True
-        self._init_parent = {}
-        self.logger = logging.getLogger("web-services")
-        netsvc.Service.__init__(self, 'object_proxy', audience='')
-        self.exportMethod(self.obj_list)
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.execute)
-
-    def init_set(self, cr, mode):
-        different = mode != self._init
-        if different:
-            if mode:
-                self._init_parent = {}
-            if not mode:
-                for o in self._init_parent:
-                    self.get(o)._parent_store_compute(cr)
-            self._init = mode
-
-        self._ready = True
-        return different
 
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         object = pooler.get_pool(cr.dbname).get(obj)
@@ -194,13 +168,12 @@ class osv_pool(netsvc.Service):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
-        db, pool = pooler.get_db_and_pool(db)
-        cr = db.cursor()
+        cr = pooler.get_db(db).cursor()
         try:
             try:
                 if method.startswith('_'):
                     raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
-                res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
+                res = self.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
                     self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
@@ -228,6 +201,34 @@ class osv_pool(netsvc.Service):
         finally:
             cr.close()
         return res
+
+object_proxy()
+
+class osv_pool(object):
+    def __init__(self):
+        self._ready = False
+        self.obj_pool = {}
+        self.module_object_list = {}
+        self.created = []
+        self._sql_error = {}
+        self._store_function = {}
+        self._init = True
+        self._init_parent = {}
+        self.logger = logging.getLogger("pool")
+
+    def init_set(self, cr, mode):
+        different = mode != self._init
+        if different:
+            if mode:
+                self._init_parent = {}
+            if not mode:
+                for o in self._init_parent:
+                    self.get(o)._parent_store_compute(cr)
+            self._init = mode
+
+        self._ready = True
+        return different
+
 
     def obj_list(self):
         return self.obj_pool.keys()
