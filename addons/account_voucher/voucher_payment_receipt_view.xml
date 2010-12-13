@@ -105,7 +105,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
+                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Open Vendor Journal Entries" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -119,7 +119,7 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
+                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Open Customer Journal Entries" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
@@ -198,22 +198,18 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
-                                    <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="payment_option" required="1"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-                                           domain="[('type','=','liquidity')]"/>
-                                         <!-- should select income accounts only. Or use the journal for this ? -->
-                                    <field name="writeoff_journal_id"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                           domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="analytic_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
-                                <separator string="Other Information" colspan="2"/>
                                 <group col="4" colspan="1">
                                   <field name="date" select="1" on_change="onchange_date(date)"/>
                                   <field name="currency_id" invisible="True"/>
@@ -227,8 +223,21 @@
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <separator string="Journal Items" colspan="4"/>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
+                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                               <tree string="Journal Items">
+                                   <field name="move_id"/>
+                                   <field name="ref"/>
+                                   <field name="date"/>
+                                   <field name="statement_id"/>
+                                   <field name="partner_id"/>
+                                   <field name="account_id"/>
+                                   <field name="name"/>
+                                   <field name="debit"/>
+                                   <field name="credit"/>
+                                   <field name="state"/>
+                                   <field name="reconcile_id"/>
+                               </tree>
+                            </field>
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
@@ -295,7 +304,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -309,7 +318,7 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
+                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
@@ -330,10 +339,7 @@
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-                                           domain="[('type','=','liquidity')]"/>
-                                         <!-- should select income accounts only. Or use the journal for this ? -->
-                                    <field name="writeoff_journal_id"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                           domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="analytic_id"
@@ -354,8 +360,21 @@
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <separator string="Journal Items" colspan="4"/>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
+                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                               <tree string="Journal Items">
+                                   <field name="move_id"/>
+                                   <field name="ref"/>
+                                   <field name="date"/>
+                                   <field name="statement_id"/>
+                                   <field name="partner_id"/>
+                                   <field name="account_id"/>
+                                   <field name="name"/>
+                                   <field name="debit"/>
+                                   <field name="credit"/>
+                                   <field name="state"/>
+                                   <field name="reconcile_id"/>
+                               </tree>
+                            </field> 
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
