@@ -64,7 +64,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price"),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()

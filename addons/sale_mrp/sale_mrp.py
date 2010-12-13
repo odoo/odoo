@@ -26,7 +26,7 @@ class mrp_production(osv.osv):
     _inherit = 'mrp.production'
 
     def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        """ Finds reference of sale order for production order.
+        """ Finds reference of sales order for production order.
         @param field_names: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
@@ -72,8 +72,8 @@ class mrp_production(osv.osv):
         return res
 
     _columns = {
-        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
+        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sales Name', help='Indicate the name of sales order.'),
+        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sales Reference', help='Indicate the Customer Reference from sales order.'),
     }
 
 mrp_production()
