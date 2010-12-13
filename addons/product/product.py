@@ -760,7 +760,7 @@ class pricelist_partnerinfo(osv.osv):
         'name': fields.char('Description', size=64),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
         'min_quantity': fields.float('Quantity', required=True),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price')),
+        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="This price will be considered as a price for default Unit of Measure of the product"),
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()

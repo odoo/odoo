@@ -29,15 +29,15 @@ from tools.translate import _
 class purchase_order_group(osv.osv_memory):
     _name = "purchase.order.group"
     _description = "Purchase Order Merge"
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
-        """ 
+        """
          Changes the view dynamically
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return: New arch of view.
         """
         if not context:
@@ -61,14 +61,20 @@ class purchase_order_group(osv.osv_memory):
 
         """
         order_obj = self.pool.get('purchase.order')
+        proc_obj = self.pool.get('procurement.order')
         mod_obj =self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'purchase', 'view_purchase_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
 
         allorders = order_obj.do_merge(cr, uid, context.get('active_ids',[]), context)
+        for new_order in allorders:
+            proc_ids = proc_obj.search(cr, uid, [('purchase_id', 'in', allorders[new_order])], context=context)
+            for proc in proc_obj.browse(cr, uid, proc_ids, context=context):
+                if proc.purchase_id:
+                    proc_obj.write(cr, uid, [proc.id], {'purchase_id': new_order}, context)
 
         return {
-            'domain': "[('id','in', [" + ','.join(map(str, allorders)) + "])]",
+            'domain': "[('id','in', [" + ','.join(map(str, allorders.keys())) + "])]",
             'name': 'Purchase Orders',
             'view_type': 'form',
             'view_mode': 'tree,form',

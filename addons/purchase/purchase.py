@@ -559,6 +559,7 @@ class purchase_order(osv.osv):
 
 
         allorders = []
+        orders_info = {}
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:
@@ -573,13 +574,14 @@ class purchase_order(osv.osv):
 
             # create the new order
             neworder_id = self.create(cr, uid, order_data)
+            orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
 
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
-        return allorders
+        return orders_info
 
 purchase_order()
 
@@ -647,7 +649,7 @@ class purchase_order_line(osv.osv):
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
 
-
+        product_uom_pool = self.pool.get('product.uom')
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
@@ -668,15 +670,18 @@ class purchase_order_line(osv.osv):
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
-                temp_qty = s.qty # supplier _qty assigned to temp
+                temp_qty = s.min_qty # supplier _qty assigned to temp
+                if s.product_uom:
+                    qty = product_uom_pool._compute_qty(cr, uid, s.product_uom.id, s.min_qty, to_uom_id=prod_uom_po)
+                    uom = prod_uom_po
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
         if price_unit:
             price = price_unit
         else:
             price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom,
+                    product, 1.0, partner_id, {
+                        'uom': prod_uom_po,
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')

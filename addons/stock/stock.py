@@ -114,8 +114,11 @@ class stock_location(osv.osv):
 
         product_product_obj = self.pool.get('product.product')
 
-        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s or location_dest_id in %s', (tuple(ids), tuple(ids)))
-        res_products_by_location = sorted(cr.dictfetchall(), key=itemgetter('location_id'))
+        cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
+        dict1 = cr.dictfetchall()
+        cr.execute('select distinct product_id, location_dest_id as location_id from stock_move where location_dest_id in %s', (tuple(ids), ))
+        dict2 = cr.dictfetchall()
+        res_products_by_location = sorted(dict1+dict2, key=itemgetter('location_id'))
         products_by_location = dict((k, [v['product_id'] for v in itr]) for k, itr in groupby(res_products_by_location, itemgetter('location_id')))
 
         result = dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
@@ -2034,6 +2037,7 @@ class stock_move(osv.osv):
         """
         partial_datas=''
         picking_ids = []
+        move_ids = []
         partial_obj=self.pool.get('stock.partial.picking')
         partial_id=partial_obj.search(cr,uid,[])
         if partial_id:
@@ -2049,6 +2053,10 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
 
         for move in self.browse(cr, uid, ids):
+            if move.state in ['done','cancel']:
+                continue
+            move_ids.append(move.id)
+
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
@@ -2065,10 +2073,11 @@ class stock_move(osv.osv):
             prodlot_id =partial_datas and  partial_datas.get('move%s_prodlot_id'%(move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id})
-            self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
-        wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+            if move_ids:
+                self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
+                wf_service = netsvc.LocalService("workflow")
+                for id in move_ids:
+                     wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
         wf_service = netsvc.LocalService("workflow")
         for pick_id in picking_ids:
