@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to track easily your production costs in the analytic accounting."),
+        'product_id': fields.many2one('product.product','Workcenter Product', help="Fill this product to track easily your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
@@ -333,7 +333,7 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
-
+    
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}

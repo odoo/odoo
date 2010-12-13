@@ -7,7 +7,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Work Center Load">
+                <tree string="Work Centers load">
                     <field name="name"/>
                     <field name="workcenter_id"/>
                     <field name="cycle"/>
@@ -21,7 +21,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Work Center Load" type="bar">
+                <graph string="Work Center load" type="bar">
                     <field name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
@@ -29,13 +29,13 @@
                 </graph>
             </field>
         </record>
-
+        
         <record id="view_workcenter_load_search" model="ir.ui.view">
             <field name="name">report.workcenter.load.search</field>
             <field name="model">report.workcenter.load</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Work Center Load">
+                <search string="Work Center load">
                     <field name="name"/>
                     <field name="workcenter_id" widget="selection"/>
                 </search>
