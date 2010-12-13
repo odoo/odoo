@@ -139,8 +139,6 @@ class crm_case(object):
     def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):
         if index + 1 == len(stage_list):
             return False
-        print "cul"
-        print index
         next_stage_id = stage_list[index + 1]
         next_stage = stage_pool.browse(cr, uid, next_stage_id, context=context)
         if not next_stage:
@@ -148,10 +146,9 @@ class crm_case(object):
             
         next_seq = next_stage.sequence
         if (abs(next_seq - current_seq)) >= 1:
-            print next_stage
             return next_stage
         else :
-            return _find_next_stage(cr, uid, stage_list, index + 1, current_seq, stage_pool)
+            return self._find_next_stage(cr, uid, stage_list, index + 1, current_seq, stage_pool)
             
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if not context:
@@ -161,10 +158,9 @@ class crm_case(object):
         current_seq = False
         next_stage_id = False
         for case in self.browse(cr, uid, ids, context):
-            print case
             next_stage = False
             data = {}
-            print stage_type
+
             domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
             if case.section_id and case.section_id.stage_ids:
                 domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
@@ -174,8 +170,7 @@ class crm_case(object):
             index = -1
             if case.stage_id and case.stage_id.id in stages:
                 index = stages.index(case.stage_id.id)
-            print stages
-            print "call"
+
             next_stage = self._find_next_stage(cr, uid, stages, index, current_seq, stage_pool, context=context)
             if next_stage:
                 next_stage_id = next_stage.id
@@ -635,6 +630,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
     }
+        
 crm_case_stage()
 
 

@@ -57,14 +57,14 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]"/>
+                    <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
-                            icon="gtk-go-back" context="{'stage_type': 'lead'}"/>
+                            icon="gtk-go-back" context="{'stage_type': 'lead'}" />
                         <button name="stage_next" string=""
                             states="open,pending,draft" type="object"
-                            icon="gtk-go-forward" />
+                            icon="gtk-go-forward" context="{'stage_type': 'lead'}" />
                     </group>
                     <field name="type" invisible="1"/>
                 </group>
