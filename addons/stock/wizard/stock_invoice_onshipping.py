@@ -40,13 +40,13 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick_types = list(set(map(lambda x: x.type, model_pool.browse(cr, uid, res_ids, context=context))))
         for type in pick_types:
             if type == 'out':
-               value = acct_obj.search(cr, uid, [('type', 'in',('sale','sale_refund') )])
+               value = acct_obj.search(cr, uid, [('type', 'in',('sale','purchase_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
                    vals.append(t1)
 
             elif type == 'in':
-               value = acct_obj.search(cr, uid, [('type', 'in',('purchase','purchase_refund') )])
+               value = acct_obj.search(cr, uid, [('type', 'in',('purchase','sale_refund') )])
                for jr_type in acct_obj.browse(cr, uid, value, context=context):
                    t1 = jr_type.id,jr_type.name
                    vals.append(t1)
