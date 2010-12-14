@@ -2678,7 +2678,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
-        self.pool._init = True
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
         children_acc_template.sort()
@@ -2706,10 +2707,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
-            new_account = obj_acc.create(cr, uid, vals)
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
         #reactivate the parent_store functionnality on account_account
-        self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)
 
         for key,value in todo_dict.items():
@@ -2857,7 +2857,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
-                'type': 'other',
+                'type': 'liquidity',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
@@ -2879,7 +2879,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
-            vals_journal['type'] = 'cash'
+            vals_journal['type'] = line.account_type == 'cash' and 'cash' or 'bank'
             vals_journal['company_id'] =  company_id
             vals_journal['analytic_journal_id'] = analitical_journal_bank
 

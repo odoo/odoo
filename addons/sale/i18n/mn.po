@@ -7,20 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-12-02 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr ""
+"Танд үнийн санал дээр хүргэлтийн өртөгийг нэмж тооцоолох боломж олгоно."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -42,12 +43,6 @@ msgstr "Өдөр"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Захиалга цуцлах"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Борлуулалт (Харилцагчаар)"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -163,11 +158,6 @@ msgid "Total Price"
 msgstr "Нийт Үнэ"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr "Ижил үйлчлүүлэгчийн захиалгыг бүлэглэж нэхэмжлэх бол сонго"
@@ -176,6 +166,13 @@ msgstr "Ижил үйлчлүүлэгчийн захиалгыг бүлэглэ�
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Захиалсан тоо хэмжээ"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -215,11 +212,6 @@ msgstr ""
 "захиалгын мөрүүдийг хэсэг хэсгээр нь нэхэмжлэх боломжтой. Уг жагсаалтад "
 "хүргэлтээс нэхэмжлэл үүсгэхээр тохируулагдсан захиалга болон нэхэмжлэл "
 "үүсгэсэн захиалгууд харагдахгүй."
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Зарах нэгж хэмжих нэгжээс ялгаатай ангилалтай байх ёстой."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -306,16 +298,14 @@ msgid "August"
 msgstr "Наймдугаар сар"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
-"Танд үнийн санал дээр хүргэлтийн өртөгийг нэмж тооцоолох боломж олгоно."
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Бүх үнийн санал"
 
 #. module: sale
 #: report:sale.order:0
@@ -422,6 +412,12 @@ msgid "Accounting"
 msgstr "Данс бүртгэл"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
@@ -525,6 +521,11 @@ msgstr "Нэхэмжлэх хаяг :"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Батлагдсан төлөвтэй борлуулалтын захиалгыг устгах боломжгүй !"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -664,11 +665,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr "Энэ нь нэхэмжлэл бүрэн төлөгдсөн эсэхийг илэрхийлнэ"
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr "Огноо"
@@ -680,9 +676,10 @@ msgid "Shipped"
 msgstr "Хүргэгдсэн"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Бүх үнийн санал"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "тохирохгүй төлөв байна"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -728,8 +725,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Та үнэхээр нэхэмжлэл үүсгэхийг хүсч байна уу ?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Борлуулалт сараар"
@@ -765,14 +760,9 @@ msgid "Exception"
 msgstr "Алдаа"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Та 'Хүргэлтийн дараа автоматаар нэхэмжлэх' гэсэн гүйцэтгэх арга "
-"тохируулагдсан захиалга дээр урьдчилгаа нэхэмжлэх боломжгүй."
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Шууд хүргэлт"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -870,18 +860,6 @@ msgid "Pricelist version for current sale order"
 msgstr "Тухайн захиалгын үнийн хүснэгтийн хувилбар"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"Та %d нэгжийн тоо хэмжээг сонголоо.\n"
-"Гэвч энэ нь сонгосон савлагаанд нийцэхгүй байна.\n"
-"Энд савлагаанд тохирох хэмжих нэгжүүдийг санал болгоё: "
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr "Борлуулалтын захиалгын огноо"
@@ -893,10 +871,13 @@ msgid "Sale Order Line"
 msgstr "Борлуулалтын захиалгын шугам"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Нэгж үнэ"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -921,6 +902,12 @@ msgid ""
 msgstr ""
 "Гадаад захиалгад хэрэглэгдэх 'Олон улсын худалдааны нөхцөл' бүхий стандарт "
 "нөхцөл"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -1004,11 +991,6 @@ msgid "Create Delivery Order"
 msgstr "Хүргэлтийн захиалга үүсгэх"
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
-
-#. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
 msgstr "Хүргэлтийн өртөг"
@@ -1067,12 +1049,6 @@ msgstr "Нэхэмжлэх гэж буй хүргэлт"
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Хуваарь хүлээж байна"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "тохирохгүй төлөв байна"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1225,11 +1201,6 @@ msgid "Shipped Quantities"
 msgstr "Тээвэрлэсэн тоо"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Захиалга дээр үндэслэсэн нэхэмжлэл"
@@ -1240,9 +1211,13 @@ msgid "Picking List"
 msgstr "Агуулахын баримт"
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "Агуулахаас"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
+"Борлуулагч үнийн саналыг батална. Борлуулалтын захиалга 'хийгдэж байна' "
+"болон 'гараар хийгдэж байна' гэсэн төлөвтэй болно."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1294,12 +1269,6 @@ msgid "Sales Management"
 msgstr "Борлуулалтын менежмент"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Тоо хэмжээ: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr "Нягтлан бодогчоор хянагдана."
@@ -1316,21 +1285,9 @@ msgid "Create invoices"
 msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Та рекурсив цэс үүсгэж болохгүй."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1414,13 +1371,10 @@ msgid "Sales"
 msgstr "Борлуулалт"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Нэхэмжлэл үүсгэх"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Нэгж үнэ"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1442,11 +1396,6 @@ msgid "Invoice"
 msgstr "Нэхэмжлэл"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1456,14 +1405,6 @@ msgstr "Борлуулалтын захиалгын мөрийг цуцалж ч
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr "Түүврийн жагсаалт ба Хүргэлтийн захиалга"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1546,16 +1487,9 @@ msgid "Product UoM"
 msgstr "Барааны хэмжих нэгж"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Борлуулалт(Борлуулагчаар)"
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
-msgstr ""
+msgid "Logistic"
+msgstr "Логистик"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1724,6 +1658,23 @@ msgid "Warning"
 msgstr "Сануулга"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Борлуулалтын захиалга"
@@ -1734,12 +1685,6 @@ msgid "Quantity (UoS)"
 msgstr "Хоёрдогч тоо хэмжээ"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Батлагдсан"
@@ -1748,6 +1693,11 @@ msgstr "Батлагдсан"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Батлах"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1939,9 +1889,14 @@ msgid "Payment Terms"
 msgstr "Төлбөрийн нөхцөл"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Шууд хүргэлт"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
+"Та 'Хүргэлтийн дараа автоматаар нэхэмжлэх' гэсэн гүйцэтгэх арга "
+"тохируулагдсан захиалга дээр урьдчилгаа нэхэмжлэх боломжгүй."
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -2003,13 +1958,9 @@ msgid "Date Order"
 msgstr "Захиалгын огноо"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
-"Борлуулагч үнийн саналыг батална. Борлуулалтын захиалга 'хийгдэж байна' "
-"болон 'гараар хийгдэж байна' гэсэн төлөвтэй болно."
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "Агуулахаас"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -2018,19 +1969,9 @@ msgid "Sale Shop"
 msgstr "Борлуулах дэлгүүр"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Борлуулалт (Үйлчлүүлэгчээр)"
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Хаах"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -2042,6 +1983,11 @@ msgstr "Хүргэгдсэн"
 #, python-format
 msgid "Not enough stock !"
 msgstr "Агуулах хангалтгүй !"
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -2182,6 +2128,43 @@ msgstr "Хүргэлт дээр үндэслэн нэхэмжлэх"
 #~ msgid "Invoice Corrected"
 #~ msgstr "Зассан нэхэмжлэх"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Зарах нэгж хэмжих нэгжээс ялгаатай ангилалтай байх ёстой."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+#~ msgstr ""
+#~ "Та %d нэгжийн тоо хэмжээг сонголоо.\n"
+#~ "Гэвч энэ нь сонгосон савлагаанд нийцэхгүй байна.\n"
+#~ "Энд савлагаанд тохирох хэмжих нэгжүүдийг санал болгоё: "
+
+#~ msgid "Sales By Partner"
+#~ msgstr "Борлуулалт (Харилцагчаар)"
+
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
 #~ "products to the customer"
@@ -2195,6 +2178,9 @@ msgstr "Хүргэлт дээр үндэслэн нэхэмжлэх"
 #~ "   'for this product: \"%s\" (id:%d)"
 #~ msgstr "Энэ бараанд орлогын данс тодорхойлогдоогүй байна: \"%s\" (id:%d)"
 
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
+
 #~ msgid ""
 #~ "A sale order generates an invoice, as soon as it is confirmed by the "
 #~ "salesman. Depending on the Invoicing control of the sale order, the invoice "
@@ -2205,8 +2191,18 @@ msgstr "Хүргэлт дээр үндэслэн нэхэмжлэх"
 #~ "хүргэлтэнд үндэслэх, эсвэл захиалсан тоо хэмжээн дээр үндэслэн нэхэмжлэл "
 #~ "үүснэ."
 
-#~ msgid "Logistic"
-#~ msgstr "Логистик"
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Тоо хэмжээ: "
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж болохгүй."
+
+#~ msgid "Sales By Salesman"
+#~ msgstr "Борлуулалт(Борлуулагчаар)"
+
+#~ msgid "Sales By Customer"
+#~ msgstr "Борлуулалт (Үйлчлүүлэгчээр)"
 
 #, python-format
 #~ msgid ""

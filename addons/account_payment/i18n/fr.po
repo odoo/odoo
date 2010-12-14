@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-11-24 09:28+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -23,22 +23,18 @@ msgid "Total debit"
 msgstr "Débit total"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue !"
-
-#. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux !"
-
-#. module: account_payment
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Crédit total"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
+#~ "caractères spéciaux !"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -49,11 +45,6 @@ msgstr "Date prévue si fixe"
 #: field:payment.line,currency:0
 msgid "Partner Currency"
 msgstr "Devise du partenaire"
-
-#. module: account_payment
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -72,9 +63,9 @@ msgid "Group By..."
 msgstr "Regrouper par..."
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle non valide dans la définition de l'action."
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Lignes de paiement"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -132,6 +123,11 @@ msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "Ligne d'écriture comptable"
@@ -152,6 +148,11 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Montant"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -175,6 +176,11 @@ msgid "Reference"
 msgstr "Référence"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -184,6 +190,11 @@ msgstr "Ordres de paiement"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Directement"
+
+#. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -205,19 +216,9 @@ msgid "Confirmed"
 msgstr "Confirmé"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Sélectionnez les factures à Payer"
-
-#. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Date effective de la facture"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Lignes de paiement"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -228,11 +229,6 @@ msgstr ""
 #: selection:payment.line,state:0
 msgid "Structured"
 msgstr "Structuré"
-
-#. module: account_payment
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -315,14 +311,20 @@ msgid "Search Payment Orders"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Date de création"
 
 #. module: account_payment
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Sélectionnez les factures à Payer"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -415,8 +417,8 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_payment
@@ -441,11 +443,6 @@ msgid "Populate Statement:"
 msgstr ""
 
 #. module: account_payment
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
@@ -465,6 +462,11 @@ msgstr "Lignes de paiement"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
 msgstr ""
 
 #. module: account_payment
@@ -575,11 +577,6 @@ msgstr "Communication"
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "Annuler"
-
-#. module: account_payment
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -712,11 +709,6 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
@@ -737,6 +729,11 @@ msgstr ""
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Compte bancaire pour le mode de paiement"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #~ msgid "Execution date:"
 #~ msgstr "Date d'exécution :"
@@ -767,6 +764,9 @@ msgstr "Compte bancaire pour le mode de paiement"
 
 #~ msgid "Draft Payment Order"
 #~ msgstr "Ordre de paiement en brouillon"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle non valide dans la définition de l'action."
 
 #~ msgid "Populate payment"
 #~ msgstr "Récupérer les lignes de paiement"

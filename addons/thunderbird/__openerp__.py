@@ -29,11 +29,11 @@
     "description": """
       This module is required for the thuderbird plug-in to work
       properly.
-
-      This allows you to select an object that you’d like to add
-      to your email and its attachments. You can select a partner, a task,
-      a project, an analytical account, or any other object and attach selected
-      mail as .eml file in attachment of selected record.
+      The Plugin allows you archive email and its attachments to the selected 
+      OpenERP objects. You can select a partner, a task, a project, an analytical
+      account,or any other object and attach selected mail as .eml file in 
+      attachment of selected record. You can create Documents for crm Lead,
+      HR Applicant and project issue from selected mails.
 
       """,
     "init_xml" : [],

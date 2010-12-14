@@ -63,7 +63,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_phone': fields.char('Phone', size=32), 
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="('object_id.model', '=', 'crm.claim')]"), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('type','=','claim')]"), 
         'cause': fields.text('Root Cause'), 
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -72,6 +72,19 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+    
+    def _get_stage_id(self, cr, uid, context=None):
+        """Finds type of stage according to object.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        type = context and context.get('stage_type', '')
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'user_id': crm.crm_case._get_default_user, 
@@ -82,7 +95,8 @@ class crm_claim(crm.crm_case, osv.osv):
         'section_id':crm.crm_case. _get_section, 
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c), 
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'stage_id': _get_stage_id, 
     }
     
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -118,7 +132,6 @@ class crm_claim(crm.crm_case, osv.osv):
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
-
 
 crm_claim()
 

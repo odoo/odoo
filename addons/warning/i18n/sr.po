@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-10-15 09:41+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -22,12 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Stavka Trebovanja"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -40,8 +34,18 @@ msgid "Message for Purchase Order Line"
 msgstr "Poruka Stavke Trebovanja"
 
 #. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: warning
@@ -73,6 +77,16 @@ msgstr "Upozorenja"
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Upozorenje"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Blokirajuća Poruka"
 
@@ -90,11 +104,6 @@ msgstr "Upozorenje za Fakturu"
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Nema Poruke"
-
-#. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: warning
 #: model:ir.model,name:warning.model_account_invoice
@@ -168,6 +177,11 @@ msgid "Module for Warnings form onchange Event."
 msgstr "Modul za Formu upozorenja za dogadjaj promene"
 
 #. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
 msgstr "Upozorenej za Listu delova"
@@ -189,14 +203,9 @@ msgid "Warning on the Sale Order"
 msgstr "Upozorenje o kreiranje porudzbenice"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Upozorenje"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -211,3 +220,6 @@ msgstr ""
 #, python-format
 #~ msgid "Alert for ' + product_info.name +' !"
 #~ msgstr "Opuzorenje za ' + product_info.name +' !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"

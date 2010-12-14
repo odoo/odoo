@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-10-27 08:06+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -44,9 +44,9 @@ msgid "Group By..."
 msgstr "Grupirano po"
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Redovi plaćanja"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -76,13 +76,9 @@ msgstr ""
 "minus iznos koji je već u nalogu za plaćanje"
 
 #. module: account_payment
-#: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr ""
-"Ako nije naveden datum plaćanja, banka će smatrati da je ovaj red plaćanja "
-"poravnan."
+#: field:payment.mode,company_id:0
+msgid "Company"
+msgstr "Preduzeće"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -111,6 +107,11 @@ msgid "Due Date"
 msgstr "Datum dospeća"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "Stavke knjiženja"
@@ -131,6 +132,11 @@ msgstr "Ispuna sadrzaja fakture"
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Iznos"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -154,6 +160,11 @@ msgid "Reference"
 msgstr "Referenca"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -165,10 +176,17 @@ msgid "Directly"
 msgstr "Direktno"
 
 #. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
 #: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Priprema"
+msgid "Payment Line"
+msgstr "Red plaćanja"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -185,11 +203,6 @@ msgstr "Potvrđeno"
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Efektivni datum fakture"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Redovi plaćanja"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -260,6 +273,11 @@ msgid "Execution date"
 msgstr "Datum izvršenja"
 
 #. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "Fiksni datum"
@@ -281,9 +299,10 @@ msgid "Search Payment Orders"
 msgstr "Pretrazi naloge za placanje"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -346,9 +365,13 @@ msgid "Address of the Main Partner"
 msgstr "Adresa glavnog partnera"
 
 #. module: account_payment
-#: field:payment.mode,company_id:0
-msgid "Company"
-msgstr "Preduzeće"
+#: help:payment.line,date:0
+msgid ""
+"If no payment date is specified, the bank will treat this payment line "
+"directly"
+msgstr ""
+"Ako nije naveden datum plaćanja, banka će smatrati da je ovaj red plaćanja "
+"poravnan."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -376,17 +399,15 @@ msgid "Payment amount in the partner currency"
 msgstr "Iznos plaćanja u valuti partnera"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
 #: view:payment.order:0
-msgid "Payment Line"
-msgstr "Red plaćanja"
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Priprema"
 
 #. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -434,6 +455,11 @@ msgstr "Redovi plaćanja"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Sadrzaj Dnevnika"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -549,13 +575,6 @@ msgid "Information"
 msgstr "Informacija"
 
 #. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
@@ -592,9 +611,10 @@ msgid "Are you sure you want to make payment?"
 msgstr "Jeste li sigurni da zelite da izvrsite isplatu?"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Cash Journal for the Payment Mode"
-msgstr "Gotovisnki Dnevnik za način plaćanja"
+#: view:payment.mode:0
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Dnevnik"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -670,9 +690,13 @@ msgid "Total"
 msgstr "Ukupno"
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request that your company does in order to pay "
+"a supplier invoice or a customer credit note. Here you can register all "
+"payment orders that should be done, keep track of all payment orders and "
+"mention the invoice reference and the partner the payment should be done for."
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -697,10 +721,12 @@ msgid "Bank Account for the Payment Mode"
 msgstr "Bankovni račun za način plaćanja"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Dnevnik"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
 
 #~ msgid "Execution date:"
 #~ msgstr "Datum izvršenja:"
@@ -710,6 +736,9 @@ msgstr "Dnevnik"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Odustani"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
 
 #~ msgid "Reference:"
 #~ msgstr "Referenca:"
@@ -732,8 +761,16 @@ msgstr "Dnevnik"
 #~ msgid "Draft Payment Order"
 #~ msgstr "Nalog za plaćanje u pripremi"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
 #~ msgid "Pay"
 #~ msgstr "Plati"
+
+#~ msgid "Cash Journal for the Payment Mode"
+#~ msgstr "Gotovisnki Dnevnik za način plaćanja"
 
 #~ msgid "_Search"
 #~ msgstr "_Traži"
@@ -752,3 +789,9 @@ msgstr "Dnevnik"
 
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Odaberite tip plaćanja za način plaćanja"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
