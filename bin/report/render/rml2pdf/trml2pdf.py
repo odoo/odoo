@@ -942,8 +942,12 @@ class _rml_template(object):
             fis.append(PageCount())
             self.doc_tmpl.build(fis)
 
-def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+def parseNode(rml, localcontext=None,fout=None, images=None, path='.',title=None):
     node = etree.XML(rml)
+    if localcontext is None:
+        localcontext = {}
+    if images is None:
+        images = {}
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:

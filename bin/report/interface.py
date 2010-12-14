@@ -164,6 +164,8 @@ class report_rml(report_int):
 
         def translate(doc, lang):
             for node in doc.xpath('//*[@t]'):
+                if not node.text:
+                    continue
                 translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)
                 if translation:
                     node.text = translation
