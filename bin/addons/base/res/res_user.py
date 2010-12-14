@@ -299,8 +299,14 @@ class users(osv.osv):
         return False
 
     def _get_menu(self,cr, uid, context=None):
-        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')], context=context)
-        return ids and ids[0] or False
+        dataobj = self.pool.get('ir.model.data')
+        try:
+            model, res_id = dataobj.get_object_reference(cr, uid, 'base', 'action_menu_admin')
+            if model != 'ir.actions.act_window':
+                return False
+            return res_id
+        except ValueError:
+            return False
 
     def _get_group(self,cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
