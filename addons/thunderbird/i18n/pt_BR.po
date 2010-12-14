@@ -7,73 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-25 19:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-"especial!"
-
-#. module: thunderbird
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
-
-#. module: thunderbird
-#: field:thunderbird.installer,plugin_file:0
-#: field:thunderbird.installer,thunderbird:0
-msgid "Thunderbird Plug-in"
-msgstr "Plug-in Thunderbird"
-
-#. module: thunderbird
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
-
-#. module: thunderbird
-#: help:thunderbird.installer,thunderbird:0
-msgid ""
-"Allows you to select an object that you’d like to add to your email and its "
-"attachments."
-msgstr ""
-"Permite selecionar um objeto que você gostaria de adicionar ao seu email e "
-"seus anexos."
-
-#. module: thunderbird
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro ! Você não pode criar Menu recursivo."
-
-#. module: thunderbird
-#: help:thunderbird.installer,pdf_file:0
-msgid "The documentation file :- how to install Thunderbird Plug-in."
-msgstr "O arquivo de documentação :- como instalar o Plug-in do Thunderbird."
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_email_server_tools
-msgid "Email Server Tools"
-msgstr "Ferramentas do Servidor de Email"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "_Close"
-msgstr "Fe_char"
-
-#. module: thunderbird
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+msgid "Thunderbird Plug-In Configuration"
+msgstr "Configuração do Plug-in no Thunderbird"
 
 #. module: thunderbird
 #: field:thunderbird.installer,pdf_file:0
@@ -86,9 +34,30 @@ msgid "Configure"
 msgstr "Configurar"
 
 #. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr "thunderbird.instalador"
+
+#. module: thunderbird
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "Descrição"
+
+#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "title"
 msgstr "Título"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Skip"
+msgstr "Pular"
+
+#. module: thunderbird
+#: field:thunderbird.installer,name:0
+#: field:thunderbird.installer,pdf_name:0
+msgid "File name"
+msgstr "Nome do arquivo"
 
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_thunderbird_partner
@@ -101,9 +70,49 @@ msgid "Thunderbird Plug-In"
 msgstr "Plug-in Thunderbird"
 
 #. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "_Close"
+msgstr "Fe_char"
+
+#. module: thunderbird
+#: help:thunderbird.installer,thunderbird:0
+msgid ""
+"Allows you to select an object that you’d like to add to your email and its "
+"attachments."
+msgstr ""
+"Permite selecionar um objeto que você gostaria de adicionar ao seu email e "
+"seus anexos."
+
+#. module: thunderbird
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
+msgstr "Plug-in Thunderbird"
+
+#. module: thunderbird
+#: help:thunderbird.installer,pdf_file:0
+msgid "The documentation file :- how to install Thunderbird Plug-in."
+msgstr "O arquivo de documentação :- como instalar o Plug-in do Thunderbird."
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_email_server_tools
+msgid "Email Server Tools"
+msgstr "Ferramentas do Servidor de Email"
+
+#. module: thunderbird
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
 msgid "Thunderbird Interface"
 msgstr "Interface do Thunderbird"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Installation and Configuration Steps"
+msgstr "Instalação e Passos de Configuração"
+
+#. module: thunderbird
+#: field:thunderbird.installer,config_logo:0
+msgid "Image"
+msgstr "Imagem"
 
 #. module: thunderbird
 #: help:thunderbird.installer,plugin_file:0
@@ -115,53 +124,30 @@ msgstr ""
 "Thunderbird."
 
 #. module: thunderbird
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_installer
-msgid "thunderbird.installer"
-msgstr "thunderbird.instalador"
-
-#. module: thunderbird
-#: field:thunderbird.installer,name:0
-#: field:thunderbird.installer,pdf_name:0
-msgid "File name"
-msgstr "Nome do arquivo"
-
-#. module: thunderbird
 #: field:thunderbird.installer,progress:0
 msgid "Configuration Progress"
 msgstr "Configuração em Progresso"
 
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Installation and Configuration Steps"
-msgstr "Instalação e Passos de Configuração"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
 
-#. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "Descrição"
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar Menu recursivo."
 
-#. module: thunderbird
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
-msgid "Thunderbird Plug-In Configuration"
-msgstr "Configuração do Plug-in no Thunderbird"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
 
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Skip"
-msgstr "Pular"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
 
-#. module: thunderbird
-#: field:thunderbird.installer,config_logo:0
-msgid "Image"
-msgstr "Imagem"
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
 
-#. module: thunderbird
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

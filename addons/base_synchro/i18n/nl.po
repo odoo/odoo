@@ -7,37 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-30 17:06+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_view_base_synchro
 msgid "Base Synchronization"
 msgstr "Basis synchronisatie"
-
-#. module: base_synchro
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#. module: base_synchro
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie definitie."
-
-#. module: base_synchro
-#: field:base.synchro,user_id:0
-msgid "Send Result To"
-msgstr "Resultaat sturen naar"
 
 #. module: base_synchro
 #: field:base.synchro.server,server_db:0
@@ -56,19 +39,14 @@ msgid "Field Name"
 msgstr "Veldnaam"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: base_synchro
 #: field:base.synchro.obj,synchronize_date:0
 msgid "Latest Synchronization"
 msgstr "Laatste synchronisatie"
 
 #. module: base_synchro
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: field:base.synchro,user_id:0
+msgid "Send Result To"
+msgstr "Resultaat sturen naar"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj_avoid
@@ -81,9 +59,9 @@ msgid "_Close"
 msgstr "_Sluiten"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+#: view:base.synchro:0
+msgid "Transfer Data To Server"
+msgstr "Gegevens naar server overzetten"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj
@@ -155,11 +133,6 @@ msgstr "Velden niet synchr."
 #: selection:base.synchro.obj,action:0
 msgid "Both"
 msgstr "Beide"
-
-#. module: base_synchro
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: base_synchro
 #: field:base.synchro.obj,name:0
@@ -310,12 +283,25 @@ msgstr "Downloaden"
 msgid "Server URL"
 msgstr "Server URL"
 
-#. module: base_synchro
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
 
-#. module: base_synchro
-#: view:base.synchro:0
-msgid "Transfer Data To Server"
-msgstr "Gegevens naar server overzetten"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

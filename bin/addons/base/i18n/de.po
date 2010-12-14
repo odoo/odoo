@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-27 03:19+0000\n"
-"PO-Revision-Date: 2010-11-30 10:38+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-13 20:30+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -393,11 +393,6 @@ msgid "Schedule Upgrade"
 msgstr "Plane Upgrade"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Herr"
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -415,11 +410,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Verkauf & Einkauf"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Gesellschaft"
 
 #. module: base
 #: view:ir.translation:0
@@ -533,7 +523,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,title:0
 msgid "Partner Form"
-msgstr "Partner Formular"
+msgstr "Gesellschaftsform"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1185,11 +1175,6 @@ msgid "Days"
 msgstr "Tage"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Serbian / српски језик"
-msgstr "Serbian / српски језик"
-
-#. module: base
 #: help:ir.actions.server,condition:0
 msgid ""
 "Condition that is to be tested before action is executed, e.g. "
@@ -1767,16 +1752,6 @@ msgstr ""
 "(Scheduler) läuft (z.B. res.partner)"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"You Can Not Load Translation For language Due To Invalid Language/Country "
-"Code"
-msgstr ""
-"Sie könnnen aufgrund eines ungültigen Sprache/Land Code keine Übersetzung "
-"für diese Sprache laden,"
-
-#. module: base
 #: model:res.country,name:base.si
 msgid "Slovenia"
 msgstr "Slowenien"
@@ -1790,7 +1765,7 @@ msgstr "EMail Nachrichten"
 #: code:addons/base/module/wizard/base_update_translations.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fehler!"
 
 #. module: base
 #: view:res.lang:0
@@ -1843,6 +1818,11 @@ msgstr "Norfolk Insel"
 #: selection:base.language.install,lang:0
 msgid "Korean (KR) / 한국어 (KR)"
 msgstr "Korean (KR) / 한국어 (KR)"
+
+#. module: base
+#: model:res.widget,title:base.matrixise_twitter_widget
+msgid "Stéphane Wirtel's tweets"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -1907,11 +1887,6 @@ msgstr "Konfiguriere Paramater"
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
 msgstr "Fehlerhafte Argumente"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Frl."
 
 #. module: base
 #: model:res.country,name:base.se
@@ -2130,6 +2105,11 @@ msgstr "Felder Mappen"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr "Portugese / Português"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Herr"
 
 #. module: base
 #: view:base.module.import:0
@@ -2391,6 +2371,11 @@ msgstr "Tadschikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 oder höher"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr "Hr."
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3039,7 +3024,7 @@ msgid "Security"
 msgstr "Sicherheit"
 
 #. module: base
-#: model:res.widget,title:base.openerp_twitter_favorites
+#: model:res.widget,title:base.openerp_favorites_twitter_widget
 msgid "OpenERP Favorites"
 msgstr "OpenERP Favoriten"
 
@@ -3563,6 +3548,8 @@ msgstr "Gujarati / ગુજરાતી"
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
 msgstr ""
+"Nicht möglich das Modul auszuführen \"%s\", da eine externe Abhängigkeit "
+"nicht erfüllt werden konnte: %s"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -3816,9 +3803,9 @@ msgid "Menus"
 msgstr "Menü"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "The selected modules have been updated / installed !"
-msgstr "Die gewählten Module wurden aktualisiert / installiert"
+#: selection:base.language.install,lang:0
+msgid "Serbian (Latin) / srpski"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.il
@@ -3973,11 +3960,6 @@ msgstr ""
 "Markieren Sie dieses Kontrollkästchen wenn der Partner ein Mitarbeiter ist."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "GmbH"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4047,6 +4029,11 @@ msgstr "Abgebrochen"
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
 msgstr "Wollen Sie die ID's löschen? "
+
+#. module: base
+#: selection:res.request,priority:0
+msgid "Low"
+msgstr "Ausreichend"
 
 #. module: base
 #: field:res.partner,customer:0
@@ -4230,6 +4217,11 @@ msgid "Faroe Islands"
 msgstr "Färöer Inseln"
 
 #. module: base
+#: view:res.widget.wizard:0
+msgid "Add"
+msgstr "Hinzufügen"
+
+#. module: base
 #: view:base.module.upgrade:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_window
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
@@ -4247,9 +4239,14 @@ msgid "Widgets"
 msgstr "Widgets"
 
 #. module: base
-#: model:res.country,name:base.cz
-msgid "Czech Republic"
-msgstr "Tschechische Republik"
+#: model:res.country,name:base.mp
+msgid "Northern Mariana Islands"
+msgstr "Nördliche Marianen"
+
+#. module: base
+#: view:res.widget.wizard:0
+msgid "Widget Wizard"
+msgstr ""
 
 #. module: base
 #: selection:ir.property,type:0
@@ -4603,9 +4600,9 @@ msgid "Dutch / Nederlands"
 msgstr "Dutch / Nederlands"
 
 #. module: base
-#: model:ir.model,name:base.model_res_widget_wizard
-msgid "Add a widget"
-msgstr "Ein Widget hinzufügen"
+#: model:res.widget,title:base.rvalyi_twitter_widget
+msgid "Raphaël Valyi's tweets"
+msgstr ""
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -4912,6 +4909,11 @@ msgid "Choose between the simplified interface and the extended one"
 msgstr "Wählen Sie zwischen einfacher und erweiterter Schnittstelle"
 
 #. module: base
+#: model:res.widget,title:base.odony_twitter_widget
+msgid "Olivier Dony's tweets"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
 msgstr "Nepal"
@@ -5148,9 +5150,9 @@ msgid "You must logout and login again after changing your password."
 msgstr "Nach dem Ändern das Passwortes müssen Sie Aus- und wieder Einloggen."
 
 #. module: base
-#: model:res.country,name:base.mp
-msgid "Northern Mariana Islands"
-msgstr "Nördliche Marianen"
+#: model:res.country,name:base.cz
+msgid "Czech Republic"
+msgstr "Tschechische Republik"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -5410,6 +5412,7 @@ msgstr "Der Kern von OpenERP, wird für alle Installationen gebraucht"
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
+#: view:res.widget.wizard:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -5814,6 +5817,11 @@ msgstr "Dateiinhalt"
 #: model:res.country,name:base.pa
 msgid "Panama"
 msgstr "Panama"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "Ltd"
 
 #. module: base
 #: help:workflow.transition,group_id:0
@@ -6230,7 +6238,7 @@ msgid ""
 "Please be patient, this operation may take a few minutes (depending on the "
 "number of modules currently installed)..."
 msgstr ""
-"Geduld ! Dieser Vorgang kenn einige Zeit dauern (in Abhängigkeit von der "
+"Geduld ! Dieser Vorgang kann einige Zeit dauern (in Abhängigkeit von der "
 "Anzahl der installierten Module)"
 
 #. module: base
@@ -6397,6 +6405,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr "Frau"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6522,11 +6535,6 @@ msgstr "Filter"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Frau"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr "Limited"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7095,6 +7103,11 @@ msgid "Uncheck the active field to hide the contact."
 msgstr "Entferne Haken, um den Kontakt in der Ansicht zu verstecken"
 
 #. module: base
+#: model:ir.model,name:base.model_res_widget_wizard
+msgid "Add a widget for User"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
 msgstr "Dänemark"
@@ -7533,6 +7546,11 @@ msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,model_id:0
 #: field:ir.values,res_id:0
 #: field:res.log,res_id:0
@@ -7918,11 +7936,6 @@ msgid "Default multi company"
 msgstr "Standard Multi Mandant"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr "Hr."
-
-#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Sende"
@@ -7989,6 +8002,11 @@ msgstr "Catalan / Català"
 #: model:res.country,name:base.do
 msgid "Dominican Republic"
 msgstr "Dominikanische Republik"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Serbian (Cyrillic) / српски"
+msgstr ""
 
 #. module: base
 #: field:res.widget.user,widget_id:0
@@ -8058,9 +8076,9 @@ msgid "Luxembourg"
 msgstr "Luxemburg"
 
 #. module: base
-#: selection:res.request,priority:0
-msgid "Low"
-msgstr "Ausreichend"
+#: view:base.module.upgrade:0
+msgid "The selected modules have been updated / installed !"
+msgstr "Die gewählten Module wurden aktualisiert / installiert"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_menu.py:0
@@ -8088,6 +8106,11 @@ msgstr "El Salvador"
 #: field:res.partner.address,phone:0
 msgid "Phone"
 msgstr "Tel"
+
+#. module: base
+#: model:res.widget,title:base.albertnan_twitter_widget
+msgid "Albert Cervera Areny's tweets"
+msgstr ""
 
 #. module: base
 #: field:res.groups,menu_access:0
@@ -8317,7 +8340,7 @@ msgstr "Segmentierung"
 #: view:res.users:0
 #: field:res.users,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Unternehmen"
 
 #. module: base
 #: view:res.users:0
@@ -8683,6 +8706,11 @@ msgid "Seychelles"
 msgstr "Seychellen"
 
 #. module: base
+#: model:res.widget,title:base.nhomar_twitter_widget
+msgid "Nhomar Hernandez's tweets"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
@@ -8714,6 +8742,11 @@ msgstr "Konto Inhaber"
 #, python-format
 msgid "Company Switch Warning"
 msgstr "Unternehmenswechsel Warnhinweis"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_widget_wizard
+msgid "Homepage Widgets Management"
+msgstr ""
 
 #. module: base
 #: field:workflow,osv:0
@@ -8749,6 +8782,7 @@ msgid "Delivery"
 msgstr "Lieferung"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "GmbH"
@@ -9104,9 +9138,6 @@ msgstr "Russian / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "Dokument Link"
 
-#~ msgid "Sir"
-#~ msgstr "Herr"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Starte Upgrade"
 
@@ -9166,9 +9197,6 @@ msgstr "Russian / русский язык"
 
 #~ msgid "Repositories"
 #~ msgstr "Repositories"
-
-#~ msgid "Ltd"
-#~ msgstr "Ltd"
 
 #~ msgid "Report Ref."
 #~ msgstr "Report Ref."
@@ -10269,14 +10297,19 @@ msgstr "Russian / русский язык"
 #~ msgid "Make sure you have no users linked with the group(s)!"
 #~ msgstr "Stellen Sie sicher, dass keine Benutzer in dieser Gruppe sind."
 
+#, python-format
+#~ msgid ""
+#~ "You Can Not Load Translation For language Due To Invalid Language/Country "
+#~ "Code"
+#~ msgstr ""
+#~ "Sie könnnen aufgrund eines ungültigen Sprache/Land Code keine Übersetzung "
+#~ "für diese Sprache laden,"
+
 #~ msgid "terp-personal+"
 #~ msgstr "terp-personal+"
 
 #~ msgid "terp-personal-"
 #~ msgstr "terp-personal-"
-
-#~ msgid "M."
-#~ msgstr "Hr."
 
 #~ msgid "Hindi / India"
 #~ msgstr "Hindi / Indien"
@@ -10361,6 +10394,9 @@ msgstr "Russian / русский язык"
 #~ "\"email_from\" muss definiert werden um Willkommen-Emails'\n"
 #~ "                  'an neue Benutzer zu schicken"
 
+#~ msgid "Add a widget"
+#~ msgstr "Ein Widget hinzufügen"
+
 #, python-format
 #~ msgid ""
 #~ "Can't set an ir.actions.todo's state to \"\n"
@@ -10386,9 +10422,6 @@ msgstr "Russian / русский язык"
 
 #~ msgid "Abkhazian (RU)"
 #~ msgstr "Abchasisch (RU)"
-
-#~ msgid "Mss"
-#~ msgstr "Frau"
 
 #, python-format
 #~ msgid ""
@@ -10538,6 +10571,27 @@ msgstr "Russian / русский язык"
 
 #~ msgid "terp-gtk-go-back-rtl"
 #~ msgstr "terp-gtk-go-back-rtl"
+
+#~ msgid "Mister"
+#~ msgstr "Herr"
+
+#~ msgid "Corporation"
+#~ msgstr "Gesellschaft"
+
+#~ msgid "Serbian / српски језик"
+#~ msgstr "Serbian / српски језик"
+
+#~ msgid "Mss."
+#~ msgstr "Frl."
+
+#~ msgid "Limited Company"
+#~ msgstr "GmbH"
+
+#~ msgid "Ltd."
+#~ msgstr "Limited"
+
+#~ msgid "Sr."
+#~ msgstr "Hr."
 
 #, python-format
 #~ msgid "You do not have the permission to perform this operation !!!"

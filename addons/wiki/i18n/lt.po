@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-07-20 22:14+0000\n"
 "Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: lt\n"
 
@@ -31,19 +31,6 @@ msgstr "Wiki puslapiai"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti x_ ir negali turėti jokių specialiųjų "
-"ženklų !"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: wiki
@@ -72,11 +59,6 @@ msgstr "Sekcija"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Suskirstyti?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -117,8 +99,8 @@ msgid "Parent Menu"
 msgstr "Bazinis meniu"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -262,9 +244,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros struktūrai!"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Suskirstyti?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -350,11 +332,6 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
-
-#. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
@@ -387,6 +364,15 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -466,6 +452,12 @@ msgstr ""
 msgid "Search Page"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti x_ ir negali turėti jokių specialiųjų "
+#~ "ženklų !"
+
 #~ msgid "Wiki Groups Links"
 #~ msgstr "Wiki grupių nuorodos"
 
@@ -492,6 +484,9 @@ msgstr ""
 
 #~ msgid "Document Management"
 #~ msgstr "Dokumentų valdymas"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros struktūrai!"
 
 #~ msgid "Parent Group"
 #~ msgstr "Tėvinė grupė"

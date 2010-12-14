@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-09 07:57+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-13 15:14+0000\n"
+"Last-Translator: Andreas Berg <Unknown>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-10 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -361,6 +361,8 @@ msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr ""
+"Om du markerar detta kommer föregående rapport returneras när användaren "
+"skriver ut andra gången med samma bilagenamn."
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -440,7 +442,7 @@ msgstr "Anpassade fält måste ha ett namn som börjar med 'x_' !"
 #. module: base
 #: help:ir.actions.server,action_id:0
 msgid "Select the Action Window, Report, Wizard to be executed."
-msgstr ""
+msgstr "Välj händelse, rapport, eller guide som ska köras"
 
 #. module: base
 #: view:base.language.export:0
@@ -551,7 +553,7 @@ msgstr "Nummerserier"
 #. module: base
 #: model:ir.model,name:base.model_base_language_import
 msgid "Language Import"
-msgstr ""
+msgstr "Språkimport"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_users
@@ -612,7 +614,7 @@ msgstr "Import / Export"
 #: help:ir.actions.act_window,domain:0
 msgid ""
 "Optional domain filtering of the destination data, as a Python expression"
-msgstr ""
+msgstr "Valfri domänfiltrering av slutdatan, i form av ett python uttryck"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
@@ -671,6 +673,8 @@ msgid ""
 "Sets the language for the user's user interface, when UI translations are "
 "available"
 msgstr ""
+"Väljer språket för användarens användargränssnitt när översatta "
+"användargränssnitt finns tillgängliga."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -750,7 +754,7 @@ msgstr ""
 #: selection:ir.actions.server,state:0
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
-msgstr ""
+msgstr "Test"
 
 #. module: base
 #: constraint:ir.ui.view:0
@@ -765,7 +769,7 @@ msgstr "Caymanöarna"
 #. module: base
 #: field:ir.module.module,contributors:0
 msgid "Contributors"
-msgstr ""
+msgstr "Bidragsgivare"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -809,6 +813,9 @@ msgid ""
 "Lauchpad's web interface (Rosetta). If you need to perform mass translation, "
 "Launchpad also allows uploading full .po files at once"
 msgstr ""
+"För att förbättra eller utvidga officiella översättningar så bör du arbeta "
+"direkt mot Launchpad's webgränssnitt (Rosetta). Om du behöver genomföra "
+"massöversättningar så tillåter Launchpad direkt uppladdning av .po filer."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -921,7 +928,7 @@ msgstr "ir.exports"
 #: code:addons/base/module/wizard/base_update_translations.py:0
 #, python-format
 msgid "No language with code \"%s\" exists"
-msgstr ""
+msgstr "Inget språk med koden %s existerar"
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -980,7 +987,7 @@ msgstr "Rapporter"
 #. module: base
 #: field:workflow,on_create:0
 msgid "On Create"
-msgstr ""
+msgstr "Vid skapande"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
@@ -1801,7 +1808,7 @@ msgstr "Armenia"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Configuration Parameters"
-msgstr ""
+msgstr "Konfigurationsparametrar"
 
 #. module: base
 #: constraint:ir.cron:0
@@ -1915,12 +1922,12 @@ msgstr ""
 #. module: base
 #: field:res.company,rml_footer1:0
 msgid "Report Footer 1"
-msgstr ""
+msgstr "Rapportfot 1"
 
 #. module: base
 #: field:res.company,rml_footer2:0
 msgid "Report Footer 2"
-msgstr ""
+msgstr "Rapportfot 2"
 
 #. module: base
 #: view:ir.model.access:0
@@ -1964,6 +1971,8 @@ msgid ""
 "Please double-check that the file encoding is set to UTF-8 (sometimes called "
 "Unicode) when the translator exports it."
 msgstr ""
+"Vänligen kontrollera att filens teckenkodning är satt till UTF-8 (ibland "
+"kallad unicode) när översättaren exporterar den."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2191,7 +2200,7 @@ msgstr ""
 #. module: base
 #: view:ir.model:0
 msgid "Create a Menu"
-msgstr ""
+msgstr "Skapa en meny"
 
 #. module: base
 #: help:res.partner,vat:0
@@ -2472,7 +2481,7 @@ msgstr ""
 #. module: base
 #: report:ir.module.reference.graph:0
 msgid "Menu :"
-msgstr ""
+msgstr "Meny:"
 
 #. module: base
 #: selection:ir.model.fields,state:0
@@ -2680,7 +2689,7 @@ msgstr "Equatorial Guinea"
 #: view:base.module.import:0
 #: model:ir.actions.act_window,name:base.action_view_base_module_import
 msgid "Module Import"
-msgstr ""
+msgstr "Modulimport"
 
 #. module: base
 #: field:res.bank,zip:0
@@ -2843,7 +2852,7 @@ msgstr ""
 #. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
-msgstr ""
+msgstr "Systemkonfigureringen är klar"
 
 #. module: base
 #: view:ir.property:0
@@ -3489,7 +3498,7 @@ msgstr ""
 #. module: base
 #: field:wizard.ir.model.menu.create,name:0
 msgid "Menu Name"
-msgstr ""
+msgstr "Menynamn"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3560,7 +3569,7 @@ msgstr ""
 #. module: base
 #: field:base.module.update,add:0
 msgid "Number of modules added"
-msgstr ""
+msgstr "Antal tillagda moduler"
 
 #. module: base
 #: view:res.currency:0
@@ -3587,7 +3596,7 @@ msgstr ""
 #. module: base
 #: view:ir.module.module:0
 msgid "Created Menus"
-msgstr ""
+msgstr "Skapade menyer"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -3670,7 +3679,7 @@ msgstr ""
 #: field:ir.module.module,menus_by_module:0
 #: view:res.groups:0
 msgid "Menus"
-msgstr ""
+msgstr "Menyer"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3723,7 +3732,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_management
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Modules"
-msgstr ""
+msgstr "Moduler"
 
 #. module: base
 #: view:workflow.activity:0
@@ -3744,7 +3753,7 @@ msgstr ""
 #: view:res.bank:0
 #: field:res.partner,bank_ids:0
 msgid "Banks"
-msgstr ""
+msgstr "Banker"
 
 #. module: base
 #: view:res.log:0
@@ -3883,7 +3892,7 @@ msgstr "Projekt"
 #. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
-msgstr ""
+msgstr "Modulfilen blev importerad!"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -4129,7 +4138,7 @@ msgstr ""
 #: help:res.config.users,company_id:0
 #: help:res.users,company_id:0
 msgid "The company this user is currently working for."
-msgstr ""
+msgstr "Företaget som användaren arbetar för."
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -4139,7 +4148,7 @@ msgstr "wizard.ir.model.menu.create"
 #. module: base
 #: view:workflow.transition:0
 msgid "Transition"
-msgstr ""
+msgstr "Övergång"
 
 #. module: base
 #: field:ir.cron,active:0
@@ -4400,7 +4409,7 @@ msgstr ""
 #. module: base
 #: field:partner.sms.send,text:0
 msgid "SMS Message"
-msgstr ""
+msgstr "SMS meddelande"
 
 #. module: base
 #: model:res.country,name:base.cm
@@ -4468,7 +4477,7 @@ msgstr ""
 #: wizard_view:server.action.create,step_1:0
 #: wizard_field:server.action.create,step_1,report:0
 msgid "Select Report"
-msgstr ""
+msgstr "Välj rapport"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -4483,7 +4492,7 @@ msgstr ""
 #. module: base
 #: field:ir.sequence,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "Suffix"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -4582,7 +4591,7 @@ msgstr ""
 #. module: base
 #: view:ir.module.module:0
 msgid "Cancel Uninstall"
-msgstr ""
+msgstr "Avbryt avinstallation"
 
 #. module: base
 #: view:res.bank:0
@@ -4615,7 +4624,7 @@ msgstr "Kuwait"
 #. module: base
 #: field:workflow.workitem,inst_id:0
 msgid "Instance"
-msgstr ""
+msgstr "Instans"
 
 #. module: base
 #: help:ir.actions.report.xml,attachment:0
@@ -5767,7 +5776,7 @@ msgstr ""
 #. module: base
 #: selection:maintenance.contract.wizard,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Validerad"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -5894,7 +5903,7 @@ msgstr ""
 #: view:workflow.activity:0
 #: field:workflow.workitem,act_id:0
 msgid "Activity"
-msgstr ""
+msgstr "Aktivitet"
 
 #. module: base
 #: view:res.partner:0
@@ -5920,7 +5929,7 @@ msgstr "Kurs"
 #. module: base
 #: model:res.country,name:base.cg
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #. module: base
 #: view:res.lang:0
@@ -6363,6 +6372,7 @@ msgstr "Ladda"
 #: help:res.users,name:0
 msgid "The new user's real name, used for searching and most listings"
 msgstr ""
+"Användarens riktiga namn, används vid sökningar och de flesta listningar"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
@@ -6735,7 +6745,7 @@ msgstr "Rapportfil"
 #. module: base
 #: model:ir.model,name:base.model_workflow_triggers
 msgid "workflow.triggers"
-msgstr ""
+msgstr "workflow.triggers"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
@@ -6800,6 +6810,8 @@ msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
+"Du försökte att installera modulen '%s' som beror på modulen '%s'.\n"
+"Men den senare är inte tillgänglig på ditt system."
 
 #. module: base
 #: view:base.language.import:0
@@ -6901,7 +6913,7 @@ msgstr "Landskod"
 #. module: base
 #: model:ir.model,name:base.model_workflow_instance
 msgid "workflow.instance"
-msgstr ""
+msgstr "workflow.instance"
 
 #. module: base
 #: view:res.lang:0
@@ -6941,7 +6953,7 @@ msgstr "Netherlands"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
 msgid "Low Level Objects"
-msgstr ""
+msgstr "Lågnivåobjekt"
 
 #. module: base
 #: view:res.company:0
@@ -6967,7 +6979,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
-msgstr ""
+msgstr "Demokratiska republiken Kongo"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6995,7 +7007,7 @@ msgstr ""
 #: view:base.module.upgrade:0
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to update"
-msgstr ""
+msgstr "Moduler att uppdatera"
 
 #. module: base
 #: help:ir.actions.server,sequence:0

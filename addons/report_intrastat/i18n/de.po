@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-12-01 09:42+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,36 +14,28 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
-
-#. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Canceled Invoice"
-msgstr "Stornierte Rechnung"
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
 msgstr "Rabatt (%)"
-
-#. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -56,9 +48,10 @@ msgid "Unit Price"
 msgstr "Preis pro Einheit"
 
 #. module: report_intrastat
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -84,11 +77,6 @@ msgstr "PRO-FORMA"
 #: report:account.invoice.intrastat:0
 msgid "Taxes:"
 msgstr "Steuern:"
-
-#. module: report_intrastat
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -141,19 +129,14 @@ msgid "Base"
 msgstr "Grundlage"
 
 #. module: report_intrastat
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr "Aktuelles Jahr"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "January"
 msgstr "Januar"
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
-msgstr "Steuer"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -204,9 +187,19 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: report_intrastat
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
 msgstr "Land"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -278,6 +271,11 @@ msgstr "Belegreferenz"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat,weight:0
 msgid "Weight"
 msgstr "Gewicht"
@@ -298,19 +296,14 @@ msgid "December"
 msgstr "Dezember"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Juni"
+#: report:account.invoice.intrastat:0
+msgid "Tax"
+msgstr "Steuer"
 
 #. module: report_intrastat
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Ländercode"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Aktuelles Jahr"
 
 #. module: report_intrastat
 #: field:report.intrastat,month:0
@@ -353,16 +346,20 @@ msgid "Price"
 msgstr "Preis"
 
 #. module: report_intrastat
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Intrastat Nummer (Code)"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Stornierte Rechnung"
 
 #~ msgid "Intrastat (this month)"
 #~ msgstr "Intrastat (dieser Monat)"
@@ -370,8 +367,26 @@ msgstr "Intrastat Nummer (Code)"
 #~ msgid "All Months"
 #~ msgstr "Alle Monate"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Period"
 #~ msgstr "Periode"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
 #~ msgid "Origin"
 #~ msgstr "Herkunft"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
