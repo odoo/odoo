@@ -151,8 +151,10 @@ class OutlookAddin:
         activeExplorer = application.ActiveExplorer()
         if activeExplorer is not None:
             bars = activeExplorer.CommandBars
+            new_bar = bars.Add('Open ERP',0,0,0)
 
             menu_bar = bars.Item("Menu Bar")
+
             tools_menu = menu_bar.Controls(5)
             tools_menu = CastTo(tools_menu, "CommandBarPopup")
 
@@ -171,8 +173,15 @@ class OutlookAddin:
             item.Enabled = True
 
             toolbar = bars.Item("Standard")
+            openerp_bar = bars.Item('Open ERP')
 
-            item = toolbar.Controls.Add(Type=constants.msoControlButton, Temporary=True)
+            item = openerp_bar.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = self.toolbarButtonConfig = DispatchWithEvents(item, Configuration)
+            item.Caption = "Configuration"
+            item.TooltipText = "Click to configure OpenERP."
+            item.Enabled = True
+
+            item = openerp_bar.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.toolbarButton = DispatchWithEvents(item, ArchiveEvent)
             item.Caption="Push"
@@ -182,18 +191,20 @@ class OutlookAddin:
             # Adding Menu in Menu Bar to the Web Menu of the Outlook
             toolbarweb = bars.Item("Web")
 
-            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = openerp_bar.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonOpenPartner = DispatchWithEvents(item, OpenPartner)
             item.Caption = "Partner"
             item.TooltipText = "Click to Open OpenERP Partner Contact Information."
             item.Enabled = True
 
 
-            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = openerp_bar.Controls.Add(Type = constants.msoControlButton, Temporary = True)
             item = self.toolbarButtonOpenDocument = DispatchWithEvents(item, OpenDocument)
             item.Caption = "Document"
             item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
+
+
 
             # Hook events for the item
 #            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
@@ -225,10 +236,10 @@ class OutlookAddin:
             item.Enabled = True
 
     def OnDisconnection(self, mode, custom):
-        self.item.close()
         mngr = manager.GetManager()
         mngr.config['login'] = False
         mngr.SaveConfig()
+        self.item.close()
         pass
     def OnAddInsUpdate(self, custom):
         pass
