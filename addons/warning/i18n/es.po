@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-08 23:08+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-09 08:38+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -42,6 +42,11 @@ msgstr "¡Error! No puede crear miembros asociados recursivos."
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Albarán"
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
@@ -123,9 +128,9 @@ msgid "Sale Order"
 msgstr "Pedido de venta"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Mensaje para factura"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Empaquetado de stock"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -163,14 +168,19 @@ msgstr ""
 "siguiente campo."
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Empaquetado de stock"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Mensaje para factura"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
 msgid "Module for Warnings form onchange Event."
 msgstr "Módulo para configuración de avisos en eventos"
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0

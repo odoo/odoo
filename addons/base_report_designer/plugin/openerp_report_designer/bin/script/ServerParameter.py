@@ -192,6 +192,10 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         Change(aVal,url)
         if aVal[1]== -1:
            self.win.getEditText("lstDatabase")
+           self.win.removeListBoxItems("lstDatabase", 0, self.win.getListBoxItemCount("lstDatabase"))
+           self.win.setEditText("txtHost",aVal[0])
+           for i in range(len(aVal[1])):
+                self.lstDatabase.addItem(aVal[1][i],i)
         elif aVal[1]==0:
             ErrorDialog(aVal[0],"")
         else:
