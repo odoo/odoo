@@ -208,7 +208,7 @@
             <field name="res_model">res.alarm</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create specific calendar alarms that can be assigned to calendar events or meetings.</field>
+            <field name="help">Create specific calendar alarms that may be assigned to calendar events or meetings.</field>
         </record>
 
         <!--        Menu for Alarms-->
@@ -244,7 +244,7 @@
                                <field name="rrule_type" string="Recurrency"
                                     colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                                <button string="Edit All"
-                                   help="Edit all Ourrences of recurrent Events"
+                                   help="Edit all Occurrences of recurrent Events"
                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                    name="open_event" icon="gtk-edit"
                                    type="object" />

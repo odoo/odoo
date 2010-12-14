@@ -11,7 +11,7 @@
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
         <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
         <field name="context">{'object_id':'crm.lead'}</field>
-        <field name="help">Create specific stages that will help your sales better organise their sales pipeline by maintaining them to their leads and sales opportunities. It will allow them to easily track how is positioned a specific lead or opportunity in the sales cycle.</field>
+        <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
     </record>
 
      <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
@@ -28,7 +28,7 @@
             <field name="view_id" ref="crm_case_categ_tree-view"/>
             <field name="context">{'object_id': 'crm.lead'}</field>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-            <field name="help">Create specific categories that fit your company's  activities in order to better classify and analyse them after they have been maintained in your leads and opportunities. You can use categories to reflect your product structure or the different types of sales you do.</field>
+            <field name="help">Create specific categories that fit your company's activities to better classify and analyse your leads and opportunities. Such categories could for instance reflect your product structure or the different types of sales you do.</field>
         </record>
 
         <menuitem action="crm_lead_categ_action"

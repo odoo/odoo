@@ -16,7 +16,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_supplier":1}</field>
             <field name="search_view_id" ref="base.view_res_partner_address_filter"/>
-            <field name="help">Access your supplier records and maintain your relationship with them. You can track all your interactions with them through the history tab: emails, orders, meeting, etc.</field>
+            <field name="help">Access your supplier records and maintain a good relationship with your suppliers. You can track all your interactions with them through the History tab: emails, orders, meetings, etc.</field>
         </record>
         <record id="action_supplier_address_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -59,7 +59,7 @@
         <field name="domain">[('type','=','in_invoice')]</field>
         <field name="context">{'type':'in_invoice', 'journal_type': 'purchase', 'search_default_draft': 1}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-            <field name="help">Use this menu to control the invoices to be received by your supplier. OpenERP pre-generates draft of invoices based on your purchase orders or your receptions. Once you receive a supplier invoice, you can control it according to the draft of invoice and validate it.</field>
+            <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
     </record>
 
      <menuitem name="Supplier Invoices to Receive"
@@ -242,7 +242,7 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">With the Requests for quotation menu you can create new request for quotations, review existing one and confirm them to order once the supplier offer is approved. When you confirm a RfQ, OpenERP will convert it to a Purchase Order and generate the next steps: draft reception of the products, invoice to control.</field>
+            <field name="help">With the Requests for Quotation menu you can create new requests for quotations, review existing ones or turn them into a purchase order once the supplier offer is approved. When you confirm a RfQ, OpenERP will convert it to a Purchase Order and generate the next steps: draft reception of the products, draft invoice to control.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
                 sequence="6" groups="group_purchase_manager,group_purchase_user"/>
@@ -413,7 +413,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">If you set the invoicing control on a purchase order as "Manual", you can track here all the purchase order lines for which you did not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
+            <field name="help">If you set the invoicing control on a purchase order as "Manual", you can track here all the purchase order lines for which you have not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
