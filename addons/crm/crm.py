@@ -479,6 +479,12 @@ class crm_case_stage(osv.osv):
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence"
+    
+    
+    
+    def _get_type_value(self, cr, user, context):
+        return [('lead','Lead'),('opportunity','Opportunity')]
+
 
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
@@ -487,9 +493,10 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements'),
-        'type': fields.selection([('lead','Lead'),('opportunity','Opportunity'),('claim','Claim'), ('fundraising','Fundraising')], 'Type'),
+        'type': fields.selection(_get_type_value, 'Type'),
     }
-
+    
+    
     def _find_stage_type(self, cr, uid, context=None):
         """Finds type of stage according to object.
         @param self: The object pointer

@@ -135,4 +135,21 @@ class crm_claim(crm.crm_case, osv.osv):
 
 crm_claim()
 
+
+class crm_stage_claim(osv.osv):
+    
+    def _get_type_value(self, cr, user, context):
+        list = super(crm_stage_claim, self)._get_type_value(cr, user, context)
+        list.append(('claim','Claim'))
+        return list
+    
+    _inherit = "crm.case.stage"
+    _columns = {
+            'type': fields.selection(_get_type_value, 'Type'),
+    }
+   
+    
+crm_stage_claim()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

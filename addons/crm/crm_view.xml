@@ -108,6 +108,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -118,6 +119,7 @@
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
             <field name="type">form</field>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
@@ -132,6 +134,36 @@
                 </form>
             </field>
         </record>
+        
+         <record model="ir.ui.view" id="crm_case_stage_form_full">
+            <field name="name">crm.case.stage.form</field>
+            <field name="model">crm.case.stage</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Stage">
+                	<group col="6">
+                    	<separator string="Stage Definition" colspan="6"/>
+	                    <field name="name" select="1" colspan="4"/>
+	                    <field name="sequence"/>
+                   	 	<field name="type" />
+                   	 	 <field name="probability"/>
+                   		<field name="on_change"/>
+                   	 </group>
+                     
+                    
+                   
+                    
+                    <separator string="Requirements" colspan="4"/>
+                    <field name="requirements" nolabel="1" colspan="4"/>
+                    
+                    <group attrs="{'invisible':[('type','in',['claim', 'fundraising', False])]}">
+	                    <separator string="Sales Team" colspan="4"/>
+	                    <field name="section_ids" nolabel="1"  />
+                	</group>
+                </form>
+            </field>
+        </record>
 
         <!-- CRM Stage Action -->
 
@@ -141,6 +173,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
+       
 
  <!-- Case Categories Form View -->
 
