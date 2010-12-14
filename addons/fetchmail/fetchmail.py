@@ -72,7 +72,7 @@ class email_server(osv.osv):
     }
 
     def check_duplicate(self, cr, uid, ids):
-	# RFC *-* Why this limitation? why not in SQL constraint?
+        # RFC *-* Why this limitation? why not in SQL constraint?
         vals = self.read(cr, uid, ids, ['user', 'password'])[0]
         cr.execute("select count(id) from email_server where user=%s and password=%s", (vals['user'], vals['password']))
         res = cr.fetchone()
@@ -113,7 +113,6 @@ class email_server(osv.osv):
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
-            count = 0
             try:
                 if server.type == 'imap':
                     imap_server = None

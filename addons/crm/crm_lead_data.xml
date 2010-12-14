@@ -2,7 +2,12 @@
 <openerp>
     <data noupdate="1">
 
-
+	<record model="crm.case.stage" id="stage_lead6">
+            <field name="name">Lost</field>
+            <field eval="'0'" name="probability"/>
+            <field eval="'0'" name="sequence"/>
+            <field name="type">lead</field>
+        </record>
         <!--        CASE STATUS(stage_id)        -->
         <record model="crm.case.stage" id="stage_lead1">
             <field name="name">New</field>
@@ -40,12 +45,7 @@
             <field name="type">lead</field>
         </record>
 
-        <record model="crm.case.stage" id="stage_lead6">
-            <field name="name">Lost</field>
-            <field eval="'0'" name="probability"/>
-            <field eval="'6'" name="sequence"/>
-            <field name="type">lead</field>
-        </record>
+        
 
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
