@@ -7,40 +7,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-30 10:06+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Canceled Invoice"
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
-msgstr ""
-
-#. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: report_intrastat
@@ -54,8 +48,9 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: report_intrastat
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: report_intrastat
@@ -144,11 +139,6 @@ msgid "January"
 msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
-msgstr ""
-
-#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "July"
 msgstr ""
@@ -197,8 +187,18 @@ msgid "Invoice"
 msgstr ""
 
 #. module: report_intrastat
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
@@ -271,6 +271,11 @@ msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat,weight:0
 msgid "Weight"
 msgstr ""
@@ -291,8 +296,8 @@ msgid "December"
 msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
+#: report:account.invoice.intrastat:0
+msgid "Tax"
 msgstr ""
 
 #. module: report_intrastat

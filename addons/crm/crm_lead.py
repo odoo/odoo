@@ -135,7 +135,7 @@ class crm_lead(crm_case, osv.osv):
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -150,6 +150,19 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+    
+    def _get_stage_id(self, cr, uid, context=None):
+        """Finds type of stage according to object.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        type = context and context.get('stage_type', '')
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -160,6 +173,7 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'stage_id': _get_stage_id,
     }
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

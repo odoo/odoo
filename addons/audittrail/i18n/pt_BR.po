@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-30 09:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -22,27 +22,21 @@ msgid "Audit Trail"
 msgstr "Trilha de Auditoria"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Registro (log)"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Inscrito"
-
-#. module: audittrail
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
@@ -57,16 +51,24 @@ msgid "Audit Logs"
 msgstr "Logs de auditoria"
 
 #. module: audittrail
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Status"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Provisório"
@@ -75,11 +77,6 @@ msgstr "Provisório"
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
 msgstr "Valor Anterior"
-
-#. module: audittrail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -104,9 +101,9 @@ msgid "Log From"
 msgstr "Log de"
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "Registro (log)"
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "Log ID"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -136,16 +133,12 @@ msgid "Log Lines"
 msgstr "Linhas do Log"
 
 #. module: audittrail
-#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Regras Inscritas"
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
 msgstr "Regras"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -167,6 +160,11 @@ msgid "New Value Text: "
 msgstr "Texto do Novo Valor: "
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 msgid "Audit Rules"
 msgstr ""
@@ -182,6 +180,7 @@ msgid "Resource Name"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Data"
@@ -192,11 +191,6 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
-msgstr "Log ID"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
@@ -217,11 +211,6 @@ msgstr "Texto do Valor Anterior "
 #: field:audittrail.rule,log_workflow:0
 msgid "Log Workflow"
 msgstr ""
-
-#. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
@@ -258,6 +247,7 @@ msgid ""
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr "Usuário"
@@ -278,17 +268,6 @@ msgid "UnSubscribe"
 msgstr "Remover Inscrição"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
-
-#. module: audittrail
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr ""
@@ -297,6 +276,11 @@ msgstr ""
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
 msgstr "Descrição do Campo"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
@@ -327,11 +311,6 @@ msgstr "Novo Valor"
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "Logs de Auditoria"
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Assinar"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
@@ -388,6 +367,15 @@ msgid ""
 "object of this rule"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
+
 #~ msgid "Create"
 #~ msgstr "Criar"
 
@@ -423,6 +411,9 @@ msgstr ""
 #~ msgid "audittrail.log"
 #~ msgstr "audittrail.log"
 
+#~ msgid "Subscribed Rules"
+#~ msgstr "Regras Inscritas"
+
 #~ msgid "Delete"
 #~ msgstr "Apagar"
 
@@ -443,3 +434,9 @@ msgstr ""
 
 #~ msgid "Log deletes"
 #~ msgstr "Eliminações do Log"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "Subscribe"
+#~ msgstr "Assinar"

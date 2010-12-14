@@ -6,32 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-01 08:48+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Vragenlijst"
-
-#. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -46,24 +34,28 @@ msgid "Open Questionnaire"
 msgstr "Open vragenlijst"
 
 #. module: crm_profiling
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+"U kunt specifieke onderwerp gerichte enquêtes maken die als leidraad "
+"gebruikt worden door uw teams in de verkoopcyclus door ze te helpen de "
+"juiste vragen te stellen. Met de segmentatie tool kunt u automatisch een "
+"relatie categorie toewijzen op basis van de verschillende antwoorden."
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Deelprofielen"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
 msgstr "Relatiesegmenten"
-
-#. module: crm_profiling
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -115,16 +107,6 @@ msgid "Use a questionnaire"
 msgstr "Gebruik een vragenlijst"
 
 #. module: crm_profiling
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -158,23 +140,14 @@ msgid "Avalaible answers"
 msgstr "Beschikbare antwoorden"
 
 #. module: crm_profiling
-#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
-msgid ""
-"You can create specific topic related questionnaires that will be used to "
-"guide your team(s) in the sales cycle by helping them to ask the right "
-"questions. Using the segmentation tool, you will be able to automatically "
-"assign a partner to a category based on his answers to the different "
-"questionnaires."
-msgstr ""
-"U kunt specifieke onderwerp gerichte enquêtes maken die als leidraad "
-"gebruikt worden door uw teams in de verkoopcyclus door ze te helpen de "
-"juiste vragen te stellen. Met de segmentatie tool kunt u automatisch een "
-"relatie categorie toewijzen op basis van de verschillende antwoorden."
-
-#. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Ingesloten antwoorden"
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Deelprofielen"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -219,13 +192,16 @@ msgstr "Een vragenlijst gebruiken"
 msgid "Save Data"
 msgstr "Gegevens opslaan"
 
-#. module: crm_profiling
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
 #~ msgid "crm_profiling management"
 #~ msgstr "crm_profiling beheer"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
 
 #~ msgid ""
 #~ "Check this box if you want to use this tab as part of the segmentation rule. "
@@ -233,3 +209,18 @@ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 #~ msgstr ""
 #~ "Vink dit aan als u dit tablad wilt gebruiken als onderdeel van de "
 #~ "segmentatieregel. Onaangevinkt worden onderstaande criteria genegeerd."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

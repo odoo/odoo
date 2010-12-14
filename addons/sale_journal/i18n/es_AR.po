@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-09-20 21:39+0000\n"
 "Last-Translator: Margarita Manterola <ubuntu@marga.com.ar>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_journal
@@ -22,9 +22,9 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
@@ -32,17 +32,17 @@ msgid "Sale Order"
 msgstr ""
 
 #. module: sale_journal
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:res.partner:0
+msgid "Invoicing"
 msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used on partners, sales order and delivery orders. You can "
+"create journal to group your invoicing according to customer's needs: daily, "
+"each wednesday, monthly, etc."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -50,19 +50,21 @@ msgid "Sales & Purchases"
 msgstr "Ventas & Compras"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Administración de ventas y entregas por diario"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "Notas"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
 msgstr "Método de facturación"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr ""
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -82,14 +84,14 @@ msgid "Grouped"
 msgstr "Agrupado"
 
 #. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
 msgstr "Método de facturación"
-
-#. module: sale_journal
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -115,18 +117,6 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "Notas"
-
-#. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the invoice "
-"type without removing it."
-msgstr ""
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr ""
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Administración de ventas y entregas por diario"

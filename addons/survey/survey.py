@@ -92,9 +92,13 @@ class survey(osv.osv):
     def survey_cancel(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, {'state': 'cancel' })
         return True
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
+        
+    def copy(self, cr, uid, ids, default=None, context=None):
+        vals = {}
+        current_rec = self.read(cr, uid, ids, context=context)
+        title = current_rec.get('title') + ' (Copy)'
+        vals.update({'title':title})
+        return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
         """
@@ -200,8 +204,12 @@ class survey_page(osv.osv):
             'context': context
         }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
+    def copy(self, cr, uid, ids, default=None, context=None):
+        vals = {}
+        current_rec = self.read(cr, uid, ids, context=context)
+        title = current_rec.get('title') + ' (Copy)'
+        vals.update({'title':title})
+        return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 
 survey_page()
 

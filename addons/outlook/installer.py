@@ -55,7 +55,8 @@ class outlook_installer(osv.osv_memory):
 Pre-requirements :
     1. Python 2.6+ .
     2. Python for Windows extensions - PyWin32 this module for python must be installed for appropriate version of the Python.
-    3. If you are using MS Outlook 2007 than you are required to install "Microsoft Exchange Server MAPI Client and Collaboration Data Objects 1.2.1 (CDO 1.21)".
+    3. If With MS Outlook 2007 it is required to install externally "Microsoft Exchange Server MAPI Client and Collaboration Data Objects 1.2.1 (CDO 1.21)".
+       and With MS Outlook2003 Install inbuilt Collaboration Data Objects(CDO) while installing Outlook.
 
 How to install openerp-outlook plug-in?
     1. Save the executable plug-in file.
