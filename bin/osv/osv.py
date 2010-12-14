@@ -127,10 +127,11 @@ class object_proxy(netsvc.Service):
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except IntegrityError, inst:
-                for key in self._sql_error.keys():
+                osv_pool = pooler.get_pool(dbname)
+                for key in osv_pool._sql_error.keys():
                     if key in inst[0]:
                         self.abortResponse(1, _('Constraint Error'), 'warning',
-                                        tr(self._sql_error[key], 'sql_constraint') or inst[0])
+                                        tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     self.logger.debug("IntegrityError", exc_info=True)
@@ -143,9 +144,8 @@ class object_proxy(netsvc.Service):
                             last_quote_end = errortxt.rfind('"')
                             last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
                             model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                            print "MODEL", last_quote_begin, last_quote_end, model_name
                         model = table.replace("_",".")
-                        model_obj = self.get(model)
+                        model_obj = osv_pool.get(model)
                         if model_obj:
                             model_name = model_obj._description or model_obj._name
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
