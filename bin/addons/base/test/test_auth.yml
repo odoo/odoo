@@ -1,0 +1,73 @@
+-
+  I will now stress the authentication layer of the ORM
+-
+  I create a test user.
+-
+  !record {model: res.users, id: res_user_test_a1}:
+      name: Test Auth User 1
+      login: test_base_a1
+      password: 'base-test-passwd'
+      active: True
+-
+  I will prepare the context
+-
+  !python {model: res.users }: |
+    from tools import config
+    host = config.get_misc('httpd', 'interface')
+    port = config.get_misc('httpd', 'port', 8069)
+    if not host:
+        host = config.get('xmlrpc_interface')
+        port = config.get('xmlrpc_port') or self.port
+    if host == '0.0.0.0' or not host:
+        host = '127.0.0.1'
+    port = int(port)
+    context['test_xmlrpc_url'] = 'http://%s:%d/xmlrpc/' % (host, port)
+-
+  I will commit the cursor and try to login.
+-
+  !python {model: res.users }: |
+    from xmlrpclib import ServerProxy
+    cr.commit()
+    try:
+        logsock = ServerProxy(context['test_xmlrpc_url']+'common')
+        luid = logsock.login(cr.dbname, 'test_base_a1', 'base-test-passwd')
+        assert luid, "User is not activated after res.users commit!"
+    except Exception:
+        raise
+-
+  I will just try to read something as that user
+-
+  !python {model: res.users }: |
+    from xmlrpclib import ServerProxy
+    cr.commit()
+    try:
+        logsock = ServerProxy(context['test_xmlrpc_url']+'object')
+        luid = ref('res_user_test_a1')
+        res = logsock.execute(cr.dbname, luid, 'base-test-passwd', 'res.users', 'read', luid, ['name',])
+        assert res and res['name'], "User cannot read its name!"
+    except Exception:
+        raise
+-
+  I will now disable the user.
+-
+  !record {model: res.users, id: res_user_test_a1}:
+      active: False
+-
+  I will commit the cursor.
+-
+  !python {model: res.users }: |
+    cr.commit()
+-
+  I will try to read again, connecting as the disabled user.
+-
+  !python {model: res.users }: |
+    from xmlrpclib import ServerProxy
+    cr.commit()
+    try:
+        logsock = ServerProxy(context['test_xmlrpc_url']+'object')
+        luid = ref('res_user_test_a1')
+        res = logsock.execute(cr.dbname, luid, 'base-test-passwd', 'res.users', 'read', luid, ['name',])
+        raise AssertionError("User should not be enabled!")
+    except Fault, e:
+        if e.faultCode != 'AccessDenied':
+            raise

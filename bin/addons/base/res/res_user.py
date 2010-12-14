@@ -299,8 +299,14 @@ class users(osv.osv):
         return False
 
     def _get_menu(self,cr, uid, context=None):
-        ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')], context=context)
-        return ids and ids[0] or False
+        dataobj = self.pool.get('ir.model.data')
+        try:
+            model, res_id = dataobj.get_object_reference(cr, uid, 'base', 'action_menu_admin')
+            if model != 'ir.actions.act_window':
+                return False
+            return res_id
+        except ValueError:
+            return False
 
     def _get_group(self,cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
@@ -354,12 +360,22 @@ class users(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)
+        db = cr.dbname
+        if db in self._uid_cache:
+            for id in ids:
+                if id in self._uid_cache[db]:
+                    del self._uid_cache[db][id]
 
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
+        db = cr.dbname
+        if db in self._uid_cache:
+            for id in ids:
+                if id in self._uid_cache[db]:
+                    del self._uid_cache[db][id]
         return super(users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
