@@ -289,20 +289,20 @@ class account_account(osv.osv):
             sums = {}
             while brs:
                 current = brs[0]
-                can_compute = True
-                for child in current.child_id:
-                    if child.id not in sums:
-                        can_compute = False
-                        try:
-                            brs.insert(0, brs.pop(brs.index(child)))
-                        except ValueError:
-                            brs.insert(0, child)
-                if can_compute:
-                    brs.pop(0)
-                    for fn in field_names:
-                        sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                        if current.child_id:
-                            sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
+#                can_compute = True
+#                for child in current.child_id:
+#                    if child.id not in sums:
+#                        can_compute = False
+#                        try:
+#                            brs.insert(0, brs.pop(brs.index(child)))
+#                        except ValueError:
+#                            brs.insert(0, child)
+#                if can_compute:
+                brs.pop(0)
+                for fn in field_names:
+                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
+                    if current.child_id:
+                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
