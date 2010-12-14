@@ -465,6 +465,9 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
+    if de.tag == 'attribute' and de.get("name") == 'string':
+        if de.text:
+            res.append(de.text.encode("utf8"))
     if de.get("string"):
         res.append(de.get('string').encode("utf8"))
     if de.get("sum"):
