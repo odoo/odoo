@@ -354,12 +354,22 @@ class users(osv.osv):
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)
+        db = cr.dbname
+        if db in self._uid_cache:
+            for id in ids:
+                if id in self._uid_cache[db]:
+                    del self._uid_cache[db][id]
 
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         if 1 in ids:
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
+        db = cr.dbname
+        if db in self._uid_cache:
+            for id in ids:
+                if id in self._uid_cache[db]:
+                    del self._uid_cache[db][id]
         return super(users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
