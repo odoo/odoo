@@ -24,7 +24,7 @@ pref("extensions.tiny.partnername","");
 pref("extensions.tiny.officeno","");
 pref("extensions.tiny.phoneno","");
 pref("extensions.tiny.address","");
-pref("extensions.tiny.listobject","Partner,Accout Invoice,Product,Sale Order,Lead and opportunities");
+pref("extensions.tiny.listobject","Partner,Account Invoice,Product,Sale Order,Lead and opportunities");
 pref("extensions.tiny.object","res.partner,account.invoice,product.product,sale.order,crm.lead");
 pref("extensions.tiny.imagename","chrome://openerp_plugin/skin/Partner.png,chrome://openerp_plugin/skin/Invoice.png,chrome://openerp_plugin/skin/Product.png,chrome://openerp_plugin/skin/Sale.png,chrome://openerp_plugin/skin/Case.png");
 pref("extensions.tiny.attachmentlength","");
