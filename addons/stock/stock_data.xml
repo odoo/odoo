@@ -18,7 +18,7 @@
             <field name="name">Production Lot</field>
             <field name="object">stock.production.lot</field>
         </record>
-        
+
         <!--
     Resource: stock.location
     -->
@@ -43,7 +43,7 @@
             <field name="scrap_location">True</field>
             <field name="usage">inventory</field>
         </record>
-        
+
         <record id="location_inventory" model="stock.location">
             <field name="name">Inventory loss</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
@@ -90,7 +90,7 @@
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>
         </record>
-        
+
         <!--
     Properties
     -->
@@ -104,7 +104,11 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
-        
+
+        <record id="base.main_partner" model="res.partner">
+            <field name="property_stock_customer" eval="ref('stock_location_stock')"/>
+        </record>
+
         <record forcecreate="True" id="property_stock_procurement" model="ir.property">
             <field name="name">property_stock_procurement</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
