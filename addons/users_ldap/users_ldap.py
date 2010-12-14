@@ -21,6 +21,7 @@
 from osv import fields, osv
 import pooler
 import tools
+import logging
 from service import security
 import ldap
 from ldap.filter import filter_format
@@ -66,9 +67,9 @@ class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
         ret = super(users,self).login(db, login, password)
-        tools.debug(ret)
         if ret:
             return ret
+        logger = logging.getLogger('orm.ldap')
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         action_obj = pool.get('ir.actions.actions')
@@ -78,7 +79,7 @@ class users(osv.osv):
             FROM res_company_ldap
             WHERE ldap_server != '' and ldap_binddn != '' ORDER BY sequence""")
         for res_company_ldap in cr.dictfetchall():
-            tools.debug(res_company_ldap)
+            logger.debug(res_company_ldap)
             try:
                 l = ldap.open(res_company_ldap['ldap_server'], res_company_ldap['ldap_server_port'])
                 if l.simple_bind_s(res_company_ldap['ldap_binddn'], res_company_ldap['ldap_password']):
@@ -93,13 +94,13 @@ class users(osv.osv):
                         continue
                     if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
                         dn = result_data[0][0]
-                        tools.debug(dn)
+                        logger.debug(dn)
                         name = result_data[0][1]['cn'][0]
                         if l.bind_s(dn, password):
                             l.unbind()
                             cr.execute("SELECT id FROM res_users WHERE login=%s",(tools.ustr(login),))
                             res = cr.fetchone()
-                            tools.debug(res)
+                            logger.debug(res)
                             if res:
                                 cr.close()
                                 return res[0]
@@ -127,7 +128,7 @@ class users(osv.osv):
                             return res
                     l.unbind()
             except Exception, e:
-                tools.debug(e)
+                logger.warning("Cannot auth", exc_info=True)
                 continue
         cr.close()
         return False
@@ -135,10 +136,11 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         try:
             return super(users,self).check(db, uid, passwd)
-        except: # AccessDenied
+        except ExceptionNoTb: # AccessDenied
             pass
         cr = pooler.get_db(db).cursor()
         user = self.browse(cr, 1, uid)
+        logger = logging.getLogger('orm.ldap')
         if user and user.company_id.ldaps:
             for res_company_ldap in user.company_id.ldaps:
                 try:
@@ -161,7 +163,7 @@ class users(osv.osv):
                                 return True
                         l.unbind()
                 except Exception, e:
-                    tools.debug(e)
+                    logger.warning('cannot check', exc_info=True)
                     pass
         cr.close()
         raise security.ExceptionNoTb('AccessDenied')
