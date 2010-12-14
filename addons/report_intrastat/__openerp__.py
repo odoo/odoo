@@ -37,7 +37,7 @@
         'intrastat_report.xml'
     ],
     'demo_xml': [],
-    'test': ['test/report_instratat_report.yml'],
+    'test': ['test/report_intrastat_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0056982189085',

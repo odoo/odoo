@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42:54+0000\n"
-"PO-Revision-Date: 2010-12-03 15:42:54+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14:50+0000\n"
+"PO-Revision-Date: 2010-12-10 17:14:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,12 @@ msgid "Cancelled Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr ""
+
+#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
@@ -48,6 +54,11 @@ msgstr ""
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
+msgstr ""
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
+msgid "Print"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -89,9 +100,8 @@ msgid "Document"
 msgstr ""
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "PRO-FORMA"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_invoice_layout
@@ -271,8 +281,8 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: account_invoice_layout
