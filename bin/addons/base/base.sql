@@ -161,7 +161,8 @@ CREATE TABLE res_groups (
 
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
-    gid integer NOT NULL references res_groups on delete cascade
+    gid integer NOT NULL references res_groups on delete cascade,
+    UNIQUE("uid","gid")
 );
 
 create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);

@@ -615,7 +615,10 @@ class many2many(_column):
             elif act[0] == 3:
                 cr.execute('delete from '+self._rel+' where ' + self._id1 + '=%s and '+ self._id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
+                # following queries are in the same transaction - so should be relatively safe
+                cr.execute('SELECT 1 FROM '+self._rel+' WHERE '+self._id1+' = %s and '+self._id2+' = %s', (id, act[1]))
+                if not cr.fetchone():
+                    cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
