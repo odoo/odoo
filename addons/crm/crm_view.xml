@@ -108,7 +108,6 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
-                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -142,11 +141,11 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Stage">
-                	<group col="6">
-                    	<separator string="Stage Definition" colspan="6"/>
-	                    <field name="name" select="1" colspan="4"/>
+                	<group>
+                    	<separator string="Stage Definition" colspan="4" />
+	                    <field name="name" select="1"/>
 	                    <field name="sequence"/>
-                   	 	<field name="type" />
+                   	 	<field name="type" invisible="1" />
                    	 	 <field name="probability"/>
                    		<field name="on_change"/>
                    	 </group>
