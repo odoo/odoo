@@ -136,7 +136,7 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         try:
             return super(users,self).check(db, uid, passwd)
-        except ExceptionNoTb: # AccessDenied
+        except security.ExceptionNoTb: # AccessDenied
             pass
         cr = pooler.get_db(db).cursor()
         user = self.browse(cr, 1, uid)
