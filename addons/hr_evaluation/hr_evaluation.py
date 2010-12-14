@@ -34,8 +34,8 @@ class hr_evaluation_plan(osv.osv):
         'name': fields.char("Evaluation Plan", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Evaluation Phases'),
-        'month_first': fields.integer('Next Evaluation After'),
-        'month_next': fields.integer('After the Date of Start'),
+        'month_first': fields.integer('First Evaluation in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),
+        'month_next': fields.integer('Periodicity of Evaluations (months)', help="The number of month that depicts the delay between each evaluation of this plan (after the first one)."),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -101,7 +101,7 @@ class hr_employee(osv.osv):
     _inherit="hr.employee"
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Evaluation Plan'),
-        'evaluation_date': fields.date('Next Evaluation', help="Date of the next evaluation"),
+        'evaluation_date': fields.date('Next Evaluation Date', help="The date of the next evaluation is computed by the evaluation plan's dates (first evaluation + periodicity)."),
     }
 
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
