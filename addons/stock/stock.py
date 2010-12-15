@@ -2057,7 +2057,7 @@ class stock_move(osv.osv):
             if move.move_dest_id.id and (move.state != 'done'):
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
+                    self.action_assign(cr, uid, [move.move_dest_id.id])
                     if move.move_dest_id.picking_id:
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                     if move.move_dest_id.auto_validate:
