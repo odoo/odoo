@@ -604,6 +604,9 @@ class sale_order(osv.osv):
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+            proc_ids = self.pool.get('procurement.order').search(cr, uid, [('origin', '=', sale.name)])
+            for proc in proc_ids:
+                wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
             message = _("The sales order '%s' has been cancelled.") % (sale.name,)
