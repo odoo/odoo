@@ -27,7 +27,7 @@ class wiki_make_index(osv.osv_memory):
     _name = "wiki.make.index"
     _description = "Create Index"
 
-    def wiki_do_index(self, cr, uid, ids, context):
+    def wiki_do_index(self, cr, uid, ids, context=None):
 
         """ Makes Index according to page hierarchy
         @param cr: the current row, from the database cursor,
@@ -35,9 +35,11 @@ class wiki_make_index(osv.osv_memory):
         @param ids: list of wiki index’s IDs
 
         """
+        if context is None:
+            context = {}
         data = context and context.get('active_ids', []) or []
 
-        for index_obj in self.browse(cr, uid, ids):
+        for index_obj in self.browse(cr, uid, ids, context=context):
             wiki_pool = self.pool.get('wiki.wiki')
             cr.execute("Select id, section from wiki_wiki where id IN %s \
                             order by section ", (tuple(data),))

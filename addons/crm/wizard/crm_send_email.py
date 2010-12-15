@@ -65,7 +65,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('mailgate.message')
 
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -162,7 +162,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -181,7 +181,7 @@ class crm_send_new_email(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         user_mail_from = user_obj._get_email_from(cr, uid, [uid], context=context)[uid]
 
-        for case in mod_obj.browse(cr, uid, res_id):
+        for case in mod_obj.browse(cr, uid, res_id, context=context):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from and tools.ustr(case.email_from) or ''})
             if 'email_from' in fields:
@@ -263,7 +263,7 @@ class crm_send_new_email(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):

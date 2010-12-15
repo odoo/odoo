@@ -70,7 +70,7 @@ class StockMove(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context)
+        return super(StockMove, self).copy(cr, uid, id, default, context=context)
 
 StockMove()
 
@@ -128,7 +128,7 @@ class procurement_order(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        procurements = self.read(cr, uid, ids, ['state'])
+        procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in procurements:
             if s['state'] in ['draft','cancel']:
@@ -139,13 +139,13 @@ class procurement_order(osv.osv):
                         s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Finds UoM and UoS of changed product.
         @param product_id: Changed id of product.
         @return: Dictionary of values.
         """
         if product_id:
-            w = self.pool.get('product.product').browse(cr, uid, product_id, context)
+            w = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {
                 'product_uom': w.uom_id.id,
                 'product_uos': w.uos_id and w.uos_id.id or w.uom_id.id
@@ -159,11 +159,11 @@ class procurement_order(osv.osv):
         """
         return all(procurement.product_id.type in ('product', 'consu') for procurement in self.browse(cr, uid, ids))
 
-    def check_move_cancel(self, cr, uid, ids, context={}):
+    def check_move_cancel(self, cr, uid, ids, context=None):
         """ Checks if move is cancelled or not.
         @return: True or False.
         """
-        return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
+        return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
@@ -176,7 +176,7 @@ class procurement_order(osv.osv):
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
     #
-    def _quantity_compute_get(self, cr, uid, proc, context={}):
+    def _quantity_compute_get(self, cr, uid, proc, context=None):
         """ Finds sold quantity of product.
         @param proc: Current procurement.
         @return: Quantity or False.
@@ -186,7 +186,7 @@ class procurement_order(osv.osv):
                 return proc.move_id.product_uos_qty
         return False
 
-    def _uom_compute_get(self, cr, uid, proc, context={}):
+    def _uom_compute_get(self, cr, uid, proc, context=None):
         """ Finds UoS if product is Stockable Product.
         @param proc: Current procurement.
         @return: UoS or False.
@@ -200,12 +200,12 @@ class procurement_order(osv.osv):
     # Return the quantity of product shipped/produced/served, which may be
     # different from the planned quantity
     #
-    def quantity_get(self, cr, uid, id, context={}):
+    def quantity_get(self, cr, uid, id, context=None):
         """ Finds quantity of product used in procurement.
         @return: Quantity of product.
         """
-        proc = self.browse(cr, uid, id, context)
-        result = self._quantity_compute_get(cr, uid, proc, context)
+        proc = self.browse(cr, uid, id, context=context)
+        result = self._quantity_compute_get(cr, uid, proc, context=context)
         if not result:
             result = proc.product_qty
         return result
@@ -214,13 +214,13 @@ class procurement_order(osv.osv):
         """ Finds UoM of product used in procurement.
         @return: UoM of product.
         """
-        proc = self.browse(cr, uid, id, context)
-        result = self._uom_compute_get(cr, uid, proc, context)
+        proc = self.browse(cr, uid, id, context=context)
+        result = self._uom_compute_get(cr, uid, proc, context=context)
         if not result:
             result = proc.product_uom.id
         return result
 
-    def check_waiting(self, cr, uid, ids, context=[]):
+    def check_waiting(self, cr, uid, ids, context=None):
         """ Checks state of move.
         @return: True or False
         """
@@ -229,17 +229,17 @@ class procurement_order(osv.osv):
                 return True
         return False
 
-    def check_produce_service(self, cr, uid, procurement, context=[]):
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return False
 
-    def check_produce_product(self, cr, uid, procurement, context=[]):
+    def check_produce_product(self, cr, uid, procurement, context=None):
         """ Finds BoM of a product if not found writes exception message.
         @param procurement: Current procurement.
         @return: True or False.
         """
         return True
 
-    def check_make_to_stock(self, cr, uid, ids, context={}):
+    def check_make_to_stock(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or False
         """
@@ -251,13 +251,13 @@ class procurement_order(osv.osv):
                 ok = ok and self._check_make_to_stock_product(cr, uid, procurement, context)
         return ok
 
-    def check_produce(self, cr, uid, ids, context={}):
+    def check_produce(self, cr, uid, ids, context=None):
         """ Checks product type.
         @return: True or Product Id.
         """
         res = True
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        for procurement in self.browse(cr, uid, ids):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
                 partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
                 if partner_list:
@@ -308,12 +308,12 @@ class procurement_order(osv.osv):
                 return True
         return False
 
-    def action_confirm(self, cr, uid, ids, context={}):
+    def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
         @return: True
         """
         move_obj = self.pool.get('stock.move')
-        for procurement in self.browse(cr, uid, ids):
+        for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
                 raise osv.except_osv(_('Data Insufficient !'),
                     _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
@@ -339,7 +339,7 @@ class procurement_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
 
-    def action_move_assigned(self, cr, uid, ids, context={}):
+    def action_move_assigned(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
@@ -347,14 +347,14 @@ class procurement_order(osv.osv):
                 'message': _('from stock: products assigned.')})
         return True
 
-    def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
+    def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
         """
            This method may be overrided by objects that override procurement.order
            for computing their own purpose
         @return: True"""
         return True
 
-    def _check_make_to_stock_product(self, cr, uid, procurement, context={}):
+    def _check_make_to_stock_product(self, cr, uid, procurement, context=None):
         """ Checks procurement move state.
         @param procurement: Current procurement.
         @return: True or move id.
@@ -374,22 +374,22 @@ class procurement_order(osv.osv):
                     self.log(cr, uid, procurement.id, message)
         return ok
 
-    def action_produce_assign_service(self, cr, uid, ids, context={}):
+    def action_produce_assign_service(self, cr, uid, ids, context=None):
         """ Changes procurement state to Running.
         @return: True
         """
-        for procurement in self.browse(cr, uid, ids):
+        for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
         return True
 
-    def action_produce_assign_product(self, cr, uid, ids, context={}):
+    def action_produce_assign_product(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign production order to procurements
         @return: True
         """
         return 0
 
 
-    def action_po_assign(self, cr, uid, ids, context={}):
+    def action_po_assign(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign purchase order to procurements
         @return: True
         """
@@ -459,8 +459,6 @@ class procurement_order(osv.osv):
         ''' Runs through scheduler.
         @param use_new_cursor: False or the dbname
         '''
-        if not context:
-            context={}
         self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
@@ -521,35 +519,35 @@ class stock_warehouse_orderpoint(osv.osv):
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
 
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.
         @return: Dictionary of values.
         """
         if warehouse_id:
-            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context)
+            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
             v = {'location_id': w.lot_stock_id.id}
             return {'value': v}
         return {}
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Finds UoM for changed product.
         @param product_id: Changed id of product.
         @return: Dictionary of values.
         """
         if product_id:
-            prod = self.pool.get('product.product').browse(cr,uid,product_id)
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-
-    def copy(self, cr, uid, id, default=None,context={}):
+    
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
-        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-
+        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
+    
 stock_warehouse_orderpoint()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

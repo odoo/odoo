@@ -59,9 +59,9 @@ class account_use_model(osv.osv_memory):
         data =  self.read(cr, uid, ids, context=context)[0]
         record_id = context and context.get('model_line', False) or False
         if record_id:
-            data_model = account_model_obj.browse(cr, uid, data['model'])
+            data_model = account_model_obj.browse(cr, uid, data['model'], context=context)
         else:
-            data_model = account_model_obj.browse(cr, uid, context['active_ids'])
+            data_model = account_model_obj.browse(cr, uid, context['active_ids'], context=context)
         for model in data_model:
             entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%d')}
             period_id = account_period_obj.find(cr, uid, context=context)
