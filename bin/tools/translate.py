@@ -155,26 +155,25 @@ logger = logging.getLogger('translate')
 
 class GettextAlias(object):
 
-    def _get_db_pool(self):
+    def _get_db(self):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
             dbname = getattr(threading.currentThread(), 'dbname')
-            return pooler.get_db_and_pool(dbname)
-        return (None, None)
+            return pooler.get_db_only(dbname)
 
     def _get_cr(self, frame):
-        new_cr = False
+        is_new_cr = False
         cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
             cr = getattr(s, 'cr', None)
         if not cr:
-            db, _ = self._get_db_pool()
+            db = self._get_db()
             if db:
                 cr = db.cursor()
-                new_cr = True
-        return cr, new_cr
+                is_new_cr = True
+        return cr, is_new_cr
 
     def _get_lang(self, frame):
         lang = None
@@ -200,7 +199,7 @@ class GettextAlias(object):
     def __call__(self, source):
         res = source
         cr = None
-        new_cr = False
+        is_new_cr = False
         try:
             frame = inspect.currentframe()
             if frame is None:
@@ -210,16 +209,11 @@ class GettextAlias(object):
                 return source
             lang = self._get_lang(frame)
             if lang:
-                cr, new_cr = self._get_cr(frame)
+                cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    _, pool = self._get_db_pool()
-                    if pool:
-                        res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
-                    else:
-                        cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
-                        res_trans = cr.fetchone()
-                        res = res_trans and res_trans[0] or source
+                    pool = pooler.get_pool(cr.dbname)
+                    res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
                 else:
                     logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -227,7 +221,7 @@ class GettextAlias(object):
         except Exception:
             logger.debug('translation went wrong for "%r", skipped', source)
         finally:
-            if cr and new_cr:
+            if cr and is_new_cr:
                 cr.close()
         return res
 
