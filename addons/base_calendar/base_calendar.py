@@ -1151,7 +1151,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('daily', 'Days'), \
                                 ('weekly', 'Weeks'), \
                                 ('monthly', 'Months'), \
-                                ('yearly', 'Years')], 'Frequency'),
+                                ('yearly', 'Years'), \
+                                ('secondly', 'Seconds'), \
+                                ('minutely', 'Minutes') ], 'Frequency'),
         'interval': fields.integer('Interval', help="Repeat every x"),
         'count': fields.integer('Count', help="Repeat max that times"),
         'mo': fields.boolean('Mon'),

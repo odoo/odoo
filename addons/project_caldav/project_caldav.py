@@ -41,8 +41,6 @@ class project_task(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
-        'recurrency': fields.boolean('Recurrency', help="Recurrent Tasks"),                                    
-        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Task."),
     }
     _defaults = {
         'state': 'draft',

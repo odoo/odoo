@@ -608,7 +608,7 @@ class stock_picking(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),

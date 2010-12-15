@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-30 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-13 14:56+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -55,11 +55,6 @@ msgstr "στάδιο της υπόθεσης"
 #: view:crm.meeting:0
 msgid "Visibility"
 msgstr "Ορατότητα"
-
-#. module: crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: crm
 #: field:crm.lead,title:0
@@ -152,7 +147,6 @@ msgid "Resource's Calendar"
 msgstr "Ημερολόγιο Πόρων"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_partner.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:0
@@ -294,11 +288,6 @@ msgstr "Εξαιρούμενες Απαντήσεις:"
 #: field:crm.case.stage,section_ids:0
 msgid "Sections"
 msgstr "Τμήματα"
-
-#. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Το πιστοποιητικό ταυτότητας του στοιχείου πρέπει να είναι μοναδικό"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -553,11 +542,6 @@ msgid "August"
 msgstr "Αύγουστος"
 
 #. module: crm
-#: field:crm.segmentation,sales_purchase_active:0
-msgid "Use The Sales Purchase Rules"
-msgstr "Χρήση Κανόνων Αγορών Πωλήσεων"
-
-#. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.lead:0
 #: view:res.partner:0
@@ -668,6 +652,11 @@ msgstr ""
 "Προεπιλεγμένη Προδιάθεση για περιόδους προηγούμενες του υπολογισμού 'Μέγ. "
 "Διαστήματος'. Αυτή είναι η Προδιάθεση με την οποία ξεκινάει κάθε συνεργάτης "
 "που δεν έχει συμβάντα."
+
+#. module: crm
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr "Σφάλμα:Το email δεν είναι σωστά διαμορφωμένο"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -829,7 +818,6 @@ msgstr "Ταμπλό Στατιστικών"
 #: selection:crm.lead.report,type:0
 #: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: view:crm.phonecall:0
 #: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
@@ -888,7 +876,7 @@ msgstr "Τύπος Συμβάν"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_installer
 msgid "crm.installer"
-msgstr ""
+msgstr "crm.installer"
 
 #. module: crm
 #: field:crm.segmentation,exclusif:0
@@ -1098,6 +1086,14 @@ msgstr "<"
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
 msgstr "Κινητό"
+
+#. module: crm
+#: code:addons/crm/wizard/crm_merge_opportunities.py:0
+#, python-format
+msgid ""
+"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+msgstr ""
+"Δεν υπάρχουν άλλες 'Ανοιχτές' η 'Εκρεμμείς' Ευκαιρίες για τον συνεργάτη '%s'"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1315,11 +1311,6 @@ msgid "History Information"
 msgstr "Ιστορικό"
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#. module: crm
 #: field:base.action.rule,act_mail_to_partner:0
 msgid "Mail to Partner"
 msgstr "Αληλλογραφία σε Συνεργάτη"
@@ -1527,6 +1518,11 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 #. module: crm
+#: view:board.board:0
+msgid "Opportunities by Categories"
+msgstr "Ευκαιρίες κατά Κατηγορίες"
+
+#. module: crm
 #: field:crm.meeting,interval:0
 msgid "Interval"
 msgstr "Διάστημα"
@@ -1598,7 +1594,7 @@ msgstr "Ακύρωση"
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -1636,11 +1632,6 @@ msgstr "Κατηγορίες Τηλεφωνημάτων"
 #: view:crm.meeting:0
 msgid "Invite People"
 msgstr "Κάλεσε Κόσμο"
-
-#. module: crm
-#: view:board.board:0
-msgid "Opportunities By Categories"
-msgstr "Ευκαιρίες ανά Κατηγορία"
 
 #. module: crm
 #: constraint:crm.case.section:0
@@ -1729,11 +1720,6 @@ msgstr "Η"
 #: field:crm.send.mail.attachment,wizard_id:0
 msgid "Wizard"
 msgstr "Οδηγός"
-
-#. module: crm
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1970,12 +1956,9 @@ msgid "Select stages for this Sales Team"
 msgstr "Επιλέξτε στάδια για αυτήν την Ομάδα Πωλήσεων"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_merge_opportunities.py:0
-#, python-format
-msgid ""
-"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+#: view:board.board:0
+msgid "Opportunities by Stage"
 msgstr ""
-"Δεν υπάρχουν άλλες 'Ανοιχτές' η 'Εκρεμμείς' Ευκαιρίες για τον συνεργάτη '%s'"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -2022,7 +2005,7 @@ msgstr "Google Adwords"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall
 msgid "crm.phonecall"
-msgstr ""
+msgstr "crm.phonecall"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead3
@@ -2057,9 +2040,9 @@ msgid "Priority"
 msgstr "Προτεραιότητα"
 
 #. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Το όνομα του αρθρώματος πρέπει να είναι μοναδικό !"
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Χρήση Κανόνων Αγορών Πωλήσεων"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2220,7 +2203,7 @@ msgstr "Ημερομηνία Έναρξης"
 #: selection:crm.phonecall,state:0
 #: view:crm.phonecall.report:0
 msgid "Todo"
-msgstr ""
+msgstr "Προς υλοποίηση"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -2252,6 +2235,13 @@ msgid "Note"
 msgstr "Σημείωση"
 
 #. module: crm
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Η επιλεγμένη εταιρία δεν είναι στις επιτρεπόμενες εταιρίες γι' αυτόν τον "
+"χρήστη"
+
+#. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
@@ -2281,7 +2271,7 @@ msgstr "Άρθρωμα"
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_meet2
 msgid "Internal Meeting"
-msgstr ""
+msgstr "Εσωτερική Σύσκεψη"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_categ_action
@@ -2462,16 +2452,11 @@ msgid "Weekly"
 msgstr "Εβδομαδιαία"
 
 #. module: crm
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "Η συντόμευση για αυτό το μενού υπάρχει ήδη!"
-
-#. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
 msgid "Opportunities Analysis"
-msgstr ""
+msgstr "Ανάλυση Ευκαιριών"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2498,11 +2483,6 @@ msgstr "Άλλο"
 #: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
-
-#. module: crm
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
@@ -2543,13 +2523,6 @@ msgstr "Πόλη"
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
 msgstr "Απασχολημένος/η"
-
-#. module: crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #. module: crm
 #: field:crm.installer,crm_helpdesk:0
@@ -2697,7 +2670,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
 msgid "crm.lead"
-msgstr ""
+msgstr "crm.lead"
 
 #. module: crm
 #: field:crm.meeting,week_list:0
@@ -2732,7 +2705,7 @@ msgstr "Συνέχιση Διαδικασίας"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
-msgstr ""
+msgstr "Τηλεφώνημα σε Συνεργάτη"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,user_id:0
@@ -2769,7 +2742,7 @@ msgstr "Συνοψη Τηλεφωνήματος"
 #. module: crm
 #: field:crm.send.mail,reply_to:0
 msgid "Reply To"
-msgstr ""
+msgstr "Απάντηση Σε"
 
 #. module: crm
 #: view:board.board:0
@@ -2827,7 +2800,7 @@ msgstr "Φαξ"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Assignment"
-msgstr ""
+msgstr "Ανάθεση"
 
 #. module: crm
 #: field:crm.lead,company_id:0
@@ -2916,7 +2889,7 @@ msgstr "Σφάλμα!"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Exclude range"
-msgstr ""
+msgstr "Αποκλεισμός έκτασης"
 
 #. module: crm
 #: selection:crm.add.note,state:0
@@ -2933,7 +2906,7 @@ msgstr "Ακυρώθηκε"
 #. module: crm
 #: field:crm.add.note,body:0
 msgid "Note Body"
-msgstr ""
+msgstr "Σώμα Σημείωσης"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_view_attendee_form
@@ -2999,18 +2972,23 @@ msgstr ""
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Προειδοποίηση"
 
 #. module: crm
 #: field:crm.phonecall,name:0
 #: view:res.partner:0
 msgid "Call Summary"
-msgstr ""
+msgstr "Σύνοψη Κλήσης"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
 msgstr "Τηλεφωνητής"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Τηλεφώνημα σε Τηλεφώνημα"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3020,12 +2998,12 @@ msgstr ""
 #. module: crm
 #: field:crm.installer,fetchmail:0
 msgid "Fetch Emails"
-msgstr ""
+msgstr "Λήψη Email"
 
 #. module: crm
 #: selection:crm.meeting,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Επιβεβαιωμένο"
 
 #. module: crm
 #: help:crm.send.mail,email_cc:0
@@ -3035,19 +3013,14 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: crm
 #: view:crm.meeting:0
 msgid "Confirm"
-msgstr ""
+msgstr "Επιβεβαίωση"
 
 #. module: crm
 #: field:crm.meeting,su:0
 msgid "Sun"
-msgstr ""
+msgstr "Κυρ"
 
 #. module: crm
 #: field:crm.phonecall.report,section_id:0
@@ -3075,7 +3048,7 @@ msgstr "Προαιρετική Έκφραση"
 #. module: crm
 #: selection:crm.meeting,select1:0
 msgid "Day of month"
-msgstr ""
+msgstr "Ημέρα του μήνα"
 
 #. module: crm
 #: field:crm.lead2opportunity,probability:0
@@ -3085,12 +3058,12 @@ msgstr ""
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
 msgid "New"
-msgstr ""
+msgstr "Νέος"
 
 #. module: crm
 #: view:crm.meeting:0
 msgid "Mail TO"
-msgstr ""
+msgstr "Αποστολή email ΣΕ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3112,7 +3085,7 @@ msgstr "Κανάλι"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule Call"
-msgstr ""
+msgstr "Προγραμάτισε Τηλεφώνημα"
 
 #. module: crm
 #: field:crm.lead,date_action_next:0
@@ -3139,12 +3112,12 @@ msgstr ""
 #. module: crm
 #: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
-msgstr ""
+msgstr "Εξαίρεση Ημερομηνία/Ώρες"
 
 #. module: crm
 #: selection:crm.meeting,class:0
 msgid "Confidential"
-msgstr ""
+msgstr "Εμπιστευτικό"
 
 #. module: crm
 #: help:crm.meeting,date_deadline:0
@@ -3152,6 +3125,7 @@ msgid ""
 "Deadline Date is automatically                         computed from Start "
 "Date + Duration"
 msgstr ""
+"Η Ημερομηνία Λήξης υπολογίζεται αυτόματα από Ημερομηνία Έναρξης + Διάρκεια"
 
 #. module: crm
 #: field:crm.lead,state_id:0
@@ -3161,17 +3135,17 @@ msgstr ""
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
 msgid "Creating business opportunities from Leads"
-msgstr ""
+msgstr "Δημιουργία ευκαιριών από Υποψήφιους Πελάτες"
 
 #. module: crm
 #: help:crm.send.mail,html:0
 msgid "Select this if you want to send email with HTML formatting."
-msgstr ""
+msgstr "Επιλέξτε αυτό εάν θέλετε να στείλετε το email με μορφή HTML."
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
 msgid "Need Information"
-msgstr ""
+msgstr "Χρειάζονται Πληροφορίες"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
@@ -3181,12 +3155,12 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_crm_installer
 msgid "CRM Application Configuration"
-msgstr ""
+msgstr "Παραμετροποίηση Εφαρμογής CRM"
 
 #. module: crm
 #: field:base.action.rule,act_categ_id:0
 msgid "Set Category to"
-msgstr ""
+msgstr "Επιλογή Κατηγορίας σε"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -3196,33 +3170,34 @@ msgstr "Ρυθμίσεις"
 #. module: crm
 #: field:crm.meeting,th:0
 msgid "Thu"
-msgstr ""
+msgstr "Πέμ"
 
 #. module: crm
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Μήνας-1    "
 
 #. module: crm
 #: help:crm.installer,sale_crm:0
 msgid "This module relates sale from opportunity cases in the CRM."
 msgstr ""
+"Αυτό το άρθρωμα συνδέει την πώληση από τις υποθέσεις ευκαιρίας στο CRM"
 
 #. module: crm
 #: view:crm.meeting:0
 msgid "of"
-msgstr ""
+msgstr "από"
 
 #. module: crm
 #: selection:crm.meeting,rrule_type:0
 msgid "Daily"
-msgstr ""
+msgstr "Ημερησίως"
 
 #. module: crm
 #: model:res.request.link,name:crm.request_link_meeting
 msgid "Case Meeting"
-msgstr ""
+msgstr "Συνάντηση Υπόθεσης"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
@@ -3237,19 +3212,19 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,byday:0
 msgid "First"
-msgstr ""
+msgstr "Πρώτη"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Δεκέμβριος"
 
 #. module: crm
 #: field:crm.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Εικόνα"
 
 #. module: crm
 #: view:base.action.rule:0
@@ -3271,24 +3246,24 @@ msgstr ""
 #. module: crm
 #: view:crm.send.mail:0
 msgid "_Send Reply"
-msgstr ""
+msgstr "_Αποστολή Απάντησης"
 
 #. module: crm
 #: field:crm.meeting,vtimezone:0
 msgid "Timezone"
-msgstr ""
+msgstr "Ζώνη Ώρας"
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,msg:0
 #: field:crm.lead2partner,msg:0
 #: view:crm.send.mail:0
 msgid "Message"
-msgstr ""
+msgstr "Μήνυμα"
 
 #. module: crm
 #: field:crm.meeting,sa:0
 msgid "Sat"
-msgstr ""
+msgstr "Σάβ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3296,17 +3271,17 @@ msgstr ""
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Salesman"
-msgstr ""
+msgstr "Πωλητής"
 
 #. module: crm
 #: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
-msgstr ""
+msgstr "Προβλεπόμενο Κλέισιμο"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity2phonecall
 msgid "Opportunity to Phonecall"
-msgstr ""
+msgstr "Ευκαιρία σε Τηλεφώνημα"
 
 #. module: crm
 #: help:crm.case.section,allow_unlink:0
@@ -3316,31 +3291,31 @@ msgstr "Επιτρέπει την διαγραφή μη πρόχειρων θε�
 #. module: crm
 #: view:crm.lead:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Προγραμματισμός Σύσκεψης"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Partner Name"
-msgstr ""
+msgstr "Όνομα συνεργάτη"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
 msgid "Outbound"
-msgstr ""
+msgstr "Εξερχόμενο"
 
 #. module: crm
 #: field:crm.lead,date_open:0
 #: field:crm.phonecall,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "Ανοιχτό"
 
 #. module: crm
 #: view:crm.case.section:0
 #: field:crm.case.section,member_ids:0
 msgid "Team Members"
-msgstr ""
+msgstr "Μέλη Ομάδας"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3348,17 +3323,17 @@ msgstr ""
 #: view:crm.meeting:0
 #: view:crm.phonecall:0
 msgid "Contacts"
-msgstr ""
+msgstr "Επαφές"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor1
 msgid "Interest in Computer"
-msgstr ""
+msgstr "Ενδιαφέρον στους Υπολογιστές"
 
 #. module: crm
 #: view:crm.meeting:0
 msgid "Invitation Detail"
-msgstr ""
+msgstr "Λεπτομέρειες Πρόσκλησης"
 
 #. module: crm
 #: field:crm.segmentation,som_interval_default:0
@@ -3374,10 +3349,15 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Σφάλμα! Υπάρχει ήδη ίδια περιγραφή συνδεδεμένου μέλους."
+
+#. module: crm
 #: field:crm.partner2opportunity,probability:0
 #: field:crm.phonecall2opportunity,probability:0
 msgid "Success Probability"
-msgstr ""
+msgstr "Πιθανότητα Επιτυχίας"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -3395,13 +3375,13 @@ msgstr "Πρόχειρη"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
 msgid "Cases by Sales Team"
-msgstr ""
+msgstr "Υποθέσεις κατά Ομάδα Πώλησης"
 
 #. module: crm
 #: view:crm.meeting:0
 #: field:crm.send.mail,email_from:0
 msgid "From"
-msgstr ""
+msgstr "Από"
 
 #. module: crm
 #: code:addons/crm/crm_meeting.py:0
@@ -3411,33 +3391,33 @@ msgstr ""
 #: model:process.node,name:crm.process_node_meeting0
 #, python-format
 msgid "Meeting"
-msgstr ""
+msgstr "Συνάντηση"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of Case"
-msgstr ""
+msgstr "Κατηγορία Υπόθεσης"
 
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
 msgid "7 Days"
-msgstr ""
+msgstr "7 Ημέρες"
 
 #. module: crm
 #: view:board.board:0
 msgid "Planned Revenue by Stage and User"
-msgstr ""
+msgstr "Προβλεπόμενα Έσοδα κατά Στάδιο και Χρήστη"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Report"
-msgstr ""
+msgstr "Αναφορά Υποψηφίων πελατών CRM"
 
 #. module: crm
 #: field:crm.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Πρόοδος Ρυθμίσεων"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -3450,13 +3430,13 @@ msgstr "Κανονικά"
 #. module: crm
 #: field:crm.lead,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "Οδός 2"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_meeting_categ_action
 #: model:ir.ui.menu,name:crm.menu_crm_case_meeting-act
 msgid "Meeting Categories"
-msgstr ""
+msgstr "Κατηγορίες Συναντήσεων"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -3464,6 +3444,7 @@ msgstr ""
 #: view:crm.phonecall2partner:0
 msgid "You may have to verify that this partner does not exist already."
 msgstr ""
+"Μπορεί να χρειαστεί να επιβεβαιώσετε ότι αυτός ο συνεργάτης δεν υπάρχει ήδη."
 
 #. module: crm
 #: field:crm.lead.report,delay_open:0
@@ -3471,23 +3452,17 @@ msgid "Delay to Open"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
-#, python-format
-msgid "There is no stage for won opportunities defined for this Sale Team."
-msgstr ""
-
-#. module: crm
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Νοέμβριος"
 
 #. module: crm
 #: code:addons/crm/crm_action_rule.py:0
@@ -3496,44 +3471,43 @@ msgid "No E-Mail ID Found for your Company address!"
 msgstr ""
 
 #. module: crm
-#: view:board.board:0
 #: view:crm.lead.report:0
 msgid "Opportunities By Stage"
-msgstr ""
+msgstr "Ευκαιρίες ανά στάδιο"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_create_partner
 msgid "Schedule Phone Call"
-msgstr ""
+msgstr "Προγραμματισμός Τηλεφωνήματος"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
 msgid "Contract"
-msgstr ""
+msgstr "Σύμβαση"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead4
 msgid "Twitter Ads"
-msgstr ""
+msgstr "Διαφημίσεις Twitter"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_add_note.py:0
 #: code:addons/crm/wizard/crm_send_email.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Σφάλμα"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Planned Revenues"
-msgstr ""
+msgstr "Προβλεπόμενα Έσοδα"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor7
@@ -3541,15 +3515,15 @@ msgid "Need Consulting"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
 msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:0
 #, python-format
 msgid "The case '%s' has been closed."
-msgstr ""
+msgstr "Η Υπόθεση '%s' έχει κλείσει"
 
 #. module: crm
 #: field:crm.lead,partner_address_id:0
@@ -3564,10 +3538,15 @@ msgid "Recurrent ID date"
 msgstr ""
 
 #. module: crm
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα!"
+
+#. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 #, python-format
 msgid "Merged into Opportunity: %s"
-msgstr ""
+msgstr "Συγγώνευση στην Ευκαιρία : %s"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -3578,15 +3557,10 @@ msgid "Close"
 msgstr "Κλείσιμο"
 
 #. module: crm
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: crm
 #: view:crm.lead:0
 #: view:crm.phonecall:0
 msgid "Categorization"
-msgstr ""
+msgstr "Κατηγοριοποίηση"
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_action_rule
@@ -3602,33 +3576,33 @@ msgstr ""
 #. module: crm
 #: field:crm.meeting,phonecall_id:0
 msgid "Phonecall"
-msgstr ""
+msgstr "Τηλεφώνημα"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "Πέμπτη"
 
 #. module: crm
 #: view:crm.meeting:0
 #: field:crm.send.mail,email_to:0
 msgid "To"
-msgstr ""
+msgstr "Προς"
 
 #. module: crm
 #: selection:crm.meeting,class:0
 msgid "Private"
-msgstr ""
+msgstr "Ιδιωτικό"
 
 #. module: crm
 #: field:crm.lead,function:0
 msgid "Function"
-msgstr ""
+msgstr "Λειτουργία"
 
 #. module: crm
 #: view:crm.add.note:0
 msgid "_Add"
-msgstr ""
+msgstr "_Προσθήκη"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -3663,14 +3637,14 @@ msgstr "Περιγραφή"
 #: field:res.partner,section_id:0
 #: field:res.users,context_section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Ομάδα Πώλησης"
 
 #. module: crm
 #: selection:crm.lead.report,month:0
 #: selection:crm.meeting,month_list:0
 #: selection:crm.phonecall.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Μάιος"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor2
@@ -3681,7 +3655,7 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:0
 #, python-format
 msgid "The opportunity '%s' has been opened."
-msgstr ""
+msgstr "Η Ευκαιρία '%s' έχει κλείσει"
 
 #. module: crm
 #: field:crm.segmentation.line,operator:0
@@ -3691,17 +3665,17 @@ msgstr "Υποχρεωτικό / Προαιρετικό"
 #. module: crm
 #: field:crm.lead,street:0
 msgid "Street"
-msgstr ""
+msgstr "Οδός"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Opportunities by User and Team"
-msgstr ""
+msgstr "Ευκαιρίες ανά Χρήστη και Ομάδα"
 
 #. module: crm
 #: field:crm.case.section,working_hours:0
 msgid "Working Hours"
-msgstr ""
+msgstr "Ώρες Εργασίας"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3778,7 +3752,7 @@ msgstr "Επιλογή"
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
 msgid "Negotiation"
-msgstr ""
+msgstr "Διαπραγμάτευση"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3794,12 +3768,12 @@ msgstr "Ιεράρχηση"
 #. module: crm
 #: field:crm.send.mail,body:0
 msgid "Message Body"
-msgstr ""
+msgstr "Σώμα Μηνύματος"
 
 #. module: crm
 #: view:crm.meeting:0
 msgid "Accept"
-msgstr ""
+msgstr "Αποδοχή"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
@@ -3819,7 +3793,7 @@ msgstr ""
 #. module: crm
 #: field:res.partner,phonecall_ids:0
 msgid "Phonecalls"
-msgstr ""
+msgstr "Τηλεφωνήματα"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -4008,6 +3982,9 @@ msgstr ""
 
 #~ msgid "Mail to these emails"
 #~ msgstr "Αποστολη στα email"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "Special Keywords to Be Used in The Body"
 #~ msgstr "Ειδικές Λέξεις-Κλειδιά για Χρήση στο Κυρίως Κείμενο"
@@ -4240,6 +4217,11 @@ msgstr ""
 #~ msgid "Section Code"
 #~ msgstr "Κωδικός Τμήματος"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
+
 #~ msgid "General Description"
 #~ msgstr "Γενική Περιγραφή"
 
@@ -4374,6 +4356,9 @@ msgstr ""
 #~ msgid "Trigger Date"
 #~ msgstr "Ημερ/νία Εκκιίνησης"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+
 #~ msgid "%(case_description)s = Case description"
 #~ msgstr "%(case_description)s = Case description"
 
@@ -4397,6 +4382,9 @@ msgstr ""
 #~ msgid "is converted to Opportunity."
 #~ msgstr "μετατρέπεται σε Ευκαιρία"
 
+#~ msgid "Opportunities By Categories"
+#~ msgstr "Ευκαιρίες ανά Κατηγορία"
+
 #~ msgid "Extended Options..."
 #~ msgstr "Εκτεταμένες επιλογές"
 
@@ -4405,3 +4393,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Έκλεισε/Ακυρώθηκε \\nΥποψήφιοι Πελάτες δεν μπορούνε να μετατραπούν σε "
 #~ "Ευκαιρίες"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Το πιστοποιητικό ταυτότητας του στοιχείου πρέπει να είναι μοναδικό"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Το όνομα του αρθρώματος πρέπει να είναι μοναδικό !"
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "Η συντόμευση για αυτό το μενού υπάρχει ήδη!"

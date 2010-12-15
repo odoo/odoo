@@ -62,7 +62,7 @@
   Now If I want to edit meetings information for all occurrence I click on "Edit All" button.
 -
   !python {model: crm.meeting}: |
-     self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'edit_all':'True'},context)
+    self.open_meeting(cr, uid, [ref('crm_meeting_regardingpresentation0')])
 - |   
   I can see that new meeting form is opened with same value
   I change some data for meeting and save it
