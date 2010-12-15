@@ -3,101 +3,104 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/create.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.createContact();" height="460" width="860">
+	title="&title.label;" onload="myPrefObserver.createContact();" height="415" width="720">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/static.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 <tabpanel id="contact">
-  <groupbox id="contact" style="border:1px solid black">
-    <separator class="groove-thin" orient="horizontal" width="94"/> 
-    <hbox>
-        <label  align="right" id="partner"  value="&selectpartner.value;" width="97" />
-    	<textbox id="txtselectpartner" readonly="true" value="" width="270"/>
-		<button label="&bsearch.label;" oncommand="Select.onMenuItemCommand(event);" image="&imagesearch.value;"/> 
-        <button label="Create Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);"/>
-	</hbox>
-	<hbox>
-        <label  align="right" id="name"  value="&name.value;" width="80" />
-		<textbox id="txtname" align="right" width="270"/>
-	</hbox>
-    <separator class="groove-thin" orient="horizontal" width="94"/> 
-    </groupbox>
-    </tabpanel>    
-  <separator class="groove-thin" orient="horizontal" width="94"/> 
- <tabpanel id="address">
-  <groupbox id="address" style="border:1px solid black">
-    <hbox>
-        <caption label="&postaladdress.value;" />
-    </hbox>
-     <separator class="groove-thin" orient="horizontal" width="94"/> 
-     <hbox>
-        <label  align="right" id="street"  value="&street.value;" width="97" />
-		<textbox id="txtstreet" width="270" align="right"/>
-       <spacer width="33"/>
-	</hbox>
+  <groupbox id="contact" >
+        <separator class="groove-thin" orient="horizontal" width="94"/> 
+            <hbox>
+                <label  align="right" id="partner"  value="&selectpartner.value;" width="97" />
+            	<textbox id="txtselectpartner" readonly="true" value="" width="270"/>
+		        <button label="&bsearch.label;" oncommand="Select.onMenuItemCommand(event);" image="&imagesearch.value;"/> 
+                <button label="Create Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);"/>
+        </hbox>
 
-     <hbox>
-        <label  align="right" id="street2"  value="&street2.value;" width="97" />
-		<textbox id="txtstreet2" width="270" align="right"/>
-        <spacer width="35"/>
-	</hbox>
-   <hbox>
-        <label  align="right" id="zip"  value="&zip.value;" width="97" />
-		<textbox id="txtzip" align="right" />
-        <spacer width="114"/>
-	</hbox>
+         <separator class="groove-thin" orient="horizontal" width="80"/> 
+            </groupbox>
+            </tabpanel>    
+        <tabpanel id="address">
+        
+        <groupbox id="address" style="border:1px solid black">
+            <hbox>
+                <caption label="&postaladdress.value;" />
+            </hbox>
+            <separator class="groove-thin" orient="horizontal" width="94"/> 
+            <hbox>
+                <label  align="right" id="name"  value="&name.value;" width="97" />
+                <textbox id="txtname" align="right" />
+            </hbox>
+            <hbox>
+                <label  align="right" id="street"  value="&street.value;" width="97" />
+                <textbox id="txtstreet" align="right"/>
+                <spacer width="33"/>
+            </hbox>
 
-     <hbox>
-        <label  align="right" id="city"  value="&city.value;" width="97"/>
-		<textbox id="txtcity" align="right" />
-        <spacer width="112"/>
-	</hbox>
- 
-    <hbox>
-         <label  align="right" id="countryname"  value="&country.value;" width="97" />
-         <menulist id="country" width="190" oncommand= "getAllState();" >
-           <menupopup>
-	     <menuitem label="" value=""/>
-   	    </menupopup>
-      	  </menulist>
-	</hbox>
+            <hbox>
+                <label  align="right" id="street2"  value="&street2.value;" width="97" />
+                <textbox id="txtstreet2"  align="right"/>
+                <spacer width="33"/>
+            </hbox>
+            <hbox>
+                <label  align="right" id="zip"  value="&zip.value;" width="97" />
+                <textbox id="txtzip" align="right" />
+                <spacer width="33"/>
+            </hbox>
 
-     <hbox>
-         <label  align="right" id="statename"  value="&state.value;" width="97" />
-         <menulist id="state" width="190">
-           <menupopup>
-	     <menuitem label="" value=""/>
-   	    </menupopup>
-      	  </menulist>
-	</hbox>
-  <separator class="groove-thin" orient="horizontal" width="94"/> 
-</groupbox>
-<groupbox id="communication" style="border:1px solid black">
-   <vbox>
-        <caption label="&communication.value;" />
-     </vbox>
-     <separator class="groove-thin" orient="horizontal" width="94"/> 
-     <hbox>
-        <label  align="right" id="office"  value="&office.value;" width="97" />
-	    <textbox id="txtoffice" align="right" />
-    </hbox>
-    <hbox>
-        <label  align="right" id="mobile"  value="&mobile.value;" width="97" />
-	    <textbox id="txtmobile" align="right"/>
-    </hbox> 
-    <hbox>
-        <label  align="right" id="fax"  value="&fax.value;" width="97" />
-	    <textbox id="txtfax" align="right" />
-    </hbox> 
-    <hbox>
-        <label  align="right" id="emailid"  value="&email.value;" width="97" />
-	    <textbox id="txtemail" width="280" align="right"/>
-    </hbox>
-  </groupbox>
-</tabpanel>
-<description></description>
+            <hbox>
+                <label  align="right" id="city"  value="&city.value;" width="97"/>
+                <textbox id="txtcity" align="right" />
+                <spacer width="33"/>
+            </hbox>
+
+            <hbox>
+                <label  align="right" id="countryname"  value="&country.value;" width="97" />
+                <menulist id="country" width="190" oncommand= "getAllState();" >
+                    <menupopup>
+                        <menuitem label="" value=""/>
+                    </menupopup>
+                </menulist>
+            </hbox>
+
+            <hbox>
+             <label  align="right" id="statename"  value="&state.value;" width="97" />
+                 <menulist id="state" width="190">
+                    <menupopup>
+                        <menuitem label="" value=""/>
+                    </menupopup>
+                </menulist>
+            </hbox>
+            <separator class="groove-thin" orient="horizontal" width="60"/> 
+        </groupbox>
+        
+        <groupbox id="communication" style="border:1px solid black">
+           <vbox>
+                <caption label="&communication.value;" />
+             </vbox>
+             <separator class="groove-thin" orient="horizontal" width="94"/> 
+             <hbox>
+                <label  align="right" id="office"  value="&office.value;" width="97" />
+	            <textbox id="txtoffice" align="right" />
+            </hbox>
+            <hbox>
+                <label  align="right" id="mobile"  value="&mobile.value;" width="97" />
+	            <textbox id="txtmobile" align="right"/>
+            </hbox> 
+            <hbox>
+                <label  align="right" id="fax"  value="&fax.value;" width="97" />
+	            <textbox id="txtfax" align="right" />
+            </hbox> 
+            <hbox>
+                <label  align="right" id="emailid"  value="&email.value;" width="97" />
+	            <textbox id="txtemail" align="right"/>
+	            <spacer width="30"/>
+            </hbox>
+          </groupbox>
+    </tabpanel>
+    <description></description>
 <hbox align="right">
   <button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();" />
   <button label="&ok.label;" image="&imageok.value;" oncommand="createContact();"/>

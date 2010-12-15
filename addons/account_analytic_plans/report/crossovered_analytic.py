@@ -97,19 +97,21 @@ class crossovered_analytic(report_sxw.rml_parse):
 
         self.final_list = children_list
         selected_ids = line_pool.search(self.cr, self.uid, [('account_id', 'in' ,self.final_list)])
+        
+        res['ref_qty'] = 0.0
+        res['ref_amt'] = 0.0
+        self.base_amount = 0.0
+        
         if selected_ids:
             query = "SELECT SUM(aal.amount) AS amt, SUM(aal.unit_amount) AS qty FROM account_analytic_line AS aal, account_analytic_account AS aaa \
                     WHERE aal.account_id = aaa.id AND aal.id IN ("+','.join(map(str,selected_ids))+") AND (aal.journal_id " + journal +") AND aal.date>='"+ str(form['date1']) +"'"" AND aal.date<='" + str(form['date2']) + "'"
 
             self.cr.execute(query)
             info=self.cr.dictfetchall()
-
             res['ref_qty'] = info[0]['qty']
             res['ref_amt'] = info[0]['amt']
             self.base_amount = info[0]['amt']
-        res['ref_qty'] = 0.0
-        res['ref_amt'] = 0.0
-        self.base_amount = 0.0
+        
         result.append(res)
         return result
 

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-12-04 08:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1275,6 +1275,11 @@ msgid "Overdue Payments"
 msgstr "Betalingsherinnering"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Fout: Referentie omzetbelasting is verplicht."
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1469,11 +1474,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Sjabloon voor fiscale situatie"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -6427,6 +6427,15 @@ msgid "Taxes:"
 msgstr "Belasting:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"De bankrekening van de relatie voor betaling.\n"
+"Laat leeg voor de standaardwaarde."
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6648,13 +6657,6 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Bevestig"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -7900,6 +7902,11 @@ msgstr "Forceer periode"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Fout: ongeldig nummer omzetbelasting (verkeerd controlegetal)"
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -10745,16 +10752,6 @@ msgstr "U kunt geen rekening met boekingen verwijderen! "
 #~ msgstr "Onkostendagboek"
 
 #~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "De bankrekening van de relatie voor betaling.\n"
-#~ "Laat leeg voor de standaardwaarde."
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Fout: Referentie omzetbelasting is verplicht."
-
-#~ msgid ""
 #~ "This account will be used to value outgoing stock for the current product "
 #~ "category"
 #~ msgstr ""
@@ -10809,9 +10806,6 @@ msgstr "U kunt geen rekening met boekingen verwijderen! "
 #~ msgstr ""
 #~ "Vink dit aan om ook de boekingen af te drukken. Standaard wordt alleen "
 #~ "gesaldeerd."
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Fout: ongeldig nummer omzetbelasting (verkeerd controlegetal)"
 
 #~ msgid "Debit Trans."
 #~ msgstr "Debetboekingen"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-25 19:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
@@ -126,14 +126,15 @@ msgid "Monthly Employee Timesheet"
 msgstr "Ажилтны сарын цаг бүртгэл"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Нэвтрэх / Гарах"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Сүүлийн мөчлөгт ажил дууссан"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -207,21 +208,11 @@ msgid "Sat"
 msgstr "Бямба"
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Ням"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -235,11 +226,6 @@ msgstr ""
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Хэвлэх"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -276,16 +262,6 @@ msgid "Categories"
 msgstr "Ангиллууд"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай байна!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
@@ -317,11 +293,9 @@ msgid "September"
 msgstr "9 сар"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "12 сар"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Цаг бүртгэлийн мөр"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -370,11 +344,9 @@ msgid "Fri"
 msgstr "Баасан"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Нэвтрэх / Гарах"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -395,11 +367,6 @@ msgstr "(Өнөөдрийн энэ цаг бол хоосон үлдээ)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Цаг бүртгэл"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -448,6 +415,11 @@ msgstr "Огноо"
 #, python-format
 msgid "November"
 msgstr "11 сар"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -512,6 +484,13 @@ msgid "Analysis summary"
 msgstr "Шинжилгээний товчоо"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "12 сар"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -534,22 +513,9 @@ msgid "février"
 msgstr "2 сар"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr "Мэдээлэл"
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
@@ -573,11 +539,6 @@ msgstr "Өнөөдөр"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr "Аналитик данс"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Цаг бүртгэлийн мөр"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -693,11 +654,6 @@ msgid "Start Working"
 msgstr "Ажиллаж эхлэх"
 
 #. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Алдаа: Буруу зураасан код"
-
-#. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
 msgstr "Статистикийг хэрэглэгчээр харах"
@@ -744,6 +700,32 @@ msgstr "9 сар"
 #~ msgid "Total"
 #~ msgstr "Нийт"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
+
 #~ msgid "This Wizard will make Sign In/Out By Project"
 #~ msgstr ""
 #~ "Дэлгэцийн энэ оролт нь нэвтрэх гарах үйлдлийг төслөөр харахад тусална"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай байна!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Алдаа: Буруу зураасан код"

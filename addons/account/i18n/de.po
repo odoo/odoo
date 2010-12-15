@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-06 12:28+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-09 08:46+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1309,6 +1309,11 @@ msgid "Overdue Payments"
 msgstr "Fällige Rechnungen"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Fehler: Bank Belegnummer ist notwendig"
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1501,11 +1506,6 @@ msgstr "Wiederkehrende Buchungen"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Steuerzuordnung Vorlage"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -2034,9 +2034,6 @@ msgid ""
 "A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
-"Eine Gutschrift ist ein Beleg von Ihrem Lieferanten, der einen Teil oder "
-"sogar den gesamte Rechnungsbetrag auf Ihrem Konto beim Lieferanten als "
-"Gutschrift ausweist .."
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
@@ -6713,6 +6710,15 @@ msgid "Taxes:"
 msgstr "Steuern:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Das Bankkonto des Partner für diese Zahlung.\n"
+"Leer für Standard"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6967,15 +6973,6 @@ msgstr "Standard Steuer Einkauf"
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Bestätigen"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
-"Bankkonto, des Unternehmens bei Kunden oder Lieferanten Gutschriften, "
-"ansonsten das Bankkonto des Partners"
 
 #. module: account
 #: help:account.tax,domain:0
@@ -8296,6 +8293,11 @@ msgstr "Erzwinge Periode"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr "Drucke Partner Saldenliste"
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Ungültige Prüfsumme"
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -11103,9 +11105,6 @@ msgstr ""
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Übergeordnetes Analyse Konto"
 
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "Ungültige Prüfsumme"
-
 #~ msgid ""
 #~ "Check this box if you don't want new account moves to pass through the "
 #~ "'draft' state and instead goes directly to the 'posted state' without any "
@@ -11117,13 +11116,6 @@ msgstr ""
 
 #~ msgid "Date or Code"
 #~ msgstr "Datum oder Code"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Das Bankkonto des Partner für diese Zahlung.\n"
-#~ "Leer für Standard"
 
 #~ msgid "Journal d'ouverture"
 #~ msgstr "Eröffnungsjournal"
@@ -11203,9 +11195,6 @@ msgstr ""
 
 #~ msgid "Journal de Banque CHF"
 #~ msgstr "Bankjournal CHF"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "Fehler: Bank Belegnummer ist notwendig"
 
 #~ msgid "Account Code"
 #~ msgstr "Kontonummer"
@@ -11499,6 +11488,14 @@ msgstr ""
 #~ msgid "UnknownError"
 #~ msgstr "UnbekannterFehler"
 
+#~ msgid ""
+#~ "A vendor refund is a credit note from your supplier indicating that he "
+#~ "refunds part or totality of the invoice sent to you."
+#~ msgstr ""
+#~ "Eine Gutschrift ist ein Beleg von Ihrem Lieferanten, der einen Teil oder "
+#~ "sogar den gesamte Rechnungsbetrag auf Ihrem Konto beim Lieferanten als "
+#~ "Gutschrift ausweist .."
+
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die ID für das Zertifikat des Moduls sollte eindeutig sein !"
 
@@ -11542,6 +11539,13 @@ msgstr ""
 
 #~ msgid "Central Journals"
 #~ msgstr "Erstelle  Journale"
+
+#~ msgid ""
+#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
+#~ "refund, otherwise Partner bank account number."
+#~ msgstr ""
+#~ "Bankkonto, des Unternehmens bei Kunden oder Lieferanten Gutschriften, "
+#~ "ansonsten das Bankkonto des Partners"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"

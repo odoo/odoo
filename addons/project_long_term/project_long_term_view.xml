@@ -377,7 +377,7 @@
         src_model="project.phase"
         view_mode="tree,form"
         context="{'search_default_phase_id': [active_id]}"
-        domain="[('phase_id', '=', active_id)]"
+        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
         />
 
     <act_window
@@ -386,8 +386,21 @@
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
+		domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
-        view_type="form" />
+        view_type="form" 
+		/>
+
+	<act_window
+		context="{'search_default_user_id': [user_id]}"
+        id="act_project_resource"
+        name="Resources"
+        res_model="resource.resource"
+        src_model="project.project"
+		domain="[('user_id', '=',user_id)]"
+        view_mode="tree,form"
+        view_type="form" 
+		/>
 
     # ------------------------------------------------------
     # Menu Items

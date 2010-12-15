@@ -7,25 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-10-29 09:41+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
 msgstr "Neponistene transakcije"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Form view not available for Payment Lines"
-msgstr "Pregled Forme nije dostupan za linije Placanja"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -53,11 +48,6 @@ msgstr "Grupirano po"
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Ne mozes obrisati vaucer(e) koji su vec otvoreni ili placeni !"
-
-#. module: account_voucher
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -115,6 +105,15 @@ msgstr "Uvezi stavke"
 #: model:ir.model,name:account_voucher.model_account_voucher_unreconcile
 msgid "Account voucher unreconcile"
 msgstr "Ponisteni Nalozi Vaucera"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When you sell products to a customer, you can give him a sales receipt or an "
+"invoice. When the sales receipt is confirmed, it creates journal items "
+"automatically and you can record the customer payment related to this sales "
+"receipt."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -180,9 +179,24 @@ msgid "Due Date"
 msgstr "Datum dospeća"
 
 #. module: account_voucher
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
 msgstr "Napomene"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
+msgid ""
+"Sales payment allows you to register the payments you receive from your "
+"customers. In order to record a payment, you must enter the customer, the "
+"payment method (=the journal) and the payment amount. OpenERP will propose "
+"to you automatically the reconciliation of this payment with the open "
+"invoices or sales receipts."
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -209,6 +223,11 @@ msgstr "Iznos"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Opcije Placanja"
+
+#. module: account_voucher
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -243,9 +262,25 @@ msgid "Supplier Vouchers"
 msgstr "Vauceri Dobavljaca"
 
 #. module: account_voucher
+#: view:account.voucher:0
+#: view:account.voucher.unreconcile:0
+msgid "Unreconcile"
+msgstr "Poništi zatvaranje"
+
+#. module: account_voucher
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Porez"
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_journal_id:0
+msgid "Write-Off journal"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -254,6 +289,7 @@ msgid "Amount (in words) :"
 msgstr "Iznos ( napisano slovima )"
 
 #. module: account_voucher
+#: field:account.voucher,analytic_id:0
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
 msgstr "Analitički konto"
@@ -262,6 +298,12 @@ msgstr "Analitički konto"
 #: report:voucher.cash_receipt.drcr:0
 msgid "Journal:"
 msgstr "Dnevnik:"
+
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -320,6 +362,11 @@ msgid "Date:"
 msgstr "Datum:"
 
 #. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Direktna Isplata"
+
+#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -354,9 +401,9 @@ msgid "Supplier Voucher"
 msgstr "Vaucer Dobavljaca"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
-msgid "Vouchers Entries"
-msgstr "Sadrzaji Vaucera"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -386,11 +433,6 @@ msgstr "Ostale informacije"
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation"
 msgstr "Poništavanje zatvaranja"
-
-#. module: account_voucher
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
@@ -427,9 +469,9 @@ msgid "Paid Amount"
 msgstr "Suma Isplate"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Directly"
-msgstr "Direktna Isplata"
+#: view:account.voucher:0
+msgid "Expense Lines"
+msgstr "Troskovi"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,line_ids:0
@@ -472,9 +514,9 @@ msgid "Draft"
 msgstr "Priprema"
 
 #. module: account_voucher
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
+#: field:account.voucher,writeoff_acc_id:0
+msgid "Write-Off account"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -482,15 +524,19 @@ msgid "Currency:"
 msgstr "Valuta:"
 
 #. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
-msgstr "Stornirana Suma"
-
-#. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "PRO-FORMA"
 msgstr "Predračun"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"The supplier payment form allows you to track the payment you do to your "
+"suppliers. When you select a supplier, the payment method and an amount for "
+"the payment, OpenERP will propose to reconcile your payment with the open "
+"supplier invoices or bills."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -519,8 +565,8 @@ msgstr "Uslovi plaćanja"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Compute Tax"
-msgstr "Izracunaj Porez"
+msgid "Are you sure to unreconcile this record ?"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -534,6 +580,11 @@ msgid "Post"
 msgstr "Пошаљи"
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Number:"
@@ -545,9 +596,9 @@ msgid "Amount reconciled"
 msgstr "Zatvoreni iznos"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Expense Lines"
-msgstr "Troskovi"
+#: field:account.voucher,comment:0
+msgid "Comment"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -561,15 +612,15 @@ msgid "Journal Vouchers"
 msgstr "Dnevnik Vaucera"
 
 #. module: account_voucher
+#: view:account.voucher:0
+msgid "Compute Tax"
+msgstr "Izracunaj Porez"
+
+#. module: account_voucher
 #: selection:account.voucher.line,type:0
 #: report:voucher.cash_receipt.drcr:0
 msgid "Credit"
 msgstr "Kredit"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Extended options..."
-msgstr "Dodatne Opcije"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:0
@@ -582,6 +633,11 @@ msgstr "Molim definisite sekvencu Knjige"
 #: report:voucher.print:0
 msgid "Through :"
 msgstr "Kroz:"
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Without Write-off"
+msgstr ""
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -599,10 +655,9 @@ msgid "Bill Date"
 msgstr "Datum Racuna"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:account.voucher.unreconcile:0
-msgid "Unreconcile"
-msgstr "Poništi zatvaranje"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -681,11 +736,9 @@ msgid "Customer Payment"
 msgstr "Placanja Stranki"
 
 #. module: account_voucher
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+#: field:account.move.line,amount_unreconciled:0
+msgid "Unreconciled Amount"
+msgstr "Stornirana Suma"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -706,6 +759,11 @@ msgstr "Duguje"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Are you sure to confirm this record ?"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Payment Method"
 msgstr "Nacin Placanja"
 
@@ -721,10 +779,9 @@ msgid "Canceled"
 msgstr "Otkazano"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Please change partner and try again !"
-msgstr "Molim p;romenite partnera i probajte ponovo !"
+#: view:account.voucher:0
+msgid "supplier Invoices and Outstanding transactions"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,journal_ids:0
@@ -732,6 +789,11 @@ msgstr "Molim p;romenite partnera i probajte ponovo !"
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Dnevnik"
+
+#. module: account_voucher
+#: field:account.voucher,payment_option:0
+msgid "Payment Option"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -748,6 +810,11 @@ msgstr "Interne Napomene"
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
 msgstr "Krediti"
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_amount:0
+msgid "Writeoff Amount"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -778,6 +845,11 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "With Write-off"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
 msgstr "Podrazumevani Tip"
@@ -794,17 +866,6 @@ msgid "Account Entry"
 msgstr "Sadrzaj Naloga"
 
 #. module: account_voucher
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Invalid Error !"
-msgstr "Nedefinisana Greska !"
-
-#. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
 msgstr "Efektivni datum za sadrzaj racuna"
@@ -819,14 +880,14 @@ msgstr ""
 "radnje koje su povezane sa tim transakcijama jer neće biti onemogućene"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Supplier Invoices and Outstanding transactions"
-msgstr "Proizvodjacevi racuni i neobradjene transakcije"
-
-#. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
 msgstr "Neporezovan Iznos"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Sadrzaji Vaucera"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -845,6 +906,11 @@ msgstr "Ukupno"
 msgid "Memo"
 msgstr "Memo"
 
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
 #~ msgid "Journal Voucher"
 #~ msgstr "Nalog za knjiženje"
 
@@ -859,6 +925,9 @@ msgstr "Memo"
 
 #~ msgid "State :"
 #~ msgstr "Stanje :"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
 
 #~ msgid "Bank Receipts"
 #~ msgstr "Bankovni primitci"
@@ -898,3 +967,43 @@ msgstr "Memo"
 
 #~ msgid "Payment Vouchers"
 #~ msgstr "Priznanice plaćanja"
+
+#~ msgid "Form view not available for Payment Lines"
+#~ msgstr "Pregled Forme nije dostupan za linije Placanja"
+
+#~ msgid "Vendor Payment"
+#~ msgstr "Placanja Proizvodjaca"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Vendor"
+#~ msgstr "proizvođač"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
+
+#~ msgid "Extended options..."
+#~ msgstr "Dodatne Opcije"
+
+#~ msgid "Open Vendor Journal Entries"
+#~ msgstr "Otvori Dnevnik Proizvodjaca"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#, python-format
+#~ msgid "Please change partner and try again !"
+#~ msgstr "Molim p;romenite partnera i probajte ponovo !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
+
+#, python-format
+#~ msgid "Invalid Error !"
+#~ msgstr "Nedefinisana Greska !"
+
+#~ msgid "Vendor Invoices and Outstanding transactions"
+#~ msgstr "Proizvodjacevi racuni i neobradjene transakcije"

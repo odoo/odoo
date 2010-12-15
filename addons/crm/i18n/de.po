@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-06 13:29+0000\n"
+"PO-Revision-Date: 2010-12-13 20:13+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -667,7 +667,7 @@ msgstr ""
 #. module: crm
 #: constraint:base.action.rule:0
 msgid "Error: The mail is not well formated"
-msgstr ""
+msgstr "Fehler: Email wurde nicht ausreichend konfiguriert"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1549,7 +1549,7 @@ msgstr "Suche"
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Categories"
-msgstr ""
+msgstr "Verkaufschancen nach Kategorien"
 
 #. module: crm
 #: field:crm.meeting,interval:0
@@ -1628,7 +1628,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge two Opportunities"
-msgstr "Fasse zwei Verkausfchancen zusammen"
+msgstr "Fasse zwei Verkaufschancen zusammen"
 
 #. module: crm
 #: selection:crm.meeting,rrule_type:0
@@ -2007,7 +2007,7 @@ msgstr "Wähle Vertriebsstufen für das Vertriebsteam"
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "Verkaufschancen nach Stufen"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -2292,6 +2292,8 @@ msgstr "Bemerkung"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Das ausgewählte Unternehmen gehört nicht zu den zulässigen Unternehmen für "
+"diesen Benutzer"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2478,6 +2480,17 @@ msgid ""
 "opportunities, convert them into quotations, manage related documents, track "
 "all customer related activities, and much more."
 msgstr ""
+"Verkaufschancen ermöglichen durch die Erfassung der erforderlichen Daten die "
+"Durchführung und Rückverfolgung von Vertriebsvorgängen. Zusatzinformationen "
+"wie erwarteter Umsatz, das zu erwartetende Verkaufsdatum sowie die "
+"Vorgangshistorie komplettieren die erforderlichen Vertriebsdaten. Die "
+"Verkaufschancen lassen sich auch über das Email Gateway anbinden, hierdurch "
+"ist dann auch eine Historie der Emailkommunikation beim Kunden einsehbar.\n"
+"\n"
+"Sie und das gesamte Verkaufsteam sind in der Lage Vertriebstermine oder "
+"Telefonanrufe für eine Verkaufschance zu planen und  Gesprächsresultate zu "
+"erfassen, außerdem können Sie direkt aus dem Vorgang bereits Angebote "
+"erstellen oder schlicht die Vorgangshistorie einsehen."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
@@ -2947,7 +2960,7 @@ msgstr "Hinzufügen Anmerkung"
 #: code:addons/crm/crm_lead.py:0
 #, python-format
 msgid "The stage of lead '%s' has been changed to '%s'."
-msgstr ""
+msgstr "Die Stufe für den Verkaufskontakt '%s' wurde auf '%s' geändert."
 
 #. module: crm
 #: selection:crm.meeting,byday:0
@@ -3002,6 +3015,9 @@ msgid ""
 "'Meeting Invitations' allows you to create and manage the meeting "
 "invitations sent/to be sent to your colleagues/partners."
 msgstr ""
+"Termineinladungen ermöglichen Ihnen die elektronische Versendung von "
+"Einladungen zu Veranstaltungen oder Besprechungen mit Kollegen, Kunden oder "
+"anderen Geschäftspartnern."
 
 #. module: crm
 #: view:board.board:0
@@ -3457,7 +3473,7 @@ msgstr ""
 #. module: crm
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Teilnehmer anlegen"
 
 #. module: crm
 #: field:crm.partner2opportunity,probability:0
@@ -3622,7 +3638,7 @@ msgstr "Benötigt Beratung"
 #. module: crm
 #: constraint:crm.segmentation:0
 msgid "Error ! You can not create recursive profiles."
-msgstr ""
+msgstr "Fehler! Es können keine rekursiven Profile erstellt werden."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:0
@@ -3645,7 +3661,7 @@ msgstr "Wiederkehrende ID"
 #. module: crm
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Sie können nicht zwei identische Benutzeranmeldungen definieren!"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
@@ -3665,7 +3681,7 @@ msgstr "Fertig"
 #: view:crm.lead:0
 #: view:crm.phonecall:0
 msgid "Categorization"
-msgstr "Die Verkaufschance '%s' wurde eröffnet."
+msgstr "Kategorisierung"
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_action_rule

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-29 10:40+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_planning
@@ -27,11 +27,6 @@ msgid ""
 msgstr ""
 "Dieser Wert repräsentiert die gesamte noch verfügbare Arbeitszeit für die "
 "Planung der Aufgabenzuweisung an Mitarbeiter."
-
-#. module: project_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -55,6 +50,11 @@ msgstr "Gesamtverfügbare Arbeitszeit"
 #: field:report_account_analytic.planning,name:0
 msgid "Planning Name"
 msgstr "Ressourcenplanung"
+
+#. module: project_planning
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
 
 #. module: project_planning
 #: view:board.board:0
@@ -174,6 +174,11 @@ msgstr ""
 "Rahmen dieser Planung zwischen dem 'Beginn am' und 'Ende am' Datum."
 
 #. module: project_planning
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning.account,plan_open:0
 #: field:report_account_analytic.planning.user,plan_open:0
 msgid "Time Allocation without Tasks"
@@ -185,20 +190,15 @@ msgid "From"
 msgstr "Von"
 
 #. module: project_planning
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning.account,account_id:0
 #: field:report_account_analytic.planning.line,account_id:0
 msgid "Analytic account"
 msgstr "Analytisches Konto"
-
-#. module: project_planning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Der Name des Moduls muss eindeutig sein."
-
-#. module: project_planning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID sollte eindeutig sein !"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,plan_open:0
@@ -247,11 +247,6 @@ msgid "Planning"
 msgstr "Auslastungsplanung"
 
 #. module: project_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Quellcode für diese Ansicht !"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
 msgstr "Verplane Arbeitszeiten"
@@ -282,13 +277,9 @@ msgid "Delegate"
 msgstr "Delegiere"
 
 #. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
-"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analyse Planung"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -345,9 +336,13 @@ msgid "tasks"
 msgstr "Aufgaben"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analyse Planung"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
+"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -364,11 +359,6 @@ msgstr "Bemerkung"
 #: selection:report_account_analytic.planning,state:0
 msgid "Draft"
 msgstr "Entwurf"
-
-#. module: project_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
 
 #. module: project_planning
 #: view:account.analytic.account:0
@@ -472,11 +462,6 @@ msgid "Open"
 msgstr "Offen"
 
 #. module: project_planning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
 #: view:report_account_analytic.planning:0
 msgid "Planning by User"
@@ -491,12 +476,6 @@ msgstr "Information"
 #: field:report_account_analytic.planning,business_days:0
 msgid "Business Days"
 msgstr "Arbeitstage"
-
-#. module: project_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0

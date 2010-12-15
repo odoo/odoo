@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-07 19:20+0000\n"
-"Last-Translator: Roger Zeng <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-09 08:58+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:55+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -274,20 +279,14 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr ""
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "所有报价单"
 
 #. module: sale
 #: report:sale.order:0
@@ -392,6 +391,12 @@ msgstr "进展"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "会计"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -637,9 +642,10 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "所有报价单"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -811,15 +817,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -831,10 +828,13 @@ msgid "Sale Order Line"
 msgstr "销售订单明细"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "单价"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "创建发票"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -1006,12 +1006,6 @@ msgid "Waiting Schedule"
 msgstr "等待调度"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr ""
-
-#. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
 msgstr ""
@@ -1039,8 +1033,7 @@ msgstr ""
 
 #. module: sale
 #: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of picking that has been generated for this sale order"
+msgid "This is a list of picking that has been generated for this sale order"
 msgstr ""
 
 #. module: sale
@@ -1213,12 +1206,6 @@ msgid "Sales Management"
 msgstr "销售管理"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1315,13 +1302,10 @@ msgid "Sales"
 msgstr "销售"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "创建发票"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "单价"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1609,6 +1593,17 @@ msgid "Sales by Month"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1617,12 +1612,6 @@ msgstr ""
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
 msgstr "数量(销售单位)"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2166,6 +2155,10 @@ msgstr "发票基于送货单"
 
 #~ msgid "You invoice has been successfully created !"
 #~ msgstr "你的发票已经成功创建!"
+
+#~ msgid ""
+#~ "This is the list of picking list that have been generated for this invoice"
+#~ msgstr "这领料/提货单已产生在此发票上."
 
 #~ msgid "Delivery, from the warehouse to the customer."
 #~ msgstr "送货,从仓库到客户"
