@@ -92,15 +92,15 @@
                                 <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
 	                        </group>
 	                        <group col="14" colspan="4" name="Select weekdays" 
-	                                attrs="{'invisible': [('rrule_type','!=','weekly')]}">
+	                                attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
 		                        <field name="mo" colspan="1" />
 		                        <field name="tu" colspan="1" />
 		                        <field name="we" colspan="1" />
 		                        <field name="th" colspan="1" />
 		                        <newline/>
 		                        <field name="fr" colspan="1" />
-		                        <field name="sa" colspan="1" />
-		                        <field name="su" colspan="1" />
+		                        <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+		                        <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
 		                        <newline />
 	                        </group>
 	                        <group col="10" colspan="4" attrs="{'invisible': [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
