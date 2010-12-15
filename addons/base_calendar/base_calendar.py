@@ -1208,7 +1208,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         value = {}
         if edit_all and rrule_type:
             for id in ids:
-              base_calendar.base_calendar_id2real_id(id)
+              base_calendar_id2real_id(id)
         return value              
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
