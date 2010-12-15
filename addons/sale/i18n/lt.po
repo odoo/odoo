@@ -6,19 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-28 19:22+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-14 21:49+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-29 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
 msgstr ""
 
 #. module: sale
@@ -40,12 +40,6 @@ msgstr ""
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Atšaukti užsakymą"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -155,11 +149,6 @@ msgid "Total Price"
 msgstr ""
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr ""
@@ -168,6 +157,13 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Užsakyti kiekiai"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -203,12 +199,6 @@ msgid ""
 "this list if you invoice based on the delivery orders or if you invoice "
 "sales totally."
 msgstr ""
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Klaida: Numat. Mat. Vnt. turi būti kitos kategorijos negu Pardavimo Mat. Vnt."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -290,15 +280,14 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Visi pasiūlymai"
 
 #. module: sale
 #: report:sale.order:0
@@ -407,6 +396,12 @@ msgid "Accounting"
 msgstr "Sąskaita"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
@@ -508,6 +503,11 @@ msgstr "Sąskaitos adresas :"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Negalima ištrinti pardavimo užsakymo, kuri yra patvirtinta!"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -634,11 +634,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr ""
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros struktūrai!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr ""
@@ -650,9 +645,10 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Visi pasiūlymai"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "Klaidingas modelis test_state"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -698,8 +694,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr ""
@@ -735,12 +729,9 @@ msgid "Exception"
 msgstr "Išimtis"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Tiesioginis pristatymas"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -829,15 +820,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -849,10 +831,13 @@ msgid "Sale Order Line"
 msgstr "Pardavimų užsakymo eilutės"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Vieneto kaina"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Sukurti sąskaitą faktūrą"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -874,6 +859,12 @@ msgstr "Skaičiuoti"
 msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
 msgstr ""
 
 #. module: sale
@@ -958,11 +949,6 @@ msgid "Create Delivery Order"
 msgstr ""
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,delivery:0
 msgid "Delivery Costs"
 msgstr ""
@@ -1021,12 +1007,6 @@ msgstr ""
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Laukiantis"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "Klaidingas modelis test_state"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1164,11 +1144,6 @@ msgid "Shipped Quantities"
 msgstr "Pristatyti kiekiai"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Sąskaita faktūra sukurta iš pardavimų užsakymų"
@@ -1179,9 +1154,11 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "Iš sandėlio"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1233,12 +1210,6 @@ msgid "Sales Management"
 msgstr "Pardavimų valdymas"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1255,21 +1226,8 @@ msgid "Create invoices"
 msgstr "Sukurti sąskaitas faktūras"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Klaida: Numatytasis mat. vnt. ir pirkimo mat. vnt. turi būti tos pačios "
-"kategorijos."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale
@@ -1348,13 +1306,10 @@ msgid "Sales"
 msgstr "Pardavimai"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Sukurti sąskaitą faktūrą"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Vieneto kaina"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1376,11 +1331,6 @@ msgid "Invoice"
 msgstr "Sąskaita faktūra"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1390,13 +1340,6 @@ msgstr ""
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1479,15 +1422,8 @@ msgid "Product UoM"
 msgstr "Produkto mat. vnt."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr ""
 
 #. module: sale
@@ -1657,6 +1593,23 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1667,12 +1620,6 @@ msgid "Quantity (UoS)"
 msgstr "Kiekis (Mat. vnt.)"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Patvirtinta"
@@ -1681,6 +1628,11 @@ msgstr "Patvirtinta"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Patvirtinti"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1866,9 +1818,12 @@ msgid "Payment Terms"
 msgstr "Mokėjimo terminas"
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Tiesioginis pristatymas"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1930,11 +1885,9 @@ msgid "Date Order"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "Iš sandėlio"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -1943,19 +1896,9 @@ msgid "Sale Shop"
 msgstr "Parduotuvė"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr ""
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Uždaryta"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -1966,6 +1909,11 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Not enough stock !"
+msgstr ""
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: sale
@@ -2206,11 +2154,18 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Packing"
 #~ msgstr "Važtaraštis"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros struktūrai!"
+
 #~ msgid "Related Packing"
 #~ msgstr "Susiję važtaraščiai"
 
 #~ msgid "Payment Accounts"
 #~ msgstr "Mokėjimo sąskaitos"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Klaida: Numat. Mat. Vnt. turi būti kitos kategorijos negu Pardavimo Mat. Vnt."
 
 #~ msgid "Customer Ref"
 #~ msgstr "Kliento nuoroda"
@@ -2276,6 +2231,12 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 #~ msgid "Sales Process"
 #~ msgstr "Pardavimų vykdymas"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Klaida: Numatytasis mat. vnt. ir pirkimo mat. vnt. turi būti tos pačios "
+#~ "kategorijos."
+
 #~ msgid "My sales in shipping exception"
 #~ msgstr "Pardavimai laukiantys pristatymo"
 
@@ -2334,6 +2295,11 @@ msgstr "Sąskaita faktūra iš pristatymo užsakymo"
 
 #~ msgid "Advance Payment"
 #~ msgstr "Avansinis apmokėjimas"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #~ msgid "Confirm sale order and Create invoice."
 #~ msgstr "Patvirtinti pardavimo užsakymą ir sukurti sąskaitą faktūrą."

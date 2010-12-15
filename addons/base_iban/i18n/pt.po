@@ -6,38 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-27 14:38+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"PO-Revision-Date: 2010-12-15 01:41+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_iban
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
-
-#. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML Inválido para a Arquitectura de Vista !"
 
 #. module: base_iban
 #: model:ir.module.module,shortdesc:base_iban.module_meta_information
 msgid "Create IBAN bank accounts"
 msgstr "Criar contas bancárias com IBAN"
-
-#. module: base_iban
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
-"especial !"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
@@ -79,11 +61,6 @@ msgid "iban"
 msgstr "iban"
 
 #. module: base_iban
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
-
-#. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
 #, python-format
 msgid "The IBAN is invalid, It should begin with the country code"
@@ -95,16 +72,34 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
+#: sql_constraint:res.partner.bank:0
+msgid "The BVR adherent number must be unique !"
+msgstr "O número de aderente ao BVR deve ser único!"
+
+#. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "Conta IBAN"
 
 #. module: base_iban
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
 msgid "acc_number"
 msgstr "Número_acc"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"

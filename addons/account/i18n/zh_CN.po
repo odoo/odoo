@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-12-04 08:52+0000\n"
 "Last-Translator: GongyuanMao <airforce.e@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1245,6 +1245,11 @@ msgid "Overdue Payments"
 msgstr "逾期付款"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "错误：需要BVR的关联单号"
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1431,11 +1436,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "财务结构模板"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -6342,6 +6342,15 @@ msgid "Taxes:"
 msgstr "税:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"付款时业务伙伴的银行帐号\n"
+"留空使用默认值"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6558,13 +6567,6 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "确认"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -7790,6 +7792,11 @@ msgstr "强制会计期间"
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
 msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "错误：无效的Bvr号(校验错误)"
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -10043,13 +10050,6 @@ msgstr "你不能删除这科目因为它已有凭证! "
 #~ "category"
 #~ msgstr "这科目将用于当前产品分类的默认进仓"
 
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "付款时业务伙伴的银行帐号\n"
-#~ "留空使用默认值"
-
 #~ msgid "Partner ID"
 #~ msgstr "业务伙伴ID"
 
@@ -10284,9 +10284,6 @@ msgstr "你不能删除这科目因为它已有凭证! "
 
 #~ msgid "All account entries"
 #~ msgstr "所有"
-
-#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
-#~ msgstr "错误：无效的Bvr号(校验错误)"
 
 #~ msgid "J.C. or Move name"
 #~ msgstr "成本业务类型或凭证名称"
@@ -10551,9 +10548,6 @@ msgstr "你不能删除这科目因为它已有凭证! "
 
 #~ msgid "Statement encoding produces payment entries"
 #~ msgstr "产品付款凭证的银行单据"
-
-#~ msgid "Error: BVR reference is required."
-#~ msgstr "错误：需要BVR的关联单号"
 
 #~ msgid ""
 #~ "If a default tax if given in the partner it only override taxes from account "

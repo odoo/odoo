@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-11-25 19:17+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -22,12 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Захиалгын мөр"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -40,13 +34,18 @@ msgid "Message for Purchase Order Line"
 msgstr "Худалдан авалтын захиалгын мэссэж"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: warning
@@ -61,11 +60,6 @@ msgid "Warning when Purchasing this Product"
 msgstr "Энэ барааг худалдах үеийн сануулга"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr ""
@@ -74,6 +68,16 @@ msgstr ""
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
+msgstr "Анхааруулга"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
 msgstr "Анхааруулга"
 
 #. module: warning
@@ -100,11 +104,6 @@ msgstr "Нэхэмжлэлийн анхааруулах"
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Мессеж байхгүй"
-
-#. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: warning
 #: model:ir.model,name:warning.model_account_invoice
@@ -175,6 +174,11 @@ msgid "Module for Warnings form onchange Event."
 msgstr ""
 
 #. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
 msgstr "Түүврийн анхааруулга"
@@ -196,14 +200,9 @@ msgid "Warning on the Sale Order"
 msgstr "Борлуулалтын захиалгын анхааруулга"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Анхааруулга"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -215,7 +214,5 @@ msgstr "Бараа гаргалтын мессеж"
 msgid "Partner"
 msgstr ""
 
-#. module: warning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"

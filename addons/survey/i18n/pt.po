@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-26 10:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -106,9 +106,9 @@ msgid "A Range"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome do modelo inválido na definição da acção."
+#: view:survey.response.line:0
+msgid "Table Answer"
+msgstr ""
 
 #. module: survey
 #: field:survey.history,date:0
@@ -129,13 +129,9 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
-msgid "Descriptive Text"
-msgstr "Texto descritivo"
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
+msgstr ""
 
 #. module: survey
 #: field:survey.send.invitation,mail:0
@@ -217,11 +213,6 @@ msgstr "survey.name.wiz"
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
 msgstr "Pergunta dos Questionários"
-
-#. module: survey
-#: view:survey.response.line:0
-msgid "Table Answer"
-msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -400,6 +391,11 @@ msgid "Text"
 msgstr "Texto"
 
 #. module: survey
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Letter (8.5\" x 11\")"
@@ -439,14 +435,14 @@ msgid "Late"
 msgstr ""
 
 #. module: survey
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: survey
 #: field:survey.send.invitation,mail_from:0
 msgid "From"
 msgstr "De"
-
-#. module: survey
-#: selection:survey,state:0
-msgid "Closed"
-msgstr "Fechado"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -490,11 +486,6 @@ msgstr "Número"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: survey
@@ -543,11 +534,6 @@ msgstr "Correio eletrónico"
 #: model:ir.ui.menu,name:survey.menu_answer_surveys
 msgid "Answer Surveys"
 msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -604,9 +590,13 @@ msgid "Page Nr"
 msgstr "Número de página"
 
 #. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
-msgstr ""
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+#: field:survey.question,descriptive_text:0
+#: selection:survey.question,type:0
+msgid "Descriptive Text"
+msgstr "Texto descritivo"
 
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
@@ -631,11 +621,6 @@ msgstr "Mensagem de erro"
 #, python-format
 msgid "You must enter one or more menu choices in column heading"
 msgstr ""
-
-#. module: survey
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML Inválido para a Arquitectura de Vista!"
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -914,9 +899,9 @@ msgid "survey.print.statistics"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro ! Não pode criar menus recursivos"
+#: selection:survey,state:0
+msgid "Closed"
+msgstr "Fechado"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1009,11 +994,6 @@ msgstr ""
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
 msgstr "Sentido horizontal"
-
-#. module: survey
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "O nome do grupo deve ser único !"
 
 #. module: survey
 #: field:survey.question,no_of_rows:0
@@ -1274,11 +1254,6 @@ msgid "Open"
 msgstr "Abrir"
 
 #. module: survey
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
 msgstr "Total de Questionario Iniciado"
@@ -1290,14 +1265,6 @@ msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
 msgstr ""
-
-#. module: survey
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
-"especial !"
 
 #. module: survey
 #: help:survey,max_response_limit:0
@@ -1685,6 +1652,9 @@ msgstr "Posição da Página"
 #~ msgid "Survey Analysis Report"
 #~ msgstr "Relatório de Análise do Questionário"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome do modelo inválido na definição da acção."
+
 #~ msgid "Give Survey Response"
 #~ msgstr "Fornece Resposta ao Questionário"
 
@@ -1736,6 +1706,9 @@ msgstr "Posição da Página"
 
 #~ msgid "Configuration"
 #~ msgstr "Configuração"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista!"
 
 #~ msgid "Survey Response Answer"
 #~ msgstr "Resposta ao Questionário"
@@ -1814,6 +1787,12 @@ msgstr "Posição da Página"
 #~ msgstr ""
 #~ "'\" + que_rec[0]['pergunta'] + \"'  Esta pergunta requer uma resposta."
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+#~ "especial !"
+
 #~ msgid "Survey Response"
 #~ msgstr "Resposta do Questionário"
 
@@ -1828,3 +1807,15 @@ msgstr "Posição da Página"
 
 #~ msgid "Response Count"
 #~ msgstr "Contagem da Resposta"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Não pode criar menus recursivos"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "O nome do grupo deve ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"

@@ -7,50 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 06:12+0000\n"
 "Last-Translator: Pedro_Maschio <pedro.bicudo@tgtconsult.com.br>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: document_webdav
-#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
-msgid "document.webdav.dir.property"
-msgstr ""
-
-#. module: document_webdav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: document_webdav
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: document_webdav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: document_webdav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
-
-#. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Group By..."
-msgstr ""
-
-#. module: document_webdav
-#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
-msgid "WebDAV server for Document Management"
 msgstr ""
 
 #. module: document_webdav
@@ -65,8 +34,8 @@ msgid "DAV properties"
 msgstr ""
 
 #. module: document_webdav
-#: view:document.directory:0
-msgid "Dynamic context"
+#: view:document.webdav.dir.property:0
+msgid "Group By..."
 msgstr ""
 
 #. module: document_webdav
@@ -75,13 +44,19 @@ msgid "These properties will be added to WebDAV requests"
 msgstr ""
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,do_subst:0
-msgid "Substitute"
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid "PyWebDAV Import Error!"
 msgstr ""
 
 #. module: document_webdav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
 msgstr ""
 
 #. module: document_webdav
@@ -90,19 +65,17 @@ msgid "WebDAV properties"
 msgstr ""
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,dir_id:0
-#: model:ir.model,name:document_webdav.model_document_directory
-msgid "Directory"
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,value:0
-msgid "Value"
-msgstr ""
-
-#. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Search Document storage"
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid ""
+"Please install PyWebDAV from "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
 msgstr ""
 
 #. module: document_webdav
@@ -117,13 +90,49 @@ msgid "Properties"
 msgstr ""
 
 #. module: document_webdav
+#: field:document.webdav.dir.property,name:0
+msgid "Name"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+msgid "Value"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr ""
+
+#. module: document_webdav
 #: view:document.webdav.dir.property:0
 msgid "Dir"
 msgstr ""
 
 #. module: document_webdav
-#: field:document.webdav.dir.property,name:0
-msgid "Name"
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr ""
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Search Document storage"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+msgid "Substitute"
 msgstr ""
 
 #~ msgid ""

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-11-23 09:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -36,11 +36,6 @@ msgstr ""
 #. module: membership
 #: view:report.membership:0
 msgid "Group By..."
-msgstr ""
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: membership
@@ -168,6 +163,11 @@ msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
 
 #. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: membership
 #: model:ir.model,name:membership.model_res_partner
 #: field:membership.membership_line,partner:0
 msgid "Partner"
@@ -189,8 +189,8 @@ msgid "From"
 msgstr "Från"
 
 #. module: membership
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
 msgstr ""
 
 #. module: membership
@@ -217,29 +217,14 @@ msgid "Create"
 msgstr "Skapa"
 
 #. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr ""
-
-#. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Member line"
-msgstr ""
-
-#. module: membership
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: membership
 #: help:report.membership,date_from:0
 #: field:res.partner,membership_start:0
 msgid "Start membership date"
-msgstr ""
-
-#. module: membership
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: membership
@@ -312,9 +297,9 @@ msgid "Define product for membership."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr ""
 
 #. module: membership
 #: view:membership.invoice:0
@@ -502,13 +487,13 @@ msgid "Member"
 msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Date From"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:product.product:0
+msgid "Date From"
 msgstr ""
 
 #. module: membership
@@ -519,6 +504,11 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
+msgstr ""
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: membership
@@ -620,13 +610,6 @@ msgid "Membership Fee"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr ""
@@ -716,13 +699,6 @@ msgid "Categorization"
 msgstr ""
 
 #. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
 msgstr ""
@@ -758,11 +734,6 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
-
-#. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr ""
 
 #. module: membership
@@ -849,3 +820,11 @@ msgstr "År"
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"

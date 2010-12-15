@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-		<!--
-			Relationshio Graph on Module object
-		-->
+        <!--
+            Relationship Graph on Module object
+        -->
 
-		<record model="ir.ui.view" id="view_module_module_graph">
-			<field name="name">ir.module.module.form.graph</field>
-			<field name="model">ir.module.module</field>
-			<field name="inherit_id" ref="base.module_form"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<notebook position="inside">
-					<page string="Relationship Graph">
-						<separator colspan="4" string="You can save this image as .png file"/>
-						<field name="file_graph" widget="image" nolabel="1" />
-					</page>
-				</notebook>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_module_module_graph">
+            <field name="name">ir.module.module.form.graph</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Relationship Graph">
+                        <separator colspan="4" string="You can save this image as .png file"/>
+                        <field name="file_graph" widget="image" nolabel="1" />
+                    </page>
+                </notebook>
+            </field>
+        </record>
 
-	</data>
+    </data>
 </openerp>

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2010-12-01 08:19+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -22,14 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Einkaufspositionen"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objektname muss mit \"x_\" Beginnen und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -42,14 +34,19 @@ msgid "Message for Purchase Order Line"
 msgstr "Bachricht bei Beschaffungsauftragsposition"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Lieferschein"
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
@@ -63,11 +60,6 @@ msgid "Warning when Purchasing this Product"
 msgstr "Warnung beim Einkauf dieses Produktes"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Produkt"
@@ -77,6 +69,16 @@ msgstr "Produkt"
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Warnungen"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -102,11 +104,6 @@ msgstr "Warnung zu Rechnung"
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
 msgstr "Keine Nachricht"
-
-#. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: warning
 #: model:ir.model,name:warning.model_account_invoice
@@ -182,6 +179,11 @@ msgid "Module for Warnings form onchange Event."
 msgstr "Modul für Warnungen bei Statusänderungen"
 
 #. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
 msgstr "Warnung beim Kommissionieren"
@@ -203,14 +205,9 @@ msgid "Warning on the Sale Order"
 msgstr "Warnung beim Verkaufsauftrag"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Warnung"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -222,7 +219,20 @@ msgstr "Nachricht zu Packauftrag"
 msgid "Partner"
 msgstr "Partner"
 
-#. module: warning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objektname muss mit \"x_\" Beginnen und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

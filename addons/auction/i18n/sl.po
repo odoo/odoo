@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:08+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:37+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -39,11 +39,6 @@ msgstr "V osnutek"
 #: field:report.auction,seller:0
 msgid "Seller"
 msgstr "Prodajalec"
-
-#. module: auction
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: auction
 #: field:auction.lots,name:0
@@ -212,6 +207,13 @@ msgid "January"
 msgstr ""
 
 #. module: auction
+#: help:auction.lot.category,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the auction "
+"lot category without removing it."
+msgstr ""
+
+#. module: auction
 #: view:auction.lots:0
 msgid "Ref"
 msgstr "Sklic"
@@ -219,11 +221,6 @@ msgstr "Sklic"
 #. module: auction
 #: field:report.auction,total_price:0
 msgid "Total Price"
-msgstr ""
-
-#. module: auction
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: auction
@@ -257,11 +254,6 @@ msgstr ""
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
 msgstr ""
-
-#. module: auction
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -305,6 +297,12 @@ msgid "Object Image"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#, python-format
+msgid "No buyer is set for this lot."
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
@@ -333,13 +331,6 @@ msgstr ""
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
-
-#. module: auction
-#: help:auction.lot.category,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the auction "
-"lot category without removing it."
 msgstr ""
 
 #. module: auction
@@ -387,8 +378,9 @@ msgid "June"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#, python-format
+msgid "No Lots belong to this Auction Date"
 msgstr ""
 
 #. module: auction
@@ -429,14 +421,6 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
-#, python-format
-msgid ""
-"Two different buyers for the same invoice !\n"
-"Please correct this problem before invoicing"
 msgstr ""
 
 #. module: auction
@@ -538,8 +522,8 @@ msgid "Last Auction Date"
 msgstr ""
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
 msgstr ""
 
 #. module: auction
@@ -666,14 +650,9 @@ msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
-
-#. module: auction
-#: constraint:account.account:0
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
 msgstr ""
 
 #. module: auction
@@ -749,11 +728,6 @@ msgid "Object Categories"
 msgstr ""
 
 #. module: auction
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#. module: auction
 #: field:auction.lots.sms.send,app_id:0
 msgid "API ID"
 msgstr ""
@@ -785,6 +759,11 @@ msgid "Net limit ?"
 msgstr ""
 
 #. module: auction
+#: field:aie.category,child_ids:0
+msgid "unknown"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of commissions:"
 msgstr ""
@@ -796,8 +775,8 @@ msgid "Auction Name"
 msgstr ""
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
 msgstr ""
 
 #. module: auction
@@ -828,8 +807,9 @@ msgid "Bailiffs Listing"
 msgstr ""
 
 #. module: auction
-#: field:aie.category,child_ids:0
-msgid "unknown"
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This record does not exist !"
 msgstr ""
 
 #. module: auction
@@ -1079,9 +1059,11 @@ msgid "Invoice Number"
 msgstr ""
 
 #. module: auction
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Napaka: neveljavna EAN črtna koda"
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "Active IDs not Found"
+msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
@@ -1235,12 +1217,6 @@ msgid "Notes"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Move to Auction date"
 msgstr ""
@@ -1334,6 +1310,12 @@ msgid "Deposit Date"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This lot does not exist !"
+msgstr ""
+
+#. module: auction
 #: selection:report.auction,month:0
 msgid "July"
 msgstr ""
@@ -1352,12 +1334,6 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,lot_est1:0
 msgid "Minimum Estimation"
-msgstr ""
-
-#. module: auction
-#: selection:auction.dates,state:0
-#: selection:report.auction.adjudication,state:0
-msgid "Closed"
 msgstr ""
 
 #. module: auction
@@ -1391,6 +1367,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Payment aborted !"
 msgstr ""
 
 #. module: auction
@@ -1450,12 +1432,6 @@ msgstr ""
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr ""
-
-#. module: auction
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Napaka: Privzeta EM in nabavna EM morata biti v isti kategoriji."
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
@@ -1578,6 +1554,14 @@ msgid "Auction manager "
 msgstr "Vodaj dražbe "
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#, python-format
+msgid ""
+"Two different buyers for the same invoice !\n"
+"Please correct this problem before invoicing"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr ""
@@ -1586,13 +1570,6 @@ msgstr ""
 #: field:auction.lots,vnd_lim:0
 msgid "Seller limit"
 msgstr ""
-
-#. module: auction
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1706,13 +1683,6 @@ msgid "Names"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
-#, python-format
-msgid "Active IDs not Found"
-msgstr ""
-
-#. module: auction
 #: view:auction.artists:0
 #: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Artists"
@@ -1816,6 +1786,13 @@ msgid "Net revenue"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr ""
@@ -1862,8 +1839,9 @@ msgid "Gross Margin (%)"
 msgstr ""
 
 #. module: auction
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: auction
@@ -1925,6 +1903,13 @@ msgstr ""
 #: model:ir.ui.menu,name:auction.auction_config_menu
 msgid "Configuration"
 msgstr "Konfiguracija"
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid ""
+"You should pay all the total: \"%.2f\" are missing to accomplish the payment."
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
@@ -2006,11 +1991,6 @@ msgstr ""
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Costs"
-msgstr ""
-
-#. module: auction
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: auction
@@ -2098,6 +2078,8 @@ msgstr ""
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
 #: code:addons/auction/wizard/auction_aie_send_result.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "Error"
 msgstr ""
@@ -2177,6 +2159,12 @@ msgstr ""
 #. module: auction
 #: view:auction.deposit:0
 msgid "Objects Description"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "No auction date for \"%s\": Please set one."
 msgstr ""
 
 #. module: auction
@@ -2276,6 +2264,24 @@ msgstr ""
 #: field:auction.lots,history_ids:0
 msgid "Auction history"
 msgstr ""
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Napaka: neveljavna EAN črtna koda"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Napaka: Privzeta EM in nabavna EM morata biti v isti kategoriji."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
 
 #~ msgid "Employees"
 #~ msgstr "Zaposleni"

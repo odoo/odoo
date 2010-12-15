@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-02 07:57+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-11 15:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -35,11 +35,6 @@ msgstr ""
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
 msgstr "Нэхэмжилсэн & Төлсөн"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Хүндэтгэсэн,"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -76,11 +71,6 @@ msgstr "Хүлээн авах хаяг"
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Баталсан"
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -494,16 +484,14 @@ msgid "Invoice Control"
 msgstr "Нэхэмжлэх арга"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
-msgstr "Үнийн саналын хүснэгт."
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "Үнийн санал"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr "Нийлүүлэгчийн дугаар"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -578,11 +566,6 @@ msgid "To be Invoiced"
 msgstr "Нэхэмжлэнэ"
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Харилцах нэр хаяг"
@@ -638,11 +621,6 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Үнийн хүснэгтийн хувилбарууд хоорондоо огтлолцож болохгүй!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -718,9 +696,10 @@ msgid "Validated by"
 msgstr "Баталсан"
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "Үнийн санал"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
@@ -743,11 +722,6 @@ msgstr "    Сар-1    "
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: purchase
@@ -856,21 +830,10 @@ msgid "Month"
 msgstr "Сар"
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
 msgstr ""
-"Худалдан авах захиалга эсвэл үнийн хүсэлтийн төлөв. Үнийн хүсэлт гэдэг нь "
-"'Ноорог' төлөвтэй худалдан авах захиалга юм. Захиалга батлагдахад "
-"'Батлагдсан' төлөвт шилжинэ. Үүний дараа 'Зөвшөөрсөн'  төлөвт оруулахын тулд "
-"нийлүүлэгч захиалгыг зөвшөөрөх ёстой. Захиалга биелэгдээд, төлбөр хийгдсэний "
-"дараа 'Дууссан' төлөвт орно. Нэхэмжлэх эсвэл бараа хүлээн авах шатанд "
-"захиалга цуцлагдвал алдаатай төлөвт орох болно."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -887,11 +850,6 @@ msgstr "Захиалга зөвшөөрөл хүлээж байна"
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
 msgstr "Нийт татваргүй хэмжээ"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
-msgstr "Нийлүүлэгчийн зөвшөөрөх худалдан авалтын захиалга."
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -974,6 +932,11 @@ msgid "Purchase Order Line"
 msgstr "Захиалгын мөр"
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Календар"
@@ -984,12 +947,11 @@ msgid "Purchase Order Merge"
 msgstr "Худалдан авалтын захиалга нэгтгэх"
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Хүндэтгэсэн,"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1037,6 +999,11 @@ msgid "Qty. per product"
 msgstr "тоо ширхэг. бараа бүрийн"
 
 #. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
 msgstr "Энэ баримт үүссэн огноо."
@@ -1050,11 +1017,6 @@ msgstr "Борлуулалт & Худалдан авалт"
 #: selection:purchase.report,month:0
 msgid "June"
 msgstr "6 сар"
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1147,9 +1109,9 @@ msgid "Cancel Purchase Order"
 msgstr "Захиалга цуцлах"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
-msgstr "Нийлүүлэгчийн дугаар"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1166,13 +1128,6 @@ msgstr "Хянах самбар"
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr "Барааны утга"
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1213,9 +1168,21 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr "Энэ худалдан авах захиалгыг үүсгэсэн ишлэл баримт."
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
 msgstr ""
+"Худалдан авах захиалга эсвэл үнийн хүсэлтийн төлөв. Үнийн хүсэлт гэдэг нь "
+"'Ноорог' төлөвтэй худалдан авах захиалга юм. Захиалга батлагдахад "
+"'Батлагдсан' төлөвт шилжинэ. Үүний дараа 'Зөвшөөрсөн'  төлөвт оруулахын тулд "
+"нийлүүлэгч захиалгыг зөвшөөрөх ёстой. Захиалга биелэгдээд, төлбөр хийгдсэний "
+"дараа 'Дууссан' төлөвт орно. Нэхэмжлэх эсвэл бараа хүлээн авах шатанд "
+"захиалга цуцлагдвал алдаатай төлөвт орох болно."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1292,9 +1259,9 @@ msgid "Purchase Order Lines"
 msgstr "Худалдан авалтын захиалгын мөр"
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr "Нийлүүлэгчийн зөвшөөрөх худалдан авалтын захиалга."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1313,14 +1280,6 @@ msgstr "Эх баримт"
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr "Захиалга нэгтгэх"
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1375,6 +1334,12 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr "Үнийн саналын хүснэгт."
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr "Хүс. Огноо"
@@ -1390,12 +1355,6 @@ msgstr "Зөвшөөрсөн огноо"
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Энэ худалдан авалтын захиалгыг цуцалж чадсангүй !"
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
-msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1421,7 +1380,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Төлөвлөгдсөн огноо"
 
 #. module: purchase
 #: field:purchase.order,product_id:0
@@ -1488,7 +1447,7 @@ msgstr "Үнийн санал"
 #: field:purchase.order.line,product_uom:0
 #: view:purchase.report:0
 msgid "Product UOM"
-msgstr "Барааны х.н"
+msgstr "Хэмжих нэгж"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1599,7 +1558,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Product UoM"
-msgstr "Барааны х.н"
+msgstr "Хэмжих нэгж"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1667,11 +1626,6 @@ msgstr "Нийт"
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr "Хаяг"
-
-#. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1807,6 +1761,9 @@ msgstr "Худалдан авалт"
 #~ msgid "After Purchase order , Create invoice."
 #~ msgstr "Захиалгын дараа, Нэхэмжлэл үүсгэх."
 
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Үнийн хүснэгтийн хувилбарууд хоорондоо огтлолцож болохгүй!"
+
 #~ msgid "Order Status"
 #~ msgstr "Захиалгын төлөв"
 
@@ -1887,6 +1844,12 @@ msgstr "Худалдан авалт"
 #~ msgid "When purchase order is approved , it creates its packing list."
 #~ msgstr "Захиалга батлагдахад баглааны баримт үүснэ."
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
 #~ msgid "New Purchase Order"
 #~ msgstr "Шинэ захиалга"
 
@@ -1912,6 +1875,9 @@ msgstr "Худалдан авалт"
 #~ msgid "Purchase Invoice"
 #~ msgstr "Худалдан авалтын нэхэмжлэл"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
+
 #~ msgid "Product Receipt"
 #~ msgstr "Барааны баримт"
 
@@ -1935,3 +1901,12 @@ msgstr "Худалдан авалт"
 
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Хүлээн авалт дээр нийлүүлэгчийн нэхэмжлэл үүснэ"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"

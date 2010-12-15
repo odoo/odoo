@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-11-29 07:57+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -158,19 +158,6 @@ msgid "Random Timesheets Lines"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:random.timesheet.lines:0
-#: field:random.timesheet.lines,user_id:0
-#: field:report.random.timesheet,user_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Пользователь"
-
-#. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr "Проект"
@@ -185,6 +172,11 @@ msgstr "Каталог продаж"
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
 msgstr "Количество"
+
+#. module: hr_timesheet_invoice
+#: view:board.board:0
+msgid "Uninvoice Lines With Billing Rate"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -225,6 +217,11 @@ msgstr ""
 #: view:report.timesheet.line:0
 msgid "Group By..."
 msgstr "Группировать по .."
+
+#. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -276,6 +273,11 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
 msgid "The time of each work done will be displayed on the invoice"
 msgstr ""
@@ -301,11 +303,6 @@ msgid "Final Invoice"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
-
-#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "Нужна ли детализация по уаждой позиции счета?"
@@ -322,11 +319,6 @@ msgstr "Расходы для выставления счетов"
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
 msgstr "Счет аналитики"
-
-#. module: hr_timesheet_invoice
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -366,11 +358,6 @@ msgstr ""
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
 msgstr "Название"
-
-#. module: hr_timesheet_invoice
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
@@ -433,11 +420,6 @@ msgstr ""
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Printing date"
 msgstr "Дата печати"
-
-#. module: hr_timesheet_invoice
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -529,9 +511,17 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: hr_timesheet_invoice
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля не может быть меньше 1 !"
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Пользователь"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -566,14 +556,19 @@ msgid "Invoice rate by user"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Табель по счетам"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
 msgid "From"
 msgstr "От"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
@@ -843,19 +838,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
-msgstr "Табель по счетам"
-
-#. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
 msgstr ""
@@ -939,7 +921,6 @@ msgid "Product"
 msgstr "Продукция"
 
 #. module: hr_timesheet_invoice
-#: view:board.board:0
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
 msgid "Uninvoice lines with billing rate"
 msgstr ""
@@ -1144,17 +1125,29 @@ msgstr ""
 #~ msgid "Open Analytic Accounts"
 #~ msgstr "Открыть счета аналитики"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
 #~ msgid "Create invoices"
 #~ msgstr "Создать счета"
 
 #~ msgid "Analytic Accounts"
 #~ msgstr "Счета аналитики"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
 #~ msgid "Pending Analytic Accounts"
 #~ msgstr "Счета аналитики в ожидании"
 
 #~ msgid "Invoice rate"
 #~ msgstr "Ставка счета"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
 
 #~ msgid "Date or Code"
 #~ msgstr "Дата или Код"
@@ -1182,3 +1175,15 @@ msgstr ""
 
 #~ msgid "Timesheet by user (this month)"
 #~ msgstr "Табель по пользователям (тек.мес.)"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля не может быть меньше 1 !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."

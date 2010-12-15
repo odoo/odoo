@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-08-03 00:37+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: analytic_journal_billing_rate
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -27,10 +22,14 @@ msgid "Analytic Journal"
 msgstr "辅助核算记录集合"
 
 #. module: analytic_journal_billing_rate
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -71,8 +70,13 @@ msgid "Invoicing Rate"
 msgstr "开票税率"
 
 #. module: analytic_journal_billing_rate
-#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
-msgid "Timesheet Line"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #~ msgid ""
@@ -96,6 +100,13 @@ msgstr ""
 #~ "    显然,如果当前的科目没有记录的数据,默认的值是作为正常科目数据,所以这模块是完全兼容旧的设置\n"
 #~ "\n"
 #~ "    "
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #~ msgid "Analytic Journal Billing Rate"
 #~ msgstr "辅助核算集合的开票税率"

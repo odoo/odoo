@@ -1,4 +1,4 @@
-# Serbian translation for openobject-addons
+# Serbian latin translation for openobject-addons
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
@@ -7,178 +7,242 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-27 08:03+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Serbian <sr@li.org>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-10 16:01+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
+"Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:0
 #, python-format
 msgid "Follwoup Summary"
-msgstr "Sumarno Pracenje"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr "Pretrazi Pracenja"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.module.module,description:account_followup.module_meta_information
+msgid ""
+"\n"
+"    Modules to automate letters for unpaid invoices, with multi-level "
+"recalls.\n"
+"\n"
+"    You can define your multiple levels of recall through the menu:\n"
+"        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
+"\n"
+"    Once it is defined, you can automatically print recalls every day\n"
+"    through simply clicking on the menu:\n"
+"        Accounting/Periodical Processing/Billing/Send followups\n"
+"\n"
+"    It will generate a PDF with all the letters according to the the\n"
+"    different levels of recall defined. You can define different policies\n"
+"    for different companies. You can also send mail to the customer.\n"
+"\n"
+"    Note that if you want to change the followup level for a given "
+"partner/account entry, you can do from in the menu:\n"
+"        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+"Sent\n"
+"\n"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Group By..."
-msgstr "Grupirano po"
+msgstr ""
 
 #. module: account_followup
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr "Poruka Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 msgid "Follow-Up"
-msgstr "Следи"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
-msgstr "Preduzeće"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Invoice Date"
-msgstr "Datum računa"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
-msgstr "Tema Email-a"
+msgstr "Zaglavlje e-maila"
+
+#. module: account_followup
+#: model:ir.actions.act_window,help:account_followup.action_followup_stat
+msgid ""
+"Follow up on the reminders sent over to your partners for unpaid invoices."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "Legend"
-msgstr "Legenda"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Ok"
-msgstr "U redu"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Select Partners to Remind"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "Datum Slanja Pracenja"
+msgstr ""
+
+#. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr "Neto dana"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr "Pracenja"
+msgstr ""
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "VAT:"
-msgstr "PDV:"
+#: view:account_followup.stat.by.partner:0
+msgid "Balance > 0"
+msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Ukupno duguje"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr "%(heading): Zaglavlje reda prijenosa"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
-msgstr "Pracenje"
+msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,name:0
+#: report:account_followup.followup.print:0
+msgid "VAT:"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Date :"
-msgstr "Datum :"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_ids:0
 msgid "Partners"
-msgstr "Partneri"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Invoices Reminder"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr "Nalog Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "End of Month"
-msgstr "Kraj Meseca"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr "Nije Sporno"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
-msgstr "%(korisnicka_oznaka)e: Korisničko ime"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
-msgstr "Duguje"
+msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,account_type:0
-msgid "Account Type"
-msgstr "Vrsta konta"
+#: view:account.followup.print:0
+msgid ""
+"This feature allows you to send reminders to partners with pending invoices. "
+"You can send them the default message for unpaid invoices or manually enter "
+"a message should you need to remind them of a specific information."
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr "Referenca"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Daje redosled sekvenci pri prikazivanju linija pracenja"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,email_body:0
 msgid "Email body"
-msgstr "Sadrzaj Email-a"
+msgstr ""
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "Nivo praćenja"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
+#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr "Poslednje praćenje"
+msgstr ""
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -203,49 +267,27 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"Postovani %(partner_name)\n"
-"Razocarani smo sto vam se moramo obracati ovako, saljuci vam opomenu, ali "
-"vas nalog je u ozbiljnom prekoracenju.\n"
-"\n"
-"Vrlo je vazno da ispunite vase obaveze ka nama, inace ce mo biti prisiljeni "
-"da obustavimo vas nalog, sto u stvari znaci da necemo vise biti\n"
-"u mogucnosti da vase preduzece nadalje snabdevamo ( robom / servisiranjem).\n"
-"Molimo vas da preduzmete mere kako bi regulisali vasa dugovanja u sledecih 8 "
-"dana.\n"
-"\n"
-"Ukoliko postoji problem, vezan za fakturu, sa kojim nismo upoznati, ne "
-"ustrucavajte se da kontaktirate nase racunovodstvo na broj (+32) 20 555 666 "
-"kako bi smo razmotrili problem sto je hitnije moguce.\n"
-"\n"
-"Detalji vase fakture su prikazani ispod.\n"
-"\n"
-"Uz svo postovanje.\n"
-
-#. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr "Posalji Email na jeziku Partnera"
+msgstr ""
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-msgid "Select partners to remind"
-msgstr "Odaberite partnere za opomenu"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Partner Selection"
-msgstr "Selekcija Partnera"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr "Ispisana Poruka"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -254,13 +296,18 @@ msgstr "Ispisana Poruka"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr "Pošalji praćenja"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:0
+msgid "Partner to Remind"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Praćenja"
+msgstr ""
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -278,28 +325,6 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"postovani %(partner_name)\n"
-"\n"
-"Nacinjen je izuzetak ukoliko je ovo nasa greska, ali , cini se da je sledeci "
-"iznos ostao neplacen. Molimo vas da preduzmete odgovarajuce mere kako bi se "
-"ovo resilo u sledecih 8 dana.\n"
-"\n"
-"Ukoliko ste izvrsili uplatu u medjuvremenu, pre ovog Emaila, molimo "
-"smatrajte ga nebitnim. Ne ustrucavajte se da kontaktirate nase racunovodstvo "
-"na broj (+32) 555 666.\n"
-"\n"
-"Svo Postovanje.\n"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
-#, python-format
-msgid ""
-"All E-mails have been successfully sent to Partners:.\n"
-"\n"
-msgstr ""
-"Svi Email-ovi su uspeno poslati vasim partnerima:.\n"
-"\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -320,192 +345,290 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
-"\n"
-"Postovani %(partner_name),\n"
-"\n"
-"Uprkos nekoliko opomena, vas racun i dalje nije sravnjen.\n"
-"\n"
-"Ukoliko ne izvrsite punu uplatu u sledecih 8 dana, bicemo prinudjeni da se "
-"obratimo nadleznim organima kako bi naplatili nasa potrazivanja,\n"
-"\n"
-"Mi verujemo da je takva akcija zaista nepotrebna, i da ce te vi izmiriti "
-"vasa dugovanja koja su prikazana ispod.\n"
-"\n"
-"U slucaju bilo kakvih nejasnoca, ne ustrucavajte se da kontaktirate nase "
-"racunovodstveno odelenje na broj ( +32) 555 666.\n"
-"\n"
-"Svo Postovanje.\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr "Slanje Emailova"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr "Valuta"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Followup Statistics by Partner"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr "Menadzment naloga Praćenja"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr "Blokiran"
+msgstr ""
 
 #. module: account_followup
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
-"Ovo polje vam omogucava da selektujete udaljeni datum za planiranje vaseg "
-"pracenja"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Due"
-msgstr "Dospeće"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:0
 #, python-format
 msgid "Select Partners"
-msgstr "Selektuj Partnere"
-
-#. module: account_followup
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
-msgstr "Email Postavke"
-
-#. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr "Stampaj Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Poslednje praćenje"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Sub-Total:"
-msgstr "Subtotal"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Balance:"
-msgstr "Saldo"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr "Statistika Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Paid"
-msgstr "Plaćeno"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr "%(user_signature): Korisnicko Ime"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Sadrzaj Dnevnika"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
-msgstr "Pošalji Email potvrdu"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
+"\n"
+msgstr ""
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr "%(company_name)s: Ime preduzeca Korisnika"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr "Kompanije"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr "Linije Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
-msgstr "Kredit"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity Date"
-msgstr "Datum Dospeća"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr "%(partner_name): Partnerovo Ime"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr "Redovi Praćenja"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr "%(company_currency)s: Valuta Preduzeca Korisnika"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
-msgstr "Saldo"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
 msgid "Type of Term"
-msgstr "Tip Uslova"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr "Stampaj Pracenje & Posalji Emailove Strankama"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr "Poslednji potez"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr "Izvestaj Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr "Razdoblje"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Cancel"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "Follow-Up Lines"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Litigation"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
+msgid "Payable Items"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(followup_amount)s: Total Amount Due"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "%(date)s: Current Date"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Followup Level"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.followup:0
+#: field:account_followup.followup,description:0
+#: report:account_followup.followup.print:0
+msgid "Description"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "This Fiscal year"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Partner entries"
+msgstr ""
+
+#. module: account_followup
+#: help:account.followup.print.all,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
+msgid "Receivable Items"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-ups Sent"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+#: field:account_followup.followup.line,name:0
+msgid "Name"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
+msgid "First move"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Maturity"
+msgstr ""
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:0
@@ -514,321 +637,69 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
-"E-mail NIJE poslat sledecim Partnerima, Email nije dostupan !\n"
-"\n"
-
-#. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
-msgid "Cancel"
-msgstr "Otkaži"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Lines"
-msgstr "Redovi Praćenja"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
-#, python-format
-msgid ""
-"\n"
-"\n"
-"E-Mail sent to following Partners successfully. !\n"
-"\n"
-msgstr ""
-"\n"
-"\n"
-"E-mail je USPESNO prosledjen sledecim Partnerima. !\n"
-"\n"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Litigation"
-msgstr "Sporno"
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
-msgid "Payable Items"
-msgstr "Stavke Placanja"
-
-#. module: account_followup
-#: view:account.followup.print.all:0
-msgid "%(followup_amount)s: Total Amount Due"
-msgstr "%(iznos_pracenja): Ukupan iznos duga"
-
-#. module: account_followup
-#: view:account.followup.print.all:0
-#: view:account_followup.followup.line:0
-msgid "%(date)s: Current Date"
-msgstr "%(datum)i: Trenutni Datum"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Followup Level"
-msgstr "Nivo Pracenja"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,description:0
-#: report:account_followup.followup.print:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "This Fiscal year"
-msgstr "Fiskalna Godina"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr "Stavke Partnera"
-
-#. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
-msgid ""
-"Do not change message text, if you want to send email in partner language, "
-"or configure from company"
-msgstr ""
-"Ne menjajte ovaj text ukoliko zelite da posaljete Email na jeziku Partnera, "
-"ili ga konfigurisete po Preduzecu."
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
-msgid "Receivable Items"
-msgstr "Prijemne Stavke"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-#: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
-msgid "Follow-ups Sent"
-msgstr "Pracenja Poslata"
-
-#. module: account_followup
-#: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
-msgid "Name"
-msgstr "Ime"
-
-#. module: account_followup
-#: field:account_followup.stat,date_move:0
-msgid "First move"
-msgstr "Prvi potez"
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Li."
-msgstr "Li."
-
-#. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Maturity"
-msgstr "Dospeće"
 
 #. module: account_followup
 #: view:account.followup.print:0
 msgid "Continue"
-msgstr "Nastavi"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Days of delay"
-msgstr "Dana kašnjenja"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "Dokument:Korisnicka stavka naloga"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,summary:0
 msgid "Summary"
-msgstr "Sumarno"
+msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr "Ukupno potražuje"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr "%(line): Ledger Posting lines"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
 msgid "Sequence"
-msgstr "Sekvenca"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr "%(company_name): Strankino Ime Preduzeca"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr "Poziv na broj"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
-msgstr "%(partner_name)s: Partnerovo Ime"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr "Datum poslednjeg Pracenja"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr "Kriterijum Pracenja"
+msgstr ""
 
-#~ msgid "All payable entries"
-#~ msgstr "Sve stavke potraživanja"
-
-#~ msgid "Amount In Currency"
-#~ msgstr "Iznos u valuti"
-
-#~ msgid "Select partners"
-#~ msgstr "Odaberi partnere"
-
-#~ msgid "%(line)s: Account Move lines"
-#~ msgstr "%(red): redovi prenosa računa"
-
-#~ msgid "Follow-Ups Criteria"
-#~ msgstr "Kriterijumi Praćenja"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Exception made if there was a mistake of ours, it seems that the following "
-#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
-#~ "this payment in the next 8 days.\n"
-#~ "\n"
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "Postovani %(partner_name)s,\n"
-#~ "\n"
-#~ "Izvinjavamo se unapred ako je greska nastala kod nas, cini se da su sledeci "
-#~ "iznosi ostali neplaceni. Molimo, preduzmite neophodne akcije u cilju isplate "
-#~ "ovih racuna u sledecih 8 dana.\n"
-#~ "\n"
-#~ "Ukoliko uradite isplatu nakon ovog maila, molimo obavestite nas, Takodje se "
-#~ "nemojte ustrucavati da kontaktirate nasu\n"
-#~ "racunovodstvenu sluzbu na tel (032) 69 555 666\n"
-#~ "\n"
-#~ "Srdacan pozdrav\n"
-#~ "\t\t\t"
-
-#~ msgid "Follow-up and Date Selection"
-#~ msgstr "Praćenja i Datum Selekcije"
-
-#~ msgid "Lines"
-#~ msgstr "redova"
-
-#~ msgid "All receivable entries"
-#~ msgstr "Sve stavke potraživanja"
-
-#~ msgid "Followup statistics"
-#~ msgstr "Statisktike Praćenja"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "We are disappointed to see that despite sending a reminder, that your "
-#~ "account is now seriously overdue.\n"
-#~ "\n"
-#~ "It is essential that immediate payment is made, otherwise we will have to "
-#~ "consider placing a stop on your account which means that we will no longer "
-#~ "be able to supply your company with (goods/services).\n"
-#~ "Please, take appropriate measures in order to carry out this payment in the "
-#~ "next 8 days\n"
-#~ "\n"
-#~ "If there is a problem with paying invoice that we are not aware of, do not "
-#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-#~ "we can resolve the matter quickly.\n"
-#~ "\n"
-#~ "Details of due payments is printed below.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "Postovani %(partner_name)s\n"
-#~ "\n"
-#~ "Zao nam je sto vas moramo podsecati, ali vas je nalog sada u ozbiljnom "
-#~ "prekoracenju.\n"
-#~ "\n"
-#~ "Vrlo je bitno da izmirite vase obaveze ka nama, u suprotnom ce mo morati "
-#~ "razmotriti dalju saradnju sa vama, sto znaci da necemo\n"
-#~ "vise biti u mogucnosti da vas snabdevamo ( servisiramo)\n"
-#~ "\n"
-#~ "Molimo vas da preduzmete hitne mere kako bi se izvrsila ova uplata u roku od "
-#~ "8 dana.\n"
-#~ "\n"
-#~ "Ukoliko postoji problem vezan za vas racun, a mi nismo upoznati, ne "
-#~ "ustrucavajte se da kontaktirate nase racunovodstvo na (+32_69 555 666 kako "
-#~ "bi mogli resiti nastalu gresku sto pre.\n"
-#~ "\n"
-#~ "Detalji vaseg racuna se nalaze ispod.\n"
-#~ "\n"
-#~ "Srdacan pozdrav.\n"
-#~ "\t\t\t"
-
-#~ msgid ""
-#~ "\n"
-#~ "Dear %(partner_name)s,\n"
-#~ "\n"
-#~ "Despite several reminders, your account is still not settled.\n"
-#~ "\n"
-#~ "Unless full payment is made in next 8 days , then legal action for the "
-#~ "recovery of the debt, will be taken without further notice.\n"
-#~ "\n"
-#~ "I trust that this action will prove unnecessary and details of due payments "
-#~ "is printed below.\n"
-#~ "\n"
-#~ "In case of any queries concerning this matter, do not hesitate to contact "
-#~ "our accounting department at (+32).10.68.94.39.\n"
-#~ "\n"
-#~ "Best Regards,\n"
-#~ "\t\t\t"
-#~ msgstr ""
-#~ "\n"
-#~ "Postovani %(partner_name)s,\n"
-#~ "\n"
-#~ "Uprkos nekoliko opomena, vase dugovanje nije izmireno.\n"
-#~ "\n"
-#~ "Ukoliko ne izvrsite uplatu u sledecih 8 dana, bicemo prinudjeni da se "
-#~ "obratimo nadleznim organima za sravnjenje ovog duga.\n"
-#~ "\n"
-#~ "Verujem da ce se ova varijanta pokazati kao nepotrebna i da ce te vi "
-#~ "izvrsiti uplatu dugova opisanih ispod.\n"
-#~ "\n"
-#~ "U slucaju bilo kakve nedoumice, ili nase greske, nemojte se ustrucavati da "
-#~ "kontaktirate nase knjigovodstvo na (+32)69 555 666.\n"
-#~ "\n"
-#~ "Srdacan Pozdrav.\n"
-#~ "\t\t\t"
-
-#~ msgid "Print Follow Ups & Send Mails"
-#~ msgstr "Odstampaj Pracenja & Posalji Meilove"
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""

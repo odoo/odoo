@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-25 19:10+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -27,11 +27,6 @@ msgstr "Өмнөх үеийг хүлээх эсэх"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -133,6 +128,12 @@ msgid "Interview Request"
 msgstr "Ярилцлагын хүсэлт"
 
 #. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
 msgstr "Э-мэйлийн үндсэн хэсэг"
@@ -172,9 +173,14 @@ msgid "July"
 msgstr "7 сар"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
 msgstr ""
+"Зарим дүгнэлт нь хариу буюу ноорог төлөвт байгаа учраас төлөвийг өөрчилж "
+"чадахгүй"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
@@ -274,11 +280,6 @@ msgid "Regarding "
 msgstr ""
 
 #. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,state:0
@@ -373,16 +374,6 @@ msgstr "Хүсэлтийн тоо"
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Evaluations"
 msgstr "Үнэлгээнүүд"
-
-#. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Буруу параметер"
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -518,11 +509,6 @@ msgid "Draft"
 msgstr "Ноорог"
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа ! Рекурс цэс үүсгэж болохгүй"
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
@@ -592,6 +578,11 @@ msgstr "11 сар"
 #: view:hr.evaluation.report:0
 msgid "Extended Filters..."
 msgstr "Өргөтгөсөн хайлт..."
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -721,22 +712,9 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Эхэлсэн"
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -831,11 +809,6 @@ msgid "Evaluation Plan"
 msgstr "Үнэлгээний төлөвлөгөө"
 
 #. module: hr_evaluation
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "February"
 msgstr "2 сар"
@@ -871,11 +844,6 @@ msgid "(months)"
 msgstr "(сар)"
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr "Дараалал"
@@ -884,16 +852,6 @@ msgstr "Дараалал"
 #: view:hr_evaluation.plan.phase:0
 msgid "(user_signature)s: User name"
 msgstr "(Хэрэглэгчийн гарын үсэг) :  Хэрэглэгчийн нэр"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"You cannot change state, because some appraisal in waiting answer or draft "
-"state"
-msgstr ""
-"Зарим дүгнэлт нь хариу буюу ноорог төлөвт байгаа учраас төлөвийг өөрчилж "
-"чадахгүй"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
@@ -999,8 +957,29 @@ msgstr "Жил"
 #~ msgid "Evaluation Type Value"
 #~ msgstr "Үнэлгээний төрлийн утга"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
 #~ msgid "Ability to create employees evaluation."
 #~ msgstr "Ажилтны үнэлгээ үүсгэх боломж"
 
 #~ msgid "Apply to categories"
 #~ msgstr "Хүсэлт гаргах зэрэглэл"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Буруу параметер"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа ! Рекурс цэс үүсгэж болохгүй"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-05 10:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-14 21:21+0000\n"
+"Last-Translator: Christophe (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -51,6 +51,11 @@ msgstr "UdM du produit"
 msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
 "Vous devez d'abord annuler toutes les factures liée à cette commande."
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr "Vous permet de calculer les frais de livraison sur vos devis."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -308,20 +313,14 @@ msgid "August"
 msgstr "Août"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN : "
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr "Vous permet de calculer les frais de livraison sur vos devis."
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Tous les devis"
 
 #. module: sale
 #: report:sale.order:0
@@ -430,6 +429,12 @@ msgstr "En cours"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Comptabilité"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -679,11 +684,6 @@ msgid "Shipped"
 msgstr "Expédié"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Tous les devis"
-
-#. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount"
 msgstr "Le montant des taxes"
@@ -861,15 +861,6 @@ msgid "Pricelist version for current sale order"
 msgstr "Version de la liste de prix pour la commande de vente actuelle"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr "Dates de commande de ventes"
@@ -881,10 +872,13 @@ msgid "Sale Order Line"
 msgstr "Ligne de commande"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Prix unitaire"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Créer facture"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -1280,12 +1274,6 @@ msgid "Sales Management"
 msgstr "Gestion des ventes"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Quantité : "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1384,13 +1372,10 @@ msgid "Sales"
 msgstr "Ventes"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Créer facture"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Prix unitaire"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1669,6 +1654,17 @@ msgid "Sales by Month"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1677,12 +1673,6 @@ msgstr ""
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
 msgstr "Quantité (UdV)"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2536,6 +2526,10 @@ msgstr "Facture basé sur les livraisons"
 #~ msgid "Sales By Partner"
 #~ msgstr "Ventes par partenaire"
 
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN : "
+
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
 #~ "products to the customer"
@@ -2549,3 +2543,7 @@ msgstr "Facture basé sur les livraisons"
 #~ "   'for this product: \"%s\" (id:%d)"
 #~ msgstr ""
 #~ "Il n'y a aucun compte de revenu défini ' \\n 'pour ce produit: \"%s\" (id:%d)"
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Quantité : "

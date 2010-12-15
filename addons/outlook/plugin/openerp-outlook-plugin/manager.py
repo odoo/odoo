@@ -140,7 +140,7 @@ class OpenERPManager:
     def LoadConfig(self):
         import win32ui
         path = os.path.join(self.data_directory, 'tiny.ini')
-        data = {'server' : 'localhost', 'port' : '8069', 'protocol' : 'http://', 'database' : '', 'objects' : self.default_objects, 'uname':'admin', 'pwd':'a', 'login':False}
+        data = {'server' : 'localhost', 'port' : '8069', 'protocol' : 'http://', 'database' : '', 'objects' : self.default_objects, 'uname':'admin', 'pwd':'a', 'login':False,'webserver':'localhost','webport':'8080'}
         if os.path.exists(path):
             fp = open(path, 'r')
             data = fp.readlines()

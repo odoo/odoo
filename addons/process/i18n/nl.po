@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2009-01-28 22:59+0000\n"
 "Last-Translator: Freerk Kalsbeek (Mindswitch BV) <f.kalsbeek@mindswitch.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -24,34 +24,16 @@ msgid "Process Node"
 msgstr "Proces knooppunt"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "Help URL"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Gerelateerd menu"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -75,9 +57,9 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "Help URL"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -167,9 +149,10 @@ msgid "Dummy"
 msgstr "Dummie"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -219,11 +202,6 @@ msgstr "Actief"
 #: view:process.transition:0
 msgid "Associated Groups"
 msgstr ""
-
-#. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Gerelateerd menu"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -334,11 +312,19 @@ msgstr "Overgangen"
 msgid "Object Method"
 msgstr "Object Methode"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "Regels uit werkschema"
 
 #~ msgid "Details"
 #~ msgstr "Details"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor overzicht"
 
 #~ msgid "Roles"
 #~ msgstr "Rollen"
