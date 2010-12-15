@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-01 08:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_partner_assign
@@ -41,11 +41,6 @@ msgstr "# Dossiers"
 #: view:crm.lead.report.assign:0
 msgid "Group By..."
 msgstr "Groepeer op..."
-
-#. module: crm_partner_assign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie definitie."
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -153,14 +148,6 @@ msgstr ""
 "betekent geen toekenning)."
 
 #. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr ""
-
-#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
@@ -206,11 +193,12 @@ msgid "From"
 msgstr "Van"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "Gesloten"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: field:res.partner,grade_id:0
+#: view:res.partner.grade:0
+msgid "Partner Grade"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -227,11 +215,6 @@ msgstr "Volgende"
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
 msgstr "Prioriteit"
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -304,11 +287,6 @@ msgstr "Juli"
 #: field:crm.lead.report.assign,stage_id:0
 msgid "Stage"
 msgstr "Stadium"
-
-#. module: crm_partner_assign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:0
@@ -421,6 +399,11 @@ msgid "Partner Geo-Localisation"
 msgstr "Relatie Geo-lokalisatie"
 
 #. module: crm_partner_assign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Draft"
@@ -432,9 +415,11 @@ msgid "Low"
 msgstr "Laag"
 
 #. module: crm_partner_assign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: selection:crm.lead.forward.to.partner,state:0
+#: view:crm.lead.report.assign:0
+#: selection:crm.lead.report.assign,state:0
+msgid "Closed"
+msgstr "Gesloten"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -579,18 +564,6 @@ msgid "Open"
 msgstr "Openen"
 
 #. module: crm_partner_assign
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: crm_partner_assign
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#. module: crm_partner_assign
 #: field:res.partner,date_localization:0
 msgid "Geo Localization Date"
 msgstr "Geo lokalisatie datum"
@@ -645,11 +618,6 @@ msgstr "Verkoopkans"
 #: field:crm.lead.report.assign,partner_id:0
 msgid "Customer"
 msgstr "Klant"
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -732,3 +700,26 @@ msgstr "Nieuwe status gezet op"
 #: field:crm.lead.report.assign,name:0
 msgid "Year"
 msgstr "Jaar"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

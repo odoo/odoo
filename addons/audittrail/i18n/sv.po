@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-30 14:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -22,25 +22,20 @@ msgid "Audit Trail"
 msgstr "Audit Trail"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Felaktigt namn för modell i händelsedefinitionen."
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Logg"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
-msgstr ""
-
-#. module: audittrail
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: audittrail
@@ -56,16 +51,24 @@ msgid "Audit Logs"
 msgstr ""
 
 #. module: audittrail
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr ""
@@ -74,11 +77,6 @@ msgstr ""
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
 msgstr ""
-
-#. module: audittrail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fel! Ni kan inte skapa rekursiva menyer"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -103,9 +101,9 @@ msgid "Log From"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "Logg"
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -135,16 +133,12 @@ msgid "Log Lines"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr ""
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -166,6 +160,11 @@ msgid "New Value Text: "
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 msgid "Audit Rules"
 msgstr ""
@@ -181,6 +180,7 @@ msgid "Resource Name"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr ""
@@ -190,11 +190,6 @@ msgstr ""
 msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
 msgstr ""
 
 #. module: audittrail
@@ -215,11 +210,6 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
 msgid "Log Workflow"
-msgstr ""
-
-#. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: audittrail
@@ -256,6 +246,7 @@ msgid ""
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr ""
@@ -276,17 +267,6 @@ msgid "UnSubscribe"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
-
-#. module: audittrail
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr ""
@@ -294,6 +274,11 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
 msgstr ""
 
 #. module: audittrail
@@ -324,11 +309,6 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
 msgstr ""
 
 #. module: audittrail
@@ -385,3 +365,14 @@ msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modell i händelsedefinitionen."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"

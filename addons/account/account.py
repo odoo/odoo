@@ -631,10 +631,13 @@ class account_journal(osv.osv):
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
-            if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+        if context is None:
+            context = {}
+        for journal in self.browse(cr, uid, ids, context=context):
+            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
+                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+                if move_lines:
+                    raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
@@ -726,7 +729,7 @@ class account_journal(osv.osv):
 
         res = {}
 
-        view_id = type_map.get(type, 'general')
+        view_id = type_map.get(type, 'account_journal_view')
 
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:

@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-04 09:06+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-06 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.cash_journal_multi_in
+msgid "Cash Journal - (OpenERP IN)"
+msgstr ""
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -57,46 +62,44 @@ msgstr ""
 "        "
 
 #. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno IMe modeka u definiciji akcije."
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Greska: UOS mora biti drugacije kategorije nego UOM"
-
-#. module: multi_company
-#: model:product.category,name:multi_company.Odoo1
-msgid "Odoo Offers"
-msgstr "Odoo Ponude"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+#: model:account.journal,name:multi_company.check_journal_multi_in
+msgid "Checks Journal - (OpenERP IN)"
 msgstr ""
-"Greska: POdrazumevani UOM i kupljeni UOM moraju biti u istoj kategoriji."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Greska ! Ne mozes kreirati rekursivne kategorije."
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Greska ! Ne mozes kreirati rekursivna Preduzeca."
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za pregled Arhitekture"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
 msgid "Multi-Companies"
 msgstr "Multi-Kompanije"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_us
+msgid "Sales Credit Note Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_us
+msgid "Expenses Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_be
+msgid "Expenses Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.sales_journal_multi_us
+msgid "Sales Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.expenses_journal_multi_in
+msgid "Expenses Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Povratak"
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
@@ -105,29 +108,69 @@ msgid "Multi Company"
 msgstr "Multi Kompanija"
 
 #. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Greska ! Ne mozes kreirati rekursivne asocirane clanove."
+#: model:account.journal,name:multi_company.sales_journal_multi_in
+msgid "Sales Journal - (OpenERP IN)"
+msgstr ""
 
 #. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Greska: Neispravan EAN kod"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Izabrano preduzece ne spada u dozvoljena preduzeca za ovog korisnika"
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! NE mozes kreirati rekursivni Meni."
+#: model:account.journal,name:multi_company.check_journal_multi_be
+msgid "Checks Journal - (OpenERP BE)"
+msgstr ""
 
 #. module: multi_company
 #: view:multi_company.default:0
-msgid "Returning"
-msgstr "Povratak"
+msgid "Condition"
+msgstr "Uslov"
+
+#. module: multi_company
+#: model:product.category,name:multi_company.Odoo1
+msgid "Odoo Offers"
+msgstr "Odoo Ponude"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_us
+msgid "Expenses Credit Notes Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.cash_journal_multi_us
+msgid "Cash Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.bank_journal_multi_us
+msgid "Bank Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_in
+msgid "Sales Credit Note Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.cash_journal_multi_be
+msgid "Cash Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.check_journal_multi_us
+msgid "Checks Journal - (OpenERP US)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.sales_journal_multi_be
+msgid "Sales Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_be
+msgid "Expenses Credit Notes Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_sales_journal_multi_be
+msgid "Sales Credit Note Journal - (OpenERP BE)"
+msgstr ""
 
 #. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
@@ -136,16 +179,58 @@ msgid "Default Company per Object"
 msgstr "Podrazumevano Preduzece po Objektu"
 
 #. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
+msgstr "Odoo Ponuda"
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_in
+msgid "Expenses Credit Notes Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.bank_journal_multi_in
+msgid "Bank Journal - (OpenERP IN)"
+msgstr ""
+
+#. module: multi_company
+#: model:account.journal,name:multi_company.bank_journal_multi_be
+msgid "Bank Journal - (OpenERP BE)"
+msgstr ""
+
+#. module: multi_company
 #: view:multi_company.default:0
 msgid "Matching"
 msgstr "Podudaranje"
 
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr "Uslov"
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Greska: POdrazumevani UOM i kupljeni UOM moraju biti u istoj kategoriji."
 
-#. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
-msgstr "Odoo Ponuda"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno IMe modeka u definiciji akcije."
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivne kategorije."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za pregled Arhitekture"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Greska: UOS mora biti drugacije kategorije nego UOM"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivna Preduzeca."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Greska: Neispravan EAN kod"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivne asocirane clanove."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! NE mozes kreirati rekursivni Meni."
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Izabrano preduzece ne spada u dozvoljena preduzeca za ovog korisnika"
