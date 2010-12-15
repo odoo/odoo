@@ -93,7 +93,7 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
-    
+
     def _get_default_address(self, cr, uid, ids, field_name, arg, context):
         res = {}
         partner_obj = self.pool.get('res.partner')
@@ -425,14 +425,14 @@ class mrp_repair(osv.osv):
                             name = fee.name
                         if not fee.product_id:
                             raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
-                        
+
                         if fee.product_id.property_account_income:
                             account_id = fee.product_id.property_account_income.id
                         elif fee.product_id.categ_id.property_account_income_categ:
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:
                             raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % fee.product_id.name)
-                        
+
                         invoice_fee_id = inv_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,
@@ -453,7 +453,10 @@ class mrp_repair(osv.osv):
         """ Writes repair order state to 'Ready'
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'ready'})
+        for repair in self.browse(cr, uid, ids, context=context):
+            self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
+                    l in repair.operations], {'state': 'confirmed'})
+            self.write(cr, uid, [repair.id], {'state': 'ready'})
         return True
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -467,7 +470,10 @@ class mrp_repair(osv.osv):
         """ Writes repair order state to 'Under Repair'
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'under_repair'})
+        for repair in self.browse(cr, uid, ids, context=context):
+            self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
+                    l in repair.operations], {'state': 'confirmed'})
+            self.write(cr, uid, [repair.id], {'state': 'under_repair'})
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
@@ -478,6 +484,8 @@ class mrp_repair(osv.osv):
             val = {}
             if (order.invoice_method == 'b4repair'):
                 val['state'] = 'ready'
+                self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
+                        l in order.operations], {'state': 'confirmed'})
             else:
                 pass
             self.write(cr, uid, [order.id], val)
@@ -527,7 +535,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'done',
                 })
-                repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id})
+                repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'})
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
                 picking = pick_obj.create(cr, uid, {
