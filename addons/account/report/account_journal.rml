@@ -257,7 +257,7 @@
         <td><para style="terp_default_8">[[ line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id)) ]]</para></td> 
         <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,17) ]]</para></td>
-        <td><para style="terp_default_8">[[ strip_name(line.name,28) ]]</para></td>
+        <td><para style="terp_default_8">[[ strip_name(line.name,27) ]]</para></td>
         <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
         <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
       </tr>
@@ -294,7 +294,7 @@
         <td><para style="terp_default_8">[[ line.move_id.name &lt;&gt; '/' and line.move_id.name or ('*'+str(line.move_id.id)) ]]</para></td> 
         <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,15) ]]</para></td>
-        <td><para style="terp_default_8">[[ strip_name(line.name,18) ]]</para></td>
+        <td><para style="terp_default_8">[[ strip_name(line.name,17) ]]</para></td>
         <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
         <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
         <td><para style="P8">[[ line.currency_id  and formatLang(line.amount_currency) or '' ]] [[ line.currency_id.symbol or '']]</para></td>
