@@ -281,7 +281,7 @@ class sale_order(osv.osv):
     _defaults = {
         'picking_policy': 'direct',
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-
+        'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
