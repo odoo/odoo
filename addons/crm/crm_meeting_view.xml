@@ -47,7 +47,6 @@
                            <field name="recurrency"/>      
                            <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
                                 on_change="onchange_edit_all(rrule_type,edit_all)"/>
-
                     </group>
                 </group>
                 <notebook colspan="4">
@@ -166,16 +165,20 @@
                             </form>
                         </field>
                     </page>
-                     <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
-		                <group col="4" colspan="4" name="rrule">
-		                    <separator string=" Recurrency Rule" colspan="8"/>
-		                    <group col="3" colspan="2">
-		                      <field name="freq" string="Recurrency"/>
-		                      <newline/>
-		                      <field name="end_date" />
-		                      <field name="interval" string="Repeat Times"/>
+                    <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
+	                    <group col="4" colspan="4" name="rrule">
+	                        <group col="2" colspan="2">
+		                        <field name="rrule_type" string="Recurrency"
+	                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" colspan="2"/>
+	                            <label string="" colspan="2"/>
+	                        </group>
+		                    <separator string="Recurrency Rule" colspan="8"/>
+		                    <group col="6" colspan="4">
+		                        <field name="freq" />
+		                        <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
+		                        <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
 		                    </group>
-		                    <group col="5" colspan="5" name="Select weekdays"
+		                    <group col="14" colspan="4" name="Select weekdays"
 		                        attrs="{'invisible' : [('freq','!=','weekly')]}">
 		                        <field name="mo" colspan="1" />
 		                        <field name="tu" colspan="1" />
@@ -212,8 +215,9 @@
 		                        </group>
 		                    </group>
 		                </group>
-		                     </page>
-		                </notebook>
+
+	                </page>
+                </notebook>
             </form>
         </field>
     </record>
