@@ -168,12 +168,12 @@
                     <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
 	                    <group col="4" colspan="4" name="rrule">
 	                        <group col="2" colspan="2">
-		                        <field name="rrule_type" string="Recurrency" colspan="2"/>
+		                        <field name="rrule_type" string="Recurrency"
+	                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" colspan="2"/>
 	                            <label string="" colspan="2"/>
 	                        </group>
 		                    <separator string="Recurrency Rule" colspan="8"/>
 		                    <group col="6" colspan="4">
-		                        <!--<field name="freq" />-->
 		                        <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
 		                        <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
 		                    </group>

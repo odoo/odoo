@@ -1176,7 +1176,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  'event_id', 'attendee_id', 'Attendees'),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
-true, it will allow you to hide the event alarm information without removing it.")
+         true, it will allow you to hide the event alarm information without removing it."),
+        'recurrency': fields.boolean('Recurrency', help="Recurrent Meeting"),                                    
+        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),        
     }
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -1198,45 +1200,15 @@ true, it will allow you to hide the event alarm information without removing it.
             'organizer': default_organizer,
     }
 
-    def open_event(self, cr, uid, ids, context=None):
-        """
-        Open Event From for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of event’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value which open Crm Meeting form.
-        """
-        if context is None:
+    def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
+        if not context:
             context = {}
-
         data_obj = self.pool.get('ir.model.data')
-
         value = {}
-
-        id2 = data_obj._get_id(cr, uid, 'base_calendar', 'event_form_view')
-        id3 = data_obj._get_id(cr, uid, 'base_calendar', 'event_tree_view')
-        id4 = data_obj._get_id(cr, uid, 'base_calendar', 'event_calendar_view')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        if id4:
-            id4 = data_obj.browse(cr, uid, id4, context=context).res_id
-        for id in ids:
-            value = {
-                    'name': _('Event'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'calendar.event',
-                    'view_id': False,
-                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window',
-                    'res_id': base_calendar_id2real_id(id),
-                    'nodestroy': True
-                    }
-
-        return value
+        if edit_all and rrule_type:
+            for id in ids:
+              base_calendar.base_calendar_id2real_id(id)
+        return value              
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
