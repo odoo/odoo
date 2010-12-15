@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-15 09:07+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_messages
@@ -23,19 +23,14 @@ msgid "To"
 msgstr "Do"
 
 #. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
+msgstr ""
 
 #. module: project_messages
 #: field:project.messages,from_id:0
 msgid "From"
 msgstr "Od"
-
-#. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
 
 #. module: project_messages
 #: help:project.messages,to_id:0
@@ -48,15 +43,11 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,help:project_messages.messages_form
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
+"An in-project messagery system permits an efficient and trackable "
+"communication between project members. The messages are kept in the system "
+"and can then be used for post-analysis."
 msgstr ""
 
 #. module: project_messages
@@ -81,14 +72,19 @@ msgid "Group By..."
 msgstr "Grupirano po"
 
 #. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
+#: view:project.messages:0
+msgid "Today"
+msgstr ""
 
 #. module: project_messages
 #: view:project.messages:0
 msgid "Message To"
 msgstr "Poruka za"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr ""
 
 #. module: project_messages
 #: view:project.messages:0
@@ -110,8 +106,8 @@ msgid "Project Messages"
 msgstr ""
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Today"
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_messages
@@ -119,8 +115,19 @@ msgstr ""
 msgid "In-Project Messaging System"
 msgstr "Projektni sistem dopisivanja"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
 #~ msgid "Communication Messages"
 #~ msgstr "Komunikacione Poruke"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
 
 #~ msgid ""
 #~ "\n"
@@ -138,3 +145,6 @@ msgstr "Projektni sistem dopisivanja"
 #~ "proslediti\n"
 #~ "    svim korisnicima.\n"
 #~ "    "
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."

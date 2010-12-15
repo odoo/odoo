@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-29 07:45+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: caldav
@@ -38,7 +38,6 @@ msgid "Provide path for Remote Calendar"
 msgstr "Wprowadź ścieżkę dla zewnętrznego kalendarza"
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_import
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
 msgid "Import .ics File"
 msgstr "Importuj plik .ics"
@@ -53,6 +52,11 @@ msgstr "_Zamknij"
 #: selection:basic.calendar.lines,name:0
 msgid "Attendee"
 msgstr "Uczestnicy"
+
+#. module: caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
+msgstr ""
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -96,6 +100,7 @@ msgstr "Błąd!"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/wizard/calendar_event_import.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Ostrzeżenie !"
@@ -163,11 +168,6 @@ msgid "Error! You can not create recursive Directories."
 msgstr "Błąd! Nie możesz tworzyć rekurencyjnych katalogów."
 
 #. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Nazwa modułu musi być unikalna !"
-
-#. module: caldav
 #: field:basic.calendar,type:0
 #: field:basic.calendar.attributes,type:0
 #: field:basic.calendar.fields,type_id:0
@@ -179,11 +179,6 @@ msgstr "Typ"
 #: field:basic.calendar,description:0
 msgid "description"
 msgstr "opis"
-
-#. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "ID certyfikatu modułu musi być unikalne !"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
@@ -200,11 +195,6 @@ msgstr "Błąd !"
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
 msgstr "Atrybuty kalendarza"
-
-#. module: caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -245,9 +235,17 @@ msgid "Calendar"
 msgstr "Kalendarz"
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
-msgstr "Do zrobienia"
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid ""
+"Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/wizard/calendar_event_import.py:0
+#, python-format
+msgid "Invalid format of the ics, file can not be imported"
+msgstr ""
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -265,21 +263,6 @@ msgid "Message..."
 msgstr "Wiadomość..."
 
 #. module: caldav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#. module: caldav
-#: model:ir.model,name:caldav.model_basic_calendar
-msgid "basic.calendar"
-msgstr ""
-
-#. module: caldav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
-
-#. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
@@ -294,6 +277,7 @@ msgstr "Kolekcje kalendarzy"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
 msgstr "Ten sam plik nie może dotyczyć dwóch rekordów !"
@@ -359,17 +343,9 @@ msgid "Fields Mapping"
 msgstr "Mapowanie pól"
 
 #. module: caldav
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Rozmiar pola nie może być mniejszy od 1 !"
-
-#. module: caldav
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:caldav.model_basic_calendar
+msgid "basic.calendar"
 msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -465,10 +441,20 @@ msgid "Attendee must have an Email Id"
 msgstr "Uczestnik musi mieć id email"
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_export
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
 msgstr "Eksportuj plik .ics"
+
+#. module: caldav
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid "vobject Import Error!"
+msgstr ""
+
+#. module: caldav
+#: view:basic.calendar:0
+msgid "MY"
+msgstr ""
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
@@ -492,8 +478,8 @@ msgstr "Kolor"
 
 #. module: caldav
 #: view:basic.calendar:0
-msgid "MY"
-msgstr ""
+msgid "Todo"
+msgstr "Do zrobienia"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
@@ -526,3 +512,27 @@ msgstr ""
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
 "Kolejność katalogu w kalendarzach (dla klientów obsługujących kolejność)"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Nazwa modułu musi być unikalna !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID certyfikatu modułu musi być unikalne !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Rozmiar pola nie może być mniejszy od 1 !"

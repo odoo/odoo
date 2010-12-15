@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-12-01 09:34+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -63,22 +63,9 @@ msgstr ""
 "        "
 
 #. module: multi_company
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "2 Benuzter können nicht den gleichen Login Code haben."
-
-#. module: multi_company
 #: model:account.journal,name:multi_company.check_journal_multi_in
 msgid "Checks Journal - (OpenERP IN)"
 msgstr "Journal Schecks - (OpenERP IN)"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fehler: Die Standard Mengeneinheit sowie die  Mengeneinheit bei der "
-"Beschaffung muss in derselben Kategorie sein."
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
@@ -86,44 +73,14 @@ msgid "Multi-Companies"
 msgstr "Multi Mandanten"
 
 #. module: multi_company
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Die ausgew. Firma ist nicht zugelassen für diesen Benutzer"
-
-#. module: multi_company
 #: model:account.journal,name:multi_company.refund_sales_journal_multi_us
 msgid "Sales Credit Note Journal - (OpenERP US)"
 msgstr "Journal Kundengutschriften - (OpenERP US)"
 
 #. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#. module: multi_company
 #: model:account.journal,name:multi_company.expenses_journal_multi_us
 msgid "Expenses Journal - (OpenERP US)"
 msgstr "Journal Aufwendungen (OpenERP US)"
-
-#. module: multi_company
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: multi_company
 #: model:account.journal,name:multi_company.expenses_journal_multi_be
@@ -146,11 +103,6 @@ msgid "Returning"
 msgstr "Rückgabe"
 
 #. module: multi_company
-#: model:account.journal,name:multi_company.refund_expenses_journal_multi_us
-msgid "Expenses Credit Notes Journal - (OpenERP US)"
-msgstr "Journal Lieferantengutschriften - (OpenERP US)"
-
-#. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
 #: view:multi_company.default:0
 msgid "Multi Company"
@@ -160,13 +112,6 @@ msgstr "Multi Mandanten"
 #: model:account.journal,name:multi_company.sales_journal_multi_in
 msgid "Sales Journal - (OpenERP IN)"
 msgstr "Journal Verkauf - (OpenERP US)"
-
-#. module: multi_company
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr ""
-"Die Kurzbezeichnung des Journals sollte eindeutig sein je Unternehmen "
-"(Mandant)."
 
 #. module: multi_company
 #: model:account.journal,name:multi_company.check_journal_multi_be
@@ -179,26 +124,14 @@ msgid "Condition"
 msgstr "Bedingung"
 
 #. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Fehler: Verkauseinheit (VE) sollte in einer anderen Kategorie sein als "
-"Mengeneinheit (ME)"
-
-#. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
 msgid "Odoo Offers"
 msgstr "Odoo Angebote"
 
 #. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Fehler! Sie können keine rekursiven Betriebe erzeugen."
+#: model:account.journal,name:multi_company.refund_expenses_journal_multi_us
+msgid "Expenses Credit Notes Journal - (OpenERP US)"
+msgstr "Journal Lieferantengutschriften - (OpenERP US)"
 
 #. module: multi_company
 #: model:account.journal,name:multi_company.cash_journal_multi_us
@@ -262,24 +195,9 @@ msgid "Bank Journal - (OpenERP IN)"
 msgstr "Journal Bank - (OpenERP IN)"
 
 #. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Fehler! Sie können keine rekursive Kategorien definieren."
-
-#. module: multi_company
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Die Journalbezeichnung sollte pro Unternehmen eindeutig sein."
-
-#. module: multi_company
 #: model:account.journal,name:multi_company.bank_journal_multi_be
 msgid "Bank Journal - (OpenERP BE)"
 msgstr "Journal Bank - (OpenERP BE)"
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fehler: Falscher EAN code"
 
 #. module: multi_company
 #: view:multi_company.default:0
@@ -330,11 +248,17 @@ msgstr "Abgleich"
 #~ msgid "Main Company"
 #~ msgstr "Hauptfirma"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Company to store the current record"
 #~ msgstr "Mandant, in dem dieser Datensatz gespeichert wrden soll"
 
 #~ msgid "Name"
 #~ msgstr "Name"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Fehler! Sie können keine rekursiven Betriebe erzeugen."
 
 #~ msgid "multi_company.default"
 #~ msgstr "multi_company.default"
@@ -348,6 +272,12 @@ msgstr "Abgleich"
 #~ msgid "Expression"
 #~ msgstr "Ausdruck"
 
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Fehler! Sie können keine rekursive Kategorien definieren."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fehler: Falscher EAN code"
+
 #~ msgid "Default company per Object"
 #~ msgstr "Standard Mandant für dieses Objekt"
 
@@ -357,3 +287,43 @@ msgstr "Abgleich"
 #, python-format
 #~ msgid " (copy)"
 #~ msgstr " (Kopie)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Fehler: Verkauseinheit (VE) sollte in einer anderen Kategorie sein als "
+#~ "Mengeneinheit (ME)"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fehler: Die Standard Mengeneinheit sowie die  Mengeneinheit bei der "
+#~ "Beschaffung muss in derselben Kategorie sein."
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Die ausgew. Firma ist nicht zugelassen für diesen Benutzer"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "2 Benuzter können nicht den gleichen Login Code haben."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr ""
+#~ "Die Kurzbezeichnung des Journals sollte eindeutig sein je Unternehmen "
+#~ "(Mandant)."
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Die Journalbezeichnung sollte pro Unternehmen eindeutig sein."

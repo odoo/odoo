@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2009-09-30 08:30+0000\n"
 "Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -33,9 +33,12 @@ msgid "From"
 msgstr "Des de"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
+"Suma de multiplicacions del preu del catàleg de venda i quantitat de "
+"factures de client"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -58,29 +61,10 @@ msgid "From Date"
 msgstr "Des de data"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Esborrany, obert i pagat"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
-"Suma de multiplicacions del preu del catàleg de venda i quantitat de "
-"factures de client"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -151,11 +135,6 @@ msgstr "Núm. facturats"
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Total cost"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -270,6 +249,11 @@ msgid "General Information"
 msgstr ""
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Diferència compra"
@@ -306,6 +290,9 @@ msgstr ""
 
 #~ msgid "Reporting"
 #~ msgstr "Informe"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #~ msgid "Select "
 #~ msgstr "Selecciona "

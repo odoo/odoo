@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-10-30 14:52+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -43,9 +43,9 @@ msgid "Group By..."
 msgstr ""
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义使用了无效的模块名。"
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "付款明细"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -72,11 +72,9 @@ msgstr ""
 "减去的金额在付款单中"
 
 #. module: account_payment
-#: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr "如果没有指定付款日期将直接由银行付款"
+#: field:payment.mode,company_id:0
+msgid "Company"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -105,6 +103,11 @@ msgid "Due Date"
 msgstr "到期日期"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "凭证行"
@@ -125,6 +128,11 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "金额"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -148,6 +156,11 @@ msgid "Reference"
 msgstr "关联单号"
 
 #. module: account_payment
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -159,10 +172,17 @@ msgid "Directly"
 msgstr "直接"
 
 #. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
 #: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "草稿"
+msgid "Payment Line"
+msgstr "付款明细"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -179,11 +199,6 @@ msgstr "确认"
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "发票有效日期"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "付款明细"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -251,6 +266,11 @@ msgid "Execution date"
 msgstr "执行日期"
 
 #. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "固定日期"
@@ -272,9 +292,10 @@ msgid "Search Payment Orders"
 msgstr ""
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -337,9 +358,11 @@ msgid "Address of the Main Partner"
 msgstr "主要业务伙伴地址"
 
 #. module: account_payment
-#: field:payment.mode,company_id:0
-msgid "Company"
-msgstr ""
+#: help:payment.line,date:0
+msgid ""
+"If no payment date is specified, the bank will treat this payment line "
+"directly"
+msgstr "如果没有指定付款日期将直接由银行付款"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -367,16 +390,14 @@ msgid "Payment amount in the partner currency"
 msgstr "在业务伙伴货币的货币金额"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
 #: view:payment.order:0
-msgid "Payment Line"
-msgstr "付款明细"
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "草稿"
 
 #. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_payment
@@ -424,6 +445,11 @@ msgstr "付款明细"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
 msgstr ""
 
 #. module: account_payment
@@ -540,12 +566,6 @@ msgid "Information"
 msgstr "信息"
 
 #. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
-
-#. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
@@ -582,9 +602,10 @@ msgid "Are you sure you want to make payment?"
 msgstr ""
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Cash Journal for the Payment Mode"
-msgstr "现金付款方式的业务类型"
+#: view:payment.mode:0
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "业务类型"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -658,8 +679,12 @@ msgid "Total"
 msgstr "合计"
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request that your company does in order to pay "
+"a supplier invoice or a customer credit note. Here you can register all "
+"payment orders that should be done, keep track of all payment orders and "
+"mention the invoice reference and the partner the payment should be done for."
 msgstr ""
 
 #. module: account_payment
@@ -685,10 +710,9 @@ msgid "Bank Account for the Payment Mode"
 msgstr "这付款方式的银行账号"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "业务类型"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #~ msgid "_Cancel"
 #~ msgstr "取消(_C)"
@@ -711,6 +735,9 @@ msgstr "业务类型"
 
 #~ msgid "Suitable bank types"
 #~ msgstr "合适的银行类型"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
 
 #~ msgid "Date"
 #~ msgstr "日期"
@@ -742,6 +769,13 @@ msgstr "业务类型"
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "选择这付款方式的付款类型"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义使用了无效的模块名。"
+
 #~ msgid "Maturity Date"
 #~ msgstr "付款到期日期"
 
@@ -753,3 +787,6 @@ msgstr "业务类型"
 
 #~ msgid "Reference:"
 #~ msgstr "关联单号："
+
+#~ msgid "Cash Journal for the Payment Mode"
+#~ msgstr "现金付款方式的业务类型"

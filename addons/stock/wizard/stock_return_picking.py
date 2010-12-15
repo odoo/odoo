@@ -78,7 +78,7 @@ class stock_return_picking(osv.osv_memory):
                     return_history[m.id] = 0
                     for rec in m.move_history_ids2:
                         return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
-                    if m.product_qty * m.product_uom.factor > return_history[m.id]:
+                    if m.product_qty * m.product_uom.factor >= return_history[m.id]:
                         valid_lines += 1
                         if 'return%s'%(m.id) not in self._columns:
                             self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)

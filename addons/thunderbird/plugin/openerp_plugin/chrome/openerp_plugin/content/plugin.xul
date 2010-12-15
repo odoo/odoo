@@ -3,7 +3,7 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/plugin.dtd">
 <window id="pluginwindows" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.loaddata()" height="650" width="1000">
+	title="&title.label;" onload="myPrefObserver.loaddata()" height="560" width="960">
 
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -12,11 +12,9 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/exportTools.js"></script>
 <description></description>
-<hbox id="root" height="10" width="800" style="padding:12px;border:1px solid black">
-    
-        <caption label="&title.label;" />
+<hbox id="root" height="10" width="800" >
 </hbox>
-<hbox id="root1" height="380" width="800" style="padding:12px;border:1px solid black">
+<hbox id="root1" height="380" width="800" >
 <vbox>
       <caption label="&gptinyobj.label;" />
       <groupbox id="existsobjectgroup" width="400" style="border:1px solid black">
@@ -42,6 +40,7 @@
 	        <listbox height="250" width="100%" id="listSearchBox" style="border:1px solid red" seltype="multiple">
 	            <listhead>
 	    	        <listheader label="&listSearchBox.header;"/>
+<!--	    	        <listheader label="&listSearchBox.header2;"/>-->
 	            </listhead>
 	            <listcols>
 	    	        <listcol flex="1"/>
@@ -58,42 +57,42 @@
 
    <vbox> 
     <caption label="&newobject.label;" />
-   <groupbox id="newobjectgroup" width="400" align="left" style="border:1px solid black;">
-        
-        <separator class="groove-thin" orient="horizontal" width="400"/> 
-	       <hbox align="left">
-                <vbox>
-                    <label id="lblex3" align="right" width="135" control="section" value="&object.label;"/>
-                </vbox>
-                <vbox>
-                    <menulist id="section" width="150">
-                    <menupopup>
-	                    <menuitem label="" value=""/>
-   	                </menupopup>
-      	            </menulist>
-                </vbox>
-                <vbox>
-      	            <button width="50" label="&archive.label;" accesskey="c" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('create');"/>
-                </vbox>
-	        </hbox>
+	<groupbox id="newobjectgroup" width="400" align="left" style="border:1px solid black;">
+		<separator class="groove-thin" orient="horizontal" width="400" height="30"/> 
+		<hbox align="left">
+			<vbox>
+				<label id="lblex3" align="right" width="135" control="section" value="&object.label;"/>
+			</vbox>
+			<vbox>
+				<menulist id="section" width="150">
+					<menupopup>
+						<menuitem label="" value=""/>
+					</menupopup>
+				</menulist>
+			</vbox>
+			<vbox>
+				<button width="50" label="&archive.label;" accesskey="c" image="&imagearchive.value;" oncommand="attachmentWidnowOpen('create');"/>
+			</vbox>
+		</hbox>
+		<separator class="groove-thin" orient="horizontal" width="180" height="100"/>
+	</groupbox>
+ 		<caption label="&newcontact.label;" />
+		<groupbox id="newcontactgroup" width="400" align="left" style="border:1px solid black;">
+			<separator class="groove-thin" orient="horizontal" width="400" height="30"/>
+		    <hbox align="left">
+			    <vbox>
+				    <label align="right" width="135" id="lblsection" control="section" value="&partner.label;"/>
+			    </vbox>
+			    <vbox>
+				    <button label="&create.label;" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
+			    </vbox>
+		    </hbox> 
+	        <separator class="groove-thin" orient="horizontal" width="180" height="215"/>
+		</groupbox>
 
-	        <separator class="groove-thin" orient="horizontal" width="180"/>
-   
-            <hbox align="left">
-                <vbox>
-	                <label align="right" width="135" id="lblsection" control="section" value="&partner.label;"/>
-                </vbox>
-                <vbox>
-	                <button label="&create.label;" image="&imagecreate.value;" oncommand="Create.onMenuItemCommand(event);"/>
-                </vbox>
-            </hbox> 
-        <separator class="groove-thin" orient="horizontal" width="480"/> 
- </groupbox>
-</vbox>
-  
-  
-</hbox>
-<hbox height="60" align="right" width="800">
-	    <button label="&close.label;" accesskey="l" image="&imagecancel.value;" oncommand="win_close();"/>
-   </hbox> 
+	</vbox>
+	</hbox>
+		<hbox height="60" align="right" width="800">
+			<button label="&close.label;" accesskey="l" image="&imagecancel.value;" oncommand="win_close();"/>
+		</hbox> 
 </window>

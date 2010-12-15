@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-30 17:48+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -34,9 +34,9 @@ msgid "Budgetary Positions"
 msgstr "Budget Positionen"
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -68,11 +68,6 @@ msgid "Validate User"
 msgstr "Genehmige Benutzer"
 
 #. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
 msgstr "Drucke Finanzbudget"
@@ -102,22 +97,16 @@ msgid "at"
 msgstr "bei"
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Druck Budgets..."
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
 msgstr "Währung:"
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -135,14 +124,14 @@ msgid "Percentage"
 msgstr "Prozentsatz"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "bis"
+
+#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Status"
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -173,9 +162,9 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "bis"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Zur Genehmigung"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -219,11 +208,6 @@ msgstr "Istwert"
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Enddatum:"
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
@@ -317,9 +301,10 @@ msgid "Approve"
 msgstr "Genehmige"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "Zur Genehmigung"
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Anfangsdatum"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -337,13 +322,6 @@ msgid "Start of period"
 msgstr "Startdatum"
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr "Druck Budgets..."
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr "Budget"
@@ -355,22 +333,12 @@ msgid "Theoretical Amt"
 msgstr "Soll"
 
 #. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht unterstützt für osv_memory Objekte"
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Select Dates Period"
 msgstr "Wähle Perioden"
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -473,13 +441,6 @@ msgid "Budget Lines"
 msgstr "Budget Positionen"
 
 #. module: account_budget
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-"vorhanden sein !"
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -494,10 +455,9 @@ msgid "Budget Management"
 msgstr "Budget Management"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Anfangsdatum"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -505,13 +465,14 @@ msgstr "Anfangsdatum"
 msgid "Analysis from"
 msgstr "Analyse vom"
 
-#. module: account_budget
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
 #~ msgid "% performance"
 #~ msgstr "% Leistungsfähigkeit"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Printing date:"
 #~ msgstr "Druckdatum:"
@@ -545,6 +506,9 @@ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #~ msgid "Select Options"
 #~ msgstr "Wähe Optionen"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "Print Summary of Budgets"
 #~ msgstr "Drucke Finanzbudget"
@@ -617,3 +581,26 @@ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 #~ "\n"
 #~ "    3. von den Analysekonten zeigt die Abweichungen.\n"
 #~ "\n"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht unterstützt für osv_memory Objekte"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

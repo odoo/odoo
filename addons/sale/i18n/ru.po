@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-05 20:05+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-14 21:02+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr "Позволяет рассчитать стоимость доставки по вашему предложению."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -285,20 +290,14 @@ msgid "August"
 msgstr "Август"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
-
-#. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr "Позволяет рассчитать стоимость доставки по вашему предложению."
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Все предложения"
 
 #. module: sale
 #: report:sale.order:0
@@ -408,6 +407,12 @@ msgstr "Выполняется"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Бухгалтерский учет"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -668,9 +673,10 @@ msgid "Shipped"
 msgstr "Доставлено"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Все предложения"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "неверный режим для test_state"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -847,18 +853,6 @@ msgid "Pricelist version for current sale order"
 msgstr "Версия каталога для текущего заказа на продажу"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"Вы выбрали количество %d единиц.\n"
-"Но это не соответствует выбранной упаковке.\n"
-"Предложение количеств в соответствии с упаковкой: "
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr "Даты заказа на продажу"
@@ -870,10 +864,13 @@ msgid "Sale Order Line"
 msgstr "Позиция заказа"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Цена за ед."
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Создать счет"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -1046,12 +1043,6 @@ msgstr "Доставки в Счета"
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "В ожидании расписания"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "неверный режим для test_state"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1272,12 +1263,6 @@ msgid "Sales Management"
 msgstr "Управление продажами"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Количество: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr "Будет проверено бухгалтером"
@@ -1381,13 +1366,10 @@ msgid "Sales"
 msgstr "Продажи"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Создать счет"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Цена за ед."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1683,6 +1665,17 @@ msgid "Sales by Month"
 msgstr "Продажи по месяцу"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Заказ на продажу"
@@ -1691,12 +1684,6 @@ msgstr "Заказ на продажу"
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
 msgstr "Количество (UoS)"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2335,6 +2322,10 @@ msgstr "Счет основанный на доставках"
 #~ msgid "Sales By Partner"
 #~ msgstr "Продажи по партнеру"
 
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
+
 #~ msgid ""
 #~ "A sale order generates an invoice, as soon as it is confirmed by the "
 #~ "salesman. Depending on the Invoicing control of the sale order, the invoice "
@@ -2350,8 +2341,22 @@ msgstr "Счет основанный на доставках"
 #~ msgid "Sales By Customer"
 #~ msgstr "Продажи по заказчику"
 
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+#~ msgstr ""
+#~ "Вы выбрали количество %d единиц.\n"
+#~ "Но это не соответствует выбранной упаковке.\n"
+#~ "Предложение количеств в соответствии с упаковкой: "
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Количество: "
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Правила не поддерживаются для объектов osv_memory !"
