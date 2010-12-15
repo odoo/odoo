@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:20+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:20+0000\n"
+"POT-Creation-Date: 2010-12-15 17:21:47+0000\n"
+"PO-Revision-Date: 2010-12-15 17:21:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -150,6 +150,11 @@ msgid "My Departments Employee"
 msgstr ""
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+msgid "Married"
+msgstr ""
+
+#. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
@@ -266,9 +271,9 @@ msgid "Other information"
 msgstr ""
 
 #. module: hr
-#: view:hr.installer:0
-#: model:ir.actions.act_window,name:hr.action_hr_installer
-msgid "Human Resources Application Configuration"
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
 msgstr ""
 
 #. module: hr
@@ -327,6 +332,11 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
+msgstr ""
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+msgid "Divorced"
 msgstr ""
 
 #. module: hr
@@ -625,6 +635,11 @@ msgid "Payroll"
 msgstr ""
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+msgid "Single"
+msgstr ""
+
+#. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
 msgstr ""
@@ -668,9 +683,9 @@ msgid "Resource"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
+#: view:hr.installer:0
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
 msgstr ""
 
 #. module: hr
@@ -742,6 +757,11 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
+msgstr ""
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+msgid "Widower"
 msgstr ""
 
 #. module: hr

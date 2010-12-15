@@ -70,7 +70,7 @@ class hr_employee_marital_status(osv.osv):
     _name = "hr.employee.marital.status"
     _description = "Employee Marital Status"
     _columns = {
-        'name': fields.char('Marital Status', size=32, required=True),
+        'name': fields.char('Marital Status', size=32, required=True, translate=True),
         'description': fields.text('Status Description'),
     }
 
