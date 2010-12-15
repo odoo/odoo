@@ -174,13 +174,15 @@
                             <group colspan="2" col="2">
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
-                                <field name="invoice_id" readonly="1" groups="base.group_extended" />
                                 <field name="fiscal_position" widget="selection"/>
                             </group>
                             <newline/>
                             <separator string="Purchase Control" colspan="4"/>
                             <field name="validator"/>
                             <field name="date_approve"/>
+                        	<separator string="Invoices" colspan="4"/>
+                        	<newline/>
+                        	<field name="invoice_ids" readonly="1" groups="base.group_extended" nolabel="1" colspan="4"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>

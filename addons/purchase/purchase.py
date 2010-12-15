@@ -88,12 +88,23 @@ class purchase_order(osv.osv):
                 res[purchase.id]=min_date
         return res
 
+    def _get_invoices(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for purchase in self.browse(cr, uid, ids, context=context):
+            invoice_ids = []
+            for line in purchase.order_line:
+                for inv_line in line.invoice_lines:
+                    invoice_ids.append(inv_line.invoice_id.id)
+            res[purchase.id] = invoice_ids
+        return res
+
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
             tot = 0.0
-            if purchase.invoice_id and purchase.invoice_id.state not in ('draft','cancel'):
-                tot += purchase.invoice_id.amount_untaxed
+            for invoice in purchase.invoice_ids:
+                if invoice.state not in ('draft','cancel'):
+                    tot += invoice.amount_untaxed
             if purchase.amount_untaxed:
                 res[purchase.id] = tot * 100.0 / purchase.amount_untaxed
             else:
@@ -137,10 +148,10 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            if purchase.invoice_id.reconciled:
-                res[purchase.id] = purchase.invoice_id.reconciled
-            else:
-                res[purchase.id] = False
+            invoiced = []
+            for invoice in purchase.invoice_ids:
+                invoiced.append(invoice.reconciled)
+            res[purchase.id] = invoiced
         return res
 
     STATE_SELECTION = [
@@ -177,7 +188,7 @@ class purchase_order(osv.osv):
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, help="An invoice generated for a purchase order"),
+        'invoice_ids': fields.function(_get_invoices, method=True, type='many2many', relation="account.invoice", string="Invoice", help="Invoices generated for a purchase order"),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
@@ -375,7 +386,7 @@ class purchase_order(osv.osv):
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
             self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
-            self.write(cr, uid, [o.id], {'invoice_id': inv_id})
+            self.write(cr, uid, [o.id], {'invoice_ids': [4, inv_id]})
             res = inv_id
         return res
 
@@ -396,14 +407,14 @@ class purchase_order(osv.osv):
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
-            inv = purchase.invoice_id
-            if inv and inv.state not in ('cancel','draft'):
-                raise osv.except_osv(
-                    _('Could not cancel this purchase order !'),
-                    _('You must first cancel all invoices attached to this purchase order.'))
-            if inv:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+            for inv in purchase.invoice_ids:
+                if inv and inv.state not in ('cancel','draft'):
+                    raise osv.except_osv(
+                        _('Could not cancel this purchase order !'),
+                        _('You must first cancel all invoices attached to this purchase order.'))
+                if inv:
+                    wf_service = netsvc.LocalService("workflow")
+                    wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
         for (id,name) in self.name_get(cr, uid, ids):
             message = _("Purchase order '%s' is cancelled.") % name
@@ -467,7 +478,7 @@ class purchase_order(osv.osv):
             'state':'draft',
             'shipped':False,
             'invoiced':False,
-            'invoice_id':False,
+            'invoice_ids':{},
             'picking_ids':[],
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
