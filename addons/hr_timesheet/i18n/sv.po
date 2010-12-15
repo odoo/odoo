@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-23 09:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
@@ -123,14 +123,15 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Logga in / Logga ut"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Utfört arbete i senaste perioden"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -204,21 +205,11 @@ msgid "Sat"
 msgstr "Sat"
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Sun"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -231,11 +222,6 @@ msgstr ""
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Skriv ut"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -272,16 +258,6 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
@@ -313,11 +289,9 @@ msgid "September"
 msgstr "September"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "December"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Tidrapportrad"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -366,10 +340,9 @@ msgid "Fri"
 msgstr "Fri"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Standardenhet och inköpsenhet måste tillhöra samma kategori."
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Logga in / Logga ut"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -388,11 +361,6 @@ msgstr "(Lämna blankt för aktuell tid)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Tidrapporter"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -441,6 +409,11 @@ msgstr ""
 #, python-format
 msgid "November"
 msgstr "November"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -505,6 +478,13 @@ msgid "Analysis summary"
 msgstr "Analysis summary"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "December"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -527,21 +507,9 @@ msgid "février"
 msgstr "februari"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
@@ -565,11 +533,6 @@ msgstr "Aktuellt datum"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Tidrapportrad"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -685,11 +648,6 @@ msgid "Start Working"
 msgstr "Börja arbeta"
 
 #. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fel: felaktig ean kod"
-
-#. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
 msgstr "Status per anställd"
@@ -727,8 +685,17 @@ msgstr "Ändra arbete"
 msgid "septembre"
 msgstr "september"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "Sign in status"
 #~ msgstr "Logga in status"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Standardenhet och inköpsenhet måste tillhöra samma kategori."
 
 #~ msgid "Choose your month"
 #~ msgstr "Välj din månad"
@@ -759,6 +726,15 @@ msgstr "september"
 
 #~ msgid "Timesheet Process"
 #~ msgstr "Tidrapportprocess"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fel: felaktig ean kod"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
 
 #, python-format
 #~ msgid ""

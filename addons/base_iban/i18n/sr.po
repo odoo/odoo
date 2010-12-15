@@ -7,32 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2010-10-30 14:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: base_iban
 #: model:ir.module.module,shortdesc:base_iban.module_meta_information
 msgid "Create IBAN bank accounts"
 msgstr "Kreiraj IBAN nalog banke"
-
-#. module: base_iban
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:0
@@ -84,6 +72,11 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
+#: sql_constraint:res.partner.bank:0
+msgid "The BVR adherent number must be unique !"
+msgstr ""
+
+#. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "IBAN konto"
@@ -92,3 +85,11 @@ msgstr "IBAN konto"
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
 msgid "acc_number"
 msgstr "Broj konta"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"

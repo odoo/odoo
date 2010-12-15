@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-05 07:16+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-13 13:54+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1017,11 +1017,6 @@ msgid "Landscape Mode"
 msgstr "Режим: пейзаж"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_liability
-msgid "Bilanzkonten - Passiva - Kapitalkonten"
-msgstr ""
-
-#. module: account
 #: view:board.board:0
 msgid "Customer Invoices to Approve"
 msgstr "Счета заказчиков для утверждения"
@@ -1252,6 +1247,11 @@ msgid "Overdue Payments"
 msgstr "Просроченные платежи"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1438,11 +1438,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Шаблон для финансовой области"
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1946,7 +1941,7 @@ msgstr "Открытые проводки"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
 msgid ""
-"A vendor refund is a credit note from your supplier indicating that he "
+"A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
 
@@ -2038,7 +2033,7 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr ""
+msgstr "Искать шаблоны планов счетов"
 
 #. module: account
 #: view:account.account.type:0
@@ -2667,11 +2662,6 @@ msgstr ""
 #. module: account
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
-msgstr ""
-
-#. module: account
-#: model:account.account.type,name:account.account_type_view
-msgid "Ansicht"
 msgstr ""
 
 #. module: account
@@ -6368,6 +6358,15 @@ msgid "Taxes:"
 msgstr "Налоги"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Банковский счет партнера для оплаты\\n\n"
+"Оставьте пустым для использования по умолчанию"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6584,13 +6583,6 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Подтвердить"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -7425,7 +7417,7 @@ msgstr "Валюта компании"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Chart of Account"
-msgstr ""
+msgstr "План счетов"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7699,7 +7691,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_configuration_misc
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Прочее"
 
 #. module: account
 #: help:res.partner,debit:0
@@ -7825,6 +7817,11 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
+msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account
@@ -10119,13 +10116,6 @@ msgstr ""
 
 #~ msgid "analytic Invoice"
 #~ msgstr "aналитический счет"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Банковский счет партнера для оплаты\\n\n"
-#~ "Оставьте пустым для использования по умолчанию"
 
 #~ msgid "Message"
 #~ msgstr "Сообщение"

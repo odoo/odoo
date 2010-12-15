@@ -62,7 +62,7 @@ class crm_claim_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('type','=','claim')]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),

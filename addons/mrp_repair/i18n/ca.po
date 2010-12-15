@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-30 11:18+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -48,9 +48,9 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
+msgstr "Recrea factura"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -213,13 +213,18 @@ msgstr "Confirmat"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Recrea factura"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Comanda de reparacions"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allows you to organize your reparations on the products. On a "
+"repair order, you can detail the components you remove, add or replace and "
+"record the time you spent on the different operations. The repair order uses "
+"the warranty date on the production lot in order to know if you have to "
+"invoice the reparation to the customer or not."
+msgstr ""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -231,11 +236,6 @@ msgstr "Comanda reparació nº"
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr "Número de lot"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "En reparació"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -291,11 +291,6 @@ msgid "Total :"
 msgstr "Total :"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -318,11 +313,6 @@ msgstr "Notes del pressupost"
 #, python-format
 msgid "Warning!"
 msgstr ""
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -420,8 +410,8 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
@@ -430,12 +420,9 @@ msgid "Repair Order"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "En reparació"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -769,6 +756,15 @@ msgstr "Preparat per reparació"
 msgid "No partner !"
 msgstr "No existeix empresa!"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
 #~ msgid "Make invoices"
 #~ msgstr "Realitza factures"
 
@@ -858,3 +854,6 @@ msgstr "No existeix empresa!"
 
 #~ msgid "Quality"
 #~ msgstr "Qualitat"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."

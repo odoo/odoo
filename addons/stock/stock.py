@@ -613,7 +613,7 @@ class stock_picking(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
@@ -2033,6 +2033,7 @@ class stock_move(osv.osv):
         picking_ids = []
         move_ids = []
         partial_obj=self.pool.get('stock.partial.picking')
+        wf_service = netsvc.LocalService("workflow")
         partial_id=partial_obj.search(cr,uid,[])
         if partial_id:
             partial_datas=partial_obj.read(cr,uid,partial_id)[0]
@@ -2058,22 +2059,19 @@ class stock_move(osv.osv):
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                     if move.move_dest_id.picking_id:
-                        wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
-            prodlot_id =partial_datas and  partial_datas.get('move%s_prodlot_id'%(move.id), False)
+            prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
-                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id})
-            if move_ids:
-                self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
-                wf_service = netsvc.LocalService("workflow")
-                for id in move_ids:
-                     wf_service.trg_trigger(uid, 'stock.move', id, cr)
+                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
 
-        wf_service = netsvc.LocalService("workflow")
+        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        for id in move_ids:
+             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+
         for pick_id in picking_ids:
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 

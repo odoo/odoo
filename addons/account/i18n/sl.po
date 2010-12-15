@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-07 18:05+0000\n"
-"Last-Translator: Matjaž Godec <Unknown>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-09 07:37+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-09 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -1018,11 +1018,6 @@ msgid "Landscape Mode"
 msgstr "Ležeče"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_liability
-msgid "Bilanzkonten - Passiva - Kapitalkonten"
-msgstr ""
-
-#. module: account
 #: view:board.board:0
 msgid "Customer Invoices to Approve"
 msgstr ""
@@ -1253,6 +1248,11 @@ msgid "Overdue Payments"
 msgstr "Zamujena plačila"
 
 #. module: account
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1438,11 +1438,6 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
-
-#. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
 msgstr ""
 
 #. module: account
@@ -1947,7 +1942,7 @@ msgstr "Odprte postavke"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
 msgid ""
-"A vendor refund is a credit note from your supplier indicating that he "
+"A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
 
@@ -2664,11 +2659,6 @@ msgstr ""
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr "Znesek osnove"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_view
-msgid "Ansicht"
-msgstr ""
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -6351,6 +6341,15 @@ msgid "Taxes:"
 msgstr "Davek:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Partnerjev bančni račun\n"
+"Pustite prazno za privzeti račun"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6567,13 +6566,6 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Potrdi"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -7804,6 +7796,11 @@ msgstr "Vsili obdobje"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
+msgstr ""
+
+#. module: account
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account
@@ -10236,13 +10233,6 @@ msgstr ""
 
 #~ msgid "Reconciliation of entries from invoice(s) and payment(s)"
 #~ msgstr "Zapiranje računov in plačil"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Partnerjev bančni račun\n"
-#~ "Pustite prazno za privzeti račun"
 
 #~ msgid "Validated accounting entries."
 #~ msgstr "Potrjene knjižbe"

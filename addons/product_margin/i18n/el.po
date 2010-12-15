@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-12 09:21+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -36,9 +36,12 @@ msgid "From"
 msgstr "Από"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
+"Άθροισμα των Γινομένων του Τιμοκαταλόγου Πωλήσεων και των ποσοτήτων στα "
+"Τιμολόγια Πώλησης"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -61,31 +64,10 @@ msgid "From Date"
 msgstr "Από Ημερ/νία"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Πρόχειρα, Ανοικτά και Πληρωμένα"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του Αντικειμένου θα πρέπει να ξεκινά με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες"
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
-"Άθροισμα των Γινομένων του Τιμοκαταλόγου Πωλήσεων και των ποσοτήτων στα "
-"Τιμολόγια Πώλησης"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -157,11 +139,6 @@ msgstr "# Τιμολογημένων"
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Σύνολο Κόστους"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -277,6 +254,11 @@ msgid "General Information"
 msgstr "Γενικές Πληροφορίες"
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Κενό Αγορών"
@@ -317,6 +299,9 @@ msgstr "Περιθόριο Προϊόντος"
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "(Εξαιρούμενη Πώληση) - (Κύκλος Εργασιών)"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Εξαιρούμενη Πώληση - Κανονικό Κόστος"
 
@@ -328,3 +313,12 @@ msgstr "Περιθόριο Προϊόντος"
 
 #~ msgid "Turnorder - Total Cost"
 #~ msgstr "Τζίρος - Συνολικό Κόστος"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου θα πρέπει να ξεκινά με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"
