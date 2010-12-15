@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-01 07:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -143,17 +143,6 @@ msgid "Object Test"
 msgstr "Обьектийн тест"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"Error in Read method:\" + str(e))]\n"
-"                else:\n"
-"                    if size < 5:\n"
-"                        speed_list = [obj, size, code_base_complexity, "
-"code_half_complexity, code_size_complexity, _(\"Warning! Not enough demo data"
-msgstr ""
-
-#. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Save Report"
 msgstr "Тайланг хадгалах"
@@ -196,11 +185,6 @@ msgid "Result of pep8_test in %"
 msgstr "pep8_test % тестийн үр дүн"
 
 #. module: base_module_quality
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Модулийн нэр давхцах ёсгүй !"
-
-#. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
 msgstr "Төлөв"
@@ -231,11 +215,6 @@ msgstr ""
 "Зарим тестүүд бусдаасаа чухал учраас эцсийн үнэлгээнд илүү жинтэй нөлөөлнө"
 
 #. module: base_module_quality
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Модулийн сертификат ID давхцах ёсгүй !"
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
@@ -263,11 +242,6 @@ msgstr "Өгөгдөлгүй"
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
 msgid "module.quality.detail"
 msgstr "module.quality.detail"
-
-#. module: base_module_quality
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
@@ -475,22 +449,9 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: base_module_quality
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
 msgstr "Нийт оноо (%)"
-
-#. module: base_module_quality
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -539,6 +500,12 @@ msgstr ""
 #: field:module.quality.detail,detail:0
 msgid "Details"
 msgstr "Дэлгэрэнгүй"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Warning! Not enough demo data"
+msgstr ""
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -684,5 +651,20 @@ msgstr "Чанар"
 msgid "Feed back About terp file of Module"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
 #~ msgid "Base module quality"
 #~ msgstr "Модулийн чанар"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Модулийн нэр давхцах ёсгүй !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Модулийн сертификат ID давхцах ёсгүй !"

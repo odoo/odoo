@@ -6,42 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-23 09:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale_journal
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: sale_journal
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Kundorder och inköp"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr ""
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr ""
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -49,33 +22,13 @@ msgid "Note"
 msgstr "Notering"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Grupperad"
-
-#. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
 msgstr ""
 
 #. module: sale_journal
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: field:stock.picking,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Fakturatyp"
-
-#. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the invoice "
-"type without removing it."
-msgstr ""
-
-#. module: sale_journal
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale_journal
@@ -92,18 +45,15 @@ msgid ""
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Fakturametod"
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Kundorder och inköp"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Aktiva"
-
-#. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
 msgstr ""
 
 #. module: sale_journal
@@ -112,24 +62,9 @@ msgid "Notes"
 msgstr "Anteckningar"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sale Order"
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr ""
-
-#. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
 msgstr "Fakturametod"
-
-#. module: sale_journal
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -139,9 +74,37 @@ msgid "Invoice Types"
 msgstr "Fakturatyper"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Managing sales and deliveries by journal"
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Grupperad"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Fakturametod"
+
+#. module: sale_journal
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Fakturatyp"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Aktiva"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -149,6 +112,16 @@ msgid "Partner"
 msgstr ""
 
 #. module: sale_journal
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
 msgstr ""
+
+#. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Managing sales and deliveries by journal"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"

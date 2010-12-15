@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-01 07:10+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
@@ -27,9 +27,11 @@ msgid "Menu Create"
 msgstr "Criar Menu"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Tipo da Nota"
 
 #. module: board
 #: view:board.note:0
@@ -52,11 +54,6 @@ msgstr "Últimas Conexões"
 #, python-format
 msgid "User Error!"
 msgstr "Erro de Usuário!"
-
-#. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View!"
 
 #. module: board
 #: view:board.board:0
@@ -84,11 +81,6 @@ msgid "Board"
 msgstr "Painel"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Você não pode criar um Menu recursivo."
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
@@ -99,13 +91,6 @@ msgstr "Atividade Global Semanal"
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Título"
-
-#. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto deve começar com x_ e não conter caracteres especiais!"
 
 #. module: board
 #: field:res.log.report,nbr:0
@@ -124,21 +109,11 @@ msgid "Open Dashboard"
 msgstr "Abrir painel"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr "Tipo de Nota"
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Atividade Mensal por Documento"
-
-#. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
 
 #. module: board
 #: view:res.log.report:0
@@ -274,11 +249,6 @@ msgstr "Fornece a ordem sequencial ao exibir uma lista de linhas de painel."
 
 #. module: board
 #: selection:res.log.report,month:0
-msgid "September"
-msgstr "Setembro"
-
-#. module: board
-#: selection:res.log.report,month:0
 msgid "April"
 msgstr "Abril"
 
@@ -323,11 +293,6 @@ msgid "Latest Activities"
 msgstr "Últimas Atividades"
 
 #. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
-
-#. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
 msgstr "Esquerda"
@@ -358,10 +323,9 @@ msgid "Sequence"
 msgstr "Sequência"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Tipo da Nota"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "Setembro"
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -417,11 +381,6 @@ msgid "Please Insert Dashboard View(s) !"
 msgstr "Por favor insira Visões de Painel"
 
 #. module: board
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
-
-#. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
@@ -436,6 +395,9 @@ msgstr "Assunto"
 #~ msgid "board.note"
 #~ msgstr "board.note"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View!"
+
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"
 
@@ -444,3 +406,26 @@ msgstr "Assunto"
 
 #~ msgid "Dashboards"
 #~ msgstr "Painéis"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto deve começar com x_ e não conter caracteres especiais!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Você não pode criar um Menu recursivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "NOte Type"
+#~ msgstr "Tipo de Nota"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"
