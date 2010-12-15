@@ -274,67 +274,65 @@
   <story>
   	<pto>
   	<pto_header>
-  		<blockTable colWidths="50.0,30.0,60.0,60.0,130.0,64.0,64.0,79.0" style="Table2">
-  			[[ display_currency(data) == False or removeParentNode('blockTable') ]]
-	        <tr>
-	          <td>
-	            <para style="terp_tblheader_Details">Date</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details">JNRL</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Centre">Ref</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Centre">Account</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details">Entry Label</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Debit</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Credit</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Balance</para>
-	          </td>
-	        </tr>
-	      </blockTable>
-  		<blockTable colWidths="45.0,30.0,60.0,50.0,75.0,64.0,64.0,79.0,70.0" style="Table8">
-  			[[ display_currency(data) == True or removeParentNode('blockTable') ]]
-	        <tr>
-	          <td>
-	            <para style="terp_tblheader_Details">Date</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details">JNRL</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Centre">Ref</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Centre">Account</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details">Entry Label</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Debit</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Credit</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Balance</para>
-	          </td>
-	          <td>
-	            <para style="terp_tblheader_Details_Right">Currency</para>
-	          </td>
-	        </tr>
-	      </blockTable>
+  	<blockTable colWidths="50.0,30.0,60.0,60.0,130.0,64.0,64.0,79.0" style="Table2">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Date</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details">JNRL</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Centre">Ref</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Centre">Account</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details">Entry Label</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Debit</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Credit</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Balance</para>
+          </td>
+        </tr>
+      </blockTable>
+  	<blockTable colWidths="45.0,30.0,60.0,50.0,75.0,64.0,64.0,79.0,70.0" style="Table8">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Date</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details">JNRL</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Centre">Ref</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Centre">Account</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details">Entry Label</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Debit</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Credit</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Balance</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Currency</para>
+          </td>
+        </tr>
+      </blockTable>
   	</pto_header>
     <para style="terp_default_8">[[ repeatIn(objects, 'p') ]]</para>
     <para style="terp_default_8">[[ setLang(p.lang) ]]</para>

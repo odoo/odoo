@@ -132,25 +132,25 @@
   <story>
   <pto>
   <pto_header>
-    <blockTable colWidths="202.0,87.0,71.0,57.0,42.0,71.0" style="Table7">
+    <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table7">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Description</para>
+          <para style="terp_tblheader_General">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Taxes</para>
+          <para style="terp_tblheader_General_Centre">Taxes</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Quantity</para>
+          <para style="terp_tblheader_General_Right">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price </para>
+          <para style="terp_tblheader_General_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Disc.(%)</para>
+          <para style="terp_tblheader_General_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_General_Right">Price</para>
         </td>
       </tr>
     </blockTable>
@@ -219,31 +219,31 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="202.0,87.0,71.0,57.0,42.0,71.0" style="Table7">
+    <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table7">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Description</para>
+          <para style="terp_tblheader_General">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Taxes</para>
+          <para style="terp_tblheader_General_Centre">Taxes</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Quantity</para>
+          <para style="terp_tblheader_General_Right">Quantity</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price </para>
+          <para style="terp_tblheader_General_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Disc.(%)</para>
+          <para style="terp_tblheader_General_Right">Disc.(%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_General_Right">Price</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_2">[[ repeatIn(o.invoice_line,'l') ]]</para>
-      <blockTable colWidths="202.0,88.0,71.0,57.0,42.0,71.0" style="Table8">
+      <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table8">
         <tr>
           <td>
             <para style="terp_default_9">[[ l.name ]]</para>
@@ -258,7 +258,7 @@
             <para style="terp_default_Right_9">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(l.discount, digits=get_digits(dp='Account')) ]] </para>
+            <para style="terp_default_Centre_9">[[ formatLang(l.discount, digits=get_digits(dp='Account')) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
