@@ -1598,7 +1598,7 @@ class stock_move(osv.osv):
         return res
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
-                        loc_id=False, product_id=False, context=None):
+                        loc_id=False, product_id=False, uom_id=False, context=None):
         """ On change of production lot gives a warning message.
         @param prodlot_id: Changed production lot id
         @param product_qty: Quantity of product
@@ -1610,13 +1610,19 @@ class stock_move(osv.osv):
             return {}
         ctx = context and context.copy() or {}
         ctx['location_id'] = loc_id
+        ctx.update({'raise-exception': True})
+        uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product_uom = product_obj.browse(cr, uid, product_id).uom_id
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location = self.pool.get('stock.location').browse(cr, uid, loc_id)
+        uom = uom_obj.browse(cr, uid, uom_id, ctx)
+        amount = uom_obj._compute_qty_obj(cr, uid, product_uom, product_qty, uom, ctx)
         warning = {}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
             warning = {
                 'title': _('Insufficient Stock in Lot !'),
-                'message': _('You are moving %.2f products but only %.2f available in this lot.') % (product_qty, prodlot.stock_available or 0.0)
+                'message': _('You are moving %.2f %s products but only %.2f %s available in this lot.') % (product_qty, uom.name, prodlot.stock_available or 0.0, uom.name)
             }
         return {'warning': warning}
 
@@ -1671,7 +1677,7 @@ class stock_move(osv.osv):
             result['product_qty'] = product_uos_qty
 
         return {'value': result}
-    
+
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, address_id=False):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
