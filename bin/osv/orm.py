@@ -1392,7 +1392,7 @@ class orm_template(object):
         if ('lang' in context) and not result:
             if node.get('string'):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
-                if not trans and ('base_model_name' in context):
+                if trans == node.get('string') and ('base_model_name' in context):
                     trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string'))
                 if trans:
                     node.set('string', trans)
@@ -1666,6 +1666,7 @@ class orm_template(object):
         ok = True
         model = True
         sql_res = False
+        parent_view_model = None
         while ok:
             view_ref = context.get(view_type + '_view_ref', False)
             if view_ref and not view_id:
@@ -1677,7 +1678,7 @@ class orm_template(object):
                         view_id = view_ref_res[0]
 
             if view_id:
-                query = "SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s"
+                query = "SELECT arch,name,field_parent,id,type,inherit_id,model FROM ir_ui_view WHERE id=%s"
                 params = (view_id,)
                 if model:
                     query += " AND model=%s"
@@ -1685,7 +1686,7 @@ class orm_template(object):
                 cr.execute(query, params)
             else:
                 cr.execute('''SELECT
-                        arch,name,field_parent,id,type,inherit_id
+                        arch,name,field_parent,id,type,inherit_id,model
                     FROM
                         ir_ui_view
                     WHERE
@@ -1701,6 +1702,7 @@ class orm_template(object):
             ok = sql_res[5]
             view_id = ok or sql_res[3]
             model = False
+            parent_view_model = sql_res[6]
 
         # if a view was found
         if sql_res:
@@ -1758,7 +1760,12 @@ class orm_template(object):
             result['field_parent'] = False
             result['view_id'] = 0
 
-        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
+        if parent_view_model != self._name:
+          ctx = context.copy()
+          ctx['base_model_name'] = parent_view_model
+        else:
+          ctx = context
+        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
