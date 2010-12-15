@@ -26,10 +26,12 @@ import inspect
 import itertools
 import locale
 import os
+import pooler
 import re
 import logging
 import tarfile
 import tempfile
+import threading
 from os.path import join
 import logging
 
@@ -153,48 +155,79 @@ logger = logging.getLogger('translate')
 
 class GettextAlias(object):
 
+    def _get_db_pool(self):
+        # find current DB based on thread/worker db name (see netsvc)
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            dbname = getattr(threading.currentThread(), 'dbname')
+            return pooler.get_db_and_pool(dbname)
+        return (None, None)
+
     def _get_cr(self, frame):
-        is_new_cr = False
-        cr = frame.f_locals.get('cr')
+        new_cr = False
+        cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
-            cr = getattr(s, 'cr', False)
-            if not cr:
-                if frame.f_globals.get('pooler', False):
-                    # TODO: we should probably get rid of the 'is_new_cr' case: no cr in locals -> no translation for you
-                    dbs = frame.f_globals['pooler'].pool_dic.keys()
-                    if len(dbs) == 1:
-                        cr = pooler.get_db(dbs[0]).cursor()
-                        is_new_cr = True
-        return cr, is_new_cr
+            cr = getattr(s, 'cr', None)
+        if not cr:
+            db, _ = self._get_db_pool()
+            if db:
+                cr = db.cursor()
+                new_cr = True
+        return cr, new_cr
 
     def _get_lang(self, frame):
-        lang = frame.f_locals.get('context', {}).get('lang', False)
+        lang = None
+        ctx = frame.f_locals.get('context')
+        if not ctx:
+            kwargs = frame.f_locals.get('kwargs')
+            if kwargs is None:
+                args = frame.f_locals.get('args')
+                if args and isinstance(args, (list, tuple)) \
+                        and isinstance(args[-1], dict):
+                    ctx = args[-1]
+            elif isinstance(kwargs, dict):
+                ctx = kwargs.get('context')
+        if ctx:
+            lang = ctx.get('lang')
         if not lang:
-            args = frame.f_locals.get('args', False)
-            if args:
-                lang = args[-1].get('lang', False)
-            if not lang:
-                s = frame.f_locals.get('self', {})
-                c = getattr(s, 'localcontext', {})
-                lang = c.get('lang', False)
+            s = frame.f_locals.get('self', {})
+            c = getattr(s, 'localcontext', None)
+            if c:
+                lang = c.get('lang')
         return lang
 
     def __call__(self, source):
-        is_new_cr = False
         res = source
+        cr = None
+        new_cr = False
         try:
-            frame = inspect.stack()[1][0]
-            cr, is_new_cr = self._get_cr(frame)
+            frame = inspect.currentframe()
+            if frame is None:
+                return source
+            frame = frame.f_back
+            if not frame:
+                return source
             lang = self._get_lang(frame)
-            if lang and cr:
-                cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
-                res_trans = cr.fetchone()
-                res = res_trans and res_trans[0] or source
+            if lang:
+                cr, new_cr = self._get_cr(frame)
+                if cr:
+                    # Try to use ir.translation to benefit from global cache if possible
+                    _, pool = self._get_db_pool()
+                    if pool:
+                        res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
+                    else:
+                        cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
+                        res_trans = cr.fetchone()
+                        res = res_trans and res_trans[0] or source
+                else:
+                    logger.debug('no context cursor detected, skipping translation for "%r"', source)
+            else:
+                logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
-            logger.debug('translation went wrong for string %s', repr(source))
+            logger.debug('translation went wrong for "%r", skipped', source)
         finally:
-            if is_new_cr:
+            if cr and new_cr:
                 cr.close()
         return res
 
