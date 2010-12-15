@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-22 20:31+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -27,13 +27,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Object"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -64,12 +57,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "attendee"
+msgid "dtstamp"
+msgstr "dtstamp"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -91,11 +86,6 @@ msgstr ""
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
 msgstr "Manages an Helpdesk service."
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -189,11 +179,6 @@ msgid "ICS Calendar"
 msgstr "ICS Calendar"
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
 msgstr "ICS Value"
@@ -204,24 +189,14 @@ msgid "Expression as constant"
 msgstr ""
 
 #. module: document_ics
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr ""
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "location"
 msgstr "location"
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "attendee"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -370,22 +345,10 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Business Opportunities"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "dtstamp"
-
-#. module: document_ics
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #~ msgid "Configure Calendars for CRM Sections"
 #~ msgstr "Configure Calendars for CRM Sections"
@@ -398,6 +361,9 @@ msgstr ""
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "document.directory.ics.fields"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
 
 #~ msgid "Used by companies to track bugs and support requests on softwares"
 #~ msgstr "Used by companies to track bugs and support requests on softwares"
@@ -415,6 +381,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
 #~ "integration..."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
 
 #~ msgid ""
 #~ "Allows you to track and manage prospects which are pre-sales requests or "

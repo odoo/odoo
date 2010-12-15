@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-12-01 07:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -33,11 +33,6 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr ""
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
 msgstr ""
 
 #. module: purchase
@@ -75,11 +70,6 @@ msgstr "Địa chỉ đích"
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr ""
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -486,15 +476,13 @@ msgid "Invoice Control"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
 msgstr ""
 
 #. module: purchase
@@ -570,11 +558,6 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr ""
@@ -622,11 +605,6 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Bạn không thể có 2 phiên bản bảng giá chồng chéo nhau!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -702,9 +680,10 @@ msgid "Validated by"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML không hợp lệ cho Kiến trúc Xem!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
@@ -727,11 +706,6 @@ msgstr ""
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: purchase
@@ -839,14 +813,9 @@ msgid "Month"
 msgstr "Tháng"
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
 msgstr ""
 
 #. module: purchase
@@ -864,11 +833,6 @@ msgstr ""
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
 msgstr "Tổng số tiền không thuế"
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
-msgstr ""
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -951,6 +915,11 @@ msgid "Purchase Order Line"
 msgstr ""
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr ""
@@ -961,12 +930,11 @@ msgid "Purchase Order Merge"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Lỗi ! Bạn không thể tạo trình đơn đệ quy."
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr ""
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1014,6 +982,11 @@ msgid "Qty. per product"
 msgstr ""
 
 #. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
 msgstr ""
@@ -1027,11 +1000,6 @@ msgstr "Bán hàng & Mua hàng"
 #: selection:purchase.report,month:0
 msgid "June"
 msgstr "Tháng Sáu"
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Tên nhóm phải duy nhất !"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1124,8 +1092,8 @@ msgid "Cancel Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: purchase
@@ -1143,15 +1111,6 @@ msgstr "Bảng điều khiển"
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-"Lỗi! Bạn không thể chỉ định bảng giá chính là bảng giá khác trong các mục "
-"bảng giá!"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1192,9 +1151,15 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr ""
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Tên của mô đun phải duy nhất !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1271,9 +1236,9 @@ msgid "Purchase Order Lines"
 msgstr ""
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Độ dài trường dữ liệu không thể nhỏ hơn 1 !"
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1292,14 +1257,6 @@ msgstr "Tài liệu gốc"
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr ""
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Tên đối tượng phải được bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc "
-"biệt nào!"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1354,6 +1311,12 @@ msgid "Warehouse"
 msgstr "Kho hàng"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr ""
@@ -1368,12 +1331,6 @@ msgstr "Ngày được chấp thuận"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
 msgstr ""
 
 #. module: purchase
@@ -1640,11 +1597,6 @@ msgid "Addresses"
 msgstr "Địa chỉ"
 
 #. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
 msgstr ""
@@ -1732,3 +1684,40 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Bạn không thể có 2 phiên bản bảng giá chồng chéo nhau!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML không hợp lệ cho Kiến trúc Xem!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Lỗi ! Bạn không thể tạo trình đơn đệ quy."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Tên nhóm phải duy nhất !"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Lỗi! Bạn không thể chỉ định bảng giá chính là bảng giá khác trong các mục "
+#~ "bảng giá!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Tên của mô đun phải duy nhất !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Tên đối tượng phải được bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc "
+#~ "biệt nào!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Độ dài trường dữ liệu không thể nhỏ hơn 1 !"
