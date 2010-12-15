@@ -2,20 +2,19 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -27,7 +26,7 @@ from tools.translate import _
 class survey_name_wiz(osv.osv_memory):
     _name = 'survey.name.wiz'
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         """
         Set the default value in survey_id field. if open this wizard in survey form then set the default value in survey_id = active survey id.
 
@@ -38,7 +37,7 @@ class survey_name_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for created survey statistics report
         """
-        if not context:
+        if context is None:
             context = {}
         data = super(survey_name_wiz, self).default_get(cr, uid, fields, context)
         if context.has_key('survey_id'):
@@ -75,7 +74,7 @@ class survey_name_wiz(osv.osv_memory):
                             u_list.append(use.id)
                         if uid in u_list:
                             result.append((sur.id, sur.title))
-                return result     
+                return result
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
             if sur.state == 'open':
                 res = False

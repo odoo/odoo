@@ -179,8 +179,8 @@
                     <field name="register_min"/>
                     <field name="register_current"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)"/>
-                    <field name="state"/>
                     <field name="user_id"/>
+                    <field name="state"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
                     <button string="Event Done" help="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
@@ -239,7 +239,7 @@
                               domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
-                        <field name="section_id" default="context.get('section_id', False)" widget="selection" groups="base.group_extended">
+                        <field name="section_id" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
                                   domain="[('section_id.user_id','=',uid)]"
@@ -280,7 +280,7 @@
             res_model="event.registration"
             src_model="event.event"
             view_mode="tree,form,calendar,graph"
-            context="{'search_default_event_id': active_id}"
+            domain="[('event_id','=',active_id)]"
             view_type="form"/>
 
       <act_window

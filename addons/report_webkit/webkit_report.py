@@ -35,12 +35,12 @@ import report
 import tempfile
 import time
 from mako.template import Template
-
+from mako import exceptions
 import netsvc
 import pooler
 from report_helper import WebKitHelper
 from report.report_sxw import *
-from tools.config import config
+import addons
 from tools.translate import _
 from osv.osv import except_osv
 
@@ -84,8 +84,10 @@ class WebKitParser(report_sxw):
                             _('path to Wkhtmltopdf is not absolute'),
                             'for path %s'%(path)
                             )
-    def generate_pdf(self, comm_path, report_xml, header, footer, html_list):
+    def generate_pdf(self, comm_path, report_xml, header, footer, html_list, webkit_header=False):
         """Call webkit in order to generate pdf"""
+        if not webkit_header:
+            webkit_header = report_xml.webkit_header
         tmp_dir = tempfile.gettempdir()
         out = report_xml.name+str(time.time())+'.pdf'
         out = os.path.join(tmp_dir, out.replace(' ',''))
@@ -95,7 +97,7 @@ class WebKitParser(report_sxw):
             command = [comm_path]
         else:
             command = ['wkhtmltopdf']
-                
+
         command.append('-q')
         if header :
             head_file = file( os.path.join(
@@ -120,20 +122,22 @@ class WebKitParser(report_sxw):
             file_to_del.append(foot_file.name)
             command.append("--footer-html '%s'"%(foot_file.name))
             
-        if report_xml.webkit_header.margin_top :
-            command.append('--margin-top %s'%(report_xml.webkit_header.margin_top))
-        if report_xml.webkit_header.margin_bottom :
-            command.append('--margin-bottom %s'%(report_xml.webkit_header.margin_bottom))
-        if report_xml.webkit_header.margin_left :
-            command.append('--margin-left %s'%(report_xml.webkit_header.margin_left))
-        if report_xml.webkit_header.margin_right :
-            command.append('--margin-right %s'%(report_xml.webkit_header.margin_right))
-        if report_xml.webkit_header.orientation :
-            command.append("--orientation '%s'"%(report_xml.webkit_header.orientation))
-        if report_xml.webkit_header.format :
-            command.append(" --page-size '%s'"%(report_xml.webkit_header.format))
+        if webkit_header.margin_top :
+            command.append('--margin-top %s'%(webkit_header.margin_top))
+        if webkit_header.margin_bottom :
+            command.append('--margin-bottom %s'%(webkit_header.margin_bottom))
+        if webkit_header.margin_left :
+            command.append('--margin-left %s'%(webkit_header.margin_left))
+        if webkit_header.margin_right :
+            command.append('--margin-right %s'%(webkit_header.margin_right))
+        if webkit_header.orientation :
+            command.append("--orientation '%s'"%(webkit_header.orientation))
+        if webkit_header.format :
+            command.append(" --page-size '%s'"%(webkit_header.format))
+        count = 0
         for html in html_list :
-            html_file = file(os.path.join(tmp_dir, str(time.time()) + '.body.html'), 'w')
+            html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
+            count += 1
             html_file.write(html)
             html_file.close()
             file_to_del.append(html_file.name)
@@ -168,6 +172,8 @@ class WebKitParser(report_sxw):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid, self.name, 'report', self.localcontext.get('lang', 'en_US'), src)
+        if not res :
+            return src
         return res 
  
     def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
@@ -207,14 +213,14 @@ class WebKitParser(report_sxw):
         
         if context is None:
             context={}
-            
+
         if report_xml.report_type != 'webkit':
             return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
 
         self.parser_instance = self.parser(
-                                            cursor, 
-                                            uid, 
-                                            self.name2, 
+                                            cursor,
+                                            uid,
+                                            self.name2,
                                             context=context
                                         )
 
@@ -225,7 +231,7 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = os.path.join(config['addons_path'], report_xml.report_file)
+            path = addons.get_module_resource(report_xml.report_file)
             if os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :
@@ -272,45 +278,64 @@ class WebKitParser(report_sxw):
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = Template(template ,input_encoding='utf-8')
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
-        html = body_mako_tpl.render(     helper=helper, 
-                                         css=css,
-                                         _=self.translate_call,
-                                         **self.parser_instance.localcontext
-                                         )
+        try :
+            html = body_mako_tpl.render(     helper=helper,
+                                             css=css,
+                                             _=self.translate_call,
+                                             **self.parser_instance.localcontext
+                                        )
+        except Exception, e:
+            msg = exceptions.text_error_template().render()
+            netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+            raise except_osv(_('Webkit render'), msg)
         head_mako_tpl = Template(header, input_encoding='utf-8')
-        head = head_mako_tpl.render(
-                                    company=company, 
-                                    time=time, 
-                                    helper=helper, 
-                                    css=css,
-                                    formatLang=self.formatLang,
-                                    setLang=self.setLang,
-                                    _=self.translate_call,
-                                    _debug=False
-                                )
+        try :
+            head = head_mako_tpl.render(
+                                        company=company,
+                                        time=time,
+                                        helper=helper,
+                                        css=css,
+                                        formatLang=self.formatLang,
+                                        setLang=self.setLang,
+                                        _=self.translate_call,
+                                        _debug=False
+                                    )
+        except Exception, e:
+            raise except_osv(_('Webkit render'),
+                exceptions.text_error_template().render())
         foot = False
         if footer :
             foot_mako_tpl = Template(footer ,input_encoding='utf-8')
-            foot = foot_mako_tpl.render(
-                                        company=company, 
-                                        time=time, 
-                                        helper=helper, 
-                                        css=css, 
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
-                                        _=self.translate_call,
-                                        )
+            try :
+                foot = foot_mako_tpl.render(
+                                            company=company,
+                                            time=time,
+                                            helper=helper,
+                                            css=css,
+                                            formatLang=self.formatLang,
+                                            setLang=self.setLang,
+                                            _=self.translate_call,
+                                            )
+            except:
+                msg = exceptions.text_error_template().render()
+                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                raise except_osv(_('Webkit render'), msg)
         if report_xml.webkit_debug :
-            deb = head_mako_tpl.render(
-                                        company=company, 
-                                        time=time, 
-                                        helper=helper, 
-                                        css=css, 
-                                        _debug=html,
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
-                                        _=self.translate_call,
-                                        )
+            try :
+                deb = head_mako_tpl.render(
+                                            company=company,
+                                            time=time,
+                                            helper=helper,
+                                            css=css,
+                                            _debug=html,
+                                            formatLang=self.formatLang,
+                                            setLang=self.setLang,
+                                            _=self.translate_call,
+                                            )
+            except Exception, e:
+                msg = exceptions.text_error_template().render()
+                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid, company.id)
         pdf = self.generate_pdf(bin, report_xml, head, foot, [html])

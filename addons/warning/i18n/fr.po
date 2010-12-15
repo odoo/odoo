@@ -6,17 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 20:15+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"PO-Revision-Date: 2010-12-01 14:11+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Ligne de Commande d'Achat"
@@ -32,6 +33,22 @@ msgid "Message for Purchase Order Line"
 msgstr "Message pour Ligne de Commande Fournisseur"
 
 #. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: warning
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Ligne de Commande Client"
@@ -42,12 +59,28 @@ msgid "Warning when Purchasing this Product"
 msgstr "Avertissement lors d'un Achat de ce Produit"
 
 #. module: warning
+#: model:ir.model,name:warning.model_product_product
+msgid "Product"
+msgstr "Produit"
+
+#. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Avertissements"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Avertissement"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
@@ -72,11 +105,7 @@ msgid "No Message"
 msgstr "Aucun Message"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: warning
+#: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
 msgstr "Facture"
@@ -94,6 +123,7 @@ msgid "Warning when Selling this Product"
 msgstr "Avertissement lors de la Vente de ce Produit"
 
 #. module: warning
+#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Commande Client"
@@ -104,6 +134,7 @@ msgid "Stock Picking"
 msgstr "Colisage"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Commande Fournisseur"
@@ -119,12 +150,14 @@ msgid "Message for Purchase Order"
 msgstr "Message pour Commande Fournisseur"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
+#, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -148,6 +181,11 @@ msgstr ""
 "formulaires"
 
 #. module: warning
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
 msgstr "Avertissement sur les Colisages"
@@ -158,21 +196,33 @@ msgid "Warning on the Purchase Order"
 msgstr "Avertissement sur les Commandes d'Achat"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr ""
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Sale Order"
 msgstr "Avertissement sur les Commandes de Ventes"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Avertissement"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
 msgid "Message for Stock Picking"
 msgstr "Message pour Colisage"
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Le nom du module doit être unique !"

@@ -8,14 +8,14 @@
     date_stop: !eval "'%s-12-31' %(datetime.now().year+1)"
     name: !eval "'Fiscal Year %s' %(datetime.now().year+1)"
 -
-  I create a period for the month of january for the new fiscalyear
+  I create a period for the opening entries for the new fiscalyear
 -
   !record {model: account.period, id: account_period_jan11}:
     company_id: base.main_company
     date_start: !eval "'%s-01-01'% (datetime.now().year+1)"
-    date_stop: !eval "'%s-12-31'% (datetime.now().year+1)"
+    date_stop: !eval "'%s-01-01'% (datetime.now().year+1)"
     fiscalyear_id: account_fiscalyear_fiscalyear0
-    name: !eval "'Jan%s' %(datetime.now().year+1)"
+    name: !eval "'OP %s' %(datetime.now().year+1)"
     special: 1
 
 -

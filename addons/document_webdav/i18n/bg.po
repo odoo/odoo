@@ -7,25 +7,141 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-05-30 15:14+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:52+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. module: document_webdav_old
-#: model:ir.module.module,description:document_webdav_old.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"\t* WebDav Interface\n"
-"\t* User Authentification\n"
-"\t* Document Indexation\n"
+#. module: document_webdav
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
 msgstr ""
-"Това е завършена система за управление на документи:\n"
-"\t* WebDav интерфейс\n"
-"\t* Удостоверяване на потребителите\n"
-"\t* Индексиране на документите\n"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: field:document.webdav.dir.property,namespace:0
+msgid "Namespace"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.directory,dav_prop_ids:0
+msgid "DAV properties"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Group By..."
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "These properties will be added to WebDAV requests"
+msgstr ""
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid "PyWebDAV Import Error!"
+msgstr ""
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "WebDAV properties"
+msgstr ""
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr ""
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid ""
+"Please install PyWebDAV from "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_dir_props
+msgid "DAV properties for folders"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.directory:0
+#: view:document.webdav.dir.property:0
+msgid "Properties"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,name:0
+msgid "Name"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+msgid "Value"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Dir"
+msgstr ""
+
+#. module: document_webdav
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr ""
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Search Document storage"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+msgid "Substitute"
+msgstr ""
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "\t* WebDav Interface\n"
+#~ "\t* User Authentification\n"
+#~ "\t* Document Indexation\n"
+#~ msgstr ""
+#~ "Това е завършена система за управление на документи:\n"
+#~ "\t* WebDav интерфейс\n"
+#~ "\t* Удостоверяване на потребителите\n"
+#~ "\t* Индексиране на документите\n"

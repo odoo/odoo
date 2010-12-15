@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 02:54+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
@@ -23,10 +23,23 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
-"Πίνακας Σχέσεων μεταξύ χρηστών και προϊόντων στον αναλυτικό λογαριασμό"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr ""
+
+#. module: analytic_user_function
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
+"ειδικούς χαρακτήρες!"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -35,8 +48,17 @@ msgstr "Προϊόν"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
+#: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Αναλυτική Λογαριασμού"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid ""
+"There is no expense account define ' \\n                                    "
+"'for this product: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -50,17 +72,23 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
 msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
+"Πίνακας Σχέσεων μεταξύ χρηστών και προϊόντων στον αναλυτικό λογαριασμό"
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
 msgstr "Αναλυτική Λειτουργία Χρήστη"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid ""
+"There is no expense account define ' \\n                                'for "
+"this product: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0

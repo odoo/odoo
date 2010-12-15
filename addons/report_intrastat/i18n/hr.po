@@ -6,64 +6,52 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-08-03 09:02+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: report:account.invoice.intrastat:0
+msgid "Cancelled Invoice"
 msgstr ""
-"Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Canceled Invoice"
-msgstr "Poništen Račun"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr ""
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
 msgstr "Popust (%)"
 
 #. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat
-msgid "Intrastat (this month)"
-msgstr "Intrastat (Ovaj mjesec)"
-
-#. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Supplier Invoice"
 msgstr "Račun Dobavljača"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nepravilno ime modela u definiciji radnje."
-
-#. module: report_intrastat
-#: field:report.intrastat,name:0
-msgid "Period"
-msgstr "Razdoblje"
-
-#. module: report_intrastat
-#: model:ir.ui.menu,name:report_intrastat.next_id_90
-msgid "All Months"
-msgstr "Svi mjeseci"
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -71,30 +59,39 @@ msgid "Import"
 msgstr "Uvoz"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "VAT :"
 msgstr "PDV :"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Document"
 msgstr "Dokument"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Taxes:"
 msgstr "Porezi:"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Opis"
+#: selection:report.intrastat,month:0
+msgid "March"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "May"
+msgstr ""
 
 #. module: report_intrastat
 #: field:report.intrastat,type:0
@@ -107,7 +104,7 @@ msgid "Invoice Intrastat"
 msgstr "Intrastat Račun"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Invoice Date"
 msgstr "Datum Računa"
 
@@ -117,44 +114,67 @@ msgid "Intrastat Reporting - Reporting"
 msgstr "Intrastat Izvještavanje - Izvještavanje"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Tel. :"
 msgstr "Tel:"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Base"
-msgstr "Osnova"
-
-#. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Quantity"
 msgstr "Količina"
 
 #. module: report_intrastat
-#: model:ir.ui.menu,name:report_intrastat.next_id_89
+#: report:account.invoice.intrastat:0
+msgid "Base"
+msgstr "Osnova"
+
+#. module: report_intrastat
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "January"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "July"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
+msgid "Intrastat code"
+msgstr "Intrastat Kod"
+
+#. module: report_intrastat
+#: view:report.intrastat:0
 msgid "This Month"
 msgstr "Ovaj mjesec"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Partner Ref."
 msgstr "Referenca Partnera"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Total (inclu. taxes):"
 msgstr "Ukupno (uklj. poreze)"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "Povrat novca"
+#: selection:report.intrastat,month:0
+msgid "February"
+msgstr ""
 
 #. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
@@ -162,17 +182,42 @@ msgid "Intrastat report"
 msgstr "Intrastat Izvještaj"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Invoice"
 msgstr "Račun"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "September"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Taxes"
 msgstr "Porezi"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: selection:report.intrastat,month:0
+msgid "April"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Amount"
 msgstr "Iznos"
 
@@ -187,14 +232,14 @@ msgid "Value"
 msgstr "Vrijednost"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 msgid "Intrastat"
 msgstr "Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Draft Invoice"
 msgstr "Nacrt računa"
 
@@ -204,23 +249,41 @@ msgid "Supply Units"
 msgstr "Jedinice Dobave"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Intrastat Kod"
+#: selection:report.intrastat,month:0
+msgid "November"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+msgid "Refund"
+msgstr "Povrat novca"
 
 #. module: report_intrastat
 #: field:report.intrastat,ref:0
-msgid "Origin"
-msgstr "Porijeklo"
+msgid "Source document"
+msgstr ""
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat,weight:0
 msgid "Weight"
 msgstr "Težina"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_product_template
+msgid "Product Template"
+msgstr ""
 
 #. module: report_intrastat
 #: field:res.country,intrastat:0
@@ -228,7 +291,12 @@ msgid "Intrastat member"
 msgstr "Intarstat Član"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: selection:report.intrastat,month:0
+msgid "December"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Tax"
 msgstr "Porez"
 
@@ -236,6 +304,11 @@ msgstr "Porez"
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Kod Zemlje"
+
+#. module: report_intrastat
+#: field:report.intrastat,month:0
+msgid "Month"
+msgstr ""
 
 #. module: report_intrastat
 #: field:report.intrastat,currency_id:0
@@ -248,22 +321,27 @@ msgid "Export"
 msgstr "Izvezi"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Fax :"
 msgstr "Fax :"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: field:report.intrastat,name:0
+msgid "Year"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Supplier Refund"
 msgstr "Povrat Dobavljaču"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Total (excl. taxes):"
 msgstr "Ukupno (isklj. poreze)"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Price"
 msgstr "Cijena"
 
@@ -273,3 +351,29 @@ msgstr "Cijena"
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Intrastat Kod"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Poništen Račun"
+
+#~ msgid "Intrastat (this month)"
+#~ msgstr "Intrastat (Ovaj mjesec)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nepravilno ime modela u definiciji radnje."
+
+#~ msgid "Period"
+#~ msgstr "Razdoblje"
+
+#~ msgid "All Months"
+#~ msgstr "Svi mjeseci"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+
+#~ msgid "Origin"
+#~ msgstr "Porijeklo"

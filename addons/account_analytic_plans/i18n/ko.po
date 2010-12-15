@@ -7,75 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
 "PO-Revision-Date: 2010-08-02 22:01+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-11 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account4_ids:0
-msgid "Account4 Id"
-msgstr "계정4 ID"
-
-#. module: account_analytic_plans
-#: constraint:ir.model:0
+#: view:analytic.plan.create.model:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
-
-#. module: account_analytic_plans
-#: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
-#: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
-msgid "Crossovered Analytic"
-msgstr "교차 분석"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account5_ids:0
-msgid "Account5 Id"
-msgstr "계정5 ID"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
-msgid "End Date"
-msgstr "마감 날짜"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,rate:0
-msgid "Rate (%)"
-msgstr "비율 (%)"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan:0
-#: field:account.analytic.plan,name:0
-#: field:account.analytic.plan.line,plan_id:0
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
-msgid "Analytic Plan"
-msgstr "분석 플랜"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
-msgid "Analytic Instance Line"
-msgstr "분석 인스턴스 라인"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Lines"
-msgstr "분석 배분 라인"
-
-#. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "인쇄"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "To Date"
+"This distribution model has been saved.You will be able to reuse it later."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -84,128 +29,45 @@ msgid "Plan Id"
 msgstr "플랜 ID"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
-msgid "Analytic Distribution's Models"
-msgstr "분석 배분 모델"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Account Name"
-msgstr "계정 이름"
+#: report:account.analytic.account.crossovered.analytic:0
+#: view:account.crossovered.analytic:0
+#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
+#: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
+msgid "Crossovered Analytic"
+msgstr "교차 분석"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
-msgstr "분석 배분 라인"
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
+msgstr "분석 플랜"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "배분 코드"
-
-#. module: account_analytic_plans
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "액션 정의에서 유효하지 않은 모델 이름"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,name:0
-msgid "Plan Name"
-msgstr "플랜 이름"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "인쇄 날짜"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Percentage"
-msgstr "퍼센트"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,empty_line:0
-msgid "Dont show empty lines"
-msgstr "빈 라인 숨기기"
-
-#. module: account_analytic_plans
-#: wizard_view:wizard.crossovered.analytic,init:0
-msgid "Select Information"
-msgstr "정보 선택"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "계정3 ID"
+#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
+msgid "Multiple-plans management in Analytic Accounting"
+msgstr "분석 계정에서 다중 플랜 관리"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
+#: view:account.crossovered.analytic:0
+#: field:account.crossovered.analytic,journal_ids:0
 msgid "Analytic Journal"
 msgstr "분석 저널"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "100.00%"
-msgstr "100.00%"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,ref:0
-msgid "Analytic Account Ref."
-msgstr "분석 계정 참조"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account :"
-msgstr "분석 계정:"
-
-#. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
 msgstr "분석 플랜 라인"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account Reference:"
-msgstr "분석 계정 참조:"
-
-#. module: account_analytic_plans
-#: model:ir.actions.wizard,name:account_analytic_plans.create_model
-msgid "Create Model"
-msgstr "모델 생성"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan,default_instance_id:0
-msgid "Default Entries"
-msgstr "디폴트 엔트리"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan:0
-#: field:account.analytic.plan,plan_ids:0
-#: field:account.journal,plan_id:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
-msgid "Analytic Plans"
-msgstr "분석 플랜"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "허용된 최소 퍼센트 (%)"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account1_ids:0
-msgid "Account1 Id"
-msgstr "계정1 ID"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,max_required:0
-msgid "Maximum Allowed (%)"
-msgstr "최대 허용 수준 (%)"
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "Distribution Model Saved"
-msgstr "배분 모델이 저장됨"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
@@ -213,14 +75,223 @@ msgid "Analytic Plan Instance"
 msgstr "분석 플랜 인스턴스"
 
 #. module: account_analytic_plans
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
-msgid "Distribution Models"
-msgstr "배분 모델"
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,plan_id:0
+msgid "Model's Plan"
+msgstr "모델의 플랜"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account2_ids:0
+msgid "Account2 Id"
+msgstr "계정2 ID"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "계정 ID"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Amount"
+msgstr "금액"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "코드"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account6_ids:0
+msgid "Account6 Id"
+msgstr "계정6 ID"
+
+#. module: account_analytic_plans
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
+msgid "Multi Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,ref:0
+msgid "Analytic Account Reference"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "인쇄 날짜"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
+msgid "Analytic Distribution's Models"
+msgstr "분석 배분 모델"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+msgid "Print"
+msgstr "인쇄"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Percentage"
+msgstr "퍼센트"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr "같은 이름과 코드를 가진 모델이 이미 있습니다 !"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr "정의된 분석 플랜이 없습니다 !"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,rate:0
+msgid "Rate (%)"
+msgstr "비율 (%)"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,plan_ids:0
+#: field:account.journal,plan_id:0
+msgid "Analytic Plans"
+msgstr "분석 플랜"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr "사용자 에러"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,max_required:0
+msgid "Maximum Allowed (%)"
+msgstr "최대 허용 수준 (%)"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "배분 모델이 저장됨"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.line:0
+msgid "Analytic Plan Lines"
+msgstr "분석 플랜 라인들"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "시작 날짜"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account5_ids:0
+msgid "Account5 Id"
+msgstr "계정5 ID"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
+msgstr "분석 인스턴스 라인"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "루트 계정"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal!"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,empty_line:0
+msgid "Dont show empty lines"
+msgstr "빈 라인 숨기기"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "분석 계정:"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
@@ -254,67 +325,46 @@ msgid ""
 "So when this line of invoice will be confirmed, it will generate 3 analytic "
 "lines,\n"
 "for one account entry.\n"
+"The analytic plan validates the minimum and maximum percentage at the time "
+"of creation\n"
+"of distribution models.\n"
 "        "
 msgstr ""
-"이 모델은 여러 분석 플랜들을 일반 저널에 따라 이용할 수 있도록 허용합니다. \n"
-"따라서, 인보이스 또는 엔트리가 확정될 때, 여러 분석 라인들이 생성됩니다. \n"
-"\n"
-"가령, 다음과 같은 분석 구조를 정의할 수 있습니다:\n"
-"\n"
-"  프로젝트\n"
-"      프로젝트 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      프로젝트 2\n"
-"  세일즈맨\n"
-"      도 동\n"
-"      김 동\n"
-"\n"
-"\n"
-"여기서, 플랜 두 개가 있습니다: 프로젝트와 세일즈맨. 인보이스 라인은\n"
-"두 플랜에서 분석 엔트리를 작성할 수 있어야 합니다: SubProj 1.1과 김 동.\n"
-"금액 역시 분할될 수 있습니다. 다음 예는 두 서브프로젝트를 한 명의 세일즈맨\n"
-"에게 할당하는 인보이스의 예입니다.\n"
-"플랜1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"플랜2:\n"
-"    도 동: 100%\n"
-"\n"
-"따라서, 이 인보이스 라인이 확정될 때, 하나의 계정 엔트리에 대해 \n"
-"3개의 분석 라인을 생성합니다.\n"
-"        "
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "분석 계정에서 다중 플랜 관리"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account Reference:"
+msgstr "분석 계정 참조:"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
-msgid "Analytic Plan Lines"
-msgstr "분석 플랜 라인들"
+#: field:account.analytic.plan.line,name:0
+msgid "Plan Name"
+msgstr "플랜 이름"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Crossovered Analytic -"
+#: field:account.analytic.plan,default_instance_id:0
+msgid "Default Entries"
+msgstr "디폴트 엔트리"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_move_line
+msgid "Journal Items"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,plan_id:0
-msgid "Model's Plan"
-msgstr "모델의 플랜"
+#: field:account.analytic.plan.instance,account1_ids:0
+msgid "Account1 Id"
+msgstr "계정1 ID"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account2_ids:0
-msgid "Account2 Id"
-msgstr "계정2 ID"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Amount"
-msgstr "금액"
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "허용된 최소 퍼센트 (%)"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
@@ -322,40 +372,131 @@ msgid "Root account of this plan."
 msgstr "이 플랜의 루트 계정"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account6_ids:0
-msgid "Account6 Id"
-msgstr "계정6 ID"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Error"
+msgstr "에러"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "Save This Distribution as a Model"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "수량"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "계정 ID"
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr "모델을 저장하기 전에 이름과 코드를 기입하십시오 !"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "코드"
+#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
+msgid "Print Crossovered Analytic"
+msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_button:create.model,info,end:0
-msgid "OK"
-msgstr "OK"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "No Analytic Journal !"
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
-msgstr "루트 계정"
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
+msgid "Bank Statement"
+msgstr ""
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
-msgstr "배분 모델이 저장되었습니다. 나중에 다시 사용할 수 있습니다."
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "계정3 ID"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account4_ids:0
+msgid "Account4 Id"
+msgstr "계정4 ID"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Lines"
+msgstr "분석 배분 라인"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "at"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Account Name"
+msgstr "계정 이름"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
+msgstr "분석 배분 라인"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "배분 코드"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "100.00%"
+msgstr "100.00%"
+
+#. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.bank.statement.line,analytics_id:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "분석 배분"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date2:0
+msgid "End Date"
+msgstr "마감 날짜"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr "배분 모델"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -363,73 +504,116 @@ msgid "Sequence"
 msgstr "시퀀스"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "분석 계정"
-
-#. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "분석 배분"
-
-#. module: account_analytic_plans
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
-msgid "Analytic Distribution's models"
-msgstr "분석 배분 모델"
-
-#. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,end:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date1:0
-msgid "Start Date"
-msgstr "시작 날짜"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "at"
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "From Date"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr "값 에러"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
 msgstr ""
 
 #~ msgid "Currency:"
 #~ msgstr "통화:"
 
-#, python-format
-#~ msgid "A model having this name and code already exists !"
-#~ msgstr "같은 이름과 코드를 가진 모델이 이미 있습니다 !"
+#~ msgid "Select Information"
+#~ msgstr "정보 선택"
 
-#, python-format
-#~ msgid "No analytic plan defined !"
-#~ msgstr "정의된 분석 플랜이 없습니다 !"
+#~ msgid "Analytic Account Ref."
+#~ msgstr "분석 계정 참조"
 
-#, python-format
-#~ msgid "User Error"
-#~ msgstr "사용자 에러"
+#~ msgid "Create Model"
+#~ msgstr "모델 생성"
 
-#, python-format
-#~ msgid "Error"
-#~ msgstr "에러"
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "이 모델은 여러 분석 플랜들을 일반 저널에 따라 이용할 수 있도록 허용합니다. \n"
+#~ "따라서, 인보이스 또는 엔트리가 확정될 때, 여러 분석 라인들이 생성됩니다. \n"
+#~ "\n"
+#~ "가령, 다음과 같은 분석 구조를 정의할 수 있습니다:\n"
+#~ "\n"
+#~ "  프로젝트\n"
+#~ "      프로젝트 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      프로젝트 2\n"
+#~ "  세일즈맨\n"
+#~ "      도 동\n"
+#~ "      김 동\n"
+#~ "\n"
+#~ "\n"
+#~ "여기서, 플랜 두 개가 있습니다: 프로젝트와 세일즈맨. 인보이스 라인은\n"
+#~ "두 플랜에서 분석 엔트리를 작성할 수 있어야 합니다: SubProj 1.1과 김 동.\n"
+#~ "금액 역시 분할될 수 있습니다. 다음 예는 두 서브프로젝트를 한 명의 세일즈맨\n"
+#~ "에게 할당하는 인보이스의 예입니다.\n"
+#~ "플랜1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "플랜2:\n"
+#~ "    도 동: 100%\n"
+#~ "\n"
+#~ "따라서, 이 인보이스 라인이 확정될 때, 하나의 계정 엔트리에 대해 \n"
+#~ "3개의 분석 라인을 생성합니다.\n"
+#~ "        "
 
-#, python-format
-#~ msgid "Please put a name and a code before saving the model !"
-#~ msgstr "모델을 저장하기 전에 이름과 코드를 기입하십시오 !"
+#~ msgid "OK"
+#~ msgstr "OK"
 
 #~ msgid "Period from"
 #~ msgstr "시작 날짜"
 
-#, python-format
-#~ msgid "Value Error"
-#~ msgstr "값 에러"
+#~ msgid "Analytic Distribution's models"
+#~ msgstr "분석 배분 모델"
+
+#~ msgid ""
+#~ "This distribution model has been saved. You will be able to reuse it later."
+#~ msgstr "배분 모델이 저장되었습니다. 나중에 다시 사용할 수 있습니다."
 
 #~ msgid "Printing date:"
 #~ msgstr "인쇄 날짜:"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "액션 정의에서 유효하지 않은 모델 이름"

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from datetime import datetime
+
 from osv import fields, osv
 
 class Invoice(osv.osv):

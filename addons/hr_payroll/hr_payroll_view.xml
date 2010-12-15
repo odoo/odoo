@@ -402,20 +402,25 @@
             <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="double_validation" position="replace">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Payroll Configurtion"/>
-                        <field name="type"/>
-                        <field name="head_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/>
-                        <field name="code" readonly="True"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Validation"/>
-                        <field name="double_validation"/>
-                    </group>
-                </field>
-            </field>
+            <xpath expr="//group[@name='selection']" position="replace">
+				<group colspan="2">
+							<separator string="Validation" colspan="2"/>
+								<newline/>
+							<field name="active" />
+								<newline/>							
+							<field name="double_validation"/>
+								<newline/>
+							<field name="limit"/>
+			  	</group>
+				<group colspan="2">						
+					<separator colspan="2" string="Payroll Configurtion"/><newline/>
+					<field name="type"/><newline/>
+					<field name="head_id"/><newline/>
+					<field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/><newline/>
+					<field name="code" readonly="True"/>
+				</group>
+			</xpath>
+        </field>
         </record>
         <!-- End Holiday Status -->
 
@@ -744,7 +749,7 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
                         <filter string="Based" icon="terp-go-month" domain="[]" context="{'group_by':'base'}"/>
-                        <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                </search>
             </field>
@@ -840,8 +845,8 @@
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-partner" name="amount_type" context="{'group_by':'amount_type'}"/>
-                        <filter string="Category" name="category_id" icon="terp-go-month"  context="{'group_by':'category_id'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" name="amount_type" context="{'group_by':'amount_type'}"/>
+                        <filter string="Category" name="category_id" icon="terp-stock_symbol-selection"  context="{'group_by':'category_id'}"/>
                     </group>
                 </search>
             </field>
@@ -910,9 +915,9 @@
                     </notebook>
                     <group col="6" colspan="6">
                         <field name="state"/>
+                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
                         <button name="confirm_sheet"  icon="gtk-apply" string="Confirm Sheet" states="draft" type="object"/>
                         <button name="set_to_draft" string="Set to Draft"  icon="gtk-convert"  states="cancel,confirm" type="object"/>
-                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
                     </group>
                 </form>
             </field>
@@ -1089,7 +1094,7 @@
             domain="[('employee_id', '=', active_id)]"
             res_model="hr.payslip"
             src_model="hr.employee"
-            view_id ="eval('view_hr_payslip_tree')"
+            view_id ="view_hr_payslip_tree"
             id="act_hr_employee_payslip_list"/>
     </data>
 </openerp>

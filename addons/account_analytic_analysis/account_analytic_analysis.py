@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from osv.orm import intersect
+from osv.orm import intersect, except_orm
 import tools.sql
 from tools.translate import _
 from decimal_precision import decimal_precision as dp
@@ -250,33 +250,56 @@ class account_analytic_account(osv.osv):
 
     def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
-        if parent_ids:
-            cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(amount_currency), 0.0) \
+        res_final = {}
+        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+        for i in child_ids:
+            res[i] =  {}
+            for n in [name]:
+                res[i][n] = 0.0
+        if not child_ids:
+            return res
+
+        if child_ids:
+            cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(amount), 0.0) \
                     FROM account_analytic_line \
                     JOIN account_analytic_journal \
                         ON account_analytic_line.journal_id = account_analytic_journal.id  \
                     WHERE account_analytic_line.account_id IN %s \
                         AND account_analytic_journal.type = 'sale' \
-                    GROUP BY account_analytic_line.account_id", (parent_ids,))
+                    GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
+                res[account_id][name] = round(sum,2)
+        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context)
+        for i in data:
+            res_final[i] = data[i][name]
+        return res_final
 
     def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
-        if parent_ids:
-            cr.execute("""SELECT account_analytic_line.account_id, COALESCE(SUM(amount_currency), 0.0) \
+        res_final = {}
+        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+
+        for i in child_ids:
+            res[i] =  {}
+            for n in [name]:
+                res[i][n] = 0.0
+        if not child_ids:
+            return res
+
+        if child_ids:
+            cr.execute("""SELECT account_analytic_line.account_id, COALESCE(SUM(amount), 0.0) \
                     FROM account_analytic_line \
                     JOIN account_analytic_journal \
                         ON account_analytic_line.journal_id = account_analytic_journal.id \
                     WHERE account_analytic_line.account_id IN %s \
                         AND amount<0 \
-                    GROUP BY account_analytic_line.account_id""",(parent_ids,))
+                    GROUP BY account_analytic_line.account_id""",(child_ids,))
             for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
+                res[account_id][name] = round(sum,2)
+        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context)
+        for i in data:
+            res_final[i] = data[i][name]
+        return res_final
 
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}

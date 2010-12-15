@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-09 07:09+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-30 14:34+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
@@ -22,9 +22,21 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "Error !"
+msgstr "Hata !"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
+msgid "Timesheet Line"
 msgstr ""
+
+#. module: analytic_user_function
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr "Nesne adı x_ ile başlamalı ve özel karakter içermemelidir!"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -33,14 +45,23 @@ msgstr "Ürün"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
+#: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analiz Hesabı"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid ""
+"There is no expense account define ' \\n                                    "
+"'for this product: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
-msgstr ""
+msgstr "Kullanıcı/Ürün İlşk."
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,user_id:0
@@ -48,17 +69,24 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
+msgstr "İlişkili tablo analitik hesapta kullanıcılar ve ürün arasında"
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
+msgstr "Analitik Kullanıcı Fonksiyonu"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid ""
+"There is no expense account define ' \\n                                'for "
+"this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
-msgstr ""
+msgstr "Bu Analitik Hesap İçin Kullanıcının Ürünü"

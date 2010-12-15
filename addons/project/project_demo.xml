@@ -3,6 +3,9 @@
     <data noupdate="1">
 
          <!-- Users -->
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_user'))]" name="groups_id"/>
+        </record>
 
         <record id="res_users_analyst" model="res.users">
             <field name="name">Phuong</field>
@@ -35,7 +38,7 @@
             <field name="password">jth</field>
         </record>
         <record id="res_users_tester" model="res.users">
-            <field name="name">Alien</field>
+            <field name="name">Aline</field>
             <field eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]" name="groups_id"/>
             <field name="login">apr</field>
             <field name="password">apr</field>

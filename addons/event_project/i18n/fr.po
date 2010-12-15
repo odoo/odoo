@@ -6,28 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 03:57+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-11 23:49+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: model:ir.model,name:event_project.model_event_project
+msgid "Event Project"
+msgstr ""
 
 #. module: event_project
-#: model:ir.actions.wizard,name:event_project.wizard_event_task
-msgid "Tasks"
-msgstr "Tâches"
+#: field:event.project,date:0
+msgid "Date End"
+msgstr "Date de fin"
 
 #. module: event_project
-#: wizard_button:event.project,init,done:0
+#: view:event.project:0
 msgid "Ok"
 msgstr "Ok"
 
@@ -36,40 +36,30 @@ msgstr "Ok"
 msgid ""
 "Organization and management of events.\n"
 "\n"
-"    This module allow you to create retro planning for managing your "
+"    This module allows you to create retro planning for managing your "
 "events.\n"
 msgstr ""
-"Organisation et gestion des évènements.\n"
+"Gestion et organisation d'événements.\n"
 "\n"
-"    Ce module vous autorise à créer un rétro-planning pour gérer vos "
-"évènements.\n"
+"    Ce module vous permet de créer des rétro-plannings pour gérer vos "
+"événements.\n"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Remaining Tasks"
-msgstr "Tâches Restantes"
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
+msgstr ""
+"Ceci est le modèle de projet. Le projet d'un événement est une copie de ce "
+"modèle. Après avoir cliqué sur 'Créer rétro-planning', le nouveau projet "
+"sera copié à partir de ce modèle."
 
 #. module: event_project
-#: model:ir.module.module,shortdesc:event_project.module_meta_information
-msgid "Event - Project"
-msgstr "Évènement - Projet"
-
-#. module: event_project
-#: field:event.event,project_id:0
-#: wizard_field:event.project,init,project_id:0
-#: model:ir.actions.wizard,name:event_project.event_wiz
-msgid "Project"
-msgstr "Projet"
-
-#. module: event_project
-#: field:event.event,task_ids:0
-msgid "Project tasks"
-msgstr "Tâches du projet"
-
-#. module: event_project
-#: wizard_button:event.project,init,end:0
-msgid "Cancel"
-msgstr "Annuler"
+#: view:event.project:0
+#: model:ir.actions.act_window,name:event_project.action_event_project
+msgid "Retro-Planning"
+msgstr "Rétro-Planning"
 
 #. module: event_project
 #: view:event.event:0
@@ -77,7 +67,55 @@ msgid "Create Retro-Planning"
 msgstr "Générer le retro planning"
 
 #. module: event_project
-#: wizard_view:event.project,init:0
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: event_project
+#: field:event.event,project_id:0
+msgid "Project"
+msgstr "Projet"
+
+#. module: event_project
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr "Modèle du projet"
+
+#. module: event_project
+#: model:ir.module.module,shortdesc:event_project.module_meta_information
+msgid "Event Project - Create Retro-Planning to manage your Events"
+msgstr ""
+"Projet d'un événement - Ce module permet de créer des rétro-plannings pour "
+"gérer vos événements"
+
+#. module: event_project
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: event_project
+#: field:event.event,task_ids:0
+msgid "Project tasks"
+msgstr "Tâches du projet"
+
+#. module: event_project
+#: view:event.project:0
+msgid "Close"
+msgstr "Fermer"
+
+#. module: event_project
+#: field:event.project,date_start:0
+msgid "Date Start"
+msgstr "Date de début"
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr "Erreur, vous ne pouvez pas créer d'événement récursif !"
+
+#. module: event_project
+#: model:ir.model,name:event_project.model_event_event
 msgid "Event"
 msgstr "Évènement"
 
@@ -85,3 +123,26 @@ msgstr "Évènement"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Gestion des Tâches"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "Remaining Tasks"
+#~ msgstr "Tâches Restantes"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "Event - Project"
+#~ msgstr "Évènement - Projet"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"
+#~ msgstr ""
+#~ "Organisation et gestion des évènements.\n"
+#~ "\n"
+#~ "    Ce module vous autorise à créer un rétro-planning pour gérer vos "
+#~ "évènements.\n"

@@ -6,22 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2009-11-09 17:22+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
 msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -36,19 +34,24 @@ msgid "Open Questionnaire"
 msgstr "Ava küsimustik"
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Alamprofiilid"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
-msgstr "crm_profileerimise haldus"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "Partneri Segmenteerimised"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -57,11 +60,22 @@ msgid "Answer"
 msgstr "Vastus"
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr ""
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "Profileerimine"
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr ""
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr "Kirjeldus"
@@ -89,11 +103,6 @@ msgid "Use a questionnaire"
 msgstr "Kasuta küsimustikku"
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -101,11 +110,12 @@ msgid "Questionnaires"
 msgstr "Küsimustikud"
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
-msgstr "Küsimustik"
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
+msgstr ""
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -129,13 +139,9 @@ msgid "Included Answers"
 msgstr "Kaasatud vastused"
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
-msgstr ""
-"Märgi see kast, kui sa soovi kasutada seda kaarti segmentatsiooni reegli "
-"osana. Kui ei märgistata siis allolevat kriteeriutmit ignoreeritakse"
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Alamprofiilid"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -157,9 +163,18 @@ msgid "Cancel"
 msgstr "Tühista"
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "Partneri Segmenteerimised"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr ""
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
+msgstr "Küsimustik"
 
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
@@ -170,3 +185,24 @@ msgstr "Küsimustiku kasutamine"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Salvesta andmed"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#~ msgid "crm_profiling management"
+#~ msgstr "crm_profileerimise haldus"
+
+#~ msgid ""
+#~ "Check this box if you want to use this tab as part of the segmentation rule. "
+#~ "If not checked, the criteria beneath will be ignored"
+#~ msgstr ""
+#~ "Märgi see kast, kui sa soovi kasutada seda kaarti segmentatsiooni reegli "
+#~ "osana. Kui ei märgistata siis allolevat kriteeriutmit ignoreeritakse"

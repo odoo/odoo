@@ -6,28 +6,179 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2008-11-24 22:26+0000\n"
 "Last-Translator: Andrzej MoST (Marcin Ostajewski) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
-#: field:idea.category,name:0
-#: field:idea.idea,category_id:0
-msgid "Category"
-msgstr "Kategoria"
+#: help:idea.category,visibility:0
+msgid "If True creator of the idea will be visible to others"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_select
+msgid "Idea select"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: view:idea.vote:0
+#: model:ir.ui.menu,name:idea.menu_idea_vote
+msgid "Votes"
+msgstr "Oceny"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,comment_ids:0
+msgid "Comments"
+msgstr "Komentarze"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Submit Vote"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_report_vote_all
+#: model:ir.ui.menu,name:idea.menu_report_vote_all
+msgid "Ideas Analysis"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+#: view:idea.idea:0
+#: view:idea.vote:0
+#: view:report.vote:0
+msgid "Group By..."
+msgstr ""
+
+#. module: idea
+#: model:ir.module.module,shortdesc:idea.module_meta_information
+msgid "Idea Manager"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,day:0
+msgid "Day"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Refuse"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,count_votes:0
+msgid "Count of votes"
+msgstr "Suma ocen"
+
+#. module: idea
+#: model:ir.model,name:idea.model_report_vote
+msgid "Idea Vote Statistics"
+msgstr ""
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
-msgid "Very Good"
-msgstr "Bardzo dobry"
+msgid "Bad"
+msgstr "Zły"
+
+#. module: idea
+#: selection:report.vote,idea_state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Category of ideas"
+msgstr "Kategoria pomysłów"
+
+#. module: idea
+#: code:addons/idea/idea.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Your comment"
+msgstr "Twój komentarz"
+
+#. module: idea
+#: view:report.vote:0
+msgid "   Month   "
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_vote
+msgid "Idea Vote"
+msgstr ""
+
+#. module: idea
+#: field:idea.category,parent_id:0
+msgid "Parent Categories"
+msgstr "Kategorie wyzszego rzędu"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Bad"
+msgstr "Bardzo zły"
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Ideas vote"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,nbr:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "You can not give Vote for this idea more than %s times"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Ideas Categories"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,description:0
+msgid "Content of the idea"
+msgstr "Zawartość pomysłu"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_category
+msgid "Idea Category"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
@@ -36,35 +187,27 @@ msgid "Statistics"
 msgstr "Statystyki"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
-msgid "My Ideas"
-msgstr "Moje pomysły"
-
-#. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Not Voted"
 msgstr "Nie głosowany"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open_my
-msgid "My Open Ideas"
-msgstr "Moje Otwarte Pomysły"
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea
-#: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
-msgid "Ideas"
-msgstr "Pomysły"
+#: model:ir.model,name:idea.model_idea_select
+msgid "select idea"
+msgstr ""
+
+#. module: idea
+#: view:idea.stat:0
+msgid "stat"
+msgstr "stat"
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -72,119 +215,62 @@ msgid "Child Categories"
 msgstr "Podkategorie"
 
 #. module: idea
+#: view:idea.select:0
+msgid "Next"
+msgstr ""
+
+#. module: idea
 #: view:idea.idea:0
-msgid "New Idea"
-msgstr "Nowy pomysł"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_category_tree
-#: model:ir.ui.menu,name:idea.menu_idea_category_tree
-msgid "Ideas by Categories"
-msgstr "Pomysły według kategorii"
-
-#. module: idea
-#: field:idea.vote,score:0
-#: field:idea.vote.stat,score:0
-msgid "Score"
-msgstr "Punktacja"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Draft"
-msgstr "Roboczy"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote
-msgid "Idea's vote"
-msgstr "Ocena pomysłu"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
-msgid "Statistics on Votes"
-msgstr "Statystyki pomysłów"
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_category
-msgid "Category for an idea"
-msgstr "Kategoria pomysłu"
-
-#. module: idea
-#: model:ir.module.module,shortdesc:idea.module_meta_information
-msgid "Idea Manager"
-msgstr ""
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
-msgstr "Statystyki ocen"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Opened"
-msgstr "Otwarty"
-
-#. module: idea
 #: field:idea.idea,state:0
-msgid "Status"
-msgstr "Stan"
+#: view:report.vote:0
+#: field:report.vote,idea_state:0
+msgid "State"
+msgstr ""
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Good"
 msgstr "Dobry"
 
 #. module: idea
-#: field:idea.idea,description:0
-msgid "Description"
-msgstr "Opis"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Normal"
-msgstr "Zwykły"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_reporting
-msgid "Reporting"
-msgstr "Raportowanie"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote_stat
-msgid "Idea Votes Statistics"
-msgstr "Statystyki ocen pomysłu"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote
-msgid "idea.vote"
-msgstr "idea.vote"
-
-#. module: idea
-#: field:idea.comment,user_id:0
-#: field:idea.vote,user_id:0
-msgid "User"
-msgstr "Użytkownik"
+#: help:idea.idea,open_date:0
+msgid "Date when an idea opened"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
-msgid "Your comment"
-msgstr "Twój komentarz"
+msgid "Idea Detail"
+msgstr ""
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_config
-msgid "Configuration"
-msgstr "Ustawienia"
+#: help:idea.idea,state:0
+msgid ""
+"When the Idea is created the state is 'Draft'.\n"
+" It is             opened by the user, the state is 'Opened'.            \n"
+"If the idea is accepted, the state is 'Accepted'."
+msgstr ""
+
+#. module: idea
+#: field:idea.category,visibility:0
+#: field:idea.idea,visibility:0
+msgid "Open Idea?"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "July"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+#: selection:report.vote,idea_state:0
+msgid "Accepted"
+msgstr ""
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -193,9 +279,170 @@ msgid "Categories"
 msgstr "Kategorie"
 
 #. module: idea
-#: view:idea.stat:0
-msgid "stat"
-msgstr "stat"
+#: view:report.vote:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,open_date:0
+msgid "Open date"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,vote_ids:0
+#: model:ir.actions.act_window,name:idea.action_idea_post_vote
+msgid "Vote"
+msgstr "Oceń"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
+#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
+msgid "Vote Statistics"
+msgstr "Statystyki ocen"
+
+#. module: idea
+#: field:idea.idea,vote_limit:0
+msgid "Maximum Vote per User"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: idea
+#: field:idea.comment,content:0
+#: view:idea.idea:0
+#: view:idea.post.vote:0
+#: field:idea.vote,comment:0
+#: model:ir.model,name:idea.model_idea_comment
+msgid "Comment"
+msgstr "Komentarz"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "September"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "December"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,month:0
+msgid "Month"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
+#: model:ir.actions.act_window,name:idea.action_idea_idea_open
+msgid "Open Ideas"
+msgstr "Otwarte pomysły"
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.category,name:0
+#: view:idea.idea:0
+#: field:idea.idea,category_id:0
+#: view:report.vote:0
+#: field:report.vote,category_id:0
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Good"
+msgstr "Bardzo dobry"
+
+#. module: idea
+#: view:report.vote:0
+msgid "  Year  "
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: selection:report.vote,idea_state:0
+msgid "Opened"
+msgstr "Otwarty"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote
+msgid "Idea's Votes"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "New Idea"
+msgstr "Nowy pomysł"
+
+#. module: idea
+#: view:idea.vote.stat:0
+msgid "vote_stat of ideas"
+msgstr "vote_stat pomysłów"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category_tree
+#: model:ir.ui.menu,name:idea.menu_idea_category_tree
+msgid "Ideas by Categories"
+msgstr "Pomysły według kategorii"
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: selection:report.vote,idea_state:0
+msgid "Draft"
+msgstr "Roboczy"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "August"
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Normal"
+msgstr "Zwykły"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "June"
+msgstr ""
+
+#. module: idea
+#: field:report.vote,creater_id:0
+#: field:report.vote,user_id:0
+msgid "User Name"
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_vote_stat
+msgid "Idea Votes Statistics"
+msgstr "Statystyki ocen pomysłu"
+
+#. module: idea
+#: field:idea.comment,user_id:0
+#: view:idea.vote:0
+#: field:idea.vote,user_id:0
+#: view:report.vote:0
+msgid "User"
+msgstr "Użytkownik"
+
+#. module: idea
+#: field:idea.vote,date:0
+msgid "Date"
+msgstr ""
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Post"
+msgstr ""
 
 #. module: idea
 #: field:idea.idea,my_vote:0
@@ -203,41 +450,20 @@ msgid "My Vote"
 msgstr "Moja ocena"
 
 #. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Votes"
-msgstr "Oceny"
-
-#. module: idea
-#: model:ir.module.module,description:idea.module_meta_information
-msgid ""
-"This module allows your user to easily and efficiently participate in the "
-"innovation of the enterprise. It allows everybody to express ideas about "
-"different subjects. Then, others users can comment these ideas and vote for "
-"particular ideas. Each idea as a score based on the different votes. The "
-"managers can obtain an easy view on best ideas from all the users. Once "
-"installed, check the menu 'Ideas' in the 'Tools' main menu."
+#: selection:report.vote,month:0
+msgid "October"
 msgstr ""
 
 #. module: idea
 #: field:idea.comment,create_date:0
-#: field:idea.idea,create_date:0
+#: field:idea.idea,created_date:0
 msgid "Creation date"
 msgstr "Data utworzenia"
 
 #. module: idea
-#: field:idea.idea,count_votes:0
-msgid "Count of votes"
-msgstr "Suma ocen"
-
-#. module: idea
-#: field:idea.vote.stat,nbr:0
-msgid "Number of Votes"
-msgstr "Liczba ocen"
+#: selection:report.vote,month:0
+msgid "January"
+msgstr ""
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
@@ -245,36 +471,152 @@ msgid "idea.idea"
 msgstr "idea.idea"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
-msgid "My Draft Ideas"
-msgstr "Moje robocze pomysły"
+#: field:idea.category,summary:0
+msgid "Summary"
+msgstr "Podsumowanie"
 
 #. module: idea
-#: field:idea.idea,vote_ids:0
-msgid "Vote"
-msgstr "Oceń"
+#: field:idea.idea,name:0
+msgid "Idea Summary"
+msgstr "Podsumowanie pomysłu"
 
 #. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Zły"
+#: selection:report.vote,month:0
+msgid "November"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
+msgid "History"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Vots Statistics"
+msgstr ""
+
+#. module: idea
+#: field:report.vote,date:0
+msgid "Date Order"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,user_id:0
+#: view:report.vote:0
+msgid "Creator"
+msgstr "Twórca"
+
+#. module: idea
+#: view:idea.post.vote:0
+#: model:ir.ui.menu,name:idea.menu_give_vote
+msgid "Give Vote"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,vote_limit:0
+msgid "Set to one if  you require only one Vote per user"
+msgstr ""
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Cancel"
+msgstr "Anuluj"
+
+#. module: idea
+#: view:idea.select:0
+msgid "Close"
+msgstr "Zamknij"
+
+#. module: idea
+#: view:idea.idea:0
+#: view:report.vote:0
+msgid "Open"
+msgstr "Otwórz"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote Analysis"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: model:ir.actions.act_window,name:idea.action_idea_idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
-msgid "All Ideas"
-msgstr "Wszystkie pomysły"
+#: model:ir.ui.menu,name:idea.menu_ideas
+#: model:ir.ui.menu,name:idea.menu_ideas1
+msgid "Ideas"
+msgstr "Pomysły"
 
 #. module: idea
-#: view:idea.comment:0
+#: model:ir.model,name:idea.model_idea_post_vote
+msgid "Post vote"
+msgstr ""
+
+#. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,comment_ids:0
-#: model:ir.model,name:idea.model_idea_comment
-msgid "Comments"
-msgstr "Komentarze"
+msgid "Current"
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,score:0
+#: field:report.vote,score:0
+msgid "Score"
+msgstr "Punktacja"
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Comments:"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.idea,description:0
+#: field:idea.post.vote,note:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "May"
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+msgid "Refused"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/idea.py:0
+#, python-format
+msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+msgstr ""
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Vote date"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "February"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+msgid "    Today    "
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,nbr:0
+msgid "Number of Votes"
+msgstr "Liczba ocen"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "April"
+msgstr ""
 
 #. module: idea
 #: field:idea.idea,count_comments:0
@@ -282,89 +624,9 @@ msgid "Count of comments"
 msgstr "Liczba komentarzy"
 
 #. module: idea
-#: field:idea.idea,title:0
-msgid "Idea Summary"
-msgstr "Podsumowanie pomysłu"
-
-#. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
-msgstr "Kategoria pomysłów"
-
-#. module: idea
-#: field:idea.category,summary:0
-msgid "Summary"
-msgstr "Podsumowanie"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open
-msgid "Open Ideas"
-msgstr "Otwarte pomysły"
-
-#. module: idea
-#: view:idea.idea:0
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
-msgstr "vote_stat pomysłów"
-
-#. module: idea
-#: view:idea.comment:0
-#: field:idea.comment,content:0
-#: view:idea.idea:0
-msgid "Comment"
-msgstr "Komentarz"
-
-#. module: idea
-#: field:idea.category,parent_id:0
-msgid "Parent Categories"
-msgstr "Kategorie wyzszego rzędu"
-
-#. module: idea
-#: field:idea.idea,user_id:0
-msgid "Creator"
-msgstr "Twórca"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_tools
-msgid "Tools"
-msgstr "Narzędzia"
-
-#. module: idea
-#: field:idea.comment,idea_id:0
-#: view:idea.idea:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-msgid "Idea"
-msgstr "Pomysł"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Bardzo zły"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Canceled"
-msgstr "Anulowany"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote
-msgid "All Votes"
-msgstr "Wszystkie oceny"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Cancel"
-msgstr "Anuluj"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Close"
-msgstr "Zamknij"
+#: field:idea.vote,score:0
+msgid "Vote Status"
+msgstr ""
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -372,11 +634,85 @@ msgid "Average Score"
 msgstr "Średnia ocena"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Open"
-msgstr "Otwórz"
+#: field:idea.comment,idea_id:0
+#: field:idea.select,idea_id:0
+#: view:idea.vote:0
+#: field:idea.vote,idea_id:0
+#: field:idea.vote.stat,idea_id:0
+#: model:ir.ui.menu,name:idea.menu_idea_reporting
+#: view:report.vote:0
+#: field:report.vote,idea_id:0
+msgid "Idea"
+msgstr "Pomysł"
 
 #. module: idea
-#: help:idea.idea,description:0
-msgid "Content of the idea"
-msgstr "Zawartość pomysłu"
+#: view:idea.idea:0
+msgid "Accept"
+msgstr ""
+
+#. module: idea
+#: field:idea.post.vote,vote:0
+msgid "Post Vote"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,year:0
+msgid "Year"
+msgstr ""
+
+#. module: idea
+#: view:idea.select:0
+msgid "Select Idea for Vote"
+msgstr ""
+
+#~ msgid "My Ideas"
+#~ msgstr "Moje pomysły"
+
+#~ msgid "My Open Ideas"
+#~ msgstr "Moje Otwarte Pomysły"
+
+#~ msgid "Idea's vote"
+#~ msgstr "Ocena pomysłu"
+
+#~ msgid "Statistics on Votes"
+#~ msgstr "Statystyki pomysłów"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Category for an idea"
+#~ msgstr "Kategoria pomysłu"
+
+#~ msgid "Status"
+#~ msgstr "Stan"
+
+#~ msgid "Reporting"
+#~ msgstr "Raportowanie"
+
+#~ msgid "idea.vote"
+#~ msgstr "idea.vote"
+
+#~ msgid "Configuration"
+#~ msgstr "Ustawienia"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#~ msgid "My Draft Ideas"
+#~ msgstr "Moje robocze pomysły"
+
+#~ msgid "All Ideas"
+#~ msgstr "Wszystkie pomysły"
+
+#~ msgid "Tools"
+#~ msgstr "Narzędzia"
+
+#~ msgid "Canceled"
+#~ msgstr "Anulowany"
+
+#~ msgid "All Votes"
+#~ msgstr "Wszystkie oceny"

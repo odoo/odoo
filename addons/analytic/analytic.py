@@ -28,130 +28,65 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, context=None):
-        # Handle multi-currency on each level of analytic account
-        # This is a refactoring of _balance_calc computation
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id IN %s" , (tuple(ids2),))
-        currency = dict(cr.fetchall())
-        res_currency= self.pool.get('res.currency')
+    def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
+        def recursive_computation(account_id, res):
+            account = self.browse(cr, uid, account_id)
+            for son in account.child_ids:
+                res = recursive_computation(son.id, res)
+                for field in field_names:
+                    res[account.id][field] += res[son.id][field]
+            return res
         for account in self.browse(cr, uid, ids, context=context):
-            if account.id not in ids2:
+            if account.id not in child_ids:
                 continue
-            for child in account.child_ids:
-                if child.id != account.id:
-                    res.setdefault(account.id, 0.0)
-                    if  currency[child.id] != currency[account.id]:
-                        res[account.id] += res_currency.compute(cr, uid, currency[child.id], currency[account.id], res.get(child.id, 0.0), context=context)
-                    else:
-                        res[account.id] += res.get(child.id, 0.0)
+            res = recursive_computation(account.id, res)
+        return res
 
-        cur_obj = res_currency.browse(cr, uid, currency.values(), context=context)
-        cur_obj = dict([(o.id, o) for o in cur_obj])
-        for id in ids:
-            if id in ids2:
-                res[id] = res_currency.round(cr, uid, cur_obj[currency[id]], res.get(id,0.0))
-
-        return dict([(i, res[i]) for i in ids ])
-
-    def _credit_calc(self, cr, uid, ids, name, arg, context=None):
+    def _debit_credit_bal_qtty(self, cr, uid, ids, name, arg, context=None):
         res = {}
         if context is None:
             context = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
-        for i in ids:
-            res.setdefault(i,0.0)
+        child_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
+        for i in child_ids:
+            res[i] =  {}
+            for n in name:
+                res[i][n] = 0.0
 
-        if not parent_ids:
+        if not child_ids:
             return res
 
         where_date = ''
+        where_clause_args = [tuple(child_ids)]  
         if context.get('from_date', False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
+            where_date += " AND l.date >= %s"
+            where_clause_args  += [context['from_date']]
         if context.get('to_date', False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount<0 and a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
-        r = dict(cr.fetchall())
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
-
-    def _debit_calc(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        if context is None:
-            context = {}
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
-        for i in ids:
-            res.setdefault(i,0.0)
-
-        if not parent_ids:
-            return res
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount>0 and a.id IN %s GROUP BY a.id" ,(tuple(parent_ids),))
-        r = dict(cr.fetchall())
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context=context)
-
-    def _balance_calc(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        if context is None:
-            context = {}
-
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
-        for i in ids:
-            res.setdefault(i,0.0)
-
-        if not parent_ids:
-            return res
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
-
-        for account_id, sum in cr.fetchall():
-            res[account_id] = sum
-        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context=context)
-
-    def _quantity_calc(self, cr, uid, ids, name, arg, context=None):
-        #XXX must convert into one uom
-        res = {}
-        if context is None:
-            context = {}
-
-        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
-
-        for i in ids:
-            res.setdefault(i,0.0)
-
-        if not parent_ids:
-            return res
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-
-        cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
-                FROM account_analytic_account a \
-                    LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
-                WHERE a.id IN %s GROUP BY a.id',(tuple(parent_ids),))
-
-        for account_id, sum in cr.fetchall():
-            res[account_id] = sum
-
-        for account in self.browse(cr, uid, ids, context=context):
-            if account.id not in parent_ids:
-                continue
-            for child in account.child_ids:
-                if child.id != account.id:
-                    res.setdefault(account.id, 0.0)
-                    res[account.id] += res.get(child.id, 0.0)
-        return dict([(i, res[i]) for i in ids])
+            where_date += " AND l.date <= %s"
+            where_clause_args += [context['to_date']]
+        cr.execute("""
+              SELECT a.id,
+                     sum(
+                         CASE WHEN l.amount > 0
+                         THEN l.amount 
+                         ELSE 0.0
+                         END
+                          ) as debit,
+                     sum(
+                         CASE WHEN l.amount < 0
+                         THEN -l.amount
+                         ELSE 0.0 
+                         END
+                          ) as credit,
+                     COALESCE(SUM(l.amount),0) AS balance,
+                     COALESCE(SUM(l.unit_amount),0) AS quantity
+              FROM account_analytic_account a 
+                  LEFT JOIN account_analytic_line l ON (a.id = l.account_id) 
+              WHERE a.id IN %s
+              """ + where_date + """
+              GROUP BY a.id""", where_clause_args)
+        for ac_id, debit, credit, balance, quantity in cr.fetchall():
+            res[ac_id] = {'debit': debit, 'credit': credit, 'balance': balance, 'quantity': quantity}
+        return self._compute_level_tree(cr, uid, ids, child_ids, res, ['debit', 'credit', 'balance', 'quantity'], context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -180,10 +115,10 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance': fields.function(_balance_calc, method=True, type='float', string='Balance'),
-        'debit': fields.function(_debit_calc, method=True, type='float', string='Debit'),
-        'credit': fields.function(_credit_calc, method=True, type='float', string='Credit'),
-        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
+        'balance': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'debit': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'credit': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'quantity': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
@@ -214,11 +149,11 @@ class account_analytic_account(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
-        'date_start': time.strftime('%Y-%m-%d')
+        'date_start': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
-        return super(account_analytic_account, self).check_recursion(cr, uid, ids, parent=parent)
+        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
     _order = 'date_start desc,parent_id desc,code'
     _constraints = [
@@ -277,7 +212,7 @@ class account_analytic_line(osv.osv):
 
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }

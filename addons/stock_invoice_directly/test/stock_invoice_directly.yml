@@ -60,16 +60,12 @@
            }
      pick_obj.do_partial(cr, uid, [ref('stock_picking_out0')], partial_datas, context=context)
 - 
-  As the Invoice state of the picking order is To be invoiced. I create a record for create invoice.
-- 
-  !record {model: stock.invoice.onshipping, id: stock_invoice_onshipping_0}:
-    invoice_date: '2010-08-04'
-    journal_id: account.bank_journal
-- 
-  I create a Customer invoice for my outgoing picking order.
+  As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 - 
   !python {model: stock.invoice.onshipping}: |
-    self.create_invoice(cr, uid, [ref("stock_invoice_onshipping_0")], {"lang": "en_US", 
+    wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.bank_journal')},
+      {'active_ids': [ref("stock_picking_out0")]})
+    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US", 
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
       "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})
 -

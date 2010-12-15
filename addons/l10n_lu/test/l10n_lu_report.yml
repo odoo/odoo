@@ -12,3 +12,5 @@
     (data, format) = netsvc.LocalService('report.l10n_lu.tax.report.print').create(cr, uid, [], {'model':'ir.ui.menu', 'form':{'tax_code_id': ref('account_tax_code_id_r1'), 'period_id': ref('account.period_1')}}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'l10n_lu-vat_report.'+format), 'wb+').write(data)
+   
+    

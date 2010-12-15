@@ -1,59 +1,113 @@
-# German translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_anglo_saxon
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-24 12:50+0000\n"
-"PO-Revision-Date: 2010-10-05 13:15+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-11-30 15:05+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-08 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_anglo_saxon
-#: view:product.category:0
-msgid " Accounting Property"
+#: model:ir.model,name:account_anglo_saxon.model_product_category
+msgid "Product Category"
+msgstr "Produkt Kategorie"
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: account_anglo_saxon
-#: model:ir.module.module,description:account_anglo_saxon.module_meta_information
-msgid ""
-"This module will support the Anglo-Saxons accounting methodology by \n"
-"    changing the accounting logic with stock transactions. The difference "
-"between the Anglo-Saxon accounting countries \n"
-"    and the Rhine or also called Continental accounting countries is the "
-"moment of taking the Cost of Goods Sold versus Cost of Sales. \n"
-"    Anglo-Saxons accounting does take the cost when sales invoice is "
-"created, Continental accounting will take the cost at he moment the goods "
-"are shipped.\n"
-"    This module will add this functionality by using a interim account, to "
-"store the value of shipped goods and will contra book this interim account \n"
-"    when the invoice is created to transfer this amount to the debtor or "
-"creditor account."
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
 msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Rechnungspositionen"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_purchase_order
+msgid "Purchase Order"
+msgstr "Beschaffungsauftrag"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_product_template
+msgid "Product Template"
+msgstr "Produkt Vorlage"
 
 #. module: account_anglo_saxon
 #: model:ir.module.module,shortdesc:account_anglo_saxon.module_meta_information
-msgid "Stock Account"
-msgstr ""
-
-#. module: account_anglo_saxon
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgid "Stock Accounting for Anglo Saxon countries"
+msgstr "Lagerbuchhaltung für den angelsächs. Sprachraum"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
 #: field:product.template,property_account_creditor_price_difference:0
 msgid "Price Difference Account"
+msgstr "Konto Preisdifferenz"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_account_invoice
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: account_anglo_saxon
+#: model:ir.model,name:account_anglo_saxon.model_stock_picking
+msgid "Picking List"
+msgstr "Pack Auftrag"
+
+#. module: account_anglo_saxon
+#: model:ir.module.module,description:account_anglo_saxon.module_meta_information
+msgid ""
+"This module will support the Anglo-Saxons accounting methodology by\n"
+"    changing the accounting logic with stock transactions. The difference "
+"between the Anglo-Saxon accounting countries\n"
+"    and the Rhine or also called Continental accounting countries is the "
+"moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
+"    Anglo-Saxons accounting does take the cost when sales invoice is "
+"created, Continental accounting will take the cost at the moment the goods "
+"are shipped.\n"
+"    This module will add this functionality by using a interim account, to "
+"store the value of shipped goods and will contra book this interim account\n"
+"    when the invoice is created to transfer this amount to the debtor or "
+"creditor account.\n"
+"    Secondly, price differences between actual purchase price and fixed "
+"product standard price are booked on a separate account"
 msgstr ""
+"Dieses Modul unterstützt die angelsächsische Buchungslogik durch eine \n"
+"    Änderung der Buchungslogik bei der Lagerbuchhaltung. Ein wesentlicher "
+"Unterschied zwischen der angelsächsichen Buchungslogik und der Methodik der "
+"kontinental-europäischen \n"
+"    Länder, liegt in verschiedenen Zeitpunkten der Buchung des "
+"Materialaufwands aus Warenverkauf. \n"
+"    Die angelsächsische Finanzbuchhaltung bucht den Warenaufwand zum "
+"Zeitpunkt des Warenverkaufs, kontinental-europäische Länder buchen den "
+"Warenaufwand erst zum Zeitpunkt des Warenabgangs unter Berücksichtigung von "
+"Preisdifferenzen zwischen Ein- und Verkauf.\n"
+"    Dieses Modul erweitert OpenERP um die angelsächsiche Buchungsmethode, "
+"indem zusätzlich zum Zeitpunkt des Warenabgangs auf ein separates "
+"Zwischenkonto gebucht \n"
+"    wird. Dieses Interimskonto wird dann erst bei der Rechnungsbuchung "
+"entweder gegen Debitor (Kundenrechnung)oder Kreditor (Lieferantenrechnung) "
+"mitsamt Preisdifferenz ausgeglichen."
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -62,3 +116,61 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"Dieses Konto wird genutzt, um Unterschiede zwischen Einkaufs- und "
+"Verkaufspreis der Rechnung und Durchschnittspreisen zum Zeitpunkt des "
+"Warenzu- oder Warenabgangs als Preisdifferenz zu buchen."
+
+#~ msgid " Accounting Property"
+#~ msgstr " Finanzkonten Einstellungen"
+
+#~ msgid ""
+#~ "This module will support the Anglo-Saxons accounting methodology by \n"
+#~ "    changing the accounting logic with stock transactions. The difference "
+#~ "between the Anglo-Saxon accounting countries \n"
+#~ "    and the Rhine or also called Continental accounting countries is the "
+#~ "moment of taking the Cost of Goods Sold versus Cost of Sales. \n"
+#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
+#~ "created, Continental accounting will take the cost at he moment the goods "
+#~ "are shipped.\n"
+#~ "    This module will add this functionality by using a interim account, to "
+#~ "store the value of shipped goods and will contra book this interim account \n"
+#~ "    when the invoice is created to transfer this amount to the debtor or "
+#~ "creditor account."
+#~ msgstr ""
+#~ "Dieses Modul unterstützt die angelsächsische Buchungslogik durch eine \n"
+#~ "    Änderung der Buchungslogik bei der Lagerbuchhaltung. Ein wesentlicher "
+#~ "Unterschied zwischen der angelsächsichen Buchungslogik und der Methodik der "
+#~ "kontinental-europäischen \n"
+#~ "    Länder, liegt in verschiedenen Zeitpunkten der Buchung des "
+#~ "Materialaufwands aus Warenverkauf. \n"
+#~ "    Die angelsächsische Finanzbuchhaltung bucht den Warenaufwand zum "
+#~ "Zeitpunkt des Warenverkaufs, kontinental-europäische Länder buchen den "
+#~ "Warenaufwand erst zum Zeitpunkt des Warenabgangs unter Berücksichtigung von "
+#~ "Preisdifferenzen zwischen Ein- und Verkauf.\n"
+#~ "    Dieses Modul erweitert OpenERP um die angelsächsiche Buchungsmethode, "
+#~ "indem zusätzlich zum Zeitpunkt des Warenabgangs auf ein separates "
+#~ "Zwischenkonto gebucht \n"
+#~ "    wird. Dieses Interimskonto wird dann erst bei der Rechnungsbuchung "
+#~ "entweder gegen Debitor (Kundenrechnung)oder Kreditor (Lieferantenrechnung) "
+#~ "mitsamt Preisdifferenz ausgeglichen."
+
+#~ msgid "Stock Account"
+#~ msgstr "Lagerbestandskonto"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehler in XML Quellen für diese Ansicht"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
+#~ "haben !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

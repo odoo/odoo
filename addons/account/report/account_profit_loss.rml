@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
+<document filename="Profit and Loss.pdf">
   <template pageSize="(595.0,842.0)" title="Profit and Loss" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
@@ -228,17 +228,17 @@
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
     <blockTable colWidths="426.0,113.0" style="Table_Net_Profit_Loss">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Total:([[ get_currency(data) ]])</para>
+          <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
           <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]] [[ company.currency_id.symbol ]]</u></para>
@@ -283,10 +283,10 @@
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

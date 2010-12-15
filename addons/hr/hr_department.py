@@ -26,7 +26,7 @@ class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        if not len(ids):
+        if not ids:
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []

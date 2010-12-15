@@ -63,7 +63,9 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <newline/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
+                            <separator colspan="4" string="Taxes"/>
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"
+                            nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -354,7 +356,7 @@
                    <group col="10" colspan="4">
                         <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter name="invoices" icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
+                        <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>

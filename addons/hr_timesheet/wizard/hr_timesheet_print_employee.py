@@ -45,8 +45,8 @@ class analytical_timesheet_employee(osv.osv_memory):
         return emp_id and emp_id[0] or False
 
     _defaults = {
-         'month': datetime.date.today().month,
-         'year': datetime.date.today().year,
+         'month': lambda *a: datetime.date.today().month,
+         'year': lambda *a: datetime.date.today().year,
          'employee_id': _get_user
              }
 

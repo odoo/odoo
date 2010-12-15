@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-07 10:44+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-12-02 08:02+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -27,6 +27,11 @@ msgid "Gross"
 msgstr "Bruto"
 
 #. module: hr_contract
+#: view:hr.contract:0
+msgid "Trial Period"
+msgstr "Proeftijd"
+
+#. module: hr_contract
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -34,35 +39,9 @@ msgstr ""
 "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: view:hr.employee:0
-msgid "Generalities"
-msgstr "Algemeenheden"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of children"
-msgstr "Aantal kinderen"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor voor uurkosten"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type:0
-msgid "Wage Types"
-msgstr "Soorten lonen"
-
-#. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: hr_contract
-#: field:hr.contract,employee_id:0
-msgid "Employee"
-msgstr "Werknemer"
+msgid "Calculations"
+msgstr "Berekeningen"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -70,9 +49,81 @@ msgid "Net"
 msgstr "Netto"
 
 #. module: hr_contract
+#: view:hr.employee:0
+msgid "Medical Examination"
+msgstr "Medische keuring"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Auto v/d zaak"
+
+#. module: hr_contract
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Afdeling"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Miscellaneous"
+msgstr "Overig"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Current"
+msgstr "Actueel"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Factor voor uurkosten"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Function Arguments"
+msgstr "Functie argumenten"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Wage Types"
+msgstr "Soorten lonen"
+
+#. module: hr_contract
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Fout ! U kunt geen recursief menu maken."
+
+#. module: hr_contract
+#: selection:hr.contract.wage.type,type:0
+msgid "Basic"
+msgstr "Basis"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
+msgid "Employee"
+msgstr "Medewerker"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Startdatum proeftijd"
+
+#. module: hr_contract
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
 msgid "Human Resources Contracts"
-msgstr "Contracten personeelszaken"
+msgstr "Personeel contracten"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,factor_days:0
@@ -80,42 +131,71 @@ msgid "Hours in the period"
 msgstr "Uren in de periode"
 
 #. module: hr_contract
-#: field:hr.contract,function:0
+#: view:hr.employee:0
 msgid "Function"
 msgstr "Functie"
 
 #. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr "Burgerlijke staat"
+#: view:hr.employee:0
+msgid "Description"
+msgstr "Omschrijving"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscelleanous"
-msgstr "Diversen"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Loon"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Geboorteplaats"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 msgid "Contracts"
 msgstr "Contracten"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Soort"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Is een manager"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-msgid "Wage Type"
-msgstr "Soort loon"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Werktijden"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Baan"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.employee:0
+msgid "Passport"
+msgstr "Paspoort"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Contract zoeken"
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Laatste contract van medewerker"
+
+#. module: hr_contract
+#: field:hr.contract,advantages_net:0
+msgid "Deductions"
+msgstr "Inhoudingen"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -123,29 +203,44 @@ msgid "Period Name"
 msgstr "Periodenaam"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Burgelijke staat werknemer"
+#: view:hr.contract:0
+#: field:hr.contract,advantages:0
+#: view:hr.employee:0
+msgid "Advantages"
+msgstr "Beloning"
 
 #. module: hr_contract
-#: field:hr.employee,medic_exam:0
-msgid "Medical examination date"
-msgstr "Datum medisch onderzoek"
+#: view:hr.contract:0
+#: view:hr.employee:0
+msgid "Valid for"
+msgstr "Geldig voor"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Naar soort loon"
+#: view:hr.contract:0
+#: view:hr.employee:0
+msgid "Work Permit"
+msgstr "Werkvergunning"
 
 #. module: hr_contract
-#: field:hr.contract,working_hours_per_day:0
-msgid "Working hours per day"
-msgstr "Werkuren per dag"
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Aantal kinderen"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
+msgid "Contract Types"
+msgstr "Contractsoorten"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Loonsoort zoeken"
 
 #. module: hr_contract
 #: view:hr.employee:0
-msgid "Salary"
-msgstr "Salaris"
+msgid "Payslip Line"
+msgstr "Loonstrookregel"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -158,6 +253,16 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Ongeldige XML voor weergave!"
 
 #. module: hr_contract
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "Contractreferentie"
+
+#. module: hr_contract
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "In kilometers"
+
+#. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
 #: view:hr.employee:0
@@ -165,63 +270,129 @@ msgid "Notes"
 msgstr "Opmerkingen"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
+#: view:hr.contract.wage.type:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "Loonsoort"
+
+#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
 msgid "Contract"
 msgstr "Contract"
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,type_id:0
 #: view:hr.contract.type:0
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
 msgid "Contract Type"
-msgstr "Soort contract"
+msgstr "Contractsoort"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type.period:0
+msgid "Search Wage Period"
+msgstr "Loonperiode zoeken"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Salary Computation"
+msgstr "Loonberekening"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Job Info"
+msgstr "Baan informatie"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
+#: view:hr.contract.wage.type.period:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
 msgstr "Loonperiode"
 
 #. module: hr_contract
-#: field:hr.employee,audiens_num:0
-msgid "AUDIENS Number"
-msgstr "BSN nummer"
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "Functietitel"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Remuneration"
-msgstr "Vergoeding"
-
-#. module: hr_contract
-#: field:hr.contract,name:0
-msgid "Contract Name"
-msgstr "Naam contract"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Soort loon contract"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Geboorteplaats"
-
-#. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Manager"
-msgstr "Manager"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
 msgid "Wage period"
 msgstr "Loonperiode"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "Woon-werk afstand"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Company contribution"
+msgstr "Bedrijfsbijdrage"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,type:0
+msgid "Type"
+msgstr "Soort"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Einddatum proeftijd"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Groepeer op..."
+
+#. module: hr_contract
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr "De modulenaam moet uniek zijn !"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Period"
+msgstr "Periode"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr "Overschreden"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Loonsoortnaam"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Employee specific allowances and deductions"
+msgstr "Medewerkersgebonden toelages en inhoudingen"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Contract Details"
+msgstr "Details contract"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Salary Structure"
+msgstr "Beloningsstructuur"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -231,25 +402,85 @@ msgid ""
 "of work wased on the contract of the employee"
 msgstr ""
 "Dit veld word gebruikt door het urenstaat-systeem om de prijs te berekenen "
-"voor een uur werk gebaseerd op het contract met de werknemer."
+"voor een uur werk gebaseerd op het contract met de medewerker."
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Loon"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Startdatum"
-
-#. module: hr_contract
-#: field:hr.employee.marital.status,description:0
-msgid "Status Description"
-msgstr "Omschrijving status"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Persoonlijke informatie"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
-msgid "Contract Duration"
-msgstr "Contractduur"
+msgid "Duration"
+msgstr "Duur"
+
+#. module: hr_contract
+#: field:hr.employee,medic_exam:0
+msgid "Medical Examination Date"
+msgstr "Datum medische keuring"
+
+#. module: hr_contract
+#: field:hr.contract,advantages_gross:0
+msgid "Allowances"
+msgstr "Toelages"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Main Data"
+msgstr "Hoofdgegevens"
+
+#. module: hr_contract
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#. module: hr_contract
+#: view:hr.contract.type:0
+msgid "Search Contract Type"
+msgstr "Contractsoort zoeken"
+
+#~ msgid "Number of children"
+#~ msgstr "Aantal kinderen"
+
+#~ msgid "Miscelleanous"
+#~ msgstr "Diversen"
+
+#~ msgid "Medical examination date"
+#~ msgstr "Datum medisch onderzoek"
+
+#~ msgid "Salary"
+#~ msgstr "Salaris"
+
+#~ msgid "Remuneration"
+#~ msgstr "Vergoeding"
+
+#~ msgid "Generalities"
+#~ msgstr "Algemeenheden"
+
+#~ msgid "Marital Status"
+#~ msgstr "Burgerlijke staat"
+
+#~ msgid "Employee Marital Status"
+#~ msgstr "Burgelijke staat werknemer"
+
+#~ msgid "Working hours per day"
+#~ msgstr "Werkuren per dag"
+
+#~ msgid "Manager"
+#~ msgstr "Manager"
+
+#~ msgid "Contract Wage Type"
+#~ msgstr "Soort loon contract"
+
+#~ msgid "Contract Name"
+#~ msgstr "Naam contract"
+
+#~ msgid "AUDIENS Number"
+#~ msgstr "BSN nummer"
+
+#~ msgid "Status Description"
+#~ msgstr "Omschrijving status"
+
+#~ msgid "Contract Duration"
+#~ msgstr "Contractduur"

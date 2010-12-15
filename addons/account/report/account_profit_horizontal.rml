@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(1120.0,770.0)" title="Profit and Loss" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20" >
+<document filename="Profit and Loss.pdf">
+  <template pageSize="(842.0,595.0)" title="Profit And Loss" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="22.0" y1="15.0" width="1080" height="680"/>
+      <frame id="first" x1="28.0" y1="57.0" width="772" height="481"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -136,9 +136,6 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_header_Centre">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
@@ -150,7 +147,7 @@
       <font color="white"> </font>
     </para>
  		<para style="P2">[[ get_data(data) or removeParentNode('para')]]</para>
-      <blockTable colWidths="250.0,200.0,200.0,200.0,200.0" style="Table2_header">
+      <blockTable colWidths="250.0,100.0,150.0,120.0,150.0" style="Table2_header">
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
@@ -162,7 +159,7 @@
 	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-        	<blockTable colWidths="90.0,90.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
 				<tr>
 	               <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
@@ -172,7 +169,7 @@
 	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
-        	<blockTable colWidths="90.0,90.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_General_Centre">Start Period</para></td>
 			        <td><para style="terp_tblheader_General_Centre">End Period</para></td>
@@ -190,16 +187,13 @@
         <para style="Standard">
       <font color="white"> </font>
     </para>
-        <para style="Standard">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="100.0,308.16,116.32,100.0,308.16,116.32" style="Table_Account_Line_Title" repeatRows="1">
+    <blockTable colWidths="80.0,210.16,100.32,80.0,210.16,100.32" style="Table_Account_Line_Title" repeatRows="1">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Code</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Perticular</para>
+          <para style="terp_default_Bold_9">Particular</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Balance</para>
@@ -208,7 +202,7 @@
           <para style="terp_default_Bold_9">Code</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Perticular</para>
+          <para style="terp_default_Bold_9">Particular</para>
         </td>
         <td>
           <para style="P1">Balance</para>
@@ -244,30 +238,30 @@
           </td>
         </tr>
       </blockTable>
-    <blockTable colWidths="100.0,308.16,116.32,100.0,308.16,116.32" style="Table_Net_Profit_Loss">
+    <blockTable colWidths="80.0,210.16,100.32,80.0,210.16,100.32" style="Table_Net_Profit_Loss">
       <tr>
         <td>
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or '' ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and  formatLang(abs(final_result()['balance'])) ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9"></para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and final_result()['type'] or '' ]]</para>
+          <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
 
-    <blockTable colWidths="408.16,116.32,408.16,116.32" style="Table_Net_Profit_Loss">
+    <blockTable colWidths="290.16,100.32,290.16,100.32" style="Table_Net_Profit_Loss">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Total:</para>
@@ -283,9 +277,6 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>
 

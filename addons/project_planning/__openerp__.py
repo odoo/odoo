@@ -54,8 +54,8 @@ At the end of the month, the planning manager can also check if the encoded time
         'project_planning_demo.xml',
     ],
     'test': [
-        'test/planning_states.yml'
-        'test/planning_report.yml'
+        'test/planning_states.yml',
+        'test/project_planning_report.yml'
     ],
     'installable': True,
     'active': False,

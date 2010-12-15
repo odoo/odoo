@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:25+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:25+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:29+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,11 +63,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr ""
@@ -95,6 +90,12 @@ msgid "March"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr ""
@@ -239,11 +240,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr ""
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr ""
@@ -321,11 +317,6 @@ msgstr ""
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "July"
-msgstr ""
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: document
@@ -512,6 +503,11 @@ msgid "Check this field if you want that the name of the file to contain the rec
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr ""
@@ -522,8 +518,8 @@ msgid "Attachment"
 msgstr ""
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
 msgstr ""
 
 #. module: document
@@ -542,9 +538,19 @@ msgid "Security"
 msgstr ""
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid "Along with Parent Model, this ID attaches this folder to a specific record of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
 msgstr ""
 
 #. module: document
@@ -580,6 +586,11 @@ msgstr ""
 #: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
+msgstr ""
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Such directories are \"attached\" to the specific model or record, just like attachments. Don't put a parent directory if you select a parent model."
 msgstr ""
 
 #. module: document
@@ -644,14 +655,14 @@ msgid "Expression"
 msgstr ""
 
 #. module: document
-#: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
-msgid "Creator"
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
+#: field:document.directory,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Creator"
 msgstr ""
 
 #. module: document
@@ -683,6 +694,11 @@ msgid "File Name"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
+
+#. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
 msgstr ""
@@ -690,11 +706,6 @@ msgstr ""
 #. module: document
 #: selection:document.storage,type:0
 msgid "External file storage"
-msgstr ""
-
-#. module: document
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: document
@@ -775,6 +786,11 @@ msgid "Users that did not inserted documents since one month"
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid "The Documents repository gives you access to all attachments, such as mails, project documents, invoices etc."
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
@@ -849,6 +865,11 @@ msgid "Name"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr ""
@@ -904,6 +925,11 @@ msgstr ""
 #. module: document
 #: selection:document.storage,type:0
 msgid "Internal File storage"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
 msgstr ""
 
 #. module: document

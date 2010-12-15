@@ -6,16 +6,16 @@
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -42,7 +42,7 @@ def prev_bounds(cdate=False):
 class hr_payroll_structure(osv.osv):
     _inherit = 'hr.payroll.structure'
     _description = 'Salary Structure'
-    
+
     _columns = {
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
     }
@@ -97,13 +97,13 @@ hr_employee()
 class payroll_register(osv.osv):
     _inherit = 'hr.payroll.register'
     _description = 'Payroll Register'
-    
+
     _columns = {
         'journal_id': fields.many2one('account.journal', 'Expanse Journal'),
         'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
     }
-    
+
     def compute_sheet(self, cr, uid, ids, context={}):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
@@ -141,7 +141,7 @@ payroll_register()
 class payroll_advice(osv.osv):
     _inherit = 'hr.payroll.advice'
     _description = 'Bank Advice Note'
-    
+
     _columns = {
         'account_id': fields.many2one('account.account', 'Account'),
     }
@@ -179,7 +179,7 @@ class contrib_register(osv.osv):
                 'yearly_total_by_comp':c_year
             }
         return res
-    
+
     _columns = {
         'account_id': fields.many2one('account.account', 'Account'),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
@@ -191,7 +191,7 @@ contrib_register()
 class contrib_register_line(osv.osv):
     _inherit = 'hr.contibution.register.line'
     _description = 'Contribution Register Line'
-    
+
     _columns = {
         'period_id': fields.many2one('account.period', 'Period'),
     }
@@ -277,10 +277,10 @@ class hr_payslip(osv.osv):
                 if ((fiscal_year['date_start'] <= slip.date) and (fiscal_year['date_stop'] >= slip.date)):
                     year_exist = True
             if not year_exist:
-                raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s'%slip.date))
+                raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s') % slip.date)
             search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date),('date_stop','>=',slip.date)], context=context)
             if not search_periods:
-                raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s'%slip.date))
+                raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s') % slip.date)
             period_id = search_periods[0]
             name = 'Payment of Salary to %s' % (slip.employee_id.name)
             move = {
@@ -296,29 +296,29 @@ class hr_payslip(osv.osv):
 
             name = "To %s account" % (slip.employee_id.name)
             ded_rec = {
-                'move_id':move_id,
+                'move_id': move_id,
                 'name': name,
                 'date': slip.date,
                 'account_id': slip.employee_id.property_bank_account.id,
                 'debit': 0.0,
-                'credit' : slip.total_pay,
-                'journal_id' : slip.journal_id.id,
-                'period_id' :period_id,
-                'ref':slip.number
+                'credit': slip.total_pay,
+                'journal_id': slip.journal_id.id,
+                'period_id': period_id,
+                'ref': slip.number
             }
             line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
             name = "By %s account" % (slip.employee_id.property_bank_account.name)
             cre_rec = {
-                'move_id':move_id,
+                'move_id': move_id,
                 'name': name,
                 'partner_id': partner_id,
                 'date': slip.date,
                 'account_id': partner.property_account_payable.id,
-                'debit':  slip.total_pay,
-                'credit' : 0.0,
-                'journal_id' : slip.journal_id.id,
-                'period_id' :period_id,
-                'ref':slip.number
+                'debit': slip.total_pay,
+                'credit': 0.0,
+                'journal_id': slip.journal_id.id,
+                'period_id': period_id,
+                'ref': slip.number
             }
             line_ids += [movel_pool.create(cr, uid, cre_rec, context=context)]
 
@@ -428,10 +428,10 @@ class hr_payslip(osv.osv):
             partner_id = False
 
             if not slip.employee_id.bank_account_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !' % (slip.employee_id.name)))
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !') % (slip.employee_id.name))
 
             if not slip.employee_id.bank_account_id.partner_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !' % (slip.employee_id.name)))
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !') % (slip.employee_id.name))
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = slip.employee_id.bank_account_id.partner_id.id
@@ -450,10 +450,10 @@ class hr_payslip(osv.osv):
                     if ((fiscal_year['date_start'] <= slip.date) and (fiscal_year['date_stop'] >= slip.date)):
                         year_exist = True
                 if not year_exist:
-                    raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s'%slip.date))
+                    raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s') % slip.date)
                 search_periods = period_pool.search(cr,uid,[('date_start','<=',slip.date),('date_stop','>=',slip.date)], context=context)
                 if not search_periods:
-                    raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s'%slip.date))
+                    raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s') % slip.date)
                 period_id = search_periods[0]
 
             move = {
@@ -510,17 +510,17 @@ class hr_payslip(osv.osv):
                     continue
 
                 rec = {
-                    'move_id':move_id,
+                    'move_id': move_id,
                     'name': name,
                     'date': slip.date,
                     'account_id': line.account_id.id,
                     'debit': 0.0,
-                    'credit' : 0.0,
-                    'journal_id' : slip.journal_id.id,
-                    'period_id' :period_id,
-                    'analytic_account_id':False,
-                    'ref':slip.number,
-                    'quantity':1
+                    'credit': 0.0,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'analytic_account_id': False,
+                    'ref': slip.number,
+                    'quantity': 1
                 }
 
                 #Setting Analysis Account for Salary Slip Lines
@@ -534,17 +534,17 @@ class hr_payslip(osv.osv):
                     if not partner.property_account_payable:
                         raise osv.except_osv(_('Integrity Error !'), _('Please Configure Partners Payable Account!!'))
                     ded_rec = {
-                        'move_id':move_id,
+                        'move_id': move_id,
                         'name': name,
                         'partner_id': partner_id,
                         'date': slip.date,
                         'account_id': partner.property_account_payable.id,
                         'debit': 0.0,
-                        'quantity':1,
-                        'credit' : amount,
-                        'journal_id' : slip.journal_id.id,
-                        'period_id' :period_id,
-                        'ref':slip.number
+                        'quantity': 1,
+                        'credit': amount,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
+                        'ref': slip.number
                     }
                     line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
                 elif line.type == 'deduction' or line.type == 'otherdeduct':
@@ -553,17 +553,17 @@ class hr_payslip(osv.osv):
                     rec['credit'] = amount
                     total_deduct += amount
                     ded_rec = {
-                        'move_id':move_id,
+                        'move_id': move_id,
                         'name': name,
                         'partner_id': partner_id,
                         'date': slip.date,
-                        'quantity':1,
+                        'quantity': 1,
                         'account_id': partner.property_account_receivable.id,
                         'debit': amount,
-                        'credit' : 0.0,
-                        'journal_id' : slip.journal_id.id,
-                        'period_id' :period_id,
-                        'ref':slip.number
+                        'credit': 0.0,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
+                        'ref': slip.number
                     }
                     line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
 
@@ -580,38 +580,38 @@ class hr_payslip(osv.osv):
                     'period_id': period_id,
                     'date': slip.date,
                     'ref':slip.number,
-                    'narration': 'Adjustment : %s' % (slip.name)
+                    'narration': 'Adjustment: %s' % (slip.name)
                 }
                 adj_move_id = move_pool.create(cr, uid, move, context=context)
                 name = "Adjustment Entry - %s" % (slip.employee_id.name)
                 self.create_voucher(cr, uid, [slip.id], name, adj_move_id)
 
                 ded_rec = {
-                    'move_id':adj_move_id,
+                    'move_id': adj_move_id,
                     'name': name,
                     'partner_id': partner_id,
                     'date': slip.date,
                     'account_id': partner.property_account_receivable.id,
                     'debit': 0.0,
-                    'quantity':1,
-                    'credit' : total_deduct,
-                    'journal_id' : slip.journal_id.id,
-                    'period_id' :period_id,
-                    'ref':slip.number
+                    'quantity': 1,
+                    'credit': total_deduct,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'ref': slip.number
                 }
                 line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
                 cre_rec = {
-                    'move_id':adj_move_id,
+                    'move_id': adj_move_id,
                     'name': name,
                     'partner_id': partner_id,
                     'date': slip.date,
                     'account_id': partner.property_account_payable.id,
                     'debit': total_deduct,
-                    'quantity':1,
-                    'credit' : 0.0,
-                    'journal_id' : slip.journal_id.id,
-                    'period_id' :period_id,
-                    'ref':slip.number
+                    'quantity': 1,
+                    'credit': 0.0,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'ref': slip.number
                 }
                 line_ids += [movel_pool.create(cr, uid, cre_rec, context=context)]
 

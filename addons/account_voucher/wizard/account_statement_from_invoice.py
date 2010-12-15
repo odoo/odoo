@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import fields, osv
@@ -129,7 +130,7 @@ class account_statement_from_invoice(osv.osv_memory):
         'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def search_invoices(self, cr, uid, ids, context=None):

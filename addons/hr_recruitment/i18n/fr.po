@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 06:21+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-30 12:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_recruitment
@@ -27,12 +27,6 @@ msgstr ""
 #: view:hr.recruitment.stage:0
 #: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "is Open."
 msgstr ""
 
 #. module: hr_recruitment
@@ -51,11 +45,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "    7 Days    "
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,department_id:0
 #: view:hr.recruitment.report:0
@@ -67,11 +56,6 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.applicant,date_action:0
 msgid "Next Action Date"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,opening_date:0
-msgid "Date of Opening"
 msgstr ""
 
 #. module: hr_recruitment
@@ -107,6 +91,11 @@ msgid "Goals"
 msgstr ""
 
 #. module: hr_recruitment
+#: field:hr.recruitment.report,partner_address_id:0
+msgid "Partner Contact Name"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: view:hr.recruitment.partner.create:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
@@ -125,18 +114,18 @@ msgid "Contract Data"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Add Internal Note"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,partner_mobile:0
 msgid "Mobile"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "365 Days"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "30 Days"
+#: view:hr.applicant:0
+msgid "Notes"
 msgstr ""
 
 #. module: hr_recruitment
@@ -152,16 +141,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:crm.case.categ,name:hr_recruitment.categ_job2
 msgid "Junior Developer"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Notes"
-msgstr ""
-
-#. module: hr_recruitment
-#: selection:hr.recruitment.report,state:0
-msgid "Cancelled"
 msgstr ""
 
 #. module: hr_recruitment
@@ -191,6 +170,13 @@ msgid "Reference"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:board.board:0
+#: view:hr.applicant:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
+msgid "Applicants Status"
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "My Recruitment"
 msgstr ""
@@ -206,7 +192,6 @@ msgid "Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,salary_prop:0
 msgid "Salary Proposed"
 msgstr ""
@@ -219,8 +204,8 @@ msgid "Partner"
 msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,salary_expected:0
-msgid "Salary Expected by Applicant"
+#: view:hr.recruitment.report:0
+msgid "Avg Proposed Salary"
 msgstr ""
 
 #. module: hr_recruitment
@@ -235,14 +220,8 @@ msgid "Previous"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
-#: selection:hr.recruitment.report,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:0
+#: view:hr.applicant:0
 #, python-format
 msgid "Phone Call"
 msgstr ""
@@ -258,11 +237,6 @@ msgid "Recruitments Statistics"
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Next"
 msgstr ""
@@ -274,17 +248,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Forward"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
 msgid "Send New Email"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule a Phone Call"
 msgstr ""
 
 #. module: hr_recruitment
@@ -297,6 +261,7 @@ msgstr ""
 #: view:hr.applicant:0
 #: selection:hr.applicant,state:0
 #: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
 msgid "New"
 msgstr ""
 
@@ -330,6 +295,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
+#: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr ""
 
@@ -352,11 +318,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Print Interview"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
 #: field:hr.applicant,stage_id:0
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,stage_id:0
@@ -370,13 +331,13 @@ msgid "Second Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,salary_exp:0
 msgid "Salary Expected"
 msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr ""
 
@@ -388,12 +349,6 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Subject"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "Job request for"
 msgstr ""
 
 #. module: hr_recruitment
@@ -414,13 +369,17 @@ msgid "Dates"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid " > Bac +5"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_config_applicant
 msgid "Applicant"
 msgstr ""
 
@@ -452,9 +411,18 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 msgid "Stages"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "In progress"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Jobs - Recruitment Form"
 msgstr ""
 
 #. module: hr_recruitment
@@ -470,12 +438,6 @@ msgstr ""
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "December"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "Applicant "
 msgstr ""
 
 #. module: hr_recruitment
@@ -499,23 +461,14 @@ msgid "Update Date"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Interview Question"
-msgstr ""
-
-#. module: hr_recruitment
 #: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr ""
 
 #. module: hr_recruitment
 #: model:crm.case.categ,name:hr_recruitment.categ_job1
 msgid "Salesman"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule Meeting"
 msgstr ""
 
 #. module: hr_recruitment
@@ -566,6 +519,11 @@ msgid "Reset to New"
 msgstr ""
 
 #. module: hr_recruitment
+#: help:hr.applicant,salary_expected:0
+msgid "Salary Expected by Applicant"
+msgstr ""
+
+#. module: hr_recruitment
 #: help:hr.applicant,email_cc:0
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
@@ -574,13 +532,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,state:0
-msgid "Draft"
-msgstr ""
-
-#. module: hr_recruitment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
+msgid "Closed"
 msgstr ""
 
 #. module: hr_recruitment
@@ -589,18 +543,23 @@ msgid "Stage Definition"
 msgstr ""
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Answer"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
 msgid "Avg. Delay to Close"
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:hr.applicant,salary_proposed:0
+msgid "Salary Proposed by the Organisation"
 msgstr ""
 
 #. module: hr_recruitment
-#: help:hr.applicant,salary_proposed:0
-msgid "Salary Proposed by the Organisation"
+#: view:hr.applicant:0
+msgid "Meeting"
 msgstr ""
 
 #. module: hr_recruitment
@@ -662,7 +621,6 @@ msgid "Days to Close"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,user_id:0
 msgid "User"
 msgstr ""
@@ -699,19 +657,8 @@ msgid "Licenced"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.module.module,description:hr_recruitment.module_meta_information
-msgid ""
-"\n"
-"Manages job positions and the recruitement process. It's integrated with "
-"the\n"
-"survey module to allow you to define interview for different jobs.\n"
-"\n"
-"This module is integrated with the mail gateway to automatically tracks "
-"email\n"
-"sent to jobs@YOURCOMPANY.com. It's also integrated with the document "
-"management\n"
-"system to store and search in your CV base.\n"
-"    "
+#: field:hr.recruitment.report,salary_prop_avg:0
+msgid "Avg Salary Proposed"
 msgstr ""
 
 #. module: hr_recruitment
@@ -755,18 +702,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Jobs - Recruitment Form"
-msgstr ""
-
-#. module: hr_recruitment
-#: field:hr.recruitment.report,partner_address_id:0
-msgid "Partner Contact Name"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "from Mailgate."
+msgid "History"
 msgstr ""
 
 #. module: hr_recruitment
@@ -785,11 +721,6 @@ msgstr ""
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,state:0
 msgid "State"
-msgstr ""
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Communication history"
 msgstr ""
 
 #. module: hr_recruitment
@@ -815,12 +746,6 @@ msgid "A partner is already existing with the same name."
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
 msgstr ""
@@ -828,6 +753,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,user_id:0
+#: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr ""
 
@@ -840,14 +766,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: view:hr.recruitment.report:0
 msgid "Current"
-msgstr ""
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "A Job Request created"
 msgstr ""
 
 #. module: hr_recruitment
@@ -871,15 +790,14 @@ msgid "Reply"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-#: field:hr.recruitment.report,month:0
-msgid "Month"
+#: view:hr.applicant:0
+msgid "Interview"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
-#, python-format
-msgid "is Hired."
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
+msgid "Month"
 msgstr ""
 
 #. module: hr_recruitment
@@ -898,19 +816,23 @@ msgid "Contract Signed"
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 msgid "Refused"
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:0
+#, python-format
+msgid "Applicant '%s' is being hired."
+msgstr ""
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 #: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
 msgid "Hired"
 msgstr ""
 
@@ -971,6 +893,12 @@ msgstr ""
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,user_id:0
 msgid "Assign To"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:0
+#, python-format
+msgid "The job request '%s' has been set 'in progress'."
 msgstr ""
 
 #. module: hr_recruitment

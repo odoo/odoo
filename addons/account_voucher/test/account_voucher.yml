@@ -1,21 +1,21 @@
-
 -
   In order to check account voucher module in OpenERP I create a customer voucher
 -
   !record {model: account.voucher, id: account_voucher_voucherforaxelor0}:
     account_id: account.cash
+    amount: 1000.0
     company_id: base.main_company
     currency_id: base.EUR
     journal_id: account.bank_journal
     name: Voucher for Axelor
     narration: Basic Pc
-    line_ids:
+    line_cr_ids:
       - account_id: account.a_recv
         amount: 1000.0
         name: Voucher for Axelor
-        partner_id: base.res_partner_desertic_hispafuentes
+    partner_id: base.res_partner_desertic_hispafuentes
     period_id: account.period_6
-    reference_type: none
+    reference: none
 
 -
   I check that Initially customer voucher is in the "Draft" state
@@ -26,11 +26,7 @@
   I compute the voucher to calculate the taxes by clicking Compute button
 -
   !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucherforaxelor0}
--
-  I check that the voucher state is now "proforma"
--
-  !assert {model: account.voucher, id: account_voucher_voucherforaxelor0}:
-    - state == 'proforma'
+
 -
   I create voucher by clicking on Create button
 -
@@ -54,32 +50,25 @@
 -
   !record {model: account.voucher, id: account_voucher_voucheraxelor0}:
     account_id: account.cash
+    amount: 1000.0
     company_id: base.main_company
     currency_id: base.EUR
     journal_id: account.bank_journal
     name: Voucher Axelor
     narration: Basic PC
-    line_ids:
+    line_dr_ids:
       - account_id: account.cash
         amount: 1000.0
         name: Voucher Axelor
+    partner_id: base.res_partner_desertic_hispafuentes
     period_id: account.period_6
-    reference_type: none
+    reference: none
 
 -
   I check that Initially vendor voucher is in the "Draft" state
 -
   !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
     - state == 'draft'
--
-  I change the state of voucher to "proforma" by clicking PRO-FORMA button
--
-  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_voucheraxelor0}
--
-  I check that the voucher state is now "proforma"
--
-  !assert {model: account.voucher, id: account_voucher_voucheraxelor0}:
-    - state == 'proforma'
 -
   I create voucher by clicking on Create button
 -

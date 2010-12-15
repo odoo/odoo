@@ -90,19 +90,19 @@ class hr_expense_expense(osv.osv):
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
-        'date' : time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
-        'employee_id' : _employee_get,
-        'user_id' : lambda cr, uid, id, c={}: id,
+        'employee_id': _employee_get,
+        'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        if not employee_id:
-            return {'value':{'department_id': False}}
-        dept = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id
-        return {'value': {'department_id':dept and dept.id or False}}
+        department_id = False
+        if employee_id:
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id.id or False
+        return {'value':{'department_id':department_id}}
 
     def expense_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
@@ -219,7 +219,7 @@ class hr_expense_line(osv.osv):
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
-        if not len(ids):
+        if not ids:
             return {}
         cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN %s GROUP BY l.id ",(tuple(ids),))
         res = dict(cr.fetchall())
@@ -237,28 +237,28 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
         }
     _defaults = {
         'unit_quantity': 1,
-        'date_value': time.strftime('%Y-%m-%d'),
+        'date_value': lambda *a: time.strftime('%Y-%m-%d'),
     }
-    _order = "sequence"
+    _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
         if context is None:
             context = {}
-        v = {}
+        res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v['name'] = product.name
+            res['name'] = product.name
             # Compute based on pricetype of employee company
             context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
             amount_unit = product.price_get('standard_price', context)[product.id]
-            v['unit_amount'] = amount_unit
+            res['unit_amount'] = amount_unit
             if not uom_id:
-                v['uom_id'] = product.uom_id.id
-        return {'value': v}
+                res['uom_id'] = product.uom_id.id
+        return {'value': res}
 
 hr_expense_line()
 

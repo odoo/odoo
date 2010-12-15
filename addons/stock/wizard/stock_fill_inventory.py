@@ -45,7 +45,7 @@ class stock_fill_inventory(osv.osv_memory):
         if context.get('active_id', False):
             stock = self.pool.get('stock.inventory').browse(cr, uid, context.get('active_id', False))
             if stock.state=='done':
-                raise osv.except_osv('Error!','Stock Inventory is done')
+                raise osv.except_osv(_('Error!'), _('Stock Inventory is done'))
         True
 
     def fill_inventory(self, cr, uid, ids, context=None):

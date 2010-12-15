@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 00:46+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-12 08:06+0000\n"
+"Last-Translator: swinter <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -22,12 +22,10 @@ msgid "Audit Trail"
 msgstr "Rapport de l' audit"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
+msgstr "ATTENTION : le module audittrail ne fait pas partie de la liste"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -35,31 +33,42 @@ msgid "Log"
 msgstr "Journal"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "S'abonner"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "Ancienne valeur "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr ""
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "Créer"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "Journaux d'audits"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr "Grouper par..."
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "État"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Brouillon"
@@ -70,19 +79,16 @@ msgid "Old Value"
 msgstr "Ancienne valeur"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle invalide pour la définition de l'action"
-
-#. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "Voir le journal"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
-msgstr "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -90,7 +96,7 @@ msgid "Method"
 msgstr "Méthode"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
 msgstr "Journal de"
 
@@ -105,14 +111,21 @@ msgid "Resource Id"
 msgstr "Id de la ressource"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "Ecrire"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
+msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
-msgstr "Audittrails"
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Utilisateurs"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -120,16 +133,12 @@ msgid "Log Lines"
 msgstr "Lignes de journal"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "S'inscrire"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Règles"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "Lire"
-
-#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -141,7 +150,7 @@ msgid "AuditTrail Rule"
 msgstr "Règle AuditTrail"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
 msgstr "Connecter à"
 
@@ -151,27 +160,47 @@ msgid "New Value Text: "
 msgstr "Nouvelle valeur texte: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
 msgstr ""
-"Autorise un administrateur à tracer toutes les manipulations des "
-"utilisateurs sur tous les objets du système.\n"
-"    Règles d'abonnement pour la lecture, l'écriture, la création, la "
-"suppression des objets et la consultation des journaux"
 
 #. module: audittrail
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr "Règles d'audit"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Ancienne valeur "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr "Nom de la ressource"
+
+#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Date"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "Utilisateur"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -179,24 +208,27 @@ msgid "Old Value Text : "
 msgstr "Ancienne valeur texte : "
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Nom"
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr ""
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr ""
+"Changer les dépendances d'essai de vérification  -- Mettre la règle en "
+"BROUILLON"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
 msgstr "Lignes de journal"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Enregistrer les règles"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -209,9 +241,27 @@ msgid "AuditTrail Rules"
 msgstr "Règles AuditTrail"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
-msgstr "audittrail.rule"
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr "ID de l'Action"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -219,14 +269,9 @@ msgid "UnSubscribe"
 msgstr "Se désabonner"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr "Ecritures du journal"
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
-msgstr "audittrail.log"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -234,12 +279,17 @@ msgid "Field Description"
 msgstr "Description du champ"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "Supprimer"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr "Enregistrer les modifications"
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
 msgstr "Ouvrir les journaux"
 
@@ -254,29 +304,9 @@ msgid "Rule Name"
 msgstr "Nom de la règle"
 
 #. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "Lectures des journaux"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Journaux"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "Nouvelle valeur"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "Visualiser les journaux"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "Créations des journaux"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -284,9 +314,15 @@ msgid "AuditTrail Logs"
 msgstr "Journaux AuditTrail"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Règles"
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -294,9 +330,11 @@ msgid "New Value : "
 msgstr "Nouvelle valeur : "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "Utilisateurs"
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -304,11 +342,102 @@ msgid "Old value Text"
 msgstr "Ancienne valeur texte"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "Supprimer les journaux"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr ""
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
+#~ msgid "Create"
+#~ msgstr "Créer"
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "Write"
+#~ msgstr "Ecrire"
+
+#~ msgid "Audittrails"
+#~ msgstr "Audittrails"
+
+#~ msgid "Subscribe"
+#~ msgstr "S'inscrire"
+
+#~ msgid "Read"
+#~ msgstr "Lire"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Enregistrer les règles"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "audittrail.rule"
+
+#~ msgid "Log writes"
+#~ msgstr "Ecritures du journal"
+
+#~ msgid "audittrail.log"
+#~ msgstr "audittrail.log"
+
+#~ msgid "Delete"
+#~ msgstr "Supprimer"
+
+#~ msgid "Log reads"
+#~ msgstr "Lectures des journaux"
+
+#~ msgid "Logs"
+#~ msgstr "Journaux"
+
+#~ msgid "View Logs"
+#~ msgstr "Visualiser les journaux"
+
+#~ msgid "Log creates"
+#~ msgstr "Créations des journaux"
+
+#~ msgid "Log deletes"
+#~ msgstr "Supprimer les journaux"
+
+#~ msgid "Name"
+#~ msgstr "Nom"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Autorise un administrateur à tracer toutes les manipulations des "
+#~ "utilisateurs sur tous les objets du système.\n"
+#~ "    Règles d'abonnement pour la lecture, l'écriture, la création, la "
+#~ "suppression des objets et la consultation des journaux"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle invalide pour la définition de l'action"

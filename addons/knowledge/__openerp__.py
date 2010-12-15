@@ -35,7 +35,7 @@
         'knowledge_installer.xml',
         'knowledge_view.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': ['knowledge_demo.xml'],
     'installable': True,
     'active': False,
 }

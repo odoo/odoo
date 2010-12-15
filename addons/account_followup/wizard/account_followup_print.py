@@ -64,17 +64,58 @@ class account_followup_print(osv.osv_memory):
     }
 
     _defaults = {
-         'date': time.strftime('%Y-%m-%d'),
+         'date': lambda *a: time.strftime('%Y-%m-%d'),
          'followup_id': _get_followup,
     }
-
 account_followup_print()
+
+class account_followup_stat_by_partner(osv.osv):
+    _name = "account_followup.stat.by.partner"
+    _description = "Followup Statistics by Partner"
+    _rec_name = 'partner_id'
+    _auto = False
+    _columns = {
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'date_move':fields.date('First move', readonly=True),
+        'date_move_last':fields.date('Last move', readonly=True),
+        'date_followup':fields.date('Latest followup', readonly=True),
+        'max_followup_id': fields.many2one('account_followup.followup.line',
+                                    'Max Follow Up Level', readonly=True, ondelete="cascade"),
+        'balance':fields.float('Balance', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+    }
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
+        cr.execute("""
+            create or replace view account_followup_stat_by_partner as (
+                SELECT
+                    l.partner_id AS id,
+                    l.partner_id AS partner_id,
+                    min(l.date) AS date_move,
+                    max(l.date) AS date_move_last,
+                    max(l.followup_date) AS date_followup,
+                    max(l.followup_line_id) AS max_followup_id,
+                    sum(l.debit - l.credit) AS balance,
+                    l.company_id as company_id
+                FROM
+                    account_move_line l
+                    LEFT JOIN account_account a ON (l.account_id = a.id)
+                WHERE
+                    a.active AND
+                    a.type = 'receivable' AND
+                    l.reconcile_id is NULL AND
+                    l.partner_id IS NOT NULL
+                    GROUP BY
+                    l.partner_id, l.company_id
+            )""")
+account_followup_stat_by_partner()
 
 class account_followup_print_all(osv.osv_memory):
     _name = 'account.followup.print.all'
     _description = 'Print Followup & Send Mail to Customers'
     _columns = {
-        'partner_ids': fields.many2many('account_followup.stat', 'partner_stat_rel', 'followup_id', 'stat_id', 'Partners', required=True),
+        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True, domain="[('account_id.type', '=', 'receivable'), ('account_id.reconcile', '=', True), ('reconcile_id','=', False), ('state', '!=', 'draft'), ('account_id.active', '=' True), ('debit', '>', 0)]"),
         'email_conf': fields.boolean('Send email confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
@@ -94,7 +135,7 @@ class account_followup_print_all(osv.osv_memory):
 
     _defaults = {
          'email_body': _get_msg,
-         'email_subject': 'Invoices Reminder',
+         'email_subject': _('Invoices Reminder'),
          'partner_lang': True,
          'partner_ids': _get_partners,
          'summary': _get_summary,
@@ -171,10 +212,8 @@ class account_followup_print_all(osv.osv_memory):
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         if data['email_conf']:
-            mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
-            count = 0
             data_user = user_obj.browse(cr, uid, uid)
             move_lines = line_obj.browse(cr, uid, data['partner_ids'])
             partners = []
@@ -280,13 +319,12 @@ class account_followup_print_all(osv.osv_memory):
                     "WHERE id=%s",
                     (to_update[id]['level'],
                     date, int(id),))
-
+        data.update({'date': context['date']})
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
              'form': data
         }
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',

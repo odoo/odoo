@@ -12,7 +12,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -23,20 +23,20 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                   <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
-                        <filter string="Customer" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
                         <field name="reference"/>
                         <field name="name"/>
                         <field name="narration"/>
                         <field name="amount"/>
                    </group>
+                   <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="10">
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -52,7 +52,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -63,20 +63,20 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                   <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
-                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." col='8' colspan='4'>
+                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
                         <field name="reference"/>
                         <field name="name"/>
                         <field name="narration"/>
                         <field name="amount"/>
                    </group>
+                   <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="10">
+                        <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -181,9 +181,6 @@
                                     <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
                                     <field name="amount" sum="Payment"/>
                                 </tree>
-                                <form string="Payment Information">
-                                    <label string="Form view not available for Payment Lines"/>
-                                </form>
                             </field>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
@@ -199,10 +196,29 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                  <field name="date" select="1" on_change="onchange_date(date)"/>
+                                  <field name="currency_id" invisible="True"/>
+                                  <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -219,8 +235,8 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -307,10 +323,29 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1">
+                                    <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
+                                    <field name="writeoff_amount"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="writeoff_acc_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                           domain="[('type','=','liquidity')]"/>
+                                         <!-- should select income accounts only. Or use the journal for this ? -->
+                                    <field name="writeoff_journal_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"/>
+                                    <field name="comment"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="analytic_id"
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <field name="date" select="1" on_change="onchange_date(date)"/>
-                                <field name="currency_id" invisible="True"/>
-                                <field name="number"/>
+                                <group col="4" colspan="1">
+                                    <field name="date" select="1" on_change="onchange_date(date)"/>
+                                    <field name="currency_id" invisible="True"/>
+                                    <field name="number"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
@@ -327,8 +362,8 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>

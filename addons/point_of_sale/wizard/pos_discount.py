@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
-
 
 class pos_discount(osv.osv_memory):
     _name = 'pos.discount'
@@ -32,7 +30,7 @@ class pos_discount(osv.osv_memory):
         'discount_notes': fields.char('Discount Notes', size= 128, required=True),
     }
     _defaults = {
-        'discount': lambda *a: 5,
+        'discount': 5,
     }
 
 
@@ -45,13 +43,14 @@ class pos_discount(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
-        res = super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
+        super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False
-        order = self.pool.get('pos.order').browse(cr, uid, record_id)
+        order = self.pool.get('pos.order').browse(cr, uid, record_id, context=context)
         if not order.lines:
-                raise osv.except_osv('Error!','No Order Lines ')
+                raise osv.except_osv(_('Error!'), _('No Order Lines'))
         True
-    def apply_discount(self, cr, uid, ids, context):
+
+    def apply_discount(self, cr, uid, ids, context=None):
         """
          To give the discount of  product and check the.
 
@@ -61,16 +60,16 @@ class pos_discount(osv.osv_memory):
          @param context: A standard dictionary
          @return : nothing
         """
+        order_ref = self.pool.get('pos.order')
+        order_line_ref = self.pool.get('pos.order.line')
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids[0], context=context)
         record_id = context and context.get('active_id', False)
         if isinstance(record_id, (int, long)):
             record_id = [record_id]
 
-        order_ref = self.pool.get('pos.order')
-        order_line_ref = self.pool.get('pos.order.line')
-
         for order in order_ref.browse(cr, uid, record_id, context=context):
-
             for line in order.lines:
                 company_discount = order.company_id.company_discount
                 applied_discount = this.discount
@@ -81,10 +80,7 @@ class pos_discount(osv.osv_memory):
                     notice = 'Minimum Discount'
                 else:
                     notice = this.discount_notes
-
-                res_new = {
-                }
-
+                res_new = {}
                 if this.discount <= company_discount:
                     res_new = {
                         'discount': this.discount,

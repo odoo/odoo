@@ -45,10 +45,11 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
-        "security/stock_security.xml",  
-        "security/ir.model.access.csv",                  
+        "security/stock_security.xml",
+        "security/ir.model.access.csv",
         "stock_data.xml",
         "wizard/stock_move_view.xml",
+        "wizard/stock_change_product_qty_view.xml",
         "wizard/stock_partial_picking_view.xml",
         "wizard/stock_partial_move_view.xml",
         "wizard/stock_fill_inventory_view.xml",

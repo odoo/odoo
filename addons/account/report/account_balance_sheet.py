@@ -22,12 +22,12 @@
 import time
 
 import pooler
-import rml_parse
 from report import report_sxw
 from account.report import account_profit_loss
 from common_report_header import common_report_header
+from tools.translate import _
 
-class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
+class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
         self.obj_pl = account_profit_loss.report_pl_account_horizontal(cr, uid, name, context=context)
@@ -60,13 +60,20 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         })
         self.context = context
 
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
+
     def sum_dr(self):
-        if self.res_bl['type'] == 'Net Profit':
+        if self.res_bl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_bl['balance']*-1
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_bl['type'] == 'Net Loss':
+        if self.res_bl['type'] == _('Net Loss'):
             self.result_sum_cr += self.res_bl['balance']
         return self.result_sum_cr
 
@@ -78,6 +85,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         #Getting Profit or Loss Balance from profit and Loss report
+        self.obj_pl.get_data(data)
         self.res_bl = self.obj_pl.final_result()
 
         account_pool = db_pool.get('account.account')
@@ -103,10 +111,14 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
-        if self.res_bl['type'] == 'Net Profit C.F.B.L.':
-            self.res_bl['type'] = 'Net Profit'
+        if not self.res_bl:
+            self.res_bl['type'] = _('Net Profit')
+            self.res_bl['balance'] = 0.0
+
+        if self.res_bl['type'] == _('Net Profit'):
+            self.res_bl['type'] = _('Net Profit')
         else:
-            self.res_bl['type'] = 'Net Loss'
+            self.res_bl['type'] = _('Net Loss')
         pl_dict  = {
             'code': self.res_bl['type'],
             'name': self.res_bl['type'],

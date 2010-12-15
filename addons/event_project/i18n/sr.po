@@ -7,28 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-10-17 07:55+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-02 07:19+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-18 04:55+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: model:ir.model,name:event_project.model_event_project
+msgid "Event Project"
+msgstr "Dogadjaj Projekta"
 
 #. module: event_project
-#: model:ir.actions.wizard,name:event_project.wizard_event_task
-msgid "Tasks"
-msgstr "Zadaci"
+#: field:event.project,date:0
+msgid "Date End"
+msgstr "Datum Zavrsetka"
 
 #. module: event_project
-#: wizard_button:event.project,init,done:0
+#: view:event.project:0
 msgid "Ok"
 msgstr "U redu"
 
@@ -37,40 +37,30 @@ msgstr "U redu"
 msgid ""
 "Organization and management of events.\n"
 "\n"
-"    This module allow you to create retro planning for managing your "
+"    This module allows you to create retro planning for managing your "
 "events.\n"
 msgstr ""
 "Organizacija i Upravljanje Dogadjajima.\n"
 "\n"
-"    Ovaj modul vam omogucava da kreirate retro planiranje za upravljanje "
-"vasim dogadjajima.\n"
+"    Ovaj modul vam omogucava da kreirate retro-planiranje za upravljanje "
+"svojim dogadjajima.\n"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Remaining Tasks"
-msgstr "Preostali Zadaci"
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
+msgstr ""
+"Ovo je Shema Projekta. Projekt dogadjaja je duplikat ove Sheme. Nakon Klika "
+"na ' Kreiraj Retro planiranje', novi projekat ce se duplicirati iz ove "
+"Projektne sheme."
 
 #. module: event_project
-#: model:ir.module.module,shortdesc:event_project.module_meta_information
-msgid "Event - Project"
-msgstr "Projekat-Dogadjaj"
-
-#. module: event_project
-#: field:event.event,project_id:0
-#: wizard_field:event.project,init,project_id:0
-#: model:ir.actions.wizard,name:event_project.event_wiz
-msgid "Project"
-msgstr "Projekat"
-
-#. module: event_project
-#: field:event.event,task_ids:0
-msgid "Project tasks"
-msgstr "Projekat Zadataka"
-
-#. module: event_project
-#: wizard_button:event.project,init,end:0
-msgid "Cancel"
-msgstr "Otkaži"
+#: view:event.project:0
+#: model:ir.actions.act_window,name:event_project.action_event_project
+msgid "Retro-Planning"
+msgstr "Retro Planiranje"
 
 #. module: event_project
 #: view:event.event:0
@@ -78,7 +68,55 @@ msgid "Create Retro-Planning"
 msgstr "Kreiraj Retro-Planiranje"
 
 #. module: event_project
-#: wizard_view:event.project,init:0
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: event_project
+#: field:event.event,project_id:0
+msgid "Project"
+msgstr "Projekat"
+
+#. module: event_project
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr "Projektna Shema"
+
+#. module: event_project
+#: model:ir.module.module,shortdesc:event_project.module_meta_information
+msgid "Event Project - Create Retro-Planning to manage your Events"
+msgstr ""
+"Projektni Dogadjaj - Kreira Retro-Planiranje da bi upravljao vasim "
+"dogadjajima"
+
+#. module: event_project
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr "Zadaci"
+
+#. module: event_project
+#: field:event.event,task_ids:0
+msgid "Project tasks"
+msgstr "Projekat Zadataka"
+
+#. module: event_project
+#: view:event.project:0
+msgid "Close"
+msgstr "zatvori"
+
+#. module: event_project
+#: field:event.project,date_start:0
+msgid "Date Start"
+msgstr "Datum Pocetka"
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr ""
+
+#. module: event_project
+#: model:ir.model,name:event_project.model_event_event
 msgid "Event"
 msgstr "Događaj"
 
@@ -86,3 +124,34 @@ msgstr "Događaj"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Upravljanje Zadacima"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Remaining Tasks"
+#~ msgstr "Preostali Zadaci"
+
+#~ msgid "Cancel"
+#~ msgstr "Otkaži"
+
+#~ msgid "Event - Project"
+#~ msgstr "Projekat-Dogadjaj"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"
+#~ msgstr ""
+#~ "Organizacija i Upravljanje Dogadjajima.\n"
+#~ "\n"
+#~ "    Ovaj modul vam omogucava da kreirate retro planiranje za upravljanje "
+#~ "vasim dogadjajima.\n"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime u definiciji Akcije."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora pocinjati sa x_ i ne sme sadrzavati specijalne karaktere !"

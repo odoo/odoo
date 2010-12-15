@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 12:07+0000\n"
-"PO-Revision-Date: 2010-09-29 10:58+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-11-08 08:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_claim
@@ -63,12 +63,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "#Claim"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim.report:0
-msgid "This Year"
-msgstr "Anno attuale"
+msgstr "# Iniziative"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -88,15 +83,9 @@ msgid "Day"
 msgstr "Giorno"
 
 #. module: crm_claim
-#: help:crm.claim,canal_id:0
-msgid ""
-"The channels represent the different communicationmodes available with the "
-"customer. With each commercial opportunity, you can indicate thecanall which "
-"is this opportunity source."
+#: view:crm.claim:0
+msgid "Add Internal Note"
 msgstr ""
-"I canali sappresentano i differenti modi di comunicazione disponibili con il "
-"cliente. Con tutte le opportunità commerciali puoi indicare il canale da cui "
-"è stata generata l'opportunità."
 
 #. module: crm_claim
 #: help:crm.claim,section_id:0
@@ -118,13 +107,7 @@ msgstr "Messaggi"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim1
 msgid "Factual Claims"
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim,type_id:0
-#: field:crm.claim.report,type_id:0
-msgid "Claim Type"
-msgstr "Tipo di richiesta"
+msgstr "Richiami reali"
 
 #. module: crm_claim
 #: selection:crm.claim,state:0
@@ -148,9 +131,14 @@ msgid "Partner Contact"
 msgstr "Contatto Partner"
 
 #. module: crm_claim
+#: field:crm.claim.report,date_closed:0
+msgid "Close Date"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim.report:0
-msgid "My Case"
-msgstr "I miei Casi"
+msgid "   Month   "
+msgstr "   Mese   "
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -175,14 +163,16 @@ msgstr "Informazioni Aggiuntive"
 #. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,partner_id:0
+#: view:crm.claim.report:0
 #: field:crm.claim.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_claim
-#: field:crm.claim,active:0
-msgid "Active"
-msgstr "Attivo"
+#: selection:crm.claim,type_action:0
+#: selection:crm.claim.report,type_action:0
+msgid "Preventive Action"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,date_closed:0
@@ -192,10 +182,9 @@ msgid "Closed"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
 #: field:crm.claim.report,section_id:0
 msgid "Section"
-msgstr ""
+msgstr "Sezione"
 
 #. module: crm_claim
 #: constraint:ir.ui.view:0
@@ -215,13 +204,8 @@ msgid "Send New Email"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Reply"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Stage: "
+#: field:crm.claim.report,delay_expected:0
+msgid "Overpassed Deadline"
 msgstr ""
 
 #. module: crm_claim
@@ -253,15 +237,8 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-#: selection:crm.claim,state:0
-#: view:crm.claim.report:0
-#: selection:crm.claim.report,state:0
-msgid "Pending"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: field:crm.claim,date_deadline:0
+#: field:crm.claim.report,date_deadline:0
 msgid "Deadline"
 msgstr ""
 
@@ -273,7 +250,7 @@ msgstr ""
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
-msgstr ""
+msgstr "Fasi reclamo"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
@@ -299,8 +276,8 @@ msgid "Dates"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_resource_act
-msgid "Claim Resource Type"
+#: view:crm.claim.report:0
+msgid "    Month-1    "
 msgstr ""
 
 #. module: crm_claim
@@ -314,9 +291,10 @@ msgid "Stages"
 msgstr ""
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
-msgstr ""
+msgstr "Analisi reclami"
 
 #. module: crm_claim
 #: help:crm.claim.report,delay_close:0
@@ -330,13 +308,18 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
+msgid "References"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
 msgid "Status and Categorization"
 msgstr ""
 
 #. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim1
 msgid "Accepted as Claim"
-msgstr ""
+msgstr "Accettato come reclamo"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -349,8 +332,8 @@ msgid "September"
 msgstr ""
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
+#: view:crm.claim:0
+msgid "Communication"
 msgstr ""
 
 #. module: crm_claim
@@ -360,8 +343,19 @@ msgid "Month"
 msgstr ""
 
 #. module: crm_claim
+#: field:crm.claim,type_action:0
+#: field:crm.claim.report,type_action:0
+msgid "Action Type"
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim,write_date:0
 msgid "Update Date"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "Salesman"
 msgstr ""
 
 #. module: crm_claim
@@ -379,6 +373,11 @@ msgstr ""
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim2
 msgid "Value Claims"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim.report:0
+msgid "  Year  "
 msgstr ""
 
 #. module: crm_claim
@@ -418,8 +417,11 @@ msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: crm_claim
+#: view:crm.claim:0
+#: selection:crm.claim,state:0
 #: view:crm.claim.report:0
-msgid "7 Days"
+#: selection:crm.claim.report,state:0
+msgid "Pending"
 msgstr ""
 
 #. module: crm_claim
@@ -449,17 +451,11 @@ msgid "June"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Type of Action"
-msgstr ""
-
-#. module: crm_claim
 #: field:crm.claim,partner_phone:0
 msgid "Phone"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
 #: field:crm.claim.report,user_id:0
 msgid "User"
 msgstr ""
@@ -470,9 +466,9 @@ msgid "Awaiting Response"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
-msgid "Claim Categories"
-msgstr ""
+#: field:crm.claim,active:0
+msgid "Active"
+msgstr "Attivo"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -490,11 +486,6 @@ msgid "Closure"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_type_act
-msgid "Resource Type"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Search"
 msgstr ""
@@ -505,17 +496,6 @@ msgid "October"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr ""
@@ -523,7 +503,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Date"
-msgstr ""
+msgstr "Data reclamo"
 
 #. module: crm_claim
 #: help:crm.claim,email_from:0
@@ -536,17 +516,17 @@ msgid "Date"
 msgstr ""
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim4
-msgid "Invalid"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
+msgstr "Reclami"
+
+#. module: crm_claim
+#: selection:crm.claim,type_action:0
+#: selection:crm.claim.report,type_action:0
+msgid "Corrective Action"
 msgstr ""
 
 #. module: crm_claim
@@ -563,7 +543,7 @@ msgstr ""
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
-msgstr ""
+msgstr "Reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -581,7 +561,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Info"
-msgstr ""
+msgstr "Informazioni reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -590,8 +570,8 @@ msgid "Done"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Communication"
+#: selection:crm.claim.report,month:0
+msgid "December"
 msgstr ""
 
 #. module: crm_claim
@@ -633,7 +613,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Date of Claim"
-msgstr ""
+msgstr "Data del reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -652,8 +632,13 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Claim/Action Description"
+msgid "Reply"
 msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Claim/Action Description"
+msgstr "Descrizione reclamo/azione"
 
 #. module: crm_claim
 #: field:crm.claim,description:0
@@ -663,7 +648,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Search Claims"
-msgstr ""
+msgstr "Cerca reclami"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -674,7 +659,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 msgid "Report a Claim"
-msgstr ""
+msgstr "Riporta un reclamo"
 
 #. module: crm_claim
 #: field:crm.claim,probability:0
@@ -687,8 +672,10 @@ msgid "Employee's Name"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "This Month"
+#: help:crm.claim,canal_id:0
+msgid ""
+"The channels represent the different communication  modes available with the "
+"customer."
 msgstr ""
 
 #. module: crm_claim
@@ -714,11 +701,6 @@ msgid "Name"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Communication history"
-msgstr ""
-
-#. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim3
 msgid "Won't fix"
 msgstr ""
@@ -729,8 +711,8 @@ msgid "April"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "References"
+#: view:crm.claim.report:0
+msgid "My Case(s)"
 msgstr ""
 
 #. module: crm_claim
@@ -747,6 +729,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,section_id:0
+#: view:crm.claim.report:0
 msgid "Sales Team"
 msgstr ""
 
@@ -765,3 +748,26 @@ msgstr ""
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+msgid "Claim Categories"
+msgstr "Categorie reclami"
+
+#~ msgid "This Year"
+#~ msgstr "Anno attuale"
+
+#~ msgid "Claim Type"
+#~ msgstr "Tipo di richiesta"
+
+#~ msgid ""
+#~ "The channels represent the different communicationmodes available with the "
+#~ "customer. With each commercial opportunity, you can indicate thecanall which "
+#~ "is this opportunity source."
+#~ msgstr ""
+#~ "I canali sappresentano i differenti modi di comunicazione disponibili con il "
+#~ "cliente. Con tutte le opportunità commerciali puoi indicare il canale da cui "
+#~ "è stata generata l'opportunità."
+
+#~ msgid "My Case"
+#~ msgstr "I miei Casi"

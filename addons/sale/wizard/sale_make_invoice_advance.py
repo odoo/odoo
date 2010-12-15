@@ -83,12 +83,12 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'reference': False,
                     'account_id': sale.partner_id.property_account_receivable.id,
                     'partner_id': sale.partner_id.id,
-                    'address_invoice_id':sale.partner_invoice_id.id,
-                    'address_contact_id':sale.partner_order_id.id,
+                    'address_invoice_id': sale.partner_invoice_id.id,
+                    'address_contact_id': sale.partner_order_id.id,
                     'invoice_line': [(6, 0, create_ids)],
-                    'currency_id' :sale.pricelist_id.currency_id.id,
+                    'currency_id': sale.pricelist_id.currency_id.id,
                     'comment': '',
-                    'payment_term':sale.payment_term.id,
+                    'payment_term': sale.payment_term.id,
                     'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
                 }
 
@@ -98,7 +98,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 for inv in sale.invoice_ids:
                     ids_inv.append(inv.id)
                 ids_inv.append(inv_id)
-                obj_sale.write(cr, uid, sale.id, {'invoice_ids':[(6, 0, ids_inv)]})
+                obj_sale.write(cr, uid, sale.id, {'invoice_ids': [(6, 0, ids_inv)]})
                 list_inv.append(inv_id)
         #
         # If invoice on picking: add the cost on the SO
@@ -127,7 +127,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             'res_model': 'sale.open.invoice',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context':context
+            'context': context
         }
 
 sale_advance_payment_inv()
@@ -135,7 +135,8 @@ sale_advance_payment_inv()
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
     _description = "Sale Open Invoice"
-    def open_invoice(self, cr, uid, ids, context):
+
+    def open_invoice(self, cr, uid, ids, context=None):
 
         """
              To open invoice.
@@ -147,15 +148,15 @@ class sale_open_invoice(osv.osv_memory):
              @return:
 
         """
-
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         for advance_pay in self.browse(cr, uid, ids):
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id'])
-            form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-            form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
-            tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
-            tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
+            form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            form_id = form_res and form_res[1] or False
+            tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+            tree_id = tree_res and tree_res[1] or False
+
         return {
             'name': _('Advance Invoice'),
             'view_type': 'form',
@@ -163,8 +164,8 @@ class sale_open_invoice(osv.osv_memory):
             'res_model': 'account.invoice',
             'res_id': int(context['invoice_id'][0]),
             'view_id': False,
-            'views': [(form_res, 'form'), (tree_res, 'tree')],
-            'context': "{'type':'out_invoice'}",
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
+            'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
          }
 

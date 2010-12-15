@@ -22,7 +22,7 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * User Authentication
@@ -46,7 +46,7 @@
         'security/document_security.xml',
         'document_view.xml',
         'document_data.xml',
-#        'wizard/document_configuration_view.xml',
+        'wizard/document_configuration_view.xml',
         'security/ir.model.access.csv',
         'report/document_report_view.xml',
         'board_document_view.xml',

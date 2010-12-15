@@ -25,6 +25,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
+                    <field name="category_id" invisible="1"/>
                     <field name="product_uom" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="name" invisible="1"/>
@@ -70,7 +71,7 @@
                         string="Quotations"
                         name="quotes"
                         domain="[('state','=','draft')]"/>
-                <filter icon="terp-accessories-archiver"
+                <filter icon="terp-gtk-jump-to-rtl"
                         string="Orders"
                         name="orders"
                         domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
@@ -79,7 +80,7 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <separator orientation="vertical"/>
@@ -99,6 +100,7 @@
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
  					<separator orientation="vertical"/>
                     <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Category" name="group_category_id" icon="terp-accessories-archiver" context="{'group_by':'category_id'}"/>
                     <filter string="Product UOM" name="group_product_uom" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
                     <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'warehouse_id'}" groups="base.group_extended"/>
                     <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>

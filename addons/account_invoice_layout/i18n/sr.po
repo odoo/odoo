@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-10-15 09:39+0000\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-10-27 08:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -23,21 +23,22 @@ msgid "Sub Total"
 msgstr "Subtotal"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Datum fakture:"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Note:"
+msgstr "Napomena:"
 
 #. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
 msgstr "Otkazane Fakture"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr "Predračun"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -46,19 +47,21 @@ msgid "Title"
 msgstr "Naslov"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
 msgid "Invoices with Layout and Message"
 msgstr "Formatirana Faktura sa Porukom"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Popust (%)"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr "Urac.porezi"
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Štampaj"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -66,9 +69,9 @@ msgid "Note"
 msgstr "Napomena"
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,print:0
-msgid "Print"
-msgstr "Štampaj"
+#: model:ir.model,name:account_invoice_layout.model_notify_message
+msgid "Notify By Messages"
+msgstr "Napomena po porukama"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -77,24 +80,32 @@ msgid ""
 msgstr "Ova napomena ce se pojaviti na dnu fakture pri stampi"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr "Budite Expert sa Expertima..."
 
 #. module: account_invoice_layout
-#: model:ir.model,name:account_invoice_layout.model_notify_message
-msgid "Notify By Messages"
-msgstr "Napomena po porukama"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "PDV :"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "PRO-FORMA"
-msgstr "Predračun"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Document"
+msgstr "Dokument"
+
+#. module: account_invoice_layout
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -112,32 +123,30 @@ msgid "Notification Message"
 msgstr "Poruka Napomene"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Referenca kupca:"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Proizvod"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
-msgstr ")"
+#: help:account.invoice.line,sequence:0
+msgid "Gives the sequence order when displaying a list of invoice lines."
+msgstr "poredja sekvence pri prikazu liste faktura."
 
 #. module: account_invoice_layout
-#: field:account.invoice.line,state:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Price"
 msgstr "Cena"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "/ ("
-msgstr "/("
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Invoice Date"
+msgstr "Datum Fakture"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Porezi:"
 
@@ -152,34 +161,10 @@ msgid "Write Messages"
 msgstr "Napisi Poruke"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Base"
 msgstr "Osnova"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr "Fax :"
-
-#. module: account_invoice_layout
-#: field:notify.message,msg:0
-msgid "Special Message"
-msgstr "Specijalna Poruka"
-
-#. module: account_invoice_layout
-#: view:notify.message:0
-msgid "Write a notification or a wishful message."
-msgstr "Napisi napomenu ili celu poruku"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel. :"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -187,12 +172,43 @@ msgid "Page Break"
 msgstr "Прелом стране"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Document:"
-msgstr "Dokument"
+#: view:notify.message:0
+#: field:notify.message,msg:0
+msgid "Special Message"
+msgstr "Specijalna Poruka"
 
 #. module: account_invoice_layout
-#: wizard_view:wizard.notify_message,init:0
+#: help:account.invoice.special.msg,message:0
+msgid "Message to Print at the bottom of report"
+msgstr "Poruka koja se stampa pri dnu izvestaja"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Partner Ref."
+msgstr "Vezani partner"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
+#: report:notify_account.invoice:0
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Total:"
+msgstr "Ukupno:"
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
 msgid "Select Message"
 msgstr "Odaberite poruku"
 
@@ -202,32 +218,31 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
 msgstr "Formatirana Faktura"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Description / Taxes"
 msgstr "Opis / Porezi"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Amount"
 msgstr "Iznos"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Description/Taxes"
-msgstr "Opis/Porezi"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Draft Invoice"
 msgstr "Neodobreni računi"
 
@@ -237,19 +252,20 @@ msgid "Sequence Number"
 msgstr "Broj Sekvence"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Quantity"
-msgstr "Količina"
+#: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
+msgid "Account Invoice Special Message"
+msgstr "Specijalna poruka naloga fakture"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Refund"
 msgstr "Refundiraj"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr "PDV :"
+#: field:account.invoice.line,state:0
+msgid "Type"
+msgstr "Tip"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -257,56 +273,122 @@ msgid "Separator Line"
 msgstr "Linija za odvajanje"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "Invoices Layout Improvement"
+msgstr "Unapredjenje izgleda fakture"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Supplier Invoice"
 msgstr "Račun dobavljača"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr "Napomena :"
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "Porez"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr "izgled_fakture_naloga"
+#: model:ir.model,name:account_invoice_layout.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Redak računa"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
-msgstr "Ukupno (bez poreza):"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Net Total:"
+msgstr "Neto Ukupno"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice"
-msgstr "Račun"
+#: view:notify.message:0
+msgid "Write a notification or a wishful message."
+msgstr "Napisi napomenu ili celu poruku"
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,end:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Fax :"
+msgstr "Faks :"
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
 msgid "Cancel"
 msgstr "Otkaži"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Supplier Refund"
 msgstr "Povrat Dobavljaču"
 
 #. module: account_invoice_layout
-#: wizard_field:wizard.notify_message,init,message:0
+#: field:account.invoice.special.msg,message:0
 msgid "Message"
 msgstr "Poruka"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr "Ukupno"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Sve Napomene"
+
+#~ msgid "Invoice Date:"
+#~ msgstr "Datum fakture:"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#~ msgid "(Incl. taxes):"
+#~ msgstr "Urac.porezi"
+
+#~ msgid "Customer Ref:"
+#~ msgstr "Referenca kupca:"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid "/ ("
+#~ msgstr "/("
+
+#~ msgid "Fax :"
+#~ msgstr "Fax :"
+
+#~ msgid "Document:"
+#~ msgstr "Dokument"
+
+#~ msgid "Tel. :"
+#~ msgstr "Tel. :"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "VAT :"
+#~ msgstr "PDV :"
+
+#~ msgid "Note :"
+#~ msgstr "Napomena :"
+
+#~ msgid "Description/Taxes"
+#~ msgstr "Opis/Porezi"
+
+#~ msgid "Total"
+#~ msgstr "Ukupno"
+
+#~ msgid "Total (Excl. taxes):"
+#~ msgstr "Ukupno (bez poreza):"
+
+#~ msgid "account_invoice_layout"
+#~ msgstr "izgled_fakture_naloga"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."

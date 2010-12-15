@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 import time
+import tools
 
 class board_board(osv.osv):
     """
@@ -184,7 +185,7 @@ class board_note_type(osv.osv):
     Board note Type
     """
     _name = 'board.note.type'
-    _description = "NOte Type"
+    _description = "Note Type"
 
     _columns = {
         'name': fields.char('Note Type', size=64, required=True),
@@ -222,5 +223,46 @@ class board_note(osv.osv):
     }
 
 board_note()
+
+class res_log_report(osv.osv):
+    """ Log Report """
+    _name = "res.log.report"
+    _auto = False
+    _description = "Log Report"
+    _columns = {
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), \
+                                  ('03', 'March'), ('04', 'April'),\
+                                  ('05', 'May'), ('06', 'June'), \
+                                  ('07', 'July'), ('08', 'August'),\
+                                  ('09', 'September'), ('10', 'October'),\
+                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'creation_date': fields.date('Creation Date', readonly=True),
+        'res_model': fields.char('Object', size=128),
+        'nbr': fields.integer('# of Entries', readonly=True)
+     }
+
+    def init(self, cr):
+        """
+            Log Report
+            @param cr: the current row, from the database cursor
+        """
+        tools.drop_view_if_exists(cr,'res_log_report')
+        cr.execute("""
+            CREATE OR REPLACE VIEW res_log_report AS (
+                SELECT
+                    l.id as id,
+                    1 as nbr,
+                    to_char(l.create_date, 'YYYY') as name,
+                    to_char(l.create_date, 'MM') as month,
+                    to_char(l.create_date, 'YYYY-MM-DD') as day,
+                    to_char(l.create_date, 'YYYY-MM-DD') as creation_date,
+                    l.res_model as res_model,
+                    date_trunc('day',l.create_date) as create_date
+                FROM
+                    res_log l
+            )""")
+res_log_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

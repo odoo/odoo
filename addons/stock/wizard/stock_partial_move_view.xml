@@ -2,13 +2,49 @@
 <openerp>
     <data>
 
-        <act_window name="Deliver Products"
+        <act_window name="Deliver/Receive Products"
             res_model="stock.partial.move"
             src_model="stock.move"
             view_mode="form"
+            multi="True"
             target="new"
             key2="client_action_multi"
-            id="action_partial_move"/>
-
+            id="action_partial_move"></act_window>
+            
+		
+		<record id="stock_move_memory_tree" model="ir.ui.view">
+            <field name="name">stock.move.memory.tree</field>
+            <field name="model">stock.move.memory</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" readonly="1" />
+                    <field name="quantity" ></field>
+                    <field name="product_uom"></field>
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]"  groups="base.group_extended" ></field>
+                    <field name="cost"></field>
+                    <field name="currency" ></field>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_move_memory_form" model="ir.ui.view">
+            <field name="name">stock.move.memory.form</field>
+            <field name="model">stock.move.memory</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                   <field name="product_id" readonly="1" />
+                    <field name="quantity" ></field>
+                    <field name="product_uom"></field>
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" ></field>
+                    <field name="cost"></field>
+                    <field name="currency"></field>
+                </form>
+            </field>
+        </record>
+		
+     
+		
     </data>
 </openerp>

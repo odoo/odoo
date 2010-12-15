@@ -6,33 +6,38 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 03:20+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-12 09:46+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:res.log.report:0
+msgid "  Year  "
 msgstr ""
-"Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr "board.board"
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
+msgstr "Δημιουργία Μενού"
 
 #. module: board
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Τύπος Σημείωσης"
+
+#. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
 msgstr "Δημιουργός"
@@ -43,25 +48,80 @@ msgid "Dashboard main module"
 msgstr "Κύριo άρθρωμα Πίνακα Αναφορών"
 
 #. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Τελευταίες Συνδέσεις"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Λάθος Χρήστη!"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
 msgstr "Σημείωση"
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Πλάτος"
+#: view:board.note:0
+#: view:res.log.report:0
+msgid "Group By..."
+msgstr "Ομαδοποίηση Κατά..."
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Τίτλος"
+
+#. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Ανοικτός Πίνακας Αναφορών"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -70,15 +130,46 @@ msgid "Dashboard Definition"
 msgstr "Ορισμός Πίνακα Αναφορών"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
 #: model:ir.ui.menu,name:board.menu_view_board_note_form
 msgid "Publish a note"
 msgstr "Δημοσίευση σημειώσεων"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
 msgstr "Πληροφορίες Μενού"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr ""
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "Τύπος σημείωσης"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -86,39 +177,61 @@ msgid "Action Views"
 msgstr "Προβολή Ενεργειών"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr "board.note"
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr ""
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "Ημερ/νία"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Ρυθμίσεις"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr ""
 
 #. module: board
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Τύπος Σημείωσης"
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr ""
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr ""
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
 msgstr "Δημιουργία Μενού για Πίνακα Αναφορών"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr ""
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr ""
+
+#. module: board
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
+msgstr ""
+
+#. module: board
+#: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Υπερκείμενο Μενού"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr ""
 
 #. module: board
 #: view:board.note:0
@@ -126,14 +239,28 @@ msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr "board.note.type"
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr ""
+
+#. module: board
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Πίνακας Αναφορών"
 
@@ -143,24 +270,30 @@ msgid "Base module for all dashboards."
 msgstr "Βασικό άρθρωμα για όλους τους πίνακες αναφορών"
 
 #. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr ""
+
+#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
 msgstr "Θέση"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Ανοικτός Πίνακας Αναφορών"
+#: view:res.log.report:0
+msgid "Model"
+msgstr ""
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Όνομα Μενού"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "Τύπος σημείωσης"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr "Τελευταίες Δραστηριότητες"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -178,20 +311,35 @@ msgid "Right"
 msgstr "Δεξιά"
 
 #. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "Πλάτος"
+
+#. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Ιεράρχηση"
 
 #. module: board
-#: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
-msgid "Create Menu"
-msgstr "Δημιουργία Μενού"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr ""
 
 #. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr "Πίνακες Αναφορών"
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: view:board.menu.create:0
+msgid "Create Menu"
+msgstr "Δημιουργία Μενού"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -199,12 +347,28 @@ msgid "Height"
 msgstr "Ύψος"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr "Δημιουργία Μενού Πίνακα"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr ""
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -214,11 +378,43 @@ msgid "Dashboard View"
 msgstr "Προβολή Πίνακα Αναφορών"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr "board.board.line"
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr ""
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Αντικείμενο"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
+#~ msgid "board.board"
+#~ msgstr "board.board"
+
+#~ msgid "board.note"
+#~ msgstr "board.note"
+
+#~ msgid "Configuration"
+#~ msgstr "Ρυθμίσεις"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
+#~ msgid "board.note.type"
+#~ msgstr "board.note.type"
+
+#~ msgid "Dashboards"
+#~ msgstr "Πίνακες Αναφορών"
+
+#~ msgid "board.board.line"
+#~ msgstr "board.board.line"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"

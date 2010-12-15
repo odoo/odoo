@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
+from lxml import etree
+
 from osv import osv
 from tools.translate import _
+import tools
 
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
@@ -48,7 +51,7 @@ class account_move_journal(osv.osv_memory):
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
             if not jids:
-                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (context.get('journal_type'))))
+                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Financial Accounting/Accounts/Journals.') % context.get('journal_type'))
             journal_id = jids[0]
 
         return journal_id
@@ -100,10 +103,13 @@ class account_move_journal(osv.osv_memory):
                 <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                 <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
             </group>
-        </form>""" % (str(journal), str(period))
+        </form>""" % (tools.ustr(journal), tools.ustr(period))
 
+        view = etree.fromstring(view.encode('utf8'))
+        xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)
+        view = xarch
         res.update({
-            'arch':view
+            'arch': view
         })
         return res
 
@@ -154,9 +160,8 @@ class account_move_journal(osv.osv_memory):
             period = period_pool.browse(cr, uid, ids[0], context=context)
             name = (period.journal_id.code or '') + ':' + (period.period_id.code or '')
 
-        result = data_pool._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-        res_id = data_pool.browse(cr, uid, result, context=context).res_id
-
+        result = data_pool.get_object_reference(cr, uid, 'account', 'view_account_move_line_filter')
+        res_id = result and result[1] or False
         return {
             'name': name,
             'view_type': 'form',

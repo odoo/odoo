@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 10:02+0000\n"
-"Last-Translator: eLBati - albatos.com <lorenzo.battistini@albatos.com>\n"
+"PO-Revision-Date: 2010-11-01 08:41+0000\n"
+"Last-Translator: Lorenzo Battistini <lorenzo.battistini@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -80,7 +80,7 @@ msgstr "Eccezione Fattura"
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Listino Predefinito Prezzi Acquisto"
+msgstr "Listino acquisti predefinito"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -196,13 +196,14 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
-"Lo stato della richiesta di preventivo o di ordine. Un preventivo è un "
-"ordine in stato di 'Bozza'. Nel momento in cui un ordine viene confermato da "
-"un utente, lo stato passa automaticamente a 'Confermato'. Poi il fornitore "
-"dovrà confermare l'ordine (lo stato passerà ad 'approvato'). Infine, quando "
-"l'ordine verrà ricevuto e pagato, lo stato diventerà 'Completato'. Se si "
-"procederà ad annullare un'operazione durante le fasi di fatturazione o di "
-"ricezione, lo stato dell'ordine verrà passato a 'Eccezione'."
+"Lo stato della richiesta di preventivo o di ordine d'acquisto. Un preventivo "
+"è un ordine in stato di 'Bozza'. Nel momento in cui un ordine viene "
+"confermato da un utente, lo stato passa automaticamente a 'Confermato'. Poi "
+"il fornitore dovrà confermare l'ordine (lo stato passerà ad 'approvato'). "
+"Infine, quando l'ordine verrà ricevuto e pagato, lo stato diventerà "
+"'Completato'. Se si procederà ad annullare un'operazione durante le fasi di "
+"fatturazione o di ricezione dei beni, lo stato dell'ordine verrà passato a "
+"'Eccezione'."
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -248,7 +249,7 @@ msgstr "Contabilità Analitica"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 msgid "Purchase Order lines"
-msgstr "Riga Ordine Acquisto"
+msgstr "Righe Ordine Acquisto"
 
 #. module: purchase
 #: field:purchase.order,validator:0

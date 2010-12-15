@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2009-09-08 12:32+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -33,25 +33,46 @@ msgid "The accoutant reimburse the expenses"
 msgstr "회계사가 비용을 환급합니다."
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_confirm
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_confirm
-msgid "Expenses waiting validation"
-msgstr "검증 대기 중인 비용"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: field:hr.expense.expense,date_confirm:0
+#: field:hr.expense.report,date_confirm:0
+msgid "Confirmation Date"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_confirm:0
-msgid "Date Confirmed"
-msgstr "확정된 날짜"
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
+msgid "Group By..."
+msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
-msgid "Waiting confirmation"
-msgstr "대기 중인 확정"
+#: model:product.template,name:hr_expense.product_product_expense_air_product_template
+msgid "Air Ticket"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,department_id:0
+msgid "Department"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.report,invoiced:0
+msgid "# of Invoiced Lines"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,company_id:0
+msgid "Company"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -59,18 +80,18 @@ msgid "Set to Draft"
 msgstr "초안으로 설정"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_confirm
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_confirm
-msgid "My expenses waiting validation"
-msgstr "검증 대기 중인 내 비용"
+#: view:hr.expense.expense:0
+msgid "To Pay"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all
-msgid "All expenses"
-msgstr "모든 비용"
+#: model:ir.model,name:hr_expense.model_hr_expense_report
+msgid "Expenses Statistics"
+msgstr ""
 
 #. module: hr_expense
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "승인됨"
@@ -81,10 +102,11 @@ msgid "UoM"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
-msgid "Refuse"
-msgstr "거부"
+#: help:hr.expense.expense,date_valid:0
+msgid ""
+"Date of the acceptation of the sheet expense. It's filled when the button "
+"Accept is pressed."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -92,7 +114,12 @@ msgid "Notes"
 msgstr "노트"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
+#: field:hr.expense.expense,invoice_id:0
+msgid "Employee's Invoice"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,state:0
 msgid "Cancelled"
 msgstr "취소됨"
 
@@ -102,38 +129,64 @@ msgid "Validation"
 msgstr "검증"
 
 #. module: hr_expense
-#: help:product.product,hr_expense_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
-msgstr "상품이 HR 비용 시트 라인으로부터 선택된 범위 내의 상품 리스트에 게시될 지 여부를 결정"
+#: selection:hr.expense.report,state:0
+msgid "Waiting confirmation"
+msgstr "대기 중인 확정"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Accepted"
 msgstr "수락됨"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: view:hr.expense.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr "참조"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "Certified honest and conform,"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
-msgid "Print HR expenses"
-msgstr "HR 비용 인쇄"
+#: help:hr.expense.expense,date_confirm:0
+msgid ""
+"Date of the confirmation of the sheet expense. It's filled when the button "
+"Confirm is pressed."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: field:hr.expense.report,nbr:0
+msgid "# of Lines"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
 msgstr "비용 거부"
+
+#. module: hr_expense
+#: model:product.template,name:hr_expense.product_product_expense_car_product_template
+msgid "Car Travel"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.report,price_average:0
+msgid "Average Price"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Total Invoiced Lines"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -147,34 +200,60 @@ msgid "The accoutant validates the sheet"
 msgstr "회계사가 시트를 검증합니다."
 
 #. module: hr_expense
+#: field:hr.expense.report,delay_valid:0
+msgid "Delay to Valid"
+msgstr ""
+
+#. module: hr_expense
+#: help:hr.expense.line,sequence:0
+msgid "Gives the sequence order when displaying a list of expense lines."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid ""
+"Please configure Default Expanse account for Product purchase, "
+"`property_account_expense_categ`"
+msgstr "상품 구매를 위한 디폴트 비용 계정을 구성하십시오. `property_account_expense_categ`"
+
+#. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "분석 계정"
 
 #. module: hr_expense
-#: model:process.node,name:hr_expense.process_node_supplierinvoice0
-#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
-msgid "Supplier Invoice"
-msgstr "공급자 인보이스"
+#: field:hr.expense.report,date:0
+msgid "Date "
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,state:0
 msgid "State"
 msgstr "상태"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
 msgid "Employee"
 msgstr "직원"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "수량"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "총 가격"
 
@@ -184,10 +263,26 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "일부 비요은 고객에게 재차 인보이스될 수 있습니다."
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Error !"
+msgstr "에러!"
+
+#. module: hr_expense
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "내 비용"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
+msgid "HR expenses"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
@@ -201,14 +296,20 @@ msgstr "비용 환급"
 
 #. module: hr_expense
 #: field:hr.expense.expense,journal_id:0
+#: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "저널"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_new
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_new
-msgid "New Expenses Sheet"
-msgstr "새 비용 시트"
+#: view:hr.expense.report:0
+#: field:hr.expense.report,no_of_products:0
+msgid "# of Products"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "July"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
@@ -221,13 +322,28 @@ msgid "Reimbursement"
 msgstr "환급"
 
 #. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:hr.expense.report:0
+msgid "    Month-1    "
 msgstr ""
 
 #. module: hr_expense
+#: field:hr.expense.expense,date_valid:0
+#: field:hr.expense.report,date_valid:0
+msgid "Validation Date"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_report_all
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report_all
+msgid "Expenses Analysis"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
+#: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "비용"
 
@@ -239,9 +355,43 @@ msgid "Expense Lines"
 msgstr "비용 라인"
 
 #. module: hr_expense
+#: field:hr.expense.report,delay_confirm:0
+msgid "Delay to Confirm"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "December"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,month:0
+msgid "Month"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
+#: field:hr.expense.report,currency_id:0
 msgid "Currency"
 msgstr "통화"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Approval"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -250,11 +400,24 @@ msgstr "직원이 자신의 모든 비용을 인코드합니다."
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: selection:hr.expense.report,state:0
 msgid "Invoiced"
 msgstr "인보이스됨"
 
 #. module: hr_expense
+#: field:product.product,hr_expense_ok:0
+msgid "Can Constitute an Expense"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "  Year  "
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Reimbursed"
 msgstr "환급됨"
 
@@ -269,15 +432,11 @@ msgid "Create Customer invoice"
 msgstr "고객 인보이스 생성"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: selection:hr.expense.expense,state:0
+#: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "초안"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -290,9 +449,24 @@ msgid "Expense is approved."
 msgstr "비용이 승인됨."
 
 #. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "August"
+msgstr ""
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_approved0
+msgid "The direct manager approves the sheet"
+msgstr "직속 상관이 이 시트를 승인합니다."
+
+#. module: hr_expense
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "총액"
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "June"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
@@ -300,36 +474,52 @@ msgid "Draft Expenses"
 msgstr "비용 초안"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Customer Project"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "사용자"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "날짜"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: selection:hr.expense.report,month:0
+msgid "November"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "October"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
 msgid "Total:"
 msgstr "합계:"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: selection:hr.expense.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
 msgid "HR Expenses"
 msgstr "HR 비용"
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-msgid "Date Validated"
-msgstr "검증된 날짜"
-
-#. module: hr_expense
-#: field:hr.expense.expense,account_move_id:0
-msgid "Account Move"
-msgstr "계정 이동"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -342,21 +532,26 @@ msgid "The direct manager refuses the sheet.Reset as draft."
 msgstr "직속 상관이 시트를 초안으로 재설정하는 것을 거부합니다."
 
 #. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_supplierinvoice0
+#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
+msgid "Supplier Invoice"
+msgstr "공급자 인보이스"
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses Sheet"
 msgstr "비용 시트"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_invoiced
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_invoiced
-msgid "Expenses waiting payment"
-msgstr "결제 댁 중인 비용"
+#: view:hr.expense.report:0
+msgid "Waiting"
+msgstr ""
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_my_draft
-#: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
-msgid "My Draft expenses"
-msgstr "내 초안 비용"
+#: view:hr.expense.report:0
+#: field:hr.expense.report,day:0
+msgid "Day"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.module.module,shortdesc:hr_expense.module_meta_information
@@ -365,15 +560,15 @@ msgstr "인적 자원 비용 추적"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-#: field:hr.expense.expense,invoice_id:0
-#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
-msgid "Invoice"
-msgstr "인보이스"
+msgid "References"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Cancel"
-msgstr "취소"
+#: field:hr.expense.report,invoice_id:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
+msgid "Invoice"
+msgstr "인보이스"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
@@ -381,9 +576,10 @@ msgid "Reinvoice"
 msgstr "재 인보이스"
 
 #. module: hr_expense
-#: model:process.process,name:hr_expense.process_process_expenseprocess0
-msgid "Expense Process"
-msgstr "비용 프로세ㅡ"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_expense.action_employee_expense
+msgid "All Employee Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -391,10 +587,15 @@ msgid "Other Info"
 msgstr "기타 정보"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_draft
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_draft
-msgid "Draft expenses"
-msgstr "비용 초안"
+#: help:hr.expense.expense,journal_id:0
+msgid "The journal used when the expense is invoiced"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
+msgid "Refuse"
+msgstr "거부"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_confirmexpense0
@@ -407,13 +608,12 @@ msgid "Approve expense"
 msgstr "비용 승인"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_accept0
 msgid "Accept"
 msgstr "수락"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
 msgstr "이 문서에 날짜를 기입하고, 환급에 서명하십시오."
 
@@ -423,32 +623,35 @@ msgid "Expense is refused."
 msgstr "비용이 거부됩니다."
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 #: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "단가"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,name:hr_expense.expense_all_valid
-#: model:ir.ui.menu,name:hr_expense.menu_expense_all_valid
-msgid "Expenses waiting invoice"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,product_id:0
+#: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
 msgstr "상품"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses of My Department"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr "설명"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-#: field:hr.expense.expense,name:0
-msgid "Expense Sheet"
-msgstr "비용 시트"
+#: selection:hr.expense.report,month:0
+msgid "May"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
@@ -456,39 +659,68 @@ msgid "Quantities"
 msgstr "수량"
 
 #. module: hr_expense
+#: field:hr.expense.report,no_of_account:0
+msgid "# of Accounts"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
 msgstr "거부됨"
 
 #. module: hr_expense
-#: field:product.product,hr_expense_ok:0
-msgid "Can be Expensed"
-msgstr "비용으로 처리될 수 있음"
-
-#. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "Ref."
 msgstr "참조"
 
 #. module: hr_expense
+#: field:hr.expense.report,employee_id:0
+msgid "Employee's Name"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on "
+"projects/analytic accounts. The accountant validates the proposed entries "
+"and the employee can be reimbursed. You can also reinvoice the customer at "
+"the end of the flow."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "This Month"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "검증 사용자"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: report:hr.expense:0
 msgid "(Date and signature)"
 msgstr "(날짜와 서명)"
 
 #. module: hr_expense
-#: rml:hr.expense:0
+#: selection:hr.expense.report,month:0
+msgid "February"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
 msgid "Name"
 msgstr "이름"
 
 #. module: hr_expense
-#: field:hr.expense.line,name:0
-msgid "Short Description"
-msgstr "짤은 설명"
+#: field:hr.expense.expense,account_move_id:0
+msgid "Ledger Posting"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -496,9 +728,41 @@ msgid "Creates supplier invoice."
 msgstr "공급자 인보이스 생성"
 
 #. module: hr_expense
-#: model:process.node,note:hr_expense.process_node_approved0
-msgid "The direct manager approves the sheet"
-msgstr "직속 상관이 이 시트를 승인합니다."
+#: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
+msgid "Hotel Accommodation"
+msgstr ""
+
+#. module: hr_expense
+#: selection:hr.expense.report,month:0
+msgid "April"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.line,name:0
+msgid "Expense Note"
+msgstr ""
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the state is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the state is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the state is 'Accepted'.\n"
+" If an invoice is made for the expense request, the state is 'Invoiced'.\n"
+" If the expense is paid to user, the state is 'Reimbursed'."
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Approve"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
+msgid "Total"
+msgstr "합계"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -512,30 +776,93 @@ msgstr "비용이 확정됨"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
+#: model:ir.actions.act_window,name:hr_expense.expense_all
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 msgid "Expenses"
 msgstr "비용"
 
 #. module: hr_expense
-#: field:hr.expense.line,total_amount:0
-msgid "Total"
-msgstr "합계"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: field:hr.expense.report,year:0
+msgid "Year"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "To Approve"
+msgstr ""
+
+#. module: hr_expense
+#: help:product.product,hr_expense_ok:0
+msgid ""
+"Determines if the product can be visible in the list of product within a "
+"selection from an HR expense sheet line."
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "재 인보이스 발급"
 
-#, python-format
-#~ msgid ""
-#~ "Please configure Default Expanse account for Product purchase, "
-#~ "`property_account_expense_categ`"
-#~ msgstr "상품 구매를 위한 디폴트 비용 계정을 구성하십시오. `property_account_expense_categ`"
+#~ msgid "All expenses"
+#~ msgstr "모든 비용"
 
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "에러!"
+#~ msgid "Date Confirmed"
+#~ msgstr "확정된 날짜"
+
+#~ msgid "Expenses waiting validation"
+#~ msgstr "검증 대기 중인 비용"
+
+#~ msgid "My expenses waiting validation"
+#~ msgstr "검증 대기 중인 내 비용"
+
+#~ msgid ""
+#~ "Determine if the product can be visible in the list of product within a "
+#~ "selection from an HR expense sheet line."
+#~ msgstr "상품이 HR 비용 시트 라인으로부터 선택된 범위 내의 상품 리스트에 게시될 지 여부를 결정"
+
+#~ msgid "Print HR expenses"
+#~ msgstr "HR 비용 인쇄"
+
+#~ msgid "New Expenses Sheet"
+#~ msgstr "새 비용 시트"
 
 #, python-format
 #~ msgid "The employee must have a contact address"
 #~ msgstr "직원은 연락 주소를 기입해야 합니다."
+
+#~ msgid "Date Validated"
+#~ msgstr "검증된 날짜"
+
+#~ msgid "Cancel"
+#~ msgstr "취소"
+
+#~ msgid "My Draft expenses"
+#~ msgstr "내 초안 비용"
+
+#~ msgid "Expenses waiting payment"
+#~ msgstr "결제 댁 중인 비용"
+
+#~ msgid "Account Move"
+#~ msgstr "계정 이동"
+
+#~ msgid "Draft expenses"
+#~ msgstr "비용 초안"
+
+#~ msgid "Expense Process"
+#~ msgstr "비용 프로세ㅡ"
+
+#~ msgid "Can be Expensed"
+#~ msgstr "비용으로 처리될 수 있음"
+
+#~ msgid "Expense Sheet"
+#~ msgstr "비용 시트"
+
+#~ msgid "Short Description"
+#~ msgstr "짤은 설명"

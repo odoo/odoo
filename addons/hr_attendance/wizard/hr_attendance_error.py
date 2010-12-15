@@ -33,8 +33,8 @@ class hr_attendance_error(osv.osv_memory):
         'max_delay': fields.integer('Max. Delay (Min)', required=True)
     }
     _defaults = {
-         'init_date': time.strftime('%Y-%m-%d'),
-         'end_date': time.strftime('%Y-%m-%d'),
+         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
          'max_delay': 120,
     }
 

@@ -28,7 +28,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_crm_opportunity_user_stage_graph">
             <field name="name">Opportunities By Stage Per User - Graph</field>
             <field name="model">crm.lead.report</field>
@@ -43,12 +43,13 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_oppor_categ">
-            <field name="res_model">Opportunities By Categories</field>
+            <field name="res_model">Opportunities by Categories</field>
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_categ_graph"/>
-            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
+            <field name="context">{'search_default_Category':1}</field>
         </record>
 
         <record model="ir.actions.act_window" id="act_opportunity_stage">
@@ -56,7 +57,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_stage_graph"/>
-            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('state', 'not in', ('done', 'cancel')), ('type', '=', 'opportunity')]</field>
+            <field name="context">{'search_default_Stage':1}</field>
         </record>
 
         <record model="ir.actions.act_window" id="act_oppor_stage_user">
@@ -66,6 +68,7 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
             <field name="domain">[('state','!=','cancel')]</field>
+            <field name="context">{'search_default_Stage':1}</field>
         </record>
 
         <record model="ir.ui.view" id="board_crm_statistical_form">
@@ -77,14 +80,14 @@
                     <hpaned>
                         <child1>
                             <action
-                                string="Opportunities By Categories"
+                                string="Opportunities by Categories"
                                 name="%(act_oppor_categ)d"
                                 colspan="4"
                                 height="200"
                                 width="250"/>
 
                             <action
-                                string="Opportunities By Stage"
+                                string="Opportunities by Stage"
                                 name="%(act_opportunity_stage)d"
                                 height="200"
                                 colspan="4"/>

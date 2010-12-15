@@ -80,12 +80,13 @@
      id="menu_account_coda_import" sequence="20"/>
 
     <act_window name="Coda File"
-        domain="[('statement_ids', 'in', [active_id])]"
-        res_model="account.coda"
-        src_model="account.bank.statement"
-        view_type="form"
-        view_mode="tree,form"
-         id="act_account_payment_account_bank_statement"/>
+		domain="[('statement_ids', 'in', [active_id])]"
+		context="{'bank_statement': 1}"
+		res_model="account.coda"
+		src_model="account.bank.statement"
+		view_type="form"
+		view_mode="tree,form"
+		id="act_account_payment_account_bank_statement"/>
 
     </data>
 </openerp>

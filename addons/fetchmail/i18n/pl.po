@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 13:33+0000\n"
-"PO-Revision-Date: 2010-09-29 09:18+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-10 08:36+0000\n"
+"Last-Translator: Jarosław Ogrodnik <nobodythere@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
@@ -23,23 +23,9 @@ msgid "Confirmed"
 msgstr "Potwierdzone"
 
 #. module: fetchmail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:email.server:0
+msgid "Confirm"
 msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: fetchmail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree_imap
-#: model:ir.ui.menu,name:fetchmail.menu_action_email_server_tree_imap
-msgid "IMAP Servers"
-msgstr "Serwery IMAP"
 
 #. module: fetchmail
 #: field:email.server,action_id:0
@@ -48,28 +34,29 @@ msgstr "Odpowiedź na email"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Server & Login"
+msgid "Group By..."
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr "Priorytet serwera"
-
-#. module: fetchmail
+#: view:email.server:0
 #: field:email.server,state:0
 msgid "State"
 msgstr "Stan"
 
 #. module: fetchmail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Ustaw na projekt"
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
 msgstr "Nie potwierdzone"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Type"
+msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
@@ -88,14 +75,19 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Priorytet serwera"
+
+#. module: fetchmail
 #: field:email.server,attach:0
 msgid "Add Attachments ?"
 msgstr "Dodać załaczniki ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
-msgstr "Ustaw na projekt"
+msgid "POP"
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,user:0
@@ -118,19 +110,25 @@ msgid "Waiting for Verification"
 msgstr "Czekanie na weryfikację"
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr "Hasło"
+#: help:email.server,object_id:0
+msgid "OpenObject Model. Generates a record of this model."
+msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Nieprawidłowe parametry"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: view:mailgate.message:0
+msgid "Emails"
+msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
+#: view:email.server:0
+msgid "Search Email Servers"
+msgstr ""
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Server & Login"
+msgstr "Serwer i login"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -148,23 +146,21 @@ msgid "Mailgateway Message"
 msgstr "Wiadomość Mailgateway"
 
 #. module: fetchmail
+#: field:email.server,message_ids:0
+#: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
+msgid "Messages"
+msgstr ""
+
+#. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_email_server_tree
-msgid "POP Servers"
-msgstr "Serwery POP"
-
-#. module: fetchmail
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Fetchmail Services"
-msgstr "Usługi Fetchmail"
+msgid "Email Servers"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_mailgate_message_tree
-#: model:ir.actions.act_window,name:fetchmail.action_mailgate_message_tree_pop
-#: model:ir.ui.menu,name:fetchmail.menu_action_mailgate_message_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_mailgate_message_tree_pop
-msgid "Received Email History"
-msgstr "Historia otrzymanych wiadomości"
+#: field:email.server,server:0
+msgid "Server"
+msgstr "Serwer"
 
 #. module: fetchmail
 #: field:email.server,active:0
@@ -179,11 +175,11 @@ msgstr "Parametr Procesu"
 #. module: fetchmail
 #: field:email.server,is_ssl:0
 msgid "SSL ?"
-msgstr ""
+msgstr "SSL ?"
 
 #. module: fetchmail
 #: selection:email.server,type:0
-#: selection:mailgate.message,type:0
+#: selection:mailgate.message,server_type:0
 msgid "IMAP Server"
 msgstr "Serwer IMAP"
 
@@ -193,14 +189,9 @@ msgid "Model"
 msgstr "Model"
 
 #. module: fetchmail
-#: field:email.server,server:0
-msgid "Server"
-msgstr "Serwer"
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
-msgid "Email History"
-msgstr "Historia poczty"
+#: view:email.server:0
+msgid "IMAP"
+msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
@@ -209,13 +200,18 @@ msgid "POP/IMAP Server"
 msgstr "Serwer POP/IMAP"
 
 #. module: fetchmail
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Reguły nie sa obsługiwane w obiektach osv_memory !"
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Hasło"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid "Warning! Can't have duplicate server configuration!"
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,type:0
-#: field:mailgate.message,type:0
+#: field:mailgate.message,server_type:0
 msgid "Server Type"
 msgstr "Typ serwera"
 
@@ -230,15 +226,20 @@ msgid "Server Information"
 msgstr "Informacja o serwerze"
 
 #. module: fetchmail
+#: help:email.server,attach:0
+msgid "Fetches mail with attachments if true."
+msgstr ""
+
+#. module: fetchmail
 #: selection:email.server,type:0
-#: selection:mailgate.message,type:0
+#: selection:mailgate.message,server_type:0
 msgid "POP Server"
 msgstr "Serwer POP"
 
 #. module: fetchmail
 #: field:email.server,port:0
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #. module: fetchmail
 #: model:ir.module.module,description:fetchmail.module_meta_information
@@ -260,11 +261,24 @@ msgstr ""
 "    "
 
 #. module: fetchmail
+#: view:email.server:0
+msgid "SSL"
+msgstr ""
+
+#. module: fetchmail
+#: help:email.server,action_id:0
+msgid ""
+"An Email Server Action. It will be run whenever an e-mail is fetched from "
+"server."
+msgstr ""
+
+#. module: fetchmail
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr "Priorytet pomiędzy 0 a 10, definiuje porządek przetwarzania."
 
 #. module: fetchmail
+#: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
 msgstr "Serwer pocztowy"
@@ -273,3 +287,39 @@ msgstr "Serwer pocztowy"
 #: view:email.server:0
 msgid "Fetch Emails"
 msgstr "Pobierz pocztę"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Nieprawidłowe parametry"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid "POP Servers"
+#~ msgstr "Serwery POP"
+
+#~ msgid "Fetchmail Services"
+#~ msgstr "Usługi Fetchmail"
+
+#~ msgid "Received Email History"
+#~ msgstr "Historia otrzymanych wiadomości"
+
+#~ msgid "Email History"
+#~ msgstr "Historia poczty"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Reguły nie sa obsługiwane w obiektach osv_memory !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid "IMAP Servers"
+#~ msgstr "Serwery IMAP"

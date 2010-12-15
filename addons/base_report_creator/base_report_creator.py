@@ -34,17 +34,15 @@ class report_creator(osv.osv):
     # Should request only used fields
     #
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
-
         if context is None:
             context = {}
         data_l = self.read(cr, uid, ids, ['sql_query'], context)
         final_datas = []
         #start Loop
-        for i in data_l:
+        for record in data_l:
             datas = []
-            for key, value in i.items():
-                if key not in fields_to_export:
-                    continue
+            for key in fields_to_export:
+                value = record.get(key,'')
                 if isinstance(value, tuple):
                     datas.append(ustr(value[1]))
                 else:
@@ -406,7 +404,7 @@ class report_creator(osv.osv):
     _columns = {
         'name': fields.char('Report Name', size=64, required=True),
         'type': fields.selection([('list', 'Rows And Columns Report'), ], 'Report Type', required=True), #('sum','Summation Report')
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the report without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the report without removing it."),
         'view_type1': fields.selection([('form', 'Form'),
                                         ('tree', 'Tree'),
                                         ('graph', 'Graph'),

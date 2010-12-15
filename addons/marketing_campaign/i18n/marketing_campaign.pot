@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:40+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:40+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:03+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,8 +32,7 @@ msgid "The current step for this item has no email or report to preview."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 
@@ -75,11 +74,6 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
-msgstr ""
-
-#. module: marketing_campaign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: marketing_campaign
@@ -180,6 +174,12 @@ msgstr ""
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Sorry, campaign duplication is not supported at the moment."
 msgstr ""
 
 #. module: marketing_campaign
@@ -393,16 +393,6 @@ msgid "Set a variable cost if you consider that every campaign item that has rea
 msgstr ""
 
 #. module: marketing_campaign
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: marketing_campaign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
 msgstr ""
@@ -512,6 +502,12 @@ msgid "Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr ""
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
 msgstr ""
@@ -530,8 +526,18 @@ msgid "Campaign Analysis"
 msgstr ""
 
 #. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr ""
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
+msgstr ""
+
+#. module: marketing_campaign
+#: sql_constraint:email.template:0
+msgid "The template name must be unique !"
 msgstr ""
 
 #. module: marketing_campaign
@@ -545,21 +551,16 @@ msgid "Directory"
 msgstr ""
 
 #. module: marketing_campaign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: marketing_campaign
 #: view:marketing.campaign:0
 #: selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Draft"
-msgstr ""
-
-#. module: marketing_campaign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: marketing_campaign
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: marketing_campaign
@@ -740,6 +741,12 @@ msgid "Done"
 msgstr ""
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates for Models"
 msgstr ""
@@ -751,8 +758,7 @@ msgid "Close"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
 
@@ -768,9 +774,8 @@ msgid "The campaign cannot be marked as done before all segments are done"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid "A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered based on a specific situation. One possible action could be sending an email template that has previously been created in the system."
 msgstr ""
 
 #. module: marketing_campaign

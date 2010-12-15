@@ -7,487 +7,763 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-28 10:27+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-11-14 07:54+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
-#: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Openerp user"
-msgstr ""
+msgstr "Openerp korisnik"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.edit_workgroup
-#: model:ir.ui.menu,name:hr.menu_edit_workgroup
-msgid "Working Time Categories"
-msgstr ""
+#: view:hr.job:0
+#: field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "Zahtevi"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "Greska ! Ne mozes kreirati rekursivna odelenja."
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Link the employee to information"
+msgstr "Veza od zaposljenog do informacija"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "SIN Br"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
+#: model:ir.ui.menu,name:hr.menu_hr_deshboard
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
-msgstr ""
+msgstr "Ljudski Resursi"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Sunday"
-msgstr ""
+#: view:hr.department:0
+#: view:hr.employee:0
+#: view:hr.job:0
+msgid "Group By..."
+msgstr "Grupisano Po..."
 
 #. module: hr
-#: view:res.users:0
-msgid "Parents"
-msgstr ""
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "Poslovni Email"
 
 #. module: hr
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Neispravno ime u definiciji akcije."
 
 #. module: hr
-#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: view:res.users:0
 msgid "Department"
-msgstr ""
+msgstr "Odeljenje"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Contact  of employee"
-msgstr ""
+#: help:hr.installer,hr_attendance:0
+msgid "Simplifies the management of employee's attendances."
+msgstr "Uproscava menadzment nad prisutnoscu zaposlenih"
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr ""
+#: view:hr.job:0
+msgid "Mark as Old"
+msgstr "Obelezi kao Staro"
 
 #. module: hr
-#: field:hr.timesheet.group,name:0
-msgid "Group name"
-msgstr ""
+#: view:hr.job:0
+msgid "Jobs"
+msgstr "Poslovi"
+
+#. module: hr
+#: view:hr.job:0
+msgid "In Recruitment"
+msgstr "U zaposljavanju"
+
+#. module: hr
+#: view:hr.installer:0
+msgid "title"
+msgstr "Naslov"
 
 #. module: hr
 #: field:hr.department,company_id:0
-#: field:hr.employee,company_id:0
-msgid "Company"
-msgstr ""
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Friday"
-msgstr ""
-
-#. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr ""
-
-#. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr ""
+#: view:hr.job:0
+#: field:hr.job,company_id:0
+msgid "Company"
+msgstr "Preduzece"
 
 #. module: hr
-#: field:hr.timesheet,hour_from:0
-msgid "Work from"
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected in Recruitment"
+msgstr "Ocekivano pri Zaposljavanju"
+
+#. module: hr
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Holidays"
+msgstr "Praznici"
+
+#. module: hr
+#: help:hr.installer,hr_holidays:0
+msgid "Tracks employee leaves, allocation requests and planning."
+msgstr "Prati odlaske zaposljenih, zahteve za raspodelu i planiranje."
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_marital_status
+msgid "Employee Marital Status"
+msgstr "Bracno stanje Zaposljenih"
+
+#. module: hr
+#: help:hr.employee,partner_id:0
+msgid ""
+"Partner that is related to the current employee. Accounting transaction will "
+"be written on this partner belongs to employee."
 msgstr ""
+"Partner koji je odnosi na datog zaposljenog. TRansakcije naloga ce biti "
+"upisane na onim partnerima koji pripadaju zaposljenom."
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Link a user to an employee"
+msgstr "Veza od korisnika do zaposljenog"
+
+#. module: hr
+#: field:hr.installer,hr_contract:0
+msgid "Employee's Contracts"
+msgstr "Ugovori Zaposljenih"
+
+#. module: hr
+#: help:hr.installer,hr_payroll:0
+msgid "Generic Payroll system."
+msgstr "Genericki Platni Sistem."
+
+#. module: hr
+#: view:hr.employee:0
+msgid "My Departments Employee"
+msgstr "Zaposljeni Mog Odelenja"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+"Greska ! Ne mozes selektovati odeljenje ciji je zaposljeni i menadzer."
+
+#. module: hr
+#: help:hr.employee,passport_id:0
+msgid "Employee Passport Information"
+msgstr "Informacije o Pasošu zaposljenog"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Position"
+msgstr "Pozicija"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Employee Hierarchy"
-msgstr ""
+msgstr "Hierarhija Zapošljenih"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid ""
+"The Related user field on the Employee form allows to link the OpenERP user "
+"(and her rights) to the employee."
 msgstr ""
+"Dato korisničko polje u formi Zapošljenih omogućava da povežeš OpenERP "
+"korisnika( i njegova prava) sa zapošljenim."
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr ""
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Recruitement"
+msgstr "U Zapošljavanju"
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "Identifikacioni Br"
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "No of Employee"
+msgstr "Br zapošljenog"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Žensko"
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
+#: help:hr.installer,hr_timesheet_sheet:0
+msgid ""
+"Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
+"Prati i pomaže pri sumiranju i validiranju radnih vremena i prisutnosti na "
+"poslu"
+
+#. module: hr
+#: field:hr.installer,hr_evaluation:0
+msgid "Periodic Evaluations"
+msgstr "Periodične Procene"
+
+#. module: hr
+#: field:hr.installer,hr_timesheet_sheet:0
+msgid "Timesheets"
+msgstr "Karneti ( vremena rada)"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "Struktura zapošljenih"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
+msgstr "Br Socijalnog"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employee with that job."
+msgstr "Broj zapošljenih na tom poslu"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr ""
+msgstr "Posl Telefon"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Pod Kategorija"
+
+#. module: hr
+#: view:hr.job:0
+#: field:hr.job,description:0
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Description"
+msgstr "Opis Posla"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Lokacija Kancelarije"
+
+#. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport"
+msgstr "Pasoš"
 
 #. module: hr
 #: view:hr.employee:0
-#: field:hr.employee,name:0
+#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
-msgstr ""
+msgstr "Zaposleni"
 
 #. module: hr
-#: field:hr.timesheet.group,manager:0
-msgid "Workgroup manager"
-msgstr ""
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Other information"
+msgstr "Ostale Informacije"
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
-msgstr ""
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Adresa Posla"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr "Konfiguracija Aplikacije Ljudskih Resursa"
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "Datum Rođenja"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Izveštavanje"
 
 #. module: hr
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr "ir.actions.act_window"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+msgid "Human Resources Dashboard"
+msgstr "Glavna Tabla Ljudskih Resursa"
+
+#. module: hr
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
+msgid "Job"
+msgstr "Posao"
+
+#. module: hr
+#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
-msgstr ""
+msgstr "Članovi"
 
 #. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr ""
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Konfiguracija"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid "Fill up contact information"
-msgstr ""
+#: view:hr.employee:0
+msgid "Categories"
+msgstr "Kategorije"
+
+#. module: hr
+#: field:hr.job,expected_employees:0
+msgid "Expected Employees"
+msgstr "Očekivani zapopljeni"
 
 #. module: hr
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Neispravan XML za pregled arhitekture"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Divorced"
-msgstr ""
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "Broj Socijalnog Osiguranja"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Roditeljska kategorija"
 
 #. module: hr
+#: constraint:hr.employee.category:0
+msgid "Error ! You cannot create recursive Categories."
+msgstr "Greska ! Ne možeš kreirati rekursivne Kategorije."
+
+#. module: hr
+#: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
-#: model:ir.ui.menu,name:hr.menu_department_def
-#: model:ir.ui.menu,name:hr.menu_department_tree
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: view:res.users:0
+#: field:res.users,context_department_id:0
 msgid "Departments"
-msgstr ""
+msgstr "Odeljenja"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr ""
+msgstr "Kontakt Zapošljenog"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Maried"
-msgstr ""
-
-#. module: hr
-#: field:hr.timesheet,tgroup_id:0
-msgid "Employee's timesheet group"
-msgstr ""
+#: view:board.board:0
+msgid "My Board"
+msgstr "Moja Tabla"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
-
-#. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee.category:0
-#: model:ir.model,name:hr.model_hr_employee_category
-msgid "Employee Category"
-msgstr ""
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Tuesday"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,user_id:0
-msgid "Related User"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,category_id:0
-#: field:hr.employee.category,name:0
-msgid "Category"
-msgstr ""
-
-#. module: hr
-#: field:hr.department,note:0
-msgid "Note"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Contact Information"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Status"
-msgstr ""
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Monday"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
-msgstr ""
-
-#. module: hr
-#: field:hr.timesheet,dayofweek:0
-msgid "Day of week"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,birthday:0
-msgid "Birthday"
-msgstr ""
-
-#. module: hr
-#: field:hr.employee,active:0
-msgid "Active"
-msgstr ""
-
-#. module: hr
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
-
-#. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract Process"
-msgstr ""
-
-#. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Create OpenERP User"
-msgstr ""
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee Complete Form"
-msgstr ""
-
-#. module: hr
-#: view:hr.department:0
-msgid "Companies"
-msgstr ""
-
-#. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Wednesday"
-msgstr ""
+msgstr "Muškarac"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Categories of Employee"
-msgstr ""
+msgstr "Kategorije Zapošljenih"
 
 #. module: hr
-#: field:hr.timesheet,date_from:0
-msgid "Starting date"
-msgstr ""
+#: view:hr.employee.category:0
+#: model:ir.model,name:hr.model_hr_employee_category
+msgid "Employee Category"
+msgstr "Kategorija Zapošljenog"
 
 #. module: hr
-#: field:res.users,parent_id:0
-msgid "Parent Users"
-msgstr ""
+#: field:hr.installer,config_logo:0
+msgid "Image"
+msgstr "Slika"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr "Ugovor Zapošljenog"
+
+#. module: hr
+#: help:hr.installer,hr_evaluation:0
+msgid ""
+"Lets you create and manage the periodic evaluation and performance review of "
+"employees."
 msgstr ""
+"Omogućava ti da kreiraš i upravljaš sa periodičnom procenama i performansama "
+"pregleda zapošljenih."
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_department
+msgid "hr.department"
+msgstr "hr.department"
+
+#. module: hr
+#: help:hr.employee,parent_id:0
+msgid "It is linked with manager of Department"
+msgstr "Povezano je sa Menadžerom Odeljenja"
+
+#. module: hr
+#: field:hr.installer,hr_recruitment:0
+msgid "Recruitment Process"
+msgstr "Proces Zapošljavanja"
+
+#. module: hr
+#: field:hr.employee,category_ids:0
+#: field:hr.employee.category,name:0
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "Račun Banke Zapošljenog"
+
+#. module: hr
+#: field:hr.department,note:0
+msgid "Note"
+msgstr "Napomena"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Contact Information"
+msgstr "Kontakt Info"
+
+#. module: hr
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Greska ! Ne možeš kreirati rekursivni Meni."
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr_manager
+msgid "HR Manager Dashboard"
+msgstr "Glavna tabla Menadžmenta Ljudskim Resursima"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Status"
+msgstr "Status"
+
+#. module: hr
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Konfiguracioni Proces"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_tree
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
+msgid "Categories structure"
+msgstr "Struktura Kategorije"
+
+#. module: hr
+#: field:hr.employee,partner_id:0
+msgid "unknown"
+msgstr "nepoynat"
+
+#. module: hr
+#: field:hr.installer,hr_holidays:0
+msgid "Holidays / Leaves Management"
+msgstr "Upravljanje sa Praynicima / Izostancima"
+
+#. module: hr
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "SSN Br"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Greska ! Ne moyes kreirati rekursivnu hijerarhiju zapošljenih."
+
+#. module: hr
+#: view:hr.department:0
+msgid "Companies"
+msgstr "Preduzeća"
+
+#. module: hr
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid ""
+"In the Employee form, there are different kind of information like Contact "
+"information."
+msgstr ""
+"U formi Zapošljenih , ima različitih vrsta informacija sličnih Kontakt "
+"informacijama."
+
+#. module: hr
+#: help:hr.job,expected_employees:0
+msgid "Required number of Employees in total for that job."
+msgstr "Ukupni broj zapošljenih za dati posao."
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Old"
+msgstr "Staro"
+
+#. module: hr
+#: field:hr.employee.marital.status,description:0
+msgid "Status Description"
+msgstr "Opis Statusa"
+
+#. module: hr
+#: view:hr.job:0
+#: field:hr.job,state:0
+msgid "State"
+msgstr "Stanje"
 
 #. module: hr
 #: field:hr.employee,marital:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr.action_hr_marital_status
+#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
-msgstr ""
+msgstr "Bračno Stanje"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet
-msgid "Timesheet Line"
-msgstr ""
+#: help:hr.installer,hr_recruitment:0
+msgid "Helps you manage and streamline your recruitment process."
+msgstr "POmaže pri upravljanju i poboljšava proces zapošljavanja."
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "Forma Zapošljenih i struktura"
+
+#. module: hr
+#: field:hr.employee,photo:0
+msgid "Photo"
+msgstr "Fotografija"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: hr
+#: field:hr.installer,hr_payroll_account:0
+msgid "Payroll Accounting"
+msgstr "Platno Računovodstvo"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr ""
+msgstr "Lične informacije"
 
 #. module: hr
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Ime objekta mora započeti sa x_ i ne sme sadržavati specijalne karaktere."
 
 #. module: hr
-#: view:hr.timesheet:0
-#: field:hr.timesheet.group,timesheet_id:0
-#: model:ir.model,name:hr.model_hr_timesheet_group
-msgid "Working Time"
-msgstr ""
+#: view:res.users:0
+msgid "Current Activity"
+msgstr "Trenutna Aktivnost"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Thursday"
+#: help:hr.installer,hr_expense:0
+msgid ""
+"Tracks and manages employee expenses, and can automatically re-invoice "
+"clients if the expenses are project-related."
 msgstr ""
+"Prati i upravlja troškovima zapošljenih, i može da automatski re-fakturiše "
+"kllijente ukoliko su troškovi veyani za projekat.Tr"
 
 #. module: hr
-#: field:hr.timesheet,hour_to:0
-msgid "Work to"
-msgstr ""
+#: view:hr.job:0
+msgid "Current"
+msgstr "Trenutni"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr ""
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "Roditeljsko Odeljenje"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "Kategorije zapošljenih"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
+msgstr "Kućna Adresa"
+
+#. module: hr
+#: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendances"
+msgstr "Prisutnost"
+
+#. module: hr
+#: view:hr.employee.marital.status:0
+#: view:hr.job:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: hr
+#: help:hr.installer,hr_contract:0
+msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
+"Širi Profile Zapošljenih da pomogne upravljanje sa njihovim ugovorima."
+
+#. module: hr
+#: field:hr.installer,hr_payroll:0
+msgid "Payroll"
+msgstr "Platni Spisak"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "Naziv Posla"
+
+#. module: hr
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Position"
+msgstr "Na Poziciji"
 
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "Odeljenje"
 
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "Nacionalnost"
 
 #. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other ID"
-msgstr ""
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Napomene"
 
 #. module: hr
-#: field:hr.timesheet,name:0
+#: model:ir.model,name:hr.model_hr_installer
+msgid "hr.installer"
+msgstr "hr.installer"
+
+#. module: hr
+#: view:board.board:0
+msgid "HR Manager Board"
+msgstr "Tabla Upravljanja Ljudskim Resursima"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "Resurs"
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: hr
 #: field:hr.employee,gender:0
 msgid "Gender"
-msgstr ""
+msgstr "Pol"
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.job,employee_ids:0
+#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
-msgstr ""
+msgstr "Zapošljeni"
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account"
+msgstr "Račun Banke"
 
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Ime Odeljenja"
+
+#. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "Broj Socijalnog Osiguranja"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Creation of a OpenERP user"
+msgstr "Kreiranje OpenERP korisnika"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Pod Odeljenja"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job
+msgid "Job Positions"
+msgstr "Pozicije Posla"
 
 #. module: hr
 #: view:hr.employee:0
-msgid "Job Information"
-msgstr ""
+#: field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "Trener"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Fill up employee's contact information"
-msgstr ""
+#: field:hr.installer,hr_expense:0
+msgid "Expenses"
+msgstr "Troškovi"
 
 #. module: hr
+#: view:hr.department:0
 #: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Menadžer"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-msgid "All Employees"
-msgstr ""
+#: help:hr.installer,hr_payroll_account:0
+msgid "Generic Payroll system Integrated with Accountings."
+msgstr "Generički sistem Platnih spiskova integrisanih sa Računovodstvom."
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Saturday"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_new
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_new
-msgid "New Employee"
-msgstr ""
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "Podređeni"

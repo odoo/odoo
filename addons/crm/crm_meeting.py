@@ -133,6 +133,7 @@ class crm_meeting(crm_case, osv.osv):
         res = super(crm_meeting, self).case_open(cr, uid, ids, args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The meeting '%s' has been confirmed.") % name
+            id=base_calendar.base_calendar_id2real_id(id)
             self.log(cr, uid, id, message)
         return res
 
@@ -187,7 +188,7 @@ class res_users(osv.osv):
             view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
             self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
                                         'user_id': user_id}, context=context)
-        except ValueError:
+        except:
             # Tolerate a missing shortcut. See product/product.py for similar code.
             logging.getLogger('orm').warning('Skipped Products shortcut for user "%s"', data.get('name','<new'))
             

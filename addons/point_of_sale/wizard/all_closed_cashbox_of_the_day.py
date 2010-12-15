@@ -19,39 +19,27 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import osv,fields
-from tools.translate import _
-import time
+from osv import osv
 
 class all_closed_cashbox_of_the_day(osv.osv_memory):
     _name = 'all.closed.cashbox.of.the.day'
     _description = 'All closed cashbox of the day'
 
-    _columns = {
-
-    }
-
     def print_report(self, cr, uid, ids, context=None):
-
         """
              To get the date and print the report
-
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param context: A standard dictionary
              @return : retrun report
         """
-        datas = {'ids' : context.get('active_ids',[])}
-        res =  {}
-        datas['form'] = res
-
+        datas = {'ids': context.get('active_ids', [])}
         return {
-            'type' : 'ir.actions.report.xml',
-            'report_name':'all.closed.cashbox.of.the.day',
-            'datas' : datas,
-       }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'all.closed.cashbox.of.the.day',
+            'datas': datas,
+        }
 
 all_closed_cashbox_of_the_day()
 

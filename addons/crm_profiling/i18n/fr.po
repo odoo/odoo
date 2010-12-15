@@ -6,23 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 14:33+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-13 16:51+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr "Liste des questions"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -37,19 +34,29 @@ msgid "Open Questionnaire"
 msgstr "Questionnaire Ouvert"
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
 msgstr ""
+"Vous pouvez créer des questionnaires sur un thème particulier qui seront "
+"utilisés pour guider votre(vos) équipe(s) dans le cycle de vente en les "
+"aidant à poser les bonnes questions. Avec l'outil de segmentation, vous "
+"serez en mesure d'attribuer automatiquement une catégorie à un partenaire "
+"selon ses réponses aux questionnaires."
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
-msgstr ""
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erreur ! Vous e pouvez pas créer de membres associés récursifs."
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "Segmentation partenaire"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -58,11 +65,23 @@ msgid "Answer"
 msgstr "Réponse"
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "Segmentation de partenaire"
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "Analyse"
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr ""
+"Gestion du profilage du CRM - pour établir une segmentation des partenaires"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr "Description"
@@ -70,7 +89,7 @@ msgstr "Description"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr ""
+msgstr "Réponses exclues"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
@@ -90,11 +109,6 @@ msgid "Use a questionnaire"
 msgstr "Utiliser un Questionnaire"
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -102,16 +116,20 @@ msgid "Questionnaires"
 msgstr "Questionnaire"
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
-msgstr "Questionnaire"
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
+msgstr ""
+"Cocher cette case si vous souhaitez utiliser cette étiquette en tant que "
+"règle de segmentation. Si la case n'est pas cochée, le critère ci-dessous "
+"sera ignoré."
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
 msgid "Error ! You can not create recursive profiles."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer des profils récursifs."
 
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
@@ -127,14 +145,12 @@ msgstr "Réponses Disponibles"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr ""
+msgstr "Réponses inclues."
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
-msgstr ""
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Profils des enfants"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -156,9 +172,18 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "Segmentation partenaire"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
+msgstr "Questionnaire"
 
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
@@ -169,3 +194,12 @@ msgstr "Utiliser un Questionnaire"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Sauvegarder les Données"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"

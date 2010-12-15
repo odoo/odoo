@@ -23,7 +23,6 @@ from osv import osv, fields
 from tools import cache
 import pooler
 
-
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
     _columns = {
@@ -31,7 +30,7 @@ class decimal_precision(osv.osv):
         'digits': fields.integer('Digits', required=True),
     }
     _defaults = {
-        'digits': lambda *a : 2,
+        'digits': 2,
     }
 
     _sql_constraints = [
@@ -55,10 +54,10 @@ class decimal_precision(osv.osv):
 
 decimal_precision()
 
-
 def get_precision(application):
     def change_digit(cr):
         res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
         return (16, res)
     return change_digit
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

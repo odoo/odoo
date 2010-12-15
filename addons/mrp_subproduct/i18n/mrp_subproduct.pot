@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:43+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:43+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:08+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: mrp_subproduct
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
 msgstr ""
 
 #. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Sub Product"
+#: sql_constraint:mrp.bom:0
+msgid "All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -41,13 +42,8 @@ msgid "MRP Sub Product - To produce several products from one production order"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: view:mrp.bom:0
+msgid "Sub Products"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -76,8 +72,13 @@ msgid "BoM"
 msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
+#: constraint:mrp.bom:0
+msgid "Error ! You can not create recursive BoM."
+msgstr ""
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -86,8 +87,13 @@ msgid "Variable"
 msgstr ""
 
 #. module: mrp_subproduct
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
 msgstr ""
 
 #. module: mrp_subproduct

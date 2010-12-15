@@ -16,6 +16,7 @@
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -195,9 +196,9 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
-                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-sale" help="Analytic Journal Items related to a sale journal."/>
+                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
-                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation')]" icon="terp-folder-orange"/>
+                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
@@ -206,21 +207,21 @@
                             <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
                         </field>
                     </group>
+					<newline/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="journal_id" widget="selection"/>
+                        <field name="product_id" widget="selection"/>
+                        <field name="amount" select="1"/>
+                    </group>
                     <newline/>
                     <group string="Group By..." expand="0">
-                        <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-blue"/>
+                        <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-green"/>
                         <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <separator orientation="vertical"/>
                         <filter string="Fin.Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended options...">
-                        <field name="journal_id" widget="selection"/>
-                        <field name="product_id" widget="selection"/>
-                        <field name="amount" select="1"/>
                     </group>
                 </search>
             </field>
@@ -312,7 +313,7 @@
                   </group>
                   <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>

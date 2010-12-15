@@ -32,12 +32,12 @@
                     <field name="categ_id" widget="selection"
                         string="Meeting Type" groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
-                    <field name="allday" on_change="onchange_allday(allday)" />
+                    <field name="allday" on_change="onchange_dates(date,False,False,allday)" />
                     <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
-                        on_change="onchange_dates(date,duration,False,allday)" readonly="1" />
+                        on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="date_deadline" string="End Date" required="1"
                         on_change="onchange_dates(date,False,date_deadline)" />
                     <field name="location" />
@@ -47,7 +47,7 @@
                            <field name="rrule_type" string="Recurrency"
                                 colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                            <button string="Edit All"
-                               help="Edit all Ourrences of recurrent Meeting"
+                               help="Edit all Occurrences of recurrent Meeting"
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
@@ -321,7 +321,7 @@
                            <field name="user_id" select="1"/>
                        </group>
                         <newline/>
-                        <group expand="0" string="Extended Options...">
+                        <group expand="0" string="Extended Filters...">
                            <field name="class" select="1" string="Privacy"/>
                            <field name="show_as" string="Show time as" select="1"/>
                         </group>

@@ -6,31 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 06:15+0000\n"
-"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-23 09:47+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: google_map
-#: model:ir.actions.wizard,name:google_map.wizard_google_map
-msgid "Launch Google Map"
-msgstr "Mostrar Google Map"
-
-#. module: google_map
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: google_map
-#: view:res.partner:0
-#: view:res.partner.address:0
-msgid "Street2 : "
-msgstr "Calle2 : "
 
 #. module: google_map
 #: model:ir.module.module,description:google_map.module_meta_information
@@ -44,7 +29,38 @@ msgstr ""
 "el campo de tipo URL."
 
 #. module: google_map
+#: model:ir.actions.wizard,name:google_map.wizard_google_map
+msgid "Launch Google Map"
+msgstr "Mostrar Google Map"
+
+#. module: google_map
+#: model:ir.model,name:google_map.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Direcciones de empresa"
+
+#. module: google_map
+#: view:res.partner:0
+#: view:res.partner.address:0
+msgid "Street2 : "
+msgstr "Calle2 : "
+
+#. module: google_map
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Map"
 msgstr "Mapa"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

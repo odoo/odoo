@@ -74,10 +74,9 @@
                                     <field name="task_ids" />
                                     <field name="note" />
                                     <field name="amount_in_base_uom" invisible="1" sum="Total Planned (in Days)"/>
-
                                 </tree>
                                 <form string="Planning Lines">
-                                    <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
+                                    <field name="user_id"/>
                                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />

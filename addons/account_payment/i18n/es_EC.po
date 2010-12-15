@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-17 17:44+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"PO-Revision-Date: 2010-12-13 01:53+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -38,9 +37,15 @@ msgid "Select the Payment Mode to be applied."
 msgstr "Seleccione el modo de pago a aplicar."
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: view:payment.mode:0
+#: view:payment.order:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: account_payment
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Líneas de pago"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -48,6 +53,17 @@ msgstr "Nombre de modelo no válido en la definición de acción."
 #: view:payment.order:0
 msgid "Owner Account"
 msgstr "Cuenta propietario"
+
+#. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the state is 'Draft'.\n"
+" Once the bank is confirmed the state is set to 'Confirmed'.\n"
+" Then the order is paid the state is 'Done'."
+msgstr ""
+"Cuando una orden es creada como borrador\n"
+" Una ves que el extracto es confirmado el estado pasa a 'Confirmado'\n"
+" Entonces la orden esta pagada y el estado es 'Terminado'"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -59,13 +75,9 @@ msgstr ""
 "menos el importe que ya está en la orden de pago"
 
 #. module: account_payment
-#: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr ""
-"Si no se indica fecha de pago, el banco procesará esta línea de pago "
-"directamente"
+#: field:payment.mode,company_id:0
+msgid "Company"
+msgstr "Compañia"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -78,14 +90,25 @@ msgid "Free"
 msgstr "Libre"
 
 #. module: account_payment
-#: wizard_field:populate_payment,search,entries:0
+#: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Asientos"
 
 #. module: account_payment
-#: wizard_field:populate_payment,init,duedate:0
+#: report:payment.order:0
+msgid "Used Account"
+msgstr "Cuenta usada"
+
+#. module: account_payment
+#: field:payment.line,ml_maturity_date:0
+#: field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Fecha de vencimiento"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr "Usted no puede crear la línea de avanzar en cuenta cerrada."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -93,20 +116,26 @@ msgid "Account Entry Line"
 msgstr "Línea del asiento contable"
 
 #. module: account_payment
-#: wizard_button:populate_payment,search,create:0
+#: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "_Añadir a la orden de pago"
 
 #. module: account_payment
-#: rml:payment.order:0
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
+#: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
+msgid "Payment Populate statement"
+msgstr "Realizar Pago"
+
+#. module: account_payment
+#: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Importe"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr "Fecha de ejecución:"
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "¡Valor crédito o débito erróneo en apunte contable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -120,15 +149,19 @@ msgstr "Cancelado"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
 msgstr "Nueva orden de pago"
 
 #. module: account_payment
-#: rml:payment.order:0
+#: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
 msgstr "Referencia"
+
+#. module: account_payment
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "Error: La referencia BVR es necesaria."
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -142,6 +175,11 @@ msgid "Directly"
 msgstr "Directamente"
 
 #. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "¡El nombre de la línea de pago debe ser única!"
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
 #: model:ir.model,name:account_payment.model_payment_line
 #: view:payment.line:0
@@ -150,16 +188,12 @@ msgid "Payment Line"
 msgstr "Línea de pago"
 
 #. module: account_payment
-#: field:payment.type,suitable_bank_types:0
-msgid "Suitable bank types"
-msgstr "Tipos de banco adecuados"
-
-#. module: account_payment
 #: view:payment.line:0
 msgid "Amount Total"
 msgstr "Importe total"
 
 #. module: account_payment
+#: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
 msgstr "Confirmada"
@@ -170,15 +204,9 @@ msgid "Invoice Effective Date"
 msgstr "Fecha vencimiento factura"
 
 #. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Líneas de pago"
-
-#. module: account_payment
-#: help:payment.order,date_scheduled:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Seleccione una fecha si ha seleccionado que la fecha preferida sea fija."
+#: report:payment.order:0
+msgid "Execution Type"
+msgstr "Tipo de ejecucion"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -186,6 +214,7 @@ msgid "Structured"
 msgstr "Estructurado"
 
 #. module: account_payment
+#: view:payment.order:0
 #: field:payment.order,state:0
 msgid "State"
 msgstr "Estado"
@@ -198,8 +227,10 @@ msgstr "Información de transacción"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
+#: model:ir.model,name:account_payment.model_payment_mode
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
+#: view:payment.order:0
 msgid "Payment Mode"
 msgstr "Modo de pago"
 
@@ -225,6 +256,12 @@ msgstr ""
 "vencimiento' para la fecha programada de ejecución."
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total debe"
@@ -235,37 +272,48 @@ msgid "Execution date"
 msgstr "Fecha ejecución"
 
 #. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr "Diario de banco o caja para el modo de pago."
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "Fecha fija"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
+#: view:payment.order:0
 msgid "Destination Account"
 msgstr "Cuenta de destino"
 
 #. module: account_payment
 #: view:payment.line:0
-#: view:payment.order:0
 msgid "Desitination Account"
 msgstr "Cuenta de destino"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: view:payment.order:0
+msgid "Search Payment Orders"
+msgstr "Buscar Ordenes de Pago"
 
 #. module: account_payment
-#: wizard_button:populate_payment,init,end:0
-#: wizard_button:populate_payment,search,end:0
-#: wizard_button:populate_statement,init,end:0
-msgid "_Cancel"
-msgstr "_Cancelar"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+"Usted no puede crear la línea de pasar por cobrar / cuentas por pagar sin "
+"empresa relacionada"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Creado"
+
+#. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Seleccionar facturas a pagar"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -288,9 +336,9 @@ msgid "Payment Management"
 msgstr "Gestión de pagos"
 
 #. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicación"
+#: field:payment.line,bank_statement_line_id:0
+msgid "Bank statement line"
+msgstr "Detalle de Extracto"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -303,9 +351,33 @@ msgid "Amount to be paid"
 msgstr "Monto a pagar"
 
 #. module: account_payment
+#: report:payment.order:0
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: account_payment
+#: view:account.payment.make.payment:0
+msgid "Yes"
+msgstr "Si"
+
+#. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
 msgstr "Dirección de la empresa principal"
+
+#. module: account_payment
+#: help:payment.line,date:0
+msgid ""
+"If no payment date is specified, the bank will treat this payment line "
+"directly"
+msgstr ""
+"Si no se indica fecha de pago, el banco procesará esta línea de pago "
+"directamente"
+
+#. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment_populate_statement
+msgid "Account Payment Populate Statement"
+msgstr "Cuenta para Pago"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -313,8 +385,12 @@ msgid "Mode of Payment"
 msgstr "Modo de pago"
 
 #. module: account_payment
-#: view:payment.type:0
-#: help:payment.type,name:0
+#: report:payment.order:0
+msgid "Value Date"
+msgstr "Fecha"
+
+#. module: account_payment
+#: report:payment.order:0
 msgid "Payment Type"
 msgstr "Tipo de Pago"
 
@@ -324,15 +400,15 @@ msgid "Payment amount in the partner currency"
 msgstr "Importe pagado en la moneda de la empresa"
 
 #. module: account_payment
+#: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Borrador"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Empresa"
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "Error: Número BVR inválido (checksum erróneo)."
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -340,9 +416,20 @@ msgid "The successor message of Communication."
 msgstr "El mensaje de pago realizado a comunicar."
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "No partner defined on entry line"
+msgstr "No tiene una empresa definida en el detalle"
+
+#. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
 msgstr "Dirección del cliente que ordena."
+
+#. module: account_payment
+#: view:account.payment.populate.statement:0
+msgid "Populate Statement:"
+msgstr "Hacer declaración"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -350,9 +437,10 @@ msgid "Total credit"
 msgstr "Total haber"
 
 #. module: account_payment
-#: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
-msgid "Populate payment"
-msgstr "Rellenar la orden"
+#: help:payment.order,date_scheduled:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr ""
+"Seleccione una fecha si ha seleccionado que la fecha preferida sea fija."
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -360,20 +448,20 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: account_payment
+#: field:account.payment.populate.statement,lines:0
 #: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
-#: wizard_field:populate_statement,init,lines:0
 msgid "Payment Lines"
 msgstr "Líneas de pago"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Date"
-msgstr "Fecha"
+#: model:ir.model,name:account_payment.model_account_move_line
+msgid "Journal Items"
+msgstr "Lineas de Asientos Contables"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr "Referencia:"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -385,9 +473,19 @@ msgstr ""
 "ordena."
 
 #. module: account_payment
+#: view:payment.order.create:0
+msgid "Search"
+msgstr "Buscar"
+
+#. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
 msgstr "Fecha de pago"
+
+#. module: account_payment
+#: report:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -395,19 +493,14 @@ msgid "Creation date"
 msgstr "Fecha de creación"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-msgid "Maturity Date"
-msgstr "Fecha vencimiento"
+#: view:account.payment.populate.statement:0
+msgid "ADD"
+msgstr "SUMAR"
 
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import payment lines"
 msgstr "Importar líneas de pago"
-
-#. module: account_payment
-#: help:payment.type,code:0
-msgid "Specify the Code for Payment Type"
-msgstr "Indique el código para el tipo de pago"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -425,14 +518,24 @@ msgid "The Ordering Customer"
 msgstr "El cliente que ordena"
 
 #. module: account_payment
-#: field:payment.type,code:0
-msgid "Code"
-msgstr "Código"
+#: model:ir.model,name:account_payment.model_account_payment_make_payment
+msgid "Account make payment"
+msgstr "Cuenta de Pago"
+
+#. module: account_payment
+#: report:payment.order:0
+msgid "Invoice Ref"
+msgstr "Factura de Ref"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
 msgstr "Su referencia"
+
+#. module: account_payment
+#: field:payment.order,mode:0
+msgid "Payment mode"
+msgstr "Modo de pago"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -446,17 +549,26 @@ msgid "General Information"
 msgstr "Información General"
 
 #. module: account_payment
+#: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Done"
 msgstr "Realizado"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Seleccionar facturas a pagar"
+#: model:ir.model,name:account_payment.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: account_payment
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicación"
+
+#. module: account_payment
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
 #: view:payment.order:0
+#: view:payment.order.create:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -467,29 +579,10 @@ msgid "Information"
 msgstr "Información"
 
 #. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: account_payment
-#: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
-msgid "Pay"
-msgstr "Pagar"
-
-#. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
 msgstr "Orden de pago"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
-msgid "Draft Payment Order"
-msgstr "Orden de pago borrador"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -497,7 +590,7 @@ msgid "Payment amount in the company currency"
 msgstr "Importe pagado en la moneda de la compañía"
 
 #. module: account_payment
-#: wizard_view:populate_payment,init:0
+#: view:payment.order.create:0
 msgid "Search Payment lines"
 msgstr "Buscar líneas de pago"
 
@@ -517,13 +610,18 @@ msgid "Destination Bank account"
 msgstr "Cuenta bancaria destino"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Cash Journal for the Payment Mode"
-msgstr "Diario de caja para el modo de pago"
+#: view:account.payment.make.payment:0
+msgid "Are you sure you want to make payment?"
+msgstr "Seguro de hacer el pago?"
+
+#. module: account_payment
+#: view:payment.mode:0
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Diario"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
-#: rml:payment.order:0
 msgid "Bank account"
 msgstr "Cuenta bancaria"
 
@@ -534,16 +632,21 @@ msgstr "Confirmar pagos"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: report:payment.order:0
 msgid "Company Currency"
 msgstr "Moneda de la compañía"
 
 #. module: account_payment
-#: model:ir.ui.menu,name:account_payment.menu_main
-#: model:ir.ui.menu,name:account_payment.next_id_44
+#: model:ir.ui.menu,name:account_payment.menu_main_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
 msgstr "Pago"
+
+#. module: account_payment
+#: report:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Orden de Pago"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -561,14 +664,13 @@ msgstr ""
 
 #. module: account_payment
 #: field:payment.mode,name:0
-#: field:payment.type,name:0
 msgid "Name"
 msgstr "Nombre"
 
 #. module: account_payment
-#: wizard_button:populate_payment,init,search:0
-msgid "_Search"
-msgstr "_Buscar"
+#: report:payment.order:0
+msgid "Bank Account"
+msgstr "Cuenta de Banco"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -577,9 +679,9 @@ msgid "Entry Information"
 msgstr "Información del asiento"
 
 #. module: account_payment
-#: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
-msgid "Populate Statement with Payment lines"
-msgstr "Llenar un extracto con líneas de pago"
+#: model:ir.model,name:account_payment.model_payment_order_create
+msgid "payment.order.create"
+msgstr "Crear Orden"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -587,37 +689,40 @@ msgid "Order"
 msgstr "Orden"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_order_open
-#: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
-msgid "Payment Orders to Validate"
-msgstr "Órdenes de pago a validar"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_type
-#: field:payment.mode,type:0
-msgid "Payment type"
-msgstr "Tipo de pago"
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Total"
 
 #. module: account_payment
-#: wizard_button:populate_statement,init,add:0
-msgid "_Add"
-msgstr "_Añadir"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request that your company does in order to pay "
+"a supplier invoice or a customer credit note. Here you can register all "
+"payment orders that should be done, keep track of all payment orders and "
+"mention the invoice reference and the partner the payment should be done for."
+msgstr ""
+"Una orden de pago es una solicitud de pago que su compañía hace para pagar "
+"una factura de proveedor o una factura de abono de un cliente. Aquí puede "
+"registrar todas las órdenes de pago a realizar, llevar un control de las "
+"mismas y hacer referencia a la factura y empresa a la que se debe hacer el "
+"pago."
 
 #. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr "Seleccione el tipo de pago para el modo de pago."
+#: view:account.payment.make.payment:0
+#: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
+msgid "Make Payment"
+msgstr "Hacer Pago"
 
 #. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_mode
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Modo de pago"
+#: field:payment.line,partner_id:0
+#: report:payment.order:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Llenar Pago"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -625,6 +730,6 @@ msgid "Bank Account for the Payment Mode"
 msgstr "Cuenta bancaria para el modo de pago"
 
 #. module: account_payment
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Diario"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."

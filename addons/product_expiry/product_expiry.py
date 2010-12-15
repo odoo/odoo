@@ -40,24 +40,24 @@ class stock_production_lot(osv.osv):
                 # set date to False when no expiry time specified on the product
                 date = duration and (datetime.datetime.today()
                     + datetime.timedelta(days=duration))
-            return date and date.strftime('%Y-%m-%d %H:%M:%S')
+            return date and date.strftime('%Y-%m-%d %H:%M:%S') or False
         return calc_date
 
     _columns = {
         'life_date': fields.datetime('End of Life Date',
-            help='The date the lot may become dangerous and should not be consumed.'),
+            help='The date on which the lot may become dangerous and should not be consumed.'),
         'use_date': fields.datetime('Best before Date',
-            help='The date the lot starts deteriorating without becoming dangerous.'),
+            help='The date on which the lot starts deteriorating without becoming dangerous.'),
         'removal_date': fields.datetime('Removal Date',
-            help='The date the lot should be removed.'),
-        'alert_date': fields.datetime('Alert Date', help="The date signifying an alert to notify about the production lot."),
+            help='The date on which the lot should be removed.'),
+        'alert_date': fields.datetime('Alert Date', help="The date on which an alert should be notified about the production lot."),
     }
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
         newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, newid, context=context)
         towrite = []
-        for f in ('life_date','use_date','removal_date','alert_date'):
+        for f in ('life_date', 'use_date', 'removal_date', 'alert_date'):
             if not getattr(obj, f):
                 towrite.append(f)
         context = context or {}
@@ -82,8 +82,7 @@ class product_product(osv.osv):
             help='The number of days before a production lot starts deteriorating without becoming dangerous.'),
         'removal_time': fields.integer('Product Removal Time',
             help='The number of days before a production lot should be removed.'),
-        'alert_time': fields.integer('Product Alert Time', help="The number of days after which, needs an alert to notify about the production lot."),
+        'alert_time': fields.integer('Product Alert Time', help="The number of days after which an alert should be notified about the production lot."),
     }
 product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

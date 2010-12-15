@@ -149,7 +149,7 @@
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
-        <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
+        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report" groups="project.group_project_manager"/>
 
    <!-- Views and action for project dashboard -->
    <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">
@@ -270,14 +270,15 @@
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
+        <field name="context">{'group_by':['project'],'group_by_no_leaf':1}</field>
         <field name="domain">[('uid','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
     </record>
 
 	<record id="open_view_project_vs_planned_total_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_vs_planned_total_hours_tree"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
     </record>
     <record id="open_view_project_vs_planned_total_hours_graph" model="ir.actions.act_window.view">

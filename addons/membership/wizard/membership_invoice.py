@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import time
-
 from osv import fields, osv
-from tools.translate import _
-import tools
 import decimal_precision as dp
 
 class membership_invoice(osv.osv_memory):
@@ -35,37 +31,38 @@ class membership_invoice(osv.osv_memory):
         'product_id': fields.many2one('product.product','Membership', required=True),
         'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True),
     }
-    def onchange_product(self, cr, uid, ids, product_id):
+    def onchange_product(self, cr, uid, ids, product_id=False):
         """This function returns value of  product's member price based on product id.
         """
         if not product_id:
             return {'value': {'unit_price': False}}
-        else:
-           unit_price=self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]
-           return {'value': {'member_price': unit_price}}
+        return {'value': {'member_price': self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]}}
 
     def membership_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         partner_obj = self.pool.get('res.partner')
         datas = {}
         if not context:
             context = {}
-        data = self.browse(cr, uid, ids)
+        data = self.browse(cr, uid, ids, context=context)
         if data:
             data = data[0]
             datas = {
                 'membership_product_id': data.product_id.id,
                 'amount': data.member_price
             }
-        invoice_ids = context.get('active_ids', [])
-        invoice_list = partner_obj.create_membership_invoice(cr, uid, invoice_ids, datas=datas, context=context)
-
+        invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
+        
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
+        
         return  {
             'domain': [('id', 'in', invoice_list)],
-            'name': 'Membership Invoice',
+            'name': 'Membership Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
+            'search_view_id': res and res[1] or False
         }
 
 membership_invoice()

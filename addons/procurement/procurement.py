@@ -62,11 +62,11 @@ mrp_property()
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
-    
+
     _columns= {
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['procurements'] = []
@@ -119,11 +119,11 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'priority': lambda *a: '1',
+        'state': 'draft',
+        'priority': '1',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'close_move': lambda *a: 0,
-        'procure_method': lambda *a: 'make_to_order',
+        'close_move': 0,
+        'procure_method': 'make_to_order',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
@@ -134,7 +134,7 @@ class procurement_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), 
+                raise osv.except_osv(_('Invalid action !'),
                         _('Cannot delete Procurement Order(s) which are in %s State!') % \
                         s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
@@ -165,12 +165,13 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids))
 
-    def check_move_done(self, cr, uid, ids, context={}):
+    def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
         """
-        return all(procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids))
-
+        if not context:
+            context = {}
+        return all(not procurement.move_id or procurement.move_id.state == 'done' for procurement in self.browse(cr, uid, ids, context=context))
     #
     # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
@@ -283,7 +284,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
-                cr.execute('update procurement_order set message=%s where id=%s', 
+                cr.execute('update procurement_order set message=%s where id=%s',
                         (_('No supplier defined for this product !'), procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
@@ -293,7 +294,7 @@ class procurement_order(osv.osv):
                     return False
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
-                cr.execute('update procurement_order set message=%s where id=%s', 
+                cr.execute('update procurement_order set message=%s where id=%s',
                         (_('No address defined for the supplier'), procurement.id))
                 return False
         return True
@@ -314,7 +315,7 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), 
+                raise osv.except_osv(_('Data Insufficient !'),
                     _('Please check the Quantity in Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
@@ -342,7 +343,7 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'running', 
+        self.write(cr, uid, ids, {'state': 'running',
                 'message': _('from stock: products assigned.')})
         return True
 
@@ -365,8 +366,8 @@ class procurement_order(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update procurement_order set message=%s where id=%s', 
-                            (_('Not enough stock and no minimum orderpoint rule defined.'), 
+                    cr.execute('update procurement_order set message=%s where id=%s',
+                            (_('Not enough stock and no minimum orderpoint rule defined.'),
                             procurement.id))
                     message = _("Procurement '%s' is in exception: not enough stock.") % \
                             (procurement.name,)
@@ -479,7 +480,7 @@ class StockPicking(osv.osv):
                         wf_service.trg_validate(user, 'procurement.order',
                                 procurement.id, 'button_check', cursor)
         return res
-    
+
 StockPicking()
 
 class stock_warehouse_orderpoint(osv.osv):
@@ -489,9 +490,19 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
+    def _get_draft_procurements(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        procurement_obj = self.pool.get('procurement.order')
+        for orderpoint in self.browse(cr, uid, ids, context=context):
+            procurement_ids = procurement_obj.search(cr, uid , [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
+            result[orderpoint.id] = procurement_ids
+        return result
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
@@ -507,6 +518,8 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'procurement_draft_ids': fields.function(_get_draft_procurements, method=True, type='many2many', relation="procurement.order", \
+                                string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -517,7 +530,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
     _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )',
                 _('Qty Multiple must be greater than zero.')),
     ]
 
@@ -531,7 +544,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'location_id': w.lot_stock_id.id}
             return {'value': v}
         return {}
-    
+
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         """ Finds UoM for changed product.
         @param product_id: Changed id of product.
@@ -542,7 +555,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-    
+
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -550,6 +563,6 @@ class stock_warehouse_orderpoint(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-    
+
 stock_warehouse_orderpoint()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

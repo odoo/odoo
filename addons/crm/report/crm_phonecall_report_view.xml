@@ -64,7 +64,7 @@
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Phone calls made in last month"/>
                         <separator orientation="vertical" />
-                        <filter icon="terp-check"
+                        <filter icon="terp-gtk-go-back-rtl"
                             string="Todo"
                             domain="[('state','in',('draft','open'))]"
                             help="Phone calls which are in draft and open state"/>
@@ -78,7 +78,6 @@
                             help="Phone calls which are in pending state"/>
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
                             <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"

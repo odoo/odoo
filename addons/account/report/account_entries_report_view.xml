@@ -87,25 +87,6 @@
                     <field name="journal_id" widget="selection"/>
                     <field name="period_id"/>
                 </group>
-                <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
-                    <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
-                    <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Acc.Type" icon="terp-folder-blue" context="{'group_by':'user_type'}" name="usertype"/>
-                    <filter string="Int.Type" icon="terp-folder-yellow" context="{'group_by':'type'}"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
-                    <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
-                    <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
-                 </group>
                  <newline/>
                  <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="fiscalyear_id"/>
@@ -119,6 +100,25 @@
                     <field name="date"/>
                     <field name="date_maturity"/>
                  </group>
+                <newline/>
+                <group expand="1" string="Group By...">
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
+                    <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
+                    <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
+                    <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
+                 </group>
             </search>
         </field>
     </record>
@@ -130,7 +130,7 @@
         <field name="search_view_id" ref="view_account_entries_report_search"/>
         <field name="view_id" ref="view_account_entries_report_tree"/>
         <field name="context">{'group_by':[], 'search_default_usertype':1, 'search_default_thisyear':1, 'group_by_no_leaf':1}</field>
-        <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
+        <field name="help">From this view, have an analysis of your different financial accounts. The document shows your debit and credit taking in consideration some criteria you can choose by using the search tool.</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
         parent="account.menu_finance_statistic_report_statement"

@@ -7,72 +7,94 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-26 06:05+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-08 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-09 12:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,copy_to:0
-msgid "Copy To"
-msgstr "Hona Kopiatu"
-
-#. module: thunderbird
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+msgid "Thunderbird Plug-In Configuration"
 msgstr ""
-"Objetuaren izena x_ -z hasi behar da eta ezin ditu karaktere berezirik izan!"
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,description:0
+#: field:thunderbird.installer,pdf_file:0
+msgid "Installation Manual"
+msgstr ""
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr ""
+
+#. module: thunderbird
+#: field:thunderbird.installer,description:0
 msgid "Description"
 msgstr "Deskribapena"
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,reference:0
-msgid "Reference"
-msgstr "Erreferentzia"
+#: view:thunderbird.installer:0
+msgid "title"
+msgstr ""
 
 #. module: thunderbird
-#: model:ir.model,name:thunderbird.model_tinythunderbird_partner
+#: view:thunderbird.installer:0
+msgid "Skip"
+msgstr ""
+
+#. module: thunderbird
+#: field:thunderbird.installer,name:0
+#: field:thunderbird.installer,pdf_name:0
+msgid "File name"
+msgstr ""
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
 msgid "Thunderbid mails"
 msgstr "Thunderbird epostak"
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,attachments:0
-msgid "Attached Files"
-msgstr "Erantsitako Fitxategiak"
+#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+msgid "Thunderbird Plug-In"
+msgstr ""
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,res_user_id:0
-msgid "User"
-msgstr "Erabiltzailea"
+#: view:thunderbird.installer:0
+msgid "_Close"
+msgstr ""
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,receiver:0
-msgid "Receiver"
-msgstr "Jasotzailea"
+#: help:thunderbird.installer,thunderbird:0
+msgid ""
+"Allows you to select an object that you’d like to add to your email and its "
+"attachments."
+msgstr ""
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,date:0
-msgid "Date"
-msgstr "Data"
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
+msgstr ""
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,title:0
-msgid "Subject"
-msgstr "Gaia"
+#: help:thunderbird.installer,pdf_file:0
+msgid "The documentation file :- how to install Thunderbird Plug-in."
+msgstr ""
 
 #. module: thunderbird
-#: code:addons/thunderbird/partner/partner.py:0
-#, python-format
-msgid "Archive"
+#: model:ir.model,name:thunderbird.model_email_server_tools
+msgid "Email Server Tools"
 msgstr ""
 
 #. module: thunderbird
@@ -81,6 +103,52 @@ msgid "Thunderbird Interface"
 msgstr "Thunderbird Interfazea"
 
 #. module: thunderbird
-#: field:tinythunderbird.partner,sender:0
-msgid "Sender"
-msgstr "Bidaltzailea"
+#: view:thunderbird.installer:0
+msgid "Installation and Configuration Steps"
+msgstr ""
+
+#. module: thunderbird
+#: field:thunderbird.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: thunderbird
+#: help:thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr ""
+
+#. module: thunderbird
+#: field:thunderbird.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#~ msgid "Copy To"
+#~ msgstr "Hona Kopiatu"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objetuaren izena x_ -z hasi behar da eta ezin ditu karaktere berezirik izan!"
+
+#~ msgid "Receiver"
+#~ msgstr "Jasotzailea"
+
+#~ msgid "Reference"
+#~ msgstr "Erreferentzia"
+
+#~ msgid "Subject"
+#~ msgstr "Gaia"
+
+#~ msgid "Date"
+#~ msgstr "Data"
+
+#~ msgid "User"
+#~ msgstr "Erabiltzailea"
+
+#~ msgid "Attached Files"
+#~ msgstr "Erantsitako Fitxategiak"
+
+#~ msgid "Sender"
+#~ msgstr "Bidaltzailea"

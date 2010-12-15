@@ -6,28 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 04:16+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-11 23:27+0000\n"
+"Last-Translator: ZhangCheng <skyxxzc@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr "控制台"
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
+msgstr ""
 
 #. module: board
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "备注类型"
+
+#. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
 msgstr "作者"
@@ -38,25 +45,80 @@ msgid "Dashboard main module"
 msgstr "控制面板主要模块"
 
 #. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "最后一次连接"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "User Error!"
+msgstr "用户错误！"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
 msgstr "备注"
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "宽度"
+#: view:board.note:0
+#: view:res.log.report:0
+msgid "Group By..."
+msgstr ""
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "标题"
+
+#. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "月"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "打开控制面板"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -65,15 +127,46 @@ msgid "Dashboard Definition"
 msgstr "控制面板定义"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "三月"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "八月"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "创建日期"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
 #: model:ir.ui.menu,name:board.menu_view_board_note_form
 msgid "Publish a note"
 msgstr "发布备注"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
 msgstr "菜单信息"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "六月"
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "备注类型"
 
 #. module: board
 #: field:board.board,line_ids:0
@@ -81,39 +174,61 @@ msgid "Action Views"
 msgstr "动作视图"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr "备注"
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr ""
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "设置"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "七月"
 
 #. module: board
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "备注类型"
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "扩展过滤..."
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr ""
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
 msgstr "创建控制面板菜单"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "二月"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "十月"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
+msgstr ""
+
+#. module: board
+#: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "上级菜单"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "一月"
 
 #. module: board
 #: view:board.note:0
@@ -121,14 +236,28 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr "备注类型"
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "十一月"
+
+#. module: board
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "四月"
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "控制面板"
 
@@ -138,24 +267,30 @@ msgid "Base module for all dashboards."
 msgstr "所有控制面板的基础模块"
 
 #. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr "动作"
+
+#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
 msgstr "位置"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "打开控制面板"
+#: view:res.log.report:0
+msgid "Model"
+msgstr ""
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "菜单名称"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr "备注类型"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr ""
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -173,20 +308,35 @@ msgid "Right"
 msgstr "右对齐"
 
 #. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "宽度"
+
+#. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "序号"
 
 #. module: board
-#: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
-msgid "Create Menu"
-msgstr "创建菜单"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "九月"
 
 #. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr "控制面板"
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "十二月"
+
+#. module: board
+#: view:board.board:0
+#: view:board.menu.create:0
+msgid "Create Menu"
+msgstr "创建菜单"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -194,12 +344,28 @@ msgid "Height"
 msgstr "高度"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr "创建控制台菜单"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr ""
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr "取消"
 
@@ -209,22 +375,41 @@ msgid "Dashboard View"
 msgstr "控制面板视图"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr "控制台明细"
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "请插入看板视图！"
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "主题"
 
-#, python-format
-#~ msgid "User Error!"
-#~ msgstr "用户错误！"
+#~ msgid "Configuration"
+#~ msgstr "设置"
 
-#, python-format
-#~ msgid "Please Insert Dashboard View(s) !"
-#~ msgstr "请插入看板视图！"
+#~ msgid "board.board"
+#~ msgstr "控制台"
 
-#~ msgid "Action"
-#~ msgstr "动作"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在这动作定义中有无效的模块名"
+
+#~ msgid "board.note"
+#~ msgstr "备注"
+
+#~ msgid "board.note.type"
+#~ msgstr "备注类型"
+
+#~ msgid "board.board.line"
+#~ msgstr "控制台明细"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "Dashboards"
+#~ msgstr "控制面板"

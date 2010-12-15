@@ -7,72 +7,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 21:31+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-11-15 10:07+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-11-16 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Date :"
-msgstr "Ημερομηνία :"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Follwoup Summary"
+msgstr ""
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,partner_ids:0
-msgid "Partners"
-msgstr "Συνεργάτες"
+#: view:account_followup.followup:0
+msgid "Search Followup"
+msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Customer Ref :"
-msgstr "Σχ. Πελάτη :"
+#: view:account_followup.stat:0
+msgid "Group By..."
+msgstr "Ομαδοποίηση Κατά..."
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
-#: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
-msgid "All payable entries"
-msgstr "Όλες οι εγγραφές πληρωμής"
-
-#. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
-
-#. module: account_followup
-#: field:account_followup.followup.line,description:0
-msgid "Printed Message"
-msgstr "Εκτύπωση Μηνύματος"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Amount In Currency"
-msgstr "Ποσό σε Νόμισμα"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Due"
-msgstr "Έως"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Συνολική χρέωση"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(user_signature)s: User name"
-msgstr "%(user_signature)s: Όνομα Χρήστη"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Select partners"
-msgstr "Επιλογή συνεργατών"
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Μύνημα Απάντησης"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -81,193 +46,88 @@ msgid "Follow-Up"
 msgstr "Follow-Up"
 
 #. module: account_followup
-#: field:account_followup.stat,debit:0
-msgid "Debit"
-msgstr "Χρέωση"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Email Settings"
-msgstr "Ρυθμίσεις Email"
-
-#. module: account_followup
-#: field:account_followup.stat,account_type:0
-msgid "Account Type"
-msgstr "Τύπος Λογαριασμού"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Ref"
-msgstr "Σχετ"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(followup_amount)s: Total Amount Due"
-msgstr "%(followup_amount)s: Συνολικό Ποσό έως"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(date)s: Current Date"
-msgstr "%(date)s: Τρέχουσα Ημερομηνία"
-
-#. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
-msgstr "Latest Follow-up"
-
-#. module: account_followup
-#: field:account_followup.followup.line,followup_id:0
-#: field:account_followup.stat,followup_id:0
-msgid "Follow Ups"
-msgstr "Follow Ups"
-
-#. module: account_followup
-#: wizard_field:account_followup.followup.print.all,init,date:0
-msgid "Follow-up Sending Date"
-msgstr "Follow-up Sending Date"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,description:0
-#: rml:account_followup.followup.print:0
-msgid "Description"
-msgstr "Περιγραφή"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Balance:"
-msgstr "Ισοζύγιο:"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "VAT:"
-msgstr "ΦΠΑ:"
-
-#. module: account_followup
 #: field:account_followup.followup,company_id:0
+#: view:account_followup.stat:0
+#: field:account_followup.stat,company_id:0
 msgid "Company"
 msgstr "Εταιρία"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
+#: report:account_followup.followup.print:0
 msgid "Invoice Date"
 msgstr "Ημερομηνία Τιμολογίου"
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,email_subject:0
+#: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
 msgstr "Θέμα Email"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Paid"
-msgstr "Πληρωμένο"
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "Legend"
+msgstr "Υπόμνημα"
 
 #. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(line)s: Account Move lines"
-msgstr "%(line)s: Γραμμές Κινήσεων Λογαριασμού"
-
-#. module: account_followup
-#: field:account_followup.stat,date_followup:0
-msgid "Latest followup"
-msgstr "Latest followup"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr "Εγγραφές Συνεργάτη"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-Ups Criteria"
-msgstr "Follow-Ups Criteria"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Partner Selection"
-msgstr "Επιλογή Συνεργάτη"
-
-#. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
-msgstr "Τύπος Όρου"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,init:0
-msgid "Follow-up and Date Selection"
-msgstr "Follow-up and Date Selection"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Select partners to remind"
-msgstr "Επιλογή συνεργατών για υπενθύμιση"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Li."
-msgstr "γρ."
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
-msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
-"\n"
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
-"\t\t\t"
-msgstr ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
-"\n"
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
-"\t\t\t"
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην εμπεριέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: account_followup
-#: wizard_button:account_followup.followup.print.all,summary,end:0
+#: view:account.followup.print.all:0
 msgid "Ok"
 msgstr "Ok"
 
 #. module: account_followup
-#: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
-msgid "Name"
-msgstr "Όνομα"
+#: field:account.followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr "Follow-up Sending Date"
 
 #. module: account_followup
-#: field:account_followup.stat,date_move:0
-msgid "First move"
-msgstr "Πρώτη κίνηση"
+#: selection:account_followup.followup.line,start:0
+msgid "Net Days"
+msgstr "Καθαρές Ημέρες"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-Ups"
+msgstr "Follow-Ups"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "VAT:"
+msgstr "ΦΠΑ:"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "Συνολική χρέωση"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(heading)s: Move line header"
+msgstr "%(heading)s: Κεφαλίδα γραμμής κίνησης"
+
+#. module: account_followup
+#: field:account.followup.print,followup_id:0
+msgid "Follow-up"
+msgstr "Follow-up"
+
+#. module: account_followup
+#: field:account_followup.stat,name:0
+msgid "Partner"
+msgstr "Συνεργάτης"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Date :"
+msgstr "Ημερομηνία :"
+
+#. module: account_followup
+#: field:account.followup.print.all,partner_ids:0
+msgid "Partners"
+msgstr "Συνεργάτες"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow Up"
+msgstr ""
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -275,27 +135,40 @@ msgid "End of Month"
 msgstr "Τέλος Μήνα"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(company_name)s: User's Company name"
-msgstr "%(company_name)s: Επωνυμία Εταιρίας Χρήστη"
+#: view:account_followup.stat:0
+msgid "Not Litigation"
+msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
-#: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile
-msgid "All receivable entries"
-msgstr "Όλες οι εισπρακτέες εγγραφές"
+#: view:account.followup.print.all:0
+msgid "%(user_signature)s: User name"
+msgstr "%(user_signature)s: Όνομα Χρήστη"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-msgid "Lines"
-msgstr "Γραμμές"
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "Χρέωση"
 
 #. module: account_followup
-#: model:ir.actions.wizard,name:account_followup.action_account_followup_all_wizard
-#: model:ir.ui.menu,name:account_followup.account_followup_wizard_menu
-msgid "Send followups"
-msgstr "Send followups"
+#: field:account_followup.stat,account_type:0
+msgid "Account Type"
+msgstr "Τύπος Λογαριασμού"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Ref"
+msgstr "Σχετ"
+
+#. module: account_followup
+#: help:account_followup.followup.line,sequence:0
+msgid "Gives the sequence order when displaying a list of follow-up lines."
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,email_body:0
+msgid "Email body"
+msgstr "Σώμα Email"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -303,68 +176,9 @@ msgid "Follow-up Level"
 msgstr "Follow-up Level"
 
 #. module: account_followup
-#: field:account_followup.stat,credit:0
-msgid "Credit"
-msgstr "Πίστωση"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup statistics"
-msgstr "Followup statistics"
-
-#. module: account_followup
-#: wizard_button:account_followup.followup.print.all,init,next:0
-msgid "Continue"
-msgstr "Συνέχιση"
-
-#. module: account_followup
-#: model:ir.module.module,shortdesc:account_followup.module_meta_information
-msgid "Accounting follow-ups management"
-msgstr "Accounting follow-ups management"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,summary:0
-#: wizard_field:account_followup.followup.print.all,summary,summary:0
-msgid "Summary"
-msgstr "Περίληψη"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Lines"
-msgstr "Follow-Up Lines"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Document : Customer account statement"
-msgstr "Έγγραφο : Δήλωση λογαριασμού Πελάτη"
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-Up lines"
-msgstr "Follow-Up lines"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(company_currency)s: User's Company Currency"
-msgstr "%(company_currency)s: Νόμισμα Εταιρίας Χρήστη"
-
-#. module: account_followup
-#: field:account_followup.stat,balance:0
-msgid "Balance"
-msgstr "Ισοζύγιο"
-
-#. module: account_followup
-#: help:account_followup.followup.print.all,init,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-"Αυτό το πεδίο σας επιτρέπει να επιλέξετε μια προβλεπόμενη ημερομηνία για το "
-"σχέδιο συνέχειας σας"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Σύνολο πίστωσης"
+#: field:account_followup.stat,date_followup:0
+msgid "Latest followup"
+msgstr "Latest followup"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -388,68 +202,74 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-"\t\t\t"
 msgstr ""
+
+#. module: account_followup
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
+#. module: account_followup
+#: field:account.followup.print.all,partner_lang:0
+msgid "Send Email in Partner Language"
+msgstr "Αποστολή Email στην Γλώσσα του Συνεργάτη"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Select partners to remind"
+msgstr "Επιλογή συνεργατών για υπενθύμιση"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Partner Selection"
+msgstr "Επιλογή Συνεργάτη"
+
+#. module: account_followup
+#: field:account_followup.followup.line,description:0
+msgid "Printed Message"
+msgstr "Εκτύπωση Μηνύματος"
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send followups"
+msgstr "Send followups"
+
+#. module: account_followup
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
+msgstr "Follow Ups"
+
+#. module: account_followup
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+msgid ""
 "\n"
 "Dear %(partner_name)s,\n"
 "\n"
-"We are disappointed to see that despite sending a reminder, that your "
-"account is now seriously overdue.\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount staid unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
 "\n"
-"It is essential that immediate payment is made, otherwise we will have to "
-"consider placing a stop on your account which means that we will no longer "
-"be able to supply your company with (goods/services).\n"
-"Please, take appropriate measures in order to carry out this payment in the "
-"next 8 days\n"
-"\n"
-"If there is a problem with paying invoice that we are not aware of, do not "
-"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
-"we can resolve the matter quickly.\n"
-"\n"
-"Details of due payments is printed below.\n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).10.68.94.39.\n"
 "\n"
 "Best Regards,\n"
-"\t\t\t"
+msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Sub-Total:"
-msgstr "Υποσύνολο:"
-
-#. module: account_followup
-#: selection:account_followup.followup.line,start:0
-msgid "Net Days"
-msgstr "Καθαρές Ημέρες"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-#: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.model,name:account_followup.model_account_followup_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat
-msgid "Follow-Ups"
-msgstr "Follow-Ups"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-#: wizard_field:account_followup.followup.print.all,next,email_body:0
-msgid "Email body"
-msgstr "Σώμα Email"
-
-#. module: account_followup
-#: field:account_followup.stat,date_move_last:0
-msgid "Last move"
-msgstr "Τελευταία κίνηση"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Maturity"
-msgstr "Ενηλικίωση"
-
-#. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Followup Report"
-msgstr "Followup Report"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
+"\n"
+msgstr ""
+"Όλα τα E-mails έχουν αποσταλεί στους Συνεργάτες:.\n"
+"\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -469,72 +289,305 @@ msgid ""
 "our accounting department at (+32).10.68.94.39.\n"
 "\n"
 "Best Regards,\n"
-"\t\t\t"
 msgstr ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Despite several reminders, your account is still not settled.\n"
-"\n"
-"Unless full payment is made in next 8 days , then legal action for the "
-"recovery of the debt, will be taken without further notice.\n"
-"\n"
-"I trust that this action will prove unnecessary and details of due payments "
-"is printed below.\n"
-"\n"
-"In case of any queries concerning this matter, do not hesitate to contact "
-"our accounting department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
-"\t\t\t"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Send Mails"
+msgstr "Αποστολή Αλληλογραφίας"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#. module: account_followup
+#: model:ir.module.module,shortdesc:account_followup.module_meta_information
+msgid "Accounting follow-ups management"
+msgstr "Accounting follow-ups management"
+
+#. module: account_followup
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Μπλοκαρισμένο"
+
+#. module: account_followup
+#: help:account.followup.print,date:0
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+"Αυτό το πεδίο σας επιτρέπει να επιλέξετε μια προβλεπόμενη ημερομηνία για το "
+"σχέδιο συνέχειας σας"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Due"
+msgstr "Έως"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Select Partners"
+msgstr "Επιλογή Συνεργατών"
+
+#. module: account_followup
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Λάθος ! Δεν μπορείτε να δημιουργήσετε κενό Μενού"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Email Settings"
+msgstr "Ρυθμίσεις Email"
+
+#. module: account_followup
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Print Follow Ups"
+msgstr ""
+
+#. module: account_followup
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr "Latest Follow-up"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Sub-Total:"
+msgstr "Υποσύνολο:"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Balance:"
+msgstr "Ισοζύγιο:"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Followup Statistics"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Paid"
+msgstr "Πληρωμένο"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(user_signature)s: User Name"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
+msgstr ""
+
+#. module: account_followup
+#: field:account.followup.print.all,email_conf:0
+msgid "Send email confirmation"
+msgstr "Αποστολή email επιβεβαίωσης"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(company_name)s: User's Company name"
+msgstr "%(company_name)s: Επωνυμία Εταιρίας Χρήστη"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_res_company
+msgid "Companies"
+msgstr "Εταιρίες"
+
+#. module: account_followup
+#: view:account_followup.followup:0
+msgid "Followup Lines"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "Πίστωση"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
 msgid "Maturity Date"
 msgstr "Ημερομηνία Ενηλικίωσης"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Legend"
-msgstr "Υπόμνημα"
+msgid "%(partner_name)s: Partner Name"
+msgstr ""
 
 #. module: account_followup
-#: field:account_followup.followup.line,sequence:0
-msgid "Sequence"
-msgstr "Αλληλουχία"
+#: view:account_followup.stat:0
+msgid "Follow-Up lines"
+msgstr "Follow-Up lines"
 
 #. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(heading)s: Move line header"
-msgstr "%(heading)s: Κεφαλίδα γραμμής κίνησης"
+#: view:account.followup.print.all:0
+msgid "%(company_currency)s: User's Company Currency"
+msgstr "%(company_currency)s: Νόμισμα Εταιρίας Χρήστη"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,balance:0
+msgid "Balance"
+msgstr "Ισοζύγιο"
+
+#. module: account_followup
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "Τύπος Όρου"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_print
+#: model:ir.model,name:account_followup.model_account_followup_print_all
+msgid "Print Followup & Send Mail to Customers"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,date_move_last:0
+msgid "Last move"
+msgstr "Τελευταία κίνηση"
+
+#. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
+msgid "Followup Report"
+msgstr "Followup Report"
+
+#. module: account_followup
+#: field:account_followup.stat,period_id:0
+msgid "Period"
+msgstr "Περίοδος"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"E-Mail not sent to following Partners, Email not available !\n"
+"\n"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Cancel"
+msgstr "Άκυρο"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(partner_name)s: Partner name"
-msgstr "%(partner_name)s: Όνομα συνεργάτη"
+msgid "Follow-Up Lines"
+msgstr "Follow-Up Lines"
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,email_conf:0
-msgid "Send email confirmation"
-msgstr "Αποστολή email επιβεβαίωσης"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+msgstr ""
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,init,followup_id:0
-msgid "Follow-up"
-msgstr "Follow-up"
+#: view:account_followup.stat:0
+msgid "Litigation"
+msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,name:0
-msgid "Partner"
-msgstr "Συνεργάτης"
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην εμπεριέχει "
+"ειδικούς χαρακτήρες!"
 
 #. module: account_followup
-#: wizard_button:account_followup.followup.print.all,init,end:0
-#: wizard_button:account_followup.followup.print.all,next,end:0
-msgid "Cancel"
-msgstr "Άκυρο"
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
+msgid "Payable Items"
+msgstr "Στοιχεία Πληρωμής"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(followup_amount)s: Total Amount Due"
+msgstr "%(followup_amount)s: Συνολικό Ποσό έως"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "%(date)s: Current Date"
+msgstr "%(date)s: Τρέχουσα Ημερομηνία"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Followup Level"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.followup:0
+#: field:account_followup.followup,description:0
+#: report:account_followup.followup.print:0
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "This Fiscal year"
+msgstr "Αυτό το Οικονομοικό Έτος"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Partner entries"
+msgstr "Εγγραφές Συνεργάτη"
+
+#. module: account_followup
+#: help:account.followup.print.all,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+"Μην αλλάξετε το μύνημα, εάν θέλετε να στείλετε email στην γλώσσα του "
+"συνεργάτη, ή να παραμετροποιηθεί από την εταιρία"
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
+msgid "Receivable Items"
+msgstr "Εισπρακτέα Στοιχεία"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-ups Sent"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+#: field:account_followup.followup.line,name:0
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+msgid "First move"
+msgstr "Πρώτη κίνηση"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr "γρ."
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Maturity"
+msgstr "Ενηλικίωση"
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid "Continue"
+msgstr "Συνέχιση"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -542,9 +595,64 @@ msgid "Days of delay"
 msgstr "Ημέρες καθυστέρησης"
 
 #. module: account_followup
-#: wizard_button:account_followup.followup.print.all,next,print:0
-msgid "Print Follow Ups & Send Mails"
-msgstr "Εκτύπωση Follow Ups & Αποστολή Mail"
+#: report:account_followup.followup.print:0
+msgid "Document : Customer account statement"
+msgstr "Έγγραφο : Δήλωση λογαριασμού Πελάτη"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr "Περίληψη"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Σύνολο πίστωσης"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(line)s: Ledger Posting lines"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup.line,sequence:0
+msgid "Sequence"
+msgstr "Αλληλουχία"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(company_name)s: User's Company Name"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Customer Ref :"
+msgstr "Σχ. Πελάτη :"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(partner_name)s: Partner name"
+msgstr "%(partner_name)s: Όνομα συνεργάτη"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Latest Followup Date"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-Up Criteria"
+msgstr ""
+
+#~ msgid "Select partners"
+#~ msgstr "Επιλογή συνεργατών"
+
+#~ msgid "All payable entries"
+#~ msgstr "Όλες οι εγγραφές πληρωμής"
+
+#~ msgid "Amount In Currency"
+#~ msgstr "Ποσό σε Νόμισμα"
 
 #, python-format
 #~ msgid ""
@@ -567,6 +675,131 @@ msgstr "Εκτύπωση Follow Ups & Αποστολή Mail"
 #~ "διαθέσιμο !\n"
 #~ "\n"
 
+#~ msgid "%(line)s: Account Move lines"
+#~ msgstr "%(line)s: Γραμμές Κινήσεων Λογαριασμού"
+
+#~ msgid "Follow-Ups Criteria"
+#~ msgstr "Follow-Ups Criteria"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+#~ msgstr ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Exception made if there was a mistake of ours, it seems that the following "
+#~ "amount staid unpaid. Please, take appropriate measures in order to carry out "
+#~ "this payment in the next 8 days.\n"
+#~ "\n"
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+
+#~ msgid "Follow-up and Date Selection"
+#~ msgstr "Follow-up and Date Selection"
+
+#~ msgid "All receivable entries"
+#~ msgstr "Όλες οι εισπρακτέες εγγραφές"
+
+#~ msgid "Lines"
+#~ msgstr "Γραμμές"
+
+#~ msgid "Followup statistics"
+#~ msgstr "Followup statistics"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+#~ msgstr ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "We are disappointed to see that despite sending a reminder, that your "
+#~ "account is now seriously overdue.\n"
+#~ "\n"
+#~ "It is essential that immediate payment is made, otherwise we will have to "
+#~ "consider placing a stop on your account which means that we will no longer "
+#~ "be able to supply your company with (goods/services).\n"
+#~ "Please, take appropriate measures in order to carry out this payment in the "
+#~ "next 8 days\n"
+#~ "\n"
+#~ "If there is a problem with paying invoice that we are not aware of, do not "
+#~ "hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+#~ "we can resolve the matter quickly.\n"
+#~ "\n"
+#~ "Details of due payments is printed below.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+
+#~ msgid ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+#~ msgstr ""
+#~ "\n"
+#~ "Dear %(partner_name)s,\n"
+#~ "\n"
+#~ "Despite several reminders, your account is still not settled.\n"
+#~ "\n"
+#~ "Unless full payment is made in next 8 days , then legal action for the "
+#~ "recovery of the debt, will be taken without further notice.\n"
+#~ "\n"
+#~ "I trust that this action will prove unnecessary and details of due payments "
+#~ "is printed below.\n"
+#~ "\n"
+#~ "In case of any queries concerning this matter, do not hesitate to contact "
+#~ "our accounting department at (+32).10.68.94.39.\n"
+#~ "\n"
+#~ "Best Regards,\n"
+#~ "\t\t\t"
+
 #, python-format
 #~ msgid ""
 #~ "All emails have been successfully sent to Partners:.\n"
@@ -574,3 +807,6 @@ msgstr "Εκτύπωση Follow Ups & Αποστολή Mail"
 #~ msgstr ""
 #~ "Όλα τα email έχουν αποσταλλεί με επιτυχία στους Συνεργάτες:\n"
 #~ "\n"
+
+#~ msgid "Print Follow Ups & Send Mails"
+#~ msgstr "Εκτύπωση Follow Ups & Αποστολή Mail"

@@ -6,64 +6,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:23+0000\n"
-"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-09 09:01+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Canceled Invoice"
+#: report:account.invoice.intrastat:0
+msgid "Cancelled Invoice"
 msgstr "Factura cancelada"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Junio"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr "¡El código de país debe ser único!"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
 msgstr "Desc. (%)"
 
 #. module: report_intrastat
-#: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree
-#: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat
-msgid "Intrastat (this month)"
-msgstr "Intrastat (este mes)"
-
-#. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Supplier Invoice"
 msgstr "Factura de proveedor"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Precio unidad"
 
 #. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
-
-#. module: report_intrastat
-#: field:report.intrastat,name:0
-msgid "Period"
-msgstr "Periodo"
-
-#. module: report_intrastat
-#: model:ir.ui.menu,name:report_intrastat.next_id_90
-msgid "All Months"
-msgstr "Todos los meses"
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
+"categoría."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -71,30 +61,39 @@ msgid "Import"
 msgstr "Importación"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "VAT :"
 msgstr "CIF/NIF:"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Document"
 msgstr "Documento"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Taxes:"
 msgstr "Impuestos:"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Descripción"
+#: selection:report.intrastat,month:0
+msgid "March"
+msgstr "Marzo"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr "Agosto"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "May"
+msgstr "Mayo"
 
 #. module: report_intrastat
 #: field:report.intrastat,type:0
@@ -107,7 +106,7 @@ msgid "Invoice Intrastat"
 msgstr "Factura Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Invoice Date"
 msgstr "Fecha factura"
 
@@ -117,44 +116,67 @@ msgid "Intrastat Reporting - Reporting"
 msgstr "Informes - Informes Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Tel. :"
 msgstr "Tel. :"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Base"
-msgstr "Base"
-
-#. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: report_intrastat
-#: model:ir.ui.menu,name:report_intrastat.next_id_89
+#: report:account.invoice.intrastat:0
+msgid "Base"
+msgstr "Base"
+
+#. module: report_intrastat
+#: view:report.intrastat:0
+msgid "This Year"
+msgstr "Este año"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "January"
+msgstr "Enero"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "July"
+msgstr "Julio"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_report_intrastat_code
+#: field:product.template,intrastat_id:0
+#: field:report.intrastat,intrastat_id:0
+#: view:report.intrastat.code:0
+msgid "Intrastat code"
+msgstr "Código Intrastat"
+
+#. module: report_intrastat
+#: view:report.intrastat:0
 msgid "This Month"
 msgstr "Este mes"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Partner Ref."
 msgstr "Ref. empresa"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Total (inclu. taxes):"
 msgstr "Total (con impuestos):"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "Factura de abono"
+#: selection:report.intrastat,month:0
+msgid "February"
+msgstr "Febrero"
 
 #. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: selection:report.intrastat,month:0
+msgid "October"
+msgstr "Octubre"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
@@ -162,17 +184,42 @@ msgid "Intrastat report"
 msgstr "Informe Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Invoice"
 msgstr "Factura"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_res_country
+msgid "Country"
+msgstr "País"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "¡El nombre del país debe ser único!"
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "September"
+msgstr "Septiembre"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Taxes"
 msgstr "Impuestos"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: selection:report.intrastat,month:0
+msgid "April"
+msgstr "Abril"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Amount"
 msgstr "Importe"
 
@@ -187,14 +234,14 @@ msgid "Value"
 msgstr "Valor"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 msgid "Intrastat"
 msgstr "Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Draft Invoice"
 msgstr "Factura borrador"
 
@@ -204,23 +251,41 @@ msgid "Supply Units"
 msgstr "Unidades suministradas"
 
 #. module: report_intrastat
-#: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: field:product.template,intrastat_id:0
-#: field:report.intrastat,intrastat_id:0
-#: view:report.intrastat.code:0
-msgid "Intrastat code"
-msgstr "Código Intrastat"
+#: selection:report.intrastat,month:0
+msgid "November"
+msgstr "Noviembre"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+msgid "Refund"
+msgstr "Factura de abono"
 
 #. module: report_intrastat
 #: field:report.intrastat,ref:0
-msgid "Origin"
-msgstr "Origen"
+msgid "Source document"
+msgstr "Documento origen"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
+msgstr "Observación posición fiscal :"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat,weight:0
 msgid "Weight"
 msgstr "Peso"
+
+#. module: report_intrastat
+#: model:ir.model,name:report_intrastat.model_product_template
+msgid "Product Template"
+msgstr "Plantilla producto"
 
 #. module: report_intrastat
 #: field:res.country,intrastat:0
@@ -228,7 +293,12 @@ msgid "Intrastat member"
 msgstr "Miembro Intrastat"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: selection:report.intrastat,month:0
+msgid "December"
+msgstr "Diciembre"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Tax"
 msgstr "Impuesto"
 
@@ -236,6 +306,11 @@ msgstr "Impuesto"
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Código del país"
+
+#. module: report_intrastat
+#: field:report.intrastat,month:0
+msgid "Month"
+msgstr "Mes"
 
 #. module: report_intrastat
 #: field:report.intrastat,currency_id:0
@@ -248,22 +323,27 @@ msgid "Export"
 msgstr "Exportación"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Fax :"
 msgstr "Fax :"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: field:report.intrastat,name:0
+msgid "Year"
+msgstr "Año"
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 msgid "Supplier Refund"
 msgstr "Factura de abono de proveedor"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Total (excl. taxes):"
 msgstr "Total (sin impuestos):"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
+#: report:account.invoice.intrastat:0
 msgid "Price"
 msgstr "Precio"
 
@@ -273,3 +353,42 @@ msgstr "Precio"
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Código Intrastat"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Factura cancelada"
+
+#~ msgid "Intrastat (this month)"
+#~ msgstr "Intrastat (este mes)"
+
+#~ msgid "All Months"
+#~ msgstr "Todos los meses"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Period"
+#~ msgstr "Periodo"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Origin"
+#~ msgstr "Origen"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

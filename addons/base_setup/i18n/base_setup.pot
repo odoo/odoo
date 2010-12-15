@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:19+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:19+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:18+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,16 +18,6 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: base_setup
@@ -91,8 +81,10 @@ msgid "Helps you handle your accounting needs, if you are not an accountant, we 
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "You can start configuring the system or connect directly to the database as an administrator."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+""
 msgstr ""
 
 #. module: base_setup
@@ -138,6 +130,11 @@ msgid "Lets you install various interesting but non-essential tools like Survey,
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "You can start configuring the system or connect directly to the database as an administrator."
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr ""
@@ -155,11 +152,6 @@ msgstr ""
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
 msgstr ""
 
 #. module: base_setup
@@ -183,6 +175,11 @@ msgid "Helps you get the most out of your points of sales with fast sale encodin
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr ""
+
+#. module: base_setup
 #: help:base.setup.installer,hr:0
 msgid "Helps you manage your human resources by encoding your employees structure, generating work sheets, tracking attendance and more."
 msgstr ""
@@ -190,11 +187,6 @@ msgstr ""
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
 msgid "Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: base_setup
@@ -413,11 +405,5 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
 msgstr ""
 

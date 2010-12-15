@@ -6,32 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:24+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-20 07:53+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-21 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr "Plaats"
-
-#. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+msgstr "Woonplaats"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -51,7 +39,7 @@ msgstr "E-mail"
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr "Bank Rekening Nr"
+msgstr "Bankrekening Nr"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
@@ -102,13 +90,10 @@ msgstr ""
 "om alleen de facturatie te installeren "
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
-"U kunt beginnen met de configuratie van het systeem of direct verbinden met "
-"de database als beheerder."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
@@ -157,6 +142,15 @@ msgstr ""
 "enquête, lunch en ideeënbus installeren."
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"U kunt beginnen met de configuratie van het systeem of direct verbinden met "
+"de database als beheerder."
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr "Geavanceerde overzichten"
@@ -175,11 +169,6 @@ msgstr "res_config_contents"
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "titel"
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Direct Gebruiken"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
@@ -215,6 +204,11 @@ msgstr ""
 "betaalmethode codering, automatische piklijst generatie en meer."
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr "Configuratie assistenten overslaan"
+
+#. module: base_setup
 #: help:base.setup.installer,hr:0
 msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
@@ -233,14 +227,9 @@ msgstr ""
 "van de boekhoud module voor managers die geen boekhouders zijn."
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
-
-#. module: base_setup
 #: field:base.setup.installer,hr:0
 msgid "Human Resources"
-msgstr "Personeelszaken"
+msgstr "Personeel"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -436,7 +425,7 @@ msgstr "Website bedrijf"
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install Specific Industry Applications"
-msgstr "Installeer specifieke bedrijfstak appliacties"
+msgstr "Installeer specifieke bedrijfstak applicaties"
 
 #. module: base_setup
 #: field:base.setup.company,street:0
@@ -497,12 +486,6 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
 msgstr "base.setup.config"
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -568,8 +551,31 @@ msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 #~ msgid "Installation Done"
 #~ msgstr "Installatie Gereed"
 
+#~ msgid "Use Directly"
+#~ msgstr "Direct Gebruiken"
+
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
 
 #~ msgid "Previous"
 #~ msgstr "Vorige"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

@@ -22,6 +22,7 @@
 import time
 import base64
 import tools
+
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -135,6 +136,52 @@ class crm_case(object):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
 
+    def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):
+        if index + 1 == len(stage_list):
+            return False
+        next_stage_id = stage_list[index + 1]
+        next_stage = stage_pool.browse(cr, uid, next_stage_id, context=context)
+        if not next_stage:
+            return False
+            
+        next_seq = next_stage.sequence
+        if (abs(next_seq - current_seq)) >= 1:
+            return next_stage
+        else :
+            return self._find_next_stage(cr, uid, stage_list, index + 1, current_seq, stage_pool)
+            
+    def stage_change(self, cr, uid, ids, context=None, order='sequence'):
+        if not context:
+            context = {}
+        stage_pool = self.pool.get('crm.case.stage')
+        stage_type = context and context.get('stage_type','')
+        current_seq = False
+        next_stage_id = False
+        for case in self.browse(cr, uid, ids, context):
+            next_stage = False
+            data = {}
+
+            domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
+            if case.section_id and case.section_id.stage_ids:
+                domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
+            
+            stages = stage_pool.search(cr, uid, domain, order=order)
+            current_seq = case.stage_id.sequence
+            index = -1
+            if case.stage_id and case.stage_id.id in stages:
+                index = stages.index(case.stage_id.id)
+
+            next_stage = self._find_next_stage(cr, uid, stages, index, current_seq, stage_pool, context=context)
+            if next_stage:
+                next_stage_id = next_stage.id
+                data = {'stage_id': next_stage.id}
+                if next_stage.on_change:
+                    data.update({'probability': next_stage.probability})
+            self.write(cr, uid, [case.id], data, context=context)
+            
+        return next_stage_id
+        
+        
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
              using available stage for that case type
@@ -143,32 +190,10 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
-        stage_pool = self.pool.get('crm.case.stage')
-        model = self._name
-        for case in self.browse(cr, uid, ids, context):
-            next_stage = False
-            data = {}
-            domain = [('object_id.model', '=', model)]
-            if case.section_id and case.section_id.stage_ids:
-                domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
-            stages = stage_pool.search(cr, uid, domain, order='sequence')
-            index = -1
-            if case.stage_id and case.stage_id.id in stages:
-                index = stages.index(case.stage_id.id)
-            if index + 1 == len(stages):
-                return False
-            else:
-                next_stage = stages[index + 1]
-            if next_stage:
-                data = {'stage_id': next_stage}
-                stage = stage_pool.browse(cr, uid, next_stage, context=context)
-                if stage.on_change:
-                    data.update({'probability': stage.probability})
-            self.write(cr, uid, [case.id], data, context=context)
-        return next_stage
-
+        
+       
+        return self.stage_change(cr, uid, ids, context=context, order='sequence')
+        
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
              using available stage for that case type
@@ -177,31 +202,7 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
-        stage_pool = self.pool.get('crm.case.stage')
-        model = self._name
-        for case in self.browse(cr, uid, ids, context):
-            prev_stage = False
-            data = {}
-            domain = [('object_id.model', '=', model)]
-            if case.section_id and case.section_id.stage_ids:
-                domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
-            stages = stage_pool.search(cr, uid, domain, order='sequence')
-            index = 0
-            if case.stage_id and case.stage_id.id in stages:
-                index = stages.index(case.stage_id.id)
-            if index == 0:
-                return False
-            else:
-                prev_stage = stages[index - 1]
-            if prev_stage:
-                data = {'stage_id': prev_stage}
-                stage = stage_pool.browse(cr, uid, prev_stage, context=context)
-                if stage.on_change:
-                    data.update({'probability': stage.probability})
-            self.write(cr, uid, [case.id], data, context=context)
-        return True
+        return self.stage_change(cr, uid, ids, context=context, order='sequence desc')
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
@@ -482,27 +483,27 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-        'object_id': fields.many2one('ir.model', 'Object Name'),
         'probability': fields.float('Probability (%)', required=True, help="This percentage depicts the default/average probability of the Case for this stage to be a success"),
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
-        'requirements': fields.text('Requirements')
+        'requirements': fields.text('Requirements'),
+        'type': fields.selection([('lead','Lead'),('opportunity','Opportunity'),('claim','Claim'), ('fundraising','Fundraising')], 'Type'),
     }
-    def _find_object_id(self, cr, uid, context=None):
-        """Finds id for case object
+
+    def _find_stage_type(self, cr, uid, context=None):
+        """Finds type of stage according to object.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
         """
-        object_id = context and context.get('object_id', False) or False
-        ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]
+        type = context and context.get('type', '') or ''
+        return type
 
     _defaults = {
         'sequence': lambda *args: 1,
         'probability': lambda *args: 0.0,
-        'object_id' : _find_object_id
+        'type': _find_stage_type,
     }
 
 crm_case_stage()
@@ -629,6 +630,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
     }
+        
 crm_case_stage()
 
 

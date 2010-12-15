@@ -19,13 +19,12 @@
 #
 ##############################################################################
 
-from itertools import groupby
-from operator import itemgetter
 from datetime import datetime
 from osv import osv, fields
 from tools.translate import _
 import netsvc
 import time
+import tools
 
 
 #----------------------------------------------------------
@@ -54,11 +53,23 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
+        'product_id': fields.many2one('product.product','Workcenter Product', help="Fill this product to track easily your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
         'resource_type': 'material',
      }
+
+    def on_change_product_cost(self, cr, uid, ids, product_id, context=None):
+        if context is None:
+            context = {}
+        value = {}
+
+        if product_id:
+            cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            value = {'costs_hour' :cost.standard_price}
+        return {'value': value}
+
 mrp_workcenter()
 
 
@@ -70,7 +81,7 @@ class mrp_routing(osv.osv):
     _description = 'Routing'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the routing without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
@@ -100,8 +111,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of operations this workcenter can do."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for doing one cycle."),
+            help="Number of iterations this workcenter has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this workcenter to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -179,7 +190,7 @@ class mrp_bom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Reference', size=16),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
                                  help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
                                  "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
@@ -311,7 +322,7 @@ class mrp_bom(osv.osv):
                     mult = (d + (m and 1.0 or 0.0))
                     cycle = mult * wc_use.cycle_nbr
                     result2.append({
-                        'name': bom.routing_id.name,
+                        'name': tools.ustr(wc_use.name) + ' - '  + tools.ustr(bom.product_id.name),
                         'workcenter_id': wc.id,
                         'sequence': level+(wc_use.sequence or 0),
                         'cycle': cycle,
@@ -322,6 +333,15 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
+    
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        bom_data = self.read(cr, uid, id, [], context=context)
+        default.update({'name': bom_data['name'] + ' ' + _('Copy')})
+        return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()
 
@@ -447,18 +467,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'priority desc, date_planned asc';
-    
+
     def _check_qty(self, cr, uid, ids):
         orders = self.browse(cr, uid, ids)
         for order in orders:
             if order.product_qty <= 0:
                 return False
         return True
-    
+
     _constraints = [
         (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
     ]
-    
+
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -466,7 +486,7 @@ class mrp_production(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -640,16 +660,16 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
-       
+
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
-        
+
         final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
             produced_qty = production_qty
-            
+
         for produced_product in production.move_created_ids2:
             if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
                 continue
@@ -659,7 +679,7 @@ class mrp_production(osv.osv):
             consumed_products = {}
             check = {}
             scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
-            
+
             for consumed_product in production.move_lines2:
                 consumed = consumed_product.product_qty
                 if consumed_product.scrapped:
@@ -672,9 +692,9 @@ class mrp_production(osv.osv):
                         if (len(production.move_lines2) - scrapped) > len(production.product_lines):
                             check[consumed_product.product_id.id] += consumed_product.product_qty
                             consumed = check[consumed_product.product_id.id]
-                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed 
+                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed
                         consumed_products[consumed_product.product_id.id] = rest_consumed
-            
+
             for raw_product in production.move_lines:
                 for f in production.product_lines:
                     if f.product_id.id == raw_product.product_id.id:
@@ -713,7 +733,7 @@ class mrp_production(osv.osv):
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
-        
+
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
@@ -738,7 +758,10 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'code': wc.code
+                        'ref': wc.code,
+                        'product_id': wc.product_id.id,
+                        'unit_amount': wc_line.hour,
+                        'product_uom_id': wc.product_id.uom_id.id
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -751,7 +774,10 @@ class mrp_production(osv.osv):
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
                         'journal_id': wc.costs_journal_id.id,
-                        'code': wc.code
+                        'ref': wc.code,
+                        'product_id': wc.product_id.id,
+                        'unit_amount': wc_line.cycle,
+                        'product_uom_id': wc.product_id.uom_id.id
                     } )
         return amount
 
@@ -828,7 +854,7 @@ class mrp_production(osv.osv):
                 'company_id': production.company_id.id,
             }
             res_final_id = move_obj.create(cr, uid, data)
-             
+
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
             for line in production.product_lines:
@@ -880,7 +906,7 @@ class mrp_production(osv.osv):
                     'company_id': production.company_id.id,
                 })
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                proc_ids.append(proc_id)                
+                proc_ids.append(proc_id)
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
             message = _("Manufacturing order '%s' is scheduled for the %s.") % (

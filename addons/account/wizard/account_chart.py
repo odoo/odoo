@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from osv import fields, osv
 
 class account_chart(osv.osv_memory):
@@ -80,8 +79,8 @@ class account_chart(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['periods'] = []
         if data['period_from'] and data['period_to']:

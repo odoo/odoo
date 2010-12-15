@@ -29,6 +29,7 @@
                 <field name="email" sum="# Mails"/>
                 <field name="delay_open"/>
                 <field name="delay_close"/>
+                <field name="planned_revenue"/>
              </tree>
             </field>
         </record>
@@ -79,7 +80,7 @@
                         <filter icon="terp-go-month" string="    Month-1    " separator="1"
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Leads/Opportunities created in last month"/>
-                            
+
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
                             string="Active"
@@ -93,10 +94,9 @@
                             string="Closed"
                             domain="[('state','=','done')]"
                             help="Leads/Opportunities which are in done state"/>
-                            
+
                         <separator orientation="vertical" />
                         <field name="section_id"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
                             <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
@@ -111,7 +111,7 @@
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
+                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
                         <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>
@@ -127,21 +127,22 @@
                         <filter string="Salesman" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]" 
+                            domain="[]"
                             context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
-                            context="{'group_by':'company_id'}" />
+                            context="{'group_by':'company_id'}" 
+                            groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection"
+                        <filter string="Category" name="Category" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
-                        <filter string="Campaign" icon="terp-stock_symbol-selection"
+                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
-                        <filter string="Channel" icon="terp-stock_symbol-selection"
+                        <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize"

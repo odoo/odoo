@@ -351,9 +351,9 @@ def _create_dta(obj, cr, uid, data, context=None):
         context = {}
     payment = payment_obj.browse(cr, uid, data['id'], context=context)
 
-    if not payment.mode or payment.mode.type.code != 'dta':
+    if not payment.mode:
         raise osv.except_osv(_('Error'),
-                _('No payment mode or payment type code invalid.'))
+                _('No payment mode'))
     bank = payment.mode.bank_id
     if not bank:
         raise osv.except_osv(_('Error'), _('No bank account for the company.'))
@@ -385,7 +385,6 @@ def _create_dta(obj, cr, uid, data, context=None):
         raise osv.except_osv(_('Error'),
                 _('No IBAN for the company bank account.'))
 
-    dta_line_obj = pool.get('account.dta.line')
     res_partner_bank_obj = pool.get('res.partner.bank')
 
     seq = 1
@@ -464,9 +463,9 @@ def _create_dta(obj, cr, uid, data, context=None):
             v['partner_city']= ''
             v['partner_zip']= ''
             v['partner_country']= ''
-            raise osv.except_osv('Error', 'No address defined \n' \
-                    'for the partner: ' + pline.partner_id.name + '\n' \
-                    'on line: ' + pline.name)
+            raise osv.except_osv(_('Error'), _('No address defined \n' \
+                    'for the partner: %s \n' \
+                    'on line: %s') % (pline.partner_id.name,pline.name))
 
         if pline.order_id.date_scheduled:
             date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')

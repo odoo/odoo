@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 00:42+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -23,12 +23,10 @@ msgid "Audit Trail"
 msgstr "Ίχνος"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
-"Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -36,31 +34,42 @@ msgid "Log"
 msgstr "Καταγραφή"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Εγγεγραμμένος"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "Παλιά τιμή: "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr ""
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "Δημιουργώ"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "Καταγραφή ίχνους"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Κατάσταση"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Πρόχειρο"
@@ -71,19 +80,16 @@ msgid "Old Value"
 msgstr "Παλιά τιμή"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
-
-#. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "Προβολή  καταγραφής"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
-msgstr "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -91,7 +97,7 @@ msgid "Method"
 msgstr "Μέθοδος"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
 msgstr "Καταγραφή απο"
 
@@ -106,14 +112,21 @@ msgid "Resource Id"
 msgstr "Ταυτότητα πηγής"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "Εγγραφή"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
+msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
-msgstr "Audittrails"
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Χρήστες"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -121,16 +134,12 @@ msgid "Log Lines"
 msgstr "Γραμμές καταγραφής"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Εγγράφομαι"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Κανόνες"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "Ανάγνωση"
-
-#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -142,7 +151,7 @@ msgid "AuditTrail Rule"
 msgstr "Κανόνες καταγραφής"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
 msgstr "Σύνδεση με"
 
@@ -152,27 +161,47 @@ msgid "New Value Text: "
 msgstr "Νέα τιμή κειμένου: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
 msgstr ""
-"Επιστρέπει στον Διαχειριστή να ακολουθεί τα ίχνη κάθε λειτουργίας του χρήστη "
-"σε όλα τα αντικείμενα του συστήματος.\n"
-"    Εισάγεται κανόνες για ανάγνωση, εγγραφή, δημιουργία και διαγραφή στα "
-"αντικείμενα και τα ημερολόγια ελέγχου."
 
 #. module: audittrail
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Παλιά τιμή: "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Ημερομηνία"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "Χρήστης"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -180,24 +209,25 @@ msgid "Old Value Text : "
 msgstr "Παλιά τιμή κειμένου: "
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Λανθασμένο XML για αρχιτεκτονική όψης!"
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Όνομα"
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr ""
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
 msgstr "Γραμμές ημερολογίου"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Εγγεγραμμένοι Κανόνες"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -210,9 +240,27 @@ msgid "AuditTrail Rules"
 msgstr "Κανόνες διαδρομής ελέγχου"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
-msgstr "ελεγκτική ιχνηλάτηση.κανόνες"
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Χρήστης"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -220,14 +268,9 @@ msgid "UnSubscribe"
 msgstr "Διαγραφείτε"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr "Εγγραφές ημερολογίου"
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
-msgstr "ελεγκτική ιχνηλάτηση.ημερολόγιο"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -235,12 +278,17 @@ msgid "Field Description"
 msgstr "Περιγραφή πεδίου"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "Διαγραφή"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
 msgstr "Άνοιγμα ημερολογίων"
 
@@ -255,29 +303,9 @@ msgid "Rule Name"
 msgstr "Όνομα Κανόνα"
 
 #. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "Αναγνώσεις ημερολογίων"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Αρχεία καταγραφής"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "Νέα τιμή"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "Δείτε τα αρχεία καταγραφής"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "Δημιουργία αρχείων καταγραφής"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -285,9 +313,15 @@ msgid "AuditTrail Logs"
 msgstr "παρακολούθηση της πόρειας των αρχείων καταγραφής"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Κανόνες"
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -295,9 +329,11 @@ msgid "New Value : "
 msgstr "Νέα τιμή : "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "Χρήστες"
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -305,11 +341,102 @@ msgid "Old value Text"
 msgstr "Παλιά τιμή κειμένου"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "Ακύρωση"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "Διαγραφή αρχείων καταγραφής"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr ""
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+
+#~ msgid "Create"
+#~ msgstr "Δημιουργώ"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
+#~ msgid "Write"
+#~ msgstr "Εγγραφή"
+
+#~ msgid "Audittrails"
+#~ msgstr "Audittrails"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "Read"
+#~ msgstr "Ανάγνωση"
+
+#~ msgid "Subscribe"
+#~ msgstr "Εγγράφομαι"
+
+#~ msgid "Name"
+#~ msgstr "Όνομα"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Λανθασμένο XML για αρχιτεκτονική όψης!"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Επιστρέπει στον Διαχειριστή να ακολουθεί τα ίχνη κάθε λειτουργίας του χρήστη "
+#~ "σε όλα τα αντικείμενα του συστήματος.\n"
+#~ "    Εισάγεται κανόνες για ανάγνωση, εγγραφή, δημιουργία και διαγραφή στα "
+#~ "αντικείμενα και τα ημερολόγια ελέγχου."
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Εγγεγραμμένοι Κανόνες"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "ελεγκτική ιχνηλάτηση.κανόνες"
+
+#~ msgid "Delete"
+#~ msgstr "Διαγραφή"
+
+#~ msgid "Log writes"
+#~ msgstr "Εγγραφές ημερολογίου"
+
+#~ msgid "audittrail.log"
+#~ msgstr "ελεγκτική ιχνηλάτηση.ημερολόγιο"
+
+#~ msgid "Log reads"
+#~ msgstr "Αναγνώσεις ημερολογίων"
+
+#~ msgid "Logs"
+#~ msgstr "Αρχεία καταγραφής"
+
+#~ msgid "Log creates"
+#~ msgstr "Δημιουργία αρχείων καταγραφής"
+
+#~ msgid "View Logs"
+#~ msgstr "Δείτε τα αρχεία καταγραφής"
+
+#~ msgid "Log deletes"
+#~ msgstr "Διαγραφή αρχείων καταγραφής"

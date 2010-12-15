@@ -6,28 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 03:58+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-01 09:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
+#: model:ir.model,name:event_project.model_event_project
+msgid "Event Project"
+msgstr "Evenement project"
 
 #. module: event_project
-#: model:ir.actions.wizard,name:event_project.wizard_event_task
-msgid "Tasks"
-msgstr "Taken"
+#: field:event.project,date:0
+msgid "Date End"
+msgstr "Einddatum"
 
 #. module: event_project
-#: wizard_button:event.project,init,done:0
+#: view:event.project:0
 msgid "Ok"
 msgstr "Ok"
 
@@ -36,29 +36,61 @@ msgstr "Ok"
 msgid ""
 "Organization and management of events.\n"
 "\n"
-"    This module allow you to create retro planning for managing your "
+"    This module allows you to create retro planning for managing your "
 "events.\n"
 msgstr ""
-"Organisatie en management van evenementen.\n"
+"Organisatie en beheer van evenementen.\n"
 "\n"
-"    Deze module stelt u in staat om evenementen achterwaarts te plannen.\n"
+"    Deze module laat u een retro-planning maken voor uw evenementen.\n"
+
+#. module: event_project
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
+msgstr ""
+"DIt is een sjabloon project. Project van evenement is een duplicaat van dit "
+"sjabloon. Na klikken van 'Retro-planning maken', wordt het nieuwe project "
+"gedupliceerd van dit sjabloon project."
+
+#. module: event_project
+#: view:event.project:0
+#: model:ir.actions.act_window,name:event_project.action_event_project
+msgid "Retro-Planning"
+msgstr "Retro-planning"
 
 #. module: event_project
 #: view:event.event:0
-msgid "Remaining Tasks"
-msgstr "Resterende taken"
+msgid "Create Retro-Planning"
+msgstr "Retro-planning maken"
 
 #. module: event_project
-#: model:ir.module.module,shortdesc:event_project.module_meta_information
-msgid "Event - Project"
-msgstr "Evenement - Project"
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: event_project
 #: field:event.event,project_id:0
-#: wizard_field:event.project,init,project_id:0
-#: model:ir.actions.wizard,name:event_project.event_wiz
 msgid "Project"
 msgstr "Project"
+
+#. module: event_project
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr "Projectsjabloon"
+
+#. module: event_project
+#: model:ir.module.module,shortdesc:event_project.module_meta_information
+msgid "Event Project - Create Retro-Planning to manage your Events"
+msgstr ""
+"Evenement project - Retro-planning maken om uw evenementen te beheren."
+
+#. module: event_project
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr "Taken"
 
 #. module: event_project
 #: field:event.event,task_ids:0
@@ -66,17 +98,22 @@ msgid "Project tasks"
 msgstr "Projecttaken"
 
 #. module: event_project
-#: wizard_button:event.project,init,end:0
-msgid "Cancel"
-msgstr "Annuleren"
+#: view:event.project:0
+msgid "Close"
+msgstr "Afsluiten"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Create Retro-Planning"
-msgstr "Maak retro-planning"
+#: field:event.project,date_start:0
+msgid "Date Start"
+msgstr "Startdatum"
 
 #. module: event_project
-#: wizard_view:event.project,init:0
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr ""
+
+#. module: event_project
+#: model:ir.model,name:event_project.model_event_event
 msgid "Event"
 msgstr "Evenement"
 
@@ -84,3 +121,42 @@ msgstr "Evenement"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Taakbeheer"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Remaining Tasks"
+#~ msgstr "Resterende taken"
+
+#~ msgid "Event - Project"
+#~ msgstr "Evenement - Project"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"
+#~ msgstr ""
+#~ "Organisatie en management van evenementen.\n"
+#~ "\n"
+#~ "    Deze module stelt u in staat om evenementen achterwaarts te plannen.\n"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciaal teken bevatten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

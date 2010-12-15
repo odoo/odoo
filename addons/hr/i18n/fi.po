@@ -7,32 +7,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-03 04:55+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-10-30 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
-#: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Openerp user"
 msgstr "OpenERP käyttäjä"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.edit_workgroup
-#: model:ir.ui.menu,name:hr.menu_edit_workgroup
-msgid "Working Time Categories"
-msgstr "Työaika kategoriat"
+#: view:hr.job:0
+#: field:hr.job,requirements:0
+msgid "Requirements"
+msgstr ""
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
 msgstr "Virhe! Et voi luoda itseään toistavia osastoja."
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Link the employee to information"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -41,19 +45,24 @@ msgstr "Vakuutustunnus"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
+#: model:ir.ui.menu,name:hr.menu_hr_deshboard
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
 msgstr "Henkilöstön hallinta"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Sunday"
-msgstr "Sunnuntai"
+#: view:hr.department:0
+#: view:hr.employee:0
+#: view:hr.job:0
+msgid "Group By..."
+msgstr ""
 
 #. module: hr
-#: view:res.users:0
-msgid "Parents"
-msgstr "Vanhemmat"
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr ""
 
 #. module: hr
 #: constraint:ir.actions.act_window:0
@@ -61,52 +70,109 @@ msgid "Invalid model name in the action definition."
 msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
 
 #. module: hr
-#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: view:res.users:0
 msgid "Department"
 msgstr "Osasto"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Contact  of employee"
-msgstr "Työntekijän yhteys"
+#: help:hr.installer,hr_attendance:0
+msgid "Simplifies the management of employee's attendances."
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr "Työsähköposti"
+#: view:hr.job:0
+msgid "Mark as Old"
+msgstr ""
 
 #. module: hr
-#: field:hr.timesheet.group,name:0
-msgid "Group name"
-msgstr "Ryhmän nimi"
+#: view:hr.job:0
+msgid "Jobs"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:0
+msgid "In Recruitment"
+msgstr ""
+
+#. module: hr
+#: view:hr.installer:0
+msgid "title"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,company_id:0
-#: field:hr.employee,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Friday"
-msgstr "Perjantai"
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected in Recruitment"
+msgstr ""
 
 #. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "Ylempi osasto"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Holidays"
+msgstr ""
 
 #. module: hr
-#: view:hr.department:0
+#: help:hr.installer,hr_holidays:0
+msgid "Tracks employee leaves, allocation requests and planning."
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_marital_status
+msgid "Employee Marital Status"
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,partner_id:0
+msgid ""
+"Partner that is related to the current employee. Accounting transaction will "
+"be written on this partner belongs to employee."
+msgstr ""
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Link a user to an employee"
+msgstr ""
+
+#. module: hr
+#: field:hr.installer,hr_contract:0
+msgid "Employee's Contracts"
+msgstr ""
+
+#. module: hr
+#: help:hr.installer,hr_payroll:0
+msgid "Generic Payroll system."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "Huomautukset"
+msgid "My Departments Employee"
+msgstr ""
 
 #. module: hr
-#: field:hr.timesheet,hour_from:0
-msgid "Work from"
-msgstr "Työaika alkaen"
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,passport_id:0
+msgid "Employee Passport Information"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Position"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -114,14 +180,27 @@ msgid "Employee Hierarchy"
 msgstr "Työntekijöiden hierarkia"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "Konfiguraatio"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid ""
+"The Related user field on the Employee form allows to link the OpenERP user "
+"(and her rights) to the employee."
+msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr "Naimaton"
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Recruitement"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "No of Employee"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -129,13 +208,23 @@ msgid "Female"
 msgstr "Nainen"
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr "Työaika kategoria"
+#: help:hr.installer,hr_timesheet_sheet:0
+msgid ""
+"Tracks and helps employees encode and validate timesheets and attendances."
+msgstr ""
+
+#. module: hr
+#: field:hr.installer,hr_evaluation:0
+msgid "Periodic Evaluations"
+msgstr ""
+
+#. module: hr
+#: field:hr.installer,hr_timesheet_sheet:0
+msgid "Timesheets"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
 msgstr "Työntekijöiden rakenne"
 
@@ -143,6 +232,11 @@ msgstr "Työntekijöiden rakenne"
 #: view:hr.employee:0
 msgid "Social IDs"
 msgstr "Henkilötunnukset"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employee with that job."
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -155,27 +249,49 @@ msgid "Child Categories"
 msgstr "Alakategoriat"
 
 #. module: hr
+#: view:hr.job:0
+#: field:hr.job,description:0
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Description"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "Toimiston sijainti"
 
 #. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
-#: field:hr.employee,name:0
+#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Työntekijä"
 
 #. module: hr
-#: field:hr.timesheet.group,manager:0
-msgid "Workgroup manager"
-msgstr "Työryhmän johtaja"
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Other information"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
-msgstr "Alaiset"
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Työosoite"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -183,19 +299,42 @@ msgid "Reporting"
 msgstr "Raportointi"
 
 #. module: hr
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+msgid "Human Resources Dashboard"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
+msgid "Job"
+msgstr ""
+
+#. module: hr
+#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "Jäsenet"
 
 #. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "Henkilötunnus"
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "Konfiguraatio"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid "Fill up contact information"
-msgstr "Täytä yhteystiedot"
+#: view:hr.employee:0
+msgid "Categories"
+msgstr ""
+
+#. module: hr
+#: field:hr.job,expected_employees:0
+msgid "Expected Employees"
+msgstr ""
 
 #. module: hr
 #: constraint:ir.ui.view:0
@@ -203,9 +342,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Divorced"
-msgstr "Eronnut"
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -213,10 +352,16 @@ msgid "Parent Category"
 msgstr "Yläkategoria"
 
 #. module: hr
+#: constraint:hr.employee.category:0
+msgid "Error ! You cannot create recursive Categories."
+msgstr ""
+
+#. module: hr
+#: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
-#: model:ir.ui.menu,name:hr.menu_department_def
-#: model:ir.ui.menu,name:hr.menu_department_tree
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: view:res.users:0
+#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Osastot"
 
@@ -226,14 +371,9 @@ msgid "Employee Contact"
 msgstr "Työntekijän yhteystiedot"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Maried"
-msgstr "Naimisissa"
-
-#. module: hr
-#: field:hr.timesheet,tgroup_id:0
-msgid "Employee's timesheet group"
-msgstr "Työntekijän aikatauluryhmä"
+#: view:board.board:0
+msgid "My Board"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -241,9 +381,10 @@ msgid "Male"
 msgstr "Mies"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr "Luo OpenERP käyttäjä"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "Työntekijän kategoriat"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -252,9 +393,21 @@ msgid "Employee Category"
 msgstr "Työntekijäkategoria"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Tuesday"
-msgstr "Tiistai"
+#: field:hr.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: hr
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr ""
+
+#. module: hr
+#: help:hr.installer,hr_evaluation:0
+msgid ""
+"Lets you create and manage the periodic evaluation and performance review of "
+"employees."
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -262,15 +415,25 @@ msgid "hr.department"
 msgstr "hr.department"
 
 #. module: hr
-#: field:hr.employee,user_id:0
-msgid "Related User"
-msgstr "Liittyvä käyttäjä"
+#: help:hr.employee,parent_id:0
+msgid "It is linked with manager of Department"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,category_id:0
+#: field:hr.installer,hr_recruitment:0
+msgid "Recruitment Process"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "Kategoria"
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,note:0
@@ -283,14 +446,24 @@ msgid "Contact Information"
 msgstr "Yhteystiedot"
 
 #. module: hr
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr_manager
+msgid "HR Manager Dashboard"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr "Asema"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Monday"
-msgstr "Maanantai"
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -299,17 +472,22 @@ msgid "Categories structure"
 msgstr "Kategorioiden rakenne"
 
 #. module: hr
-#: field:hr.timesheet,dayofweek:0
-msgid "Day of week"
-msgstr "Viikonpäivä"
+#: field:hr.employee,partner_id:0
+msgid "unknown"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,birthday:0
-msgid "Birthday"
-msgstr "Syntymäaika"
+#: field:hr.installer,hr_holidays:0
+msgid "Holidays / Leaves Management"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,active:0
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "Henkilötunnus"
+
+#. module: hr
+#: view:hr.employee:0
 msgid "Active"
 msgstr "Aktiivinen"
 
@@ -319,60 +497,71 @@ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Virhe! Et voi luoda itseään toistavaa työntekijähierarkiaa."
 
 #. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract Process"
-msgstr "Työntekijän sopimusprosessi"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Create OpenERP User"
-msgstr "Luo OpenERP käyttäjä"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee Complete Form"
-msgstr "Työntekijän täysi lomake"
-
-#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "Yritykset"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Wednesday"
-msgstr "Keskiviikko"
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid ""
+"In the Employee form, there are different kind of information like Contact "
+"information."
+msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Työntekijän kategoriat"
+#: help:hr.job,expected_employees:0
+msgid "Required number of Employees in total for that job."
+msgstr ""
 
 #. module: hr
-#: field:hr.timesheet,date_from:0
-msgid "Starting date"
-msgstr "Aloituspäivämäärä"
+#: selection:hr.job,state:0
+msgid "Old"
+msgstr ""
 
 #. module: hr
-#: field:res.users,parent_id:0
-msgid "Parent Users"
-msgstr "Ylemmät käyttäjät"
+#: field:hr.employee.marital.status,description:0
+msgid "Status Description"
+msgstr ""
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Työosoite"
+#: view:hr.job:0
+#: field:hr.job,state:0
+msgid "State"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,marital:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr.action_hr_marital_status
+#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "Siviilisääty"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet
-msgid "Timesheet Line"
-msgstr "Tuntilistan rivi"
+#: help:hr.installer,hr_recruitment:0
+msgid "Helps you manage and streamline your recruitment process."
+msgstr ""
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,photo:0
+msgid "Photo"
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "res.users"
+msgstr ""
+
+#. module: hr
+#: field:hr.installer,hr_payroll_account:0
+msgid "Payroll Accounting"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -386,26 +575,26 @@ msgid ""
 msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
 
 #. module: hr
-#: view:hr.timesheet:0
-#: field:hr.timesheet.group,timesheet_id:0
-#: model:ir.model,name:hr.model_hr_timesheet_group
-msgid "Working Time"
-msgstr "Työaika"
+#: view:res.users:0
+msgid "Current Activity"
+msgstr ""
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Thursday"
-msgstr "Torstai"
+#: help:hr.installer,hr_expense:0
+msgid ""
+"Tracks and manages employee expenses, and can automatically re-invoice "
+"clients if the expenses are project-related."
+msgstr ""
 
 #. module: hr
-#: field:hr.timesheet,hour_to:0
-msgid "Work to"
-msgstr "Työaika päättyy"
+#: view:hr.job:0
+msgid "Current"
+msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr "Muu"
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "Ylempi osasto"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -418,6 +607,39 @@ msgid "Home Address"
 msgstr "Kotiosoite"
 
 #. module: hr
+#: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendances"
+msgstr ""
+
+#. module: hr
+#: view:hr.employee.marital.status:0
+#: view:hr.job:0
+msgid "Description"
+msgstr ""
+
+#. module: hr
+#: help:hr.installer,hr_contract:0
+msgid "Extends employee profiles to help manage their contracts."
+msgstr ""
+
+#. module: hr
+#: field:hr.installer,hr_payroll:0
+msgid "Payroll"
+msgstr ""
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr ""
+
+#. module: hr
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Position"
+msgstr ""
+
+#. module: hr
 #: view:hr.department:0
 msgid "department"
 msgstr "osasto"
@@ -428,12 +650,30 @@ msgid "Nationality"
 msgstr "Kansallisuus"
 
 #. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other ID"
-msgstr "Muu tunnus"
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Huomautukset"
 
 #. module: hr
-#: field:hr.timesheet,name:0
+#: model:ir.model,name:hr.model_hr_installer
+msgid "hr.installer"
+msgstr ""
+
+#. module: hr
+#: view:board.board:0
+msgid "HR Manager Board"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr ""
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Nimi"
 
@@ -444,10 +684,19 @@ msgstr "Sukupuoli"
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.job,employee_ids:0
+#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "Työntekijät"
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,name:0
@@ -455,39 +704,165 @@ msgid "Department Name"
 msgstr "Osaston nimi"
 
 #. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr ""
+
+#. module: hr
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Creation of a OpenERP user"
+msgstr ""
+
+#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Alaosastot"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job
+msgid "Job Positions"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
-msgid "Job Information"
-msgstr "Työnkuvaus"
+#: field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr ""
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Fill up employee's contact information"
-msgstr "Täytä työntekijän yhteystiedot"
+#: field:hr.installer,hr_expense:0
+msgid "Expenses"
+msgstr ""
 
 #. module: hr
+#: view:hr.department:0
 #: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Esimies"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-msgid "All Employees"
-msgstr "Kaikki työntekijät"
+#: help:hr.installer,hr_payroll_account:0
+msgid "Generic Payroll system Integrated with Accountings."
+msgstr ""
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Saturday"
-msgstr "Lauantai"
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "Alaiset"
 
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_new
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_new
-msgid "New Employee"
-msgstr "Uusi työntekijä"
+#~ msgid "Sunday"
+#~ msgstr "Sunnuntai"
+
+#~ msgid "Unmaried"
+#~ msgstr "Naimaton"
+
+#~ msgid "Work Email"
+#~ msgstr "Työsähköposti"
+
+#~ msgid "Workgroup manager"
+#~ msgstr "Työryhmän johtaja"
+
+#~ msgid "Fill up contact information"
+#~ msgstr "Täytä yhteystiedot"
+
+#~ msgid "Maried"
+#~ msgstr "Naimisissa"
+
+#~ msgid "Divorced"
+#~ msgstr "Eronnut"
+
+#~ msgid "Related User"
+#~ msgstr "Liittyvä käyttäjä"
+
+#~ msgid "Employee's timesheet group"
+#~ msgstr "Työntekijän aikatauluryhmä"
+
+#~ msgid "Create openerp user"
+#~ msgstr "Luo OpenERP käyttäjä"
+
+#~ msgid "Day of week"
+#~ msgstr "Viikonpäivä"
+
+#~ msgid "Create OpenERP User"
+#~ msgstr "Luo OpenERP käyttäjä"
+
+#~ msgid "Starting date"
+#~ msgstr "Aloituspäivämäärä"
+
+#~ msgid "New Employee"
+#~ msgstr "Uusi työntekijä"
+
+#~ msgid "Job Information"
+#~ msgstr "Työnkuvaus"
+
+#~ msgid "All Employees"
+#~ msgstr "Kaikki työntekijät"
+
+#~ msgid "Fill up employee's contact information"
+#~ msgstr "Täytä työntekijän yhteystiedot"
+
+#~ msgid "Timesheet Line"
+#~ msgstr "Tuntilistan rivi"
+
+#~ msgid "Group name"
+#~ msgstr "Ryhmän nimi"
+
+#~ msgid "Friday"
+#~ msgstr "Perjantai"
+
+#~ msgid "Tuesday"
+#~ msgstr "Tiistai"
+
+#~ msgid "Wednesday"
+#~ msgstr "Keskiviikko"
+
+#~ msgid "Birthday"
+#~ msgstr "Syntymäaika"
+
+#~ msgid "Monday"
+#~ msgstr "Maanantai"
+
+#~ msgid "Working Time"
+#~ msgstr "Työaika"
+
+#~ msgid "Thursday"
+#~ msgstr "Torstai"
+
+#~ msgid "Other"
+#~ msgstr "Muu"
+
+#~ msgid "Saturday"
+#~ msgstr "Lauantai"
+
+#~ msgid "Parents"
+#~ msgstr "Vanhemmat"
+
+#~ msgid "Working Time Categories"
+#~ msgstr "Työaika kategoriat"
+
+#~ msgid "Contact  of employee"
+#~ msgstr "Työntekijän yhteys"
+
+#~ msgid "Work from"
+#~ msgstr "Työaika alkaen"
+
+#~ msgid "Working Time Category"
+#~ msgstr "Työaika kategoria"
+
+#~ msgid "Employee Complete Form"
+#~ msgstr "Työntekijän täysi lomake"
+
+#~ msgid "Employee Contract Process"
+#~ msgstr "Työntekijän sopimusprosessi"
+
+#~ msgid "Parent Users"
+#~ msgstr "Ylemmät käyttäjät"
+
+#~ msgid "Work to"
+#~ msgstr "Työaika päättyy"
+
+#~ msgid "Other ID"
+#~ msgstr "Muu tunnus"

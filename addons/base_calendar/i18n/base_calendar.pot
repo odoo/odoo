@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:16+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:16+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43:14+0000\n"
+"PO-Revision-Date: 2010-12-03 15:43:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,9 +38,8 @@ msgid "This property defines the list of date/time exceptions for a recurring ca
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: base_calendar
@@ -180,8 +179,8 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
 msgstr ""
 
 #. module: base_calendar
@@ -215,16 +214,15 @@ msgid "Tue"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -253,10 +251,9 @@ msgid "Days"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
 msgstr ""
 
 #. module: base_calendar
@@ -317,10 +314,9 @@ msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -428,11 +424,6 @@ msgstr ""
 #: field:calendar.event,attendee_ids:0
 #: field:calendar.todo,attendee_ids:0
 msgid "Attendees"
-msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: base_calendar
@@ -576,18 +567,8 @@ msgid "Delegrated To"
 msgstr ""
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
-msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: base_calendar
@@ -677,6 +658,12 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Privacy"
+msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
 msgstr ""
 
 #. module: base_calendar
@@ -795,9 +782,9 @@ msgid "Fri"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
 msgstr ""
 
 #. module: base_calendar
@@ -828,18 +815,8 @@ msgid "Attachment"
 msgstr ""
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
-msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: base_calendar
@@ -912,8 +889,10 @@ msgid "June"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
 msgstr ""
 
 #. module: base_calendar
@@ -973,6 +952,13 @@ msgid "Count"
 msgstr ""
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1023,6 +1009,12 @@ msgstr ""
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
+msgstr ""
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
 msgstr ""
 
 #. module: base_calendar
@@ -1102,6 +1094,11 @@ msgstr ""
 #: field:calendar.event,recurrent_id:0
 #: field:calendar.todo,recurrent_id:0
 msgid "Recurrent ID date"
+msgstr ""
+
+#. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: base_calendar
@@ -1266,9 +1263,8 @@ msgid "Month"
 msgstr ""
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
 msgstr ""
 
 #. module: base_calendar
@@ -1325,6 +1321,12 @@ msgstr ""
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
+msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
 msgstr ""
 
 #. module: base_calendar
@@ -1543,8 +1545,8 @@ msgid "Duration"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid "Create specific calendar alarms that can be assigned to calendar events or meetings."
 msgstr ""
 
 #. module: base_calendar

@@ -19,13 +19,12 @@
 ##############################################################################
 
 import time
-
 import pooler
-import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
+from tools.translate import _
 
-class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
+class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         super(report_pl_account_horizontal, self).__init__(cr, uid, name, context=context)
@@ -57,17 +56,24 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         })
         self.context = context
 
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_pl_account_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
+
 
     def final_result(self):
         return self.res_pl
 
     def sum_dr(self):
-        if self.res_pl['type'] == 'Net Profit C.F.B.L.':
+        if self.res_pl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_pl['type'] == 'Net Loss C.F.B.L.':
+        if self.res_pl['type'] == _('Net Loss'):
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr
 
@@ -76,7 +82,6 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         account_pool = db_pool.get('account.account')
-        year_pool = db_pool.get('account.fiscalyear')
 
         types = [
             'expense',
@@ -114,10 +119,10 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                     else:
                         accounts_temp.append(account)
             if self.result_sum_dr > self.result_sum_cr:
-                self.res_pl['type'] = 'Net Loss C.F.B.L.'
+                self.res_pl['type'] = _('Net Loss')
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:
-                self.res_pl['type'] = 'Net Profit C.F.B.L.'
+                self.res_pl['type'] = _('Net Profit')
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
             cal_list[typ] = self.result[typ]

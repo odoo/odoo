@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-19 12:50+0000\n"
-"PO-Revision-Date: 2010-09-29 09:16+0000\n"
+"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"PO-Revision-Date: 2010-11-25 19:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -25,8 +25,6 @@ msgstr "Үйл явдал эхлэх"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Hourly"
 msgstr "Цаг бүр"
 
@@ -44,15 +42,19 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Цагийн бүс"
+
+#. module: base_calendar
 #: field:calendar.event.edit.all,name:0
 msgid "Title"
 msgstr "Гарчиг"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
 msgstr "Сарын"
@@ -61,6 +63,11 @@ msgstr "Сарын"
 #: view:calendar.attendee:0
 msgid "Invited User"
 msgstr "Урьсан хэрэглэгч"
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "Select range to Exclude"
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -95,10 +102,16 @@ msgid "Fourth"
 msgstr "4 дэх"
 
 #. module: base_calendar
+#: help:calendar.event,count:0
+#: help:calendar.todo,count:0
+msgid "Repeat max that times"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
-msgstr ""
+msgstr "Үзүүлэх"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,day:0
@@ -118,6 +131,8 @@ msgstr "Нийтийн"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr "Хугацаа"
@@ -169,9 +184,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr ""
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Үндсэн дохио"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -182,7 +197,7 @@ msgstr ""
 #: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_to:0
 msgid "Delegated To"
-msgstr ""
+msgstr "рүү шилжүүлэх"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,we:0
@@ -194,7 +209,7 @@ msgstr "Лх"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Show time as"
-msgstr ""
+msgstr "Үзүүлэх цаг"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,tu:0
@@ -204,19 +219,16 @@ msgid "Tue"
 msgstr "Мя"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Жил тутам"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -237,6 +249,8 @@ msgstr "Өрөө"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr "Өдрүүд"
@@ -262,9 +276,9 @@ msgid "Chair Person"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.alarm,action:0
-msgid "Procedure"
-msgstr "Хийх ажил"
+#: view:calendar.event:0
+msgid "Exclude range"
+msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -279,6 +293,8 @@ msgstr "Цуцлагдсан"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
 msgstr "Минут"
@@ -300,23 +316,25 @@ msgstr "Урилгын төрөл"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Secondly"
 msgstr "Хоёрдугаарт"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Үйл явцын огноо"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr ""
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
 msgstr "Груплэх"
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,email:0
+msgid "Provide external email address who will receive this invitation."
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.attendee,partner_id:0
@@ -329,10 +347,9 @@ msgid "Specify the type of Invitation"
 msgstr ""
 
 #. module: base_calendar
-#: help:calendar.event,exrule:0
-#: help:calendar.todo,exrule:0
-msgid ""
-"defines a rule or repeating pattern for an exception to a recurrence set"
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Years"
 msgstr ""
 
 #. module: base_calendar
@@ -344,6 +361,12 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
+msgstr ""
+
+#. module: base_calendar
+#: help:calendar.event,interval:0
+#: help:calendar.todo,interval:0
+msgid "Repeat every x"
 msgstr ""
 
 #. module: base_calendar
@@ -442,6 +465,11 @@ msgid "Reminder details"
 msgstr ""
 
 #. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
 msgstr ""
@@ -479,6 +507,11 @@ msgid "Event Detail"
 msgstr "Үйл явдлын мэдээлэл"
 
 #. module: base_calendar
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Run"
 msgstr ""
@@ -499,6 +532,12 @@ msgstr "Итгэмжлэгдсэн"
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
 msgid "Repeat Until"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Seconds"
 msgstr ""
 
 #. module: base_calendar
@@ -575,6 +614,11 @@ msgid "Created"
 msgstr "Үүссэн"
 
 #. module: base_calendar
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
+msgid "Set Exclude range"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -582,9 +626,7 @@ msgstr "Хувийн"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
 msgstr "Өдөр тутмын"
@@ -608,6 +650,12 @@ msgid "Contact"
 msgstr "Гэрээ"
 
 #. module: base_calendar
+#: help:calendar.event,rrule_type:0
+#: help:calendar.todo,rrule_type:0
+msgid "Let the event automatically repeat at that interval"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Delegate"
@@ -619,11 +667,6 @@ msgstr "Төлөөлөгч"
 #: field:calendar.attendee,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
-
-#. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "Select data for ExRule"
-msgstr ""
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -731,6 +774,12 @@ msgid "Decline"
 msgstr "Бууралт"
 
 #. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Weeks"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Group"
 msgstr "Груп"
@@ -814,7 +863,6 @@ msgstr "Сануулга"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -879,9 +927,11 @@ msgid "June"
 msgstr "6 сар"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Үндсэн дохио"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Үйл явцын огноо"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -896,21 +946,17 @@ msgid "Delegated From"
 msgstr "Хаанаас төлөөлсөн"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,user_id:0
 msgid "User"
 msgstr "Хэрэглэгч"
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "ExRule"
-msgstr ""
-
-#. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
-msgstr "Огноо"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
+msgstr "Идэвхитэй"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -922,6 +968,11 @@ msgstr "11 сар"
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
+msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+msgid "Data"
 msgstr ""
 
 #. module: base_calendar
@@ -998,12 +1049,10 @@ msgid "Summary"
 msgstr "Дүгнэлт"
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
-msgstr "Идэвхитэй"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
+msgstr "Огноо"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1014,6 +1063,11 @@ msgstr "Урих"
 #: field:calendar.alarm,action:0
 msgid "Action"
 msgstr "Үйл ажиллагаа"
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,type:0
+msgid "Select whom you want to Invite"
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.alarm,duration:0
@@ -1050,9 +1104,7 @@ msgstr "Үйл явдал хайх"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
 msgstr "7 хоног тутмын"
@@ -1137,6 +1189,16 @@ msgid "Tuesday"
 msgstr "Мягмар"
 
 #. module: base_calendar
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.alarm,action:0
+msgid "Procedure"
+msgstr "Хийх ажил"
+
+#. module: base_calendar
 #: help:calendar.alarm,description:0
 msgid ""
 "Provides a more complete                             description of the "
@@ -1170,6 +1232,7 @@ msgid "Tentative"
 msgstr "Шалгуур"
 
 #. module: base_calendar
+#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
@@ -1220,6 +1283,14 @@ msgid "Details"
 msgstr "Нарийвчлал"
 
 #. module: base_calendar
+#: help:calendar.event,exrule:0
+#: help:calendar.todo,exrule:0
+msgid ""
+"Defines a rule or repeating pattern of time to exclude from the recurring "
+"rule."
+msgstr ""
+
+#. module: base_calendar
 #: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
@@ -1227,10 +1298,9 @@ msgid "Month"
 msgstr "Сар"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Хүмүүсийг урих"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr "Гадаад Имэйл"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1291,6 +1361,12 @@ msgid "ir.values"
 msgstr ""
 
 #. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Хүмүүсийг урих"
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
 msgstr "Объект"
@@ -1320,8 +1396,6 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Minutely"
 msgstr "Минут тутамд"
 
@@ -1342,6 +1416,12 @@ msgstr "Дуусах огноо"
 #: selection:calendar.todo,month_list:0
 msgid "February"
 msgstr "2 сар"
+
+#. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Months"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
@@ -1461,10 +1541,10 @@ msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Цагийн бүс"
+#: help:calendar.event,alarm_id:0
+#: help:calendar.todo,alarm_id:0
+msgid "Set an alarm at this time, before the event occurs"
+msgstr ""
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
@@ -1476,13 +1556,6 @@ msgstr "Дотоод хэрэглэгч"
 #: view:calendar.event:0
 msgid "Accept"
 msgstr "Зөвшөөрөл"
-
-#. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
-msgstr "Бямба"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1514,9 +1587,11 @@ msgid "Duration"
 msgstr "Үргэлжлэх хугацаа"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
-msgstr "Гадаад Имэйл"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that can be assigned to calendar events or "
+"meetings."
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
@@ -1524,15 +1599,11 @@ msgid "Trigger Date"
 msgstr ""
 
 #. module: base_calendar
-#: help:calendar.alarm,attach:0
-msgid ""
-"* Points to a sound resource,                     which is rendered when the "
-"alarm is triggered for audio,\n"
-"                    * File which is intended to be sent as message "
-"attachments for email,\n"
-"                    * Points to a procedure resource, which is invoked when  "
-"                    the alarm is triggered for procedure."
-msgstr ""
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr "Бямба"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0

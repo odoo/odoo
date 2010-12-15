@@ -194,7 +194,7 @@
         <record id="process_transition_saleinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a sale order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A sale order generates an invoice, as soon as it is confirmed by the salesman. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Depending on the Invoicing control of the sale order, the invoice can be based on delivered or on ordered quantities. Thus, a sale order can generates an invoice or a delivery order as soon as it is confirmed by the salesman.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_order0"/>
         </record>

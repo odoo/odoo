@@ -19,6 +19,18 @@
             </field>
         </record>
 
+	<record id="project_invoice_form_cutomer" model="ir.ui.view">
+            <field name="name">Inherit project form : Customer</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project_invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                </field>
+            </field>
+        </record>
+
         <record id="project_invoice_search" model="ir.ui.view">
             <field name="name">Inherit project search view : Invoicing Data</field>
             <field name="model">project.project</field>
@@ -27,15 +39,95 @@
             <field name="arch" type="xml">
                 <xpath expr='//filter[@string="Member"]' position='after'>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test" string="Invoiceble" domain="[('to_invoice','!=', False)]" help="Invoiceable Project"/>
+                    <filter icon="terp-camera_test" string="Invoiceable" domain="[('to_invoice','!=', False)]" help="Invoiceable Project"/>
                 </xpath>
             </field>
+        </record>
+        <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.search.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="arch" type="xml">
+                     <field name="account_id" position="replace">
+                    <field name="account_id" string="Project" />
+                </field>
+            </field>
+         </record>        
+        <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="account_id"  position="replace">
+                    <field name="account_id" string="Project"/>
+                </field>
+            </field>
+        </record>
+       <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="account_id"  position="replace">
+                    <field name="account_id" string="Project"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_filter_inherit_buttons" model="ir.ui.view">
+            <field name="name">account.analytic.line.inherit.select</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">search</field>
+			<field name="priority">10</field>
+            <field name="arch" type="xml">
+                <search string="Search Analytic Lines">
+                    <group col='6' colspan='4'>
+                        <field name="name"/>
+						<field name="date"/>
+                        <field name="account_id"/>
+                        <field name="user_id">
+                            <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                        </field>
+                    </group>
+					<newline/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="journal_id" widget="selection"/>
+                        <field name="product_id" widget="selection"/>
+                        <field name="amount" select="1"/>
+                    </group>
+                    <newline/>
+                    <group string="Group By..." expand="0">
+                        <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-green"/>
+                        <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Fin.Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+ 		<!-- Menus -->
+        <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
+            <field name="name">Bill Tasks Works</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
+			<field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
+			<field name="search_view_id" ref="view_account_analytic_line_filter_inherit_buttons"/>
+            <field name="help">This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically.</field>
         </record>
 
         <menuitem id="menu_project_billing" name="Invoicing"
                   parent="base.menu_main_pm" sequence="5"/>
         <menuitem id="menu_project_billing_line" name="Invoice Tasks Work"
-            parent="menu_project_billing" action="hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree"/>
+            parent="menu_project_billing" action="action_project_timesheet_bill_task"/>
         <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
                 parent="base.menu_main_pm" sequence="5"/>
     </data>

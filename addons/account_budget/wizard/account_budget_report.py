@@ -32,8 +32,8 @@ class account_budget_report(osv.osv_memory):
         'date_to': fields.date('End of period', required=True),
     }
     _defaults= {
-        'date_from': time.strftime('%Y-01-01'),
-        'date_to': time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def check_report(self, cr, uid, ids, context=None):

@@ -2,67 +2,74 @@
 <openerp>
     <data>
         <record model="ir.ui.view" id="view_calendar_collection_form">
-        <field name="name">Calendar Collections : Form</field>
-        <field name="model">document.directory</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Calendar Collections">
-                <field name="name" select="1" colspan="4"/>
-                <field name="user_id"/>
-                <field name="parent_id"/>
-                <field name="calendar_ids" colspan="4" nolabel="1"/>
-            </form>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="view_calendar_collection_tree">
-        <field name="name">Calendar Collections : Tree</field>
-        <field name="model">document.directory</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Calendar Collections" toolbar="1">
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
-            </tree>
-        </field>
-    </record>
+            <field name="name">Calendar Collections : Form</field>
+            <field name="model">document.directory</field>
+            <field name="priority">40</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Calendar Collections">
+                    <field name="name" select="1" colspan="4"/>
+                    <field name="user_id"/>
+                    <field name="parent_id"/>
+                    <field name="type"/>
+                    <field name="calendar_collection"/>
+                    <field name="storage_id"/>
+                    <field name="calendar_ids" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
 
-    <record model="ir.actions.act_window" id="action_calendar_collection_form">
-        <field name="name">Calendar Collections</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">document.directory</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('calendar_collection','=',True)]</field>
-    </record>
+        <record model="ir.ui.view" id="view_calendar_collection_tree">
+            <field name="name">Calendar Collections : Tree</field>
+            <field name="model">document.directory</field>
+            <field name="type">tree</field>
+            <field name="priority">40</field>
+            <field name="arch" type="xml">
+                <tree string="Calendar Collections" toolbar="1">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="user_id"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                    <field name="type"/>
+                    <field name="calendar_collection"/>
+                    <field name="storage_id"/>
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.actions.act_window" id="document.action_document_directory_form">
-        <field name="domain">[('calendar_collection','=',False)]</field>
-    </record>
+        <record model="ir.actions.act_window" id="action_calendar_collection_form">
+            <field name="name">Calendar Collections</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.directory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('calendar_collection','=',True)]</field>
+        </record>
 
-    <record id="action_dir_view1" model="ir.actions.act_window.view">
-        <field eval="10" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_calendar_collection_tree"/>
-        <field name="act_window_id" ref="action_calendar_collection_form"/>
-    </record>
-    <record id="action_dir_view2" model="ir.actions.act_window.view">
-        <field eval="20" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_calendar_collection_form"/>
-        <field name="act_window_id" ref="action_calendar_collection_form"/>
-    </record>
+        <record model="ir.actions.act_window" id="document.action_document_directory_form">
+            <field name="domain">[('calendar_collection','=',False)]</field>
+        </record>
 
-    <menuitem
-        id="menu_calendar"
-        name="Calendar"
-        parent="knowledge.menu_document_configuration"/>
+        <record id="action_dir_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_calendar_collection_tree"/>
+            <field name="act_window_id" ref="action_calendar_collection_form"/>
+        </record>
 
-    <menuitem
-        action="action_calendar_collection_form"
-        id="menu_calendar_collection"
-        parent="menu_calendar"/>
+        <record id="action_dir_view2" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_calendar_collection_form"/>
+            <field name="act_window_id" ref="action_calendar_collection_form"/>
+        </record>
+
+        <menuitem id="menu_calendar" name="Calendar"
+            parent="knowledge.menu_document_configuration" />
+
+        <menuitem action="action_calendar_collection_form"
+            id="menu_calendar_collection" parent="menu_calendar" />
 
         <record model="ir.ui.view" id="view_caldav_form">
             <field name="name">Calendar : Form</field>
@@ -100,7 +107,7 @@
                                             <separator string="Value Mapping" colspan="4" />
                                             <field name="mapping" select="1" colspan="4" nolabel="1" />
                                         </form>
-                                   </field>
+                                    </field>
                                 </form>
                                 <tree string="Calendar Lines" editable="bottom">
                                     <field name="name" select="1" />
@@ -118,45 +125,66 @@
         </record>
 
 
-    <record model="ir.ui.view" id="view_caldav_tree">
-        <field name="name">Calendar : Tree</field>
-        <field name="model">basic.calendar</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Calendars" toolbar="1">
-                <field name="name"/>
-                <field name="type"/>
-                <field name="user_id"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
-            </tree>
-        </field>
-    </record>
+        <record model="ir.ui.view" id="view_caldav_tree">
+            <field name="name">Calendar : Tree</field>
+            <field name="model">basic.calendar</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Calendars" toolbar="1">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="user_id"/>
+                    <field name="collection_id" required="1"/>
+                    <field name="has_webcal" groups="base.group_extended" />
+                    <field name="calendar_color" groups="base.group_extended" />
+                    <field name="calendar_order" groups="base.group_extended" />
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.actions.act_window" id="action_caldav_form">
-        <field name="name">Calendars</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">basic.calendar</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-    </record>
+        <record model="ir.ui.view" id="view_caldav_search">
+            <field name="name">Calendar: Search</field>
+            <field name="model">basic.calendar</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Calendars">
+                    <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
+                    <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
+                    <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="user_id" widget="selection">
+                        <filter icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)" string="MY"/>
+                    </field>
+                    <field name="collection_id" required="1"/>
+                </search>
+            </field>
+        </record>
 
-    <record id="action_caldav_view1" model="ir.actions.act_window.view">
-        <field eval="10" name="sequence"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_caldav_tree"/>
-        <field name="act_window_id" ref="action_caldav_form"/>
-    </record>
-    <record id="action_caldav_view2" model="ir.actions.act_window.view">
-        <field eval="20" name="sequence"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_caldav_form"/>
-        <field name="act_window_id" ref="action_caldav_form"/>
-    </record>
+        <record model="ir.actions.act_window" id="action_caldav_form">
+            <field name="name">Calendars</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">basic.calendar</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-    <menuitem
-        action="action_caldav_form"
-        id="menu_caldav_directories"
-        parent="menu_calendar"/>
+        <record id="action_caldav_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_caldav_tree"/>
+            <field name="act_window_id" ref="action_caldav_form"/>
+        </record>
+        <record id="action_caldav_view2" model="ir.actions.act_window.view">
+            <field eval="20" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_caldav_form"/>
+            <field name="act_window_id" ref="action_caldav_form"/>
+        </record>
+
+        <menuitem action="action_caldav_form"
+            id="menu_caldav_directories" parent="menu_calendar" />
+
     </data>
 </openerp>

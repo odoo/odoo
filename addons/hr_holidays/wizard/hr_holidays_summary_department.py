@@ -34,7 +34,7 @@ class hr_holidays_summary_dept(osv.osv_memory):
     }
 
     _defaults = {
-         'date_from': time.strftime('%Y-%m-01'),
+         'date_from': lambda *a: time.strftime('%Y-%m-01'),
          'holiday_type': 'Validated'
     }
 

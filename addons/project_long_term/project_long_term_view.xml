@@ -257,8 +257,8 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Phases" icon="terp-document-new" default="1"/>
-                        <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-camera_test"/>
+	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
+                        <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -287,7 +287,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
-            <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
+            <field name="context">{"search_default_current": 1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
             <field name="help">A project can be split into the different phases. For each phase, you can define your resources allocation, describe different tasks and link your phase to previous and next ones, add date constraints for the automated scheduling. Use the long term planning in order to planify your available human resources, convert your phases into a series of tasks when you start working on it.</field>
         </record>
@@ -297,7 +297,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-             <field name="context">{'search_default_responsible_id':uid,'search_default_project':1}</field>
+             <field name="context">{"search_default_current": 1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
@@ -346,13 +346,39 @@
             </field>
         </record>
 
+         <record id="view_phase_task_search_form_group" model="ir.ui.view">
+            <field name="name">phase.task.search.form.group</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+            <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" position="after">
+            <filter string="Project Phase" name="group_project_id_phase" icon="terp-folder-violet" domain="[]" context="{'group_by':'phase_id'}" groups="base.group_extended"/>
+            </filter>
+            </field>
+        </record>
+
+         <record id="view_phase_task_search_form_tree" model="ir.ui.view">
+            <field name="name">phase.task.search.form.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+                <field name="project_id" position="after">
+                    <field name="phase_id" invisible="1" groups="base.group_extended"/>
+                </field>
+            </field>
+        </record>
+
     <act_window
         id="project_phase_task_list"
         name="Related Tasks"
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        context="{'search_default_phase_id': [active_id]}"/>
+        context="{'search_default_phase_id': [active_id]}"
+        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
+        />
 
     <act_window
         context="{'search_default_project_id': [active_id]}"
@@ -360,8 +386,21 @@
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
+		domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
-        view_type="form" />
+        view_type="form" 
+		/>
+
+	<act_window
+		context="{'search_default_user_id': [user_id]}"
+        id="act_project_resource"
+        name="Resources"
+        res_model="resource.resource"
+        src_model="project.project"
+		domain="[('user_id', '=',user_id)]"
+        view_mode="tree,form"
+        view_type="form" 
+		/>
 
     # ------------------------------------------------------
     # Menu Items

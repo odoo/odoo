@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 20:31+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-10-23 07:02+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -25,16 +25,6 @@ msgid ""
 msgstr ""
 "Ο αριθμός των ωρών που μπορούν να τιμολογηθούν σύν αυτές που έχουν ήδη "
 "τιμολογηθεί"
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours summary by user"
-msgstr "Περίληψη ωρών ανα χρήστη"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Τελευταία Ημερομηνία Τιμολογίου"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -50,57 +40,33 @@ msgstr ""
 "Υπολογισμός χρησιμοποιώντας την φόρμουλα: Μεγιστη Ποσότητα - Συνολικές Ώρες."
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all
-msgid "All Analytic Accounts"
-msgstr "Όλοι οι Αναλυτικοί Λογαριασμοί"
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "AccessError"
+msgstr "Πρόβλημα πρόσβασης"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
-msgid "My Current Accounts"
-msgstr "Οι Τρέχοντες Λογαριασμοί Μου"
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theorical Revenue"
+msgstr "Δυνητικά Έσοδα"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
 msgstr ""
 "Ημερομηνία του τελευταίου τιμολογίου που δημιουργήθηκε για αυτόν τον "
-"αναλυτικό λογαριασμό."
+"λογαριασμό της αναλυτικής."
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Θεωρητικά Έσοδα"
-
-#. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Τελευταία Ημερομηνία Τιμολογίου"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr ""
 "Υπολογισμός χρησιμοποιώντας την φόρμουλα: Θεωρητικά Έσοδα - Συνολικά Κόστη"
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_new
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_new
-msgid "New Analytic Account"
-msgstr "Νέος Αναλυτικός Λογαριασμός"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -113,31 +79,18 @@ msgid "Real Margin Rate (%)"
 msgstr "Πραγματικό Ποσοστό Περιθώριου (%)"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_open
-msgid "Current Analytic Accounts"
-msgstr "Τρέχοντες Αναλυτικοί Λογαριασμοί"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr ""
-"Ημερομηνία της τελευταίας εργασίας που πραγματοποιήθηκε σε αυτόν τον "
-"λογαριασμό."
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
+"Εάν τιμολογηθεί στο κόστος, αυτή είναι η τελευταία ημέρα τιμολογημένης "
+"εργασίας ή κόστους."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Invoicing"
-msgstr "Τιμολόγηση"
+msgid "Billing"
+msgstr "Χρεώση"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -181,16 +134,9 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_pending
-msgid "My Pending Accounts"
-msgstr "Οι Αναμενόμενοι Λογαριασμοί Μου"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
-msgid "My Uninvoiced Entries"
-msgstr "Οι Μή Τιμολογημένες Εγγραφές Μου"
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
+msgstr "Μή Τιμολογημένο Ποσό"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -199,37 +145,16 @@ msgstr ""
 "Υπολογισμός χρησιμοποιώντας την φόρμουλα: Τιμολογημένο Ποσό - Συνολικά Κόστη."
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_managed
-msgid "My Accounts"
-msgstr "Οι Λογαριασμοί Μου"
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
-msgid ""
-"Modify account analytic view to show\n"
-"important data for project manager of services companies.\n"
-"Add menu to show relevant information for each manager."
-msgstr ""
-"Τροποποιήστε την όψη του αναλυτικού λογαριασμού για να επιδείξετε\n"
-"σημαντικές πληροφορίες για τον διαχειριστή του έργου των εταιρειών "
-"υπηρεσιών.\n"
-"Προσθέστε μενού για να δείξετε σχετικές πληροφορίες για κάθε διαχειριστή."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
 msgstr "Μή Τιμολογημένες Ώρες"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Συν. Ώρες"
-
-#. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_account
-msgid "Analytic Accounts"
-msgstr "Αναλυτικοί Λογαριασμοί"
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr ""
+"Ημερομηνία της τελευταίας εργασίας που πραγματοποιήθηκε σε αυτόν τον "
+"λογαριασμό."
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
@@ -237,30 +162,26 @@ msgid "report_account_analytic"
 msgstr "report_account_analytic"
 
 #. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
+msgstr "Άθροισμα ωρών χρήστη"
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
 msgstr "Τιμολογημένο Ποσό"
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.next_id_71
-msgid "Financial Project Management"
-msgstr "Οικονομική Διαχείριση Έργου"
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
+msgstr ""
+"Προσπαθείτε να προσπεράσετε έναν κανόνα πρόσβασης (Τύπος Εγγράφου: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Ημερομηνία Τελευταίου Τιμολογημένου Κόστους"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr "Μή Τιμολογημένο Ποσό"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_pending
-msgid "Pending Analytic Accounts"
-msgstr "Αναμενόμενοι Αναλυτικοί Λογαριασμοί"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -275,7 +196,7 @@ msgstr "Πραγματικό Περιθώριο"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Συνολικό ποσό πελάτη για αυτόν τον λογαριασμό."
+msgstr "Συνολικό τιμολογημένο ποσό πελάτη για αυτόν τον λογαριασμό."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -343,8 +264,9 @@ msgstr "Μήνας"
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Αναλυτικός Λογαριασμός"
+msgstr "Λογαριασμος Αναλυτικής"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
@@ -359,6 +281,16 @@ msgid "All Uninvoiced Entries"
 msgstr "Όλες οι Μή Τιμολογημένες Εγγραφές"
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Hours Tot"
+msgstr "Συν. Ώρες"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -367,7 +299,63 @@ msgstr ""
 "Συνολικά κόστη για τον λογαριασμό. Περιλαμβάνει τα πραγματικά κόστη (απο "
 "τιμολόγια) και έμεσα κοστη, όπως χρόνος που δαπανήθηκε σε χρονοδιαγράμματα."
 
-#, python-format
-#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgid "My Current Accounts"
+#~ msgstr "Οι Τρέχοντες Λογαριασμοί Μου"
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Περίληψη ωρών ανα χρήστη"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Όλοι οι Αναλυτικοί Λογαριασμοί"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Νέος Αναλυτικός Λογαριασμός"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Τρέχοντες Αναλυτικοί Λογαριασμοί"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
-#~ "Προσπαθείτε να προσπεράσετε έναν κανόνα πρόσβασης (Τύπος Εγγράφου: %s)."
+#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
+#~ msgid "Invoicing"
+#~ msgstr "Τιμολόγηση"
+
+#~ msgid "My Accounts"
+#~ msgstr "Οι Λογαριασμοί Μου"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Οι Αναμενόμενοι Λογαριασμοί Μου"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Οι Μή Τιμολογημένες Εγγραφές Μου"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Οικονομική Διαχείριση Έργου"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Αναμενόμενοι Αναλυτικοί Λογαριασμοί"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Αναλυτικοί Λογαριασμοί"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "Τροποποιήστε την όψη του αναλυτικού λογαριασμού για να επιδείξετε\n"
+#~ "σημαντικές πληροφορίες για τον διαχειριστή του έργου των εταιρειών "
+#~ "υπηρεσιών.\n"
+#~ "Προσθέστε μενού για να δείξετε σχετικές πληροφορίες για κάθε διαχειριστή."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος. Δεν μπορείτε να δημιουργήσετε αναδρομικό μενού"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Λανθασμένο XML για προβολή αρχιτεκτονικής!"

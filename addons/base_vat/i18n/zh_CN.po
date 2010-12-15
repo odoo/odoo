@@ -6,38 +6,63 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:18+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
+#: code:addons/base_vat/base_vat.py:0
+#, python-format
 msgid ""
-"Enable the VAT Number for the partner. Check the validity of that VAT Number."
-msgstr "启用业务伙伴增值税号.检查有效性"
+"The Vat does not seems to be correct. You should have entered something like "
+"this %s"
+msgstr ""
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件"
+#: model:ir.module.module,shortdesc:base_vat.module_meta_information
+msgid "Base VAT - To check VAT number validity"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:0
+#, python-format
+msgid "The VAT is invalid, It should begin with the country code"
+msgstr ""
+
+#. module: base_vat
+#: help:res.partner,vat_subjected:0
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr "如果你的业务伙伴接收增值税勾选此项.它将用于增值税的正式报表"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr ""
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "增值税描述"
 
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "VAT"
-msgstr "增值税"
+#~ msgid "VAT"
+#~ msgstr "增值税"
 
 #~ msgid ""
-#~ "Check this box if the partner is subjected to the VAT. It will be used for "
-#~ "the VAT legal statement."
-#~ msgstr "如果你的业务伙伴接收增值税勾选此项.它将用于增值税的正式报表"
+#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
+#~ msgstr "启用业务伙伴增值税号.检查有效性"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件"

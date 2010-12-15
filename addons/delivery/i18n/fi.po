@@ -7,36 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 03:24+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-10-30 11:51+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid ">="
-msgstr ">="
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Myynti ja hankinta"
-
-#. module: delivery
-#: view:delivery.grid:0
-msgid "Destination"
-msgstr "Kohde"
+#: report:sale.shipping:0
+msgid "Order Ref."
+msgstr ""
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -44,45 +28,42 @@ msgid "Delivery by Poste"
 msgstr "Toimitus postilla"
 
 #. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
+#: view:delivery.grid:0
+msgid "Destination"
+msgstr "Kohde"
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
-
-#. module: delivery
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "Osavaltiot"
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
-
-#. module: delivery
-#: help:res.partner,property_delivery_carrier:0
-msgid "This delivery method will be used when invoicing from packing."
+#: field:stock.move,weight_net:0
+msgid "Net weight"
 msgstr ""
-"Tätä toimitustapaa käytetään kun lähetyksen toimituksesta laskutetaan."
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Toimitustaulukko"
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "Lähtö postinumero"
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr "Ei hintaa saatavilla!"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-msgid "Fixed"
-msgstr "Kiinteä"
+#: model:ir.model,name:delivery.model_delivery_grid_line
+msgid "Delivery Grid Line"
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+msgid "Delivery grids"
+msgstr "Toimitustaulukot"
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: field:stock.picking,volume:0
+msgid "Volume"
+msgstr "Tilavuus"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -90,26 +71,137 @@ msgid "Grid Line"
 msgstr "Taulukkorivi"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
-msgid "Delivery Pricelist"
-msgstr "Toimitushinnasto"
+#: model:ir.actions.report.xml,name:delivery.report_shipping
+msgid "Delivery order"
+msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree5
-#: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
-msgid "Generate Draft Invoices On Receptions"
-msgstr "Luo laskuluonnos vastaanotetuista"
+#: view:res.partner:0
+msgid "Deliveries Properties"
+msgstr "Toimituksien ominaisuudet"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid_line
-msgid "Delivery line of grid"
-msgstr "Taulukon toimitusrivi"
+#: model:ir.actions.act_window,name:delivery.action_picking_tree4
+msgid "Picking to be invoiced"
+msgstr ""
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "Toimitus"
+#: help:delivery.grid,sequence:0
+msgid "Gives the sequence order when displaying a list of delivery grid."
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+#: field:delivery.grid,country_ids:0
+msgid "Countries"
+msgstr "Maat"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Delivery Order :"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sale Order"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,variable_factor:0
+msgid "Variable Factor"
+msgstr "Vaihteleva kerroin"
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+msgid "Fixed"
+msgstr "Kiinteä"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+#: field:delivery.sale.order,carrier_id:0
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: field:res.partner,property_delivery_carrier:0
+msgid "Delivery Method"
+msgstr "Toimitustapa"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr "Yksikään valitun toimitustaulukon rivi ei vastaa tilausta!"
+
+#. module: delivery
+#: field:stock.picking,carrier_tracking_ref:0
+msgid "Carrier Tracking Ref"
+msgstr ""
+
+#. module: delivery
+#: field:stock.picking,weight_net:0
+msgid "Net Weight"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr "Varoitus"
+
+#. module: delivery
+#: view:delivery.grid:0
+msgid "Grid definition"
+msgstr "Taulukon määrittely"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr "Operaattori"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Partner"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Toimitustaulukko"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Invoiced to"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_sale_order
+msgid "Make Delievery"
+msgstr ""
+
+#. module: delivery
+#: model:ir.module.module,description:delivery.module_meta_information
+msgid ""
+"Allows you to add delivery methods in sale orders and picking.\n"
+"     You can define your own carrier and delivery grids for prices.\n"
+"     When creating invoices from picking, OpenERP is able to add and compute "
+"the shipping line.\n"
+"\n"
+"     "
+msgstr ""
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -122,9 +214,89 @@ msgid "Grid"
 msgstr "Taulukko"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "Toimituksien ominaisuudet"
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,zip_to:0
+msgid "To Zip"
+msgstr "Kohde postinumero"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Order Date"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,name:0
+msgid "Grid Name"
+msgstr "Taulukon nimi"
+
+#. module: delivery
+#: view:stock.move:0
+msgid "Weights"
+msgstr ""
+
+#. module: delivery
+#: field:stock.picking,number_of_packages:0
+msgid "Number of Packages"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: report:sale.shipping:0
+#: field:stock.move,weight:0
+#: field:stock.picking,weight:0
+msgid "Weight"
+msgstr "Paino"
+
+#. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+
+#. module: delivery
+#: field:sale.order,carrier_id:0
+msgid "Delivery method"
+msgstr "Toimitustapa"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid available !"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid ">="
+msgstr ">="
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "Order not in draft state !"
+msgstr "Tilaus ei ole luonnostilassa!"
+
+#. module: delivery
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Lot"
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -133,9 +305,128 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: delivery
-#: view:delivery.grid:0
-msgid "Grid definition"
-msgstr "Taulukon määrittely"
+#: report:sale.shipping:0
+msgid "Shipping Date"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.carrier,product_id:0
+msgid "Delivery Product"
+msgstr "Kuljetustuote"
+
+#. module: delivery
+#: view:delivery.grid.line:0
+msgid "Condition"
+msgstr "Tila"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Muuttuva"
+
+#. module: delivery
+#: help:res.partner,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from picking."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,max_value:0
+msgid "Maximum Value"
+msgstr "Maksimiarvo"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Quantity"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "Lähtö postinumero"
+
+#. module: delivery
+#: help:sale.order,carrier_id:0
+msgid ""
+"Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.carrier,partner_id:0
+msgid "Carrier Partner"
+msgstr "Kuljetusliike kumppani"
+
+#. module: delivery
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Myynti ja hankinta"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Kustannushinta"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+msgid "Create Deliveries"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_cost
+#: view:sale.order:0
+msgid "Delivery Costs"
+msgstr "Toimituskustannukset"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Description"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
+msgid "Delivery Pricelist"
+msgstr "Toimitushinnasto"
+
+#. module: delivery
+#: field:delivery.carrier,price:0
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+msgid "Price"
+msgstr "Hinta"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid matching for this carrier !"
+msgstr "Kuljetusliikkeen taulukossa ei ole lähetystä vastaavia kohtia!"
+
+#. module: delivery
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
+msgstr "Toimitus"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -149,24 +440,10 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: field:delivery.carrier,product_id:0
-msgid "Delivery Product"
-msgstr "Kuljetustuote"
-
-#. module: delivery
-#: view:delivery.grid.line:0
-msgid "Condition"
-msgstr "Tila"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
-msgid "Carrier and delivery grids"
-msgstr "Kuljetus- ja toimitustaulukot"
-
-#. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Kustannushinta"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr "Kuljetusliikkeellä %s (tunnus: %d) ei ole taulukkoa kuljetuksille!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -174,76 +451,19 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö."
-
-#. module: delivery
-#: field:delivery.grid,country_ids:0
-msgid "Countries"
-msgstr "Maat"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Virhe: Oletus mittayksikkö ja ostojen mittayksikkö täytyy olla samassa "
-"kategoriassa."
-
-#. module: delivery
-#: view:sale.order:0
-msgid "Notes"
-msgstr "Huomautukset"
-
-#. module: delivery
-#: field:delivery.grid.line,variable_factor:0
-msgid "Variable Factor"
-msgstr "Vaihteleva kerroin"
-
-#. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "Muuttuva"
-
-#. module: delivery
-#: field:delivery.grid,name:0
-msgid "Grid Name"
-msgstr "Taulukon nimi"
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
 msgstr "Kuljetusliike"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
-msgid "Volume"
-msgstr "Tilavuus"
-
-#. module: delivery
-#: field:delivery.grid.line,max_value:0
-msgid "Maximum Value"
-msgstr "Maksimiarvo"
-
-#. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Add Delivery Costs"
-msgstr "Lisää toimituskustannukset"
-
-#. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-#: field:res.partner,property_delivery_carrier:0
-msgid "Delivery Method"
-msgstr "Toimitustapa"
+#: view:delivery.sale.order:0
+msgid "_Apply"
+msgstr ""
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -251,9 +471,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
-msgid "Operator"
-msgstr "Operaattori"
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
+"Tilauksen tilan täytyy olla luonnos jos haluat lisätä toimitusrivejä."
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
@@ -266,56 +488,9 @@ msgid "Delivery Grids"
 msgstr "Toimitustaulukot"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,weight:0
-msgid "Weight"
-msgstr "Paino"
-
-#. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
 msgstr "Sarja"
-
-#. module: delivery
-#: field:delivery.carrier,partner_id:0
-msgid "Carrier Partner"
-msgstr "Kuljetusliike kumppani"
-
-#. module: delivery
-#: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
-"Mahdollistaa toimitustavan lisäämisen tilauksen käsittelyssä tai "
-"pakkauksessa. Voit määritellä omat kuljetusliikkeesi ja taulukot "
-"toimituksien hinnoille. Kun keräilyn pohjalta tehdään lasku, voi OpenERP "
-"laskea ja lisätä siihen toimitusmaksun."
-
-#. module: delivery
-#: field:delivery.grid,zip_to:0
-msgid "To Zip"
-msgstr "Kohde postinumero"
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree4
-#: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
-msgid "Packing to be invoiced"
-msgstr "Laskutettava pakkaus"
-
-#. module: delivery
-#: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
-"Täytä tämä kenttä jos haluat laskuttaa toimituksesta pakkauksen perusteella."
-
-#. module: delivery
-#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
-msgid "Delivery Costs"
-msgstr "Toimituskustannukset"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -323,38 +498,77 @@ msgid "Sale Price"
 msgstr "Myyntihinta"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Virhe: Virheellinen EAN-koodi"
-
-#. module: delivery
 #: view:delivery.grid:0
-msgid "Delivery grids"
-msgstr "Toimitustaulukot"
-
-#. module: delivery
-#: wizard_button:delivery.sale.order,init,end:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: delivery
-#: field:sale.order,carrier_id:0
-msgid "Delivery method"
-msgstr "Toimitustapa"
-
-#. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-msgid "Price"
-msgstr "Hinta"
-
-#. module: delivery
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "ALV ei vaikuta olevan oikein."
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "Osavaltiot"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Hintatyyppi"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+
+#~ msgid "Notes"
+#~ msgstr "Huomautukset"
+
+#~ msgid "Add Delivery Costs"
+#~ msgstr "Lisää toimituskustannukset"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Virhe: Virheellinen EAN-koodi"
+
+#~ msgid "Cancel"
+#~ msgstr "Peruuta"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Virheellinen XML näkymä-arkkitehtuurille!"
+
+#~ msgid "This delivery method will be used when invoicing from packing."
+#~ msgstr ""
+#~ "Tätä toimitustapaa käytetään kun lähetyksen toimituksesta laskutetaan."
+
+#~ msgid "Delivery line of grid"
+#~ msgstr "Taulukon toimitusrivi"
+
+#~ msgid "Generate Draft Invoices On Receptions"
+#~ msgstr "Luo laskuluonnos vastaanotetuista"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Virhe: Oletus mittayksikkö ja ostojen mittayksikkö täytyy olla samassa "
+#~ "kategoriassa."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö."
+
+#~ msgid "Carrier and delivery grids"
+#~ msgstr "Kuljetus- ja toimitustaulukot"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sales orders and packing. You can "
+#~ "define your own carrier and delivery grids for prices. When creating "
+#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
+#~ msgstr ""
+#~ "Mahdollistaa toimitustavan lisäämisen tilauksen käsittelyssä tai "
+#~ "pakkauksessa. Voit määritellä omat kuljetusliikkeesi ja taulukot "
+#~ "toimituksien hinnoille. Kun keräilyn pohjalta tehdään lasku, voi OpenERP "
+#~ "laskea ja lisätä siihen toimitusmaksun."
+
+#~ msgid "Packing to be invoiced"
+#~ msgstr "Laskutettava pakkaus"
+
+#~ msgid ""
+#~ "Complete this field if you plan to invoice the shipping based on packing."
+#~ msgstr ""
+#~ "Täytä tämä kenttä jos haluat laskuttaa toimituksesta pakkauksen perusteella."
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "ALV ei vaikuta olevan oikein."

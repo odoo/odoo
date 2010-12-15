@@ -1,5 +1,5 @@
 -
-  In order to test Cash statement I create a Cash statement and and confirm it and check it's move created
+  In order to test Cash statement I create a Cash statement and confirm it and check it's move created
 -
  !record {model: account.bank.statement, id: account_bank_statement_1}:
     date: '2010-10-16'
@@ -13,9 +13,9 @@
          subtotal: 20.0
       -  pieces: 100.0
          number: 1
-         subtotal: 200.0
-    balance_start: 220.0
-    balance_end: 220.0
+         subtotal: 100.0
+    balance_start: 120.0
+    balance_end: 120.0
 -
   I check that Initially bank statement is in the "Draft" state
 -
@@ -46,18 +46,18 @@
         partner_id: base.res_partner_4
         sequence: 0.0
         type: general
-    balance_end: 1220.0
+    balance_end: 1120.0
     ending_details_ids:
       -  pieces: 10.0
          number: 2
          subtotal: 20.0
       -  pieces: 100.0
          number: 1
-         subtotal: 200.0
+         subtotal: 100.0
       -  pieces: 500.0
          number: 2
          subtotal: 1000.0
-    balance_end_cash: 1220.0
+    balance_end_cash: 1120.0
 
 -
   I clicked on Close CashBox button to close the cashbox

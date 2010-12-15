@@ -12,7 +12,7 @@
     <record model="ir.ui.menu" id="base.menu_base_partner">
         <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
     </record>
-    
+
     <record model="ir.ui.menu" id="base.menu_base_config">
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
@@ -31,6 +31,26 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="sale_order_personal_rule" model="ir.rule">
+        <field name="name">Personal Orders</field>
+        <field ref="model_sale_order" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="sale_order_line_personal_rule" model="ir.rule">
+        <field name="name">Personal Order Lines</field>
+        <field ref="model_sale_order_line" name="model_id"/>
+        <field name="domain_force">['|',('order_id.user_id','=',user.id),('order_id.user_id','=',False)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
+    </record>
+
+    <record model="ir.rule" id="sale_order_line_comp_rule">
+        <field name="name">Sale Shop multi-company</field>
+        <field name="model_id" ref="model_sale_shop"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
 
 </data>
 </openerp>

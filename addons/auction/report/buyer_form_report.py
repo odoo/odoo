@@ -44,7 +44,7 @@ class buyer_form_report(report_sxw.rml_parse):
             taxes.append(lot.author_right)
         if lot.auction_id:
             taxes += lot.auction_id.buyer_costs
-        tax=self.pool.get('account.tax').compute(self.cr, self.uid, taxes, lot.obj_price, 1)
+        tax=self.pool.get('account.tax').compute_all(self.cr, self.uid, taxes, lot.obj_price, 1)
         for t in tax:
             amount+=t['amount']
         return amount

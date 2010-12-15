@@ -6,40 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2008-09-29 11:23+0000\n"
 "Last-Translator: Tsvetin Vasilev <cecipv@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
+#: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.model:0
+#: help:process.process,active:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-"символи!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Roles from Workflow"
+"If the active field is set to False, it will allow you to hide the process "
+"without removing it."
 msgstr ""
 
 #. module: process
@@ -48,11 +36,15 @@ msgid "Related Menu"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition,action_ids:0
 msgid "Buttons"
 msgstr "Бутони"
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Group By..."
+msgstr ""
 
 #. module: process
 #: selection:process.node,kind:0
@@ -61,9 +53,7 @@ msgstr ""
 
 #. module: process
 #: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Details"
+msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
@@ -73,7 +63,6 @@ msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.model,name:process.model_process_node
 #: model:ir.ui.menu,name:process.menu_process_node_form
 #: view:process.node:0
 #: view:process.process:0
@@ -91,6 +80,11 @@ msgstr "Възли"
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
+msgstr ""
+
+#. module: process
+#: view:process.transition:0
+msgid "Search Process Transition"
 msgstr ""
 
 #. module: process
@@ -115,7 +109,9 @@ msgstr ""
 
 #. module: process
 #: field:process.condition,model_id:0
+#: view:process.node:0
 #: field:process.node,model_id:0
+#: view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Обект"
@@ -126,6 +122,7 @@ msgid "Source Node"
 msgstr ""
 
 #. module: process
+#: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr ""
@@ -136,14 +133,13 @@ msgid "Action ID"
 msgstr ""
 
 #. module: process
+#: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
 msgstr ""
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
-#: view:process.node:0
-#: view:process.process:0
 msgid "Condition"
 msgstr ""
 
@@ -153,9 +149,10 @@ msgid "Dummy"
 msgstr "Фиктивен"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Невалиден XML за преглед на архитектурата"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -167,41 +164,28 @@ msgid "Name"
 msgstr ""
 
 #. module: process
-#: field:process.transition,role_ids:0
-msgid "Roles"
-msgstr ""
-
-#. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
 msgstr ""
 
 #. module: process
+#: view:process.node:0
 #: field:process.node,note:0
+#: view:process.process:0
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
 msgstr "Бележки"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
 msgstr "Преход"
 
 #. module: process
-#: view:process.node:0
 #: view:process.process:0
-#: view:process.transition:0
-msgid "Roles Required"
+msgid "Search Process"
 msgstr ""
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-msgid "Extra Information"
-msgstr "Допълнителна информация"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -213,6 +197,16 @@ msgstr ""
 #: field:process.process,active:0
 msgid "Active"
 msgstr "Активен"
+
+#. module: process
+#: view:process.transition:0
+msgid "Associated Groups"
+msgstr ""
+
+#. module: process
+#: field:process.node,model_states:0
+msgid "States Expression"
+msgstr ""
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -230,6 +224,17 @@ msgid "Expression"
 msgstr ""
 
 #. module: process
+#: field:process.transition,group_ids:0
+msgid "Required Groups"
+msgstr ""
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Incoming Transitions"
+msgstr ""
+
+#. module: process
 #: field:process.transition.action,state:0
 msgid "Type"
 msgstr "Вид"
@@ -240,34 +245,42 @@ msgid "Ending Transitions"
 msgstr "Завършване на прехода"
 
 #. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.model,name:process.model_process_process
-#: model:ir.ui.menu,name:process.menu_process_form
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
 msgstr ""
 
 #. module: process
-#: model:ir.module.module,shortdesc:process.module_meta_information
-msgid "Enterprise Process"
+#: view:process.node:0
+msgid "Search ProcessNode"
 msgstr ""
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
+msgid "Other Conditions"
+msgstr ""
+
+#. module: process
+#: model:ir.module.module,shortdesc:process.module_meta_information
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Process"
+msgstr ""
+
+#. module: process
 #: view:process.transition:0
 msgid "Actions"
 msgstr "Действия"
 
 #. module: process
-#: field:process.node,model_states:0
-msgid "States Expression"
+#: view:process.node:0
+#: view:process.process:0
+msgid "Properties"
 msgstr ""
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
-#: model:ir.model,name:process.model_process_transition
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
 msgstr ""
@@ -289,11 +302,6 @@ msgid "Outgoing Transitions"
 msgstr ""
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Processes"
-msgstr ""
-
-#. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Transitions"
@@ -303,3 +311,15 @@ msgstr "Преходи"
 #: selection:process.transition.action,state:0
 msgid "Object Method"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
+#~ "символи!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Невалиден XML за преглед на архитектурата"
+
+#~ msgid "Extra Information"
+#~ msgstr "Допълнителна информация"

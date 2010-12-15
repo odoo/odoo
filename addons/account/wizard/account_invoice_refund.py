@@ -36,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
-       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already rencociled'),
+       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -50,7 +50,7 @@ class account_invoice_refund(osv.osv_memory):
         return journal and journal[0] or False
 
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'modify',
     }
@@ -179,7 +179,6 @@ class account_invoice_refund(osv.osv_memory):
                         invoice_lines = inv_obj._refund_cleanup_lines(cr, uid, invoice_lines)
                         tax_lines = inv_tax_obj.read(cr, uid, invoice['tax_line'], context=context)
                         tax_lines = inv_obj._refund_cleanup_lines(cr, uid, tax_lines)
-
                         invoice.update({
                             'type': inv.type,
                             'date_invoice': date,
@@ -190,32 +189,31 @@ class account_invoice_refund(osv.osv_memory):
                             'period_id': period,
                             'name': description
                         })
-
                         for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
                                 'account_id', 'currency_id', 'payment_term', 'journal_id'):
                                 invoice[field] = invoice[field] and invoice[field][0]
-
                         inv_id = inv_obj.create(cr, uid, invoice, {})
                         if inv.payment_term.id:
                             data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], inv.payment_term.id, date)
                             if 'value' in data and data['value']:
                                 inv_obj.write(cr, uid, [inv_id], data['value'])
                         created_inv.append(inv_id)
-
             if inv.type in ('out_invoice', 'out_refund'):
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'
-
-            result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)['res_id']
+            result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
+            id = result and result[1] or False
             result = act_obj.read(cr, uid, id, context=context)
-            result['res_id'] = created_inv
+            invoice_domain = eval(result['domain'])
+            invoice_domain.append(('id', 'in', created_inv))
+            result['domain'] = invoice_domain
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
         data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
+
 
 account_invoice_refund()
 

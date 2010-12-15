@@ -93,7 +93,7 @@
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="Emails" groups="base.group_extended">
+                        <page string="History" groups="base.group_extended">
                             <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
@@ -146,7 +146,7 @@
                                context="{'mail':'new', 'model': 'project.issue'}"
                                icon="terp-mail-message-new" type="action" />
                         </page>
-                           <page string="History" groups="base.group_extended">
+                           <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Date"/>
                             <field name="create_date"/>
@@ -210,7 +210,7 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check" default="1"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>

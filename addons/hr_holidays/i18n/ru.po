@@ -7,25 +7,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 06:06+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-10-30 11:43+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
-msgid "New Holidays Request"
-msgstr "Новое заявление на отпуск"
+#: selection:hr.holidays.status,color_name:0
+msgid "Blue"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
-msgid "All Holidays Requests"
-msgstr "Все заявления на отпуск"
+#: view:hr.holidays:0
+#: field:hr.holidays,allocation_type:0
+#: field:hr.holidays,holiday_type:0
+msgid "Allocation Type"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+msgid "Waiting Second Approval"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,taken_leaves:0
+msgid "Taken Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays.status,remaining_leaves:0
+msgid "Maximum Leaves Allowed - Leaves Already Taken"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Leaves Management"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: view:hr.holidays:0
+msgid "Group By..."
+msgstr ""
 
 #. module: hr_holidays
 #: constraint:ir.actions.act_window:0
@@ -33,14 +62,34 @@ msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия."
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
-msgid "Requests Awaiting for Validation"
-msgstr "Заявления, ожидающие проверки"
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
+msgid "Sick Leave"
+msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Blue"
-msgstr "Светло-синий"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,department_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,department_id:0
+msgid "Department"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,state:0
+#: selection:hr.holidays,state:0
+msgid "Refused"
+msgstr "Отклонено"
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,max_leave:0
+msgid "Allocated Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,allocation_type:0
+msgid "Company Allocation"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -48,20 +97,32 @@ msgid "Brown"
 msgstr "Коричневый"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "of the"
-msgstr "из"
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Off-Days' Summary"
+#: view:available.holidays.report:0
+#: view:hr.holidays:0
+msgid "Remaining Days"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
-#: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
-msgid "Employee Holidays"
-msgstr "Отпуска сотрудника"
+#: selection:available.holidays.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,holiday_type:0
+msgid "By Employee"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays,employee_id:0
+msgid ""
+"Leave Manager can let this field empty if this leave request/allocation is "
+"for every employee"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "Leave Days"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -69,15 +130,16 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-#: model:process.node,name:hr_holidays.process_node_holidays0
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Holidays"
 msgstr "Отпуска"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "to"
-msgstr "до"
+#: field:available.holidays.report,category_id:0
+msgid "Category's Name"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -90,31 +152,15 @@ msgid "Light Green"
 msgstr "Светло-зеленый"
 
 #. module: hr_holidays
-#: model:process.transition,name:hr_holidays.process_transition_employeedeclaration0
-msgid "Employee Declaration"
-msgstr "Заявления сотрудника"
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
+msgid "Summary Of Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
-#: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
-msgid "Validate"
-msgstr "Проверить"
-
-#. module: hr_holidays
-#: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
-msgid "Refused Request"
-msgstr "Запрос, которому отказывают."
-
-#. module: hr_holidays
-#: model:process.node,name:hr_holidays.process_node_approved0
 msgid "Approved"
 msgstr "Утвержденный"
-
-#. module: hr_holidays
-#: selection:hr.holidays.summary.employee,init,holiday_type:0
-msgid "Both"
-msgstr "Оба"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -122,70 +168,83 @@ msgid "Refuse"
 msgstr "Отклонить"
 
 #. module: hr_holidays
-#: wizard_button:hr.holidays.summary,notify,end:0
-#: wizard_button:hr.holidays.summary.employee,notify,end:0
-msgid "Ok"
-msgstr "Ок"
+#: view:available.holidays.report:0
+#: view:hr.holidays:0
+msgid "Leaves"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
-msgid "My Holidays Requests"
-msgstr "Мои заявления на отпуск"
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,notes:0
-msgid "Notes"
-msgstr "Примечания"
+#: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
+msgid "Remaining leaves"
+msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_status:0
-#: field:hr.holidays.log,holiday_status:0
-msgid "Holiday's Status"
-msgstr "Статус отпуска"
+#: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
+msgid "Leaves by Department"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_refusedrequest0
-msgid "Request is refused."
-msgstr "На запрос отказано."
+#: selection:available.holidays.report,state:0
+#: selection:hr.holidays,state:0
+msgid "Cancelled"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
-msgid "Holidays Management"
-msgstr "Управление отпусками"
+#: help:hr.holidays,type:0
+msgid ""
+"Choose 'Leave Request' if someone wants to take an off-day. \n"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
+msgstr ""
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr "Анализировать с"
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Внимание!"
 
 #. module: hr_holidays
-#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
-msgid "Summary Of Holidays"
-msgstr "Сводка отпусков"
+#: field:hr.holidays.status,color_name:0
+msgid "Color in Report"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_calendar0
-msgid "The holiday is set in the calendar"
-msgstr "Отпуск установлен в календаре"
+#: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
+msgid "HR Holidays Summary Report By Employee"
+msgstr ""
 
 #. module: hr_holidays
+#: field:available.holidays.report,holiday_status_id:0
+#: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
-msgid "Holiday status"
-msgstr "Статус отпуска"
-
-#. module: hr_holidays
+#: field:hr.holidays.status,name:0
+#: field:hr.holidays.summary.dept,holiday_type:0
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
-msgid "Holidays Status"
-msgstr "Статус отпусков"
+#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
+msgid "Leave Type"
+msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,date_to:0
-msgid "Vacation end day"
-msgstr "Последний день отпуска"
+#: view:available.holidays.report:0
+msgid "Validation User"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_legaldeclaration0
-msgid "Legal Declaration Document to declare new employee"
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,state:0
+#: selection:hr.holidays,state:0
+msgid "Draft"
 msgstr ""
 
 #. module: hr_holidays
@@ -194,197 +253,66 @@ msgid "Magenta"
 msgstr "Пурпурный"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
-msgid "Holidays Per User"
-msgstr "Отпусков на пользователя"
-
-#. module: hr_holidays
-#: view:hr.holidays.status:0
-msgid "Define holiday status"
+#: help:hr.holidays,state:0
+msgid ""
+"When the holiday request is created the state is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the state is "
+"'Waiting Approval'.            If the admin accepts it, the state is "
+"'Approved'. If it is refused, the state is 'Refused'."
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.summary,init,holiday_type:0
-#: selection:hr.holidays.summary.employee,init,holiday_type:0
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
+#, python-format
+msgid "You have to select at least 1 Department. And try again"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Confirmed"
 msgstr "Подтверждено"
 
 #. module: hr_holidays
-#: wizard_field:hr.holidays.summary,init,date_from:0
-#: wizard_field:hr.holidays.summary.employee,init,date_from:0
+#: field:hr.holidays.summary.dept,date_from:0
+#: field:hr.holidays.summary.employee,date_from:0
 msgid "From"
 msgstr "От"
 
 #. module: hr_holidays
+#: help:hr.holidays,allocation_type:0
+msgid ""
+"This field is only for informative purposes, to depict if the leave "
+"request/allocation comes from an employee or from the company"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
-#: model:process.transition.action,name:hr_holidays.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Подтвердить"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
-msgid "My Awaiting Confirmation Holidays Requests"
-msgstr "Мои заявления на отпуск в ожидании подтверждения"
-
-#. module: hr_holidays
-#: field:hr.holidays,user_id:0
-msgid "Employee_id"
-msgstr "ID сотрудника"
-
-#. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
-msgid "Encoding of annual available holidays."
+#: model:ir.model,name:hr_holidays.model_available_holidays_report
+msgid "available.holidays.report"
 msgstr ""
-
-#. module: hr_holidays
-#: field:hr.holidays,employee_id:0
-#: field:hr.holidays.log,employee_id:0
-msgid "Employee"
-msgstr "Сотрудник"
-
-#. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "Waiting Validation"
-msgstr ""
-
-#. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
-msgid "Employee get holidays"
-msgstr ""
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Salmon"
-msgstr "Светлый оранжево-розовый"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Wheat"
-msgstr "Пшеничный"
-
-#. module: hr_holidays
-#: field:hr.holidays.log,nb_holidays:0
-msgid "Number of Holidays Requested"
-msgstr ""
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-msgid "My Holiday Requests"
-msgstr "Мои запросы отпусков"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-msgid "Number of Days"
-msgstr "Кол-во дней"
-
-#. module: hr_holidays
-#: field:hr.holidays.status,name:0
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
-#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
-msgid "Holiday Status"
-msgstr "Статус отпуска"
-
-#. module: hr_holidays
-#: wizard_view:hr.holidays.summary,init:0
-#: wizard_view:hr.holidays.summary.employee,init:0
-msgid "Report Options"
-msgstr "Параметры отчета"
-
-#. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_approved0
-msgid "His manager approves the request"
-msgstr "Его менеджер одобряет запрос"
-
-#. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
-msgid "If holidays available, employee can take it and fill it."
-msgstr "Если доступен отпуск, служащий может взять и заполнить это."
-
-#. module: hr_holidays
-#: wizard_view:hr.holidays.summary.employee,notify:0
-msgid "You have to select at least 1 Employee. Try again."
-msgstr "Выберите хотя бы 1 сотрудника. Повторите попытку."
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
-msgid "My Validated Holidays Requests"
-msgstr "Мои проверенные заявления на отпуск"
-
-#. module: hr_holidays
-#: wizard_field:hr.holidays.summary.employee,init,emp:0
-msgid "Employee(s)"
-msgstr "Сотрудник(и)"
-
-#. module: hr_holidays
-#: field:hr.holidays,number_of_days:0
-msgid "Number of Days in this Holiday Request"
-msgstr "Количество дней в данном заявлении на отпуск"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
-#: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
-msgid "Holidays Per Employee"
-msgstr "Отпусков на сотрудника"
-
-#. module: hr_holidays
-#: field:hr.holidays.status,limit:0
-msgid "Allow to override Limit"
-msgstr ""
-
-#. module: hr_holidays
-#: field:hr.holidays.log,holiday_user_id:0
-msgid "Holidays user"
-msgstr "Отпуска пользователя"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Lavender"
-msgstr "Бледно-лиловый"
-
-#. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays_log
-msgid "hr.holidays.log"
-msgstr "Регистрация отпусков"
-
-#. module: hr_holidays
-#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
-msgid "Print Summary of Employee's Holidays"
-msgstr "Распечатать сводку отпусков сотрудников"
-
-#. module: hr_holidays
-#: model:process.node,name:hr_holidays.process_node_calendar0
-msgid "Calendar"
-msgstr "Календарь"
-
-#. module: hr_holidays
-#: field:hr.holidays,date_from:0
-msgid "Vacation start day"
-msgstr "Первый день отпуска"
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
 msgid ""
-"Human Ressources: Holidays tracking and workflow\n"
+"Human Resources: Holidays tracking and workflow\n"
 "\n"
-"    This module allows you to manage holidays and holidays requests. For "
-"each employee, you can also define a number of available holidays per "
-"holiday status.\n"
-"\n"
+"    This module allows you to manage leaves and leaves' requests.\n"
+"    Implements a dashboard for human resource management that includes.\n"
+"        * My Leaves\n"
+"        * My Expenses\n"
 "    Note that:\n"
 "    - A synchronisation with an internal agenda (use of the CRM module) is "
 "possible: in order to automatically create a case when an holiday request is "
 "accepted, you have to link the holidays status to a case section. You can "
 "set up this info and your colour preferences in\n"
 "                HR / Configuration / Holidays Status\n"
-"    - An employee can make a negative holiday request (holiday request of -2 "
-"days for example), this is considered by the system as an ask for more off-"
-"days. It will increase his total of that holiday status available (if the "
+"    - An employee can make an ask for more off-days by making a new "
+"Allocation It will increase his total of that leave type available (if the "
 "request is accepted).\n"
 "    - There are two ways to print the employee's holidays:\n"
 "        * The first will allow to choose employees by department and is used "
@@ -398,143 +326,45 @@ msgid ""
 "                'Print Summary of Employee's Holidays'\n"
 "    - The wizard allows you to choose if you want to print either the "
 "Confirmed & Validated holidays or only the Validated ones. These states must "
-"be set up by a user from the group 'HR' and with the role 'holidays'. You "
-"can define these features in the security tab from the user data in\n"
+"be set up by a user from the group 'HR'. You can define these features in "
+"the security tab from the user data in\n"
 "                Administration / Users / Users\n"
-"            for example, you maybe will do it for the user 'admin'.\n"
+"            for example, you maybe will do it for the user 'admin'\n"
+"            .\n"
 msgstr ""
 
 #. module: hr_holidays
-#: wizard_view:hr.holidays.summary,notify:0
-#: wizard_view:hr.holidays.summary.employee,notify:0
-msgid "Notification"
-msgstr "Уведомление"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,remaining_leave:0
+#: field:hr.holidays.status,remaining_leaves:0
+msgid "Remaining Leaves"
+msgstr "Оставшиеся отпуска"
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_holidaysrequest0
-msgid "Employee fills in a request for holidays"
-msgstr "Сотрудник заполняется в запросе об отпусках"
-
-#. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_setholiday0
-msgid "Holiday is set in the calendar."
-msgstr "Отпуск установлен в календаре."
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Coral"
-msgstr "Светло-коралловый"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_available
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_available
-msgid "My Available Holidays"
-msgstr "Мои доступные отпуска"
-
-#. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Black"
-msgstr "Черный"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
-msgid "My Refused Holidays Requests"
-msgstr "Мои отклоненные заявления на отпуск"
-
-#. module: hr_holidays
-#: model:process.transition,name:hr_holidays.process_transition_setholiday0
-msgid "Set Holiday"
-msgstr "Установить отпуск"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
-msgid "My Draft Holidays Requests"
-msgstr "Мои черновые заявления на отпуск"
-
-#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,state:0
+#: view:hr.holidays:0
 #: field:hr.holidays,state:0
-msgid "Status"
-msgstr "Состояние"
+msgid "State"
+msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Ivory"
-msgstr "Слоновой кости"
+#: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
+msgid "Total holidays by type"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
-msgid "My Holidays Request"
-msgstr "Мои заявления на отпуск"
+#: view:available.holidays.report:0
+#: view:hr.holidays:0
+#: field:hr.holidays,employee_id:0
+#: field:hr.holidays.remaining.leaves.user,name:0
+msgid "Employee"
+msgstr "Сотрудник"
 
 #. module: hr_holidays
-#: field:hr.holidays.status,color_name:0
-msgid "Color of the status"
-msgstr "Цвет статуса"
-
-#. module: hr_holidays
-#: selection:hr.holidays.summary,init,holiday_type:0
-msgid "Both Validated and Confirmed"
-msgstr "Оба Утвержденные и Подтвержденные"
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "holidays."
-msgstr "отпусков."
-
-#. module: hr_holidays
-#: selection:hr.holidays,state:0
-msgid "draft"
-msgstr "черновик"
-
-#. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
-msgid "Document for employee"
-msgstr "Документ для сотрудника"
-
-#. module: hr_holidays
-#: field:hr.holidays.log,date:0
-msgid "Date"
-msgstr "Дата"
-
-#. module: hr_holidays
-#: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
-msgid "Reufse"
-msgstr "Отказать"
-
-#. module: hr_holidays
-#: field:hr.holidays.status,section_id:0
-msgid "Section"
-msgstr "Раздел"
-
-#. module: hr_holidays
-#: field:hr.holidays,manager_id:0
-msgid "Holiday manager"
-msgstr "Ответственный за график отпусков"
-
-#. module: hr_holidays
-#: field:hr.holidays.status,active:0
-msgid "Active"
-msgstr "Активно"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
-msgid "My Holidays Request Draft"
-msgstr "Мой черновик заявления на отпуск"
-
-#. module: hr_holidays
-#: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
-msgid "Approved Request"
-msgstr "Одобренный Запрос"
-
-#. module: hr_holidays
-#: model:process.node,name:hr_holidays.process_node_holidaysrequest0
-msgid "Holidays Request"
-msgstr "Заявление на отпуск"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
-msgid "Holidays Requests Awaiting for Validation"
-msgstr "Заявления на отпуск в ожидании проверки"
+#: selection:available.holidays.report,state:0
+msgid "Waiting Validation"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -542,28 +372,410 @@ msgid "General"
 msgstr "Общие"
 
 #. module: hr_holidays
+#: view:available.holidays.report:0
 #: view:hr.holidays:0
+msgid "Type"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Red"
+msgstr "Красный"
+
+#. module: hr_holidays
+#: view:hr.holidays.remaining.leaves.user:0
+msgid "Leaves by Type"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Salmon"
+msgstr "Светлый оранжево-розовый"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Wheat"
+msgstr "Пшеничный"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: field:hr.holidays,number_of_days:0
+#: field:hr.holidays,number_of_days_temp:0
+msgid "Number of Days"
+msgstr "Кол-во дней"
+
+#. module: hr_holidays
+#: help:hr.holidays,category_id:0
+msgid "Category Of employee"
+msgstr ""
+
+#. module: hr_holidays
+#: view:board.board:0
+msgid "Remaining Leave by Type and User"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "July"
+msgstr ""
+
+#. module: hr_holidays
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильный XML для просмотра архитектуры!"
+
+#. module: hr_holidays
+#: help:hr.holidays.status,double_validation:0
+msgid ""
+"If its True then its Allocation/Request have to be validated by second "
+"validator"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays,state:0
-#: wizard_button:hr.holidays.summary,init,end:0
-#: wizard_button:hr.holidays.summary.employee,init,end:0
+msgid "Waiting Approval"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.summary.employee,emp:0
+msgid "Employee(s)"
+msgstr "Сотрудник(и)"
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid " Month "
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays.status,categ_id:0
+msgid ""
+"If you link this type of leave with a category in the CRM, it will "
+"synchronize each leave asked with a case in this category, to display it in "
+"the company shared calendar for example."
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,parent_id:0
+msgid "Parent"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays,manager_id2:0
+msgid ""
+"This area is automaticly filled by the user who validate the leave with "
+"second level (If Leave type need second validation)"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "December"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_remaining_leaves_empoloyee_all
+msgid "Remaining Leaves by User"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Lavender"
+msgstr "Бледно-лиловый"
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,month:0
+msgid "Month"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
+msgid "Leave Requests"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.status,limit:0
+msgid "Allow to Override Limit"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.summary.employee:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
+msgid "Employee's Holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:hr.holidays,category_id:0
+msgid "Category"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays.status,max_leaves:0
+msgid ""
+"This value is given by the sum of all holidays requests with a positive "
+"value."
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "Available Holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
+msgid "All Employee Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid "No user related to the selected employee."
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Coral"
+msgstr "Светло-коралловый"
+
+#. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
+msgid "Holidays by Department"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Black"
+msgstr "Черный"
+
+#. module: hr_holidays
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: hr_holidays
+#: field:resource.calendar.leaves,holiday_id:0
+msgid "Holiday"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.status,max_leaves:0
+msgid "Maximum Leaves Allowed"
+msgstr "Максимально позволенные отпуска"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for %s while available leaves are less than asked "
+"leaves.' %(record.category_id.name)))\n"
+"                nb = -(record.number_of_days_temp)\n"
+"            else:\n"
+"                nb = record.number_of_days_temp\n"
+"\n"
+"            if record.holiday_type == 'employee' and record.employee_id:\n"
+"                user_id = record.employee_id.user_id and "
+"record.employee_id.user_id.id or uid\n"
+"\n"
+"            self.write(cr, uid, [record.id], {'state':'confirm', "
+"'number_of_days': nb, 'user_id': user_id })\n"
+"        return True\n"
+"\n"
+"    def holidays_refuse(self, cr, uid, ids, *args):\n"
+"        vals = {'state': 'refuse'}\n"
+"        ids2 = self.pool.get('hr.employee"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid " Year "
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Ivory"
+msgstr "Слоновой кости"
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "August"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "June"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr "Оба Утвержденные и Подтвержденные"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,leaves_taken:0
+msgid "Leaves Already Taken"
+msgstr "Отпуска, уже взятые"
+
+#. module: hr_holidays
+#: field:available.holidays.report,user_id:0
+#: field:hr.holidays,user_id:0
+#: field:hr.holidays.remaining.leaves.user,user_id:0
+msgid "User"
+msgstr "Пользователь"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,active:0
+msgid "Active"
+msgstr "Активно"
+
+#. module: hr_holidays
+#: field:hr.holidays,date_from:0
+msgid "Start Date"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "November"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "October"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:available.holidays.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,allocation_type:0
+msgid "Employee Request"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,manager_id:0
+msgid "First Approval"
+msgstr ""
+
+#. module: hr_holidays
+#: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
+msgid "Casual Leave"
+msgstr ""
+
+#. module: hr_holidays
+#: field:available.holidays.report,date:0
+msgid "Date"
+msgstr "Дата"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Extended options..."
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for %s while available leaves are less than asked "
+"leaves.' %(record.employee_id.name)))\n"
+"                nb = -(record.number_of_days_temp)\n"
+"            elif record.holiday_type == 'category' and record.type == "
+"'remove':\n"
+"                if record.category_id and not "
+"record.holiday_status_id.limit:\n"
+"                    leaves_rest = self.pool.get('hr.holidays.status"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Blue"
+msgstr "Светло-синий"
+
+#. module: hr_holidays
+#: constraint:hr.holidays:0
+msgid ""
+"Start date should not be larger than end date!\n"
+"Number of Days should be greater than 1!"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,type:0
+msgid "Request Type"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays.status,active:0
+msgid ""
+"If the active field is set to false, it will allow you to hide the leave "
+"type without removing it."
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,day:0
+msgid "Day"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: field:hr.holidays,notes:0
+msgid "Reasons"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
+msgid "Leaves Analysis"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: hr_holidays
-#: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
-msgid "Holidays def Request"
-msgstr "Определение запросов на отпуск"
+#: help:hr.holidays.status,color_name:0
+msgid ""
+"This color will be used in the leaves summary located in Reporting\\Leaves "
+"by Departement"
+msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.holidays.summary,init,holiday_type:0
-#: selection:hr.holidays.summary.employee,init,holiday_type:0
+#: view:available.holidays.report:0
+#: selection:available.holidays.report,state:0
+#: view:hr.holidays:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
 msgstr "Проверено"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
-msgid "My Holidays Request Refused"
-msgstr "Мои отклоненные заявления на отпуск"
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
+msgid "Allocation Request"
+msgstr ""
 
 #. module: hr_holidays
 #: constraint:ir.model:0
@@ -574,21 +786,47 @@ msgstr ""
 "символов !"
 
 #. module: hr_holidays
-#: wizard_button:hr.holidays.summary,init,checkdept:0
-#: wizard_button:hr.holidays.summary.employee,init,checkemp:0
+#: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
+msgid "Leave Detail"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.status,double_validation:0
+msgid "Apply Double Validation"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,holiday_status_id:0
+msgid " Leave Type"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Печать"
 
 #. module: hr_holidays
-#: model:ir.actions.wizard,name:hr_holidays.holidays_summary
-#: model:ir.ui.menu,name:hr_holidays.menu_holidays_summary
-msgid "Print Summary of Holidays"
-msgstr "Распечатать сводку отпустков"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
+msgid "My Leaves"
+msgstr ""
 
 #. module: hr_holidays
-#: wizard_field:hr.holidays.summary,init,depts:0
+#: view:board.board:0
+msgid "My Leaves by Type"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
 msgstr "Отдел(ы)"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
+msgid "Leave Request"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,name:0
@@ -596,26 +834,56 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: hr_holidays
-#: selection:hr.holidays,state:0
-#: model:process.node,name:hr_holidays.process_node_refused0
-msgid "Refused"
-msgstr "Отклонено"
+#: selection:available.holidays.report,month:0
+msgid "May"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition,note:hr_holidays.process_transition_approvedrequest0
-msgid "Request is approved."
-msgstr "Запрос одобрен."
+#: field:hr.holidays.status,categ_id:0
+msgid "Meeting Category"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,name:hr_holidays.process_node_holidaysdefinition0
-msgid "Holidays Definition"
-msgstr "Определение отпусков"
+#: help:hr.holidays,holiday_type:0
+msgid ""
+"By Employee: Allocation/Request for individual Employee, By Employee "
+"Category: Allocation/Request for group of employees in category"
+msgstr ""
 
 #. module: hr_holidays
-#: wizard_field:hr.holidays.summary,init,holiday_type:0
-#: wizard_field:hr.holidays.summary.employee,init,holiday_type:0
+#: view:hr.holidays:0
+msgid "Search Leave"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Holiday Type"
 msgstr "Выбор типа отпуска"
+
+#. module: hr_holidays
+#: field:available.holidays.report,employee_id:0
+msgid "Employee's Name"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
+msgid "Leaves by Month"
+msgstr ""
+
+#. module: hr_holidays
+#: selection:hr.holidays,holiday_type:0
+msgid "By Employee Category"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "This Month"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,manager_id2:0
+msgid "Second Approval"
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
@@ -623,18 +891,27 @@ msgid "Case"
 msgstr "Вопрос"
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_user_id:0
-msgid "Holiday per user"
+#: field:hr.holidays,date_to:0
+msgid "End Date"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_holidays0
-msgid "Encode number of available holidays"
-msgstr "Расшифровать число имеющихся отпусков"
+#: selection:available.holidays.report,month:0
+msgid "February"
+msgstr ""
 
 #. module: hr_holidays
-#: model:process.node,name:hr_holidays.process_node_legaldeclaration0
-msgid "Secretariat Social"
+#: help:hr.holidays.status,limit:0
+msgid ""
+"If you tick this checkbox, the system will allow, for this section, the "
+"employees to take more leaves than the available ones."
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays.status,leaves_taken:0
+msgid ""
+"This value is given by the sum of all holidays requests with a negative "
+"value."
 msgstr ""
 
 #. module: hr_holidays
@@ -643,9 +920,9 @@ msgid "Violet"
 msgstr "Фиолетовый"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Red"
-msgstr "Красный"
+#: selection:available.holidays.report,month:0
+msgid "April"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
@@ -653,24 +930,35 @@ msgid "Human Resources: Holidays management"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.process,name:hr_holidays.process_process_holidaysprocess0
-msgid "Holidays Process"
-msgstr "Процесс отпусков"
+#: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
+msgid "HR Holidays Summary Report By Department"
+msgstr ""
 
 #. module: hr_holidays
-#: wizard_view:hr.holidays.summary,notify:0
-msgid "You have to select at least 1 Department. Try again."
-msgstr "Вы должны выбрать по крайней мере один отдел. Попробуйте еще раз."
+#: help:hr.holidays,manager_id:0
+msgid "This area is automaticly filled by the user who validate the leave"
+msgstr ""
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
-msgid "My Holidays Request Validated"
-msgstr "Мои проверенные заявления на отпуск"
+#: view:hr.holidays:0
+msgid "Approve"
+msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.log,holiday_req_id:0
-msgid "Holiday Request ID"
-msgstr "ID запроса на отпуск"
+#: field:hr.holidays,linked_request_ids:0
+msgid "Linked Requests"
+msgstr ""
+
+#. module: hr_holidays
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr ""
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
+msgid "Allocation Requests"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -683,6 +971,251 @@ msgid "Light Pink"
 msgstr "Светло-розовый"
 
 #. module: hr_holidays
-#: model:process.node,note:hr_holidays.process_node_refused0
-msgid "His manager refuses the request"
-msgstr "Его менеджер отказывает по запросу"
+#: view:hr.holidays:0
+#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
+msgid "Leaves Summary"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid "Wrong leave definition."
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Manager"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "To Confirm"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+#: field:available.holidays.report,year:0
+msgid "Year"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "To Approve"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You Cannot Validate leaves while available leaves are less than asked leaves."
+msgstr ""
+
+#~ msgid "Notification"
+#~ msgstr "Уведомление"
+
+#~ msgid "Section"
+#~ msgstr "Раздел"
+
+#~ msgid "Color of the status"
+#~ msgstr "Цвет статуса"
+
+#~ msgid "draft"
+#~ msgstr "черновик"
+
+#~ msgid "Employee_id"
+#~ msgstr "ID сотрудника"
+
+#~ msgid "Validate"
+#~ msgstr "Проверить"
+
+#~ msgid "Notes"
+#~ msgstr "Примечания"
+
+#~ msgid "Report Options"
+#~ msgstr "Параметры отчета"
+
+#~ msgid "You have to select at least 1 Employee. Try again."
+#~ msgstr "Выберите хотя бы 1 сотрудника. Повторите попытку."
+
+#~ msgid "Print Summary of Holidays"
+#~ msgstr "Распечатать сводку отпустков"
+
+#~ msgid "My Available Holidays"
+#~ msgstr "Мои доступные отпуска"
+
+#~ msgid "Holiday Status"
+#~ msgstr "Статус отпуска"
+
+#~ msgid "to"
+#~ msgstr "до"
+
+#~ msgid "holidays."
+#~ msgstr "отпусков."
+
+#~ msgid "Holidays Per Employee"
+#~ msgstr "Отпусков на сотрудника"
+
+#~ msgid "Analyze from"
+#~ msgstr "Анализировать с"
+
+#~ msgid "Summary Of Holidays"
+#~ msgstr "Сводка отпусков"
+
+#~ msgid "Number of Days in this Holiday Request"
+#~ msgstr "Количество дней в данном заявлении на отпуск"
+
+#~ msgid "My Holidays Requests"
+#~ msgstr "Мои заявления на отпуск"
+
+#~ msgid "Holiday's Status"
+#~ msgstr "Статус отпуска"
+
+#~ msgid "My Holidays Request Draft"
+#~ msgstr "Мой черновик заявления на отпуск"
+
+#~ msgid "Print Summary of Employee's Holidays"
+#~ msgstr "Распечатать сводку отпусков сотрудников"
+
+#~ msgid "My Holidays Request Refused"
+#~ msgstr "Мои отклоненные заявления на отпуск"
+
+#~ msgid "of the"
+#~ msgstr "из"
+
+#~ msgid "Holidays Request"
+#~ msgstr "Заявление на отпуск"
+
+#~ msgid "My Holidays Request Validated"
+#~ msgstr "Мои проверенные заявления на отпуск"
+
+#~ msgid "Holiday status"
+#~ msgstr "Статус отпуска"
+
+#~ msgid "Vacation start day"
+#~ msgstr "Первый день отпуска"
+
+#~ msgid "All Holidays Requests"
+#~ msgstr "Все заявления на отпуск"
+
+#~ msgid "Vacation end day"
+#~ msgstr "Последний день отпуска"
+
+#~ msgid "Holidays Status"
+#~ msgstr "Статус отпусков"
+
+#~ msgid "Holidays Requests Awaiting for Validation"
+#~ msgstr "Заявления на отпуск в ожидании проверки"
+
+#~ msgid "My Validated Holidays Requests"
+#~ msgstr "Мои проверенные заявления на отпуск"
+
+#~ msgid "Requests Awaiting for Validation"
+#~ msgstr "Заявления, ожидающие проверки"
+
+#~ msgid "My Refused Holidays Requests"
+#~ msgstr "Мои отклоненные заявления на отпуск"
+
+#~ msgid "My Awaiting Confirmation Holidays Requests"
+#~ msgstr "Мои заявления на отпуск в ожидании подтверждения"
+
+#~ msgid "Holidays Management"
+#~ msgstr "Управление отпусками"
+
+#~ msgid "The holiday is set in the calendar"
+#~ msgstr "Отпуск установлен в календаре"
+
+#~ msgid "Holidays Per User"
+#~ msgstr "Отпусков на пользователя"
+
+#~ msgid "Refused Request"
+#~ msgstr "Запрос, которому отказывают."
+
+#~ msgid "Request is refused."
+#~ msgstr "На запрос отказано."
+
+#~ msgid "Employee Declaration"
+#~ msgstr "Заявления сотрудника"
+
+#~ msgid "New Holidays Request"
+#~ msgstr "Новое заявление на отпуск"
+
+#~ msgid "Employee Holidays"
+#~ msgstr "Отпуска сотрудника"
+
+#~ msgid "Holidays user"
+#~ msgstr "Отпуска пользователя"
+
+#~ msgid "My Holiday Requests"
+#~ msgstr "Мои запросы отпусков"
+
+#~ msgid "His manager approves the request"
+#~ msgstr "Его менеджер одобряет запрос"
+
+#~ msgid "If holidays available, employee can take it and fill it."
+#~ msgstr "Если доступен отпуск, служащий может взять и заполнить это."
+
+#~ msgid "Holiday is set in the calendar."
+#~ msgstr "Отпуск установлен в календаре."
+
+#~ msgid "Document for employee"
+#~ msgstr "Документ для сотрудника"
+
+#~ msgid "Set Holiday"
+#~ msgstr "Установить отпуск"
+
+#~ msgid "Employee fills in a request for holidays"
+#~ msgstr "Сотрудник заполняется в запросе об отпусках"
+
+#~ msgid "Calendar"
+#~ msgstr "Календарь"
+
+#~ msgid "Holiday manager"
+#~ msgstr "Ответственный за график отпусков"
+
+#~ msgid "Approved Request"
+#~ msgstr "Одобренный Запрос"
+
+#~ msgid "Holidays def Request"
+#~ msgstr "Определение запросов на отпуск"
+
+#~ msgid "Holiday Request ID"
+#~ msgstr "ID запроса на отпуск"
+
+#~ msgid "His manager refuses the request"
+#~ msgstr "Его менеджер отказывает по запросу"
+
+#~ msgid "Request is approved."
+#~ msgstr "Запрос одобрен."
+
+#~ msgid "Holidays Definition"
+#~ msgstr "Определение отпусков"
+
+#~ msgid "Encode number of available holidays"
+#~ msgstr "Расшифровать число имеющихся отпусков"
+
+#~ msgid "You have to select at least 1 Department. Try again."
+#~ msgstr "Вы должны выбрать по крайней мере один отдел. Попробуйте еще раз."
+
+#~ msgid "Holidays Process"
+#~ msgstr "Процесс отпусков"
+
+#~ msgid "hr.holidays.log"
+#~ msgstr "Регистрация отпусков"
+
+#~ msgid "Reufse"
+#~ msgstr "Отказать"
+
+#~ msgid "Both"
+#~ msgstr "Оба"
+
+#~ msgid "Ok"
+#~ msgstr "Ок"
+
+#~ msgid "My Draft Holidays Requests"
+#~ msgstr "Мои черновые заявления на отпуск"
+
+#~ msgid "Status"
+#~ msgstr "Состояние"
+
+#~ msgid "My Holidays Request"
+#~ msgstr "Мои заявления на отпуск"

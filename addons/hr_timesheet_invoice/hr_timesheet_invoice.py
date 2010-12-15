@@ -66,7 +66,7 @@ class account_analytic_account(osv.osv):
 
     _inherit = "account.analytic.account"
     _columns = {
-        'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist', 
+        'pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',

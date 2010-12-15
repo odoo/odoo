@@ -77,9 +77,9 @@
             <field name="help">Time Tracking functionality aims to manage employee's attendances on the basis of the actions (Sign in/Sign out) performed by them. You can also link this to an attendance machine using OpenERP's webservices features.</field>
         </record>
 
-        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3"/>
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4"/>
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20"/>
 

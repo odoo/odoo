@@ -1,9 +1,22 @@
 -
+  In order to Print the Invoice layout report in Normal Mode, we will create a invoice record
+-
+  !record {model: account.invoice, id: test_invoice_1}:
+    currency_id: base.EUR
+    company_id: base.main_company
+    address_invoice_id: base.res_partner_address_tang
+    partner_id: base.res_partner_asus
+    state: draft
+    type: out_invoice
+    account_id: account.a_recv
+    name: Test invoice 1
+    address_contact_id: base.res_partner_address_tang
+-
   Print the Invoice layout report in Normal Mode
-- 
+-
   !python {model: account.invoice}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.invoice.layout').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.invoice.layout').create(cr, uid, [ref('test_invoice_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout.'+format), 'wb+').write(data)
 -
@@ -11,7 +24,7 @@
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.invoice', 'form': {'message':ref('account_invoice_layout.demo_message1'),'id':ref('account.test_invoice_1'),'context':{}}}
-    (data, format) = netsvc.LocalService('report.notify_account.invoice').create(cr, uid, [ref('account.test_invoice_1')], data_dict, {})
+    data_dict = {'model': 'account.invoice', 'form': {'message':ref('account_invoice_layout.demo_message1'),'id':ref('test_invoice_1'),'context':{}}}
+    (data, format) = netsvc.LocalService('report.notify_account.invoice').create(cr, uid, [ref('test_invoice_1')], data_dict, {})
     if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout_message_report.'+format), 'wb+').write(data) 
+       file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout_message_report.'+format), 'wb+').write(data)

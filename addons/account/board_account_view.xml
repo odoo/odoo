@@ -29,7 +29,7 @@
             <field name="view_id" ref="account.view_account_entries_report_tree"/>
       </record>
       <record id="action_treasory_graph" model="ir.actions.act_window">
-          <field name="name">Treasory</field>
+          <field name="name">Treasury</field>
           <field name="res_model">account.account</field>
           <field name="view_type">form</field>
           <field name="view_mode">graph,tree</field>
@@ -44,12 +44,12 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Validate" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                             <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" />
                         </child1>
                         <child2>
-                            <action colspan="4" height="220" name="%(action_treasory_graph)d" string="Treasory"/>
-                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
+                            <action colspan="4" height="220" name="%(action_treasory_graph)d" string="Treasury"/>
+                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged Receivables"/>
                             <!--  <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/> -->
                         </child2>
                     </hpaned>

@@ -5,7 +5,7 @@
     name : Tax Code Test
     sign : 1.00
 -
-  In order to test the 'Validate Journal Entries' wizard in OpenERP, I created an account move
+  In order to test the 'Post Journal Entries' wizard in OpenERP, I created an account move
 -
   !record {model: account.move, id: account_move_0}:
     date: '2010-06-07'
@@ -46,7 +46,7 @@
   !assert {model: account.move, id: account_move_0, string: initialstatedraft}:
     - state == 'draft'
 -
-  I validate this account move by using the 'Validate Journal Entries' wizard
+  I validate this account move by using the 'Post Journal Entries' wizard
 -
   !record {model: validate.account.move, id: validate_account_move_0}:
     journal_id: account.bank_journal

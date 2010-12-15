@@ -6,402 +6,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 13:51+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 08:41+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_journal_sale_stats
-msgid "Monthly sales"
-msgstr "Ventes mensuelles"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_assigned
-msgid "Assigned packing"
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "assigned"
-msgstr "Attribué"
-
-#. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Waiting Schedule"
-msgstr "Attente d'exécution"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "to be invoiced"
-msgstr "à facturer"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_sale_journal
-#: view:sale_journal.sale.journal:0
-#: field:stock.picking,sale_journal_id:0
-msgid "Sale Journal"
-msgstr "Journal de vente"
-
-#. module: sale_journal
-#: field:sale_journal.sale.journal,sale_stats_ids:0
-msgid "Sale Stats"
-msgstr "Stats de vente"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "waiting"
-msgstr "En attente"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Set to Draft"
-msgstr "Mettre au brouillon"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,date:0
-#: field:sale_journal.sale.journal,date:0
-msgid "Journal date"
-msgstr "Date du journal"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice_method
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_menu
-msgid "Packing by Invoice Method"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking
-msgid "Packing Journals"
-msgstr ""
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Notes"
-msgstr "Notes"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_my
-msgid "My open journals"
-msgstr "Mes journaux ouverts"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,count:0
-#: field:sale_journal.picking.stats,count:0
-#: field:sale_journal.sale.stats,count:0
-msgid "# of Lines"
-msgstr "# de lignes"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_all
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_all_open
-msgid "All Open Journals"
-msgstr "Tous les journaux ouverts"
-
-#. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "done"
-msgstr "terminer"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,price_average:0
-#: field:sale_journal.picking.stats,price_average:0
-#: field:sale_journal.sale.stats,price_average:0
-msgid "Average Price"
-msgstr "Prix moyen"
-
-#. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Groupé"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,state:0
-#: field:sale_journal.picking.stats,state:0
-#: field:sale_journal.sale.journal,state:0
-msgid "State"
-msgstr "État"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_all
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_all_month
-msgid "All Months"
-msgstr "Tous les mois"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,price_total:0
-#: field:sale_journal.picking.stats,price_total:0
-#: field:sale_journal.sale.stats,price_total:0
-msgid "Total Price"
-msgstr "Prix Total"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal
-msgid "Packing journals"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales
-msgid "Reporting"
-msgstr "Reporting"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_my
-msgid "My open packing journals"
-msgstr "Mes journaux de colisage ouvert"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_sale_stats
-msgid "Sales Orders by Journal"
-msgstr "Commandes de ventes par Journal"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_all
-msgid "Open journals"
-msgstr ""
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Packing"
-msgstr ""
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and packing."
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "None"
-msgstr "Aucun"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_sale_sale_stats_open_menu_month
-msgid "Sales by journal (this month)"
-msgstr "Ventes par journal (ce mois)"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Manual in progress"
-msgstr "Manuel en cours"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_month
-msgid "Packing by journal"
-msgstr ""
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Cancel Packing"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_confirmed
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_confirmed
-msgid "Confirmed packing"
-msgstr ""
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "In progress"
-msgstr "En cours"
-
-#. module: sale_journal
-#: view:sale_journal.picking.stats:0
-msgid "Packing by journals"
-msgstr ""
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,name:0
-#: field:sale_journal.picking.stats,name:0
-#: field:sale_journal.sale.stats,name:0
-msgid "Month"
-msgstr "Mois"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,invoice_state:0
-msgid "Invoice state"
-msgstr "État de la facture"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_month
-#: view:sale_journal.invoice.type.stats:0
-msgid "Packing by invoice method"
-msgstr ""
-
-#. module: sale_journal
-#: field:sale_journal.sale.stats,state:0
-msgid "Order State"
-msgstr "État commande"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Shipping Exception"
-msgstr "Exception de livraison"
-
-#. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
-#: field:sale_journal.picking.journal,note:0
-#: field:sale_journal.sale.journal,note:0
 msgid "Note"
 msgstr "Note"
 
 #. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Draft"
-msgstr "Brouillon"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "cancel"
-msgstr "annuler"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Invoice Exception"
-msgstr "Exception de facture"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,date_validation:0
-#: field:sale_journal.sale.journal,date_validation:0
-msgid "Validation date"
-msgstr "Date da validation"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "draft"
-msgstr "brouillon"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Actif"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_draft
-msgid "Draft sales"
-msgstr "Ventes en brouillon"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Quotation"
-msgstr "Proposition"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal
-msgid "Sales Journals"
-msgstr "Journaux de ventes"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_tree
-msgid "sale_journal.invoice.type.tree"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Confirm Sales"
-msgstr "Confirmer les Ventes"
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sale Order"
+msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.picking.journal,date_created:0
-#: field:sale_journal.picking.journal,state:0
-#: field:sale_journal.sale.journal,date_created:0
-msgid "Creation date"
-msgstr "Date de création"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr ""
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
-msgstr "Méthode de facturation"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,code:0
-#: field:sale_journal.sale.journal,code:0
-msgid "Code"
-msgstr "Code"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Open Journal"
-msgstr "Ouvrir journal"
-
-#. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Sales"
-msgstr "Ventes"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_picking_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting
-#: view:sale_journal.picking.journal:0
-msgid "Packing Journal"
-msgstr "Journal de colisage"
-
-#. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-#: selection:sale_journal.sale.stats,state:0
-msgid "Done"
-msgstr "Terminer"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,picking_stats_ids:0
-msgid "Journal Stats"
-msgstr "Statistiques des Journaux"
-
-#. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Open"
-msgstr "Ouvert"
-
-#. module: sale_journal
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"Invoice types are used on partners, sales order and delivery orders. You can "
+"create journal to group your invoicing according to customer's needs: daily, "
+"each wednesday, monthly, etc."
 msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -409,26 +51,48 @@ msgid "Sales & Purchases"
 msgstr "Ventes & Achats"
 
 #. module: sale_journal
-#: field:sale_journal.picking.journal,user_id:0
-#: field:sale_journal.sale.journal,user_id:0
-msgid "Responsible"
-msgstr "Responsable"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_my
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_my_open
-msgid "My Open Journals"
-msgstr "Mes Journaux Ouverts"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
-msgid "Statistics on packing to invoice"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Cancel Sales"
-msgstr "Ventes Annulées"
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Method"
+msgstr "Méthode de facturation"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Types de facture"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Non groupées"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Groupé"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Méthode de facturation"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -439,116 +103,213 @@ msgid "Invoice Type"
 msgstr "Type de facture"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "invoiced"
-msgstr "Facturé"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Actif"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "confirmed"
-msgstr "Confirmé"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_picking_stats
-msgid "Packing lists by Journal"
-msgstr "Listes des colisages par journaux"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,quantity:0
-#: field:sale_journal.picking.stats,quantity:0
-#: field:sale_journal.sale.stats,quantity:0
-msgid "Quantities"
-msgstr "Quantités"
-
-#. module: sale_journal
-#: field:sale.order,journal_id:0
-#: view:sale_journal.picking.journal:0
-#: field:sale_journal.picking.journal,name:0
-#: field:sale_journal.picking.stats,journal_id:0
-#: view:sale_journal.sale.journal:0
-#: field:sale_journal.sale.journal,name:0
-#: field:sale_journal.sale.stats,journal_id:0
-#: field:stock.picking,journal_id:0
-msgid "Journal"
-msgstr "Journal"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-#: field:sale_journal.invoice.type.stats,invoice_type_id:0
-msgid "Invoicing method"
-msgstr "Méthode de facturation"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_this
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_this_month
-msgid "This Month"
-msgstr "Ce mois"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales
-#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_menu
-#: view:sale_journal.sale.stats:0
-msgid "Sales by Journal"
-msgstr "Ventes par Journa"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoicing Methods"
-msgstr "Méthodes de facturation"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Non groupées"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_open
-msgid "Packing to invoice"
+#: model:ir.model,name:sale_journal.model_res_partner
+msgid "Partner"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Journal Information"
-msgstr "Information Journal"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type_stats
-msgid "Stats on packing by invoice method"
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Types de facture"
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Gestion des ventes et des livraisons par journal"
 
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "States"
-msgstr "États"
+#~ msgid "Monthly sales"
+#~ msgstr "Ventes mensuelles"
 
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
-msgid "Packing by Journal"
-msgstr ""
+#~ msgid "assigned"
+#~ msgstr "Attribué"
 
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Close Journal"
-msgstr "Fermer Journal"
+#~ msgid "Waiting Schedule"
+#~ msgstr "Attente d'exécution"
 
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice
-msgid "Packing to Invoice"
-msgstr ""
+#~ msgid "to be invoiced"
+#~ msgstr "à facturer"
 
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_approved
-msgid "Approved sales"
-msgstr "Ventes Approuvées"
+#~ msgid "Sale Journal"
+#~ msgstr "Journal de vente"
+
+#~ msgid "Sale Stats"
+#~ msgstr "Stats de vente"
+
+#~ msgid "waiting"
+#~ msgstr "En attente"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Mettre au brouillon"
+
+#~ msgid "Journal date"
+#~ msgstr "Date du journal"
+
+#~ msgid "My open journals"
+#~ msgstr "Mes journaux ouverts"
+
+#~ msgid "# of Lines"
+#~ msgstr "# de lignes"
+
+#~ msgid "All Open Journals"
+#~ msgstr "Tous les journaux ouverts"
+
+#~ msgid "done"
+#~ msgstr "terminer"
+
+#~ msgid "Average Price"
+#~ msgstr "Prix moyen"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "State"
+#~ msgstr "État"
+
+#~ msgid "All Months"
+#~ msgstr "Tous les mois"
+
+#~ msgid "Total Price"
+#~ msgstr "Prix Total"
+
+#~ msgid "Reporting"
+#~ msgstr "Reporting"
+
+#~ msgid "My open packing journals"
+#~ msgstr "Mes journaux de colisage ouvert"
+
+#~ msgid "Sales Orders by Journal"
+#~ msgstr "Commandes de ventes par Journal"
+
+#~ msgid "None"
+#~ msgstr "Aucun"
+
+#~ msgid "Sales by journal (this month)"
+#~ msgstr "Ventes par journal (ce mois)"
+
+#~ msgid "Manual in progress"
+#~ msgstr "Manuel en cours"
+
+#~ msgid "In progress"
+#~ msgstr "En cours"
+
+#~ msgid "Month"
+#~ msgstr "Mois"
+
+#~ msgid "Invoice state"
+#~ msgstr "État de la facture"
+
+#~ msgid "Order State"
+#~ msgstr "État commande"
+
+#~ msgid "Shipping Exception"
+#~ msgstr "Exception de livraison"
+
+#~ msgid "Draft"
+#~ msgstr "Brouillon"
+
+#~ msgid "cancel"
+#~ msgstr "annuler"
+
+#~ msgid "Invoice Exception"
+#~ msgstr "Exception de facture"
+
+#~ msgid "Validation date"
+#~ msgstr "Date da validation"
+
+#~ msgid "draft"
+#~ msgstr "brouillon"
+
+#~ msgid "Draft sales"
+#~ msgstr "Ventes en brouillon"
+
+#~ msgid "Quotation"
+#~ msgstr "Proposition"
+
+#~ msgid "Sales Journals"
+#~ msgstr "Journaux de ventes"
+
+#~ msgid "Confirm Sales"
+#~ msgstr "Confirmer les Ventes"
+
+#~ msgid "Creation date"
+#~ msgstr "Date de création"
+
+#~ msgid "Code"
+#~ msgstr "Code"
+
+#~ msgid "Open Journal"
+#~ msgstr "Ouvrir journal"
+
+#~ msgid "Sales"
+#~ msgstr "Ventes"
+
+#~ msgid "Packing Journal"
+#~ msgstr "Journal de colisage"
+
+#~ msgid "Done"
+#~ msgstr "Terminer"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "Journal Stats"
+#~ msgstr "Statistiques des Journaux"
+
+#~ msgid "Open"
+#~ msgstr "Ouvert"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
+#~ msgid "Responsible"
+#~ msgstr "Responsable"
+
+#~ msgid "My Open Journals"
+#~ msgstr "Mes Journaux Ouverts"
+
+#~ msgid "Cancel Sales"
+#~ msgstr "Ventes Annulées"
+
+#~ msgid "invoiced"
+#~ msgstr "Facturé"
+
+#~ msgid "confirmed"
+#~ msgstr "Confirmé"
+
+#~ msgid "Packing lists by Journal"
+#~ msgstr "Listes des colisages par journaux"
+
+#~ msgid "Quantities"
+#~ msgstr "Quantités"
+
+#~ msgid "Journal"
+#~ msgstr "Journal"
+
+#~ msgid "This Month"
+#~ msgstr "Ce mois"
+
+#~ msgid "Sales by Journal"
+#~ msgstr "Ventes par Journa"
+
+#~ msgid "Invoicing Methods"
+#~ msgstr "Méthodes de facturation"
+
+#~ msgid "Journal Information"
+#~ msgstr "Information Journal"
+
+#~ msgid "States"
+#~ msgstr "États"
+
+#~ msgid "Close Journal"
+#~ msgstr "Fermer Journal"
+
+#~ msgid "Approved sales"
+#~ msgstr "Ventes Approuvées"

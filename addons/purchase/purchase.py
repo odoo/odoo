@@ -34,7 +34,7 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
-    
+
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -42,7 +42,7 @@ class purchase_order(osv.osv):
             for oline in order.order_line:
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
-         
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
@@ -187,7 +187,7 @@ class purchase_order(osv.osv):
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
                 "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
-                "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
+                "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
@@ -271,7 +271,6 @@ class purchase_order(osv.osv):
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
-        product = []
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -281,7 +280,7 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
             message = _("Purchase order '%s' is confirmed.") % (po.name,)
             self.log(cr, uid, po.id, message)
-        current_name = self.name_get(cr, uid, ids)[0][1]
+#        current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -298,10 +297,10 @@ class purchase_order(osv.osv):
                     managers.append(manager.id)
             for manager_id in managers:
                 request.create(cr, uid,{
-                       'name' : "Purchase amount over the limit",
+                       'name' : _("Purchase amount over the limit"),
                        'act_from' : uid,
                        'act_to' : manager_id,
-                       'body': 'Somebody has just confirmed a purchase with an amount over the defined limit',
+                       'body': _('Somebody has just confirmed a purchase with an amount over the defined limit'),
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                 })
@@ -369,7 +368,7 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
-                'fiscal_position': o.partner_id.property_account_position.id,
+                'fiscal_position': o.fiscal_position.id or o.partner_id.property_account_position.id,
                 'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
                 'company_id': o.company_id.id,
             }
@@ -560,6 +559,7 @@ class purchase_order(osv.osv):
 
 
         allorders = []
+        orders_info = {}
         for order_key, (order_data, old_ids) in new_orders.iteritems():
             # skip merges with only one order
             if len(old_ids) < 2:
@@ -574,13 +574,14 @@ class purchase_order(osv.osv):
 
             # create the new order
             neworder_id = self.create(cr, uid, order_data)
+            orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
 
             # make triggers pointing to the old orders point to the new order
             for old_id in old_ids:
                 wf_service.trg_redirect(uid, 'purchase.order', old_id, neworder_id, cr)
                 wf_service.trg_validate(uid, 'purchase.order', old_id, 'purchase_cancel', cr)
-        return allorders
+        return orders_info
 
 purchase_order()
 
@@ -598,7 +599,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.date('Scheduled Date', required=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -617,7 +618,7 @@ class purchase_order_line(osv.osv):
                                        \n* The \'Cancelled\' state is set automatically when user cancel purchase order.'),
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),
+        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
 
     }
@@ -647,6 +648,8 @@ class purchase_order_line(osv.osv):
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid, product)
+
+        product_uom_pool = self.pool.get('product.uom')
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
@@ -661,22 +664,27 @@ class purchase_order_line(osv.osv):
             date_order = time.strftime('%Y-%m-%d')
         qty = qty or 1.0
         seller_delay = 0
+
+        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
+ 
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
-                temp_qty = s.qty # supplier _qty assigned to temp
+                temp_qty = s.min_qty # supplier _qty assigned to temp
+                if s.product_uom:
+                    qty = product_uom_pool._compute_qty(cr, uid, s.product_uom.id, s.min_qty, to_uom_id=prod_uom_po)
+                    uom = prod_uom_po
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
         if price_unit:
             price = price_unit
         else:
             price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom,
+                    product, 1.0, partner_id, {
+                        'uom': prod_uom_po,
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
-        prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
         res = {'value': {'price_unit': price, 'name': name or prod_name,

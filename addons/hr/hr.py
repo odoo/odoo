@@ -19,16 +19,14 @@
 #
 ##############################################################################
 
-import os
-
 from osv import fields, osv
-import tools
-from tools.translate import _
+
+import addons
 
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context)
         res = []
@@ -115,7 +113,7 @@ class hr_job(osv.osv):
     def on_change_expected_employee(self, cr, uid, ids, expected_employee, no_of_employee, context=None):
         if context is None:
             context = {}
-        result={}
+        result = {}
         if expected_employee:
             result['no_of_recruitment'] = expected_employee - no_of_employee
         return {'value': result}
@@ -166,27 +164,22 @@ class hr_employee(osv.osv):
     }
 
     def onchange_company(self, cr, uid, ids, company, context=None):
-        company_id = self.pool.get('res.company').browse(cr,uid,company)
-        for address in company_id.partner_id.address:
-            return {'value': {'address_id': address.id}}
-        return {'value':{'address_id':False}}
-
-    def onchange_department(self, cr, uid, ids, department_id, context=None):
-        if not department_id:
-            return {'value':{'parent_id': False}}
-        manager = self.pool.get('hr.department').browse(cr, uid, department_id).manager_id
-        return {'value': {'parent_id':manager and manager.id or False}}
+        address_id = False
+        if company:
+            company_id = self.pool.get('res.company').browse(cr,uid,company)
+            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
+            address_id = address and address['default'] or False
+        return {'value': {'address_id' : address_id}}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
-        if not user_id:
-            return {'value':{'work_email': False}}
-        mail = self.pool.get('res.users').browse(cr,uid,user_id)
-        return {'value': {'work_email':mail.user_email}}
+        work_email = False
+        if user_id:
+            work_email = self.pool.get('res.users').browse(cr, uid, user_id).user_email
+        return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        return open(os.path.join(
-            tools.config['addons_path'], 'hr/image', 'photo.png'),
-                    'rb') .read().encode('base64')
+        photo_path = addons.get_module_resource('hr','images','photo.png')
+        return open(photo_path, 'rb').read().encode('base64')
 
     _defaults = {
         'active': 1,

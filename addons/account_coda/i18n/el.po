@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-24 13:11+0000\n"
-"PO-Revision-Date: 2010-08-02 21:26+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"PO-Revision-Date: 2010-11-14 08:11+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-11-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
-#: field:account.coda,journal_id:0
-#: wizard_field:account.coda_import,init,journal_id:0
+#: help:account.coda,journal_id:0
+#: field:account.coda.import,journal_id:0
 msgid "Bank Journal"
 msgstr "Ημερολόγιο τράπεζας"
 
@@ -32,19 +32,14 @@ msgstr ""
 "ειδικούς χαρακτήρες!"
 
 #. module: account_coda
-#: wizard_field:account.coda_import,extraction,note:0
-msgid "Log"
-msgstr "Καταγραφή"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
 
 #. module: account_coda
-#: wizard_button:account.coda_import,extraction,open:0
-msgid "_Open Statement"
-msgstr "_Ανοιχτή δήλωση"
-
-#. module: account_coda
-#: model:ir.module.module,shortdesc:account_coda.module_meta_information
-msgid "Account CODA"
-msgstr "Λογαριασμός CODA"
+#: model:ir.model,name:account_coda.model_account_coda_import
+msgid "Account Coda Import"
+msgstr ""
 
 #. module: account_coda
 #: field:account.coda,name:0
@@ -52,19 +47,24 @@ msgid "Coda file"
 msgstr "Αρχείο Coda"
 
 #. module: account_coda
-#: wizard_view:account.coda_import,init:0
-msgid "Clic on 'New' to select your file :"
-msgstr "Πατήστε \"Νέο\" για να επιλέξετε το αρχείο σας"
+#: view:account.coda:0
+msgid "Group By..."
+msgstr "Ομαδοποίηση Κατά..."
 
 #. module: account_coda
-#: model:ir.actions.wizard,name:account_coda.wizard_account_coda_import
-msgid "Import Coda File"
-msgstr "Εισαγωγή αρχείου Coda"
+#: field:account.coda.import,awaiting_account:0
+msgid "Default Account for Unrecognized Movement"
+msgstr "Προεπιλεγμένος Λογαριασμός για μη Αναγνωρίσιμη Κίνηση"
 
 #. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+#: help:account.coda,date:0
+msgid "Import Date"
+msgstr "Εισαγωγή ημερομηνίας"
+
+#. module: account_coda
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"
 
 #. module: account_coda
 #: field:account.coda,note:0
@@ -72,43 +72,64 @@ msgid "Import log"
 msgstr "Εισαγωγή ιστορικού καταγραφής"
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,def_receivable:0
-msgid "Default receivable Account"
-msgstr "Προεπιλεγμένος λογαριασμός είσπραξης"
-
-#. module: account_coda
-#: model:ir.module.module,description:account_coda.module_meta_information
-msgid ""
-"Module provides functionality to import\n"
-"    bank statements from .csv file.\n"
-"    Import coda file wizard is used to import bank statements."
-msgstr ""
-"Η μονάδα παρέχει λειτουργικότητα για να εισάγεται\n"
-"    τραπεζικούς λογαριασμούς απο αρχείο .csv .\n"
-"    Οδηγός εισαγωγής αρχείων coda χρησιμοποιείται για την εισαγωγή των "
-"τραπεζικών λογαριασμών."
-
-#. module: account_coda
-#: wizard_button:account.coda_import,extraction,end:0
-msgid "_Close"
-msgstr "_Κλείσιμο"
-
-#. module: account_coda
-#: field:account.coda,statement_id:0
-msgid "Generated Bank Statement"
-msgstr "Δημιουργημένος τραπεζικός λογαριασμός"
+#: view:account.coda.import:0
+msgid "Import"
+msgstr "Εισαγωγή"
 
 #. module: account_coda
 #: view:account.coda:0
-#: model:ir.actions.act_window,name:account_coda.act_account_payment_account_bank_statement
-#: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda import"
 msgstr "Εισαγωγή Coda"
 
 #. module: account_coda
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "Καταγραφή"
+
+#. module: account_coda
+#: help:account.coda.import,awaiting_account:0
+msgid ""
+"Set here the default account that will be used, if the partner is found but "
+"does not have the bank account, or if he is domiciled"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,company_id:0
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: account_coda
+#: help:account.coda.import,def_payable:0
+msgid ""
+"Set here the payable account that will be used, by default, if the partner "
+"is not found"
+msgstr ""
+"Σημειώστε εδώ τον προεπιλεγμένο λογαριασμό πληρωμής που θα χρησιμοποιηθεί , "
+"εάν δεν βρεθεί ο συνεργάτης"
+
+#. module: account_coda
+#: view:account.coda:0
+msgid "Search Coda"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda:0
 #: field:account.coda,user_id:0
 msgid "User"
 msgstr "Χρήστης"
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,date:0
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#. module: account_coda
+#: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
+msgid "Coda Import Logs"
+msgstr ""
 
 #. module: account_coda
 #: constraint:ir.ui.view:0
@@ -121,30 +142,45 @@ msgid "coda for an Account"
 msgstr "coda για εναν λογαριασμό"
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,def_payable:0
+#: field:account.coda.import,def_payable:0
 msgid "Default Payable Account"
 msgstr "Προεπιλεγμένος λογαριασμός πληρωμής"
 
 #. module: account_coda
-#: model:ir.ui.menu,name:account_coda.menu_account_coda
-msgid "Coda Statements"
-msgstr "Λογαριασμοί Coda"
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr ""
 
 #. module: account_coda
-#: model:ir.ui.menu,name:account_coda.menu_account_coda_wizard
+#: view:account.coda.import:0
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Open Statements"
+msgstr ""
+
+#. module: account_coda
+#: model:ir.ui.menu,name:account_coda.menu_account_coda_import
 msgid "Import Coda Statements"
 msgstr "Εισαγωγή λογαριασμών Coda"
 
 #. module: account_coda
-#: wizard_button:account.coda_import,init,extraction:0
-msgid "_Ok"
-msgstr "_Εντάξει"
-
-#. module: account_coda
-#: wizard_view:account.coda_import,extraction:0
-#: wizard_view:account.coda_import,init:0
+#: view:account.coda.import:0
+#: model:ir.actions.act_window,name:account_coda.action_account_coda_import
 msgid "Import Coda Statement"
 msgstr "Εισαγωγή λογαριασμών Coda"
+
+#. module: account_coda
+#: view:account.coda:0
+msgid "Statements"
+msgstr ""
+
+#. module: account_coda
+#: constraint:ir.rule:0
+msgid "Rules are not supported for osv_memory objects !"
+msgstr ""
 
 #. module: account_coda
 #: field:account.bank.statement,coda_id:0
@@ -152,21 +188,127 @@ msgid "Coda"
 msgstr "Coda"
 
 #. module: account_coda
-#: wizard_view:account.coda_import,extraction:0
+#: view:account.coda.import:0
 msgid "Results :"
 msgstr "Αποτελέσματα :"
 
 #. module: account_coda
-#: wizard_field:account.coda_import,init,coda:0
+#: view:account.coda.import:0
+msgid "Result of Imported Coda Statements"
+msgstr ""
+
+#. module: account_coda
+#: help:account.coda.import,def_receivable:0
+msgid ""
+"Set here the receivable account that will be used, by default, if the "
+"partner is not found"
+msgstr ""
+
+#. module: account_coda
+#: field:account.coda.import,coda:0
+#: model:ir.actions.act_window,name:account_coda.act_account_payment_account_bank_statement
 msgid "Coda File"
 msgstr "Αρχείο Coda"
 
 #. module: account_coda
-#: field:account.coda,date:0
-msgid "Import Date"
-msgstr "Εισαγωγή ημερομηνίας"
+#: model:ir.model,name:account_coda.model_account_bank_statement
+msgid "Bank Statement"
+msgstr ""
 
 #. module: account_coda
-#: wizard_view:account.coda_import,init:0
-msgid "Select your bank journal :"
-msgstr "Επιλέξτε το ημερολόγιο τράπεζά σας :"
+#: model:ir.actions.act_window,name:account_coda.action_account_coda
+msgid "Coda Logs"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "Result"
+msgstr "Αποτέλεσμα"
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Click on 'New' to select your file :"
+msgstr "Κάντε κλικ στο 'Νέο' για επιλογή αρχείου:"
+
+#. module: account_coda
+#: field:account.coda.import,def_receivable:0
+msgid "Default Receivable Account"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#. module: account_coda
+#: field:account.coda,statement_ids:0
+msgid "Generated Bank Statements"
+msgstr ""
+
+#. module: account_coda
+#: model:ir.module.module,shortdesc:account_coda.module_meta_information
+msgid "Account CODA - import bank statements from coda file"
+msgstr ""
+
+#. module: account_coda
+#: view:account.coda.import:0
+msgid "Configure Your Journal and Account :"
+msgstr "Παραμετροποίησε το Ημερολόγιο και τον Λογαριασμό"
+
+#. module: account_coda
+#: view:account.coda:0
+msgid "Coda Import"
+msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+msgstr "Ο λογαριασμός τραπέζης %s δεν έχει οριστεί για τον συνεργάτη %s.\n"
+
+#. module: account_coda
+#: view:account.coda:0
+#: field:account.coda,journal_id:0
+msgid "Journal"
+msgstr "Ημερολόγιο"
+
+#~ msgid "Clic on 'New' to select your file :"
+#~ msgstr "Πατήστε \"Νέο\" για να επιλέξετε το αρχείο σας"
+
+#~ msgid "Default receivable Account"
+#~ msgstr "Προεπιλεγμένος λογαριασμός είσπραξης"
+
+#~ msgid "_Close"
+#~ msgstr "_Κλείσιμο"
+
+#~ msgid "Generated Bank Statement"
+#~ msgstr "Δημιουργημένος τραπεζικός λογαριασμός"
+
+#~ msgid "_Ok"
+#~ msgstr "_Εντάξει"
+
+#~ msgid "_Open Statement"
+#~ msgstr "_Ανοιχτή δήλωση"
+
+#~ msgid "Coda Statements"
+#~ msgstr "Λογαριασμοί Coda"
+
+#~ msgid ""
+#~ "Module provides functionality to import\n"
+#~ "    bank statements from .csv file.\n"
+#~ "    Import coda file wizard is used to import bank statements."
+#~ msgstr ""
+#~ "Η μονάδα παρέχει λειτουργικότητα για να εισάγεται\n"
+#~ "    τραπεζικούς λογαριασμούς απο αρχείο .csv .\n"
+#~ "    Οδηγός εισαγωγής αρχείων coda χρησιμοποιείται για την εισαγωγή των "
+#~ "τραπεζικών λογαριασμών."
+
+#~ msgid "Account CODA"
+#~ msgstr "Λογαριασμός CODA"
+
+#~ msgid "Import Coda File"
+#~ msgstr "Εισαγωγή αρχείου Coda"
+
+#~ msgid "Select your bank journal :"
+#~ msgstr "Επιλέξτε το ημερολόγιο τράπεζά σας :"

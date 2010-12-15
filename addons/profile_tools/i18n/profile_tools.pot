@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:48+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:48+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44:17+0000\n"
+"PO-Revision-Date: 2010-12-03 15:44:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,8 @@ msgid "Promote ideas of the employees, votes and discussion on best ideas."
 msgstr ""
 
 #. module: profile_tools
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,progress:0
-msgid "Configuration Progress"
+#: help:misc_tools.installer,share:0
+msgid "Allows you to give restricted access to your OpenERP documents to external users, such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc."
 msgstr ""
 
 #. module: profile_tools
@@ -66,18 +61,8 @@ msgid "Recurring Documents"
 msgstr ""
 
 #. module: profile_tools
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: profile_tools
-#: model:ir.model,name:profile_tools.model_misc_tools_installer
-msgid "misc_tools.installer"
-msgstr ""
-
-#. module: profile_tools
-#: field:misc_tools.installer,share:0
-msgid "Share Data / Portals"
+#: help:misc_tools.installer,pad:0
+msgid "This module creates a tighter integration between a Pad instance of your choosing and your OpenERP Web Client by letting you easily link pads to OpenERP objects via OpenERP attachments."
 msgstr ""
 
 #. module: profile_tools
@@ -91,13 +76,18 @@ msgid "Survey"
 msgstr ""
 
 #. module: profile_tools
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.model,name:profile_tools.model_misc_tools_installer
+msgid "misc_tools.installer"
 msgstr ""
 
 #. module: profile_tools
-#: help:misc_tools.installer,share:0
-msgid "This module allows you to easily give restricted access of any filtered list of objects to any customer or supplier.Just click on the share icon to give access to your customers on their project's tasks, support requests, invoices, etc."
+#: field:misc_tools.installer,pad:0
+msgid "Native pad integration"
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,share:0
+msgid "Web Share"
 msgstr ""
 
 #. module: profile_tools
@@ -110,5 +100,10 @@ msgstr ""
 msgid "Installs tools for lunch,survey,subscription and audittrail\n"
 "    module\n"
 "    "
+msgstr ""
+
+#. module: profile_tools
+#: field:misc_tools.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 

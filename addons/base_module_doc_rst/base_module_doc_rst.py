@@ -26,6 +26,7 @@ import report
 from osv import fields, osv, orm
 import tools
 from tools.translate import _
+import addons
 
 class module(osv.osv):
     _inherit = 'ir.module.module'
@@ -104,7 +105,7 @@ class module(osv.osv):
         context.update({'level': 1})
         dots = self.get_graphical_representation(cr, uid, object_ids, context=context)
         # todo: use os.realpath
-        file_path = tools.config['addons_path']+"/base_module_doc_rst/"
+        file_path = addons.get_module_resource('base_module_doc_rst')
         path_png = file_path + "/module.png"
         for key, val in dots.items():
            path_dotfile = file_path + "/%s.dot" % (key,)

@@ -41,8 +41,8 @@ class project_account_analytic_line(osv.osv_memory):
                 domain = [('date','>=',from_date)]
           elif to_date:
                 domain = [('date','<=',to_date)]
-          result = mod_obj._get_id(cr, uid, 'account', 'view_account_analytic_line_filter')
-          id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+          result = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_analytic_line_filter')
+          id = result and result[1] or False
           return {
                 'name': _('Analytic Entries by line'),
                 'view_type': 'form',

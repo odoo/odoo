@@ -7,60 +7,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-25 13:16+0000\n"
-"PO-Revision-Date: 2010-09-29 09:36+0000\n"
-"Last-Translator: Paul Korotkov <korotkov.paul@gmail.com>\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-29 07:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "E-mail Address"
 msgstr "Адрес эл. почты"
 
 #. module: hr_payroll
-#: view:hr.holidays.status:0
-msgid "(Based on type Payroll will calculate basic salary)"
+#: view:hr.allounce.deduction.categoty:0
+msgid "Based"
 msgstr ""
 
 #. module: hr_payroll
+#: field:hr.contract,net:0
+#: field:hr.employee,net:0
 #: field:hr.payroll.register,net:0
 #: field:hr.payslip,net:0
+#: report:salary.structure:0
 msgid "Net Salary"
 msgstr "Зарплата на руки"
 
 #. module: hr_payroll
-#: field:hr.payslip,working_days:0
-msgid "Working Days"
-msgstr "Рабочие дни"
-
-#. module: hr_payroll
-#: selection:hr.payroll.register,state:0
-#: selection:hr.payslip,state:0
-msgid "New Slip"
-msgstr "Новый расчетный листок"
-
-#. module: hr_payroll
-#: rml:payroll.advice:0
-msgid "Axis Bank"
+#: view:hr.payslip:0
+msgid "Recompute Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.employee,esp_account:0
-msgid "EPS Account"
-msgstr ""
+#: report:employees.salary:0
+msgid "Employees Salary Details"
+msgstr "Детали заработной платы"
 
 #. module: hr_payroll
-#: help:hr.employee,analytic_account:0
-msgid "Analytic Account for Salary Analysis"
-msgstr "Аналитический счет для анализа заработной платы"
-
-#. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Allowances with Basic:"
 msgstr ""
 
@@ -70,35 +57,46 @@ msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия."
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: report:salary.structure:0
 msgid "Department"
 msgstr "Подразделение"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Deductions:"
 msgstr "Удержания"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,gratuity:0
+#: field:company.contribution,gratuity:0
 msgid "Use for Gratuity ?"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
-msgid "Employee No"
-msgstr ""
+#: field:hr.contract,working_days_per_week:0
+#: field:hr.payslip,working_days:0
+#: report:payslip.pdf:0
+msgid "Working Days"
+msgstr "Рабочие дни"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: selection:hr.allounce.deduction.categoty,type:0
+#: selection:hr.payslip.line,type:0
+msgid "Loan"
+msgstr "Долги"
+
+#. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
 msgid "Salary Payment Register"
 msgstr "Журнал начисления заработной платы"
 
 #. module: hr_payroll
-#: field:hr.payslip,paid:0
-msgid "Paid ? "
-msgstr "Оплачено? "
+#: field:hr.employee,slip_ids:0
+#: view:hr.payroll.register:0
+#: field:hr.payroll.register,line_ids:0
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+msgid "Payslips"
+msgstr "Расчетные листки"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_salary_report
@@ -112,21 +110,26 @@ msgid "Paid Salary"
 msgstr "Выплаченная заработная плата"
 
 #. module: hr_payroll
-#: field:hr.payroll.advice.line,flag:0
-msgid "D/C"
+#: report:payslip.pdf:0
+msgid "("
 msgstr ""
 
 #. module: hr_payroll
+#: field:company.contribution,company_id:0
+#: field:hr.allounce.deduction.categoty,company_id:0
+#: field:hr.contibution.register,company_id:0
+#: field:hr.holidays.status,company_id:0
+#: field:hr.payroll.advice,company_id:0
 #: field:hr.payroll.register,company_id:0
+#: field:hr.payroll.structure,company_id:0
 #: field:hr.payslip,company_id:0
-#: wizard_field:payroll.analysis,init,company_id:0
 msgid "Company"
 msgstr "Организация"
 
 #. module: hr_payroll
-#: help:hr.employee,employee_account:0
-msgid "Employee Payable Account"
-msgstr ""
+#: report:payroll.advice:0
+msgid "The Manager"
+msgstr "Менеджер"
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -134,9 +137,10 @@ msgid "Letter Details"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
+#: report:payslip.pdf:0
 msgid ","
-msgstr ""
+msgstr ","
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -146,9 +150,15 @@ msgid "Set to Draft"
 msgstr "Установить в 'Черновик'"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
-msgid "The Manager"
-msgstr "Менеджер"
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Variable Error: %s "
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.passport:0
+msgid "Expire"
+msgstr "Истечение срока"
 
 #. module: hr_payroll
 #: selection:hr.holidays.status,type:0
@@ -156,8 +166,7 @@ msgid "Half-Pay Holiday"
 msgstr "Частично оплачиваемый отпуск"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 #: field:hr.payslip,other_pay:0
 msgid "Others"
 msgstr "Прочие"
@@ -165,98 +174,109 @@ msgstr "Прочие"
 #. module: hr_payroll
 #: field:hr.payslip.line,slip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Pay Slip"
 msgstr "Расчетный листок"
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
-msgid "Calculations Rules"
-msgstr "Правила расчетов"
-
-#. module: hr_payroll
-#: model:ir.module.module,description:hr_payroll.module_meta_information
-msgid ""
-"\n"
-"    The Payroll system - India, Manages and depends on,\n"
-"    * HR Details\n"
-"    * HR Contracts\n"
-"    * HR Payslip\n"
-"    * HR Paysheet\n"
-"    * HR Attendance\n"
-"    * HR Holidays\n"
-"    "
+#: report:salary.structure:0
+msgid "Contract Detail:"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-#: rml:salary.structure:0
-msgid "Salary"
-msgstr "Заработная плата"
-
-#. module: hr_payroll
-#: field:hr.holidays.status,account_id:0
-msgid "Account"
-msgstr "Счет"
-
-#. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Payment From"
-msgstr "Платеж от"
-
-#. module: hr_payroll
-#: view:hr.employee:0
-msgid "Miscelleanous / Statutory"
+#: field:hr.payslip,igross:0
+#: field:hr.payslip,inet:0
+msgid "Calculaton Field"
 msgstr ""
 
 #. module: hr_payroll
+#: help:hr.payroll.advice,bank_id:0
+#: help:hr.payroll.register,bank_id:0
+msgid "Select the Bank Address from whcih the salary is going to be paid"
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.payroll.advice:0
+#: field:hr.payroll.advice.line,advice_id:0
+msgid "Bank Advice"
+msgstr ""
+
+#. module: hr_payroll
+#: selection:hr.payroll.advice,state:0
+#: selection:hr.payroll.register,state:0
+#: selection:hr.payslip,state:0
+msgid "Reject"
+msgstr "Отклонить"
+
+#. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Leaves"
 msgstr "Уходы"
 
 #. module: hr_payroll
+#: field:hr.contibution.register.line,register_id:0
+#: view:hr.payslip:0
 #: field:hr.payslip,register_id:0
+#: report:payslip.pdf:0
 msgid "Register"
+msgstr "Зарегистрироваться"
+
+#. module: hr_payroll
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
 
 #. module: hr_payroll
-#: selection:wizard.year.salary,init,salary_on:0
-msgid "Next Month Date"
-msgstr "Дата в следующем месяце"
-
-#. module: hr_payroll
-#: help:hr.payroll.register,period_id:0
-#: help:hr.payslip,period_id:0
-msgid "Keep empty to use the period of the validation(Payslip) date."
+#: report:payslip.pdf:0
+msgid "Total Deductions"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,value:0
+#: field:company.contribution.line,value:0
+#: field:hr.payslip.line.line,value:0
 msgid "Value"
 msgstr "Значение"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Name of the Employee"
 msgstr "Имя работника"
 
 #. module: hr_payroll
-#: field:hr.contract,permit_no:0
-msgid "Work Permit No"
+#: view:hr.contibution.register:0
+msgid "Register Lines"
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.payslip:0
+msgid "Salary Computation"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,amount:0
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
+#: report:salary.structure:0
 msgid "Amount"
 msgstr "Величина"
 
 #. module: hr_payroll
-#: field:hr.payslip,line_ids:0
-#: view:hr.payslip.line:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip_line
-msgid "Payslip Line"
-msgstr "Строка расчетного листка"
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Please check configuration of %s, payroll head is missing"
+msgstr ""
+
+#. module: hr_payroll
+#: selection:company.contribution,amount_type:0
+msgid "Percentage"
+msgstr "В процентах"
+
+#. module: hr_payroll
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+msgid "Other Information"
+msgstr "Прочая информация"
 
 #. module: hr_payroll
 #: field:hr.passport,country_id:0
@@ -264,18 +284,20 @@ msgid "Country of Issue"
 msgstr "Страна выдачи"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid "Warning !"
-msgstr "Внимание!"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid "Please Confirm all Expanse Invoice appear for Reimbursement"
+#: field:hr.contibution.register.line,emp_deduction:0
+msgid "Employee Deduction"
 msgstr ""
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid ""
+"Variable Error: %s ' % (e)))\n"
+"                elif line.amount_type in ('fix', 'func"
+msgstr ""
+
+#. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
 msgstr "Другие удержания"
@@ -286,9 +308,12 @@ msgid "Paid Holiday"
 msgstr "Оплачиваемый отпуск"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-msgid "Employees Salary Details"
-msgstr "Детали заработной платы"
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: view:hr.passport:0
+#: view:hr.payslip:0
+msgid "Group By..."
+msgstr "Группировать по .."
 
 #. module: hr_payroll
 #: field:hr.passport,date_expire:0
@@ -296,23 +321,24 @@ msgid "Passport Expire Date"
 msgstr "Дата истечения срока действия паспорта"
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Special Allowance and Deductions for Employee"
-msgstr "Специальные доплаты и удержания работника"
-
-#. module: hr_payroll
 #: selection:hr.holidays.status,type:0
 msgid "Un-Paid Holiday"
 msgstr "Неоплачиваемый отпуск"
 
 #. module: hr_payroll
-#: field:hr.payroll.register,period_id:0
-#: field:hr.payslip,period_id:0
-msgid "Force Period"
-msgstr "Установить период"
+#: view:hr.passport:0
+msgid "Valid From"
+msgstr "Действительно с"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: help:hr.payslip,igross:0
+#: help:hr.payslip,inet:0
+msgid ""
+"Calculation field used for internal calculation, do not place this on form"
+msgstr ""
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
 msgid "Amount (in words) :"
 msgstr "Величина (прописью)"
 
@@ -322,34 +348,30 @@ msgid "Payment"
 msgstr "Платеж"
 
 #. module: hr_payroll
-#: field:hr.employee,analytic_account:0
-#: field:hr.employee.grade,account_id:0
-#: field:hr.holidays.status,analytic_account_id:0
-#: field:hr.payslip.line,analytic_account_id:0
-#: rml:salary.structure:0
-msgid "Analytic Account"
-msgstr "Аналитический счет"
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: field:hr.payslip,line_ids:0
+#: view:hr.payslip.line:0
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Строка расчетного листка"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Expanse To"
+#: report:payslip.pdf:0
+msgid "Identification No"
 msgstr ""
 
 #. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,base:0
 msgid "Based on"
 msgstr "На основе"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
-msgid "Bank"
-msgstr "Банк"
-
-#. module: hr_payroll
-#: field:hr.payslip,move_id:0
-msgid "Expanse Entries"
-msgstr ""
+#: selection:hr.payroll.register,state:0
+#: selection:hr.payslip,state:0
+msgid "Wating for Verification"
+msgstr "Ожидает проверки"
 
 #. module: hr_payroll
 #: model:ir.module.module,shortdesc:hr_payroll.module_meta_information
@@ -357,25 +379,39 @@ msgid "Human Resource Payroll"
 msgstr "Начисление заработной платы"
 
 #. module: hr_payroll
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Ошибка! Вы не можете создать рекурсивные счета аналитического учета."
+#: report:payroll.advice:0
+msgid "Total:"
+msgstr "Всего:"
 
 #. module: hr_payroll
-#: field:hr.employee,esi_account:0
-msgid "ESI Account"
+#: view:hr.payslip:0
+msgid "Posted"
+msgstr "Написал"
+
+#. module: hr_payroll
+#: model:ir.module.module,description:hr_payroll.module_meta_information
+msgid ""
+"Generic Payroll system\n"
+"    * Employee Details\n"
+"    * Employee Contracts\n"
+"    * Passport based Contract\n"
+"    * Allowances / Deductions\n"
+"    * Allow to configure Basic / Grows / Net Salary\n"
+"    * Employee Payslip\n"
+"    * Monthly Payroll Register\n"
+"    * Integrated with Holiday Management\n"
+"    "
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_passport
-msgid "Passport Detail"
-msgstr "Паспортные данные"
+#: model:ir.model,name:hr_payroll.model_hr_holidays_status
+msgid "Leave Type"
+msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid "Please defined the Employee Home Address Along with Partners !!"
-msgstr "Пожалуйста, задайте домашний адрес работника вместе с Партнерами"
+#: report:hr.payroll.register.sheet:0
+msgid "Date :"
+msgstr "Дата :"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,total:0
@@ -383,24 +419,35 @@ msgid "Sub Total"
 msgstr "Промежуточный итог"
 
 #. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Payments -"
+msgstr ""
+
+#. module: hr_payroll
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
 msgstr "Номер визы"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,from:0
+#: field:company.contribution.line,from_val:0
+#: report:employees.salary:0
+#: field:hr.payslip.line.line,from_val:0
+#: report:year.salary:0
 msgid "From"
 msgstr "От"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,bysal:0
+#: report:payroll.advice:0
 msgid "By Salary"
 msgstr "В виде зарплаты"
 
 #. module: hr_payroll
-#: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_year_salary
-msgid "Employee Year Salary"
-msgstr "Годовая зарплата работника"
+#: field:hr.payroll.employees.detail,date_to:0
+#: field:hr.payroll.year.salary,date_to:0
+#: report:salary.structure:0
+msgid "End Date"
+msgstr "Дата окончания"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.salary_payslip
@@ -408,60 +455,77 @@ msgid "Employee PaySlip"
 msgstr "Расчетный листок работника"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-#: rml:payroll.advice:0
+#: field:hr.payslip,leaves:0
+msgid "Leave Deductions"
+msgstr ""
+
+#. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
+#: report:payroll.advice:0
 msgid "Authorised Signature"
 msgstr "Заверенная подпись"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,umo_id:0
-msgid "Unite"
-msgstr "Объединить"
+#: selection:hr.payslip.line,amount_type:0
+msgid "Function Value"
+msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Salary Detail"
-msgstr "Детали зарплаты"
+#: model:ir.model,name:hr_payroll.model_hr_contibution_register_line
+msgid "Contribution Register Line"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Notes:"
 msgstr "Примечания:"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
-msgid "End Date"
-msgstr "Дата окончания"
+#: field:hr.payroll.advice,state:0
+#: field:hr.payroll.register,state:0
+#: field:hr.payslip,state:0
+msgid "State"
+msgstr "Состояние"
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Accounting Information"
-msgstr "Учетная информация"
+#: view:hr.payroll.advice:0
+msgid "Paymeny Lines"
+msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee.grade:0
-msgid "Amount Information"
-msgstr "Информация о величине"
+#: report:payslip.pdf:0
+msgid "Other Lines"
+msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,passport_id:0
-#: field:hr.employee,passport_id:0
-#: view:hr.passport:0
-msgid "Passport"
-msgstr "Паспорт"
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+msgid "Function Arguments"
+msgstr "Аргументы функций"
 
 #. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_company_contribution_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_company_contribution_tree
+msgid "Company Contributions"
+msgstr ""
+
+#. module: hr_payroll
+#: field:hr.contibution.register.line,employee_id:0
 #: field:hr.passport,employee_id:0
 #: field:hr.payroll.advice.line,employee_id:0
 #: field:hr.payslip,employee_id:0
 #: field:hr.payslip.line,employee_id:0
+#: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
 msgstr "Работник"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
-msgid "Start Date"
-msgstr "Дата начала"
+#: field:hr.payslip.line,base:0
+msgid "Formula"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_advice_line
@@ -469,28 +533,29 @@ msgid "Bank Advice Lines"
 msgstr ""
 
 #. module: hr_payroll
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,type:0
 #: field:hr.payslip.line,type:0
-#: wizard_field:payroll.analysis,init,type:0
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Type"
 msgstr "Тип"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "#"
-msgstr ""
+#: report:payslip.pdf:0
+msgid "Email"
+msgstr "Эл. почта"
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Miscelleanous"
-msgstr "Разное"
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
 #, python-format
-msgid "Integrity Error !"
-msgstr "Ошибка целостности!"
+msgid "Error !"
+msgstr "Ошибка !"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -499,56 +564,71 @@ msgid "Verify Sheet"
 msgstr "Лист сверки"
 
 #. module: hr_payroll
-#: field:hr.employee,pan_no:0
-msgid "PAN No"
+#: help:hr.contract,working_days_per_week:0
+msgid "No of Working days / week for an employee"
 msgstr ""
 
 #. module: hr_payroll
-#: wizard_button:wizard.employees.detail,init,report:0
-#: wizard_button:wizard.year.salary,init,report:0
-msgid "Print"
-msgstr "Печать"
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Имя Объекта должно начинаться с x_ и не должно содержать специальных "
+"символов!"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Accounting Informations"
-msgstr "Учетная информация"
+#: selection:hr.payroll.register,state:0
+#: selection:hr.payslip,state:0
+msgid "New Slip"
+msgstr "Новый расчетный листок"
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
-msgid "Contributions Configuration"
-msgstr "Конфигурация вложений"
+#: field:hr.payslip,basic:0
+msgid "Net Basic"
+msgstr ""
 
 #. module: hr_payroll
+#: field:hr.contract,gross:0
+#: field:hr.employee,gross:0
 #: field:hr.payroll.register,grows:0
 #: field:hr.payslip,grows:0
+#: report:salary.structure:0
 msgid "Gross Salary"
 msgstr "Зарплата без учета удержаний"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Total Earnings"
 msgstr "Итоговые сборы"
 
 #. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
+msgid "Employee Salary Statement"
+msgstr ""
+
+#. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
 msgstr "Иные выплаты"
 
 #. module: hr_payroll
-#: field:hr.payslip,basic:0
-msgid "Basic Salary - Leaves"
-msgstr "Базовая зарплата - Уходы"
+#: field:hr.employee,advantages_net:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
+msgid "Deductions"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "C/D"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:payroll.analysis,init,type:0
-msgid "By Employee Function"
-msgstr "По должностной инструкции"
+#: field:hr.contract,permit_no:0
+msgid "Work Permit No"
+msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,line_ids:0
@@ -561,31 +641,42 @@ msgid "Chaque Nos"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.wizard,name:hr_payroll.wizard_print_year_salary
-msgid "Year Salary Detail"
-msgstr "Детали годовой зарплаты"
+#: field:hr.contibution.register,monthly_total_by_emp:0
+msgid "Total By Employee"
+msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty.line,amount_type:0
+#: view:company.contribution:0
+#: selection:company.contribution,amount_type:0
+#: selection:company.contribution.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
+#: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr "Фиксированная величина"
 
 #. module: hr_payroll
-#: selection:hr.payroll.register,state:0
-#: selection:hr.payslip,state:0
-msgid "Wating for Verification"
-msgstr "Ожидает проверки"
-
-#. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Account Lines"
-msgstr "Строки счета"
+#: field:company.contribution.line,to_val:0
+#: report:employees.salary:0
+#: field:hr.payslip.line.line,to_val:0
+#: report:year.salary:0
+msgid "To"
+msgstr "Кому"
 
 #. module: hr_payroll
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Некорректный формат XML для структуры вида!"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Variable Error !"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_employees_detail
+msgid "hr.payroll.employees.detail"
+msgstr ""
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -594,32 +685,34 @@ msgid "Pay Salary"
 msgstr "Начисление зарплаты"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Gross SAL"
+#: field:hr.payroll.advice.line,name:0
+msgid "Bank Account A/C"
 msgstr ""
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
 #, python-format
-msgid "Please defined the Partner in Home Address !!"
-msgstr "Пожалуйста, задайте Партнера через домашний адрес!!"
+msgid ""
+"Variable Error: %s ' % (e)))\n"
+"\n"
+"                if sal_type in ('gross', 'net"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-#: rml:payslip.pdf:0
+#: view:hr.contibution.register:0
+msgid "Contribution Lines"
+msgstr ""
+
+#. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
 msgid "For the month of"
 msgstr "В месяце:"
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
-#: view:hr.payslip:0
-msgid "Payslip"
-msgstr "Расчетный листок"
-
-#. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,deduction:0
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 #: field:hr.payslip,deduction:0
 #: selection:hr.payslip.line,type:0
 msgid "Deduction"
@@ -631,85 +724,57 @@ msgid "Bank Advice Note"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.passport:0
-msgid "Passport List"
-msgstr "Список паспортов"
-
-#. module: hr_payroll
-#: field:hr.payslip,payment_id:0
-msgid "Payment Entries"
-msgstr "Строки платежа"
-
-#. module: hr_payroll
-#: rml:payslip.pdf:0
-msgid "YTD"
+#: model:ir.actions.act_window,name:hr_payroll.action_contibution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contibution_register_form
+msgid "Contibution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,expanse_id:0
-msgid "Expense"
-msgstr "Затраты"
+#: view:hr.payroll.register:0
+#: view:hr.payslip:0
+msgid "Payslip"
+msgstr "Расчетный листок"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,based_on:0
-msgid "Fided Value"
-msgstr ""
-
-#. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Loan Installment"
 msgstr "Налоговая база"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
-#: view:hr.payslip:0
 msgid "Complete HR Checking"
 msgstr "Полная кадровая проверка"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Yours Sincerely"
 msgstr "Искренне Ваш,"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Allowances"
-msgstr "Доплаты"
-
-#. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "SI. No."
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Net Amount"
 msgstr "Величина с учетом всех удержаний"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,based_on:0
-#: field:hr.payroll.advice,state:0
-#: field:hr.payroll.register,state:0
-#: field:hr.payslip,state:0
-msgid "State"
-msgstr "Состояние"
-
-#. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Salary Structure:"
 msgstr "Структура зарплаты"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_employees_detail
-#: model:ir.actions.wizard,name:hr_payroll.wizard_print_employees_detail
-#: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_employees_detail
 msgid "Employees Salary Detail"
 msgstr "Детали зарплаты работника"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_employee_grade
-msgid "Function of the Employee"
-msgstr "Трудовая функция работника"
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line_line
+msgid "Function Line"
+msgstr ""
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -720,114 +785,124 @@ msgid "Confirm Sheet"
 msgstr "Лист подтверждения"
 
 #. module: hr_payroll
-#: selection:hr.payroll.register,state:0
-#: selection:hr.payslip,state:0
-msgid "Wating for Account Verification"
-msgstr "Ожидает проверки счета"
-
-#. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Others:"
 msgstr "Другие:"
 
 #. module: hr_payroll
-#: view:hr.employee:0
-#: field:hr.passport,contracts_ids:0
-msgid "Contracts"
-msgstr "Договоры"
+#: view:company.contribution:0
+#: selection:company.contribution,amount_type:0
+msgid "Function Calculation"
+msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Passport and Visa"
-msgstr "Паспорт и виза"
+#: field:hr.payslip,worked_days:0
+#: report:payslip.pdf:0
+msgid "Worked Day"
+msgstr "Отработанный день"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: field:hr.contibution.register,monthly_total_by_comp:0
+msgid "Total By Company"
+msgstr ""
+
+#. module: hr_payroll
+#: field:hr.payroll.advice.line,flag:0
+msgid "D/C"
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.passport:0
+msgid "Country & Address"
+msgstr ""
+
+#. module: hr_payroll
+#: report:employees.salary:0
 msgid "Employee Code"
 msgstr "Код работника"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,amount_type:0
+#: report:payslip.pdf:0
+msgid "Basic Salary – Leaves"
+msgstr ""
+
+#. module: hr_payroll
+#: field:company.contribution,amount_type:0
+#: field:company.contribution.line,amount_type:0
 #: field:hr.payslip.line,amount_type:0
-#: rml:salary.structure:0
+#: field:hr.payslip.line.line,amount_type:0
+#: report:salary.structure:0
 msgid "Amount Type"
 msgstr "Тип суммы"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,category_id:0
+#: view:company.contribution:0
 #: field:hr.payslip.line,category_id:0
-#: rml:salary.structure:0
 msgid "Category"
 msgstr "Категория"
 
 #. module: hr_payroll
-#: field:hr.payslip,move_line_ids:0
-msgid "Accounting Lines"
-msgstr "Строки счета"
-
-#. module: hr_payroll
-#: field:hr.payroll.register,bank_journal_id:0
-#: field:hr.payslip,bank_journal_id:0
-msgid "Bank Journal"
-msgstr "Банковский журнал"
-
-#. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Total SAL"
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: field:hr.payslip.line,company_contrib:0
+#: model:ir.model,name:hr_payroll.model_company_contribution
+msgid "Company Contribution"
 msgstr ""
 
 #. module: hr_payroll
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Имя Объекта должно начинаться с x_ и не должно содержать специальных "
-"символов!"
+#: field:company.contribution,category_id:0
+msgid "Heads"
+msgstr "Головные"
 
 #. module: hr_payroll
-#: field:hr.employee,hospital_id:0
-msgid "ESI Hospital"
+#: model:ir.actions.report.xml,name:hr_payroll.year_payroll_register
+msgid "Print Statement"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.employee,slip_ids:0
-#: view:hr.payroll.register:0
-#: field:hr.payroll.register,line_ids:0
-msgid "Payslips"
-msgstr "Расчетные листки"
+#: view:hr.payslip:0
+msgid "Draft"
+msgstr "Черновик"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Earnings"
 msgstr "Сборы"
 
 #. module: hr_payroll
-#: selection:hr.payroll.advice,state:0
-#: selection:hr.payroll.register,state:0
-#: selection:hr.payslip,state:0
-msgid "Reject"
-msgstr "Отклонить"
+#: constraint:ir.ui.menu:0
+msgid "Error ! You can not create recursive Menu."
+msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
+#: report:salary.structure:0
+msgid "Basic"
+msgstr "Основные"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_passport_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_passport_tree
 msgid "All Passports"
 msgstr "Все паспорты"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:hr.payroll.register.sheet:0
-#: rml:payslip.pdf:0
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_year_salary
+#: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_year_salary
+msgid "Salary Register"
+msgstr ""
+
+#. module: hr_payroll
+#: report:employees.salary:0
+#: report:hr.payroll.register.sheet:0
 msgid "Employee Name"
 msgstr "Имя работника"
 
 #. module: hr_payroll
-#: field:hr.employee,salary_account:0
-msgid "Salary Account"
-msgstr "Зарплатный счет"
+#: model:ir.model,name:hr_payroll.model_hr_passport
+msgid "Passport Detail"
+msgstr "Паспортные данные"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
 msgid "Percentage (%)"
 msgstr "Процентное соотношение (%)"
@@ -842,67 +917,61 @@ msgid "Payroll Register"
 msgstr "Журналы начисления заработной платы"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:hr.payroll.register.sheet:0
-#: rml:payroll.advice:0
-#: rml:salary.structure:0
-#: rml:year.salary:0
+#: report:hr.payroll.register.sheet:0
+#: report:payroll.advice:0
 msgid "For"
 msgstr "Для"
 
 #. module: hr_payroll
-#: field:hr.payroll.register,journal_id:0
-#: field:hr.payslip,journal_id:0
-msgid "Expanse Journal"
-msgstr "Журнал затрат"
+#: view:hr.passport:0
+#: field:hr.passport,contracts_ids:0
+msgid "Contracts"
+msgstr "Договоры"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_contract
-#: model:ir.ui.menu,name:hr_payroll.hr_menu_contract
-msgid "Employee Contract"
-msgstr "Договор с работником"
-
-#. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,contribute:0
-msgid "Contribe by Company ?"
-msgstr "Внесено организацией?"
-
-#. module: hr_payroll
-#: view:hr.employee.grade:0
+#: view:hr.payroll.structure:0
 msgid "Employee Function"
 msgstr "Трудовая функция работника"
 
 #. module: hr_payroll
-#: field:hr.contract,working_days_per_week:0
-msgid "Working Days / Week"
-msgstr "Рабочие дни/недели"
-
-#. module: hr_payroll
-#: field:hr.payslip,worked_days:0
-msgid "Worked Day"
-msgstr "Отработанный день"
-
-#. module: hr_payroll
-#: view:hr.payroll.register:0
 #: view:hr.payslip:0
-msgid "Complete Accountant Checking"
-msgstr "Полная бухгалтерская проверка"
+msgid "Paid"
+msgstr "Выплачено"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: view:hr.payslip:0
+msgid "Approve Sheet"
+msgstr ""
+
+#. module: hr_payroll
+#: field:hr.payslip,paid:0
+msgid "Paid ? "
+msgstr "Оплачено? "
+
+#. module: hr_payroll
+#: view:hr.holidays.status:0
+msgid "Validation"
+msgstr "Проверка"
+
+#. module: hr_payroll
+#: report:employees.salary:0
 msgid "Title"
 msgstr "Обращение"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,based_on:0
-msgid "On Attendance"
+#: view:company.contribution:0
+msgid "Search Company Contribution"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_employee_grade_form
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_allounce_deduction_tree
-msgid "Allowance/Deduction Heads"
-msgstr ""
+#: field:hr.allounce.deduction.categoty,user_id:0
+msgid "User"
+msgstr "Пользователь"
+
+#. module: hr_payroll
+#: view:hr.payroll.advice:0
+msgid "Payment Lines"
+msgstr "Позиции платежа"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -910,19 +979,25 @@ msgid "Compute Sheet"
 msgstr ""
 
 #. module: hr_payroll
+#: field:company.contribution,active:0
 #: field:hr.payroll.register,active:0
 msgid "Active"
 msgstr "Активен"
 
 #. module: hr_payroll
-#: field:hr.employee,employee_account:0
-msgid "Employee Account"
-msgstr "Счет работника"
+#: help:hr.allounce.deduction.categoty,condition:0
+msgid "Applied this head for calculation if condition is true"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:year.salary:0
+#: report:year.salary:0
 msgid "Yearly Salary Details"
 msgstr ""
+
+#. module: hr_payroll
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Ошибка! Вы не можете создать взаимное подчинение сотрудников."
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,condition:0
@@ -936,8 +1011,8 @@ msgid "Wating for HR Verification"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.employee,pf_account:0
-msgid "PF Account"
+#: report:payroll.advice:0
+msgid "Payment Advice:"
 msgstr ""
 
 #. module: hr_payroll
@@ -946,29 +1021,23 @@ msgid "Compute"
 msgstr "Вычислить"
 
 #. module: hr_payroll
-#: view:hr.payroll.advice:0
-#: view:hr.payslip:0
-#: field:hr.payslip,move_payment_ids:0
-msgid "Payment Lines"
-msgstr "Позиции платежа"
-
-#. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 #: field:hr.payslip,deg_id:0
-#: rml:payslip.pdf:0
-#: rml:salary.structure:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Designation"
 msgstr "Обозначение"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 msgid "HR Manager"
 msgstr "Кадровый менеджер"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,based_on:0
+#: field:hr.contract,basic:0
+#: field:hr.employee,basic:0
 #: field:hr.payslip,basic_before_leaves:0
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Basic Salary"
 msgstr "Базовая зарплата"
 
@@ -983,20 +1052,25 @@ msgid "Salary Information"
 msgstr "Информация о зарплате"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty
-#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty_line
+#: model:ir.model,name:hr_payroll.model_company_contribution_line
 msgid "Allowance Deduction Categoty"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: view:hr.payslip:0
+msgid "Companies"
+msgstr "Компании"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
 msgid "Authorized Signature"
 msgstr "Заверенная подпись"
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
-msgid "Allowance / Deduction Category"
-msgstr ""
+#: field:hr.payslip,contract_id:0
+#: model:ir.model,name:hr_payroll.model_hr_contract
+msgid "Contract"
+msgstr "Договор"
 
 #. module: hr_payroll
 #: selection:hr.payroll.advice,state:0
@@ -1004,17 +1078,17 @@ msgid "Draft Sheet"
 msgstr ""
 
 #. module: hr_payroll
+#: selection:hr.payroll.year.salary,salary_on:0
+msgid "Next Month Date"
+msgstr "Дата в следующем месяце"
+
+#. module: hr_payroll
+#: field:hr.contibution.register.line,date:0
 #: field:hr.payroll.advice,date:0
 #: field:hr.payroll.register,date:0
-#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,date:0
 msgid "Date"
 msgstr "Дата"
-
-#. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Basic SAL"
-msgstr ""
 
 #. module: hr_payroll
 #: field:hr.contract,visa_expire:0
@@ -1022,139 +1096,147 @@ msgid "Visa Expire Date"
 msgstr "Дата окончания визы"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
+#: view:hr.passport:0
+msgid "Search Passport"
+msgstr ""
+
+#. module: hr_payroll
+#: report:employees.salary:0
+#: report:salary.structure:0
 msgid "Phone No."
 msgstr "№ телефона"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,include_in_salary:0
-msgid "Included in Salary ?"
-msgstr "Включено в зарплату"
+#: field:company.contribution,contribute_per:0
+#: field:company.contribution.line,contribution_id:0
+#: view:hr.allounce.deduction.categoty:0
+#: view:hr.contibution.register:0
+#: view:hr.contibution.register.line:0
+msgid "Contribution"
+msgstr "Авторы"
 
 #. module: hr_payroll
-#: field:hr.expense.expense,category_id:0
-#: field:hr.holidays.status,head_id:0
-msgid "Payroll Head"
-msgstr "Заголовок ведомости по начислению зарплаты"
+#: field:hr.allounce.deduction.categoty,state:0
+msgid "Label"
+msgstr "Метка"
 
 #. module: hr_payroll
-#: view:hr.payroll.advice:0
-#: field:hr.payroll.advice.line,advice_id:0
-msgid "Bank Advice"
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+msgid "Company contribution"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,account_id:0
-#: rml:salary.structure:0
-msgid "General Account"
-msgstr "Базовый счет"
+#: report:employees.salary:0
+#: report:salary.structure:0
+msgid "Other No."
+msgstr ""
 
 #. module: hr_payroll
+#: field:company.contribution,code:0
+#: field:hr.contibution.register.line,code:0
 #: field:hr.holidays.status,code:0
+#: field:hr.payroll.structure,code:0
 #: field:hr.payslip.line,code:0
-#: rml:salary.structure:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Code"
 msgstr "Код"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_bank_advice_tree
 #: model:ir.ui.menu,name:hr_payroll.hr_menu_payment_advice
-#: rml:payroll.advice:0
 msgid "Payment Advice"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,to:0
-msgid "To"
-msgstr "Кому"
+#: report:hr.payroll.register.sheet:0
+msgid "Number :"
+msgstr ""
 
 #. module: hr_payroll
-#: wizard_button:payroll.analysis,init,process:0
-msgid "Process"
-msgstr "Процесс"
+#: help:hr.allounce.deduction.categoty,base:0
+msgid ""
+"This will use to computer the % fields values, in general its on basic, but "
+"You can use all heads code field in small letter as a variable name i.e. "
+"hra, ma, lta, etc...., also you can use, static varible basic"
+msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.payslip.line,type:0
-msgid "Loan"
-msgstr "Долги"
+#: view:hr.payslip:0
+msgid "Computation Overview"
+msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,sequence:0
-msgid "Sequence"
-msgstr "Последовательность"
-
-#. module: hr_payroll
-#: wizard_field:wizard.year.salary,init,salary_on:0
+#: field:hr.payroll.year.salary,salary_on:0
 msgid "Salary On"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,number:0
 #: field:hr.payroll.register,number:0
-#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,number:0
 msgid "Number"
 msgstr "Номер"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
-msgid "Contract Detail:"
-msgstr ""
-
-#. module: hr_payroll
-#: view:hr.employee.grade:0
-msgid "General Information"
-msgstr "Общая информация"
-
-#. module: hr_payroll
-#: view:hr.payroll.advice:0
-msgid "Paymeny Lines"
-msgstr ""
-
-#. module: hr_payroll
-#: view:hr.employee:0
+#: field:hr.contract,struct_id:0
 #: field:hr.employee,line_ids:0
-#: view:hr.employee.grade:0
-#: field:hr.employee.grade,line_ids:0
-#: rml:salary.structure:0
+#: view:hr.payroll.structure:0
+#: field:hr.payroll.structure,line_ids:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_employee_grade_form
+#: model:ir.actions.report.xml,name:hr_payroll.salary_structure_register
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_employee_function
 msgid "Salary Structure"
 msgstr "Структура зарплаты"
 
 #. module: hr_payroll
+#: field:hr.contibution.register,register_line_ids:0
+msgid "Register Line"
+msgstr ""
+
+#. module: hr_payroll
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
-#: wizard_button:payroll.analysis,init,end:0
-#: wizard_button:wizard.employees.detail,init,end:0
-#: wizard_button:wizard.year.salary,init,end:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: hr_payroll
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
+msgid "Close"
+msgstr "Закрыть"
+
+#. module: hr_payroll
 #: field:hr.payslip.line,amount:0
-#: rml:salary.structure:0
 msgid "Amount / Percentage"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Accounting Details"
-msgstr ""
+#: field:hr.employee,advantages_gross:0
+#: report:hr.payroll.register.sheet:0
+#: report:salary.structure:0
+msgid "Allowances"
+msgstr "Доплаты"
 
 #. module: hr_payroll
-#: selection:wizard.year.salary,init,salary_on:0
+#: selection:hr.payroll.year.salary,salary_on:0
 msgid "Current Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Contract Duration"
-msgstr "Срок действия договора"
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr "Размер поля не может быть меньше 1 !"
 
 #. module: hr_payroll
-#: wizard_view:payroll.analysis,init:0
-msgid "Process Form"
-msgstr "Форма процесса"
+#: report:salary.structure:0
+msgid "Salary"
+msgstr "Заработная плата"
 
 #. module: hr_payroll
 #: field:hr.passport,name:0
@@ -1162,44 +1244,65 @@ msgid "Passport No"
 msgstr "№ паспорта"
 
 #. module: hr_payroll
-#: view:hr.employee.grade:0
-msgid "Account Information"
-msgstr "Информация об учётной записи"
+#: field:hr.contract,passport_id:0
+#: view:hr.passport:0
+msgid "Passport"
+msgstr "Паспорт"
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Generalities"
-msgstr "Общее положение"
+#: report:hr.payroll.register.sheet:0
+msgid "Total Salary"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "for period"
 msgstr "за период"
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
-msgid "Allowance / Deduction"
-msgstr "Доплаты / Удержания"
+#: field:hr.holidays.status,head_id:0
+msgid "Payroll Head"
+msgstr "Заголовок ведомости по начислению зарплаты"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: field:company.contribution,register_id:0
+#: model:ir.model,name:hr_payroll.model_hr_contibution_register
+msgid "Contribution Register"
+msgstr ""
+
+#. module: hr_payroll
+#: report:salary.structure:0
 msgid "E-mail"
 msgstr "Адрес эл. почты"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.year_payroll_register
-msgid "Print Statement"
+#: view:hr.allounce.deduction.categoty:0
+#: model:ir.actions.act_window,name:hr_payroll.hr_allounce_deduction_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_allounce_deduction_tree
+msgid "Salary Heads"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
-#: field:hr.allounce.deduction.categoty,line_ids:0
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
+msgid "Print Report"
+msgstr ""
+
+#. module: hr_payroll
+#: field:company.contribution,line_ids:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,line_ids:0
 msgid "Calculations"
 msgstr "Расчеты"
 
 #. module: hr_payroll
-#: wizard_view:wizard.year.salary,init:0
-msgid "Salary Deposit Date Option?"
+#: help:company.contribution,contribute_per:0
+msgid ""
+"Define Company contribution ratio 1.00=100% contribution, If Employee "
+"Contribute 5% then company will and here 0.50 defined then company will "
+"contribute 50% on employee 5% contribution"
 msgstr ""
 
 #. module: hr_payroll
@@ -1208,46 +1311,139 @@ msgid "Other Informations"
 msgstr "Прочая информация"
 
 #. module: hr_payroll
+#: view:hr.contibution.register:0
+msgid "Month"
+msgstr "Месяц"
+
+#. module: hr_payroll
+#: view:hr.passport:0
+msgid "Issue"
+msgstr "Запрос"
+
+#. module: hr_payroll
 #: view:hr.allounce.deduction.categoty:0
 msgid "Dynamic Computation"
 msgstr "Динамическое вычисление"
 
 #. module: hr_payroll
-#: field:hr.employee.grade,function_id:0
+#: report:payslip.pdf:0
+msgid "Basic Salary without Leave:"
+msgstr ""
+
+#. module: hr_payroll
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
 #: field:hr.payslip.line,function_id:0
 msgid "Function"
 msgstr "Функция"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: view:hr.payslip:0
+msgid "States"
+msgstr "Состояния"
+
+#. module: hr_payroll
+#: report:payroll.advice:0
 msgid "Dear Sir/Madam,"
 msgstr "Уважаемые господа,"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
-msgid "PAN No."
+#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty
+msgid "Allowance Deduction Heads"
 msgstr ""
 
 #. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
+msgid "Gross Sal."
+msgstr ""
+
+#. module: hr_payroll
+#: view:company.contribution:0
+#: field:company.contribution,note:0
+#: view:hr.allounce.deduction.categoty:0
+#: field:hr.allounce.deduction.categoty,note:0
+#: view:hr.contibution.register:0
+#: field:hr.contibution.register,note:0
+#: view:hr.passport:0
+#: field:hr.passport,note:0
 #: field:hr.payroll.advice,note:0
+#: field:hr.payroll.register,note:0
+#: view:hr.payroll.structure:0
+#: field:hr.payroll.structure,note:0
+#: view:hr.payslip:0
+#: field:hr.payslip,note:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,note:0
 msgid "Description"
 msgstr "Описание"
 
 #. module: hr_payroll
-#: field:hr.employee,pg_joining:0
-msgid "PF Join Date"
+#: field:hr.payroll.employees.detail,date_from:0
+#: field:hr.payroll.year.salary,date_from:0
+#: report:salary.structure:0
+msgid "Start Date"
+msgstr "Дата начала"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Deduction -"
+msgstr ""
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid ")"
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.contibution.register:0
+msgid "Contribution Registers"
 msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_root_payroll
+#: model:ir.ui.menu,name:hr_payroll.payroll_configure
 msgid "Payroll"
 msgstr "Платежная ведомость"
 
 #. module: hr_payroll
-#: wizard_view:wizard.employees.detail,init:0
-#: wizard_view:wizard.year.salary,init:0
+#: model:ir.model,name:hr_payroll.model_hr_contract_wage_type
+msgid "Wage Type"
+msgstr "Тип зарплаты"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid ""
+"Variable Error: %s ' % (e)))\n"
+"\n"
+"                if not calculate:\n"
+"                    continue\n"
+"\n"
+"                percent = 0.0\n"
+"                value = 0.0\n"
+"                base = False\n"
+"#                company_contrib = 0.0\n"
+"                base = line.category_id.base\n"
+"\n"
+"                try:\n"
+"                    #Please have a look at the configuration guide.\n"
+"                    amt = eval(base, obj)\n"
+"                except Exception, e:\n"
+"                    raise osv.except_osv(_('Variable Error !"
+msgstr ""
+
+#. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
+msgid "Net Sal."
+msgstr ""
+
+#. module: hr_payroll
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
 msgid "Year Salary"
 msgstr "Годовая зарплата"
 
@@ -1257,37 +1453,35 @@ msgid "Categoty Name"
 msgstr "Название категории"
 
 #. module: hr_payroll
-#: model:ir.actions.wizard,name:hr_payroll.wizard_payroll_analysis
-#: model:ir.ui.menu,name:hr_payroll.menu_wizard_payroll_analysis
-msgid "Create Analytic Structure"
-msgstr "Создать аналитическую структуру"
+#: model:ir.model,name:hr_payroll.model_hr_payroll_year_salary
+msgid "hr.payroll.year.salary"
+msgstr ""
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:payslip.pdf:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: field:hr.passport,address_id:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Address"
 msgstr "Адрес"
 
 #. module: hr_payroll
-#: help:hr.employee,property_bank_account:0
-msgid "Select Bank Account from where Salary Expanse will be Paid"
-msgstr "Выберите банковский счет для списания зарплаты"
-
-#. module: hr_payroll
-#: help:hr.employee,salary_account:0
-msgid "Expanse account when Salary Expanse will be recorded"
+#: field:hr.payslip.line.line,slipline_id:0
+msgid "Slip Line"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Notes"
-msgstr "Примечания"
+#: report:payslip.pdf:0
+msgid "Number of Leaves"
+msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.menu,name:hr_payroll.payroll_configure
-msgid "Configure Payroll"
-msgstr "Настроить начисление зарплаты"
+#: report:employees.salary:0
+#: field:hr.payroll.advice,bank_id:0
+#: field:hr.payroll.register,bank_id:0
+#: report:salary.structure:0
+msgid "Bank"
+msgstr "Банк"
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -1295,72 +1489,87 @@ msgid "Cancel Sheet"
 msgstr ""
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Advance"
 msgstr "Перенести"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Special Allowances and Deductions For Employee:"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,name:0
+#: field:company.contribution,name:0
+#: field:company.contribution.line,name:0
+#: field:hr.contibution.register,name:0
+#: field:hr.contibution.register.line,name:0
 #: field:hr.payroll.advice,name:0
 #: field:hr.payroll.register,name:0
+#: field:hr.payroll.structure,name:0
 #: field:hr.payslip,name:0
 #: field:hr.payslip.line,name:0
-#: rml:salary.structure:0
-#: rml:year.salary:0
+#: field:hr.payslip.line.line,name:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
+#: report:year.salary:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: hr_payroll
-#: field:hr.payslip,leaves:0
+#: report:payslip.pdf:0
 msgid "Leaved Deduction"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Statutory Information"
-msgstr ""
+#: view:hr.passport:0
+msgid "Country"
+msgstr "Страна"
 
 #. module: hr_payroll
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_employee_function
-msgid "Employee Functions"
-msgstr ""
-
-#. module: hr_payroll
-#: wizard_field:wizard.employees.detail,init,employee_ids:0
-#: wizard_field:wizard.year.salary,init,employee_ids:0
+#: view:hr.passport:0
+#: view:hr.payroll.employees.detail:0
+#: field:hr.payroll.employees.detail,employee_ids:0
+#: view:hr.payroll.year.salary:0
+#: field:hr.payroll.year.salary,employee_ids:0
+#: view:hr.payslip:0
 msgid "Employees"
-msgstr ""
+msgstr "Сотрудники"
 
 #. module: hr_payroll
-#: field:hr.employee,property_bank_account:0
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Bank Account"
+msgstr "Банковский счет"
+
+#. module: hr_payroll
+#: help:company.contribution,register_id:0
+msgid "Contribution register based on company"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payroll.advice.line,name:0
-msgid "Bank Account A/C"
+#: help:hr.allounce.deduction.categoty,sequence:0
+msgid "Use to arrange calculation sequence"
 msgstr ""
 
 #. module: hr_payroll
-#: wizard_field:wizard.employees.detail,init,fiscalyear_id:0
-#: wizard_field:wizard.year.salary,init,fiscalyear_id:0
-msgid "Fiscal Year"
+#: field:hr.payslip,total_pay:0
+msgid "Total Payment"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-msgid "Contract"
+#: report:payslip.pdf:0
+msgid "Leave Deductions Line:"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:payroll.analysis,init,type:0
-msgid "By Allownce / Deduction"
+#: selection:hr.payroll.register,state:0
+#: selection:hr.payslip,state:0
+msgid "Wating for Account Verification"
+msgstr "Ожидает проверки счета"
+
+#. module: hr_payroll
+#: field:hr.contibution.register.line,comp_deduction:0
+msgid "Company Deduction"
 msgstr ""
 
 #. module: hr_payroll
@@ -1369,11 +1578,18 @@ msgid "Payroll Configurtion"
 msgstr ""
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Please define bank account for the %s employee"
+msgstr ""
+
+#. module: hr_payroll
 #: field:hr.passport,date_issue:0
 msgid "Passport Issue Date"
 msgstr ""
 
 #. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,allounce:0
 #: field:hr.payslip,allounce:0
@@ -1387,14 +1603,27 @@ msgid "No of Leaves"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
-msgid "Bank Details"
+#: field:hr.employee,otherid:0
+msgid "Other Id"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
-msgid "Deductions"
+#: report:payslip.pdf:0
+msgid "Bank Details"
+msgstr "Банковская информация"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Slip ID"
 msgstr ""
+
+#. module: hr_payroll
+#: field:company.contribution.line,sequence:0
+#: field:hr.allounce.deduction.categoty,sequence:0
+#: field:hr.payslip.line,sequence:0
+#: field:hr.payslip.line.line,sequence:0
+msgid "Sequence"
+msgstr "Последовательность"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
@@ -1408,14 +1637,9 @@ msgid "Letter Content"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
-msgid "By Sal"
-msgstr ""
-
-#. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-msgid "Net SAL"
-msgstr ""
+#: view:hr.payroll.register:0
+msgid "Allowance / Deduction"
+msgstr "Доплаты / Удержания"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payroll_advice
@@ -1423,18 +1647,182 @@ msgid "Bank Payment Advice"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.salary_structure_register
-msgid "Print Salary Structure"
+#: view:hr.payslip:0
+msgid "Search Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
-msgid "Total Deductions"
-msgstr ""
-
-#. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:payroll.advice:0
-#: rml:year.salary:0
+#: report:employees.salary:0
+#: field:hr.contibution.register.line,total:0
+#: report:year.salary:0
 msgid "Total"
+msgstr "Всего"
+
+#. module: hr_payroll
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: field:hr.allounce.deduction.categoty,contribute_ids:0
+msgid "Contributions"
+msgstr "При участии"
+
+#. module: hr_payroll
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
 msgstr ""
+
+#~ msgid "Analytic Account for Salary Analysis"
+#~ msgstr "Аналитический счет для анализа заработной платы"
+
+#~ msgid "Calculations Rules"
+#~ msgstr "Правила расчетов"
+
+#~ msgid "Account"
+#~ msgstr "Счет"
+
+#~ msgid "Payment From"
+#~ msgstr "Платеж от"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Внимание!"
+
+#~ msgid "Special Allowance and Deductions for Employee"
+#~ msgstr "Специальные доплаты и удержания работника"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Аналитический счет"
+
+#~ msgid "Force Period"
+#~ msgstr "Установить период"
+
+#, python-format
+#~ msgid "Please defined the Employee Home Address Along with Partners !!"
+#~ msgstr "Пожалуйста, задайте домашний адрес работника вместе с Партнерами"
+
+#~ msgid "Employee Year Salary"
+#~ msgstr "Годовая зарплата работника"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Ошибка! Вы не можете создать рекурсивные счета аналитического учета."
+
+#~ msgid "Accounting Information"
+#~ msgstr "Учетная информация"
+
+#~ msgid "Amount Information"
+#~ msgstr "Информация о величине"
+
+#~ msgid "Unite"
+#~ msgstr "Объединить"
+
+#~ msgid "Salary Detail"
+#~ msgstr "Детали зарплаты"
+
+#~ msgid "Accounting Informations"
+#~ msgstr "Учетная информация"
+
+#~ msgid "Print"
+#~ msgstr "Печать"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Ошибка целостности!"
+
+#~ msgid "Miscelleanous"
+#~ msgstr "Разное"
+
+#~ msgid "Contributions Configuration"
+#~ msgstr "Конфигурация вложений"
+
+#~ msgid "Basic Salary - Leaves"
+#~ msgstr "Базовая зарплата - Уходы"
+
+#~ msgid "By Employee Function"
+#~ msgstr "По должностной инструкции"
+
+#~ msgid "Year Salary Detail"
+#~ msgstr "Детали годовой зарплаты"
+
+#, python-format
+#~ msgid "Please defined the Partner in Home Address !!"
+#~ msgstr "Пожалуйста, задайте Партнера через домашний адрес!!"
+
+#~ msgid "Account Lines"
+#~ msgstr "Строки счета"
+
+#~ msgid "Passport List"
+#~ msgstr "Список паспортов"
+
+#~ msgid "Expense"
+#~ msgstr "Затраты"
+
+#~ msgid "Payment Entries"
+#~ msgstr "Строки платежа"
+
+#~ msgid "Function of the Employee"
+#~ msgstr "Трудовая функция работника"
+
+#~ msgid "Passport and Visa"
+#~ msgstr "Паспорт и виза"
+
+#~ msgid "Accounting Lines"
+#~ msgstr "Строки счета"
+
+#~ msgid "Bank Journal"
+#~ msgstr "Банковский журнал"
+
+#~ msgid "Salary Account"
+#~ msgstr "Зарплатный счет"
+
+#~ msgid "Employee Contract"
+#~ msgstr "Договор с работником"
+
+#~ msgid "Expanse Journal"
+#~ msgstr "Журнал затрат"
+
+#~ msgid "Contribe by Company ?"
+#~ msgstr "Внесено организацией?"
+
+#~ msgid "Complete Accountant Checking"
+#~ msgstr "Полная бухгалтерская проверка"
+
+#~ msgid "Working Days / Week"
+#~ msgstr "Рабочие дни/недели"
+
+#~ msgid "Employee Account"
+#~ msgstr "Счет работника"
+
+#~ msgid "General Account"
+#~ msgstr "Базовый счет"
+
+#~ msgid "Process"
+#~ msgstr "Процесс"
+
+#~ msgid "Included in Salary ?"
+#~ msgstr "Включено в зарплату"
+
+#~ msgid "General Information"
+#~ msgstr "Общая информация"
+
+#~ msgid "Account Information"
+#~ msgstr "Информация об учётной записи"
+
+#~ msgid "Generalities"
+#~ msgstr "Общее положение"
+
+#~ msgid "Process Form"
+#~ msgstr "Форма процесса"
+
+#~ msgid "Contract Duration"
+#~ msgstr "Срок действия договора"
+
+#~ msgid "Create Analytic Structure"
+#~ msgstr "Создать аналитическую структуру"
+
+#~ msgid "Notes"
+#~ msgstr "Примечания"
+
+#~ msgid "Configure Payroll"
+#~ msgstr "Настроить начисление зарплаты"
+
+#~ msgid "Select Bank Account from where Salary Expanse will be Paid"
+#~ msgstr "Выберите банковский счет для списания зарплаты"

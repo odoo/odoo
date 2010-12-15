@@ -6,71 +6,64 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 14:49+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-11-29 07:46+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
-msgid "wizard.wiki.history.show_diff"
-msgstr ""
+#: field:wiki.groups,template:0
+msgid "Wiki Template"
+msgstr "Wiki Шаблон"
 
 #. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: wiki
-#: model:ir.model,name:wiki.model_wiki_groups_link
-msgid "Wiki Groups Links"
-msgstr ""
-
-#. module: wiki
-#: field:wiki.wiki,create_uid:0
-msgid "Author"
-msgstr "Автор"
-
-#. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_open_page
-msgid "Open Page"
-msgstr "Открыть страницу"
-
-#. module: wiki
-#: field:wiki.groups.link,action_id:0
-msgid "Menu"
-msgstr "Меню"
-
-#. module: wiki
-#: field:wiki.groups,child_ids:0
-msgid "Child Groups"
-msgstr ""
-
-#. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
 msgstr "Wiki страницы"
 
 #. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
+#: field:wiki.groups,method:0
+msgid "Display Method"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,create_uid:0
+msgid "Author"
+msgstr "Автор"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_wiki_page_open
+#: view:wiki.wiki.page.open:0
+msgid "Open Page"
+msgstr "Открыть страницу"
+
+#. module: wiki
+#: field:wiki.groups,menu_id:0
+msgid "Menu"
+msgstr "Меню"
+
+#. module: wiki
+#: field:wiki.wiki,section:0
+msgid "Section"
+msgstr "Секция"
+
+#. module: wiki
+#: help:wiki.wiki,toc:0
+msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
 #: view:wiki.wiki.history:0
 msgid "Wiki History"
-msgstr ""
+msgstr "История Wiki"
 
 #. module: wiki
 #: field:wiki.wiki,minor_edit:0
@@ -78,25 +71,43 @@ msgid "Minor edit"
 msgstr ""
 
 #. module: wiki
+#: view:wiki.wiki:0
 #: field:wiki.wiki,text_area:0
 msgid "Content"
 msgstr "Содержание"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document_configuration
-msgid "Wiki Configuration"
-msgstr "Настройка Wiki"
+#: field:wiki.wiki,child_ids:0
+msgid "Child Pages"
+msgstr ""
 
 #. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: field:wiki.wiki,parent_id:0
+msgid "Parent Page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,write_uid:0
+msgid "Last Contributor"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.create.menu,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Родительское меню"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
+#: view:wiki.wiki:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
-msgstr ""
+msgstr "Wiki Группа"
 
 #. module: wiki
 #: field:wiki.wiki,name:0
@@ -104,13 +115,30 @@ msgid "Title"
 msgstr "Заголовок"
 
 #. module: wiki
+#: model:ir.model,name:wiki.model_wiki_create_menu
+msgid "Wizard Create Menu"
+msgstr ""
+
+#. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,template:0
-msgid "Wiki Template"
+#: view:wiki.wiki:0
+msgid "Page Content"
+msgstr "Текст страницы"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Внимание!"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no changes in revisions"
 msgstr ""
 
 #. module: wiki
@@ -119,9 +147,9 @@ msgid "Document Management - Wiki"
 msgstr ""
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Create a Menu"
-msgstr "Создать меню"
+#: field:wiki.create.menu,menu_name:0
+msgid "Menu Name"
+msgstr "Название меню"
 
 #. module: wiki
 #: field:wiki.groups,notes:0
@@ -129,34 +157,32 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: wiki
-#: field:wiki.wiki,section:0
-msgid "Section"
-msgstr "Секция"
-
-#. module: wiki
-#: view:wizard.wiki.history.show_diff:0
-msgid "History Differance"
+#: field:wiki.wiki,review:0
+msgid "Needs Review"
 msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,page:0
-msgid "Group Home Page"
+#: help:wiki.wiki,review:0
+msgid ""
+"Indicates that this page should be reviewed, raising the attention of other "
+"contributors"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,write_uid:0
-msgid "Last Author"
-msgstr "Последний автор"
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+msgid "Menu Information"
+msgstr "Информация меню"
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_view_diff
-msgid "Differences"
-msgstr "Разность"
-
-#. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
+#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
+msgid "Page History"
 msgstr ""
+
+#. module: wiki
+#: selection:wiki.groups,method:0
+msgid "Tree"
+msgstr "Дерево"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -164,9 +190,20 @@ msgid "Page Template"
 msgstr "Шаблон страницы"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document2
-msgid "Document Management"
-msgstr "Управление документами"
+#: field:wiki.wiki,tags:0
+msgid "Keywords"
+msgstr "Ключевые слова"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr "Внимание"
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -174,25 +211,41 @@ msgid "Date"
 msgstr "Дата"
 
 #. module: wiki
-#: wizard_view:wiki.make.index,init:0
+#: view:wiki.make.index:0
 msgid "Want to create a Index on Selected Pages ? "
-msgstr ""
+msgstr "Хотите создать Индекс на Выбранных Странцах ? "
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Configuration"
-msgstr "Конфигурация"
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
+#: view:wizard.wiki.history.show_diff:0
+msgid "Difference"
+msgstr "Различие"
 
 #. module: wiki
-#: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
 msgstr "Страницы"
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: view:wiki.groups:0
+msgid "Group Description"
+msgstr "Описание группы"
+
+#. module: wiki
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki.page.open:0
+msgid "Want to open a wiki page? "
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Создать Раздел ?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -200,9 +253,9 @@ msgid "Text area"
 msgstr "Текстовое поле"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Родительское меню"
+#: view:wiki.wiki:0
+msgid "Meta Information"
+msgstr "Метаданные"
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -211,20 +264,14 @@ msgstr "Создан"
 
 #. module: wiki
 #: view:wiki.groups:0
+#: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Заметки"
 
 #. module: wiki
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Menu Information"
-msgstr "Информация меню"
-
-#. module: wiki
-#: field:wiki.groups,parent_id:0
-#: field:wiki.groups.link,group_id:0
-msgid "Parent Group"
-msgstr ""
+#: selection:wiki.groups,method:0
+msgid "List"
+msgstr "Список"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -239,7 +286,6 @@ msgstr "Дата создания"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
-#: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
 msgstr "История всех страниц"
 
@@ -249,32 +295,43 @@ msgid "wiki.wiki"
 msgstr ""
 
 #. module: wiki
+#: help:wiki.groups,method:0
+msgid "Define the default behaviour of the menu created on this group"
+msgstr ""
+
+#. module: wiki
 #: view:wizard.wiki.history.show_diff:0
-msgid "Wiki Differance"
+msgid "Close"
+msgstr "Закрыть"
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
+msgid "wizard.wiki.history.show_diff"
 msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
+msgstr "Wiki Id"
+
+#. module: wiki
+#: field:wiki.groups,home:0
+#: selection:wiki.groups,method:0
+msgid "Home Page"
+msgstr "Главная страница"
+
+#. module: wiki
+#: help:wiki.wiki,parent_id:0
+msgid "Allows you to link with the other page with in the current topic"
 msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_name:0
-msgid "Menu Name"
-msgstr "Название меню"
-
-#. module: wiki
 #: view:wiki.wiki:0
-msgid "Modifications"
-msgstr "Модификации"
+msgid "Modification Information"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
-msgid "History"
-msgstr "История"
-
-#. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document
+#: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
 msgstr "Wiki"
@@ -285,10 +342,45 @@ msgid "Modification Date"
 msgstr "Дата изменения"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_make_index
-#: wizard_button:wiki.make.index,init,yes:0
+#: view:wiki.groups:0
+msgid "Configuration"
+msgstr "Конфигурация"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index_values
+#: model:ir.model,name:wiki.model_wiki_make_index
+#: view:wiki.make.index:0
 msgid "Create Index"
 msgstr "Создать индекс"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr "Вам нужно выбрать минимум 1 или максимум 2 истории изменений!"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Group By..."
+msgstr "Группировать по .."
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
+#: view:wiki.create.menu:0
+#: view:wiki.groups:0
+#: view:wiki.make.index:0
+msgid "Create Menu"
+msgstr "Создать меню"
 
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
@@ -296,27 +388,18 @@ msgid "This is a major edit ?"
 msgstr ""
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_button:wiki.create.menu,init,create_menu:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Create Menu"
-msgstr "Создать меню"
-
-#. module: wiki
-#: field:wiki.wiki,tags:0
-msgid "Tags"
-msgstr "Ярлыки"
-
-#. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups_browse
 #: model:ir.model,name:wiki.model_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
 msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Topic"
+msgstr "Тема"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -324,22 +407,94 @@ msgid "Modify By"
 msgstr ""
 
 #. module: wiki
+#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:0
 #: field:wiki.wiki,toc:0
+#, python-format
 msgid "Table of Contents"
+msgstr "Содержание"
+
+#. module: wiki
+#: view:wiki.groups:0
+#: view:wiki.wiki.page.open:0
+msgid "Open Wiki Page"
 msgstr ""
 
 #. module: wiki
-#: wizard_button:wiki.create.menu,init,end:0
-#: wizard_button:wiki.make.index,init,end:0
+#: model:ir.model,name:wiki.model_wiki_wiki_page_open
+msgid "wiz open page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+#: view:wiki.wiki.page.open:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: wiki
-#: field:wizard.wiki.history.show_diff,diff:0
+#: field:wizard.wiki.history.show_diff,file_path:0
 msgid "Diff"
 msgstr "Различие"
 
 #. module: wiki
-#: field:wiki.wiki,review:0
+#: view:wiki.wiki:0
 msgid "Need Review"
+msgstr "Необходима Проверка"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_review
+msgid "Pages Waiting Review"
 msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
+msgid "Search Page"
+msgstr "Страница поиска"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Wiki Configuration"
+#~ msgstr "Настройка Wiki"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Создать меню"
+
+#~ msgid "Document Management"
+#~ msgstr "Управление документами"
+
+#~ msgid "Differences"
+#~ msgstr "Разность"
+
+#~ msgid "Last Author"
+#~ msgstr "Последний автор"
+
+#~ msgid "Modifications"
+#~ msgstr "Модификации"
+
+#~ msgid "History"
+#~ msgstr "История"
+
+#~ msgid "Tags"
+#~ msgstr "Ярлыки"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля не может быть меньше 1 !"

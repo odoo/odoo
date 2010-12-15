@@ -6,66 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:56+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-10-30 14:49+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
-msgid "wizard.wiki.history.show_diff"
-msgstr "assistent.wiki.historial.mostra_dif"
+#: field:wiki.groups,template:0
+msgid "Wiki Template"
+msgstr "Plantilla Wiki"
 
 #. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
-
-#. module: wiki
-#: model:ir.model,name:wiki.model_wiki_groups_link
-msgid "Wiki Groups Links"
-msgstr "Enllaços grups wiki"
-
-#. module: wiki
-#: field:wiki.wiki,create_uid:0
-msgid "Author"
-msgstr "Autor"
-
-#. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_open_page
-msgid "Open Page"
-msgstr "Obre pagina"
-
-#. module: wiki
-#: field:wiki.groups.link,action_id:0
-msgid "Menu"
-msgstr "Menú"
-
-#. module: wiki
-#: field:wiki.groups,child_ids:0
-msgid "Child Groups"
-msgstr "Grups fills"
-
-#. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
 msgstr "Pàgines Wiki"
 
 #. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Crear secció?"
+#: field:wiki.groups,method:0
+msgid "Display Method"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,create_uid:0
+msgid "Author"
+msgstr "Autor"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_wiki_page_open
+#: view:wiki.wiki.page.open:0
+msgid "Open Page"
+msgstr "Obre pagina"
+
+#. module: wiki
+#: field:wiki.groups,menu_id:0
+msgid "Menu"
+msgstr "Menú"
+
+#. module: wiki
+#: field:wiki.wiki,section:0
+msgid "Section"
+msgstr "Secció"
+
+#. module: wiki
+#: help:wiki.wiki,toc:0
+msgid "Indicates that this pages have a table of contents or not"
+msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -79,22 +72,40 @@ msgid "Minor edit"
 msgstr "Edició menor"
 
 #. module: wiki
+#: view:wiki.wiki:0
 #: field:wiki.wiki,text_area:0
 msgid "Content"
 msgstr "Contingut"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document_configuration
-msgid "Wiki Configuration"
-msgstr "Configuració Wiki"
+#: field:wiki.wiki,child_ids:0
+msgid "Child Pages"
+msgstr ""
 
 #. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
+#: field:wiki.wiki,parent_id:0
+msgid "Parent Page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,write_uid:0
+msgid "Last Contributor"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.create.menu,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Menú pare"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
+#: view:wiki.wiki:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
 msgstr "Grup Wiki"
@@ -105,14 +116,31 @@ msgid "Title"
 msgstr "Títol"
 
 #. module: wiki
+#: model:ir.model,name:wiki.model_wiki_create_menu
+msgid "Wizard Create Menu"
+msgstr ""
+
+#. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
 msgstr "Línies historial"
 
 #. module: wiki
-#: field:wiki.groups,template:0
-msgid "Wiki Template"
-msgstr "Plantilla Wiki"
+#: view:wiki.wiki:0
+msgid "Page Content"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no changes in revisions"
+msgstr ""
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
@@ -120,9 +148,9 @@ msgid "Document Management - Wiki"
 msgstr "Gestió de documents - Wiki"
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Create a Menu"
-msgstr "Crea un menú"
+#: field:wiki.create.menu,menu_name:0
+msgid "Menu Name"
+msgstr "Nom menú"
 
 #. module: wiki
 #: field:wiki.groups,notes:0
@@ -130,34 +158,32 @@ msgid "Description"
 msgstr "Descripció"
 
 #. module: wiki
-#: field:wiki.wiki,section:0
-msgid "Section"
-msgstr "Secció"
+#: field:wiki.wiki,review:0
+msgid "Needs Review"
+msgstr ""
 
 #. module: wiki
-#: view:wizard.wiki.history.show_diff:0
-msgid "History Differance"
-msgstr "Diferències historial"
+#: help:wiki.wiki,review:0
+msgid ""
+"Indicates that this page should be reviewed, raising the attention of other "
+"contributors"
+msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,page:0
-msgid "Group Home Page"
-msgstr "Pagina d'inici del grup"
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+msgid "Menu Information"
+msgstr "Informació del menú"
 
 #. module: wiki
-#: field:wiki.wiki,write_uid:0
-msgid "Last Author"
-msgstr "Últim autor"
+#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
+msgid "Page History"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_view_diff
-msgid "Differences"
-msgstr "Diferències"
-
-#. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr "Utilitza codi de secció de la pàgina, per exemple 1.2.1"
+#: selection:wiki.groups,method:0
+msgid "Tree"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -165,9 +191,20 @@ msgid "Page Template"
 msgstr "Plantilla de pàgina"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document2
-msgid "Document Management"
-msgstr "Gestió de documents"
+#: field:wiki.wiki,tags:0
+msgid "Keywords"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr "Avís"
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -175,25 +212,41 @@ msgid "Date"
 msgstr "Data"
 
 #. module: wiki
-#: wizard_view:wiki.make.index,init:0
+#: view:wiki.make.index:0
 msgid "Want to create a Index on Selected Pages ? "
 msgstr "Voleu crear un índex sobre les pàgines seleccionades? "
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Configuration"
-msgstr "Configuració"
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
+#: view:wizard.wiki.history.show_diff:0
+msgid "Difference"
+msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
 msgstr "Pàgines"
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: view:wiki.groups:0
+msgid "Group Description"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr "Utilitza codi de secció de la pàgina, per exemple 1.2.1"
+
+#. module: wiki
+#: view:wiki.wiki.page.open:0
+msgid "Want to open a wiki page? "
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Crear secció?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -201,9 +254,9 @@ msgid "Text area"
 msgstr "Àrea de text"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Menú pare"
+#: view:wiki.wiki:0
+msgid "Meta Information"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -212,20 +265,14 @@ msgstr "Creat el"
 
 #. module: wiki
 #: view:wiki.groups:0
+#: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Notes"
 
 #. module: wiki
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Menu Information"
-msgstr "Informació del menú"
-
-#. module: wiki
-#: field:wiki.groups,parent_id:0
-#: field:wiki.groups.link,group_id:0
-msgid "Parent Group"
-msgstr "Grup pare"
+#: selection:wiki.groups,method:0
+msgid "List"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -240,7 +287,6 @@ msgstr "Data creació"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
-#: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
 msgstr "Tots els historials de pàgines"
 
@@ -250,9 +296,19 @@ msgid "wiki.wiki"
 msgstr "wiki.wiki"
 
 #. module: wiki
+#: help:wiki.groups,method:0
+msgid "Define the default behaviour of the menu created on this group"
+msgstr ""
+
+#. module: wiki
 #: view:wizard.wiki.history.show_diff:0
-msgid "Wiki Differance"
-msgstr "Diferències Wiki"
+msgid "Close"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
+msgid "wizard.wiki.history.show_diff"
+msgstr "assistent.wiki.historial.mostra_dif"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -260,22 +316,23 @@ msgid "Wiki Id"
 msgstr "ID Wiki"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_name:0
-msgid "Menu Name"
-msgstr "Nom menú"
+#: field:wiki.groups,home:0
+#: selection:wiki.groups,method:0
+msgid "Home Page"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,parent_id:0
+msgid "Allows you to link with the other page with in the current topic"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.wiki:0
-msgid "Modifications"
-msgstr "Modificacions"
+msgid "Modification Information"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
-msgid "History"
-msgstr "Historial"
-
-#. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document
+#: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
 msgstr "Wiki"
@@ -286,10 +343,46 @@ msgid "Modification Date"
 msgstr "Data modificació"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_make_index
-#: wizard_button:wiki.make.index,init,yes:0
+#: view:wiki.groups:0
+msgid "Configuration"
+msgstr "Configuració"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index_values
+#: model:ir.model,name:wiki.model_wiki_make_index
+#: view:wiki.make.index:0
 msgid "Create Index"
 msgstr "Crea índex"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+"Heu de seleccionar com a mínim 1 o com a màxim 2 revisions històriques!"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
+#: view:wiki.create.menu:0
+#: view:wiki.groups:0
+#: view:wiki.make.index:0
+msgid "Create Menu"
+msgstr "Crea menú"
 
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
@@ -297,27 +390,18 @@ msgid "This is a major edit ?"
 msgstr "És aquesta una edició major?"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_button:wiki.create.menu,init,create_menu:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Create Menu"
-msgstr "Crea menú"
-
-#. module: wiki
-#: field:wiki.wiki,tags:0
-msgid "Tags"
-msgstr "Etiquetes"
-
-#. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups_browse
 #: model:ir.model,name:wiki.model_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
 msgstr "Grups Wiki"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Topic"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -325,22 +409,100 @@ msgid "Modify By"
 msgstr "Modificat per"
 
 #. module: wiki
+#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:0
 #: field:wiki.wiki,toc:0
+#, python-format
 msgid "Table of Contents"
 msgstr "Taula de continguts"
 
 #. module: wiki
-#: wizard_button:wiki.create.menu,init,end:0
-#: wizard_button:wiki.make.index,init,end:0
+#: view:wiki.groups:0
+#: view:wiki.wiki.page.open:0
+msgid "Open Wiki Page"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wiki_wiki_page_open
+msgid "wiz open page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+#: view:wiki.wiki.page.open:0
 msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: wiki
-#: field:wizard.wiki.history.show_diff,diff:0
+#: field:wizard.wiki.history.show_diff,file_path:0
 msgid "Diff"
 msgstr "Dif."
 
 #. module: wiki
-#: field:wiki.wiki,review:0
+#: view:wiki.wiki:0
 msgid "Need Review"
 msgstr "Necessita revisió"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_review
+msgid "Pages Waiting Review"
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
+msgid "Search Page"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
+#~ msgid "Wiki Groups Links"
+#~ msgstr "Enllaços grups wiki"
+
+#~ msgid "Child Groups"
+#~ msgstr "Grups fills"
+
+#~ msgid "Wiki Configuration"
+#~ msgstr "Configuració Wiki"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Crea un menú"
+
+#~ msgid "History Differance"
+#~ msgstr "Diferències historial"
+
+#~ msgid "Group Home Page"
+#~ msgstr "Pagina d'inici del grup"
+
+#~ msgid "Last Author"
+#~ msgstr "Últim autor"
+
+#~ msgid "Differences"
+#~ msgstr "Diferències"
+
+#~ msgid "Document Management"
+#~ msgstr "Gestió de documents"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid "Parent Group"
+#~ msgstr "Grup pare"
+
+#~ msgid "Wiki Differance"
+#~ msgstr "Diferències Wiki"
+
+#~ msgid "Modifications"
+#~ msgstr "Modificacions"
+
+#~ msgid "History"
+#~ msgstr "Historial"
+
+#~ msgid "Tags"
+#~ msgstr "Etiquetes"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."

@@ -29,10 +29,13 @@ class misc_tools_installer(osv.osv_memory):
         'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
         'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
         'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
-        'share':fields.boolean('Share Data / Portals',help='This module allows you to easily give restricted access of any filtered list of objects to any customer or supplier.' \
-            'Just click on the share icon to give access to your customers on their project\'s tasks, support requests, invoices, etc.'),
-    }
-    _defaults = {
+        'share':fields.boolean('Web Share',help='Allows you to give restricted access to your OpenERP documents to external users, ' \
+            'such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc.'),
+        'pad': fields.boolean('Native pad integration',
+            help="This module creates a tighter integration between a Pad "
+                 "instance of your choosing and your OpenERP Web Client by "
+                 "letting you easily link pads to OpenERP objects via "
+                 "OpenERP attachments."),
     }
 misc_tools_installer()
 

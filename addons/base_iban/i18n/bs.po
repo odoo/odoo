@@ -6,20 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-10 17:15+0000\n"
 "PO-Revision-Date: 2009-11-17 08:58+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neodgovarajući XML za arhitekturu prikaza!"
+#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+msgid "Create IBAN bank accounts"
+msgstr ""
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:0
+#, python-format
+msgid ""
+"The IBAN does not seems to be correct. You should have entered something "
+"like this %s"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -30,6 +38,11 @@ msgstr "zip"
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
 msgstr "Broj Međunarodnog Bankovnog Računa"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
@@ -47,10 +60,20 @@ msgid "iban"
 msgstr "iban"
 
 #. module: base_iban
-#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+#: code:addons/base_iban/base_iban.py:0
+#, python-format
+msgid "The IBAN is invalid, It should begin with the country code"
+msgstr ""
+
+#. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
 msgstr "IBAN"
+
+#. module: base_iban
+#: sql_constraint:res.partner.bank:0
+msgid "The BVR adherent number must be unique !"
+msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
@@ -61,3 +84,6 @@ msgstr "IBAN Račun"
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
 msgid "acc_number"
 msgstr "acc_number"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"

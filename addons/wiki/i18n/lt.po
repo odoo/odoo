@@ -6,66 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-07-20 22:14+0000\n"
 "Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: lt\n"
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
-msgid "wizard.wiki.history.show_diff"
-msgstr ""
+#: field:wiki.groups,template:0
+msgid "Wiki Template"
+msgstr "Viki šablonas"
 
 #. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti x_ ir negali turėti jokių specialiųjų "
-"ženklų !"
-
-#. module: wiki
-#: model:ir.model,name:wiki.model_wiki_groups_link
-msgid "Wiki Groups Links"
-msgstr "Wiki grupių nuorodos"
-
-#. module: wiki
-#: field:wiki.wiki,create_uid:0
-msgid "Author"
-msgstr "Autorius"
-
-#. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_open_page
-msgid "Open Page"
-msgstr "Atidaryti puslapį"
-
-#. module: wiki
-#: field:wiki.groups.link,action_id:0
-msgid "Menu"
-msgstr "Meniu"
-
-#. module: wiki
-#: field:wiki.groups,child_ids:0
-msgid "Child Groups"
-msgstr "Žemesnės grupės"
-
-#. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
 msgstr "Wiki puslapiai"
 
 #. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Suskirstyti?"
+#: field:wiki.groups,method:0
+msgid "Display Method"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,create_uid:0
+msgid "Author"
+msgstr "Autorius"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_wiki_page_open
+#: view:wiki.wiki.page.open:0
+msgid "Open Page"
+msgstr "Atidaryti puslapį"
+
+#. module: wiki
+#: field:wiki.groups,menu_id:0
+msgid "Menu"
+msgstr "Meniu"
+
+#. module: wiki
+#: field:wiki.wiki,section:0
+msgid "Section"
+msgstr "Sekcija"
+
+#. module: wiki
+#: help:wiki.wiki,toc:0
+msgid "Indicates that this pages have a table of contents or not"
+msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -79,22 +72,40 @@ msgid "Minor edit"
 msgstr "Smulkus keitimas"
 
 #. module: wiki
+#: view:wiki.wiki:0
 #: field:wiki.wiki,text_area:0
 msgid "Content"
 msgstr "Turinys"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document_configuration
-msgid "Wiki Configuration"
-msgstr "Wiki konfigūracija"
+#: field:wiki.wiki,child_ids:0
+msgid "Child Pages"
+msgstr ""
 
 #. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: field:wiki.wiki,parent_id:0
+msgid "Parent Page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,write_uid:0
+msgid "Last Contributor"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.create.menu,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Bazinis meniu"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
+#: view:wiki.wiki:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
 msgstr "Wiki grupė"
@@ -105,14 +116,31 @@ msgid "Title"
 msgstr "Antraštė"
 
 #. module: wiki
+#: model:ir.model,name:wiki.model_wiki_create_menu
+msgid "Wizard Create Menu"
+msgstr ""
+
+#. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
 msgstr "Istorijos eilutės"
 
 #. module: wiki
-#: field:wiki.groups,template:0
-msgid "Wiki Template"
-msgstr "Viki šablonas"
+#: view:wiki.wiki:0
+msgid "Page Content"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no changes in revisions"
+msgstr ""
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
@@ -120,9 +148,9 @@ msgid "Document Management - Wiki"
 msgstr "Dokumentų valdymas - Wiki"
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Create a Menu"
-msgstr "Sukurti meniu"
+#: field:wiki.create.menu,menu_name:0
+msgid "Menu Name"
+msgstr "Meniu pavadinimas"
 
 #. module: wiki
 #: field:wiki.groups,notes:0
@@ -130,34 +158,32 @@ msgid "Description"
 msgstr "Aprašas"
 
 #. module: wiki
-#: field:wiki.wiki,section:0
-msgid "Section"
-msgstr "Sekcija"
+#: field:wiki.wiki,review:0
+msgid "Needs Review"
+msgstr ""
 
 #. module: wiki
-#: view:wizard.wiki.history.show_diff:0
-msgid "History Differance"
-msgstr "Istorijos skirtumas"
+#: help:wiki.wiki,review:0
+msgid ""
+"Indicates that this page should be reviewed, raising the attention of other "
+"contributors"
+msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,page:0
-msgid "Group Home Page"
-msgstr "Grupuoti puslapius"
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+msgid "Menu Information"
+msgstr "Meniu informacija"
 
 #. module: wiki
-#: field:wiki.wiki,write_uid:0
-msgid "Last Author"
-msgstr "Paskutinis autorius"
+#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
+msgid "Page History"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_view_diff
-msgid "Differences"
-msgstr "Skirtumai"
-
-#. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
-msgstr "Naudoti puslapių sekcijos kodą kaip 1.2.1"
+#: selection:wiki.groups,method:0
+msgid "Tree"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -165,9 +191,20 @@ msgid "Page Template"
 msgstr "Puslapio šablonas"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document2
-msgid "Document Management"
-msgstr "Dokumentų valdymas"
+#: field:wiki.wiki,tags:0
+msgid "Keywords"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -175,25 +212,41 @@ msgid "Date"
 msgstr "Data"
 
 #. module: wiki
-#: wizard_view:wiki.make.index,init:0
+#: view:wiki.make.index:0
 msgid "Want to create a Index on Selected Pages ? "
 msgstr "Norite sukurti nuorodą į pasirinktus puslapius? "
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Configuration"
-msgstr "Nustatymai"
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
+#: view:wizard.wiki.history.show_diff:0
+msgid "Difference"
+msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
 msgstr "Puslapiai"
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros struktūrai!"
+#: view:wiki.groups:0
+msgid "Group Description"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr "Naudoti puslapių sekcijos kodą kaip 1.2.1"
+
+#. module: wiki
+#: view:wiki.wiki.page.open:0
+msgid "Want to open a wiki page? "
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Suskirstyti?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -201,9 +254,9 @@ msgid "Text area"
 msgstr "Tekstas"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Bazinis meniu"
+#: view:wiki.wiki:0
+msgid "Meta Information"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -212,20 +265,14 @@ msgstr "Sukurta"
 
 #. module: wiki
 #: view:wiki.groups:0
+#: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Pastabos"
 
 #. module: wiki
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Menu Information"
-msgstr "Meniu informacija"
-
-#. module: wiki
-#: field:wiki.groups,parent_id:0
-#: field:wiki.groups.link,group_id:0
-msgid "Parent Group"
-msgstr "Tėvinė grupė"
+#: selection:wiki.groups,method:0
+msgid "List"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -240,7 +287,6 @@ msgstr "Sukūrimo data"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
-#: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
 msgstr "Visos puslapių istorijos"
 
@@ -250,9 +296,19 @@ msgid "wiki.wiki"
 msgstr "Wiki"
 
 #. module: wiki
+#: help:wiki.groups,method:0
+msgid "Define the default behaviour of the menu created on this group"
+msgstr ""
+
+#. module: wiki
 #: view:wizard.wiki.history.show_diff:0
-msgid "Wiki Differance"
-msgstr "Wiki skirtumas"
+msgid "Close"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
+msgid "wizard.wiki.history.show_diff"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -260,22 +316,23 @@ msgid "Wiki Id"
 msgstr "Wiki ID"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_name:0
-msgid "Menu Name"
-msgstr "Meniu pavadinimas"
+#: field:wiki.groups,home:0
+#: selection:wiki.groups,method:0
+msgid "Home Page"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,parent_id:0
+msgid "Allows you to link with the other page with in the current topic"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.wiki:0
-msgid "Modifications"
-msgstr "Pakeitimai"
+msgid "Modification Information"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
-msgid "History"
-msgstr "Istorija"
-
-#. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document
+#: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
 msgstr "Wiki"
@@ -286,10 +343,45 @@ msgid "Modification Date"
 msgstr "Modifikavimo data"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_make_index
-#: wizard_button:wiki.make.index,init,yes:0
+#: view:wiki.groups:0
+msgid "Configuration"
+msgstr "Nustatymai"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index_values
+#: model:ir.model,name:wiki.model_wiki_make_index
+#: view:wiki.make.index:0
 msgid "Create Index"
 msgstr "Sukurti nuorodą"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
+#: view:wiki.create.menu:0
+#: view:wiki.groups:0
+#: view:wiki.make.index:0
+msgid "Create Menu"
+msgstr "Sukurti meniu"
 
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
@@ -297,27 +389,18 @@ msgid "This is a major edit ?"
 msgstr "Tai yra svarbesnis keitimas?"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_button:wiki.create.menu,init,create_menu:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Create Menu"
-msgstr "Sukurti meniu"
-
-#. module: wiki
-#: field:wiki.wiki,tags:0
-msgid "Tags"
-msgstr "Gairės"
-
-#. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups_browse
 #: model:ir.model,name:wiki.model_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
 msgstr "Wiki grupės"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Topic"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -325,26 +408,101 @@ msgid "Modify By"
 msgstr "Pakeistas"
 
 #. module: wiki
+#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:0
 #: field:wiki.wiki,toc:0
+#, python-format
 msgid "Table of Contents"
 msgstr "Lentelės turinys"
 
 #. module: wiki
-#: wizard_button:wiki.create.menu,init,end:0
-#: wizard_button:wiki.make.index,init,end:0
+#: view:wiki.groups:0
+#: view:wiki.wiki.page.open:0
+msgid "Open Wiki Page"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wiki_wiki_page_open
+msgid "wiz open page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+#: view:wiki.wiki.page.open:0
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: wiki
-#: field:wizard.wiki.history.show_diff,diff:0
+#: field:wizard.wiki.history.show_diff,file_path:0
 msgid "Diff"
 msgstr "Skirtumas"
 
 #. module: wiki
-#: field:wiki.wiki,review:0
+#: view:wiki.wiki:0
 msgid "Need Review"
 msgstr "Reikalinga peržiūra"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_review
+msgid "Pages Waiting Review"
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
+msgid "Search Page"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti x_ ir negali turėti jokių specialiųjų "
+#~ "ženklų !"
+
+#~ msgid "Wiki Groups Links"
+#~ msgstr "Wiki grupių nuorodos"
+
+#~ msgid "Child Groups"
+#~ msgstr "Žemesnės grupės"
+
+#~ msgid "Wiki Configuration"
+#~ msgstr "Wiki konfigūracija"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Sukurti meniu"
+
+#~ msgid "History Differance"
+#~ msgstr "Istorijos skirtumas"
+
+#~ msgid "Group Home Page"
+#~ msgstr "Grupuoti puslapius"
+
+#~ msgid "Last Author"
+#~ msgstr "Paskutinis autorius"
+
+#~ msgid "Differences"
+#~ msgstr "Skirtumai"
+
+#~ msgid "Document Management"
+#~ msgstr "Dokumentų valdymas"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros struktūrai!"
+
+#~ msgid "Parent Group"
+#~ msgstr "Tėvinė grupė"
+
+#~ msgid "Wiki Differance"
+#~ msgstr "Wiki skirtumas"
 
 #, python-format
 #~ msgid "No action found"
 #~ msgstr "Veiksmas nerastas"
+
+#~ msgid "Modifications"
+#~ msgstr "Pakeitimai"
+
+#~ msgid "History"
+#~ msgstr "Istorija"
+
+#~ msgid "Tags"
+#~ msgstr "Gairės"

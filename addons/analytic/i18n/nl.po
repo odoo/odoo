@@ -7,36 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
-"PO-Revision-Date: 2010-10-01 11:59+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"PO-Revision-Date: 2010-12-03 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-02 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-04 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Subrekeningen"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-"Het bedrag in de valuta van de gekoppelde rekening als deze afwijkt van die "
-"van het bedrijf"
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -47,12 +31,6 @@ msgstr "Naam rekening"
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Het aantal te rekenen eenheden"
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr ""
-"De valuta van de gekoppelde rekening wijkt af van die van het bedrijf."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -89,39 +67,6 @@ msgid "Debit"
 msgstr "Debit"
 
 #. module: analytic
-#: help:account.analytic.account,state:0
-msgid ""
-"* When an account is created its in 'Draft' state.                           "
-"       \n"
-"* If any associated partner is there, it can be in 'Open' state.             "
-"                     \n"
-"* If any pending balance is there it can be in 'Pending'.                    "
-"               \n"
-"* And finally when all the transactions are over, it can be in 'Close' "
-"state.                                   \n"
-"* The project can be in either if the states 'Template' and 'Running'.\n"
-" If it is template then we can make projects based on the template projects. "
-"If its in 'Running' state it is a normal project.                            "
-"     \n"
-" If it is to be reviewed then the state is 'Pending'.\n"
-" When the project is completed the state is set to 'Done'."
-msgstr ""
-"* Nadat de rekening is gemaakt, wordt de status 'Concept'.                   "
-"               \n"
-"* Als er een gekoppelde relatie is, kan de status naar 'Open'.               "
-"                   \n"
-"* Als er openstaand saldo is, kan de status naar 'Wacht'.                    "
-"               \n"
-"* En tenslotte als alle transacties klaar zijn, dan gaat de status naar "
-"'Gesloten'.                                   \n"
-"* Het project kan zowel in 'Sjabloon' als in 'Lopend' zijn.\n"
-" Als het in 'Sjabloon' status is, dan kunnen we projecten maken op basis van "
-"het sjabloon project. Als het status 'Lopend' heeft, dan is het een gewoon "
-"project.                                 \n"
-" Als het moet worden nagekeken is de status 'Wacht'.\n"
-" Als het project klaar is dan is de status 'Klaar'."
-
-#. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
 msgstr "Rekeningsoort"
@@ -148,12 +93,9 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
-"Berekend door het aantal en de product kostprijs te vermenigvuldigen."
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Normaal"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -183,14 +125,23 @@ msgstr "Datum"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr "Kostenplaats valuta"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Weergave"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Aantal"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Berekend door vermenigvuldiging van aantal en prijs uit de kostprijs van het "
+"product. Altijd uitgedrukt in de hoofdvaluta van het bedrijf."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -223,15 +174,18 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Begindatum"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Aantal"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
+"Als u de soort weergave selecteert, betekent het dat u niet toelaat dat er "
+"geen journaalposten met die rekening gemaakt kunnen worden."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -242,11 +196,6 @@ msgstr "Einddatum"
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Rekeningcode"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normaal"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -261,19 +210,19 @@ msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr "Bedrag in valuta"
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Weergave"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Gekoppelde relatie"
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Begindatum"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -284,3 +233,83 @@ msgstr "Open"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Kostenplaatsboekingen"
+
+#~ msgid ""
+#~ "The amount expressed in the related account currency if not equal to the "
+#~ "company one."
+#~ msgstr ""
+#~ "Het bedrag in de valuta van de gekoppelde rekening als deze afwijkt van die "
+#~ "van het bedrijf"
+
+#~ msgid "The related account currency if not equal to the company one."
+#~ msgstr ""
+#~ "De valuta van de gekoppelde rekening wijkt af van die van het bedrijf."
+
+#~ msgid ""
+#~ "Calculated by multiplying the quantity and the price given in the Product's "
+#~ "cost price."
+#~ msgstr ""
+#~ "Berekend door het aantal en de product kostprijs te vermenigvuldigen."
+
+#~ msgid ""
+#~ "* When an account is created its in 'Draft' state.                           "
+#~ "       \n"
+#~ "* If any associated partner is there, it can be in 'Open' state.             "
+#~ "                     \n"
+#~ "* If any pending balance is there it can be in 'Pending'.                    "
+#~ "               \n"
+#~ "* And finally when all the transactions are over, it can be in 'Close' "
+#~ "state.                                   \n"
+#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
+#~ " If it is template then we can make projects based on the template projects. "
+#~ "If its in 'Running' state it is a normal project.                            "
+#~ "     \n"
+#~ " If it is to be reviewed then the state is 'Pending'.\n"
+#~ " When the project is completed the state is set to 'Done'."
+#~ msgstr ""
+#~ "* Nadat de rekening is gemaakt, wordt de status 'Concept'.                   "
+#~ "               \n"
+#~ "* Als er een gekoppelde relatie is, kan de status naar 'Open'.               "
+#~ "                   \n"
+#~ "* Als er openstaand saldo is, kan de status naar 'Wacht'.                    "
+#~ "               \n"
+#~ "* En tenslotte als alle transacties klaar zijn, dan gaat de status naar "
+#~ "'Gesloten'.                                   \n"
+#~ "* Het project kan zowel in 'Sjabloon' als in 'Lopend' zijn.\n"
+#~ " Als het in 'Sjabloon' status is, dan kunnen we projecten maken op basis van "
+#~ "het sjabloon project. Als het status 'Lopend' heeft, dan is het een gewoon "
+#~ "project.                                 \n"
+#~ " Als het moet worden nagekeken is de status 'Wacht'.\n"
+#~ " Als het project klaar is dan is de status 'Klaar'."
+
+#~ msgid "Currency"
+#~ msgstr "Valuta"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Gekoppelde relatie"
+
+#~ msgid "Amount currency"
+#~ msgstr "Bedrag in valuta"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "De groepsnaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"

@@ -147,8 +147,8 @@ class hr_holidays(osv.osv):
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
-        'holiday_status_id' : fields.many2one("hr.holidays.status", " Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'employee_id' : fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
+        'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
+        'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automaticly filled by the user who validate the leave'),
         #'notes': fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, help='This area is automaticly filled by the user who validate the leave'),
@@ -167,7 +167,7 @@ class hr_holidays(osv.osv):
     }
 
     _defaults = {
-        'employee_id': _employee_get ,
+        'employee_id': _employee_get,
         'state': 'draft',
         'type': 'remove',
         'allocation_type': 'employee',
@@ -216,12 +216,12 @@ class hr_holidays(osv.osv):
 
     def onchange_type(self, cr, uid, ids, holiday_type):
         result = {}
-        if holiday_type=='employee':
+        if holiday_type == 'employee':
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
             if ids_employee:
                 result['value'] = {
                     'employee_id': ids_employee[0]
-                                    }
+                    }
         return result
 
     def _get_number_of_days(self, date_from, date_to):
@@ -235,10 +235,11 @@ class hr_holidays(osv.osv):
         return diff_day
 
     def _update_user_holidays(self, cr, uid, ids):
+        obj_crm_meeting = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             if record.state=='validate':
                 if record.case_id:
-                    self.pool.get('crm.meeting').unlink(cr, uid, [record.case_id.id])
+                    obj_crm_meeting.unlink(cr, uid, [record.case_id.id])
                 if record.linked_request_ids:
                     list_ids = [ lr.id for lr in record.linked_request_ids]
                     self.holidays_cancel(cr, uid, list_ids)
@@ -313,8 +314,7 @@ class hr_holidays(osv.osv):
             vals['manager_id'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
-        self.write(cr, uid, ids, vals)
-        return True
+        return self.write(cr, uid, ids, vals)
 
     def holidays_validate(self, cr, uid, ids, *args):
         obj_emp = self.pool.get('hr.employee')
@@ -358,20 +358,21 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
+        obj_hr_holiday_status = self.pool.get('hr.holidays.status')
         for record in self.browse(cr, uid, ids):
             user_id = False
             leave_asked = record.number_of_days_temp
             if record.holiday_type == 'employee' and record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
-                    leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                    leaves_rest = obj_hr_holiday_status.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.employee_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for employee %s while there are too few remaining leave days.') % (record.employee_id.name))
                 nb = -(record.number_of_days_temp)
             elif record.holiday_type == 'category' and record.type == 'remove':
                 if record.category_id and not record.holiday_status_id.limit:
-                    leaves_rest = self.pool.get('hr.holidays.status').get_days_cat( cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
-                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.category_id.name)))
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for category %s while there are too few remaining leave days.') % (record.category_id.name))
                 nb = -(record.number_of_days_temp)
             else:
                 nb = record.number_of_days_temp
@@ -397,8 +398,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'draft'})
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'})
 
     def check_holidays(self, cr, uid, ids):
         holi_status_obj = self.pool.get('hr.holidays.status')
@@ -424,12 +424,12 @@ class hr_holidays(osv.osv):
             else:# This condition will never meet!!
                 holiday_ids = []
                 vals = {
-                    'name' : record.name,
-                    'holiday_status_id' : record.holiday_status_id.id,
+                    'name': record.name,
+                    'holiday_status_id': record.holiday_status_id.id,
                     'state': 'draft',
-                    'date_from' : record.date_from,
-                    'date_to' : record.date_to,
-                    'notes' : record.notes,
+                    'date_from': record.date_from,
+                    'date_to': record.date_to,
+                    'notes': record.notes,
                     'number_of_days': record.number_of_days,
                     'number_of_days_temp': record.number_of_days_temp,
                     'type': record.type,
@@ -449,12 +449,12 @@ class hr_holidays(osv.osv):
             if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
                 diff_day = self._get_number_of_days(record.date_from, record.date_to)
                 vals = {
-                    'name' : record.name,
-                    'categ_id' : record.holiday_status_id.categ_id.id,
-                    'duration' : (diff_day) * 8,
-                    'note' : record.notes,
-                    'user_id' : record.user_id.id,
-                    'date' : record.date_from,
+                    'name': record.name,
+                    'categ_id': record.holiday_status_id.categ_id.id,
+                    'duration': (diff_day) * 8,
+                    'note': record.notes,
+                    'user_id': record.user_id.id,
+                    'date': record.date_from,
                 }
                 case_id = meeting_obj.create(cr, uid, vals)
                 self.write(cr, uid, ids, {'case_id': case_id})

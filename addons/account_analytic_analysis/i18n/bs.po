@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-08-02 20:29+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -23,16 +23,6 @@ msgid ""
 "invoiced."
 msgstr ""
 "Broj sati koji mogu biti fakturirani, plus oni koji su već fakturirani."
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours summary by user"
-msgstr "Ukupno sati po korisniku"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Posljednji datum fakture"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -47,25 +37,10 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Izračunato korištenjem forume: Maksimalna količina - Ukupno sati"
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all
-msgid "All Analytic Accounts"
-msgstr "Svi analitički računi"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
-msgid "My Current Accounts"
-msgstr "Moji tekući računi"
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neodgovarajući XML za arhitekturu prikaza!"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
-msgstr "Datum zadnje fakture stvorene za ovaj analitički račun."
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "AccessError"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -73,27 +48,19 @@ msgid "Theorical Revenue"
 msgstr "Teoretski/mogući prihod"
 
 #. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešan model name u definisanju radnje"
+#: help:account.analytic.account,last_invoice_date:0
+msgid "Date of the last invoice created for this analytic account."
+msgstr "Datum zadnje fakture stvorene za ovaj analitički račun."
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Posljednji datum fakture"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Izračunato korištenjem formule: Teorijski prihod - Ukupni troškovi"
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_new
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_new
-msgid "New Analytic Account"
-msgstr "Novo analitičko konto"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -106,17 +73,6 @@ msgid "Real Margin Rate (%)"
 msgstr "Stopa stvarne granice (%)"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_open
-msgid "Current Analytic Accounts"
-msgstr "Tekući analitički računi"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Datum posljednje izmjene/rada na ovom kontu"
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
@@ -127,8 +83,8 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Invoicing"
-msgstr "Fakturiranje"
+msgid "Billing"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -171,16 +127,9 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_pending
-msgid "My Pending Accounts"
-msgstr "Moja konta na čekanju"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
-msgid "My Uninvoiced Entries"
-msgstr "Moje nefakturirane stavke"
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
+msgstr "Nefakturirani iznos"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -188,40 +137,23 @@ msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr "Izračunato korištenjem formule: Fakturirani iznos - Ukupni troškovi."
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_managed
-msgid "My Accounts"
-msgstr "Moja konta"
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
-msgid ""
-"Modify account analytic view to show\n"
-"important data for project manager of services companies.\n"
-"Add menu to show relevant information for each manager."
-msgstr ""
-"Izmijeni analitički pregled konta da prikazuje\n"
-"bitne podatke za projekt menadžere uslužnih poduzeća.\n"
-"Dodaj meni za prikazivanje relevantnih informacija za svakog menadžera."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
 msgstr "Nefakturirani sati"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Ukupno sati"
-
-#. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_account
-msgid "Analytic Accounts"
-msgstr "Analitička konta"
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Datum posljednje izmjene/rada na ovom kontu"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -230,25 +162,15 @@ msgid "Invoiced Amount"
 msgstr "Fakturirani iznos"
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.next_id_71
-msgid "Financial Project Management"
-msgstr "Financijsko upravljanje projektima"
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
+msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Datum zadnjeg fakturiranog troška"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr "Nefakturirani iznos"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_pending
-msgid "Pending Analytic Accounts"
-msgstr "Analitička kontana čekanju"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -329,6 +251,7 @@ msgstr "Mjesec"
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analitičko konto"
 
@@ -345,6 +268,16 @@ msgid "All Uninvoiced Entries"
 msgstr "Sve nefakturirane stavke"
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Hours Tot"
+msgstr "Ukupno sati"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
@@ -352,3 +285,59 @@ msgid ""
 msgstr ""
 "Ukupno troškova za ovaj račun. Uključuje stvarne troškove (iz faktura) i "
 "neizravne troškove, kao vrijeme potrošeno na timesheetovima."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "Moji tekući računi"
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Ukupno sati po korisniku"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Svi analitički računi"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Novo analitičko konto"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešan model name u definisanju radnje"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Tekući analitički računi"
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturiranje"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
+
+#~ msgid "My Accounts"
+#~ msgstr "Moja konta"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Moja konta na čekanju"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Moje nefakturirane stavke"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Financijsko upravljanje projektima"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Analitička kontana čekanju"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Analitička konta"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "Izmijeni analitički pregled konta da prikazuje\n"
+#~ "bitne podatke za projekt menadžere uslužnih poduzeća.\n"
+#~ "Dodaj meni za prikazivanje relevantnih informacija za svakog menadžera."

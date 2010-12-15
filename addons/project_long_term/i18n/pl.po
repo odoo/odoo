@@ -7,48 +7,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 10:11+0000\n"
-"PO-Revision-Date: 2010-09-29 10:37+0000\n"
+"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"PO-Revision-Date: 2010-11-05 09:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
 msgid "Long Term Project Management"
-msgstr ""
+msgstr "Zarządzanie projektami długoterminowymi"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
-#: view:project.compute.tasks:0
 msgid "Compute Scheduling of Phases"
-msgstr ""
+msgstr "Oblicz planowanie faz"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr "Nastepna faza"
+msgstr "Nastepne fazy"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr ""
+msgstr "Zadania projektu"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
-#: view:project.phase:0
 msgid "Phases"
 msgstr "Fazy"
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-msgid "_Compute"
-msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -62,9 +55,17 @@ msgid "Invalid model name in the action definition."
 msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: project_long_term
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource
+#: view:project.resource.allocation:0
+msgid "Resources"
+msgstr "Zasoby"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: view:project.resource.allocation:0
+msgid "Resources Allocation"
+msgstr "Alokacja zasobów"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
@@ -72,43 +73,9 @@ msgid "Schedule"
 msgstr "Harmonogram"
 
 #. module: project_long_term
-#: model:ir.module.module,description:project_long_term.module_meta_information
-msgid ""
-"\n"
-"\n"
-"        Long Term Project management module that tracks planning, "
-"scheduling, resources allocation.\n"
-"        Mainly used with Big project management.\n"
-"            - Project Phases will be maintained by Manager of the project\n"
-"            - Compute Phase Scheduling: Compute start date and end date of "
-"the phases which are in draft,open and pending state of the project given.\n"
-"                                        If no project given then all the "
-"draft,open and pending state phases will be taken\n"
-"            - Compute Task Scheduling: This works same as the scheduler "
-"button on project.phase. It takes the project as argument and computes all "
-"the open,draft and pending tasks\n"
-"            - Schedule Tasks: All the tasks which are in draft,pending and "
-"open state are scheduled with taking the phase's start date\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
-#: view:project.resource.allocation:0
 msgid "Resource Allocations"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.resource.allocation:0
-msgid "R.A."
-msgstr ""
-
-#. module: project_long_term
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Alokacje zasobów"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:0
@@ -124,18 +91,18 @@ msgstr "Zadanie"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Oblicz pojedyńczy projekt"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Poprzenie fazy"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "JM (Jednostka Miary) jest jednostką miary dla czasu trwania"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -143,6 +110,9 @@ msgstr ""
 #: field:project.compute.tasks,project_id:0
 #: view:project.phase:0
 #: field:project.phase,project_id:0
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,project_id:0
+#: view:project.task:0
 msgid "Project"
 msgstr "Projekt"
 
@@ -158,31 +128,30 @@ msgid "Cancelled"
 msgstr "Anulowano"
 
 #. module: project_long_term
-#: field:project.resource.allocation,useability:0
-msgid "Usability"
-msgstr "Użyteczność"
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "No tasks to compute for Project '%s'."
+msgstr "Brak zadań do obliczeń w Projekcie '%s'"
 
 #. module: project_long_term
-#: help:project.resource.allocation,useability:0
-msgid ""
-"Usability of this resource for this project phase in percentage (=50%)"
-msgstr ""
+#: help:project.resource.allocation,date_end:0
+msgid "Ending Date"
+msgstr "Data końcowa"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
-#: field:project.resource.allocation,phase_id_date_end:0
 msgid "Ending Date of the phase"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.compute.phases:0
-msgid "This wizard will schedule phases for all or specified project"
-msgstr ""
+msgstr "Końcowa data fazy"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Planning"
 msgstr "Planowanie"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_end:0
+msgid "Deadline"
+msgstr "Termin"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -194,22 +163,29 @@ msgstr "_Anuluj"
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 msgid "Compute Phase Scheduling"
-msgstr ""
+msgstr "Oblicz planowanie fazy"
 
 #. module: project_long_term
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid " (copy)"
+msgstr " (kopia)"
 
 #. module: project_long_term
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Błąd! Nie możesz tworzyć rekurencyjnych kont analitycznych"
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,useability:0
+msgid "Availability"
+msgstr "Dostępność"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Dates"
 msgstr "Daty"
+
+#. module: project_long_term
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -218,33 +194,66 @@ msgid "State"
 msgstr "Stan"
 
 #. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "C_ompute"
+msgstr "_Oblicz"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+msgid "Compute Scheduling of phases for all or specified project"
+msgstr "Oblicz planowanie faz dla wszystkich lub wybranych projektów"
+
+#. module: project_long_term
+#: sql_constraint:ir.module.module:0
+msgid "The certificate ID of the module must be unique !"
+msgstr ""
+
+#. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration UoM"
-msgstr ""
+msgstr "JM czasu trwania"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 msgid "Compute Task Scheduling"
-msgstr ""
+msgstr "Oblicz planowanie zadań"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_start:0
+msgid "Minimum Start Date"
+msgstr "Minimalna data początkowa"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_resource_allocation
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 msgid "Project Resource Allocation"
+msgstr "Alokacja zasobów projektu"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task"
+msgstr "Oblicz planowanie zadania"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"\t           "
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
-#: model:ir.ui.menu,name:project_long_term.menu_view_resource
-msgid "Resources"
-msgstr "Zasoby"
+#: help:project.resource.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Data początkowa"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Related Tasks"
-msgstr ""
+msgstr "Zadania powiązane"
 
 #. module: project_long_term
 #: constraint:ir.ui.view:0
@@ -252,9 +261,15 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: project_long_term
+#: help:project.resource.allocation,useability:0
+msgid ""
+"Availability of this resource for this project phase in percentage (=50%)"
+msgstr "Dostępność tego zasobu dla tej fazy projektu w procentach (=50%)"
+
+#. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "wymuś start fazy po tej dacie"
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
@@ -264,7 +279,7 @@ msgstr "Zadania projektu"
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
 msgid "Project Resources"
-msgstr ""
+msgstr "Zasoby projektu"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -272,9 +287,14 @@ msgid "_Ok"
 msgstr ""
 
 #. module: project_long_term
+#: view:project.phase:0
+msgid "Month"
+msgstr "Miesiąc"
+
+#. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
+msgstr "Data początkowa projektu musi być mniejsza od daty końcowej."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -282,26 +302,19 @@ msgid "project.schedule.tasks"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,constraint_date_start:0
 #: field:project.phase,date_start:0
+#: field:project.resource.allocation,date_start:0
 msgid "Start Date"
 msgstr "Data Początkowa"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Resource Allocation"
-msgstr ""
+msgstr "Alokacja zasobów"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_tasks.py:0
-#, python-format
-msgid "Project must have members assigned !"
 msgstr ""
 
 #. module: project_long_term
@@ -316,59 +329,71 @@ msgid "Error ! You can not create recursive Menu."
 msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
 
 #. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your resources allocation, describe different tasks and link your "
+"phase to previous and next ones, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"human resources, convert your phases into a series of tasks when you start "
+"working on it."
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
 msgstr "Oczekujące"
 
 #. module: project_long_term
-#: constraint:project.task:0
-msgid "Error! Task start-date must be lower then task end-date."
+#: field:project.resource.allocation,name:0
+msgid "unknown"
 msgstr ""
 
 #. module: project_long_term
-#: view:project.phase:0
-msgid "Remaining Hours"
-msgstr "Pozostałe godziny"
-
-#. module: project_long_term
-#: view:project.phase:0
+#: field:project.resource.allocation,user_id:0
 msgid "User"
 msgstr "Użytkownik"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Task Detail"
-msgstr ""
+msgstr "Szczegóły zadania"
 
 #. module: project_long_term
-#: view:project.compute.tasks:0
-msgid "Compute"
-msgstr "Oblicz"
+#: help:project.project,resource_calendar_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr ""
+"Rozkład godzin roboczych do uwzględnienia w raporcie z wykresem Gantta"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Obliczanie zadań projektu"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#: code:addons/project_long_term/project_long_term.py:0
 #, python-format
 msgid "No responsible person assigned !"
-msgstr ""
+msgstr "Nie przypisano osoby odpowiedzialnej"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_tasks.py:0
-#: code:addons/project_long_term/wizard/project_schedule_tasks.py:0
+#: code:addons/project_long_term/project_long_term.py:0
 #, python-format
 msgid "Error"
 msgstr "Błąd"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#: code:addons/project_long_term/project_long_term.py:0
 #, python-format
 msgid "You must assign a responsible person for phase '%s' !"
-msgstr ""
+msgstr "Musisz podać osobę odpowiedzialną za fazę '%s' !"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "Should have Resources Allocation or Project Members!"
+msgstr "Musi być Alokacja zasobów lub Członkowie projektu!"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -378,16 +403,17 @@ msgstr "Ograniczenia"
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Ustala kolejność wyświetlania listy faz."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
 #: model:ir.ui.menu,name:project_long_term.menu_project_phase
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Fazy projektu"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -399,6 +425,11 @@ msgstr "Wykonano"
 #: view:project.phase:0
 msgid "Cancel"
 msgstr "Anuluj"
+
+#. module: project_long_term
+#: sql_constraint:ir.model.fields:0
+msgid "Size of the field can never be less than 1 !"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -415,10 +446,9 @@ msgstr ""
 "specjalnych !"
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_schedule_tasks.py:0
-#, python-format
-msgid "Phase must have resources assigned !"
-msgstr ""
+#: view:project.phase:0
+msgid "Remaining Hours"
+msgstr "Pozostałe godziny"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -426,25 +456,47 @@ msgid "Other Info"
 msgstr "Inne informacje"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,responsible_id:0
 msgid "Responsible"
 msgstr "Odpowiedzialny"
 
 #. module: project_long_term
+#: field:project.project,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Czas pracy"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Current"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Rozpocznij fazę"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:0
 #, python-format
 msgid "Please Specify Project to be schedule"
-msgstr ""
+msgstr "Wybierz projekt do zaplanowania"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,total_hours:0
+msgid "Total Hours"
+msgstr "Suma godzin"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
 msgid "Task Scheduling completed successfully."
-msgstr ""
+msgstr "Planowanie zadań zakończono pomyślnie"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task for specified project."
+msgstr "Oblicz planowanie zadań dla projektu"
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -453,7 +505,6 @@ msgstr "Faza"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
-#: field:project.resource.allocation,phase_id_date_start:0
 msgid "Starting Date of the phase"
 msgstr "Data rozpoczęcia fazy"
 
@@ -466,10 +517,15 @@ msgid ""
 "          \n"
 " If the phase is over, the states is set to 'Done'."
 msgstr ""
+"Po utworzeniu faza jest w stanie 'Projekt'.\n"
+" Po uruchomieniu faza przechodzi w stan 'W toku'.\n"
+" Jeśli jest potrzebny przegląd, to faza wchodzi w stan 'Oczekiwanie'.        "
+"                          \n"
+" Jeśli faza jest zakończona, to stan jest ustawiany na 'Wykonano'."
 
 #. module: project_long_term
-#: field:project.phase,constraint_date_end:0
 #: field:project.phase,date_end:0
+#: field:project.resource.allocation,date_end:0
 msgid "End Date"
 msgstr "Data końcowa"
 
@@ -490,15 +546,27 @@ msgid "Working Period"
 msgstr "Godziny pracy"
 
 #. module: project_long_term
+#: model:ir.model,name:project_long_term.model_resource_resource
+msgid "Resource Detail"
+msgstr "Szczegóły zasobu"
+
+#. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 #: view:project.phase:0
 msgid "Scheduling"
 msgstr "Harmonogram"
 
 #. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "No tasks to compute for Phase '%s'."
+msgstr "Brak zadań do obliczania dla Fazy '%s'."
+
+#. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
 #: view:project.phase:0
 #: field:project.resource.allocation,phase_id:0
+#: view:project.task:0
 #: field:project.task,phase_id:0
 msgid "Project Phase"
 msgstr "Faza projektu"
@@ -506,7 +574,7 @@ msgstr "Faza projektu"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Obliczenie faz projektu"
 
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
@@ -516,7 +584,7 @@ msgstr "Wiadomość"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "Zapętlenia w fazach są niedozwolone"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -526,7 +594,7 @@ msgstr "Numeracja"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All Projects"
-msgstr ""
+msgstr "Oblicz wszystkie projekty"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -543,9 +611,18 @@ msgstr "Planuj zadania"
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Domyślnie w dniach"
 
 #. module: project_long_term
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Czas trwania"
+
+#~ msgid "Usability"
+#~ msgstr "Użyteczność"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Błąd! Nie możesz tworzyć rekurencyjnych kont analitycznych"
+
+#~ msgid "Compute"
+#~ msgstr "Oblicz"

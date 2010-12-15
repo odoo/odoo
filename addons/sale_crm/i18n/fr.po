@@ -6,202 +6,213 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 06:21+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-12-04 09:26+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_crmopportunityquotation
-msgid "Crm opportunity quotation"
-msgstr "Chiffrage de l'opportunité"
-
-#. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
-msgid "Opportunity Analytic"
-msgstr "Analytique de l'opportunité"
-
-#. module: sale_crm
-#: help:crm.case.make_order,init,partner_id:0
-msgid "Use this partner if there is no partner on the case"
-msgstr "Utiliser ce partenaire si il n'y a pas de partenaire sur ce cas"
-
-#. module: sale_crm
-#: wizard_button:sale_crm.make_case,init,create:0
-msgid "Create"
-msgstr "Créer"
-
-#. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "All at once"
-msgstr ""
-
-#. module: sale_crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_crmopportunityquotation
-msgid "Opportunity goes into the quotation"
-msgstr ""
-
-#. module: sale_crm
-#: model:process.node,name:sale_crm.process_node_contractanalytic0
-msgid "Analytic account"
-msgstr "Compte analytique"
-
-#. module: sale_crm
-#: model:process.node,note:sale_crm.process_node_crmquotation0
-msgid "Convert opportunity to quotation"
-msgstr "Convertir une oportunité en chiffrage"
-
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,description:0
-msgid "Your action"
-msgstr "Votre action"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,picking_policy:0
-msgid "Packing Policy"
-msgstr "Politique de Colisage"
-
-#. module: sale_crm
-#: wizard_button:crm.case.make_order,init,order:0
-msgid "Create Quote"
-msgstr "Créer un chiffrage"
-
-#. module: sale_crm
-#: model:process.node,note:sale_crm.process_node_contractpricelist0
-msgid "Contract Volume (pricelist)"
-msgstr "Contrat en volume (liste de prix)"
-
-#. module: sale_crm
-#: model:process.node,name:sale_crm.process_node_crmopportunity0
-msgid "CRM Opportunity"
-msgstr "CRM Opportunité"
-
-#. module: sale_crm
-#: model:ir.module.module,shortdesc:sale_crm.module_meta_information
-msgid "Sale CRM Stuff"
-msgstr ""
-
-#. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
-msgid "Opportunity convert into quotation"
-msgstr "Convertir une opportunité en chiffrage"
-
-#. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Livraison directe"
-
-#. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
-msgid "Opportunity Quotation"
-msgstr "Chiffrage de l'opportunité"
-
-#. module: sale_crm
-#: model:process.node,name:sale_crm.process_node_crmquotation0
-msgid "Quotation"
-msgstr "Proposition"
-
-#. module: sale_crm
-#: view:crm.case:0
-#: wizard_view:crm.case.make_order,init:0
-msgid "Convert to Quote"
-msgstr "Convertir en chiffrage"
-
-#. module: sale_crm
-#: help:crm.case.make_order,init,close:0
-msgid "Check this to close the case after having created the sale order."
-msgstr ""
-"Vérifier ceci pour fermer le cas après la création de la commande de vente"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,partner_id:0
+#: field:crm.make.sale,partner_id:0
 msgid "Customer"
 msgstr "Client"
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
-msgstr "Opportunité converti en liste de prix"
-
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,user:0
-msgid "User Responsible"
-msgstr "Responsable"
-
-#. module: sale_crm
-#: model:process.node,note:sale_crm.process_node_contractanalytic0
-msgid "Reflect the contract made with customer"
-msgstr "Refleter le contrat passé avec le client"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,products:0
-msgid "Products"
-msgstr "Produits"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,close:0
-msgid "Close Case"
-msgstr "Fermer le cas"
-
-#. module: sale_crm
-#: model:ir.actions.wizard,name:sale_crm.sale_crm_make_case_wizard
-#: wizard_view:sale_crm.make_case,init:0
-msgid "Make Case"
-msgstr "Créer un Cas"
-
-#. module: sale_crm
-#: wizard_field:crm.case.make_order,init,shop_id:0
-msgid "Shop"
-msgstr "Magasin"
-
-#. module: sale_crm
-#: model:process.node,note:sale_crm.process_node_crmopportunity0
-msgid "The CRM Opportunity can lead to a quotation."
+#: view:crm.make.sale:0
+msgid "Convert to Quotation"
 msgstr ""
 
 #. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunitypricelist0
-msgid "Opportunity Pricelist"
-msgstr "Liste de prix de l'opporunité"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "is converted to Quotation."
+msgstr ""
 
 #. module: sale_crm
-#: model:process.node,name:sale_crm.process_node_contractpricelist0
-msgid "Contract Pricelist"
-msgstr "Liste de prix du contrat"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr "Données insuffisantes !"
 
 #. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,name:0
-msgid "Case Description"
-msgstr "Description du cas"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "Customer has no addresses defined!"
+msgstr "Le client n'a pas d'adresse définie !"
 
 #. module: sale_crm
-#: wizard_field:crm.case.make_order,init,analytic_account:0
-#: model:process.transition,note:sale_crm.process_transition_opportunityanalytic0
-msgid "Analytic Account"
-msgstr "Compte analytique"
+#: view:crm.make.sale:0
+msgid "_Create"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.actions.wizard,name:sale_crm.sale_crm_wizard
+#: help:crm.make.sale,close:0
+msgid ""
+"Check this to close the opportunity after having created the sale order."
+msgstr ""
+
+#. module: sale_crm
+#: view:crm.lead:0
+msgid "Convert to Quote"
+msgstr "Convertir en chiffrage"
+
+#. module: sale_crm
+#: view:account.invoice.report:0
+#: view:board.board:0
+msgid "Monthly Turnover"
+msgstr "Chiffre d'affaires mensuel"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "Converted to Sales Quotation(id: %s)."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
 msgid "Make Quotation"
 msgstr "Faire un chiffrage"
 
 #. module: sale_crm
-#: wizard_button:crm.case.make_order,init,end:0
-#: wizard_button:sale_crm.make_case,init,end:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "Opportunity "
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#, python-format
+msgid "Opportunity: %s"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sale Order"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.module.module,shortdesc:sale_crm.module_meta_information
+msgid "Creates Sales order from Opportunity"
+msgstr "Créer une commande de vente à partir de l'opportunité"
+
+#. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.action_quotation_for_sale_crm
+msgid "Quotations"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,shop_id:0
+msgid "Shop"
+msgstr "Magasin"
+
+#. module: sale_crm
+#: view:board.board:0
+msgid "My Quotations"
+msgstr ""
+
+#. module: sale_crm
+#: field:crm.make.sale,close:0
+msgid "Close Opportunity"
+msgstr ""
+
+#. module: sale_crm
+#: view:sale.order:0
+#: field:sale.order,section_id:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sale"
+msgstr ""
+
+#. module: sale_crm
+#: view:crm.make.sale:0
 msgid "Cancel"
 msgstr "Annuler"
 
-#. module: sale_crm
-#: wizard_field:sale_crm.make_case,init,section:0
-msgid "Case Section"
-msgstr ""
+#~ msgid "Crm opportunity quotation"
+#~ msgstr "Chiffrage de l'opportunité"
+
+#~ msgid "Opportunity Analytic"
+#~ msgstr "Analytique de l'opportunité"
+
+#~ msgid "Use this partner if there is no partner on the case"
+#~ msgstr "Utiliser ce partenaire si il n'y a pas de partenaire sur ce cas"
+
+#~ msgid "Create"
+#~ msgstr "Créer"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "Analytic account"
+#~ msgstr "Compte analytique"
+
+#~ msgid "Convert opportunity to quotation"
+#~ msgstr "Convertir une oportunité en chiffrage"
+
+#~ msgid "Your action"
+#~ msgstr "Votre action"
+
+#~ msgid "Packing Policy"
+#~ msgstr "Politique de Colisage"
+
+#~ msgid "Create Quote"
+#~ msgstr "Créer un chiffrage"
+
+#~ msgid "Contract Volume (pricelist)"
+#~ msgstr "Contrat en volume (liste de prix)"
+
+#~ msgid "CRM Opportunity"
+#~ msgstr "CRM Opportunité"
+
+#~ msgid "Opportunity convert into quotation"
+#~ msgstr "Convertir une opportunité en chiffrage"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "Livraison directe"
+
+#~ msgid "Opportunity Quotation"
+#~ msgstr "Chiffrage de l'opportunité"
+
+#~ msgid "Quotation"
+#~ msgstr "Proposition"
+
+#~ msgid "Check this to close the case after having created the sale order."
+#~ msgstr ""
+#~ "Vérifier ceci pour fermer le cas après la création de la commande de vente"
+
+#~ msgid "Opporunity convert to the Pricelist"
+#~ msgstr "Opportunité converti en liste de prix"
+
+#~ msgid "User Responsible"
+#~ msgstr "Responsable"
+
+#~ msgid "Reflect the contract made with customer"
+#~ msgstr "Refleter le contrat passé avec le client"
+
+#~ msgid "Products"
+#~ msgstr "Produits"
+
+#~ msgid "Close Case"
+#~ msgstr "Fermer le cas"
+
+#~ msgid "Make Case"
+#~ msgstr "Créer un Cas"
+
+#~ msgid "Opportunity Pricelist"
+#~ msgstr "Liste de prix de l'opporunité"
+
+#~ msgid "Contract Pricelist"
+#~ msgstr "Liste de prix du contrat"
+
+#~ msgid "Case Description"
+#~ msgstr "Description du cas"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Compte analytique"

@@ -18,20 +18,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
 from osv import osv, fields
-import netsvc
-from tools.translate import _
 
 class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
     _description = 'Invoice Types'
     _columns = {
         'name': fields.char('Invoice Type', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the invoice type without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the invoice type without removing it."),
         'note': fields.text('Note'),
-        'invoicing_method': fields.selection([('simple','Non grouped'),('grouped','Grouped')], 'Invoicing method', required=True),
+        'invoicing_method': fields.selection([('simple', 'Non grouped'), ('grouped', 'Grouped')], 'Invoicing method', required=True),
     }
     _defaults = {
         'active': True,

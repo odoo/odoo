@@ -7,49 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-10 17:16+0000\n"
 "PO-Revision-Date: 2009-09-08 12:39+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Partial Delivery"
-msgstr "Daļēja piegāde"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Procurement"
-msgstr "Veidot Iepirkumu no jauna"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_confirmquotation0
-msgid "Confirm Quotation"
-msgstr "Apstiprināt Pasūtījumu"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Piegādes Pasūtījums"
-
-#. module: sale
-#: field:sale.order.line,address_allotment_id:0
-msgid "Allotment Partner"
-msgstr "Daļas Partneris"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Waiting Schedule"
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
 msgstr ""
 
 #. module: sale
@@ -60,84 +30,9 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "no noliktavā esošajām precēm"
-
-#. module: sale
-#: field:sale.config.picking_policy,step:0
-msgid "Steps To Deliver a Sale Order"
-msgstr ""
-
-#. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0
-#: rml:sale.order:0
-msgid "Quantity"
-msgstr "Skaits"
-
-#. module: sale
-#: wizard_view:sale.advance_payment_inv,create:0
-msgid "You invoice has been successfully created !"
-msgstr "Rēķins ir sekmīgi izveidots!"
-
-#. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Automatic Declaration"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree3
-#: model:ir.ui.menu,name:sale.menu_action_order_line_tree3
-msgid "Uninvoiced and Delivered Lines"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Set to Draft"
-msgstr "Atzīmēt kā Melnrakstu"
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Invoice Exception"
-msgstr "Rēķina kļūda"
-
-#. module: sale
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is the list of picking list that have been generated for this invoice"
-msgstr ""
-
-#. module: sale
-#: model:process.node,note:sale.process_node_deliveryorder0
-msgid "Delivery, from the warehouse to the customer."
-msgstr "Piegāde no noliktavas klientam."
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
-msgstr "sale.config.picking_policy"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_validate0
-msgid "Validate"
-msgstr "Apstiprināt"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Make Invoice"
-msgstr "Izveidot Rēķinu"
-
-#. module: sale
-#: field:sale.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Apakšsumma kopā"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"Whenever confirm button is clicked, the draft state is moved to manual. that "
-"is, quotation is moved to  sale order."
+#: view:sale.report:0
+#: field:sale.report,day:0
+msgid "Day"
 msgstr ""
 
 #. module: sale
@@ -147,79 +42,31 @@ msgid "Cancel Order"
 msgstr "Atcelt Pasūtījumu"
 
 #. module: sale
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Kustība Noliktavā"
+#: selection:sale.order,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Apmaksa pirms Piegādes"
 
 #. module: sale
-#: view:sale.order.line:0
-msgid "Manual Designation"
-msgstr "Manuāls Norīkojums"
-
-#. module: sale
-#: view:sale.order:0
-#: field:sale.order,note:0
-#: view:sale.order.line:0
-#: field:sale.order.line,notes:0
-msgid "Notes"
-msgstr "Piezīmes"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-msgid "Invoice after delivery"
-msgstr "Rēķins pēc piegādes"
-
-#. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
-msgid "Taxes"
-msgstr "Nodokļi"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Net Total :"
-msgstr "Tīrais kopā:"
-
-#. module: sale
-#: field:sale.order,order_policy:0
-msgid "Shipping Policy"
-msgstr "Piegādes noteikumi"
-
-#. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
-msgid "Cancelled"
+#: help:sale.order,origin:0
+msgid "Reference of the document that generated this sale order request."
 msgstr ""
 
 #. module: sale
-#: selection:sale.order,state:0
-msgid "Shipping Exception"
-msgstr "Piegādes kļūda"
+#: code:addons/sale/wizard/sale_make_invoice.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: sale
-#: field:sale.order,amount_total:0
-msgid "Total"
-msgstr "Kopā"
+#: report:sale.order:0
+msgid "VAT"
+msgstr "PVN"
 
 #. module: sale
-#: field:sale.order,origin:0
-msgid "Origin"
-msgstr "Izcelsme"
-
-#. module: sale
-#: field:sale.order,partner_invoice_id:0
-msgid "Invoice Address"
-msgstr "Rēķina Adrese"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_packinglist0
-msgid "Outgoing Products"
-msgstr "Izejošā Produkcija"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Reference"
-msgstr "Atsauce"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel stock moves attached to this sale order line."
+msgstr ""
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -227,50 +74,33 @@ msgid "All at Once"
 msgstr "Visu kopā"
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_saleprocurement0
-msgid "Procurement is created after confirmation of sale order."
-msgstr "Iepirkums tiks izveidots pēc Pasūtījuma apstiprināšanas."
-
-#. module: sale
 #: field:sale.order,project_id:0
+#: view:sale.report:0
+#: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Analītiskais Konts"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "TVA :"
+#: model:process.node,name:sale.process_node_saleprocurement0
+msgid "Procurement Order"
 msgstr ""
 
 #. module: sale
-#: field:sale.order.line,type:0
-msgid "Procure Method"
-msgstr "Iepirkuma Metode"
+#: view:sale.report:0
+#: field:sale.report,partner_id:0
+msgid "Partner"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "Extra Info"
-msgstr "Papildus Info"
+msgid "Order Line"
+msgstr "Pasūtījuma pozīcija"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Fax :"
-msgstr "Fakss:"
-
-#. module: sale
-#: field:sale.order.line,price_net:0
-msgid "Net Price"
-msgstr "Tīrā cena"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree9
-#: model:ir.ui.menu,name:sale.menu_action_order_tree9
-msgid "My sales order in progress"
-msgstr "Mana pasūtījuma progress"
-
-#. module: sale
-#: field:sale.order.line,product_uos_qty:0
-msgid "Quantity (UoS)"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete a sale order line which is %s !"
 msgstr ""
 
 #. module: sale
@@ -278,14 +108,16 @@ msgstr ""
 msgid ""
 "The sale order will automatically create the invoice proposition (draft "
 "invoice). Ordered and delivered quantities may not be the same. You have to "
-"choose if you invoice based on ordered or shipped quantities. If the product "
-"is a service, shipped quantities means hours spent on the associated tasks."
+"choose if you want your invoice based on ordered or shipped quantities. If "
+"the product is a service, shipped quantities means hours spent on the "
+"associated tasks."
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Confirmed"
-msgstr "Apstiprināts"
+#: view:sale.report:0
+#: field:sale.report,price_average:0
+msgid "Average Price"
+msgstr ""
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -293,121 +125,33 @@ msgid "Default Payment Term"
 msgstr "Apmaksas termiņš pēc noklusējuma"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree_all
-#: model:ir.ui.menu,name:sale.menu_action_order_tree_all
-msgid "All Sales Order"
-msgstr "Tirdzniecības Pasūtījums"
+#: model:ir.actions.act_window,name:sale.action_config_picking_policy
+msgid "Configure Picking Policy for Sales Order"
+msgstr ""
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_confirm0
-msgid "Confirm"
-msgstr "Apstiprināt"
-
-#. module: sale
-#: field:sale.order,partner_shipping_id:0
-msgid "Shipping Address"
-msgstr "Piegādes Adrese"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Piegādātais Daudzums"
-
-#. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Sales Orders"
-msgstr "Rēķins pēc Tirdzniecības Pasūtījuma"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
-msgid "Sale Shop"
-msgstr "Tirdzniecības Veikals"
-
-#. module: sale
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Noliktava"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Order N°"
-msgstr "Pasūtījuma Nr."
-
-#. module: sale
-#: field:sale.order,order_line:0
+#: view:sale.order:0
 #: view:sale.order.line:0
-msgid "Order Lines"
-msgstr "Pasūtījuma sastāvdaļas"
+#: field:sale.order.line,state:0
+#: view:sale.report:0
+msgid "State"
+msgstr ""
 
 #. module: sale
-#: rml:sale.order:0
+#: report:sale.order:0
 msgid "Disc.(%)"
 msgstr "Atlaide %"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-#: field:sale.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Rēķina pozīcijas"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Piespiedu Nodošana"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Untaxed amount"
-msgstr "Summa bez nodokļiem"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_packing0
-msgid ""
-"Packing list is created when 'Assign' is being clicked after confirming the "
-"sale order. This transaction moves the sale order to packing list."
+#: view:sale.report:0
+#: field:sale.report,price_total:0
+msgid "Total Price"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree8
-#: model:ir.ui.menu,name:sale.menu_action_order_tree8
-msgid "My sales order waiting Invoice"
-msgstr "Mans tirdzniecības pasūtījums (Tiek gaidīts Rēķins)"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Shipping address :"
-msgstr "Piegādes adrese:"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
-msgid ""
-"When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
-"will automatic create after delivery."
+#: help:sale.make.invoice,grouped:0
+msgid "Check the box to group the invoices for the same customers"
 msgstr ""
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Pilna Piegāde"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Manual Description"
-msgstr "Manuāls Apraksts"
-
-#. module: sale
-#: field:sale.order.line,product_uom_qty:0
-msgid "Quantity (UoM)"
-msgstr "Daudzums (mērv.)"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree1
-#: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
-#: view:sale.order.line:0
-msgid "Sales Order Lines"
-msgstr "Tirdzniecības Pasūtījuma pozīcijas"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -415,115 +159,62 @@ msgid "Ordered Quantities"
 msgstr "Pasūtītais Daudzums"
 
 #. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sale Order Procurement"
-msgstr "Iepirkums bāzēts uz Tirdzniecības pasūtījumu"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_packing0
-msgid "Packing"
-msgstr "Iepakojums"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Total :"
-msgstr "Kopā:"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Confirm Order"
-msgstr "Apstiprināt Pasūtījumu"
+#: field:sale.order.line,move_ids:0
+msgid "Inventory Moves"
+msgstr "Kustība Noliktavā"
 
 #. module: sale
 #: field:sale.order,name:0
+#: field:sale.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Atsauce uz Pasūtījumu"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
-#: selection:sale.order.line,state:0
-msgid "Done"
-msgstr "Pabeigts"
-
-#. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
-msgid "Pricelist"
-msgstr "Cenuzīme"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_shop_configuration
-msgid "Configuration"
-msgstr "Konfigurācija"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice on Order After Delivery"
-msgstr "Rēķins no Pasūtījuma pēc Piegādes"
-
-#. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:sale.order:0
+msgid "Other Information"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,picking_ids:0
-msgid "Related Packing"
-msgstr ""
-
-#. module: sale
-#: field:sale.shop,payment_account_id:0
-msgid "Payment Accounts"
-msgstr ""
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-
-#. module: sale
-#: field:sale.order,client_order_ref:0
-msgid "Customer Ref"
+#: help:sale.order,create_date:0
+msgid "Date on which sale order is created"
 msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "Sales orders"
-msgstr "Tirdzniecības pasūtījumi"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleprocurement0
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Iepirkums"
-
-#. module: sale
-#: view:sale.shop:0
-msgid "Payment accounts"
+msgid "Dates"
 msgstr ""
 
 #. module: sale
-#: wizard_button:sale.advance_payment_inv,create,end:0
-msgid "Close"
-msgstr "Aizvērt"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"Here is a list of each sales order line to be invoiced. This view allows you "
+"to invoice sales orders partially, by lines of sales order. You don't need "
+"this list if you invoice based on the delivery orders or if you invoice "
+"sales totally."
+msgstr ""
 
 #. module: sale
-#: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
-msgid "Draft Invoice"
-msgstr "Rēķins (Melnraksts)"
+#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
+msgid ""
+"The invoice is created automatically if the shipping policy is 'Invoice from "
+"pick' or 'Invoice on order after delivery'."
+msgstr ""
 
 #. module: sale
-#: wizard_field:sale.order.line.make_invoice,init,grouped:0
-#: wizard_field:sale.order.make_invoice,init,grouped:0
-msgid "Group the invoices"
-msgstr "Grupēt rēķinus"
+#: model:process.transition,name:sale.process_transition_saleinvoice0
+msgid "From a sale order"
+msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-#: model:ir.ui.menu,name:sale.menu_action_order_tree5
-msgid "All Quotations"
+#: view:sale.order:0
+msgid "Recreate Packing"
 msgstr ""
 
 #. module: sale
@@ -532,51 +223,17 @@ msgid "Discount (%)"
 msgstr "Atlaide %"
 
 #. module: sale
-#: model:process.node,note:sale.process_node_invoice0
-msgid "Draft customer invoice, to be reviewed by accountant."
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree3
-#: model:ir.ui.menu,name:sale.menu_action_order_tree3
-msgid "Sales Order To Be Invoiced"
-msgstr "Tirdzniecības pasūtījums kuram jāpiestāda Rēķins"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorderprocurement0
-msgid "Procurement for each line"
-msgstr "Iepirkums pēc pozīcijām"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree10
-#: model:ir.ui.menu,name:sale.menu_action_order_tree10
-msgid "My Quotations"
-msgstr ""
-
-#. module: sale
-#: wizard_view:sale.advance_payment_inv,create:0
-msgid "Invoices"
-msgstr "Rēķini"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Line"
-msgstr "Pasūtījuma pozīcija"
-
-#. module: sale
-#: field:sale.config.picking_policy,picking_policy:0
-msgid "Packing Default Policy"
-msgstr "Standarta noteikumi iepakošanai"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorder0
-msgid "Manages the delivery and invoicing progress"
-msgstr ""
-
-#. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Standarta Piegādes Noteikumi"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel sale order !"
+msgstr "Nevar atcelt tirdzniecības pasūtījumu!"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -584,267 +241,97 @@ msgid "Packaging"
 msgstr "Iepakojums"
 
 #. module: sale
-#: model:ir.module.module,shortdesc:sale.module_meta_information
-#: model:ir.ui.menu,name:sale.menu_sale_root
-msgid "Sales Management"
-msgstr "Tirdzniecības Vadība"
-
-#. module: sale
-#: field:sale.order.line,order_id:0
-msgid "Order Ref"
-msgstr "Pasūtījuma atsauce"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Invoice"
-msgstr "Veidot Rēķinu"
-
-#. module: sale
-#: field:sale.order,user_id:0
-msgid "Salesman"
-msgstr "Pārdošanas menedžeris"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleorderprocurement0
-msgid ""
-"In sale order , procuerement for each line and it comes into the procurement "
-"order"
+#: field:sale.shop,name:0
+msgid "Shop Name"
 msgstr ""
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Taxes :"
-msgstr "Nodokļi"
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0
-#: field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Rēķins piestādīts"
-
-#. module: sale
-#: model:ir.actions.wizard,name:sale.advance_payment
-msgid "Advance Invoice"
-msgstr "Priekšapmaksas Rēķins"
-
-#. module: sale
-#: field:sale.order,state:0
-msgid "Order State"
-msgstr "Pasūtījuma statuss"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree2
-#: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
-msgid "Uninvoiced Lines"
-msgstr "Pozīcijas, par kurām nav piestādīti rēķini"
-
-#. module: sale
-#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
-msgid ""
-"This Configuration step use to set default picking policy when make sale "
-"order"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
 msgstr ""
-
-#. module: sale
-#: model:process.process,name:sale.process_process_salesprocess0
-msgid "Sales Process"
-msgstr "Tirdzniecības Process"
-
-#. module: sale
-#: wizard_view:sale.order.line.make_invoice,init:0
-#: wizard_button:sale.order.line.make_invoice,init,invoice:0
-#: wizard_view:sale.order.make_invoice,init:0
-#: wizard_button:sale.order.make_invoice,init,invoice:0
-msgid "Create invoices"
-msgstr "Izveidot Rēķinus"
-
-#. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree7
-#: model:ir.ui.menu,name:sale.menu_action_order_tree7
-msgid "My sales in shipping exception"
-msgstr ""
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Sales Configuration"
-msgstr "Tirdzniecības Konfigurācija"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
-#: model:ir.ui.menu,name:sale.menu_action_order_tree2
 msgid "Sales in Exception"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr ""
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "Melnraksts"
-
-#. module: sale
-#: field:sale.order,invoiced:0
-msgid "Paid"
-msgstr "Samaksāts"
+#: view:sale.order:0
+msgid "Set to Draft"
+msgstr "Atzīmēt kā Melnrakstu"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Procurement Corrected"
-msgstr "Iepirkums Izlabots"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Shipping & Manual Invoice"
-msgstr "Piegāde un Manuāls Rēķins"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleorderprocurement0
-#: model:process.transition,name:sale.process_transition_saleprocurement0
-msgid "Sale Procurement"
+msgid "Conditions"
 msgstr ""
 
 #. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Configure Sale Order Logistic"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"There is no income category account defined in default Properties for "
+"Product Category or Fiscal Position is not defined !"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Summa bez nodokļiem"
+#: selection:sale.report,month:0
+msgid "August"
+msgstr ""
 
 #. module: sale
-#: field:sale.order.line,state:0
-msgid "Status"
-msgstr "Statuss"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: sale
-#: field:sale.order,picking_policy:0
-msgid "Packing Policy"
-msgstr "Iepakošanas Noteikumi"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-msgid "Product sales"
-msgstr "Preču tirdzniecība"
-
-#. module: sale
-#: rml:sale.order:0
+#: report:sale.order:0
 msgid "Our Salesman"
 msgstr "Mūsu tirdzniecības menedžeris"
 
 #. module: sale
-#: wizard_button:sale.advance_payment_inv,init,create:0
-msgid "Create Advance Invoice"
-msgstr "Izveidot Priekšapmaksas Rēķinu"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleprocurement0
-msgid "One procurement for each product."
+#: selection:sale.report,month:0
+msgid "June"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
-#: model:ir.ui.menu,name:sale.menu_sale_order
-msgid "Sales Orders"
-msgstr "Tirdzniecības Pasūtījumi"
+#: model:ir.model,name:sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Tirdzniecības Cenuzīmes"
+#: selection:sale.report,month:0
+msgid "October"
+msgstr ""
 
 #. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Tiešā Piegāde"
-
-#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 #: view:sale.order:0
-#: view:sale.order.line:0
-#: field:sale.order.line,property_ids:0
-msgid "Properties"
+#: view:sale.report:0
+msgid "Quotations"
 msgstr ""
 
 #. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0
-msgid "Quotation"
-msgstr ""
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance Product"
-msgstr ""
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
 msgid ""
-"Invoice is created when 'Create Invoice' is being clicked after confirming "
-"the sale order. This transaction moves the sale order to invoices."
+"Invoice cannot be created for this Sale Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sale Order Line is Invoiced!"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "Compute"
-msgstr "Aprēķināt"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form
-#: field:sale.order,shop_id:0
-msgid "Shop"
-msgstr "Veikals"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "VAT"
-msgstr "PVN"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
-#: model:ir.ui.menu,name:sale.menu_action_order_tree4
-msgid "Sales Order in Progress"
-msgstr "Tirdzniecības pasūtījuma progress"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_assign0
-msgid "Assign"
-msgstr "Piešķirt"
-
-#. module: sale
-#: view:sale.order:0
-msgid "History"
-msgstr "Vēsture"
-
-#. module: sale
-#: help:sale.order,order_policy:0
-msgid ""
-"The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and "
-"then generate the packing order after the payment of this invoice.\n"
-"  - The 'Shipping & Manual Invoice' will create the packing order directly "
-"and wait for the user to manually click on the 'Invoice' button to generate "
-"the draft invoice.\n"
-"  - The 'Invoice on Order After Delivery' choice will generate the draft "
-"invoice based on sale order after all packing lists have been finished.\n"
-"  - The 'Invoice from the packing' choice is used to create an invoice "
-"during the packing process."
-msgstr ""
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Your Reference"
-msgstr "Jūsu Atsauce"
+#: field:sale.advance.payment.inv,qtty:0
+#: report:sale.order:0
+msgid "Quantity"
+msgstr "Skaits"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -852,81 +339,31 @@ msgid "Delivery Order Only"
 msgstr "Piegādes Pasūtījums Tikai"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Sales order lines"
-msgstr "Tirdzniecības pasūtījuma pozīcijas"
-
-#. module: sale
-#: field:sale.order.line,sequence:0
-msgid "Sequence"
-msgstr "Secība"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-msgid "Sales"
-msgstr "Tirdzniecība"
-
-#. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Qty"
-msgstr "Sk."
-
-#. module: sale
-#: model:process.node,note:sale.process_node_packinglist0
-msgid "Packing OUT is created for stockable products."
+#: report:sale.order:0
+msgid "TVA :"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "Other data"
-msgstr "Citi dati"
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
+msgstr ""
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0
-#: rml:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Vienības cena"
+#: report:sale.order:0
+msgid "Quotation Date"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_open_invoice
+msgid "Sale Open Invoice"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
 msgstr "Fiskālā Pozīcija"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Invoice address :"
-msgstr "Rēķina adrese:"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: field:sale.order,invoice_ids:0
-msgid "Invoice"
-msgstr "Rēķins"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
-#: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0
-#: view:sale.order.line:0
-#: wizard_button:sale.order.line.make_invoice,init,end:0
-#: wizard_button:sale.order.make_invoice,init,end:0
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: sale
-#: help:sale.order,state:0
-msgid ""
-"Gives the state of the quotation or sale order. The exception state is "
-"automatically set when a cancel operation occurs in the invoice validation "
-"(Invoice Exception) or in the packing list process (Shipping Exception). The "
-"'Waiting Schedule' state is set when the invoice is confirmed but waiting "
-"for the scheduler to run on the date 'Date Ordered'."
-msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -940,169 +377,59 @@ msgid "Number Packages"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_deliver0
-msgid ""
-"Confirming the packing list moves them to delivery order. This can be done "
-"by clicking on 'Validate' button."
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
+#: selection:sale.report,state:0
 msgid "In Progress"
 msgstr ""
 
 #. module: sale
-#: wizard_view:sale.advance_payment_inv,init:0
-msgid "Advance Payment"
-msgstr "Priekšapmaksa"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:sale.shop:0
+msgid "Accounting"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid "Confirm sale order and Create invoice."
-msgstr "Apstiprināt Tirdzniecības pasūtījumu un izveidot Rēķinu"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
-#: selection:sale.config.picking_policy,step:0
-msgid "Packing List & Delivery Order"
-msgstr "Iepakojuma Saraksts un Piegādes Pasūtījums"
+#: help:sale.advance.payment.inv,product_id:0
+msgid ""
+"Select a product of type service which is called 'Advance Product'. You may "
+"have to create it and set it as a default value on this field."
+msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Exception"
-msgstr "Kļūda"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sale Order Lines"
-msgstr "Tirdzniecības pasūtījuma pozīcijas"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.order:0
-msgid "Create Invoice"
-msgstr "Izveidot Rēķinu"
-
-#. module: sale
-#: wizard_view:sale.order.line.make_invoice,init:0
-#: wizard_view:sale.order.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Tiešām vēlaties izveidot Rēķinus?"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoiceafterdelivery0
-msgid "Invoice based on packing lists"
-msgstr "Rēķins no iepakojuma sarakstiem"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Set Default"
-msgstr "Uzstādīt kā noklusēto"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales order"
-msgstr "Tirdzniecības pasūtījums"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_quotation0
-msgid "Quotation (A sale order in draft state)"
-msgstr "Cenas piedāvājums (neapstiprināts Tirdzniecības pasūtījums)"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleinvoice0
-msgid "Sale Invoice"
-msgstr "Rēķins"
-
-#. module: sale
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Inkoterms"
-
-#. module: sale
-#: wizard_field:sale.advance_payment_inv,init,product_id:0
-#: field:sale.order.line,product_id:0
-msgid "Product"
-msgstr "Produkts"
-
-#. module: sale
-#: wizard_button:sale.advance_payment_inv,create,open:0
-msgid "Open Advance Invoice"
-msgstr "Atvērt Priekšapmaksas rēķinu"
-
-#. module: sale
-#: field:sale.order,partner_order_id:0
-msgid "Ordering Contact"
-msgstr "Pasūtījuma Kontaktpersona"
-
-#. module: sale
-#: rml:sale.order:0
-#: field:sale.order.line,name:0
-msgid "Description"
-msgstr "Apraksts"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Price"
-msgstr "Cena"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_deliver0
-msgid "Deliver"
-msgstr "Nosūtīt"
-
-#. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "Cenas piedāvājums / Pasūtījums"
-
-#. module: sale
-#: rml:sale.order:0
+#: report:sale.order:0
 msgid "Tel. :"
 msgstr "Tel. :"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Quotation N°"
-msgstr "Cenas piedāvājuma Nr."
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel this sale order !"
+msgstr "Nevar atcelt šo tirdzniecības pasūtījumu!"
 
 #. module: sale
-#: field:stock.move,sale_line_id:0
-msgid "Sale Order Line"
-msgstr "Tirdzniecības pasūtījuma pozīcija"
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
+#: field:sale.order.line,notes:0
+msgid "Notes"
+msgstr "Piezīmes"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Atcelt preču nodošanu"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice from the Packing"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
-
-#. module: sale
-#: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
-#: model:ir.actions.wizard,name:sale.wizard_sale_order_make_invoice
-msgid "Make invoices"
-msgstr "Veidot Rēķinus"
-
-#. module: sale
-#: help:sale.order,partner_order_id:0
-msgid ""
-"The name and address of the contact that requested the order or quotation."
-msgstr ""
-
-#. module: sale
-#: field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
-msgid "Customer"
-msgstr "Klients"
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
@@ -1110,13 +437,484 @@ msgid "Purchase Pricelists"
 msgstr "Iepirkuma Cenrādis"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order
+#: help:sale.order,amount_total:0
+msgid "The total amount"
+msgstr ""
+
+#. module: sale
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Kļūda: nepareizs EAN kods"
+
+#. module: sale
+#: help:sale.order,partner_invoice_id:0
+msgid "Invoice address for current sale order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Summa bez nodokļiem"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_advance_payment_inv
+msgid "Sale Advance Payment Invoice"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,project_id:0
+msgid "The analytic account related to a sale order"
+msgstr ""
+
+#. module: sale
+#: model:process.node,name:sale.process_node_deliveryorder0
+msgid "Delivery Order"
+msgstr "Piegādes Pasūtījums"
+
+#. module: sale
+#: field:sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Daļas Partneris"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Apakšsumma kopā"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Invoice address :"
+msgstr "Rēķina adrese:"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr "Nevar dzēst Tirdzniecības pasūtījumus, kas jau ir apstiprināti!"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Rēķina Adrese"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Search Uninvoiced Lines"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleprocurement0
+msgid ""
+"One Procurement order for each sale order line and for each of the "
+"components."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Cenas piedāvājums / Pasūtījums"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sale Make Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.shop,warehouse_id:0
+msgid "Warehouse"
+msgstr "Noliktava"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Order N°"
+msgstr "Pasūtījuma Nr."
+
+#. module: sale
+#: field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "Pasūtījuma sastāvdaļas"
+
+#. module: sale
 #: view:sale.order:0
-#: field:stock.picking,sale_id:0
-msgid "Sale Order"
-msgstr "Tirdzniecības Pasūtījums"
+msgid "Untaxed amount"
+msgstr "Summa bez nodokļiem"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
+msgid "Lines to Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,product_uom_qty:0
+msgid "Quantity (UoM)"
+msgstr "Daudzums (mērv.)"
+
+#. module: sale
+#: help:sale.installer,sale_layout:0
+msgid ""
+"Provides some features to improve the layout of the Sales Order reports."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Total :"
+msgstr "Kopā:"
+
+#. module: sale
+#: view:sale.report:0
+msgid "My Sales"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "Nepareiza darbība!"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and "
+"then generate the picking order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the picking order directly "
+"and wait for the user to manually click on the 'Invoice' button to generate "
+"the draft invoice.\n"
+"  - The 'Invoice on Order After Delivery' choice will generate the draft "
+"invoice based on sale order after all picking lists have been finished.\n"
+"  - The 'Invoice from the picking' choice is used to create an invoice "
+"during the picking process."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.report,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
+msgid "Pricelist"
+msgstr "Cenuzīme"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Order Date"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+#: field:sale.report,shipped:0
+msgid "Shipped"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "nepareizs režīms test_state"
+
+#. module: sale
+#: help:sale.order,amount_tax:0
+msgid "The tax amount"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,categ_id:0
+msgid "Category of Product"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Taxes :"
+msgstr "Nodokļi"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Stock Moves"
+msgstr "Preču kustība Noliktavā"
+
+#. module: sale
+#: view:sale.report:0
+msgid "  Year  "
+msgstr ""
+
+#. module: sale
+#: field:sale.order,state:0
+#: field:sale.report,state:0
+msgid "Order State"
+msgstr "Pasūtījuma statuss"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Sales By Month"
+msgstr ""
+
+#. module: sale
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleorderprocurement0
+msgid "Procurement of sold material"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Create Final Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr "Piegādes Adrese"
+
+#. module: sale
+#: view:sale.report:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "Kļūda"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Tiešā Piegāde"
+
+#. module: sale
+#: field:sale.order,create_date:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "November"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "History"
+msgstr "Vēsture"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_packing0
+msgid ""
+"The Pick List form is created as soon as the sale order is confirmed, in the "
+"same time as the procurement order. It represents the assignment of parts to "
+"the sale order. There is 1 pick list by sale order line which evolves with "
+"the availability of parts."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"Sales Orders helps you manage quotations and orders done with your "
+"customers. OpenERP suggests that you to start by creating a quotation. Once "
+"the order is confirmed, the quotation is converted into a Sale Order. "
+"OpenERP can handle several types of products so that a sales order can "
+"trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
+"Based on the configuration of the sale order, a draft invoice will be "
+"generated so that you just have to confirm it when you want to bill your "
+"customer."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Your Reference"
+msgstr "Jūsu Atsauce"
+
+#. module: sale
+#: help:sale.order,partner_order_id:0
+msgid ""
+"The name and address of the contact who requested the order or quotation."
+msgstr ""
+
+#. module: sale
+#: help:res.company,security_lead:0
+msgid ""
+"This is the days added to what you promise to customers for security purpose"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr "Sk."
+
+#. module: sale
+#: view:sale.order:0
+msgid "References"
+msgstr ""
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "Atcelt"
+
+#. module: sale
+#: help:sale.order,pricelist_id:0
+msgid "Pricelist version for current sale order"
+msgstr ""
+
+#. module: sale
+#: field:sale.installer,sale_order_dates:0
+msgid "Sales Order Dates"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+#: field:stock.move,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Tirdzniecības pasūtījuma pozīcija"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Izveidot Rēķinu"
+
+#. module: sale
+#: field:sale.installer,sale_margin:0
+msgid "Margins in Sales Orders"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total Tax Excluded"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Compute"
+msgstr "Aprēķināt"
+
+#. module: sale
+#: help:sale.order,incoterm:0
+msgid ""
+"Incoterm which stands for 'International Commercial terms' implies its a "
+"series of sales terms which are used in the commercial transaction"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,partner_order_id:0
+msgid "Ordering Contact"
+msgstr "Pasūtījuma Kontaktpersona"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
+#: view:sale.open.invoice:0
+msgid "Open Invoice"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sale order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sale order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+#: view:sale.order.line:0
+msgid "Price"
+msgstr "Cena"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_installer
+msgid "Sales Application Configuration"
+msgstr ""
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
+msgid "Force Assignation"
+msgstr "Piespiedu Nodošana"
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "on order"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoiceafterdelivery0
+msgid "Based on the shipped or on the ordered quantities."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,picking_ids:0
+msgid "Related Picking"
+msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1124,24 +922,483 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #. module: sale
+#: report:sale.order:0
+msgid "Shipping address :"
+msgstr "Piegādes adrese:"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Drives procurement and invoicing"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence Number"
+msgstr ""
+
+#. module: sale
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr "Tirdzniecības Cenuzīmes"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_deliver0
+msgid "Create Delivery Order"
+msgstr ""
+
+#. module: sale
+#: field:sale.installer,delivery:0
+msgid "Delivery Costs"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total Tax Included"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been cancelled."
+msgstr ""
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_packing0
+msgid "Create Pick List"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Sales by Product Category"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Daļēja piegāde"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_confirmquotation0
+msgid "Confirm Quotation"
+msgstr "Apstiprināt Pasūtījumu"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: view:sale.report:0
+msgid "Group By..."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Invoice"
+msgstr "Veidot Rēķinu"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,type:0
+msgid "Procurement Method"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
+msgid "title"
+msgstr ""
+
+#. module: sale
+#: model:process.node,name:sale.process_node_packinglist0
+msgid "Pick List"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice from Delivery"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Order date"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,picking_ids:0
+msgid "This is a list of picking that has been generated for this sale order"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_packinglist0
+msgid "Document of the move to the output or to the customer."
+msgstr ""
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_validate0
+msgid "Validate"
+msgstr "Apstiprināt"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Confirm Order"
+msgstr "Apstiprināt Pasūtījumu"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleprocurement0
+msgid "Create Procurement Order"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_order0
+#: model:process.node,name:sale.process_node_saleorder0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "Tirdzniecības Pasūtījums"
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr "Nodokļi"
+
+#. module: sale
+#: field:sale.order,order_policy:0
+msgid "Shipping Policy"
+msgstr "Piegādes noteikumi"
+
+#. module: sale
+#: model:ir.model,name:sale.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create Invoices"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the state of the quotation or sale order. \n"
+"The exception state is automatically set when a cancel operation occurs in "
+"the invoice validation (Invoice Exception) or in the picking list process "
+"(Shipping Exception). \n"
+"The 'Waiting Schedule' state is set when the invoice is confirmed but "
+"waiting for the scheduler to run on the date 'Ordered Date'."
+msgstr ""
+
+#. module: sale
+#: help:sale.order.line,state:0
+msgid ""
+"* The 'Draft' state is set when the related sale order in draft state.       "
+"              \n"
+"* The 'Confirmed' state is set when the related sale order is confirmed.     "
+"                \n"
+"* The 'Exception' state is set when the related sale order is set as "
+"exception.                     \n"
+"* The 'Done' state is set when the sale order line has been picked.          "
+"           \n"
+"* The 'Cancelled' state is set when a user cancel the sale order related."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Extra Info"
+msgstr "Papildus Info"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Fax :"
+msgstr "Fakss:"
+
+#. module: sale
+#: field:sale.advance.payment.inv,amount:0
+msgid "Advance Amount"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_product_total_price
+msgid "Sales by Product's Category"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Piegādātais Daudzums"
+
+#. module: sale
+#: selection:sale.config.picking_policy,order_policy:0
+msgid "Invoice Based on Sales Orders"
+msgstr "Rēķins pēc Tirdzniecības Pasūtījuma"
+
+#. module: sale
+#: model:ir.model,name:sale.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Error !"
+msgstr "Kļūda!"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "July"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,procurement_id:0
+msgid "Procurement"
+msgstr "Iepirkums"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Shipping Exception"
+msgstr "Piegādes kļūda"
+
+#. module: sale
+#: field:sale.make.invoice,grouped:0
+msgid "Group the invoices"
+msgstr "Grupēt rēķinus"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Piegāde un Manuāls Rēķins"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Picking Information !"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,month:0
+msgid "Month"
+msgstr ""
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management"
+msgstr "Tirdzniecības Vadība"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoice0
+msgid "To be reviewed by the accountant."
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorderprocurement0
+msgid "Drives procurement orders for every sale order line."
+msgstr ""
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create invoices"
+msgstr "Izveidot Rēķinus"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line_make_invoice
+msgid "Sale OrderLine Make_invoice"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.picking_policy,step:0
+msgid ""
+"By default, OpenERP is able to manage complex routing and paths of products "
+"in your warehouse and partner locations. This will configure the most common "
+"and simple methods to deliver products to the customer in one or two "
+"operations by the worker."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+msgid "Old Quotations"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Samaksāts"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_all
+#: model:ir.ui.menu,name:sale.menu_report_product_all
+#: view:sale.report:0
+msgid "Sales Analysis"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_quotation0
+msgid "Draft state of sale order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr ""
+
+#. module: sale
+#: model:process.node,name:sale.process_node_quotation0
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Quotation"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid ""
+"The Salesman creates an invoice manually, if the sales order shipping policy "
+"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"if the shipping policy is 'Payment before Delivery'."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.picking_policy,order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Related Invoices"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_order0
+msgid "Confirmed sale order to invoice."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: model:process.process,name:sale.process_process_salesprocess0
+#: view:sale.order:0
+#: view:sale.report:0
+msgid "Sales"
+msgstr "Tirdzniecība"
+
+#. module: sale
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Vienības cena"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Done"
+msgstr "Pabeigts"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_installer
+msgid "sale.installer"
+msgstr ""
+
+#. module: sale
+#: model:process.node,name:sale.process_node_invoice0
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+msgid "Invoice"
+msgstr "Rēķins"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel sale order line!"
+msgstr ""
+
+#. module: sale
+#: selection:sale.config.picking_policy,step:0
+msgid "Picking List & Delivery Order"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "To Do"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,picking_policy:0
+msgid "Picking Policy"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_deliveryorder0
+msgid "Document of the move to the customer."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Standarta Piegādes Noteikumi"
+
+#. module: sale
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Inkoterms"
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_product
+#: view:sale.order.line:0
+#: field:sale.order.line,product_id:0
+#: view:sale.report:0
+#: field:sale.report,product_id:0
+msgid "Product"
+msgstr "Produkts"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_invoiced
+msgid "Invoicing"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,date_confirm:0
+msgid "Date on which sale order is confirmed"
+msgstr ""
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
+msgid "Cancel Assignation"
+msgstr "Atcelt preču nodošanu"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_config_picking_policy
+msgid "sale.config.picking_policy"
+msgstr "sale.config.picking_policy"
+
+#. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree_new
-#: model:ir.ui.menu,name:sale.menu_action_order_tree_new
-msgid "New Quotation"
-msgstr "Jauns Cenas piedāvājums"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total amount"
-msgstr "Kopējais daudzums"
-
-#. module: sale
-#: rml:sale.order:0
-#: field:sale.order,date_order:0
+#: report:sale.order:0
 msgid "Date Ordered"
 msgstr "Datums, kad tika pasūtīts"
 
@@ -1152,6 +1409,7 @@ msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
+#: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr ""
 
@@ -1161,58 +1419,335 @@ msgid "Product UoM"
 msgstr "Preces mērv."
 
 #. module: sale
-#: help:sale.config.picking_policy,step:0
-msgid ""
-"By default, Open ERP is able to manage complex routing and paths of products "
-"in your warehouse and partner locations. This will configure the most common "
-"and simple methods to deliver products to the customer in one or two "
-"operations by the worker."
+#: view:sale.order:0
+msgid "Logistic"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_config_picking_policy
-msgid "Configure Picking Policy for Sale Order"
-msgstr ""
-
-#. module: sale
-#: model:process.node,name:sale.process_node_order0
+#: view:sale.order.line:0
 msgid "Order"
 msgstr "Pasūtījums"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Payment Terms"
-msgstr "Apmaksas Noteikumi"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Invoice Corrected"
-msgstr "Rēķins Izlabots"
-
-#. module: sale
-#: field:sale.order.line,delay:0
-msgid "Delivery Delay"
-msgstr "Piegādes kavējums"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Related invoices"
-msgstr "Saistītie Rēķini"
-
-#. module: sale
-#: field:sale.shop,name:0
-msgid "Shop Name"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,payment_term:0
-msgid "Payment Term"
-msgstr "Apmaksas Noteikumi"
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,partner_shipping_id:0
+msgid "Shipping address for current sale order"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "States"
+msgstr "Stāvokļi"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "res_config_contents"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Customer Reference"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_total:0
+#: view:sale.order.line:0
+msgid "Total"
+msgstr "Kopā"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_deliver0
+msgid ""
+"Depending on the configuration of the location Output, the move between the "
+"output area and the customer is done through the Delivery Order manually or "
+"automatically."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,shipped:0
+msgid ""
+"It indicates that the sale order has been delivered. This field is updated "
+"only after the scheduler have been launched !"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
+#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.order:0
+msgid "Make Invoices"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "To Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.picking_policy,step:0
+msgid "Steps To Deliver a Sale Order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,company_id:0
+#: field:sale.order.line,company_id:0
+#: view:sale.report:0
+#: field:sale.report,company_id:0
+#: field:sale.shop,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: sale
+#: field:sale.make.invoice,invoice_date:0
+msgid "Invoice Date"
+msgstr ""
+
+#. module: sale
+#: help:sale.advance.payment.inv,amount:0
+msgid "The amount to be invoiced in advance."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Invoice Exception"
+msgstr "Rēķina kļūda"
+
+#. module: sale
+#: help:sale.installer,sale_margin:0
+msgid ""
+"Gives the margin of profitability by calculating the difference between Unit "
+"Price and Cost Price."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all invoices attached to this sale order."
+msgstr ""
+"Vispirms ir jāatceļ visi tirdzniecības pasūtījumam pievienotie rēķini."
+
+#. module: sale
+#: report:sale.order:0
+msgid "Net Total :"
+msgstr "Tīrais kopā:"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
+#: view:sale.report:0
+#: field:sale.report,shop_id:0
+msgid "Shop"
+msgstr "Veikals"
+
+#. module: sale
+#: view:sale.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,uom_name:0
+msgid "Default UoM"
+msgstr ""
+
+#. module: sale
+#: field:sale.report,date_confirm:0
+msgid "Date Confirm"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Apstiprināts"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_confirm0
+msgid "Confirm"
+msgstr "Apstiprināt"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this sale order."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Rēķina pozīcijas"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Sales Order Lines"
+msgstr "Tirdzniecības Pasūtījuma pozīcijas"
+
+#. module: sale
+#: field:sale.order.line,delay:0
+msgid "Delivery Lead Time"
+msgstr ""
+
+#. module: sale
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Konfigurācija"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no sale journal defined for this company: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
-msgid "Payment Before Delivery"
-msgstr "Apmaksa pirms Piegādes"
+msgid "Invoice on Order After Delivery"
+msgstr "Rēķins no Pasūtījuma pēc Piegādes"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleorderprocurement0
+msgid ""
+"For every sale order line, a procurement order is created to supply the sold "
+"product."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Pilna Piegāde"
+
+#. module: sale
+#: view:sale.report:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: sale
+#: help:sale.config.picking_policy,picking_policy:0
+msgid ""
+"The Shipping Policy is used to configure per order if you want to deliver as "
+"soon as possible when one product is available or you wait that all products "
+"are available.."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Source document"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Svars"
+
+#. module: sale
+#: view:sale.open.invoice:0
+#: field:sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr "Rēķini"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "December"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.picking_policy,config_logo:0
+#: field:sale.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,amount_untaxed:0
+msgid "The amount without tax"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Uninvoiced"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,user_id:0
+#: view:sale.order.line:0
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:0
+#: field:sale.report,user_id:0
+msgid "Salesman"
+msgstr "Pārdošanas menedžeris"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1223,35 +1758,267 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Rēķins piestādīts"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#, python-format
+msgid "Advance Invoice"
+msgstr "Priekšapmaksas Rēķins"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Requisition"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Melnraksts"
+
+#. module: sale
+#: field:sale.config.picking_policy,progress:0
+#: field:sale.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+msgid "Product sales"
+msgstr "Preču tirdzniecība"
+
+#. module: sale
+#: field:sale.order,date_order:0
+msgid "Ordered Date"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: view:sale.order:0
+msgid "Sales Orders"
+msgstr "Tirdzniecības Pasūtījumi"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Payment Terms"
+msgstr "Apmaksas Noteikumi"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
+
+#. module: sale
+#: field:sale.installer,sale_journal:0
+msgid "Invoicing journals"
+msgstr ""
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+#: field:sale.advance.payment.inv,product_id:0
+msgid "Advance Product"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped Qty"
+msgstr ""
+
+#. module: sale
+#: view:sale.open.invoice:0
+msgid "You invoice has been successfully created!"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree4
+msgid "Sales Order in Progress"
+msgstr "Tirdzniecības pasūtījuma progress"
+
+#. module: sale
+#: field:sale.installer,sale_layout:0
+msgid "Sales Order Layout Improvement"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Error"
+msgstr "Klūda"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,delay:0
+msgid "Commitment Delay"
+msgstr ""
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_assign0
+msgid "Assign"
+msgstr "Piešķirt"
+
+#. module: sale
+#: field:sale.report,date:0
+msgid "Date Order"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "no noliktavā esošajām precēm"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
+msgid "Sale Shop"
+msgstr "Tirdzniecības Veikals"
+
+#. module: sale
+#: view:sale.open.invoice:0
+msgid "Close"
+msgstr "Aizvērt"
+
+#. module: sale
+#: field:sale.order,shipped:0
+msgid "Delivered"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Not enough stock !"
+msgstr ""
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sale Order Lines"
+msgstr "Tirdzniecības pasūtījuma pozīcijas"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"If you have more than one shops reselling your company products, you can "
+"create and manage them from here. Whenever you will record a new quotation "
+"or sale order, it has to be linked to a shop. The shop also defines the "
+"warehouse from which the products will be delivered for each particular sale."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+#: field:sale.order.line,name:0
+msgid "Description"
+msgstr "Apraksts"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "May"
+msgstr ""
+
+#. module: sale
+#: help:sale.installer,sale_order_dates:0
+msgid "Adds commitment, requested and effective dates on Sales Orders."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr "Klients"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "February"
+msgstr ""
+
+#. module: sale
+#: help:sale.installer,sale_journal:0
+msgid ""
+"Allows you to group and invoice your delivery orders according to different "
+"invoicing types: daily, weekly, etc."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Picking Default Policy"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "April"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been set in draft state."
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
-msgid "States"
-msgstr "Stāvokļi"
+msgid "Search Sales Order"
+msgstr ""
 
 #. module: sale
-#: field:sale.order.line,th_weight:0
-msgid "Weight"
-msgstr "Svars"
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "Apmaksas Noteikumi"
 
 #. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "After confirming order, Create the invoice."
-msgstr "Pēc pasūtījuma apstiprināšanas izveidojiet Rēķinu."
+#: model:process.transition,note:sale.process_transition_saleprocurement0
+msgid ""
+"A procurement order is automatically created as soon as a sale order is "
+"confirmed or as the invoice is paid. It drives the purchasing and the "
+"production of products regarding to the rules and to the sale order's "
+"parameters. "
+msgstr ""
 
 #. module: sale
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Kļūda: nepareizs EAN kods"
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Quotation N°"
+msgstr "Cenas piedāvājuma Nr."
 
 #. module: sale
 #: field:sale.order,picked_rate:0
-#: field:sale.order,shipped:0
+#: view:sale.report:0
 msgid "Picked"
 msgstr "Pieņemts piegādei"
 
 #. module: sale
-#: view:sale.shop:0
-msgid "Accounting"
+#: view:sale.report:0
+#: field:sale.report,year:0
+msgid "Year"
 msgstr ""
 
 #. module: sale
@@ -1259,317 +2026,193 @@ msgstr ""
 msgid "Invoice Based on Deliveries"
 msgstr "Rēķins pēc Piegādes"
 
-#. module: sale
-#: view:sale.order:0
-msgid "Stock Moves"
-msgstr "Preču kustība Noliktavā"
+#~ msgid "Recreate Procurement"
+#~ msgstr "Veidot Iepirkumu no jauna"
 
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree
-#: model:ir.ui.menu,name:sale.menu_action_order_tree
-msgid "My Sales Order"
-msgstr "Mans Tirdzniecības pasūtījums"
+#~ msgid "You invoice has been successfully created !"
+#~ msgstr "Rēķins ir sekmīgi izveidots!"
 
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
-msgid "Sale Order line"
-msgstr "Tirdzniecības pasūtījuma pozīcija"
+#~ msgid "Delivery, from the warehouse to the customer."
+#~ msgstr "Piegāde no noliktavas klientam."
 
-#. module: sale
-#: model:ir.module.module,shortdesc:sale.module_meta_information
-msgid "Dashboard for sales"
-msgstr ""
+#~ msgid "After confirming order, Create the invoice."
+#~ msgstr "Pēc pasūtījuma apstiprināšanas izveidojiet Rēķinu."
 
-#. module: sale
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sale Dashboard"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales of the month"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales manager board"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Cases of the month"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "My open quotations"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Cases statistics"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-msgid "Top ten sales of the month"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,price_average:0
-#: field:report.sale.order.product,price_average:0
-msgid "Average Price"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_report_sale_order_created
-msgid "Report of Created Sale Order"
-msgstr ""
-
-#. module: sale
-#: view:report.sale.order.category:0
-msgid "Sales Orders by category"
-msgstr ""
-
-#. module: sale
-#: model:ir.report.custom,name:sale.ir_report_custom_6
-#: model:ir.report.custom,title:sale.ir_report_custom_6
-msgid "Monthly cumulated sales turnover over one year"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_report_sale_order_product
-msgid "Sales Orders by Products"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.ir_ui_menu1
-msgid "Monthly Sales Turnover Over One Year"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
-#: model:ir.model,name:sale.model_report_turnover_per_product
-#: view:report.turnover.per.product:0
-msgid "Turnover Per Product"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.next_id_82
-msgid "All Months"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,price_total:0
-#: field:report.sale.order.product,price_total:0
-msgid "Total Price"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_report_sale_order_category
-msgid "Sales Orders by Categories"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_sale_list
-#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
-msgid "Sales of the Month"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_product_tree
-#: model:ir.ui.menu,name:sale.menu_report_order_product
-msgid "Sales by Product (this month)"
-msgstr ""
-
-#. module: sale
-#: model:ir.report.custom,name:sale.ir_report_custom_4
-#: model:ir.report.custom,title:sale.ir_report_custom_4
-msgid "Monthly sales turnover over one year"
-msgstr ""
-
-#. module: sale
-#: model:ir.module.module,shortdesc:sale.module_meta_information
-msgid "Sales Management - Reporting"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
-#: model:ir.ui.menu,name:sale.menu_report_order_category_all
-#: view:report.sale.order.category:0
-msgid "Sales by Category of Products"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.ir_ui_menu3
-msgid "Monthly Cumulated Sales Turnover Over One Year"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,quantity:0
-#: field:report.sale.order.product,quantity:0
-msgid "# of Products"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
-#: model:ir.ui.menu,name:sale.menu_report_order_product_all
-#: view:report.sale.order.product:0
-msgid "Sales by Product"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.next_id_81
-msgid "This Month"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,category_id:0
-msgid "Categories"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
-msgid "Created Sale Orders"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.next_id_80
-msgid "Reporting"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
-#: model:ir.model,name:sale.model_report_turnover_per_month
-#: view:report.turnover.per.month:0
-msgid "Turnover Per Month"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.ir_ui_menu2
-msgid "Daily Sales Turnover Over One Year"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.next_id_83
-msgid "Graphs"
-msgstr ""
-
-#. module: sale
-#: selection:report.sale.order.category,state:0
-#: selection:report.sale.order.product,state:0
-msgid "Manual in progress"
-msgstr ""
-
-#. module: sale
-#: field:report.turnover.per.month,turnover:0
-#: field:report.turnover.per.product,turnover:0
-msgid "Total Turnover"
-msgstr ""
-
-#. module: sale
-#: selection:report.sale.order.category,state:0
-#: selection:report.sale.order.product,state:0
-msgid "In progress"
-msgstr "Progress"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_category_tree
-#: model:ir.ui.menu,name:sale.menu_report_order_category
-msgid "Sales by Category of Product (this month)"
-msgstr ""
-
-#. module: sale
-#: model:ir.report.custom,name:sale.ir_report_custom_5
-#: model:ir.report.custom,title:sale.ir_report_custom_5
-msgid "Daily sales turnover over one year"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,name:0
-#: field:report.sale.order.product,name:0
-#: field:report.turnover.per.month,name:0
-msgid "Month"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.category,count:0
-#: field:report.sale.order.product,count:0
-msgid "# of Lines"
-msgstr ""
-
-#. module: sale
-#: field:report.sale.order.created,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: sale
-#: view:report.sale.order.created:0
-msgid "Created Sales orders"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_so_pipeline
-#: view:sale.order:0
-msgid "Sales by State"
-msgstr ""
+#~ msgid "Manual Designation"
+#~ msgstr "Manuāls Norīkojums"
 
 #~ msgid "Customer Ref."
 #~ msgstr "Atsauce uz Klientu:"
 
+#~ msgid "Invoice after delivery"
+#~ msgstr "Rēķins pēc piegādes"
+
 #~ msgid "Shop name"
 #~ msgstr "Veikala nosaukums"
 
-#, python-format
-#~ msgid "Error !"
-#~ msgstr "Kļūda!"
+#~ msgid "Outgoing Products"
+#~ msgstr "Izejošā Produkcija"
 
-#, python-format
-#~ msgid "You must first cancel all invoices attached to this sale order."
-#~ msgstr ""
-#~ "Vispirms ir jāatceļ visi tirdzniecības pasūtījumam pievienotie rēķini."
+#~ msgid "Procurement is created after confirmation of sale order."
+#~ msgstr "Iepirkums tiks izveidots pēc Pasūtījuma apstiprināšanas."
 
-#, python-format
-#~ msgid "Invalid action !"
-#~ msgstr "Nepareiza darbība!"
+#~ msgid "Reference"
+#~ msgstr "Atsauce"
+
+#~ msgid "Origin"
+#~ msgstr "Izcelsme"
+
+#~ msgid "Procure Method"
+#~ msgstr "Iepirkuma Metode"
+
+#~ msgid "All Sales Order"
+#~ msgstr "Tirdzniecības Pasūtījums"
+
+#~ msgid "Net Price"
+#~ msgstr "Tīrā cena"
+
+#~ msgid "My sales order in progress"
+#~ msgstr "Mana pasūtījuma progress"
+
+#~ msgid "My sales order waiting Invoice"
+#~ msgstr "Mans tirdzniecības pasūtījums (Tiek gaidīts Rēķins)"
+
+#~ msgid "Manual Description"
+#~ msgstr "Manuāls Apraksts"
+
+#~ msgid "Packing"
+#~ msgstr "Iepakojums"
+
+#~ msgid "Sale Order Procurement"
+#~ msgstr "Iepirkums bāzēts uz Tirdzniecības pasūtījumu"
+
+#~ msgid "Total amount"
+#~ msgstr "Kopējais daudzums"
+
+#~ msgid "Sales orders"
+#~ msgstr "Tirdzniecības pasūtījumi"
 
 #~ msgid "Number packages"
 #~ msgstr "Iepakojumu skaits"
 
-#, python-format
-#~ msgid "Could not cancel sale order !"
-#~ msgstr "Nevar atcelt tirdzniecības pasūtījumu!"
+#~ msgid "Draft Invoice"
+#~ msgstr "Rēķins (Melnraksts)"
+
+#~ msgid "Sales Order To Be Invoiced"
+#~ msgstr "Tirdzniecības pasūtījums kuram jāpiestāda Rēķins"
+
+#~ msgid "In progress"
+#~ msgstr "Progress"
+
+#~ msgid "Packing Default Policy"
+#~ msgstr "Standarta noteikumi iepakošanai"
+
+#~ msgid "Procurement for each line"
+#~ msgstr "Iepirkums pēc pozīcijām"
+
+#~ msgid "Order Ref"
+#~ msgstr "Pasūtījuma atsauce"
 
 #~ msgid "Canceled"
 #~ msgstr "Atcelts"
 
+#~ msgid "Uninvoiced Lines"
+#~ msgstr "Pozīcijas, par kurām nav piestādīti rēķini"
+
+#~ msgid "Procurement Corrected"
+#~ msgstr "Iepirkums Izlabots"
+
+#~ msgid "Sales Configuration"
+#~ msgstr "Tirdzniecības Konfigurācija"
+
+#~ msgid "Sales Process"
+#~ msgstr "Tirdzniecības Process"
+
 #~ msgid "Quantity (UOS)"
 #~ msgstr "Daudzums (Pārd. mērv.)"
 
-#, python-format
-#~ msgid "invalid mode for test_state"
-#~ msgstr "nepareizs režīms test_state"
+#~ msgid "Status"
+#~ msgstr "Statuss"
+
+#~ msgid "Packing Policy"
+#~ msgstr "Iepakošanas Noteikumi"
+
+#~ msgid "Create Advance Invoice"
+#~ msgstr "Izveidot Priekšapmaksas Rēķinu"
 
 #~ msgid "Related Packings"
 #~ msgstr "Sastītie Iepakojumi"
 
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Klūda"
+#~ msgid "Make Invoice"
+#~ msgstr "Izveidot Rēķinu"
+
+#~ msgid "Sales order lines"
+#~ msgstr "Tirdzniecības pasūtījuma pozīcijas"
+
+#~ msgid "Other data"
+#~ msgstr "Citi dati"
+
+#~ msgid "Sequence"
+#~ msgstr "Secība"
+
+#~ msgid "Confirm sale order and Create invoice."
+#~ msgstr "Apstiprināt Tirdzniecības pasūtījumu un izveidot Rēķinu"
+
+#~ msgid "Advance Payment"
+#~ msgstr "Priekšapmaksa"
+
+#~ msgid "Sale Invoice"
+#~ msgstr "Rēķins"
+
+#~ msgid "Quotation (A sale order in draft state)"
+#~ msgstr "Cenas piedāvājums (neapstiprināts Tirdzniecības pasūtījums)"
+
+#~ msgid "Packing List & Delivery Order"
+#~ msgstr "Iepakojuma Saraksts un Piegādes Pasūtījums"
+
+#~ msgid "Invoice based on packing lists"
+#~ msgstr "Rēķins no iepakojuma sarakstiem"
+
+#~ msgid "Do you really want to create the invoices ?"
+#~ msgstr "Tiešām vēlaties izveidot Rēķinus?"
+
+#~ msgid "Set Default"
+#~ msgstr "Uzstādīt kā noklusēto"
+
+#~ msgid "Sales order"
+#~ msgstr "Tirdzniecības pasūtījums"
+
+#~ msgid "Open Advance Invoice"
+#~ msgstr "Atvērt Priekšapmaksas rēķinu"
 
 #~ msgid "Product UOS"
 #~ msgstr "Preces tirdzn. mērv."
 
-#, python-format
-#~ msgid "Could not cancel this sale order !"
-#~ msgstr "Nevar atcelt šo tirdzniecības pasūtījumu!"
+#~ msgid "Deliver"
+#~ msgstr "Nosūtīt"
 
 #, python-format
 #~ msgid "You can not cancel a sale order line that has already been invoiced !"
 #~ msgstr ""
 #~ "Nevar atcelt Tirdzniecības pasūtījuma pozīciju, par kuru ir izveidots Rēķins!"
 
-#, python-format
-#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
-#~ msgstr "Nevar dzēst Tirdzniecības pasūtījumus, kas jau ir apstiprināti!"
+#~ msgid "Make invoices"
+#~ msgstr "Veidot Rēķinus"
+
+#~ msgid "New Quotation"
+#~ msgstr "Jauns Cenas piedāvājums"
+
+#~ msgid "Related invoices"
+#~ msgstr "Saistītie Rēķini"
+
+#~ msgid "Delivery Delay"
+#~ msgstr "Piegādes kavējums"
+
+#~ msgid "Invoice Corrected"
+#~ msgstr "Rēķins Izlabots"
+
+#~ msgid "My Sales Order"
+#~ msgstr "Mans Tirdzniecības pasūtījums"
+
+#~ msgid "Sale Order line"
+#~ msgstr "Tirdzniecības pasūtījuma pozīcija"

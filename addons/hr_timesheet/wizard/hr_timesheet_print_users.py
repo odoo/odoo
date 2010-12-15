@@ -34,8 +34,8 @@ class analytical_timesheet_employees(osv.osv_memory):
                 }
 
     _defaults = {
-         'month': datetime.date.today().month,
-         'year': datetime.date.today().year,
+         'month': lambda *a: datetime.date.today().month,
+         'year': lambda *a: datetime.date.today().year,
              }
 
     def print_report(self, cr, uid, ids, context=None):

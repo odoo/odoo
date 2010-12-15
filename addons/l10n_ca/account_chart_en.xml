@@ -1,0 +1,1557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Account Templates-->
+        <record id="chart0_en" model="account.account.template">
+            <field name="code">0</field>
+            <field name="name">Account Chart CA EN</field>
+            <field eval="0" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="user_type_view_en"/>
+        </record>
+
+	<!-- ASSET -->
+
+	<record id="chart100000_en" model="account.account.template">
+		<field name="code">100000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ASSET</field>
+	</record>
+	
+	<record id="chart110000_en" model="account.account.template">
+		<field name="code">110000</field>
+		<field name="parent_id" ref="chart100000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">FINANCIAL ASSETS</field>
+	</record>
+	
+	<record id="chart111000_en" model="account.account.template">
+		<field name="code">111000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CASH, DEPOSIT AND OFFICIAL INTERNATIONAL RESERVES</field>
+	</record>
+
+	<record id="chart111100_en" model="account.account.template">
+		<field name="code">111100</field>
+		<field name="parent_id" ref="chart111000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CASH IN CANADIAN CURRENCY</field>
+	</record>
+
+	<record id="chart111160_en" model="account.account.template">
+		<field name="code">111160</field>
+		<field name="parent_id" ref="chart111100_en"/>
+		<field name="type">liquidity</field>
+		<field name="user_type" ref="user_type_asset_en" />
+		<field name="name">Checking account</field>
+	</record>
+
+	<record id="chart111170_en" model="account.account.template">
+		<field name="code">111170</field>
+		<field name="parent_id" ref="chart111100_en"/>
+		<field name="type">liquidity</field>
+		<field name="user_type" ref="user_type_asset_en" />
+		<field name="name">Cash</field>
+	</record>
+
+	<record id="chart111200_en" model="account.account.template">
+		<field name="code">111200</field>
+		<field name="parent_id" ref="chart111000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEMAND DEPOSITS / NOTICE DEPOSITS IN DEPOSIT ACCEPTING INSTITUTIONS</field>
+	</record>
+
+	<record id="chart111300_en" model="account.account.template">
+		<field name="code">111300</field>
+		<field name="parent_id" ref="chart111000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">TERM DEPOSITS - UNDER 90 DAYS</field>
+	</record>
+
+	<record id="chart111400_en" model="account.account.template">
+		<field name="code">111400</field>
+		<field name="parent_id" ref="chart111000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER CASH EQUIVALENTS</field>
+	</record>
+
+	<record id="chart111500_en" model="account.account.template">
+		<field name="code">111500</field>
+		<field name="parent_id" ref="chart111000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER CURRENT CASH ACCOUNTS</field>
+	</record>
+
+	<record id="chart112000_en" model="account.account.template">
+		<field name="code">112000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ACCOUNTS RECEIVABLE - NET</field>
+	</record>
+
+	<record id="chart112100_en" model="account.account.template">
+		<field name="code">112100</field>
+		<field name="parent_id" ref="chart112000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ACCOUNTS RECEIVABLE AND ACCRUED REVENUE - GROSS</field>
+	</record>
+
+	<record id="chart112110_en" model="account.account.template">
+		<field name="code">112110</field>
+		<field name="parent_id" ref="chart112100_en"/>
+		<field name="type">receivable</field>
+		<field name="user_type" ref="user_type_receivable_en" />
+		<field name="name">Customer account</field>
+	</record>
+
+	<record id="chart112200_en" model="account.account.template">
+		<field name="code">112200</field>
+		<field name="parent_id" ref="chart112000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALLOWANCE FOR DOUBTFUL ACCOUNTS</field>
+	</record>
+
+	<record id="chart113000_en" model="account.account.template">
+		<field name="code">113000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN AFFILIATES</field>
+	</record>
+
+	<record id="chart113100_en" model="account.account.template">
+		<field name="code">113100</field>
+		<field name="parent_id" ref="chart113000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN CANADIAN AFFILIATES</field>
+	</record>
+
+	<record id="chart113200_en" model="account.account.template">
+		<field name="code">113200</field>
+		<field name="parent_id" ref="chart113000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN FOREIGN AFFILIATES</field>
+	</record>
+
+	<record id="chart113300_en" model="account.account.template">
+		<field name="code">113300</field>
+		<field name="parent_id" ref="chart113000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">LOANS, NOTES, ACCOUNTS, BONDS, MORTGAGES AND OTHER INVESTMENTS</field>
+	</record>
+
+	<record id="chart114000_en" model="account.account.template">
+		<field name="code">114000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN NON-AFFILIATES</field>
+	</record>
+
+	<record id="chart114100_en" model="account.account.template">
+		<field name="code">114100</field>
+		<field name="parent_id" ref="chart114000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN CANADIAN DEBT INSTRUMENTS (NON-AFFILIATED)</field>
+	</record>
+
+	<record id="chart114200_en" model="account.account.template">
+		<field name="code">114200</field>
+		<field name="parent_id" ref="chart114000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN CANADIAN EQUITY INSTRUMENTS</field>
+	</record>
+
+	<record id="chart114300_en" model="account.account.template">
+		<field name="code">114300</field>
+		<field name="parent_id" ref="chart114000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVESTMENTS IN FOREIGN NON-AFFILIATES</field>
+	</record>
+
+	<record id="chart115000_en" model="account.account.template">
+		<field name="code">115000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">MORTGAGE LOANS TO NON-AFFILIATES</field>
+	</record>
+
+	<record id="chart115100_en" model="account.account.template">
+		<field name="code">115100</field>
+		<field name="parent_id" ref="chart115000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">MORTGAGE LOANS TO NON-AFFILIATES, SECURED BY PROPERTY IN CANADA</field>
+	</record>
+
+	<record id="chart115200_en" model="account.account.template">
+		<field name="code">115200</field>
+		<field name="parent_id" ref="chart115000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">MORTGAGE LOANS TO NON-AFFILIATES, SECURED BY PROPERTY OUTSIDE OF CANADA</field>
+	</record>
+
+	<record id="chart116000_en" model="account.account.template">
+		<field name="code">116000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS TO NON-AFFILIATES</field>
+	</record>
+
+	<record id="chart116100_en" model="account.account.template">
+		<field name="code">116100</field>
+		<field name="parent_id" ref="chart116000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS MADE BY ENTERPRISES IN NON-FINANCIAL INDUSTRIES</field>
+	</record>
+
+	<record id="chart116200_en" model="account.account.template">
+		<field name="code">116200</field>
+		<field name="parent_id" ref="chart116000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALLOWANCE FOR LOSSES ON NON-MORTGAGE LOANS</field>
+	</record>
+
+	<record id="chart117000_en" model="account.account.template">
+		<field name="code">117000</field>
+		<field name="parent_id" ref="chart110000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES ASSETS</field>
+	</record>
+
+	<record id="chart117100_en" model="account.account.template">
+		<field name="code">117100</field>
+		<field name="parent_id" ref="chart117000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES ASSETS WITH RESIDENT COUNTERPARTIES</field>
+	</record>
+
+	<record id="chart117200_en" model="account.account.template">
+		<field name="code">117200</field>
+		<field name="parent_id" ref="chart117000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES ASSETS WITH NON-RESIDENT COUNTERPARTIES</field>
+	</record>
+
+	<record id="chart120000_en" model="account.account.template">
+		<field name="code">120000</field>
+		<field name="parent_id" ref="chart100000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">TANGIBLES ASSETS</field>
+	</record>
+
+	<record id="chart121000_en" model="account.account.template">
+		<field name="code">121000</field>
+		<field name="parent_id" ref="chart120000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INVENTORIES</field>
+	</record>
+
+	<record id="chart121100_en" model="account.account.template">
+		<field name="code">121100</field>
+		<field name="parent_id" ref="chart121000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GOODS INVENTORIES</field>
+	</record>
+
+	<record id="chart121200_en" model="account.account.template">
+		<field name="code">121200</field>
+		<field name="parent_id" ref="chart121000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PART AND SUPPLIES INVENTORIES</field>
+	</record>
+
+	<record id="chart121300_en" model="account.account.template">
+		<field name="code">121300</field>
+		<field name="parent_id" ref="chart121000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REAL ESTATE HELD OR BEING DEVELOPER FOR SALE</field>
+	</record>
+
+	<record id="chart122000_en" model="account.account.template">
+		<field name="code">122000</field>
+		<field name="parent_id" ref="chart120000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALLOWANCE FOR OBSOLESCENCE AND DECLINE IN VALUE</field>
+	</record>
+
+	<record id="chart123000_en" model="account.account.template">
+		<field name="code">123000</field>
+		<field name="parent_id" ref="chart120000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">BREEDING LIVESTOCK</field>
+	</record>
+
+	<record id="chart124000_en" model="account.account.template">
+		<field name="code">124000</field>
+		<field name="parent_id" ref="chart120000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CAPITAL ASSETS</field>
+	</record>
+
+	<record id="chart124100_en" model="account.account.template">
+		<field name="code">124100</field>
+		<field name="parent_id" ref="chart124000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">FIXED ASSETS - NET</field>
+	</record>
+
+	<record id="chart124200_en" model="account.account.template">
+		<field name="code">124200</field>
+		<field name="parent_id" ref="chart124000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEPLETABLE ASSETS - NET</field>
+	</record>
+ 
+	<record id="chart124300_en" model="account.account.template">
+		<field name="code">124300</field>
+		<field name="parent_id" ref="chart124000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REPOSSESSED ASSETS HELD FOR SALE</field>
+	</record>
+ 
+	<record id="chart130000_en" model="account.account.template">
+		<field name="code">130000</field>
+		<field name="parent_id" ref="chart100000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEFERRED CHARGES AND INTANGIBLE ASSETS</field>
+	</record>
+
+	<record id="chart131000_en" model="account.account.template">
+		<field name="code">131000</field>
+		<field name="parent_id" ref="chart130000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEFERRED CHARGES AND PREPAID EXPENSES</field>
+	</record>
+
+	<record id="chart131100_en" model="account.account.template">
+		<field name="code">131100</field>
+		<field name="parent_id" ref="chart131000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEFERRED CHARGES - NET</field>
+	</record>
+
+	<record id="chart131200_en" model="account.account.template">
+		<field name="code">131200</field>
+		<field name="parent_id" ref="chart131000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PREPAID EXPENSES</field>
+	</record>
+
+	<record id="chart132000_en" model="account.account.template">
+		<field name="code">132000</field>
+		<field name="parent_id" ref="chart130000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTANGIBLE ASSETS - NET</field>
+	</record>
+
+	<record id="chart132100_en" model="account.account.template">
+		<field name="code">132100</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GOODWILL - NET</field>
+	</record>
+
+	<record id="chart132200_en" model="account.account.template">
+		<field name="code">132200</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SOFTWARE</field>
+	</record>
+
+	<record id="chart132300_en" model="account.account.template">
+		<field name="code">132300</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DATABASE</field>
+	</record>
+
+	<record id="chart132400_en" model="account.account.template">
+		<field name="code">132400</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXCESS OF PURCHASE PRICE OF CONSOLIDATED SUBSIDIARY SHARES</field>
+	</record>
+
+	<record id="chart132500_en" model="account.account.template">
+		<field name="code">132500</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PATENTS, TRADEMARKS AND COPYRIGHTS - NET</field>
+	</record>
+
+	<record id="chart132600_en" model="account.account.template">
+		<field name="code">132600</field>
+		<field name="parent_id" ref="chart132000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER INTANGIBLES</field>
+	</record>
+
+	<record id="chart140000_en" model="account.account.template">
+		<field name="code">140000</field>
+		<field name="parent_id" ref="chart100000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER ASSETS</field>
+	</record>
+
+	<record id="chart141000_en" model="account.account.template">
+		<field name="code">141000</field>
+		<field name="parent_id" ref="chart140000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PENSIONS</field>
+	</record>
+
+	<record id="chart142000_en" model="account.account.template">
+		<field name="code">142000</field>
+		<field name="parent_id" ref="chart140000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALL OTHER ASSETS</field>
+	</record>
+
+	<record id="chart142100_en" model="account.account.template">
+		<field name="code">142100</field>
+		<field name="parent_id" ref="chart142000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER DEPOSITS</field>
+	</record>
+
+	<record id="chart142200_en" model="account.account.template">
+		<field name="code">142200</field>
+		<field name="parent_id" ref="chart142000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALL OTHER ASSETS, EXCEPT OTHER DEPOSITS</field>
+	</record>
+
+	<!-- LIABILITIES -->
+
+	<record id="chart200000_en" model="account.account.template">
+		<field name="code">200000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">LIABILITIES</field>
+	</record>
+
+	<record id="chart210000_en" model="account.account.template">
+		<field name="code">210000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">FINANCIAL INSTRUMENTS AND BORROWING</field>
+	</record>
+
+	<record id="chart211000_en" model="account.account.template">
+		<field name="code">211000</field>
+		<field name="parent_id" ref="chart210000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">MORTGAGES LOANS</field>
+	</record>
+
+	<record id="chart211100_en" model="account.account.template">
+		<field name="code">211100</field>
+		<field name="parent_id" ref="chart211000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">RESIDENTIAL MORTGAGE LOANS</field>
+	</record>
+
+	<record id="chart211200_en" model="account.account.template">
+		<field name="code">211200</field>
+		<field name="parent_id" ref="chart211000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-RESIDENTIAL MORTGAGE LOANS</field>
+	</record>
+
+	<record id="chart212000_en" model="account.account.template">
+		<field name="code">212000</field>
+		<field name="parent_id" ref="chart210000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS</field>
+	</record>
+
+	<record id="chart212100_en" model="account.account.template">
+		<field name="code">212100</field>
+		<field name="parent_id" ref="chart212000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS, BANK LOANS</field>
+	</record>
+
+	<record id="chart212200_en" model="account.account.template">
+		<field name="code">212200</field>
+		<field name="parent_id" ref="chart212000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS, LOANS FROM OTHER DOMESTIC LENDING INSTITUTIONS</field>
+	</record>
+
+	<record id="chart212300_en" model="account.account.template">
+		<field name="code">212300</field>
+		<field name="parent_id" ref="chart212000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS, LOANS FROM OTHERS</field>
+	</record>
+
+	<record id="chart212400_en" model="account.account.template">
+		<field name="code">212400</field>
+		<field name="parent_id" ref="chart212000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-MORTGAGE LOANS, LIEN NOT PAYABLE</field>
+	</record>
+
+	<record id="chart212500_en" model="account.account.template">
+		<field name="code">212500</field>
+		<field name="parent_id" ref="chart212000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OBLIGATIONS UNDER FINANCIAL/CAPITAL LEASES</field>
+	</record>
+
+	<record id="chart213000_en" model="account.account.template">
+		<field name="code">213000</field>
+		<field name="parent_id" ref="chart210000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEBT SECURITIES</field>
+	</record>
+
+	<record id="chart213100_en" model="account.account.template">
+		<field name="code">213100</field>
+		<field name="parent_id" ref="chart213000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEBT SECURITIES, SHORT-TERM PAPER, COMMERCIAL PAPER, FINANCE COMPANY PAPER AND BANKER'S ACCEPTANCE</field>
+	</record>
+
+	<record id="chart213200_en" model="account.account.template">
+		<field name="code">213200</field>
+		<field name="parent_id" ref="chart213000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEBT SECURITIES, BONDS, DEBENTURES AND PROMISSORY NOTES</field>
+	</record>
+
+	<record id="chart214000_en" model="account.account.template">
+		<field name="code">214000</field>
+		<field name="parent_id" ref="chart210000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES LIABILITIES</field>
+	</record>
+
+	<record id="chart214100_en" model="account.account.template">
+		<field name="code">214100</field>
+		<field name="parent_id" ref="chart214000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES LIABILITIES WITH RESIDENT COUNTERPARTIES</field>
+	</record>
+
+	<record id="chart214200_en" model="account.account.template">
+		<field name="code">214200</field>
+		<field name="parent_id" ref="chart214000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DERIVATIVES LIABILITIES WITH NON-RESIDENT COUNTERPARTIES</field>
+	</record>
+
+	<record id="chart220000_en" model="account.account.template">
+		<field name="code">220000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CLAIMS</field>
+	</record>
+
+	<record id="chart221000_en" model="account.account.template">
+		<field name="code">221000</field>
+		<field name="parent_id" ref="chart220000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ACCOUNTS PAYABLE AND ACCRUED LIABILITIES</field>
+	</record>
+
+	<record id="chart221100_en" model="account.account.template">
+		<field name="code">221100</field>
+		<field name="parent_id" ref="chart221000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ACCOUNTS PAYABLE, TRADE</field>
+	</record>
+
+	<record id="chart221110_en" model="account.account.template">
+		<field name="code">221110</field>
+		<field name="parent_id" ref="chart221100_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Supplier account</field>
+	</record>
+
+	<record id="chart221200_en" model="account.account.template">
+		<field name="code">221200</field>
+		<field name="parent_id" ref="chart221000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER ACCOUNTS PAYABLE AND ACCRUALS</field>
+	</record>
+
+	<record id="chart222000_en" model="account.account.template">
+		<field name="code">222000</field>
+		<field name="parent_id" ref="chart220000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CLAIMS OF AFFILIATES</field>
+	</record>
+
+	<record id="chart222100_en" model="account.account.template">
+		<field name="code">222100</field>
+		<field name="parent_id" ref="chart222000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">AMOUNTS OWING TO SHAREHOLDERS, DIRECTORS AND OFFICERS</field>
+	</record>
+
+	<record id="chart222200_en" model="account.account.template">
+		<field name="code">222200</field>
+		<field name="parent_id" ref="chart222000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">AMOUNTS OWING TO PARENTS, SUBSIDIARIES, RELATED CORPORATIONS, JOINT VENTURES AND PARTNERSHIPS</field>
+	</record>
+
+	<record id="chart240000_en" model="account.account.template">
+		<field name="code">240000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">FUTURE INCOME TAXES</field>
+	</record>
+
+	<record id="chart241000_en" model="account.account.template">
+		<field name="code">241000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Federal tax to pay</field>
+	</record>
+
+	<record id="chart242000_en" model="account.account.template">
+		<field name="code">242000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Provincial tax to pay</field>
+	</record>
+
+	<record id="chart243000_en" model="account.account.template">
+		<field name="code">243000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="user_type_expense_en" />
+		<field name="name">GST</field>
+	</record>
+
+	<record id="chart244000_en" model="account.account.template">
+		<field name="code">244000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="user_type_expense_en" />
+		<field name="name">PST</field>
+	</record>
+
+	<record id="chart245000_en" model="account.account.template">
+		<field name="code">245000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Vacation pay to pay</field>
+	</record>
+
+	<record id="chart246000_en" model="account.account.template">
+		<field name="code">246000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Workplace Safety and Insurance Board to pay</field>
+	</record>
+
+	<record id="chart247000_en" model="account.account.template">
+		<field name="code">247000</field>
+		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">Payroll deductions</field>
+	</record>
+
+	<record id="chart247100_en" model="account.account.template">
+		<field name="code">247100</field>
+		<field name="parent_id" ref="chart247000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Employment insurance to pay</field>
+	</record>
+
+	<record id="chart247200_en" model="account.account.template">
+		<field name="code">247200</field>
+		<field name="parent_id" ref="chart247000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Annuities to pay</field>
+	</record>
+
+	<record id="chart247300_en" model="account.account.template">
+		<field name="code">247300</field>
+		<field name="parent_id" ref="chart247000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">Income tax to pay</field>
+	</record>
+
+	<record id="chart250000_en" model="account.account.template">
+		<field name="code">250000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">MINORITY INTEREST IN SUBSIDIARIES CONSOLIDATED</field>
+	</record>
+
+	<record id="chart260000_en" model="account.account.template">
+		<field name="code">260000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PENSIONS PLANS AND DEFERRED PROFIT SHARING PLANS</field>
+	</record>
+
+	<record id="chart270000_en" model="account.account.template">
+		<field name="code">270000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PROVISIONS FOR FUTURE OBLIGATIONS</field>
+	</record>
+
+	<record id="chart280000_en" model="account.account.template">
+		<field name="code">280000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CUSTOMER DEPOSITS, DEFERRED INCOME</field>
+	</record>
+
+	<record id="chart290000_en" model="account.account.template">
+		<field name="code">290000</field>
+		<field name="parent_id" ref="chart200000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER LIABILITIES</field>
+	</record>
+
+	<!-- EQUITY -->
+
+	<record id="chart300000_en" model="account.account.template">
+		<field name="code">300000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EQUITY</field>
+	</record>
+
+	<record id="chart310000_en" model="account.account.template">
+		<field name="code">310000</field>
+		<field name="parent_id" ref="chart300000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SHARE CAPITAL</field>
+	</record>
+
+	<record id="chart311000_en" model="account.account.template">
+		<field name="code">311000</field>
+		<field name="parent_id" ref="chart310000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PREFERRED SHARES</field>
+	</record>
+
+	<record id="chart311100_en" model="account.account.template">
+		<field name="code">311100</field>
+		<field name="parent_id" ref="chart311000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PREFERRED SHARES - NEW ISSUES</field>
+	</record>
+
+	<record id="chart311200_en" model="account.account.template">
+		<field name="code">311200</field>
+		<field name="parent_id" ref="chart311000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PREFERRED SHARES - NEW ISSUES (DIVIDEND REINVESTMENT PLANS)</field>
+	</record>
+
+	<record id="chart311300_en" model="account.account.template">
+		<field name="code">311300</field>
+		<field name="parent_id" ref="chart311000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PREFERRED SHARES - SHARE BUYBACKS AND REDEMPTIONS</field>
+	</record>
+
+	<record id="chart312000_en" model="account.account.template">
+		<field name="code">312000</field>
+		<field name="parent_id" ref="chart310000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">COMMON SHARES</field>
+	</record>
+
+	<record id="chart312100_en" model="account.account.template">
+		<field name="code">312100</field>
+		<field name="parent_id" ref="chart312000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">COMMON SHARES - NEW ISSUES</field>
+	</record>
+
+	<record id="chart312200_en" model="account.account.template">
+		<field name="code">312200</field>
+		<field name="parent_id" ref="chart312000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">COMMON SHARES - NEW ISSUES (DIVIDEND REINVESTMENT PLANS)</field>
+	</record>
+
+	<record id="chart312300_en" model="account.account.template">
+		<field name="code">312300</field>
+		<field name="parent_id" ref="chart312000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">COMMON SHARES - SHARE BUYBACKS AND REDEMPTIONS</field>
+	</record>
+
+	<record id="chart313000_en" model="account.account.template">
+		<field name="code">313000</field>
+		<field name="parent_id" ref="chart310000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OWNER'S EQUITY</field>
+	</record>
+
+	<record id="chart314000_en" model="account.account.template">
+		<field name="code">314000</field>
+		<field name="parent_id" ref="chart310000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER SHARES</field>
+	</record>
+
+	<record id="chart320000_en" model="account.account.template">
+		<field name="code">320000</field>
+		<field name="parent_id" ref="chart300000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">RETAINED EARNINGS/DEFICITS</field>
+	</record>
+
+	<record id="chart321000_en" model="account.account.template">
+		<field name="code">321000</field>
+		<field name="parent_id" ref="chart320000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">RETAINED EARNINGS/DEFICITS, APPROPRIATED</field>
+	</record>
+
+	<record id="chart322000_en" model="account.account.template">
+		<field name="code">322000</field>
+		<field name="parent_id" ref="chart320000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">RETAINED EARNINGS/DEFICITS, UNAPPROPRIATED</field>
+	</record>
+
+	<record id="chart330000_en" model="account.account.template">
+		<field name="code">330000</field>
+		<field name="parent_id" ref="chart300000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CONTRIBUTED SURPLUS</field>
+	</record>
+
+	<record id="chart340000_en" model="account.account.template">
+		<field name="code">340000</field>
+		<field name="parent_id" ref="chart300000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER SURPLUS</field>
+	</record>
+
+	<!-- REVENUE -->
+
+	<record id="chart400000_en" model="account.account.template">
+		<field name="code">400000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REVENUE</field>
+	</record>
+
+	<record id="chart410000_en" model="account.account.template">
+		<field name="code">410000</field>
+		<field name="parent_id" ref="chart400000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OPERATING REVENUE</field>
+	</record>
+
+	<record id="chart411000_en" model="account.account.template">
+		<field name="code">411000</field>
+		<field name="parent_id" ref="chart410000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SALES OF GOODS AND SERVICES</field>
+	</record>
+
+	<record id="chart411100_en" model="account.account.template">
+		<field name="code">411100</field>
+		<field name="parent_id" ref="chart411000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SALES OF GOODS</field>
+	</record>
+
+	<record id="chart411110_en" model="account.account.template">
+		<field name="code">411110</field>
+		<field name="parent_id" ref="chart411100_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="user_type_income_en" />
+		<field name="name">Inside Sales</field>
+	</record>
+
+        <record id="chart411120_en" model="account.account.template">
+                <field name="code">411120</field>
+                <field name="parent_id" ref="chart411100_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">Harmonized Provinces Sales</field>
+        </record>
+
+        <record id="chart411130_en" model="account.account.template">
+                <field name="code">411130</field>
+                <field name="parent_id" ref="chart411100_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">Non-Harmonized Provinces Sales</field>
+        </record>
+
+        <record id="chart411140_en" model="account.account.template">
+                <field name="code">411140</field>
+                <field name="parent_id" ref="chart411100_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">International Sales</field>
+        </record>
+
+	<record id="chart411200_en" model="account.account.template">
+		<field name="code">411200</field>
+		<field name="parent_id" ref="chart411000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SALES OF SERVICES</field>
+	</record>
+
+        <record id="chart411210_en" model="account.account.template">
+                <field name="code">411210</field>
+                <field name="parent_id" ref="chart411200_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">Inside Sales</field>
+        </record>
+
+        <record id="chart411220_en" model="account.account.template">
+                <field name="code">411220</field>
+                <field name="parent_id" ref="chart411200_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">Harmonized Provinces Sales</field>
+        </record>
+
+        <record id="chart411230_en" model="account.account.template">
+                <field name="code">411230</field>
+                <field name="parent_id" ref="chart411200_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">Non-Harmonized Provinces Sales</field>
+        </record>
+
+        <record id="chart411240_en" model="account.account.template">
+                <field name="code">411240</field>
+                <field name="parent_id" ref="chart411200_en"/>
+                <field name="type">other</field>
+                <field name="user_type" ref="user_type_income_en" />
+                <field name="name">International Sales</field>
+        </record>
+
+	<record id="chart413000_en" model="account.account.template">
+		<field name="code">413000</field>
+		<field name="parent_id" ref="chart410000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER OPERATING REVENUE</field>
+	</record>
+
+	<record id="chart413100_en" model="account.account.template">
+		<field name="code">413100</field>
+		<field name="parent_id" ref="chart413000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SUBSIDIES AND GRANTS</field>
+	</record>
+
+	<record id="chart413200_en" model="account.account.template">
+		<field name="code">413200</field>
+		<field name="parent_id" ref="chart413000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ROYALTIES AND FRANCHISE FEES REVENUE</field>
+	</record>
+
+	<record id="chart413300_en" model="account.account.template">
+		<field name="code">413300</field>
+		<field name="parent_id" ref="chart413000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALL OTHER OPERATING REVENUE</field>
+	</record>
+
+	<record id="chart420000_en" model="account.account.template">
+		<field name="code">420000</field>
+		<field name="parent_id" ref="chart400000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-OPERATING REVENUE</field>
+	</record>
+
+	<record id="chart421000_en" model="account.account.template">
+		<field name="code">421000</field>
+		<field name="parent_id" ref="chart420000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DIVIDENDS</field>
+	</record>
+
+	<record id="chart421100_en" model="account.account.template">
+		<field name="code">421100</field>
+		<field name="parent_id" ref="chart421000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DIVIDENDS FROM CANADIAN CORPORATIONS</field>
+	</record>
+
+	<record id="chart421200_en" model="account.account.template">
+		<field name="code">421200</field>
+		<field name="parent_id" ref="chart421000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DIVIDENDS FROM FOREIGN CORPORATIONS</field>
+	</record>
+
+	<record id="chart422000_en" model="account.account.template">
+		<field name="code">422000</field>
+		<field name="parent_id" ref="chart420000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTERESTS</field>
+	</record>
+
+	<record id="chart422100_en" model="account.account.template">
+		<field name="code">422100</field>
+		<field name="parent_id" ref="chart422000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTERESTS FROM CANADIAN SOURCES</field>
+	</record>
+
+	<record id="chart422200_en" model="account.account.template">
+		<field name="code">422200</field>
+		<field name="parent_id" ref="chart422000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTERESTS FROM FOREIGN SOURCES</field>
+	</record>
+
+	<record id="chart423000_en" model="account.account.template">
+		<field name="code">423000</field>
+		<field name="parent_id" ref="chart420000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER NON-OPERATING REVENUE</field>
+	</record>
+
+	<!-- EXPENSES -->
+
+	<record id="chart500000_en" model="account.account.template">
+		<field name="code">500000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXPENSES</field>
+	</record>
+
+	<record id="chart510000_en" model="account.account.template">
+		<field name="code">510000</field>
+		<field name="parent_id" ref="chart500000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OPERATING EXPENSES</field>
+	</record>
+
+	<record id="chart511000_en" model="account.account.template">
+		<field name="code">511000</field>
+		<field name="parent_id" ref="chart510000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">COST OF GOODS SOLD</field>
+	</record>
+
+	<record id="chart511100_en" model="account.account.template">
+		<field name="code">511100</field>
+		<field name="parent_id" ref="chart511000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OPENING INVENTORIES</field>
+	</record>
+
+	<record id="chart511110_en" model="account.account.template">
+		<field name="code">511110</field>
+		<field name="parent_id" ref="chart511100_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="user_type_expense_en" />
+		<field name="name">Expenses</field>
+	</record>
+
+	<record id="chart511200_en" model="account.account.template">
+		<field name="code">511200</field>
+		<field name="parent_id" ref="chart511000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PURCHASES AND COSTS CHARGEABLE TO COST OF SALES</field>
+	</record>
+
+	<record id="chart511300_en" model="account.account.template">
+		<field name="code">511300</field>
+		<field name="parent_id" ref="chart511000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">CLOSING INVENTORIES</field>
+	</record>
+
+	<record id="chart512000_en" model="account.account.template">
+		<field name="code">512000</field>
+		<field name="parent_id" ref="chart510000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OPERATING EXPENSES NOT INCLUDED IN COST OF GOODS SOLD</field>
+	</record>
+
+	<record id="chart512100_en" model="account.account.template">
+		<field name="code">512100</field>
+		<field name="parent_id" ref="chart512000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">LABOUR EXPENSES</field>
+	</record>
+
+	<record id="chart512110_en" model="account.account.template">
+		<field name="code">512110</field>
+		<field name="parent_id" ref="chart512100_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SALARIES, WAGES AND COMMISSIONS</field>
+	</record>
+
+	<record id="chart512120_en" model="account.account.template">
+		<field name="code">512120</field>
+		<field name="parent_id" ref="chart512100_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EMPLOYEE BENEFITS</field>
+	</record>
+
+	<record id="chart512200_en" model="account.account.template">
+		<field name="code">512200</field>
+		<field name="parent_id" ref="chart512000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXPENSES OTHER THAN LABOUR</field>
+	</record>
+
+	<record id="chart512210_en" model="account.account.template">
+		<field name="code">512210</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">DEPRECIATION, DEPLETION AND AMORTIZATION EXPENSES</field>
+	</record>
+
+	<record id="chart512220_en" model="account.account.template">
+		<field name="code">512220</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ENERGY, WATER AND TELEPHONE/TELECOMMUNICATION EXPENSES</field>
+	</record>
+
+	<record id="chart512230_en" model="account.account.template">
+		<field name="code">512230</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INDIRECTS TAXES AND LICENCES AND PERMITS</field>
+	</record>
+
+	<record id="chart512240_en" model="account.account.template">
+		<field name="code">512240</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">SUB-CONTRACTS</field>
+	</record>
+
+	<record id="chart512250_en" model="account.account.template">
+		<field name="code">512250</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXPLORATION AND DEVELOPMENT EXPENSES</field>
+	</record>
+
+	<record id="chart512260_en" model="account.account.template">
+		<field name="code">512260</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ROYALTIES AND FRANCHISE FEES EXPENSES</field>
+	</record>
+
+	<record id="chart512270_en" model="account.account.template">
+		<field name="code">512270</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">PURCHASED MATERIALS, SUPPLIES AND SERVICES</field>
+	</record>
+
+	<record id="chart512290_en" model="account.account.template">
+		<field name="code">512290</field>
+		<field name="parent_id" ref="chart512200_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ALL OTHER OPERATING EXPENSES</field>
+	</record>
+
+	<record id="chart520000_en" model="account.account.template">
+		<field name="code">520000</field>
+		<field name="parent_id" ref="chart500000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-OPERATING EXPENSES</field>
+	</record>
+
+	<record id="chart521000_en" model="account.account.template">
+		<field name="code">521000</field>
+		<field name="parent_id" ref="chart520000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTEREST EXPENSES</field>
+	</record>
+
+	<record id="chart521100_en" model="account.account.template">
+		<field name="code">521100</field>
+		<field name="parent_id" ref="chart521000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTEREST EXPENSES ON SHORT-TERM DEBT</field>
+	</record>
+
+	<record id="chart521200_en" model="account.account.template">
+		<field name="code">521200</field>
+		<field name="parent_id" ref="chart521000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INTEREST EXPENSES ON LONG-TERM DEBT</field>
+	</record>
+
+	<record id="chart522000_en" model="account.account.template">
+		<field name="code">522000</field>
+		<field name="parent_id" ref="chart520000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">OTHER NON-OPERATING EXPENSES</field>
+	</record>
+
+	<!-- GAINS/LOSSES, CORPORATE TAXES AND OTHER ITEMS -->
+
+	<record id="chart600000_en" model="account.account.template">
+		<field name="code">600000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GAINS/LOSSES, CORPORATE TAXES AND OTHER ITEMS</field>
+	</record>
+
+	<record id="chart610000_en" model="account.account.template">
+		<field name="code">610000</field>
+		<field name="parent_id" ref="chart600000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GAINS/LOSSES</field>
+	</record>
+
+	<record id="chart611000_en" model="account.account.template">
+		<field name="code">611000</field>
+		<field name="parent_id" ref="chart610000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GAINS/LOSSES ON THE SALE OF ASSETS</field>
+	</record>
+
+	<record id="chart611100_en" model="account.account.template">
+		<field name="code">611100</field>
+		<field name="parent_id" ref="chart611000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REALIZED GAINS/LOSSES - CAPITAL ASSETS</field>
+	</record>
+
+	<record id="chart611200_en" model="account.account.template">
+		<field name="code">611200</field>
+		<field name="parent_id" ref="chart611000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REALIZED GAINS/LOSSES - INVESTMENTS</field>
+	</record>
+
+	<record id="chart611300_en" model="account.account.template">
+		<field name="code">611300</field>
+		<field name="parent_id" ref="chart611000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">REALIZED GAINS/LOSSES - OTHER ASSETS</field>
+	</record>
+
+	<record id="chart612000_en" model="account.account.template">
+		<field name="code">612000</field>
+		<field name="parent_id" ref="chart610000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">GAINS/LOSSES ON THE TRANSLATION OF FOREIGN CURRENCY</field>
+	</record>
+
+	<record id="chart613000_en" model="account.account.template">
+		<field name="code">613000</field>
+		<field name="parent_id" ref="chart610000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">UNREALIZED LOSSES ON ASSET REEVALUATIONS</field>
+	</record>
+
+	<record id="chart613100_en" model="account.account.template">
+		<field name="code">613100</field>
+		<field name="parent_id" ref="chart613000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">UNREALIZED LOSSES - CAPITAL ASSETS</field>
+	</record>
+
+	<record id="chart613200_en" model="account.account.template">
+		<field name="code">613200</field>
+		<field name="parent_id" ref="chart613000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">UNREALIZED LOSSES - INVESTMENTS</field>
+	</record>
+
+	<record id="chart613300_en" model="account.account.template">
+		<field name="code">613300</field>
+		<field name="parent_id" ref="chart613000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">UNREALIZED LOSSES - OTHER ASSETS</field>
+	</record>
+
+        <record id="chart614000_en" model="account.account.template">
+                <field name="code">614000</field>
+                <field name="parent_id" ref="chart610000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">GAINS ON SETTLEMENT OF PENSION OBLIGATION</field>
+        </record>
+
+        <record id="chart615000_en" model="account.account.template">
+                <field name="code">615000</field>
+                <field name="parent_id" ref="chart610000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">GAINS/LOSSES RELATED TO LITIGATION SETTLEMENT</field>
+        </record>
+
+        <record id="chart616000_en" model="account.account.template">
+                <field name="code">616000</field>
+                <field name="parent_id" ref="chart610000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">GAINS/LOSSES ON DERIVATIVE INSTRUMENTS</field>
+        </record>
+
+        <record id="chart620000_en" model="account.account.template">
+                <field name="code">620000</field>
+                <field name="parent_id" ref="chart600000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">CORPORATE INCOME TAX</field>
+        </record>
+
+        <record id="chart621000_en" model="account.account.template">
+                <field name="code">621000</field>
+                <field name="parent_id" ref="chart620000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">CURRENT INCOME TAX</field>
+        </record>
+
+        <record id="chart622000_en" model="account.account.template">
+                <field name="code">622000</field>
+                <field name="parent_id" ref="chart620000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">DEFERRED INCOME TAX</field>
+        </record>
+
+        <record id="chart623000_en" model="account.account.template">
+                <field name="code">623000</field>
+                <field name="parent_id" ref="chart620000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">PROVINCIAL MINING AND LOGGING TAXES</field>
+        </record>
+
+        <record id="chart630000_en" model="account.account.template">
+                <field name="code">630000</field>
+                <field name="parent_id" ref="chart600000_en"/>
+                <field name="type">view</field>
+                <field name="user_type" ref="user_type_view_en" />
+                <field name="name">OTHER ITEMS</field>
+        </record>
+
+	<!-- EXTRAORDINARY GAINS/LOSSES, NON-RECURRING ITEMS AND ADJUSTMENTS -->
+
+	<record id="chart700000_en" model="account.account.template">
+		<field name="code">700000</field>
+		<field name="parent_id" ref="chart0_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXTRAORDINARY GAINS/LOSSES, NON-RECURRING ITEMS AND ADJUSTMENTS</field>
+	</record>
+
+	<record id="chart710000_en" model="account.account.template">
+		<field name="code">710000</field>
+		<field name="parent_id" ref="chart700000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXTRAORDINARY GAINS/LOSSES</field>
+	</record>
+
+	<record id="chart711000_en" model="account.account.template">
+		<field name="code">711000</field>
+		<field name="parent_id" ref="chart710000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">EXTRAORDINARY ITEMS - GROSS</field>
+	</record>
+
+	<record id="chart712000_en" model="account.account.template">
+		<field name="code">712000</field>
+		<field name="parent_id" ref="chart710000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">INCOME TAX ON EXTRAORDINARY ITEMS</field>
+	</record>
+
+	<record id="chart720000_en" model="account.account.template">
+		<field name="code">720000</field>
+		<field name="parent_id" ref="chart700000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">NON-RECURRING ITEMS</field>
+	</record>
+
+	<record id="chart730000_en" model="account.account.template">
+		<field name="code">730000</field>
+		<field name="parent_id" ref="chart700000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">ADJUSTMENTS DUE TO CUMULATIVE EFFECT OF CHANGES IN ACCOUNTING PRINCIPLES</field>
+	</record>
+
+    </data>
+</openerp>

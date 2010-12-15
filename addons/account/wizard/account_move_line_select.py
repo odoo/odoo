@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from osv import osv
 
 class account_move_line_select(osv.osv_memory):
     """
@@ -52,8 +51,8 @@ class account_move_line_select(osv.osv_memory):
                     period_ids.append(period.id)
             domain = str(('period_id', 'in', period_ids))
 
-        result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_move_line_tree1')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id])[0]
         result['context'] = {
             'fiscalyear': False,

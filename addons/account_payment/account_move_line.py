@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from operator import itemgetter
 from osv import fields, osv
 from tools.translate import _
@@ -40,10 +41,10 @@ class account_move_line(osv.osv):
                             INNER JOIN payment_order po
                                 ON (pl.order_id = po.id)
                         WHERE move_line_id = ml.id
-                        AND po.state != 'cancel') as amount
+                        AND po.state != 'cancel') AS amount
                     FROM account_move_line ml
                     WHERE id IN %s""", (tuple(ids),))
-        r=dict(cr.fetchall())
+        r = dict(cr.fetchall())
         return r
 
     def _to_pay_search(self, cr, uid, obj, name, args, context):
@@ -74,8 +75,8 @@ class account_move_line(osv.osv):
 
         res = cr.fetchall()
         if not res:
-            return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(lambda x:x[0], res))]
 
     def line2bank(self, cr, uid, ids, payment_type=None, context=None):
         """
@@ -117,4 +118,3 @@ class account_move_line(osv.osv):
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

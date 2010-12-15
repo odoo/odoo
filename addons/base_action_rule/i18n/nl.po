@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-19 12:20+0000\n"
-"PO-Revision-Date: 2010-10-02 08:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-11-27 07:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-03 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,17 +36,9 @@ msgid "Partner Category"
 msgstr "Relatiecategorie"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige naam van het model in de actie definitie."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Vink dit aan wanneer u wilt dat de regel de gebruiker via de mail een "
-"herinnering stuurt."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "E-mail naar toeschouwers (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -67,6 +59,11 @@ msgstr "Mail naar deze emails"
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
 msgstr "Zet status op"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
+msgstr "Email van"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -117,9 +114,18 @@ msgstr ""
 "stuurt."
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Email Reminders"
-msgstr "Email herinneringen"
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
+"Maakt automatisch acties die worden geactiveerd op basis van "
+"gebruikersactiviteit in het systeem. Bijv.: een verkoopkans door een "
+"specifieke gebruiker gemaakt kan automatisch worden onderhouden door een "
+"specifiek verkooptea, of een verkoopkans die na 14 dagen nog steeds status "
+"wachtend heeft activeert automatisch een herinnering email."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -142,9 +148,9 @@ msgid "%(object_subject)s = Object subject"
 msgstr "%(object_subject)s = Object onderwerp"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
+#: view:base.action.rule:0
+msgid "Email Reminders"
+msgstr "Email herinneringen"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -218,6 +224,15 @@ msgid "None"
 msgstr "Geen"
 
 #. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'To' field of the header"
+msgstr ""
+"Gebruik een python expressie om het juiste veld te specificeren die we dan "
+"gaan gebruiken voor het 'Aan' veld in de kop"
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_phone)s = Responsible phone"
 msgstr "%(object_user_phone)s = Telefoon verantwoordelijke"
@@ -256,6 +271,11 @@ msgid "Call Object Method"
 msgstr "Object-methode aanroepen"
 
 #. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr "Email aan"
+
+#. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
 msgid ""
 "Check this if you want the rule to mark CC(mail to any other person defined "
@@ -275,9 +295,13 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: help:base.action.rule,act_email_from:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'From' field of the header"
+msgstr ""
+"Gebruik een python expressie om het juiste veld te specificeren die we dan "
+"gaan gebruiken voor het 'Van' veld in de kop"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -361,6 +385,11 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Object omschrijving"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Email acties"
@@ -369,13 +398,6 @@ msgstr "Email acties"
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Email Informatie"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -399,11 +421,6 @@ msgstr "%(partner_email)s = Relatie email"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "%(object_date)s = Creation date"
-msgstr "%(object_date)s = Aanmaakdatum"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
 msgid "%(object_user_email)s = Responsible Email"
 msgstr "%(object_user_email)s = Verantwoordelijke email"
 
@@ -413,9 +430,12 @@ msgid "Mail body"
 msgstr "E-mail berichttekst"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "E-mail naar toeschouwers (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Vink dit aan wanneer u wilt dat de regel de gebruiker via de mail een "
+"herinnering stuurt."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -505,3 +525,29 @@ msgstr "Voorwaarden op status"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Activeerdatum"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige naam van het model in de actie definitie."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "%(object_date)s = Creation date"
+#~ msgstr "%(object_date)s = Aanmaakdatum"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 12:29+0000\n"
-"PO-Revision-Date: 2010-10-12 07:44+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-01 09:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-13 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_revenue:0
 msgid "Planned Revenue"
-msgstr "Verwachte omzet"
+msgstr "Geplande omzet"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,nbr:0
@@ -39,25 +39,9 @@ msgid "Avg. Probability"
 msgstr "Gemiddelde kans"
 
 #. module: crm_fundraising
-#: help:crm.fundraising,canal_id:0
-msgid ""
-"The channels represent the different communication modes available with the "
-"customer. With each commercial opportunity, you can indicate                 "
-"    the canall which is this opportunity source."
-msgstr ""
-"De kanalen geven de verschillende beschikbare communicatievormen met de "
-"klant weer. Met elke kans kunt u het kanaal aangeven wat de oorsprong van de "
-"kans is."
-
-#. module: crm_fundraising
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Funds Form"
-msgstr "Fondsenformulier"
+#: selection:crm.fundraising.report,month:0
+msgid "March"
+msgstr "Maart"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,delay_close:0
@@ -83,11 +67,6 @@ msgstr "Email toeschouwers"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-msgid "This Year"
-msgstr "Dit jaar"
-
-#. module: crm_fundraising
-#: view:crm.fundraising.report:0
 msgid "Cases"
 msgstr "Dossiers"
 
@@ -101,6 +80,11 @@ msgstr "Hoogste"
 #: field:crm.fundraising.report,day:0
 msgid "Day"
 msgstr "Dag"
+
+#. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "Add Internal Note"
+msgstr "Toevoegen interne notitie"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,partner_mobile:0
@@ -123,10 +107,9 @@ msgid "Amount"
 msgstr "Bedrag"
 
 #. module: crm_fundraising
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Cancelled"
-msgstr "Geannuleerd"
+#: model:crm.case.categ,name:crm_fundraising.categ_fund4
+msgid "Arts And Culture"
+msgstr "Kunst en cultuur"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
@@ -141,13 +124,13 @@ msgstr "Contactpersoon relatie"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
-msgid "My Case"
-msgstr "Mijn Fondsen"
+msgid "   Month   "
+msgstr "   Maand   "
 
 #. module: crm_fundraising
-#: field:crm.fundraising,ref:0
-msgid "Reference"
-msgstr "Verwijzing"
+#: field:crm.fundraising,type_id:0
+msgid "Campaign"
+msgstr "Campagne"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,date_action_next:0
@@ -179,6 +162,7 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr "Fondsenwerving Analyse"
@@ -190,19 +174,13 @@ msgstr "CRM Fondsenwerving"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Estimates"
-msgstr "Schattingen"
+msgid "Misc"
+msgstr "Overig"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,section_id:0
 msgid "Section"
 msgstr "Afdeling"
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Dates"
-msgstr "Data"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -223,6 +201,7 @@ msgstr ""
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
+#: view:crm.fundraising.report:0
 msgid "Payment Mode"
 msgstr "Betalingsvorm"
 
@@ -252,14 +231,6 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-#: selection:crm.fundraising,state:0
-#: view:crm.fundraising.report:0
-#: selection:crm.fundraising.report,state:0
-msgid "Pending"
-msgstr "Wacht"
-
-#. module: crm_fundraising
 #: field:crm.fundraising,date_deadline:0
 msgid "Deadline"
 msgstr "Uiterste datum"
@@ -285,16 +256,20 @@ msgid "History Information"
 msgstr "Historie Informatie"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,date_closed:0
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Closed"
-msgstr "Gesloten"
+#: view:crm.fundraising:0
+msgid "Dates"
+msgstr "Data"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,partner_name2:0
 msgid "Employee Email"
 msgstr "E-mail werknemer"
+
+#. module: crm_fundraising
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
 
 #. module: crm_fundraising
 #: model:crm.case.categ,name:crm_fundraising.categ_fund2
@@ -307,14 +282,9 @@ msgid "Contact"
 msgstr "Contactpersoon"
 
 #. module: crm_fundraising
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
-
-#. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "March"
-msgstr "Maart"
+#: view:crm.fundraising:0
+msgid "Funds Form"
+msgstr "Fondsenformulier"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -327,11 +297,26 @@ msgid "Number of Days to close the case"
 msgstr "Aantal dagen om werving af te sluiten"
 
 #. module: crm_fundraising
+#: view:crm.fundraising:0
+msgid "References"
+msgstr "Verwijzingen"
+
+#. module: crm_fundraising
 #: view:crm.fundraising.report:0
-#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
 msgstr "Fondsenwerving"
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.action_report_crm_fundraising
+msgid ""
+"Have a general overview of all fund raising activities by sorting them with "
+"specific criteria such as the estimated revenue, average success probability "
+"and delay to close."
+msgstr ""
+"Gefet een algemeen overzicht van de fondsenwerving activiteiten door "
+"sortering in verschillende criteria zoals geschatte omzet, gemiddelde "
+"slaagkans en dagen tot sluiting."
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -339,9 +324,9 @@ msgid "September"
 msgstr "September"
 
 #. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "December"
-msgstr "December"
+#: view:crm.fundraising:0
+msgid "Communication"
+msgstr "Communicatie"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -375,6 +360,16 @@ msgid "Fundraising Stages"
 msgstr "Fondswerving fasen"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "Salesman"
+msgstr "Verkoper"
+
+#. module: crm_fundraising
+#: field:crm.fundraising,ref:0
+msgid "Reference"
+msgstr "Verwijzing"
+
+#. module: crm_fundraising
 #: field:crm.fundraising,ref2:0
 msgid "Reference 2"
 msgstr "Referentie 2"
@@ -388,12 +383,25 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: crm_fundraising
-#: model:crm.case.categ,name:crm_fundraising.categ_fund4
-msgid "Arts And Culture"
-msgstr "Kunst en cultuur"
+#: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
+msgid ""
+"If you need to support your organization or a campaign, with 'Fund Raising' "
+"you can track all you fund raising activities. The search list allows you to "
+"filter by funds description, email, history and probability of success."
+msgstr ""
+"Om uw organisatie or campagne te ondersteunen kunt u met 'fondsenwerving' "
+"alle wervingsactiviteiten volgen. De zoeklijst laat u fondsen filteren op "
+"omschrijving, email, geschiedenis en slagingskans."
+
+#. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "  Year  "
+msgstr "  Jaar  "
 
 #. module: crm_fundraising
 #: field:crm.fundraising,planned_cost:0
+#: view:crm.fundraising.report:0
+#: field:crm.fundraising.report,planned_cost:0
 msgid "Planned Costs"
 msgstr "Verwachte kosten"
 
@@ -421,14 +429,19 @@ msgid "Low"
 msgstr "Laag"
 
 #. module: crm_fundraising
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: field:crm.fundraising,date_closed:0
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Closed"
+msgstr "Gesloten"
 
 #. module: crm_fundraising
+#: view:crm.fundraising:0
+#: selection:crm.fundraising,state:0
 #: view:crm.fundraising.report:0
-msgid "7 Days"
-msgstr "7 Dagen"
+#: selection:crm.fundraising.report,state:0
+msgid "Pending"
+msgstr "Wacht"
 
 #. module: crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_stage_act
@@ -467,15 +480,14 @@ msgid "Phone"
 msgstr "Telefoon"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,user_id:0
 msgid "User"
 msgstr "Gebruiker"
 
 #. module: crm_fundraising
-#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
-msgid "Cheque"
-msgstr "Cheque"
+#: view:crm.fundraising.report:0
+msgid "#Fundraising"
+msgstr "# Fondsen"
 
 #. module: crm_fundraising
 #: field:crm.fundraising,active:0
@@ -493,11 +505,6 @@ msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
 
 #. module: crm_fundraising
-#: model:ir.ui.menu,name:crm_fundraising.menu_crm_fundraising_resource_act
-msgid "Resource Type"
-msgstr "Betalingsvorm"
-
-#. module: crm_fundraising
 #: view:crm.fundraising.report:0
 msgid "Search"
 msgstr "Zoeken"
@@ -513,9 +520,18 @@ msgid "January"
 msgstr "Januari"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "#Fundraising"
-msgstr "# Fondsen"
+#: model:crm.case.resource.type,name:crm_fundraising.type_fund2
+msgid "Cheque"
+msgstr "Cheque"
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
+msgid ""
+"Manage and define the fund raising categories you want to be maintained in "
+"the system."
+msgstr ""
+"De fondsenwerving categorieën beheren en definiëren die u wilt bijhouden in "
+"het systeem."
 
 #. module: crm_fundraising
 #: help:crm.fundraising,email_from:0
@@ -544,8 +560,8 @@ msgstr "Bijlagen"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Misc"
-msgstr "Overig"
+msgid "Estimates"
+msgstr "Schattingen"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -562,9 +578,9 @@ msgid "Done"
 msgstr "Klaar"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Communication"
-msgstr "Communicatie"
+#: selection:crm.fundraising.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -579,13 +595,6 @@ msgstr "Annuleren"
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
 msgstr "Open"
-
-#. module: crm_fundraising
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -618,7 +627,7 @@ msgid "CRM Fundraising Report"
 msgstr "CRM Fondsenwerving overzicht"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,type_id:0
+#: field:crm.fundraising.report,type_id:0
 msgid "Fundraising Type"
 msgstr "Betalingsvorm"
 
@@ -627,6 +636,15 @@ msgstr "Betalingsvorm"
 #: field:crm.fundraising.report,amount_revenue_prob:0
 msgid "Est. Rev*Prob."
 msgstr "Verw. omzet*kans"
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
+msgid ""
+"Create and manage fund raising activity categories you want to be maintained "
+"in the system."
+msgstr ""
+"Maak en beheer fondsenwerving activiteiten categorieën die u wilt bijhouden "
+"in het systeem."
 
 #. module: crm_fundraising
 #: field:crm.fundraising,description:0
@@ -649,14 +667,13 @@ msgid "Employee's Name"
 msgstr "Relatienaam"
 
 #. module: crm_fundraising
-#: view:crm.fundraising.report:0
-msgid "This Month"
-msgstr "Deze maand"
-
-#. module: crm_fundraising
-#: model:ir.actions.act_window,name:crm_fundraising.crm_fundraising_resource_act
-msgid "Fundraising Resource Type"
-msgstr "Fondsenwerving betalingsvorm"
+#: help:crm.fundraising,canal_id:0
+msgid ""
+"The channels represent the different communication  modes available with the "
+"customer."
+msgstr ""
+"De kanalen vertegenwoordigen de verschillende beschikbare communicatievormen "
+"met de klant."
 
 #. module: crm_fundraising
 #: help:crm.fundraising,state:0
@@ -690,11 +707,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Communication history"
-msgstr "Communicatiegeschiedenis"
-
-#. module: crm_fundraising
 #: model:crm.case.resource.type,name:crm_fundraising.type_fund1
 msgid "Cash"
 msgstr "Contant"
@@ -710,9 +722,9 @@ msgid "April"
 msgstr "April"
 
 #. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "References"
-msgstr "Verwijzingen"
+#: view:crm.fundraising.report:0
+msgid "My Case(s)"
+msgstr "Mijn fonds(en)"
 
 #. module: crm_fundraising
 #: model:crm.case.resource.type,name:crm_fundraising.type_fund4
@@ -737,6 +749,7 @@ msgstr "Hoog"
 #. module: crm_fundraising
 #: view:crm.fundraising:0
 #: field:crm.fundraising,section_id:0
+#: view:crm.fundraising.report:0
 msgid "Sales Team"
 msgstr "Verkoopteam"
 
@@ -760,3 +773,56 @@ msgstr "Jaar"
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr "Duur"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "The channels represent the different communication modes available with the "
+#~ "customer. With each commercial opportunity, you can indicate                 "
+#~ "    the canall which is this opportunity source."
+#~ msgstr ""
+#~ "De kanalen geven de verschillende beschikbare communicatievormen met de "
+#~ "klant weer. Met elke kans kunt u het kanaal aangeven wat de oorsprong van de "
+#~ "kans is."
+
+#~ msgid "This Year"
+#~ msgstr "Dit jaar"
+
+#~ msgid "My Case"
+#~ msgstr "Mijn Fondsen"
+
+#~ msgid "7 Days"
+#~ msgstr "7 Dagen"
+
+#~ msgid "Resource Type"
+#~ msgstr "Betalingsvorm"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "This Month"
+#~ msgstr "Deze maand"
+
+#~ msgid "Communication history"
+#~ msgstr "Communicatiegeschiedenis"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Fundraising Resource Type"
+#~ msgstr "Fondsenwerving betalingsvorm"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

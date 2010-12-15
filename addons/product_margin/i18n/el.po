@@ -6,18 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 09:09+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"PO-Revision-Date: 2010-11-12 09:21+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
+
+#. module: product_margin
+#: view:product.product:0
+#: field:product.product,turnover:0
+msgid "Turnover"
+msgstr "Τζίρος"
 
 #. module: product_margin
 #: field:product.product,expected_margin_rate:0
@@ -25,7 +31,7 @@ msgid "Expected Margin (%)"
 msgstr "Αναμενόμενο Περιθώριο (%)"
 
 #. module: product_margin
-#: wizard_field:product.margins,init,from_date:0
+#: field:product.margin,from_date:0
 msgid "From"
 msgstr "Από"
 
@@ -38,7 +44,12 @@ msgstr ""
 "Τιμολόγια Πώλησης"
 
 #. module: product_margin
-#: wizard_field:product.margins,init,to_date:0
+#: help:product.product,total_margin:0
+msgid "Turnorder - Standard price"
+msgstr "Τζίρος- Καθορισμένη Τιμή"
+
+#. module: product_margin
+#: field:product.margin,to_date:0
 msgid "To"
 msgstr "Σε"
 
@@ -53,15 +64,10 @@ msgid "From Date"
 msgstr "Από Ημερ/νία"
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Πρόχειρα, Ανοικτά και Πληρωμένα"
-
-#. module: product_margin
-#: model:ir.ui.menu,name:product_margin.menu_product_reporting
-msgid "Reporting"
-msgstr "Αναφορές"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -75,12 +81,9 @@ msgid "Margins in Product"
 msgstr "Περιθώρια στα Προϊόντα"
 
 #. module: product_margin
-#: help:product.product,total_cost:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
-msgstr ""
-"Άθροισμα των Γινομένων των Τιμολογημένων τιμών και των ποσοτήτων στα "
-"Τιμολόγια Αγοράς "
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr "Προϊόν"
 
 #. module: product_margin
 #: view:product.product:0
@@ -88,15 +91,15 @@ msgid "Catalog Price"
 msgstr "Τιμή Καταλόγου"
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr "Πληρωμένα"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
-msgid "Excepted Sale - Turn Over"
-msgstr "(Εξαιρούμενη Πώληση) - (Κύκλος Εργασιών)"
+msgid "Expected Sale - Turn Over"
+msgstr "Προσδοκόμενη Πώληση - Τζίρος"
 
 #. module: product_margin
 #: field:product.product,sale_expected:0
@@ -121,10 +124,9 @@ msgstr ""
 "Αγοράς"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,turnover:0
-msgid "Turnover"
-msgstr "Ανατροπή"
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
+msgstr "Προσδοκόμενη Πώληση -  Κανονικό Κόστος"
 
 #. module: product_margin
 #: field:product.product,purchase_num_invoiced:0
@@ -139,24 +141,9 @@ msgid "Total Cost"
 msgstr "Σύνολο Κόστους"
 
 #. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Excepted Sale - Normal Cost"
-msgstr "Εξαιρούμενη Πώληση - Κανονικό Κόστος"
-
-#. module: product_margin
 #: field:product.product,expected_margin:0
 msgid "Expected Margin"
 msgstr "Αναμενόμενο Περιθώριο"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Total Cost"
-msgstr "Τζίρος - Συνολικό Κόστος"
 
 #. module: product_margin
 #: view:product.product:0
@@ -182,12 +169,15 @@ msgid "Avg. Price in Customer Invoices)"
 msgstr "Μέση Τιμή στα Τιμολόγια Πώλησης"
 
 #. module: product_margin
-#: wizard_view:product.margins,init:0
-msgid "Select "
-msgstr "Επιλογή "
+#: help:product.product,total_cost:0
+msgid ""
+"Sum of Multification of Invoice price and quantity of Supplier Invoices "
+msgstr ""
+"Άθροισμα των Γινομένων των Τιμολογημένων τιμών και των ποσοτήτων στα "
+"Τιμολόγια Αγοράς "
 
 #. module: product_margin
-#: wizard_field:product.margins,init,invoice_state:0
+#: field:product.margin,invoice_state:0
 #: field:product.product,invoice_state:0
 msgid "Invoice State"
 msgstr "Κατάσταση Τιμολογίου"
@@ -196,6 +186,11 @@ msgstr "Κατάσταση Τιμολογίου"
 #: help:product.product,purchase_gap:0
 msgid "Normal Cost - Total Cost"
 msgstr "(Κανονικό Κόστος) - (Συνολικό Κόστος)"
+
+#. module: product_margin
+#: field:product.product,total_margin:0
+msgid "Total Margin"
+msgstr "Σύνολο Περιθωρίων"
 
 #. module: product_margin
 #: view:product.product:0
@@ -219,9 +214,9 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Μέση Τιμή στα Τιμολόγια Προμηθευτή "
 
 #. module: product_margin
-#: field:product.product,total_margin:0
-msgid "Total Margin"
-msgstr "Σύνολο Περιθωρίων"
+#: view:product.margin:0
+msgid "Properties categories"
+msgstr "Ιδοότητες κατηγοριών"
 
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
@@ -234,7 +229,7 @@ msgid "Analysis Criteria"
 msgstr "Κριτήρια Ανάλυσης"
 
 #. module: product_margin
-#: selection:product.margins,init,invoice_state:0
+#: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Open and Paid"
 msgstr "Ανοικτά & Πληρωμένα"
@@ -245,11 +240,23 @@ msgid "Sales"
 msgstr "Πωλήσεις"
 
 #. module: product_margin
-#: model:ir.actions.wizard,name:product_margin.action_open_margin
+#: code:addons/product_margin/wizard/product_margin.py:0
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: view:product.product:0
+#, python-format
 msgid "Product Margins"
 msgstr "Περιθώρια Προϊόντων"
+
+#. module: product_margin
+#: view:product.margin:0
+msgid "General Information"
+msgstr "Γενικές Πληροφορίες"
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -262,12 +269,12 @@ msgid "Total Margin (%)"
 msgstr "Συνολικό Περιθώριο (%)"
 
 #. module: product_margin
-#: wizard_button:product.margins,init,open:0
+#: view:product.margin:0
 msgid "Open Margins"
 msgstr "Ανοικτά Περιθώρια"
 
 #. module: product_margin
-#: wizard_button:product.margins,init,end:0
+#: view:product.margin:0
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -282,6 +289,36 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Άθροισμα Ποσοτήτων στα Τιμολόγια Πελάτη"
 
 #. module: product_margin
-#: wizard_view:product.margins,init:0
-msgid "View Stock of Products"
-msgstr "Προβολή Αποθεμάτων Προϊόντων"
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
+msgstr "Περιθόριο Προϊόντος"
+
+#~ msgid "Reporting"
+#~ msgstr "Αναφορές"
+
+#~ msgid "Excepted Sale - Turn Over"
+#~ msgstr "(Εξαιρούμενη Πώληση) - (Κύκλος Εργασιών)"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
+#~ msgid "Excepted Sale - Normal Cost"
+#~ msgstr "Εξαιρούμενη Πώληση - Κανονικό Κόστος"
+
+#~ msgid "Select "
+#~ msgstr "Επιλογή "
+
+#~ msgid "View Stock of Products"
+#~ msgstr "Προβολή Αποθεμάτων Προϊόντων"
+
+#~ msgid "Turnorder - Total Cost"
+#~ msgstr "Τζίρος - Συνολικό Κόστος"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου θα πρέπει να ξεκινά με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"

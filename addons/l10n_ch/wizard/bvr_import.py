@@ -69,16 +69,14 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
         return []
     return True
 
-def _import(obj, cursor, user, data, context=None):
+def _import(self, cursor, user, data, context=None):
 
-    pool = pooler.get_pool(cursor.dbname)
-    statement_obj = pool.get('account.bank.statement')
-    statement_line_obj = pool.get('account.bank.statement.line')
-#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
-    voucher_obj = pool.get('account.voucher')
-    voucher_line_obj = pool.get('account.voucher.line')
-    move_line_obj = pool.get('account.move.line')
-    attachment_obj = pool.get('ir.attachment')
+    statement_line_obj = self.pool.get('account.bank.statement.line')
+    statement_obj = self.pool.get('account.bank.statement')
+    voucher_obj = self.pool.get('account.voucher')
+    voucher_line_obj = self.pool.get('account.voucher.line')
+    move_line_obj = self.pool.get('account.move.line')
+    attachment_obj = self.pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
     records = []
@@ -187,18 +185,18 @@ def _import(obj, cursor, user, data, context=None):
                     account_id = line.account_id.id
                     break
         result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id=partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='payment', context=context)
-
         voucher_res = { 'type': 'payment' ,
-            'name': values['name'],
-            'partner_id': partner_id,
-            'journal_id': statement.journal_id.id,
-            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
-            'company_id': statement.company_id.id,
-            'currency_id': statement.currency.id,
-            'date': record['date'] or time.strftime('%Y-%m-%d'),
-            'amount': abs(record['amount']),
+
+             'name': values['name'],
+             'partner_id': partner_id,
+             'journal_id': statement.journal_id.id,
+             'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+             'company_id': statement.company_id.id,
+             'currency_id': statement.currency.id,
+             'date': record['date'] or time.strftime('%Y-%m-%d'),
+             'amount': abs(record['amount']),
             'period_id': statement.period_id.id
-            }
+             }
         voucher_id = voucher_obj.create(cursor, user, voucher_res, context=context)
         context.update({'move_line_ids': line_ids})
         values['voucher_id'] = voucher_id
@@ -210,8 +208,8 @@ def _import(obj, cursor, user, data, context=None):
                     voucher_line_dict = line_dict
         if voucher_line_dict:
             voucher_line_dict.update({'voucher_id':voucher_id})
-            voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)
-
+            voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
+             
         if not account_id:
             if record['amount'] >= 0:
                 account_id = account_receivable

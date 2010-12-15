@@ -29,8 +29,8 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-            <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="domain">[('type', '=', 'fundraising')]</field>
+            <field name="context">{'type':'fundraising'}</field>
             <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
 

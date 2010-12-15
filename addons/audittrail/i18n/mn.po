@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 09:37+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-10-22 10:06+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -23,12 +23,10 @@ msgid "Audit Trail"
 msgstr "Audit Trail"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
+msgstr "АНХААР: audittrail нь pool-ээс хамааралгүй"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -36,31 +34,42 @@ msgid "Log"
 msgstr "Лог"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Захиалсан"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "Хуучин утга: "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr "Audittrail дүрэм"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "Үүсгэх"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "Аудит логууд"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Төлөв"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Ноорог"
@@ -71,19 +80,16 @@ msgid "Old Value"
 msgstr "Хуучин утга"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
-
-#. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "Лог харах"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
-msgstr "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,method:0
@@ -91,7 +97,7 @@ msgid "Method"
 msgstr "Метод"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
 msgstr "Лог эхлэл"
 
@@ -106,14 +112,21 @@ msgid "Resource Id"
 msgstr "Нөөц Id"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "Бичих"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
+msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
-msgstr "Аудит шалгалт"
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Хэрэглэгчид"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -121,16 +134,12 @@ msgid "Log Lines"
 msgstr "Лог мөрүүд"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Захиалах"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Дүрэм"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "Унших"
-
-#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -142,7 +151,7 @@ msgid "AuditTrail Rule"
 msgstr "AuditTrail Rule дүрэм"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
 msgstr "Лог төгсгөл"
 
@@ -152,26 +161,47 @@ msgid "New Value Text: "
 msgstr "Шинэ утга: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
 msgstr ""
-"Системийн объектууд дээр хийгдсэн бүх үйлдлийг мөшгих боломж олгоно.\n"
-"    Объектууд дээр унших, бичих, үүсгэх, устгах үйлдлийг мөшгих дүрмүүд "
-"бичнэ, тэгээд логоо шалгана"
 
 #. module: audittrail
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr "Аудитын дүрмүүд"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Хуучин утга: "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr "Нөөцийн нэр"
+
+#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Огноо"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "Хэрэглэгч"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "Үүсэлтийг хөтлөх"
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr "Түүх хөтлөх объектоо сонгоно"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -179,24 +209,25 @@ msgid "Old Value Text : "
 msgstr "Хуучин утгын текст: "
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr "Ажлын урсгалыг хянах"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Нэр"
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr "Уншилтыг хянах"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
 msgstr "Лог мөрүүд"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Захиалсан дүрмүүд"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -209,9 +240,27 @@ msgid "AuditTrail Rules"
 msgstr "AuditTrail дүрмүүд"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
-msgstr "audittrail.rule"
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr "Үйлдлийн ID"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
+msgstr "Хэрэглэгчид (хэрэв хэрэглэгч нэмээгүй бол бүх хэрэглэгчид хамаатай)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -219,14 +268,9 @@ msgid "UnSubscribe"
 msgstr "Захиалга болих"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr "Бичилтийг хөтлөх"
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
-msgstr "audittrail.log"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
+msgstr "Устгалыг хянах"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -234,12 +278,17 @@ msgid "Field Description"
 msgstr "Талбарын тодорхойлолт"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "Устгах"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr "Бичилтийг хянах"
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
 msgstr "Лог нээх"
 
@@ -254,29 +303,9 @@ msgid "Rule Name"
 msgstr "Дүрмийн нэр"
 
 #. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "Уншилтыг хөтлөх"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Логууд"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "Шинэ утга"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "Лог харах"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "Үүсгэлтийг хөтлөх"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -284,9 +313,15 @@ msgid "AuditTrail Logs"
 msgstr "AuditTrail логууд"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Дүрэм"
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
+msgstr "Audittrail түүх"
+
+#. module: audittrail
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -294,9 +329,11 @@ msgid "New Value : "
 msgstr "Шинэ утга: "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "Хэрэглэгчид"
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -304,11 +341,104 @@ msgid "Old value Text"
 msgstr "Хуучин утгын текст"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "Устгалыг хөтлөх"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr "Түүх харах"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr "Мөрийг хянах"
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr "Үйлдлийг хянах"
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+
+#~ msgid "Create"
+#~ msgstr "Үүсгэх"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Write"
+#~ msgstr "Бичих"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "Read"
+#~ msgstr "Унших"
+
+#~ msgid "Subscribe"
+#~ msgstr "Захиалах"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Name"
+#~ msgstr "Нэр"
+
+#~ msgid "audittrail.log"
+#~ msgstr "audittrail.log"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "audittrail.rule"
+
+#~ msgid "Delete"
+#~ msgstr "Устгах"
+
+#~ msgid "Logs"
+#~ msgstr "Логууд"
+
+#~ msgid "View Logs"
+#~ msgstr "Лог харах"
+
+#~ msgid "Log writes"
+#~ msgstr "Бичилтийг хөтлөх"
+
+#~ msgid "Log reads"
+#~ msgstr "Уншилтыг хөтлөх"
+
+#~ msgid "Log creates"
+#~ msgstr "Үүсгэлтийг хөтлөх"
+
+#~ msgid "Log deletes"
+#~ msgstr "Устгалыг хөтлөх"
+
+#~ msgid "Audittrails"
+#~ msgstr "Аудит шалгалт"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Системийн объектууд дээр хийгдсэн бүх үйлдлийг мөшгих боломж олгоно.\n"
+#~ "    Объектууд дээр унших, бичих, үүсгэх, устгах үйлдлийг мөшгих дүрмүүд "
+#~ "бичнэ, тэгээд логоо шалгана"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Захиалсан дүрмүүд"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
