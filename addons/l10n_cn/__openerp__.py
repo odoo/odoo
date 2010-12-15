@@ -36,6 +36,7 @@
     "demo_xml" : [],
     "update_xml" : [
         'account_chart.xml',
+        "l10n_chart_cn_wizard.xml",
     ],
     "license": "GPL-3",
     "certificate":"",
