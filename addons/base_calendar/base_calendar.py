@@ -1026,44 +1026,43 @@ class calendar_event(osv.osv):
 
         qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
         qry_args = [ rrule_type, ]
-        if rrule_type == 'custom':
-            new_val = val.copy()
-            for k, v in val.items():
-                if  val['freq'] == 'weekly' and val.get('byday'):
-                    for day in val['byday'].split(','):
-                        new_val[day] = True
-                    val.pop('byday')
+        new_val = val.copy()
+        for k, v in val.items():
+            if  val['freq'] == 'weekly' and val.get('byday'):
+                for day in val['byday'].split(','):
+                    new_val[day] = True
+                val.pop('byday')
 
-                if val.get('until'):
-                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
-                    new_val['end_date'] = until.strftime('%Y-%m-%d')
-                    val.pop('until')
-                    new_val.pop('until')
+            if val.get('until'):
+                until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                new_val['end_date'] = until.strftime('%Y-%m-%d')
+                val.pop('until')
+                new_val.pop('until')
 
-                if val.get('bymonthday'):
-                    new_val['day'] = val.get('bymonthday')
-                    val.pop('bymonthday')
-                    new_val['select1'] = 'date'
-                    new_val.pop('bymonthday')
+            if val.get('bymonthday'):
+                new_val['day'] = val.get('bymonthday')
+                val.pop('bymonthday')
+                new_val['select1'] = 'date'
+                new_val.pop('bymonthday')
 
-                if val.get('byday'):
-                    d = val.get('byday')
-                    if '-' in d:
-                        new_val['byday'] = d[:2]
-                        new_val['week_list'] = d[2:4].upper()
-                    else:
-                        new_val['byday'] = d[:1]
-                        new_val['week_list'] = d[1:3].upper()
-                    new_val['select1'] = 'day'
+            if val.get('byday'):
+                d = val.get('byday')
+                if '-' in d:
+                    new_val['byday'] = d[:2]
+                    new_val['week_list'] = d[2:4].upper()
+                else:
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:3].upper()
+                new_val['select1'] = 'day'
 
-                if val.get('bymonth'):
-                    new_val['month_list'] = val.get('bymonth')
-                    val.pop('bymonth')
-                    new_val.pop('bymonth')
+            if val.get('bymonth'):
+                new_val['month_list'] = val.get('bymonth')
+                val.pop('bymonth')
+                new_val.pop('bymonth')
 
-            for k, v in new_val.items():
-                qry += ", %s=%%s" % k
-                qry_args.append(v)
+        for k, v in new_val.items():
+            qry += ", %s=%%s" % k
+            qry_args.append(v)
 
         qry = qry + " where id=%s"
         qry_args.append(id)
@@ -1083,6 +1082,8 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
             if datas.get('rrule_type'):
+                if  datas['rrule_type']=='daily_working':
+                    datas.update({'rrule_type': 'weekly'})
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
@@ -1131,7 +1132,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
  rule or repeating pattern for recurring events\n\
 e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
-        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
+        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'),('daily_working', 'Daily(Working day)'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'),], 
                             'Recurrency', states={'done': [('readonly', True)]},
@@ -1308,6 +1309,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
+                    
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     for r_date in rdates:
                         if start_date and r_date < start_date:
@@ -1338,15 +1340,16 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         weekstring = ''
         monthstring = ''
         yearstring = ''
-
-        freq = datas.get('rrule_type')
+        freq=''
         if freq == 'None':
             return ''
-
+        if datas.get('rrule_type')=='daily_working':
+            freq ='weekly'
+        else:
+            freq=datas.get('rrule_type')    
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         if freq == 'weekly':
-
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
