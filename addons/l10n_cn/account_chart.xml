@@ -976,60 +976,6 @@
 			<field name="account_collected_id" ref="chart22210101"/>
 			<field name="account_paid_id" ref="chart22210101"/>
 			<field name="type_tax_use">purchase</field>
-		</record>        
-        <!-- 辅助核算类别 -->
-		<record id="analytic_department" model="account.analytic.account">
-			<field name="name">某部门</field>
-		</record>
-		<record id="analytic_employee" model="account.analytic.account">
-			<field name="name">某员工</field>
-		</record>
-		<record id="analytic_project" model="account.analytic.account">
-			<field name="name">某项目</field>
-		</record>
-        <!-- 管理会计账簿 -->
-		<record id="gl_ana_journal" model="account.analytic.journal">
-			<field name="name">总账核算</field>
-			<field name="code">GLAJ</field>
-			<field name="type">general</field>
-		</record>
-		<record id="sale_ana_journal" model="account.analytic.journal">
-			<field name="name">收入核算</field>
-			<field name="code">INCJ</field>
-			<field name="type">sale</field>
-		</record>
-		<record id="purchase_ana_journal" model="account.analytic.journal">
-			<field name="name">费用核算</field>
-			<field name="code">EXPJ</field>
-			<field name="type">purchase</field>
-		</record>
-        <!-- 财务会计账簿 -->
-		<record id="gl_journal" model="account.journal">
-			<field name="name">总账</field>
-			<field name="code">GLJ</field>
-			<field name="type">general</field>
-			<field name="view_id" ref="account.account_journal_view"/>
-			<field name="sequence_id" ref="account.sequence_journal"/>
-			<field name="analytic_journal_id" ref="gl_ana_journal"/>
-			<field name="user_id" ref="base.user_root"/>
-		</record>
-		<record id="sale_journal" model="account.journal">
-			<field name="name">销售</field>
-			<field name="code">SAJ</field>
-			<field name="type">sale</field>
-			<field name="view_id" ref="account.account_journal_view"/>
-			<field name="sequence_id" ref="account.sequence_journal"/>
-			<field name="analytic_journal_id" ref="sale_ana_journal"/>
-			<field name="user_id" ref="base.user_root"/>
-		</record>
-		<record id="purchase_journal" model="account.journal">
-			<field name="name">采购</field>
-			<field name="code">PUJ</field>
-			<field name="type">purchase</field>
-			<field name="view_id" ref="account.account_journal_view"/>
-			<field name="sequence_id" ref="account.sequence_journal"/>
-			<field name="analytic_journal_id" ref="purchase_ana_journal"/>
-			<field name="user_id" ref="base.user_root"/>
 		</record>
 	</data>
 </openerp>
