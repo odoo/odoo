@@ -168,7 +168,7 @@ class ir_translation(osv.osv):
                           FROM ir_translation
                           WHERE lang=%s
                            AND type in %s
-                           AND name=%s"""
+                           AND name=%s""",
                     (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or u''
