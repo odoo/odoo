@@ -1671,7 +1671,7 @@ class stock_move(osv.osv):
             result['product_qty'] = product_uos_qty
 
         return {'value': result}
-    
+
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, address_id=False):
         """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
@@ -2462,7 +2462,6 @@ class stock_inventory(osv.osv):
         """ Finished the inventory
         @return: True
         """
-
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
@@ -2486,8 +2485,9 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id)
+                product_context.update(uom=line.product_uom.id,date=inv.date)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
+
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
@@ -2497,7 +2497,6 @@ class stock_inventory(osv.osv):
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
-                        'date': inv.date,
                         'date': inv.date,
                     }
                     if change > 0:
@@ -2557,7 +2556,7 @@ class stock_inventory_line(osv.osv):
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
+    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
         """ Changes UoM and name if product_id changes.
         @param location_id: Location id
         @param product: Changed product_id
@@ -2569,7 +2568,7 @@ class stock_inventory_line(osv.osv):
         if not uom:
             prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
             uom = prod.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom})[product]
+        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
