@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2009-11-17 06:58+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,18 +14,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:29+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -66,11 +60,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
 msgid "Idea Manager"
 msgstr "Gestió d'idees"
@@ -78,6 +67,12 @@ msgstr "Gestió d'idees"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -201,6 +196,11 @@ msgid "Not Voted"
 msgstr "No votada"
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
 msgstr ""
@@ -278,11 +278,6 @@ msgstr ""
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
 msgstr "Categories"
-
-#. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: idea
 #: view:report.vote:0
@@ -402,11 +397,6 @@ msgstr "Idees per categories"
 #: selection:report.vote,idea_state:0
 msgid "Draft"
 msgstr "Esborrany"
-
-#. module: idea
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -544,14 +534,6 @@ msgstr "Tanca"
 #: view:report.vote:0
 msgid "Open"
 msgstr "Oberta"
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
 
 #. module: idea
 #: view:report.vote:0
@@ -697,6 +679,12 @@ msgstr ""
 #~ msgid "Statistics on Votes"
 #~ msgstr "Estadístiques sobre vots"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
 #~ msgid "Category for an idea"
 #~ msgstr "Categoria per a una idea"
 
@@ -712,6 +700,9 @@ msgstr ""
 #~ msgid "Configuration"
 #~ msgstr "Configuració"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
 #~ msgid "My Draft Ideas"
 #~ msgstr "Les meves idees en esborrany"
 
@@ -726,6 +717,9 @@ msgstr ""
 
 #~ msgid "All Votes"
 #~ msgstr "Tots els vots"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #~ msgid ""
 #~ "This module allows your user to easily and efficiently participate in the "
