@@ -174,12 +174,12 @@
 	                        </group>
 		                    <separator string="Recurrency Rule" colspan="8"/>
 		                    <group col="6" colspan="4">
-		                        <field name="freq" />
+		                        <!--<field name="freq" />-->
 		                        <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
 		                        <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
 		                    </group>
 		                    <group col="14" colspan="4" name="Select weekdays"
-		                        attrs="{'invisible' : [('freq','!=','weekly')]}">
+		                        attrs="{'invisible' : [('rrule_type','!=','weekly')]}">
 		                        <field name="mo" colspan="1" />
 		                        <field name="tu" colspan="1" />
 		                        <field name="we" colspan="1" />
@@ -191,7 +191,7 @@
 		                        <newline />
 		                    </group>
 		                    <group col="10" colspan="4"
-		                        attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+		                        attrs="{'invisible' : [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
 		                        <group col="2" colspan="1">
 		                            <field name="select1" />
 		                        </group>
@@ -208,10 +208,10 @@
 		                                attrs="{'required' : [('select1','=','day')]}" />
 		                        </group>
 		                        <group col="1" colspan="1"
-		                            attrs="{'invisible' : [('freq','!=','yearly')]}">
+		                            attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
 		                            <field name="month_list" string="of"
 		                                colspan="1"
-		                                attrs="{'required' : [('freq','=','yearly')]}" />
+		                                attrs="{'required' : [('rrule_type','=','yearly')]}" />
 		                        </group>
 		                    </group>
 		                </group>

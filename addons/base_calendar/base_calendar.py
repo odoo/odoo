@@ -1026,7 +1026,6 @@ class calendar_event(osv.osv):
 
         qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
         qry_args = [ rrule_type, ]
-
         if rrule_type == 'custom':
             new_val = val.copy()
             for k, v in val.items():
@@ -1087,11 +1086,11 @@ class calendar_event(osv.osv):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
-                elif datas.get('rrule_type') == 'custom':
+                if datas.get('rrule_type') :
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
-                    if datas.get('count', 0) < 0:
-                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+#                    if datas.get('count', 0) < 0:
+#                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
                     rrule_custom = self.compute_rule_string(cr, uid, datas, \
                                                          context=context)
                     result[event] = rrule_custom
@@ -1368,7 +1367,7 @@ true, it will allow you to hide the event alarm information without removing it.
         monthstring = ''
         yearstring = ''
 
-        freq = datas.get('freq')
+        freq = datas.get('rrule_type')
         if freq == 'None':
             return ''
 
