@@ -74,17 +74,6 @@ class crm_meeting(crm_case, osv.osv):
                                     ('done', 'Done')], 'State', \
                                     size=16, readonly=True),
     }
-    def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
-        if not context:
-            context = {}
-
-        data_obj = self.pool.get('ir.model.data')
-
-        value = {}
-        if edit_all and rrule_type:
-            for id in ids:
-              base_calendar.base_calendar_id2real_id(id)
-        return value
     _defaults = {
         'state': lambda *a: 'draft', 
         'active': lambda *a: 1,

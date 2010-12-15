@@ -66,7 +66,8 @@
             <field name="arch" type="xml">
                 <field name="progress" position="after">
                     <field name="recurrency"/>      
-                    <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"/>
+                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
+                                on_change="onchange_edit_all(rrule_type,edit_all)"/>                    
                 </field>
             </field>
         </record>
