@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-19 09:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -106,9 +106,9 @@ msgid "A Range"
 msgstr "Een bereik"
 
 #. module: survey
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie definitie."
+#: view:survey.response.line:0
+msgid "Table Answer"
+msgstr ""
 
 #. module: survey
 #: field:survey.history,date:0
@@ -129,13 +129,9 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
-msgid "Descriptive Text"
-msgstr "Beschrijvende tekst"
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
+msgstr ""
 
 #. module: survey
 #: field:survey.send.invitation,mail:0
@@ -217,11 +213,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
 msgstr "Enquêtevragen"
-
-#. module: survey
-#: view:survey.response.line:0
-msgid "Table Answer"
-msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -400,6 +391,11 @@ msgid "Text"
 msgstr ""
 
 #. module: survey
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Letter (8.5\" x 11\")"
@@ -439,13 +435,13 @@ msgid "Late"
 msgstr ""
 
 #. module: survey
-#: field:survey.send.invitation,mail_from:0
-msgid "From"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: survey
-#: selection:survey,state:0
-msgid "Closed"
+#: field:survey.send.invitation,mail_from:0
+msgid "From"
 msgstr ""
 
 #. module: survey
@@ -493,11 +489,6 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: survey
 #: view:survey:0
 #: view:survey.request:0
 #: field:survey.request,state:0
@@ -542,11 +533,6 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_answer_surveys
 msgid "Answer Surveys"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: survey
@@ -604,9 +590,13 @@ msgid "Page Nr"
 msgstr ""
 
 #. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
-msgstr ""
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+#: field:survey.question,descriptive_text:0
+#: selection:survey.question,type:0
+msgid "Descriptive Text"
+msgstr "Beschrijvende tekst"
 
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
@@ -630,11 +620,6 @@ msgstr ""
 #: code:addons/survey/survey.py:0
 #, python-format
 msgid "You must enter one or more menu choices in column heading"
-msgstr ""
-
-#. module: survey
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: survey
@@ -914,8 +899,8 @@ msgid "survey.print.statistics"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: selection:survey,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: survey
@@ -1008,11 +993,6 @@ msgstr ""
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: survey
@@ -1274,11 +1254,6 @@ msgid "Open"
 msgstr ""
 
 #. module: survey
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
 msgstr ""
@@ -1289,12 +1264,6 @@ msgstr ""
 msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
-msgstr ""
-
-#. module: survey
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: survey
@@ -1679,3 +1648,6 @@ msgstr ""
 #: field:survey.name.wiz,page:0
 msgid "Page Position"
 msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie."

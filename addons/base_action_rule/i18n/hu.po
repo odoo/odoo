@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-02 09:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,17 +36,9 @@ msgid "Partner Category"
 msgstr "Partner kategória"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Érvénytelen modell név a művelet meghatározásában."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Jelölje be, ha szeretné azt az előírást, hogy egy emlékeztető emailt küldjön "
-"a felhasználónak."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Levél másolatok (Cc)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -166,11 +158,6 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Speciális kulcsszavak használata a törzsben"
 
 #. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "A modul nevének egyedinek kell lennie!"
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Állam"
@@ -179,11 +166,6 @@ msgstr "Állam"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr "A személyek email id-je, akiknek a levelet küldik"
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "A modul tanusítvány ID-jének egyedinek kell lennie !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -271,11 +253,6 @@ msgid "Delay type"
 msgstr "Késedelem típusa"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Érvénytelen XML a nézet architektúrában!"
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -325,11 +302,6 @@ msgid ""
 msgstr ""
 "Használjon python kifejezést, hogy meghatározza a megfelelő mezőt, amelyet a "
 "fejléc 'Kitől' mezejének fogunk használni"
-
-#. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Hiba ! Nem hozhat létre rekurzív Menüt."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -416,27 +388,19 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Objektum leírása"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Email műveletek"
 
 #. module: base_action_rule
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "A mező mérete soha nem lehet kevesebb, mint 1 !"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Email információ"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
-"karaktereket"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -469,9 +433,12 @@ msgid "Mail body"
 msgstr "Levél törzs"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Levél másolatok (Cc)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Jelölje be, ha szeretné azt az előírást, hogy egy emlékeztető emailt küldjön "
+"a felhasználónak."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -561,3 +528,27 @@ msgstr "Állapotok feltételei"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Indítás dátuma"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Érvénytelen modell név a művelet meghatározásában."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "A modul nevének egyedinek kell lennie!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "A modul tanusítvány ID-jének egyedinek kell lennie !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Érvénytelen XML a nézet architektúrában!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Hiba ! Nem hozhat létre rekurzív Menüt."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "A mező mérete soha nem lehet kevesebb, mint 1 !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
+#~ "karaktereket"
