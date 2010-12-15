@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-30 14:54+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -147,9 +147,7 @@ msgid "My Tasks"
 msgstr "我的任务"
 
 #. module: project
-#: code:addons/project/project.py:0
 #: constraint:project.task:0
-#, python-format
 msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
@@ -404,10 +402,13 @@ msgid "res.users"
 msgstr ""
 
 #. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the project "
-"without removing it."
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
 msgstr ""
 
 #. module: project
@@ -433,9 +434,12 @@ msgid "Done by"
 msgstr "完成者"
 
 #. module: project
-#: view:project.task:0
-msgid "Planning"
-msgstr "计划"
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define here the steps that will be used on the project from the creation of "
+"the task, up to the closing of the task or issue. You will use these stages "
+"in order to track the progress of the resolution of a task or an issue."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -449,11 +453,6 @@ msgstr "最后期限"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "_Delegate"
 msgstr ""
 
 #. module: project
@@ -474,6 +473,11 @@ msgstr ""
 #: code:addons/project/project.py:0
 #, python-format
 msgid " (copy)"
+msgstr ""
+
+#. module: project
+#: field:project.task,user_id:0
+msgid "Responsible"
 msgstr ""
 
 #. module: project
@@ -499,8 +503,13 @@ msgid "Reevaluate Task"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
+#: view:project.project:0
+msgid "Date Stop: %(date)s"
+msgstr ""
+
+#. module: project
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: project
@@ -509,9 +518,9 @@ msgid "Reset as Project"
 msgstr "重设项目"
 
 #. module: project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义使用了无效的模型名称。"
+#: selection:project.vs.hours,state:0
+msgid "Template"
+msgstr "模板"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -524,9 +533,9 @@ msgid "My projects"
 msgstr "我的项目"
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -558,10 +567,17 @@ msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr "结束任务和全部要做任务的百分比"
 
 #. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
-msgstr "新任务说明"
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"A task represents a work that has to be done. Each user works in his own "
+"list of tasks where he can record his task work in hours. He can work and "
+"close the task itself or delegate it to antoher user. If you delegate a task "
+"to another user, you get a new task in pending state, which will be re-"
+"opened when you have to review the work achieved. If you install the "
+"project_timesheet module, tasks works can be invoiced based on the project "
+"configuration. With the project_mrp module, sales orders can create tasks "
+"automatically when they are confirmed."
+msgstr ""
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -615,11 +631,6 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Medium"
 msgstr "普通"
-
-#. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
-msgstr "模板"
 
 #. module: project
 #: view:project.task:0
@@ -756,6 +767,7 @@ msgstr "延迟的小时数"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
 msgstr ""
@@ -990,8 +1002,8 @@ msgid "Project Tasks"
 msgstr "项目任务列表"
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: project
@@ -1010,11 +1022,6 @@ msgstr "草稿"
 #: selection:report.project.task.user,priority:0
 msgid "Low"
 msgstr "低"
-
-#. module: project
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1154,8 +1161,10 @@ msgid "Manager Email"
 msgstr ""
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
 msgstr ""
 
 #. module: project
@@ -1209,10 +1218,9 @@ msgid "Reactivate Project"
 msgstr "重新启动项目"
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Urgent"
-msgstr "紧急的"
+#: view:project.task.delegate:0
+msgid "_Delegate"
+msgstr ""
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:0
@@ -1290,6 +1298,14 @@ msgid "State"
 msgstr "状态"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "Task '%s' set in progress"
@@ -1359,12 +1375,6 @@ msgid "In Progress"
 msgstr "进展"
 
 #. module: project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#. module: project
 #: code:addons/project/wizard/project_task_close.py:0
 #, python-format
 msgid "Please specify the email address of Customer."
@@ -1387,9 +1397,10 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: field:project.task,user_id:0
-msgid "Responsible"
-msgstr ""
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
+msgstr "新任务说明"
 
 #. module: project
 #: view:project.project:0
@@ -1420,6 +1431,11 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
 msgstr "非常低"
+
+#. module: project
+#: view:project.task:0
+msgid "Planning"
+msgstr "计划"
 
 #. module: project
 #: field:project.project,warn_manager:0
@@ -1469,6 +1485,19 @@ msgid "Bill Time on Tasks"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel.  A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
+
+#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr ""
@@ -1488,9 +1517,10 @@ msgid "Your Task Title"
 msgstr "你的任务主题"
 
 #. module: project
-#: view:project.project:0
-msgid "Scheduling"
-msgstr ""
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Urgent"
+msgstr "紧急的"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1539,6 +1569,11 @@ msgstr "花费的时间"
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "我的发票科目"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
+msgstr ""
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1657,6 +1692,11 @@ msgid "Project Time Unit"
 msgstr "项目时间单位"
 
 #. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' is pending."
@@ -1688,11 +1728,6 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
-
-#. module: project
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: project
@@ -1764,8 +1799,8 @@ msgstr "工作摘要"
 
 #. module: project
 #: view:project.project:0
-msgid "Date Stop: %(date_stop)s"
-msgstr "停止日期:%(date_stop)"
+msgid "Scheduling"
+msgstr ""
 
 #. module: project
 #: view:project.installer:0
@@ -2002,6 +2037,10 @@ msgstr ""
 #~ msgid "Create a Task"
 #~ msgstr "创建一个任务"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
 #~ msgid "Send mail to customer"
 #~ msgstr "发送邮件到客户"
 
@@ -2028,6 +2067,9 @@ msgstr ""
 #~ msgid "Error ! You can not create recursive projects."
 #~ msgstr "错误!你不能创建递归的项目"
 
+#~ msgid "Date Stop: %(date_stop)s"
+#~ msgstr "停止日期:%(date_stop)"
+
 #~ msgid "Expected End"
 #~ msgstr "预期结束"
 
@@ -2037,11 +2079,17 @@ msgstr ""
 #~ msgid "Change Remaining Hours"
 #~ msgstr "修改剩余时间"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义使用了无效的模型名称。"
+
 #~ msgid "Estimated time to close this task by the delegated user."
 #~ msgstr "委托用户结束这任务的估计时间"
 
 #~ msgid "Hours"
 #~ msgstr "小时数"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件"
 
 #~ msgid "Timetable working hours to adjust the gantt diagram report"
 #~ msgstr "时间表工作时间调整甘特图报表"

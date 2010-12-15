@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-12-01 09:45+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,18 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: project_messages
-#: field:project.messages,from_id:0
-msgid "From"
-msgstr "Von"
-
-#. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen."
 
 #. module: project_messages
 #: field:project.messages,to_id:0
@@ -33,25 +23,14 @@ msgid "To"
 msgstr "An"
 
 #. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung für Aktion"
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
+msgstr "project.messages"
 
 #. module: project_messages
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
-
-#. module: project_messages
-#: view:project.messages:0
-msgid "Today"
-msgstr "Heute"
-
-#. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: field:project.messages,from_id:0
+msgid "From"
+msgstr "Von"
 
 #. module: project_messages
 #: help:project.messages,to_id:0
@@ -64,19 +43,16 @@ msgid "Creation Date"
 msgstr "Erzeugungsdatum"
 
 #. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
-msgstr "project.messages"
-
-#. module: project_messages
-#: model:ir.module.module,shortdesc:project_messages.module_meta_information
-msgid "In-Project Messaging System"
-msgstr "Integriertes Projekt Nachrichten System"
-
-#. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehler in XML Quellcode für diese Ansicht!"
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid ""
+"An in-project messagery system permits an efficient and trackable "
+"communication between project members. The messages are kept in the system "
+"and can then be used for post-analysis."
+msgstr ""
+"Ein integriertes Benachrichtigungssystem ermöglicht eine effiziente und "
+"rückverfolgbare Kommunikation zwischen den Projektmitarbeitern. Diese "
+"Benachrichtigungen verbleiben im System und können für eine anschliessende "
+"oder abschliessende Analyse eines Projektes verwendet werden."
 
 #. module: project_messages
 #: model:ir.actions.act_window,name:project_messages.act_project_messages
@@ -96,37 +72,23 @@ msgstr "Projekt"
 
 #. module: project_messages
 #: view:project.messages:0
-msgid "Message To"
-msgstr "Nachricht An"
-
-#. module: project_messages
-#: model:ir.actions.act_window,help:project_messages.messages_form
-msgid ""
-"An in-project messagery system permits an efficient and trackable "
-"communication between project members. The messages are kept in the system "
-"and can then be used for post-analysis."
-msgstr ""
-"Ein integriertes Benachrichtigungssystem ermöglicht eine effiziente und "
-"rückverfolgbare Kommunikation zwischen den Projektmitarbeitern. Diese "
-"Benachrichtigungen verbleiben im System und können für eine anschliessende "
-"oder abschliessende Analyse eines Projektes verwendet werden."
-
-#. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
-#: view:project.messages:0
-msgid "Project Messages"
-msgstr "Projekt Mitteilungen"
-
-#. module: project_messages
-#: view:project.messages:0
 msgid "Group By..."
 msgstr "Gruppiere je ..."
 
 #. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: view:project.messages:0
+msgid "Today"
+msgstr "Heute"
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Message To"
+msgstr "Nachricht An"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr ""
 
 #. module: project_messages
 #: view:project.messages:0
@@ -141,6 +103,40 @@ msgid "Message From"
 msgstr "Mitteilung von"
 
 #. module: project_messages
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+#: view:project.messages:0
+msgid "Project Messages"
+msgstr "Projekt Mitteilungen"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr ""
+
+#. module: project_messages
+#: model:ir.module.module,shortdesc:project_messages.module_meta_information
+msgid "In-Project Messaging System"
+msgstr "Integriertes Projekt Nachrichten System"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehler in XML Quellcode für diese Ansicht!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung für Aktion"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
