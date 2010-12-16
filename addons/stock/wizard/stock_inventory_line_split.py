@@ -30,7 +30,7 @@ class stock_inventory_line_split(osv.osv_memory):
     _description = "Split inventory lines"
 
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ To check the availability of production lot. 
         @param self: The object pointer.
         @param cr: A database cursor
@@ -39,9 +39,11 @@ class stock_inventory_line_split(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id',False)
         res = {}
-        line = self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
+        line = self.pool.get('stock.inventory.line').browse(cr, uid, record_id, context=context)        
         if 'product_id' in fields:
             res.update({'product_id':line.product_id.id})
         if 'product_uom' in fields:
@@ -64,8 +66,8 @@ class stock_inventory_line_split(osv.osv_memory):
         ir_sequence_obj = self.pool.get('ir.sequence')
         line_obj = self.pool.get('stock.inventory.line')
         new_line = []        
-        for data in self.browse(cr, uid, ids):
-            for inv_line in line_obj.browse(cr, uid, line_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for inv_line in line_obj.browse(cr, uid, line_ids, context=context):
                 line_qty = inv_line.product_qty
                 quantity_rest = inv_line.product_qty                
                 new_line = []   

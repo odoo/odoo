@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2009-09-16 17:44+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: subscription
@@ -23,28 +23,8 @@ msgid "Source Document"
 msgstr "Docmento Fonte"
 
 #. module: subscription
-#: help:subscription.document,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-
-#. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
-msgstr ""
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-
-#. module: subscription
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: subscription
@@ -55,14 +35,6 @@ msgstr ""
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Search Subscription"
-msgstr ""
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
 msgstr ""
 
 #. module: subscription
@@ -95,19 +67,6 @@ msgstr ""
 #: selection:subscription.document.fields,value:0
 msgid "Current Date"
 msgstr ""
-
-#. module: subscription
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: subscription
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -186,9 +145,11 @@ msgid "Number of documents"
 msgstr "Número de Chamadas"
 
 #. module: subscription
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: help:subscription.document,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr ""
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -200,6 +161,14 @@ msgstr ""
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Nome"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"You cannot modify the Object linked to the Document Type!\n"
+"Create another Document instead !"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -227,13 +196,6 @@ msgstr ""
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Ativo"
-
-#. module: subscription
-#: help:subscription.subscription,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the "
-"subscription without removing it."
-msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -279,6 +241,13 @@ msgstr ""
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
 msgstr "Documento de Envio"
+
+#. module: subscription
+#: help:subscription.subscription,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription without removing it."
+msgstr ""
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
@@ -341,6 +310,14 @@ msgid "Invoice"
 msgstr ""
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist !"
+msgstr ""
+
+#. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
 msgstr "Valor Padrão"
@@ -351,5 +328,14 @@ msgstr "Valor Padrão"
 msgid "Documents created"
 msgstr "Documentos Criados"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
 #~ msgid "Configuration"
 #~ msgstr "Configuração"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"

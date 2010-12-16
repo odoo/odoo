@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-27 14:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"PO-Revision-Date: 2010-12-14 19:14+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -32,22 +32,14 @@ msgid "Trial Period"
 msgstr "Período de teste"
 
 #. module: hr_contract
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
 msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
-"especial !"
 
 #. module: hr_contract
 #: view:hr.employee:0
-msgid "Calculations"
-msgstr "Cálculos"
-
-#. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Líquido"
+msgid "Function Arguments"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -60,14 +52,9 @@ msgid "Company Vehicle"
 msgstr "Veículo da empresa"
 
 #. module: hr_contract
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID do certificado do módulo tem de ser único!"
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Departamento"
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Nome do Tipo de Salário"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -80,13 +67,13 @@ msgid "Current"
 msgstr "Actual"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor de custo por hora"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Departamento"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -95,9 +82,9 @@ msgid "Wage Types"
 msgstr "Tipos de Salário"
 
 #. module: hr_contract
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro ! Não pode criar menus recursivos"
+#: view:hr.employee:0
+msgid "Calculations"
+msgstr "Cálculos"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -112,14 +99,15 @@ msgid "Employee"
 msgstr "Funcionário"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr ""
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Horário de trabalho"
 
 #. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção."
+#: selection:hr.contract.wage.type,type:0
+msgid "Net"
+msgstr "Líquido"
 
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
@@ -137,14 +125,15 @@ msgid "Function"
 msgstr "Função"
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: hr_contract
 #: view:hr.employee:0
 msgid "Description"
 msgstr "Descrição"
-
-#. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salário"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -165,12 +154,6 @@ msgstr "Contratos"
 #: field:hr.employee,manager:0
 msgid "Is a Manager"
 msgstr "É gerente"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Horário de trabalho"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -208,7 +191,7 @@ msgstr "Nome do Período"
 #: field:hr.contract,advantages:0
 #: view:hr.employee:0
 msgid "Advantages"
-msgstr ""
+msgstr "Vantagens"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -239,9 +222,9 @@ msgid "Search Wage Type"
 msgstr "Procurar tipo de salário"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr ""
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Erro! Não pode criar hierarquias de funcionários recursivamente."
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -249,9 +232,9 @@ msgid "End Date"
 msgstr "Data de Final"
 
 #. module: hr_contract
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML Inválido para a Arquitectura de Vista !"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salário"
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -269,6 +252,13 @@ msgstr "Em quilómetros"
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "Notas"
+
+#. module: hr_contract
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+"Erro! Não pode seleccionar um departamento cujo gestor é o empregado."
 
 #. module: hr_contract
 #: field:hr.contract,wage_type_id:0
@@ -304,7 +294,7 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Salary Computation"
-msgstr ""
+msgstr "Cálculo de salário"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -332,7 +322,7 @@ msgstr "Período Salarial"
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "Distância entre casa e o trabalho"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -342,7 +332,7 @@ msgstr "Data de Início"
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Company contribution"
-msgstr ""
+msgstr "Contribuição da empresa"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -355,15 +345,9 @@ msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Agrupar por..."
-
-#. module: hr_contract
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo deve ser único!"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Factor de custo por hora"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -371,14 +355,9 @@ msgid "Period"
 msgstr "Período"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
+#: view:hr.employee:0
+msgid "Payslip Line"
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Nome do Tipo de Salário"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -388,12 +367,12 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Contract Details"
-msgstr ""
+msgstr "Detalhes do contrato"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Salary Structure"
-msgstr ""
+msgstr "Estrutura do salário"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -432,11 +411,6 @@ msgid "Main Data"
 msgstr ""
 
 #. module: hr_contract
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Procurar o tipo de contrato"
@@ -455,3 +429,27 @@ msgstr "Procurar o tipo de contrato"
 
 #~ msgid "Manager"
 #~ msgstr "Gestor"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+#~ "especial !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Não pode criar menus recursivos"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"

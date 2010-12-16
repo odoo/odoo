@@ -41,8 +41,6 @@ class account_cash_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
     def _equal_balance(self, cr, uid, cash_id, context=None):
-        if context is None:
-            context = {}
         statement = self.browse(cr, uid, cash_id, context=context)
         if not statement.journal_id.check_dtls:
             return True
@@ -60,8 +58,6 @@ class account_cash_statement(osv.osv):
         return False
 
     def _get_cash_open_box_lines(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         res = super(account_cash_statement,self)._get_cash_open_box_lines(cr, uid, context)
         curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
         for rs in curr:
@@ -74,8 +70,6 @@ class account_cash_statement(osv.osv):
         return res
 
     def _get_default_cash_close_box_lines(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         res = super(account_cash_statement,self)._get_default_cash_close_box_lines(cr, uid, context=context)
         curr = [0.01, 0.02, 0.05, 0.10, 0.20, 0.50]
         for rs in curr:

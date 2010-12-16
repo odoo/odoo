@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-29 07:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -47,11 +47,6 @@ msgstr "Raggruppato per..."
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
 msgid "Air Ticket"
 msgstr "Biglietto aereo"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome modello non valido nella definizione dell'azione."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -270,11 +265,6 @@ msgid "Total Price"
 msgstr "Prezzo Totale"
 
 #. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID del certificato del modulo deve essere unico!"
-
-#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
 msgstr "Alcuni costi devono essere rifatturati al cliente"
@@ -337,18 +327,6 @@ msgstr "Dopo avercreato la fattura, rimborsare le spese"
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
 msgstr "Rimborso"
-
-#. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: hr_expense
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Errore: L'Unità di misura per la Vendita (UOS) deve essere in una categoria "
-"diversa da quella dell'Unità di misura (UOM)"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -445,14 +423,6 @@ msgid "  Year  "
 msgstr "  Anno  "
 
 #. module: hr_expense
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Errore: l'unità misura di default e quella di acquisto devono essere nella "
-"stessa categoria."
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -474,11 +444,6 @@ msgstr "Creare fattura del cliente"
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Bozza"
-
-#. module: hr_expense
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore ! Non è possibile creare menu ricorsivi."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -525,11 +490,6 @@ msgstr "Progetto del cliente"
 #: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "Utente"
-
-#. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico !"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -618,33 +578,15 @@ msgid "Invoice"
 msgstr "Fattura"
 
 #. module: hr_expense
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "La regola deve avere almento un diritto di accesso spuntato!"
-
-#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Rifattura"
-
-#. module: hr_expense
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #. module: hr_expense
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
 msgstr "Spese di tutti i dipendenti"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -842,11 +784,6 @@ msgid "Total"
 msgstr "Totale"
 
 #. module: hr_expense
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
-
-#. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
@@ -912,6 +849,15 @@ msgstr "In fase di rifatturazione"
 #~ msgid "New Expenses Sheet"
 #~ msgstr "Foglio nuove spese"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "Account Move"
 #~ msgstr "Spostamento Contabile"
 
@@ -949,5 +895,37 @@ msgstr "In fase di rifatturazione"
 #~ "Determina se il prodotto può essere visibile nella lista di prodotti con una "
 #~ "selezione da una linea/dettaglio di spese HR"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome modello non valido nella definizione dell'azione."
+
 #~ msgid "Can be Expensed"
 #~ msgstr "Può essere addebitato"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID del certificato del modulo deve essere unico!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Errore: L'Unità di misura per la Vendita (UOS) deve essere in una categoria "
+#~ "diversa da quella dell'Unità di misura (UOM)"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore ! Non è possibile creare menu ricorsivi."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Errore: l'unità misura di default e quella di acquisto devono essere nella "
+#~ "stessa categoria."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "La regola deve avere almento un diritto di accesso spuntato!"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"

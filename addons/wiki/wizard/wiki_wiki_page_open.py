@@ -27,7 +27,7 @@ class wiki_wiki_page_open(osv.osv_memory):
     _name = "wiki.wiki.page.open"
     _description = "wiz open page"
 
-    def open_wiki_page(self, cr, uid, ids, context):
+    def open_wiki_page(self, cr, uid, ids, context=None):
 
         """ Opens Wiki Page of Group
         @param cr: the current row, from the database cursor,
@@ -35,8 +35,10 @@ class wiki_wiki_page_open(osv.osv_memory):
         @param ids: List of open wiki page’s IDs
         @return: dictionay of open wiki window on give group id
         """
+        if context is None:
+            context = {}
         group_ids = context.get('active_ids', [])
-        for group in self.pool.get('wiki.groups').browse(cr, uid, group_ids):
+        for group in self.pool.get('wiki.groups').browse(cr, uid, group_ids, context=context):
             value = {
                 'domain': "[('group_id','=',%d)]" % (group.id),
                 'name': 'Wiki Page',

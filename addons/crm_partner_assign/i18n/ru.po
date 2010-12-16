@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-20 07:57+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-21 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_partner_assign
@@ -41,11 +41,6 @@ msgstr "кол-во вопросов"
 #: view:crm.lead.report.assign:0
 msgid "Group By..."
 msgstr "Объединять по..."
-
-#. module: crm_partner_assign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -149,14 +144,6 @@ msgid ""
 msgstr ""
 
 #. module: crm_partner_assign
-#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
-#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
-#: view:res.partner.grade:0
-msgid "Partner Grade"
-msgstr ""
-
-#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
@@ -200,11 +187,12 @@ msgid "From"
 msgstr "От"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,state:0
-#: view:crm.lead.report.assign:0
-#: selection:crm.lead.report.assign,state:0
-msgid "Closed"
-msgstr "Закрыто"
+#: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
+#: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
+#: field:res.partner,grade_id:0
+#: view:res.partner.grade:0
+msgid "Partner Grade"
+msgstr ""
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -221,11 +209,6 @@ msgstr "Следующий"
 #: field:crm.lead.report.assign,priority:0
 msgid "Priority"
 msgstr "Приоритет"
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -298,11 +281,6 @@ msgstr "Июль"
 #: field:crm.lead.report.assign,stage_id:0
 msgid "Stage"
 msgstr "Этап"
-
-#. module: crm_partner_assign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:0
@@ -415,6 +393,11 @@ msgid "Partner Geo-Localisation"
 msgstr ""
 
 #. module: crm_partner_assign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Draft"
@@ -426,9 +409,11 @@ msgid "Low"
 msgstr "Низкий"
 
 #. module: crm_partner_assign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: selection:crm.lead.forward.to.partner,state:0
+#: view:crm.lead.report.assign:0
+#: selection:crm.lead.report.assign,state:0
+msgid "Closed"
+msgstr "Закрыто"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -572,19 +557,6 @@ msgid "Open"
 msgstr "Открыто"
 
 #. module: crm_partner_assign
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#. module: crm_partner_assign
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: crm_partner_assign
 #: field:res.partner,date_localization:0
 msgid "Geo Localization Date"
 msgstr ""
@@ -639,11 +611,6 @@ msgstr "Сделка"
 #: field:crm.lead.report.assign,partner_id:0
 msgid "Customer"
 msgstr "Заказчик"
-
-#. module: crm_partner_assign
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -726,3 +693,27 @@ msgstr ""
 #: field:crm.lead.report.assign,name:0
 msgid "Year"
 msgstr "Год"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"

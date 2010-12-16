@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-11 16:31+0000\n"
+"PO-Revision-Date: 2010-12-15 00:25+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-12 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
 #: help:sale.installer,delivery:0
 msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
+msgstr "Ger dig möjlighet att beräkna frkatkostnad på dina offerter."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -50,6 +50,7 @@ msgstr "Betalning före leverans"
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sale order request."
 msgstr ""
+"Refererande till dokumentet som låg till underlag för försäljningsordern."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:0
@@ -67,6 +68,8 @@ msgstr "Moms"
 #, python-format
 msgid "You must first cancel stock moves attached to this sale order line."
 msgstr ""
+"Du måste först avbryta lagerförflyttningen som är kopplad till denna "
+"försäljningsorderrad."
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -127,7 +130,7 @@ msgstr "Standard betalningsvillkor"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr ""
+msgstr "Konfigurerar plockpolicyn för försäljningsorder"
 
 #. module: sale
 #: view:sale.order:0
@@ -135,7 +138,7 @@ msgstr ""
 #: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: sale
 #: report:sale.order:0
@@ -151,7 +154,7 @@ msgstr "Totalt belopp"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Markera checkboxen för att gruppera fakturorna per kund."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -163,7 +166,7 @@ msgstr "Beställt antal"
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr ""
+msgstr "Försäljning per säljare"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -206,6 +209,8 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"Fakturan skapas med automatik om plockpolicyn är 'fakturera från plock' "
+"eller 'fakturera från order efter leverans'."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
