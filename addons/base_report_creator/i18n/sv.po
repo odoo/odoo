@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-22 21:01+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -132,11 +132,6 @@ msgid "No Related Models!!"
 msgstr "No Related Models!!"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
-
-#. module: base_report_creator
 #: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "Menu Information"
@@ -145,6 +140,11 @@ msgstr "Menu Information"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "Sum"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -160,11 +160,6 @@ msgstr "Field List"
 #: field:base_report_creator.report,type:0
 msgid "Report Type"
 msgstr "Report Type"
-
-#. module: base_report_creator
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -204,9 +199,9 @@ msgid "Starting Date"
 msgstr "Starting Date"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "Filters on Fields"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,group_ids:0
@@ -247,8 +242,8 @@ msgid "AND"
 msgstr "AND"
 
 #. module: base_report_creator
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
 msgstr ""
 
 #. module: base_report_creator
@@ -337,13 +332,6 @@ msgid "Condition"
 msgstr "Condition"
 
 #. module: base_report_creator
-#: help:base_report_creator.report,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the report "
-"without removing it."
-msgstr ""
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
 msgstr "Count"
@@ -392,16 +380,9 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #. module: base_report_creator
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
 msgstr ""
-
-#. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,menu_id:0
@@ -429,9 +410,11 @@ msgid "Unique Colors"
 msgstr "Unique Colors"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "Filters on Fields"
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -536,8 +519,16 @@ msgid ""
 "the \"Dashboard\" menu.\n"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "UserError"
 #~ msgstr "UserError"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
 
 #~ msgid "State"
 #~ msgstr "State"
@@ -550,6 +541,9 @@ msgstr ""
 
 #~ msgid "No Wizards available for this object!"
 #~ msgstr "No Wizards available for this object!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
 
 #~ msgid "Draft"
 #~ msgstr "Draft"

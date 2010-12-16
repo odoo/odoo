@@ -31,7 +31,7 @@ class change_standard_price(osv.osv_memory):
     }
     
     
-    def change_price(self, cr, uid, ids, context):
+    def change_price(self, cr, uid, ids, context=None):
         """ Changes the Standard Price of Parent Product according to BoM 
             only when the field 'change_parent_price' is True.
             And creates an account move accordingly.
@@ -42,7 +42,9 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        res = self.browse(cr, uid, ids) 
+        if context is None:
+            context = {}
+        res = self.browse(cr, uid, ids, context=context) 
         context.update({'change_parent_price': res[0].change_parent_price})
         return super(change_standard_price, self).change_price(cr, uid, ids, context=context)
     

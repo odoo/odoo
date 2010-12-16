@@ -57,7 +57,7 @@ class account_bs_report(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'])
+        account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'], context=context)
         if not account.company_id.property_reserve_and_surplus_account:
             raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
         data['form']['reserve_account_id'] = account.company_id.property_reserve_and_surplus_account.id

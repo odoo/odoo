@@ -31,7 +31,7 @@ class pos_sales_user_today(osv.osv_memory):
        'user_id': fields.many2many('res.users', 'sale_user_rel_today', 'user_id', 'uid', 'Salesman'),
     }
 
-    def print_report(self, cr, uid, ids, context={}):
+    def print_report(self, cr, uid, ids, context=None):
         """
          To get the date and print the report
          @param self: The object pointer.
@@ -40,9 +40,11 @@ class pos_sales_user_today(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
+        if context is None:
+            context = {}
 
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['user_id'], context)
+        res = self.read(cr, uid, ids, ['user_id'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
 

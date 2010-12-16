@@ -40,16 +40,12 @@ class hr_so_project(osv.osv_memory):
 
     def _get_empid(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
-        if context is None:
-            context = {}
         emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_ids:
             for employee in emp_obj.browse(cr, uid, emp_ids, context=context):
                 return {'name': employee.name, 'state': employee.state, 'emp_id': emp_ids[0], 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
 
     def _get_empid2(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         res = self._get_empid(cr, uid, context=context)
         cr.execute('select name,action from hr_attendance where employee_id=%s order by name desc limit 1', (res['emp_id'],))
 
@@ -61,8 +57,6 @@ class hr_so_project(osv.osv_memory):
         return res
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         res = super(hr_so_project, self).default_get(cr, uid, fields_list, context=context)
         res.update(self._get_empid2(cr, uid, context=context))
         return res
@@ -94,8 +88,6 @@ class hr_so_project(osv.osv_memory):
         return timesheet_obj.create(cr, uid, res, context=context)
 
     def sign_out_result_end(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
@@ -104,8 +96,6 @@ class hr_so_project(osv.osv_memory):
         return {}
 
     def sign_out_result(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
@@ -137,8 +127,6 @@ class hr_si_project(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         """
         emp_obj = self.pool.get('hr.employee')
-        if context is None:
-            context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if not emp_id:
             raise osv.except_osv(_('UserError'), _('No employee defined for your user !'))
@@ -146,8 +134,6 @@ class hr_si_project(osv.osv_memory):
 
     def check_state(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
         emp_id = self.default_get(cr, uid, context)['emp_id']
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
@@ -168,8 +154,6 @@ class hr_si_project(osv.osv_memory):
 
     def sign_in_result(self, cr, uid, ids, context=None):
         emp_obj = self.pool.get('hr.employee')
-        if context is None:
-            context = {}
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
             emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
@@ -177,8 +161,6 @@ class hr_si_project(osv.osv_memory):
 
     def default_get(self, cr, uid, fields_list, context=None):
         res = super(hr_si_project, self).default_get(cr, uid, fields_list, context=context)
-        if context is None:
-            context = {}
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:

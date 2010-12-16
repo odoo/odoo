@@ -53,7 +53,7 @@ class product_product(osv.osv):
             'property_stock_variation': account_variation
         }
 
-    def do_change_standard_price(self, cr, uid, ids, datas, context={}):
+    def do_change_standard_price(self, cr, uid, ids, datas, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly.
         @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
         @param context: A standard dictionary
@@ -63,19 +63,21 @@ class product_product(osv.osv):
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
+        if context is None:
+            context = {}
 
         new_price = datas.get('new_price', 0.0)
         stock_output_acc = datas.get('stock_output_account', False)
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
-        product_obj=self.browse(cr,uid,ids)[0]
+        product_obj=self.browse(cr, uid, ids, context=context)[0]
         account_variation = product_obj.categ_id.property_stock_variation
         account_variation_id = account_variation and account_variation.id or False
         if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
-            for location in location_obj.browse(cr, uid, loc_ids):
+            for location in location_obj.browse(cr, uid, loc_ids, context=context):
                 c = context.copy()
                 c.update({
                     'location': location.id,

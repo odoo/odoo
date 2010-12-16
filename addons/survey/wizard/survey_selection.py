@@ -120,6 +120,7 @@ class survey_name_wiz(osv.osv_memory):
         """
         survey_obj = self.pool.get('survey')
         search_obj = self.pool.get('ir.ui.view')
+        if context is None: context = {}
 
         sur_id = self.read(cr, uid, ids, [])[0]
         survey_id = sur_id['survey_id']

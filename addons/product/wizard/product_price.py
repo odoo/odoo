@@ -48,8 +48,10 @@ class product_price_list(osv.osv_memory):
         To get the date and print the report
         @return : return report
         """
+        if context is None:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context)
+        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         return {

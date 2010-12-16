@@ -65,7 +65,7 @@ class base_synchro(osv.osv_memory):
     report_create = 0
     report_write = 0
 
-    def synchronize(self, cr, uid, server, object, context):
+    def synchronize(self, cr, uid, server, object, context=None):
         pool = pooler.get_pool(cr.dbname)
         self.meta = {}
         ids = []
@@ -136,7 +136,7 @@ class base_synchro(osv.osv_memory):
         self.meta = {}
         return True
 
-    def get_id(self, cr, uid, object_id, id, action, context={}):
+    def get_id(self, cr, uid, object_id, id, action, context=None):
         pool = pooler.get_pool(cr.dbname)
         line_pool = pool.get('base.synchro.obj.line')
         field_src = (action=='u') and 'local_id' or 'remote_id'
@@ -147,7 +147,7 @@ class base_synchro(osv.osv_memory):
             result  = line_pool.read(cr, uid, rid, [field_dest], context=context)[0][field_dest]
         return result
 
-    def relation_transform(self, cr, uid, pool_src, pool_dest, object, id, action, context={}):
+    def relation_transform(self, cr, uid, pool_src, pool_dest, object, id, action, context=None):
         if not id:
             return False
         pool = pooler.get_pool(cr.dbname)
@@ -181,10 +181,10 @@ class base_synchro(osv.osv_memory):
     #        Otherwise, use the name_search method
     #
 
-    def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context={}):
+    def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context=None):
         self.meta.setdefault(pool_src, {})
         if not object in self.meta[pool_src]:
-            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context)
+            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context=context)
         fields = self.meta[pool_src][object]
 
         for f in fields:
@@ -196,7 +196,7 @@ class base_synchro(osv.osv_memory):
                 del data[f]
             elif ftype == 'many2one':
                 if data[f]:
-                    df = self.relation_transform(cr, uid, pool_src, pool_dest, fields[f]['relation'], data[f][0], action, context)
+                    df = self.relation_transform(cr, uid, pool_src, pool_dest, fields[f]['relation'], data[f][0], action, context=context)
                     data[f] = df
                     if not data[f]:
                         del data[f]
@@ -212,11 +212,11 @@ class base_synchro(osv.osv_memory):
     #
 
 
-    def upload_download(self, cr, uid, ids, context):
+    def upload_download(self, cr, uid, ids, context=None):
         start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-        syn_obj = self.browse(cr, uid, ids)[0]
+        syn_obj = self.browse(cr, uid, ids, context=context)[0]
         pool = pooler.get_pool(cr.dbname)
-        server = pool.get('base.synchro.server').browse(cr, uid, ids, context)[0]
+        server = pool.get('base.synchro.server').browse(cr, uid, ids, context=context)[0]
         for object in server.obj_ids:
             dt = time.strftime('%Y-%m-%d %H:%M:%S')
             self.synchronize(cr, uid, server, object, context)
@@ -249,7 +249,7 @@ Exceptions:
             })
             return True
 
-    def upload_download_multi_thread(self, cr, uid, data, context):
+    def upload_download_multi_thread(self, cr, uid, data, context=None):
         threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr, uid, data, context))
         threaded_synchronization.run()
         data_obj = self.pool.get('ir.model.data')

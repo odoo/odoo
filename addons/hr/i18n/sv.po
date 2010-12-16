@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-23 09:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -62,11 +62,6 @@ msgstr ""
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
 
 #. module: hr
 #: view:hr.employee:0
@@ -255,11 +250,6 @@ msgid "Job Description"
 msgstr ""
 
 #. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "Kontorsplats"
@@ -283,18 +273,8 @@ msgid "Other information"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "adress"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
-
-#. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr
@@ -344,11 +324,6 @@ msgstr ""
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -424,11 +399,6 @@ msgid "hr.department"
 msgstr "hr.department"
 
 #. module: hr
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
 msgstr ""
@@ -470,14 +440,19 @@ msgid "Note"
 msgstr "Anteckning"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Kontaktinformation"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "adress"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -561,6 +536,11 @@ msgid "Status Description"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -604,13 +584,6 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Personlig information"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: hr
 #: view:res.users:0
@@ -835,6 +808,11 @@ msgstr "Underordnad"
 #~ msgid "Wednesday"
 #~ msgstr "Onsdag"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "Thursday"
 #~ msgstr "Torsdag"
 
@@ -909,6 +887,12 @@ msgstr "Underordnad"
 
 #~ msgid "Fill up employee's contact information"
 #~ msgstr "Fyll i den anställdes kontakt information"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
 
 #~ msgid "Employee Complete Form"
 #~ msgstr "Employee Complete Form"
