@@ -39,7 +39,7 @@ class crm_make_sale(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: default value of partner_id field.
         """
-        if not context:
+        if context is None:
             context = {}
 
         lead_obj = self.pool.get('crm.lead')
@@ -51,8 +51,6 @@ class crm_make_sale(osv.osv_memory):
         return lead['partner_id']
 
     def view_init(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
 
     def makeOrder(self, cr, uid, ids, context=None):
@@ -65,7 +63,7 @@ class crm_make_sale(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value of created sale order.
         """
-        if not context:
+        if context is None:
             context = {}
 
         case_obj = self.pool.get('crm.lead')
@@ -138,8 +136,6 @@ class crm_make_sale(osv.osv_memory):
             return value
 
     def _get_shop_id(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
         return shop and shop[0] or False

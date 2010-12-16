@@ -93,7 +93,7 @@ class account_invoice_refund(osv.osv_memory):
             date = False
             period = False
             description = False
-            company = res_users_obj.browse(cr, uid, uid).company_id
+            company = res_users_obj.browse(cr, uid, uid, context=context).company_id
             journal_id = form.get('journal_id', False)
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:

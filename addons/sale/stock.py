@@ -117,8 +117,6 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        if context is None:
-            context = {}
 
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,
@@ -190,7 +188,7 @@ class stock_picking(osv.osv):
 
     def action_cancel(self, cr, uid, ids, context=None):
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
-        for pick in self.browse(cr, uid, ids, context):
+        for pick in self.browse(cr, uid, ids, context=context):
             call_ship_end = True
             if pick.sale_id:
                 for picks in pick.sale_id.picking_ids:
@@ -198,7 +196,7 @@ class stock_picking(osv.osv):
                         call_ship_end = False
                         break
                 if call_ship_end:
-                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)
+                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context=context)
         return res
 
 stock_picking()

@@ -30,7 +30,7 @@ class mrp_repair(osv.osv):
     _name = 'mrp.repair'
     _description = 'Repair Order'
 
-    def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
+    def _amount_untaxed(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates untaxed amount.
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
@@ -44,7 +44,7 @@ class mrp_repair(osv.osv):
         res = {}
         cur_obj = self.pool.get('res.currency')
 
-        for repair in self.browse(cr, uid, ids):
+        for repair in self.browse(cr, uid, ids, context=context):
             res[repair.id] = 0.0
             for line in repair.operations:
                 res[repair.id] += line.price_subtotal
@@ -54,7 +54,7 @@ class mrp_repair(osv.osv):
             res[repair.id] = cur_obj.round(cr, uid, cur, res[repair.id])
         return res
 
-    def _amount_tax(self, cr, uid, ids, field_name, arg, context):
+    def _amount_tax(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates taxed amount.
         @param field_name: Name of field.
         @param arg: Argument
@@ -64,7 +64,7 @@ class mrp_repair(osv.osv):
         #return {}.fromkeys(ids, 0)
         cur_obj = self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
-        for repair in self.browse(cr, uid, ids):
+        for repair in self.browse(cr, uid, ids, context=context):
             val = 0.0
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
@@ -78,26 +78,26 @@ class mrp_repair(osv.osv):
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
         return res
 
-    def _amount_total(self, cr, uid, ids, field_name, arg, context):
+    def _amount_total(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates total amount.
         @param field_name: Name of field.
         @param arg: Argument
         @return: Dictionary of values.
         """
         res = {}
-        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
-        tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
+        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context=context)
+        tax = self._amount_tax(cr, uid, ids, field_name, arg, context=context)
         cur_obj = self.pool.get('res.currency')
         for id in ids:
-            repair = self.browse(cr, uid, [id])[0]
+            repair = self.browse(cr, uid, id, context=context)
             cur = repair.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
     
-    def _get_default_address(self, cr, uid, ids, field_name, arg, context):
+    def _get_default_address(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         partner_obj = self.pool.get('res.partner')
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             adr_id = False
             if data.partner_id:
                 adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
@@ -335,7 +335,7 @@ class mrp_repair(osv.osv):
         @return: True
         """
         mrp_line_obj = self.pool.get('mrp.repair.line')
-        for repair in self.browse(cr, uid, ids):
+        for repair in self.browse(cr, uid, ids, context=context):
             mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
         self.write(cr,uid,ids,{'state':'cancel'})
         return True
@@ -474,7 +474,7 @@ class mrp_repair(osv.osv):
         """ Writes repair order state to 'Ready' if invoice method is Before repair.
         @return: True
         """
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             val = {}
             if (order.invoice_method == 'b4repair'):
                 val['state'] = 'ready'
@@ -488,7 +488,7 @@ class mrp_repair(osv.osv):
         After repair else state is set to 'Ready'.
         @return: True
         """
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             val = {}
             val['repaired'] = True
             if (not order.invoiced and order.invoice_method=='after_repair'):
@@ -625,7 +625,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         default.update( {'invoice_line_id': False, 'move_id': False, 'invoiced': False, 'state': 'draft'})
         return super(mrp_repair_line, self).copy_data(cr, uid, id, default, context)
 
-    def _amount_line(self, cr, uid, ids, field_name, arg, context):
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
         @param arg: Argument
@@ -633,7 +633,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         """
         res = {}
         cur_obj=self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
             cur = line.repair_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
@@ -714,7 +714,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         default.update({'invoice_line_id': False, 'invoiced': False})
         return super(mrp_repair_fee, self).copy_data(cr, uid, id, default, context)
 
-    def _amount_line(self, cr, uid, ids, field_name, arg, context):
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates amount.
         @param field_name: Name of field.
         @param arg: Argument
@@ -722,7 +722,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         """
         res = {}
         cur_obj = self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.to_invoice and line.price_unit * line.product_uom_qty or 0
             cur = line.repair_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])

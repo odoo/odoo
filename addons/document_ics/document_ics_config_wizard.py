@@ -78,7 +78,7 @@ class document_ics_crm_wizard(osv.osv_memory):
             @param ids: List of Document CRM wizard’s IDs
             @param context: A standard dictionary for contextual values """
 
-        data=self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         dir_obj = self.pool.get('document.directory')
         dir_cont_obj = self.pool.get('document.directory.content')
         dir_id = dir_obj.search(cr, uid, [('name', '=', 'Calendars')])

@@ -30,12 +30,12 @@ class account_open_closed_fiscalyear(osv.osv_memory):
                                  'Fiscal Year to Open', required=True, help='Select Fiscal Year which you want to remove entries for its End of year entries journal'),
     }
 
-    def remove_entries(self, cr, uid, ids, context={}):
+    def remove_entries(self, cr, uid, ids, context=None):
         fy_obj = self.pool.get('account.fiscalyear')
         move_obj = self.pool.get('account.move')
 
-        data = self.read(cr, uid, ids, [])[0]
-        data_fyear = fy_obj.browse(cr, uid, data['fyear_id'])
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        data_fyear = fy_obj.browse(cr, uid, data['fyear_id'], context=context)
         if not data_fyear.end_journal_period_id:
             raise osv.except_osv(_('Error'), _('No journal for ending writing has been defined for the fiscal year'))
         period_journal = data_fyear.end_journal_period_id
