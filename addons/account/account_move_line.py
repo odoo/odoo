@@ -304,7 +304,7 @@ class account_move_line(osv.osv):
                     FROM account_move_line l1, account_move_line l2
                     WHERE l2.account_id = l1.account_id
                       AND l1.id <= l2.id
-                      AND l2.id IN %%s AND """ + \
+                      AND l2.id IN %s AND """ + \
                 self._query_get(cr, uid, obj='l1', context=c) + \
                 " GROUP BY l2.id"
 
