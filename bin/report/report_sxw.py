@@ -366,8 +366,10 @@ class rml_parse(object):
             else:
                 self.localcontext.update({'name_space' :common.sxw_namespace})
 
+        # WARNING: the object[0].exists() call below is slow but necessary because
+        # some broken reporting wizards pass incorrect IDs (e.g. ir.ui.menu ids)
         if objects and len(objects) == 1 and \
-            'company_id' in objects[0] and objects[0].company_id:
+            objects[0].exists() and 'company_id' in objects[0] and objects[0].company_id:
             # When we print only one record, we can auto-set the correct
             # company in the localcontext. For other cases the report
             # will have to call setCompany() inside the main repeatIn loop.
