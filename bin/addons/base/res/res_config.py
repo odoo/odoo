@@ -418,9 +418,9 @@ class ir_actions_configuration_wizard(osv.osv_memory):
             # if the next one is also an old-style extension, you never know...
             if next.note:
                 return next.note
-            return "Click 'Continue' to configure the next addon..."
-        return "Your database is now fully configured.\n\n"\
-            "Click 'Continue' and enjoy your OpenERP experience..."
+            return _("Click 'Continue' to configure the next addon...")
+        return _("Your database is now fully configured.\n\n"\
+            "Click 'Continue' and enjoy your OpenERP experience...")
 
     _columns = {
         'note': fields.text('Next Wizard', readonly=True),
