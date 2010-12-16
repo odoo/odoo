@@ -47,7 +47,7 @@ class account_sequence_installer(osv.osv_memory):
             context = {}
         jou_obj = self.pool.get('account.journal')
         obj_sequence = self.pool.get('ir.sequence')
-        record = self.browse(cr, uid, ids, context)[0]
+        record = self.browse(cr, uid, ids, context=context)[0]
         j_ids = []
         if record.company_id:
             company_id = record.company_id.id,
@@ -70,7 +70,7 @@ class account_sequence_installer(osv.osv_memory):
         ir_seq = obj_sequence.create(cr, uid, vals, context)
         res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
         journal_ids = jou_obj.search(cr, uid, search_criteria, context=context)
-        for journal in jou_obj.browse(cr, uid, journal_ids, context):
+        for journal in jou_obj.browse(cr, uid, journal_ids, context=context):
             if not journal.internal_sequence_id:
                 j_ids.append(journal.id)
         if j_ids:

@@ -57,7 +57,7 @@ class crm_partner2opportunity(osv.osv_memory):
                 res.update({'partner_id': data and data[0] or False})
         return res
 
-    def make_opportunity(self, cr, uid, ids, context):
+    def make_opportunity(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -67,7 +67,7 @@ class crm_partner2opportunity(osv.osv_memory):
 
         data = context and context.get('active_ids', []) or []
         make_opportunity = self.pool.get('crm.partner2opportunity')
-        for make_opportunity_obj in make_opportunity.browse(cr,uid,ids):
+        for make_opportunity_obj in make_opportunity.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])

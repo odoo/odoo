@@ -26,7 +26,7 @@ class procurement_compute(osv.osv_memory):
     _name = 'procurement.order.compute'
     _description = 'Compute Procurement'
 
-    def _procure_calculation_procure(self, cr, uid, ids, context):
+    def _procure_calculation_procure(self, cr, uid, ids, context=None):
         try:
             proc_obj = self.pool.get('procurement.order')
             proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
@@ -34,7 +34,7 @@ class procurement_compute(osv.osv_memory):
             pass
         return {}
 
-    def procure_calculation(self, cr, uid, ids, context):
+    def procure_calculation(self, cr, uid, ids, context=None):
         """
          @param self: The object pointer.
          @param cr: A database cursor

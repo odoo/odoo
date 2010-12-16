@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2009-09-22 18:10+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -27,14 +27,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objeto"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
-"especial!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -66,12 +58,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "asistente"
+msgid "dtstamp"
+msgstr "Fecha-sello"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -93,11 +87,6 @@ msgstr "Reuniones de calendario compartidas"
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
 msgstr "Gestiona un servicio de mesa de ayuda."
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -207,9 +196,9 @@ msgid "location"
 msgstr "ubicación"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para la definición de la vista!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "asistente"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -358,18 +347,6 @@ msgstr "dirección"
 msgid "Business Opportunities"
 msgstr "Oportunidades de negocio"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "Fecha-sello"
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-
 #~ msgid "Next"
 #~ msgstr "Siguiente"
 
@@ -381,6 +358,12 @@ msgstr ""
 
 #~ msgid "Open ERP Field"
 #~ msgstr "Campo OpenERP"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
+#~ "especial!"
 
 #~ msgid ""
 #~ "This Configuration step use to create Calendars in document for all Case "
@@ -406,6 +389,9 @@ msgstr ""
 #~ "Le permite hacer seguimiento y gestionar prospects, los cuales son contactos "
 #~ "o solicitudes pre-ventas, en el primer contacto con una solicitud del "
 #~ "cliente."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para la definición de la vista!"
 
 #~ msgid "Duration(In Hour)"
 #~ msgstr "Duración (en horas)"

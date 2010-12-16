@@ -62,7 +62,7 @@ send an Email to Invited Person')
         @return: Dictionary of {}.
         """
 
-        if not context:
+        if context is None:
             context = {}
 
         model = False
@@ -74,7 +74,7 @@ send an Email to Invited Person')
 
         model_field = context.get('attendee_field', False)
         obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context_id)
+        res_obj = obj.browse(cr, uid, context_id, context=context)
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, uid, uid, context=context)

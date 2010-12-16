@@ -35,8 +35,6 @@ class hr_attendance_byweek(osv.osv_memory):
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         datas = {
              'ids': [],
              'model': 'hr.employee',

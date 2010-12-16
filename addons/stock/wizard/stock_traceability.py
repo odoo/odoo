@@ -29,7 +29,7 @@ class action_traceability(osv.osv_memory):
     _name = "action.traceability"
     _description = "Action traceability "
      
-    def action_traceability(self, cr, uid, ids, context={}):
+    def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
@@ -38,7 +38,8 @@ class action_traceability(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary of values
         """
-
+        if context is None:
+            context = {}
         type1 = context['type'] or 'move_history_ids2'
         field = context['field'] or 'tracking_id'
         obj = self.pool.get('stock.move')

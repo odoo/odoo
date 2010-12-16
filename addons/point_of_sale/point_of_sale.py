@@ -96,14 +96,14 @@ class pos_order(osv.osv):
                 res[rec.id] = res[rec.id] + rec.amount_tax
         return res
 
-    def _get_date_payment2(self, cr, uid, ids, context, *a):
+    def _get_date_payment2(self, cr, uid, ids, context=None, *a):
         # Todo need to check this function
         """ Find payment Date
         @param field_names: Names of fields.
         @return: Dictionary of values """
         res = {}
         val = None
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             cr.execute("SELECT date_payment FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None
@@ -878,7 +878,7 @@ class pos_order(osv.osv):
         self.write(cr, uid, ids, vals, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         if context.get('flag', False):
             self.create_picking(cr, uid, ids, context=None)
@@ -973,12 +973,12 @@ class pos_order_line(osv.osv):
                 res[line.id] = line.price_unit * line.qty
         return res
 
-    def _amount_line_all(self, cr, uid, ids, field_names, arg, context):
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
 
         self.price_by_product_multi(cr, uid, ids)
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             for f in field_names:
                 if f == 'price_subtotal':
                     if line.discount != 0.0:

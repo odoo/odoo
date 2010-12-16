@@ -33,7 +33,7 @@ class auction_pay_sel(osv.osv_memory):
        'period_id':fields.many2one('account.period', 'Period', required=True),
     }
 
-    def pay_and_reconcile(self, cr, uid, ids, context):
+    def pay_and_reconcile(self, cr, uid, ids, context=None):
         """
         Pay and Reconcile
         @param cr: the current row, from the database cursor.
@@ -42,9 +42,11 @@ class auction_pay_sel(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context)
+        if context is None: 
+            context = {}
+        lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context=context)
         invoice_obj = self.pool.get('account.invoice')
-        for datas in self.read(cr, uid, ids):
+        for datas in self.read(cr, uid, ids, context=context):
             account_id = datas.get('writeoff_acc_id', False)
             period_id = datas.get('period_id', False)
             journal_id = datas.get('journal_id', False)

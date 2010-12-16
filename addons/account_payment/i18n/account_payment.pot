@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14:51+0000\n"
-"PO-Revision-Date: 2010-12-10 17:14:51+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04:41+0000\n"
+"PO-Revision-Date: 2010-12-15 15:04:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -151,8 +151,8 @@ msgid "Reference"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
 msgstr ""
 
 #. module: account_payment
@@ -164,11 +164,6 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
 msgstr ""
 
 #. module: account_payment
@@ -382,11 +377,6 @@ msgstr ""
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_payment

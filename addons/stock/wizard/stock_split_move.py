@@ -25,7 +25,7 @@ class stock_split_move_line(osv.osv_memory):
     _name = 'stock.move.line.split'
     _description = "Split Moves"
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -34,6 +34,8 @@ class stock_split_move_line(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """ 
+        if context is None:
+            context = {}
         res = super(stock_split_move_line, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
@@ -90,7 +92,7 @@ class stock_split_move_line(osv.osv_memory):
         res['arch'] = '\n'.join(arch_lst)
         return res
     
-    def split_lines(self, cr, uid, ids, context):
+    def split_lines(self, cr, uid, ids, context=None):
         """ Splits moves in quantity given in the wizard.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -99,6 +101,8 @@ class stock_split_move_line(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """ 
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')

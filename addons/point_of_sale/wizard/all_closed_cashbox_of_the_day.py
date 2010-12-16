@@ -34,6 +34,8 @@ class all_closed_cashbox_of_the_day(osv.osv_memory):
              @param context: A standard dictionary
              @return : retrun report
         """
+        if context is None:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
         return {
             'type': 'ir.actions.report.xml',

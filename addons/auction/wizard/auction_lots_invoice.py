@@ -36,7 +36,7 @@ class auction_lots_invoice(osv.osv_memory):
         'number': fields.integer('Invoice Number'),
     }
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         """
          To get default values for the object.
          @param self: The object pointer.
@@ -46,6 +46,8 @@ class auction_lots_invoice(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
+        if context is None: 
+            context = {}
         res = super(auction_lots_invoice, self).default_get(cr, uid, fields, context=context)
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids', []))
@@ -78,7 +80,7 @@ class auction_lots_invoice(osv.osv_memory):
 
     #TODO: recuperer id next invoice (de la sequence)???
         invoice_number = False
-        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', []), context=context):
             if 'objects' in fields:
                 res.update({'objects':len(context.get('active_ids', []))})
             if 'amount' in fields:
@@ -93,7 +95,7 @@ class auction_lots_invoice(osv.osv_memory):
                 res.update({'number':invoice_number})
         return res
 
-    def print_report(self, cr, uid, ids, context={}):
+    def print_report(self, cr, uid, ids, context=None):
         """
         Create an invoice report.
         @param cr: the current row, from the database cursor.
@@ -101,6 +103,8 @@ class auction_lots_invoice(osv.osv_memory):
         @param ids: List of Auction lots make invoice buyer’s IDs
         @return: dictionary of  account invoice form.
         """
+        if context is None: 
+            context = {}
         service = netsvc.LocalService("object_proxy")
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number','ach_uid'])

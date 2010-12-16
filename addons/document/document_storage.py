@@ -422,9 +422,7 @@ class document_storage(osv.osv):
             optionally, fil_obj could point to the browse object of the file
             (ir.attachment)
         """
-        if not context:
-            context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
             raise IOError(errno.EREMOTE, 'medium offline')
         
@@ -439,7 +437,7 @@ class document_storage(osv.osv):
         """
         if context is None:
             context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
             raise IOError(errno.EREMOTE, 'medium offline')
         
@@ -540,9 +538,7 @@ class document_storage(osv.osv):
             This function MUST be used from an ir.attachment. It wouldn't make sense
             to store things persistently for other types (dynamic).
         """
-        if not context:
-            context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if fil_obj:
             ira = fil_obj
         else:

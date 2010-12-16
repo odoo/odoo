@@ -70,8 +70,6 @@ class hr_analytic_timesheet(osv.osv):
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         toremove = {}
         for obj in self.browse(cr, uid, ids, context=context):
             toremove[obj.line_id.id] = True
@@ -80,8 +78,6 @@ class hr_analytic_timesheet(osv.osv):
 
 
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
-        if context is None:
-            context = {}
         res = {'value':{}}
         if prod_id and unit_amount:
             # find company

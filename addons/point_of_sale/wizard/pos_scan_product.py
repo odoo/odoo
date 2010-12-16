@@ -28,7 +28,7 @@ class pos_scan_product(osv.osv_memory):
     _columns = {
         'gencod': fields.char('Barcode',size=13,required= True)
     }
-    def scan(self, cr, uid, ids, context):
+    def scan(self, cr, uid, ids, context=None):
         """ 
          To get the gencod and scan product         
          @param self: The object pointer.
@@ -37,7 +37,8 @@ class pos_scan_product(osv.osv_memory):
          @param context: A standard dictionary 
          @return : retrun gencod
         """
-                
+        if context is None:
+            context = {}
         data=self.read(cr, uid, ids)[0]
         record_id = context and context.get('active_id',False)
         result =self. pool.get('pos.order.line')._scan_product(cr, uid, data['gencod'], 1, record_id)

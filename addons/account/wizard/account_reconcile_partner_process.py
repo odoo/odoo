@@ -73,6 +73,8 @@ class account_partner_reconcile_process(osv.osv_memory):
         return res
 
     def next_partner(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         move_line_obj = self.pool.get('account.move.line')
         res_partner_obj = self.pool.get('res.partner')
 
