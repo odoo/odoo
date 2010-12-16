@@ -1745,6 +1745,7 @@ class stock_move(osv.osv):
                     result.setdefault(m.picking_id, [])
                     result[m.picking_id].append( (m, dest) )
         return result
+
     def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,move, context=None):
         res_obj = self.pool.get('res.company')
         picking_obj = self.pool.get('stock.picking')
@@ -1762,6 +1763,7 @@ class stock_move(osv.osv):
                                 'date': picking.date,
                             })
         return pick_id
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move.
         @return: List of ids.
@@ -1804,9 +1806,10 @@ class stock_move(osv.osv):
                 if pickid:
                     wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
-                create_chained_picking(self, cr, uid, new_moves, context)
-        create_chained_picking(self, cr, uid, moves, context)
-        return []
+                new_moves += create_chained_picking(self, cr, uid, new_moves, context)
+            return new_moves
+        all_moves = create_chained_picking(self, cr, uid, moves, context)
+        return all_moves
 
     def action_assign(self, cr, uid, ids, *args):
         """ Changes state to confirmed or waiting.
@@ -2059,8 +2062,7 @@ class stock_move(osv.osv):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
-                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
-                #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
+                self.write(cr, uid, [move.id], {'stock_move_history_ids': [(4, move.move_dest_id.id)]}, context=context)
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.action_assign(cr, uid, [move.move_dest_id.id])
                     if move.move_dest_id.picking_id:
@@ -2248,7 +2250,18 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
+    def trigger_move_state(self, cr, uid, move, state, context=None):
+        if isinstance(move, (int, long)):
+            move = [move]
+        res = []
+        if state == 'confirm':
+            res = self.action_confirm(cr, uid, move, context=context)
+        if state == 'assigned':
+            self.check_assign(cr, uid, move, context=context)
+            self.force_assign(cr, uid, move, context=context)
+        return res
+
+    def action_consume(self, cr, uid, ids, quantity, location_id=False,  context=None):
         """ Consumed product with specific quatity from specific source location
         @param cr: the database cursor
         @param uid: the user id
@@ -2276,12 +2289,12 @@ class stock_move(osv.osv):
                 quantity = move.product_qty
 
             uos_qty = quantity / move_qty * move.product_uos_qty
+            state = (move.state in ('confirm', 'assign') and move.state) or 'confirm'
 
             if quantity_rest > 0:
                 default_val = {
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
-                    'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
                 if move.product_id.track_production and location_id:
@@ -2314,6 +2327,8 @@ class stock_move(osv.osv):
                 for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
                     message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
                     self.log(cr, uid, new_move.id, message)
+
+            self.trigger_move_state(cr, uid, res, state, context=context)
         self.action_done(cr, uid, res)
 
         return res

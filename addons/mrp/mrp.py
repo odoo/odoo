@@ -664,8 +664,6 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-        
-        final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -706,10 +704,7 @@ class mrp_production(osv.osv):
                             stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
-            # To produce remaining qty of final product
-            vals = {'state':'confirmed'}
-            final_product_todo = [x.id for x in production.move_created_ids]
-            stock_mov_obj.write(cr, uid, final_product_todo, vals)
+
             produced_products = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:
