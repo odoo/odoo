@@ -31,14 +31,16 @@ class auction_lots_able(osv.osv_memory):
     _name = "auction.lots.able"
     _description = "Lots able"
     
-    def confirm_able(self, cr, uid, ids, context={}):
+    def confirm_able(self, cr, uid, ids, context=None):
         """
             This function Update auction lots object and set taken away field true.
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of auction lots able’s IDs.
         """
-        self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'ach_emp':True})
+        if context is None: 
+            context = {}
+        self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'ach_emp':True})
         return {}
     
 auction_lots_able()

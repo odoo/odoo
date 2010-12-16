@@ -106,7 +106,6 @@ def _links_get(self, cr, uid, context=None):
     @param context: A standard dictionary for contextual values
     @return: list of dictionary which contain object and name and id.
     """
-
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -222,7 +221,7 @@ class calendar_attendee(osv.osv):
             name += ':'
         return (name or '') + (email and ('MAILTO:' + email) or '')
 
-    def _compute_data(self, cr, uid, ids, name, arg, context):
+    def _compute_data(self, cr, uid, ids, name, arg, context=None):
         """
         Compute data on function fields for attendee values .
         @param cr: the current row, from the database cursor,
@@ -300,7 +299,6 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: list of dictionary which contain object and name and id.
         """
-
         obj = self.pool.get('res.request.link')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
@@ -649,7 +647,7 @@ true, it will allow you to hide the event alarm information without removing it.
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
         model_obj = self.pool.get(model)
-        for data in model_obj.browse(cr, uid, ids, context):
+        for data in model_obj.browse(cr, uid, ids, context=context):
 
             basic_alarm = data.alarm_id
             cal_alarm = data.base_calendar_alarm_id
@@ -719,7 +717,7 @@ true, it will allow you to hide the event alarm information without removing it.
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
         model_obj = self.pool.get(model)
-        for datas in model_obj.browse(cr, uid, ids, context):
+        for datas in model_obj.browse(cr, uid, ids, context=context):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
@@ -794,7 +792,7 @@ class calendar_alarm(osv.osv):
                 delta = timedelta(minutes=vals['trigger_duration'])
             trigger_date = dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
-        res = super(calendar_alarm, self).create(cr, uid, vals, context)
+        res = super(calendar_alarm, self).create(cr, uid, vals, context=context)
         return res
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -1026,45 +1024,43 @@ class calendar_event(osv.osv):
 
         qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
         qry_args = [ rrule_type, ]
+        new_val = val.copy()
+        for k, v in val.items():
+            if  val['freq'] == 'weekly' and val.get('byday'):
+                for day in val['byday'].split(','):
+                    new_val[day] = True
+                val.pop('byday')
 
-        if rrule_type == 'custom':
-            new_val = val.copy()
-            for k, v in val.items():
-                if  val['freq'] == 'weekly' and val.get('byday'):
-                    for day in val['byday'].split(','):
-                        new_val[day] = True
-                    val.pop('byday')
+            if val.get('until'):
+                until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                new_val['end_date'] = until.strftime('%Y-%m-%d')
+                val.pop('until')
+                new_val.pop('until')
 
-                if val.get('until'):
-                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
-                    new_val['end_date'] = until.strftime('%Y-%m-%d')
-                    val.pop('until')
-                    new_val.pop('until')
+            if val.get('bymonthday'):
+                new_val['day'] = val.get('bymonthday')
+                val.pop('bymonthday')
+                new_val['select1'] = 'date'
+                new_val.pop('bymonthday')
 
-                if val.get('bymonthday'):
-                    new_val['day'] = val.get('bymonthday')
-                    val.pop('bymonthday')
-                    new_val['select1'] = 'date'
-                    new_val.pop('bymonthday')
+            if val.get('byday'):
+                d = val.get('byday')
+                if '-' in d:
+                    new_val['byday'] = d[:2]
+                    new_val['week_list'] = d[2:4].upper()
+                else:
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:3].upper()
+                new_val['select1'] = 'day'
 
-                if val.get('byday'):
-                    d = val.get('byday')
-                    if '-' in d:
-                        new_val['byday'] = d[:2]
-                        new_val['week_list'] = d[2:4].upper()
-                    else:
-                        new_val['byday'] = d[:1]
-                        new_val['week_list'] = d[1:3].upper()
-                    new_val['select1'] = 'day'
+            if val.get('bymonth'):
+                new_val['month_list'] = val.get('bymonth')
+                val.pop('bymonth')
+                new_val.pop('bymonth')
 
-                if val.get('bymonth'):
-                    new_val['month_list'] = val.get('bymonth')
-                    val.pop('bymonth')
-                    new_val.pop('bymonth')
-
-            for k, v in new_val.items():
-                qry += ", %s=%%s" % k
-                qry_args.append(v)
+        for k, v in new_val.items():
+            qry += ", %s=%%s" % k
+            qry_args.append(v)
 
         qry = qry + " where id=%s"
         qry_args.append(id)
@@ -1084,14 +1080,16 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
             if datas.get('rrule_type'):
+                if  datas['rrule_type']=='daily_working':
+                    datas.update({'rrule_type': 'weekly'})
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
-                elif datas.get('rrule_type') == 'custom':
+                if datas.get('rrule_type') :
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
-                    if datas.get('count', 0) < 0:
-                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+#                    if datas.get('count', 0) < 0:
+#                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
                     rrule_custom = self.compute_rule_string(cr, uid, datas, \
                                                          context=context)
                     result[event] = rrule_custom
@@ -1132,9 +1130,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
  rule or repeating pattern for recurring events\n\
 e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
-        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
+        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'),('daily_working', 'Daily(Working day)'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 
+                            ('yearly', 'Yearly'),], 
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
         'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
@@ -1151,9 +1149,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('daily', 'Days'), \
                                 ('weekly', 'Weeks'), \
                                 ('monthly', 'Months'), \
-                                ('yearly', 'Years'), \
-                                ('secondly', 'Seconds'), \
-                                ('minutely', 'Minutes') ], 'Frequency'),
+                                ('yearly', 'Years'), ], 'Frequency'),
         'interval': fields.integer('Interval', help="Repeat every x"),
         'count': fields.integer('Count', help="Repeat max that times"),
         'mo': fields.boolean('Mon'),
@@ -1179,7 +1175,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  'event_id', 'attendee_id', 'Attendees'),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
-true, it will allow you to hide the event alarm information without removing it.")
+         true, it will allow you to hide the event alarm information without removing it."),
+        'recurrency': fields.boolean('Recurrency', help="Recurrent Meeting"),                                    
+        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),        
     }
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -1201,45 +1199,15 @@ true, it will allow you to hide the event alarm information without removing it.
             'organizer': default_organizer,
     }
 
-    def open_event(self, cr, uid, ids, context=None):
-        """
-        Open Event From for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of event’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value which open Crm Meeting form.
-        """
-        if context is None:
+    def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
+        if not context:
             context = {}
-
         data_obj = self.pool.get('ir.model.data')
-
         value = {}
-
-        id2 = data_obj._get_id(cr, uid, 'base_calendar', 'event_form_view')
-        id3 = data_obj._get_id(cr, uid, 'base_calendar', 'event_tree_view')
-        id4 = data_obj._get_id(cr, uid, 'base_calendar', 'event_calendar_view')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        if id4:
-            id4 = data_obj.browse(cr, uid, id4, context=context).res_id
-        for id in ids:
-            value = {
-                    'name': _('Event'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'calendar.event',
-                    'view_id': False,
-                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window',
-                    'res_id': base_calendar_id2real_id(id),
-                    'nodestroy': True
-                    }
-
-        return value
+        if edit_all and rrule_type:
+            for id in ids:
+              base_calendar_id2real_id(id)
+        return value              
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
@@ -1339,6 +1307,7 @@ true, it will allow you to hide the event alarm information without removing it.
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
+                    
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     for r_date in rdates:
                         if start_date and r_date < start_date:
@@ -1369,15 +1338,16 @@ true, it will allow you to hide the event alarm information without removing it.
         weekstring = ''
         monthstring = ''
         yearstring = ''
-
-        freq = datas.get('freq')
+        freq=''
         if freq == 'None':
             return ''
-
+        if datas.get('rrule_type')=='daily_working':
+            freq ='weekly'
+        else:
+            freq=datas.get('rrule_type')    
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         if freq == 'weekly':
-
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
@@ -1685,7 +1655,7 @@ class calendar_todo(osv.osv):
     _inherit = "calendar.event"
     _description = "Calendar Task"
 
-    def _get_date(self, cr, uid, ids, name, arg, context):
+    def _get_date(self, cr, uid, ids, name, arg, context=None):
         """
         Get Date
         @param self: The object pointer
@@ -1701,7 +1671,7 @@ class calendar_todo(osv.osv):
             res[event.id] = event.date_start
         return res
 
-    def _set_date(self, cr, uid, id, name, value, arg, context):
+    def _set_date(self, cr, uid, id, name, value, arg, context=None):
         """
         Set Date
         @param self: The object pointer

@@ -41,7 +41,7 @@ class crm_lead(crm_case, osv.osv):
     _description = "Lead"
     _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
-    def _compute_day(self, cr, uid, ids, fields, args, context={}):
+    def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -53,7 +53,7 @@ class crm_lead(crm_case, osv.osv):
         res_obj = self.pool.get('resource.resource')
 
         res = {}
-        for lead in self.browse(cr, uid, ids , context):
+        for lead in self.browse(cr, uid, ids, context=context):
             for field in fields:
                 res[lead.id] = {}
                 duration = 0
@@ -241,7 +241,7 @@ class crm_lead(crm_case, osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Value of action in dict
         """
-        if not context:
+        if context is None:
             context = {}
         context.update({'active_ids': ids})
 
@@ -288,9 +288,9 @@ class crm_lead(crm_case, osv.osv):
                         }
         return value
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'date_closed' in vals:
-            return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
             
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
@@ -312,7 +312,7 @@ class crm_lead(crm_case, osv.osv):
                 self.write(cr, uid, ids, data)
         return stage
     
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
 
@@ -320,7 +320,6 @@ class crm_lead(crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject')
@@ -357,14 +356,13 @@ class crm_lead(crm_case, osv.osv):
 
         return res
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 

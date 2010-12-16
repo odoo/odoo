@@ -34,7 +34,7 @@ class document_configuration(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         conf_id = ids and ids[0] or False
-        conf = self.browse(cr, uid, conf_id, context)
+        conf = self.browse(cr, uid, conf_id, context=context)
         dir_pool = self.pool.get('document.directory')
         data_pool = self.pool.get('ir.model.data')
         model_pool = self.pool.get('ir.model')

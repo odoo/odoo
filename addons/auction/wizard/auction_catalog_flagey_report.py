@@ -27,7 +27,7 @@ class auction_catalog_flagey(osv.osv_memory):
     _name = 'auction.catalog.flagey'
     _description = 'Auction Catalog Flagey'
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -40,7 +40,7 @@ class auction_catalog_flagey(osv.osv_memory):
         res = super(auction_catalog_flagey, self).default_get(cr, uid, fields, context=context)
         return res
     
-    def view_init(self, cr, uid, fields, context):
+    def view_init(self, cr, uid, fields, context=None):
         """ 
          Creates view dynamically, adding fields at runtime, raises exception
          at the time of initialization of view.
@@ -53,15 +53,17 @@ class auction_catalog_flagey(osv.osv_memory):
         """
         lots_obj = self.pool.get('auction.lots')
         auc_dates_obj = self.pool.get('auction.dates')
+        if context is None: 
+            context = {}
         current_auction = auc_dates_obj.browse(cr, uid, context.get('active_ids', []))
         v_lots = lots_obj.search(cr, uid, [('auction_id','=',current_auction.id)])
-        v_ids = lots_obj.browse(cr, uid, v_lots)
+        v_ids = lots_obj.browse(cr, uid, v_lots, context=context)
         for ab in v_ids:
             if not ab.auction_id :
                 raise osv.except_osv(_('Error!'), _('No Lots belong to this Auction Date'))
         pass
     
-    def print_report(self, cr, uid, ids, context):
+    def print_report(self, cr, uid, ids, context=None):
         """ 
          Prints auction catalog flagey report.
          @param self: The object pointer.
@@ -71,6 +73,8 @@ class auction_catalog_flagey(osv.osv_memory):
          @param context: A standard dictionary 
          @return: Report  
         """
+        if context is None: 
+            context = {}
         datas = {'ids': context.get('active_ids',[])}
         return {
             'type': 'ir.actions.report.xml',

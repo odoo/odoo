@@ -34,7 +34,7 @@ class make_delivery(osv.osv_memory):
     }
 
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
              To get default values for the object.
             
@@ -46,10 +46,10 @@ class make_delivery(osv.osv_memory):
              
              @return: A dictionary which of fields with values. 
         
-        """        
+        """
         res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('sale.order')
-        for order in order_obj.browse(cr, uid, context.get('active_ids', [])):
+        for order in order_obj.browse(cr, uid, context.get('active_ids', []), context=context):
              carrier = order.carrier_id.id
              if not carrier:
                   carrier = order.partner_id.property_delivery_carrier.id
@@ -58,13 +58,15 @@ class make_delivery(osv.osv_memory):
         return res
     
     def view_init(self, cr , uid , fields, context=None):
+         if context is None:
+            context = {}
          order_obj = self.pool.get('sale.order')
-         for order in order_obj.browse(cr, uid, context.get('active_ids', [])):     
+         for order in order_obj.browse(cr, uid, context.get('active_ids', []), context=context):     
              if not order.state in ('draft'):
                  raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
          pass     
         
-    def delivery_set(self, cr, uid, ids, context):
+    def delivery_set(self, cr, uid, ids, context=None):
         """ 
              Adds delivery costs to Sale Order Line.
             
@@ -77,14 +79,16 @@ class make_delivery(osv.osv_memory):
              @return:  
         
         """
+        if context is None:
+            context = {}
         rec_ids = context and context.get('active_ids',[])
         order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
-        order_objs = order_obj.browse(cr, uid, rec_ids, context)
-        for datas in self.browse(cr, uid, ids):    
+        order_objs = order_obj.browse(cr, uid, rec_ids, context=context)
+        for datas in self.browse(cr, uid, ids, context=context):    
             for order in order_objs:
                 grid_id = carrier_obj.grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
                 if not grid_id:
@@ -93,7 +97,7 @@ class make_delivery(osv.osv_memory):
                 if not order.state in ('draft'):
                     raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
                 
-                grid = grid_obj.browse(cr, uid, grid_id)
+                grid = grid_obj.browse(cr, uid, grid_id, context=context)
         
                 taxes = grid.carrier_id.product_id.taxes_id
                 fpos = order.fiscal_position or False

@@ -7,25 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-02 14:34+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -66,11 +60,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
 msgid "Idea Manager"
 msgstr ""
@@ -78,6 +67,12 @@ msgstr ""
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -201,6 +196,11 @@ msgid "Not Voted"
 msgstr ""
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
 msgstr ""
@@ -277,11 +277,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:idea.action_idea_category
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
-msgstr ""
-
-#. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: idea
@@ -401,11 +396,6 @@ msgstr ""
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
-msgstr ""
-
-#. module: idea
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: idea
@@ -543,12 +533,6 @@ msgstr ""
 #: view:idea.idea:0
 #: view:report.vote:0
 msgid "Open"
-msgstr ""
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: idea

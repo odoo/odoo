@@ -39,8 +39,6 @@ class analytical_timesheet_employees(osv.osv_memory):
              }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': [],

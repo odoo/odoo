@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-02 07:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
@@ -131,14 +131,15 @@ msgid "Monthly Employee Timesheet"
 msgstr "Maandelijkse urenverantwoording medewerker"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Inschrijven/Uitschrijven"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Gedane arbeid in de laatste periode"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -212,21 +213,11 @@ msgid "Sat"
 msgstr "Zat"
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
 msgstr "Zon"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -240,11 +231,6 @@ msgstr ""
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Afdrukken"
-
-#. module: hr_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -281,17 +267,6 @@ msgid "Categories"
 msgstr "Categorieën"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Fout: Verkoopeenheid moet in een andere categorie staan dan de maateenheid"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
@@ -323,11 +298,9 @@ msgid "September"
 msgstr "September"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "December"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Regel urenstaat"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -376,12 +349,9 @@ msgid "Fri"
 msgstr "Vr"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
-"categorie liggen."
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Inschrijven/Uitschrijven"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -403,11 +373,6 @@ msgstr "(Laat leeg voor huidige tijd)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Urenstaten"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -457,6 +422,11 @@ msgstr "Datum"
 #, python-format
 msgid "November"
 msgstr "November"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -521,6 +491,13 @@ msgid "Analysis summary"
 msgstr "Samenvatting analyse"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "December"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -543,21 +520,9 @@ msgid "février"
 msgstr "februari"
 
 #. module: hr_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
 msgstr "Informatie"
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
@@ -581,11 +546,6 @@ msgstr "Huidige datum"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr "Kostenplaats"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Regel urenstaat"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -702,11 +662,6 @@ msgid "Start Working"
 msgstr "Begin met werken"
 
 #. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: Ongeldige EAN-code"
-
-#. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
 msgstr "Statistieken per gebruiker"
@@ -744,6 +699,9 @@ msgstr "Verander taak"
 msgid "septembre"
 msgstr "september"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fout: Ongeldige EAN-code"
+
 #~ msgid "Day"
 #~ msgstr "Dag"
 
@@ -755,6 +713,12 @@ msgstr "september"
 
 #~ msgid "Choose Users"
 #~ msgstr "Kies gebruikers"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
+#~ "categorie liggen."
 
 #~ msgid "Sign in status"
 #~ msgstr "Klok in status"
@@ -774,8 +738,23 @@ msgstr "september"
 #~ msgid "Timesheet Process"
 #~ msgstr "Urenstaat proces"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
 #~ msgid "Hour"
 #~ msgstr "Uur"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Fout: Verkoopeenheid moet in een andere categorie staan dan de maateenheid"
 
 #~ msgid "Working Hours of The Day"
 #~ msgstr "Werkuren van vandaag"
@@ -794,3 +773,15 @@ msgstr "september"
 
 #~ msgid "Timesheet line"
 #~ msgstr "Regel urenstaat"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

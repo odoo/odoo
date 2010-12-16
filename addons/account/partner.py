@@ -34,7 +34,7 @@ class account_fiscal_position(osv.osv):
         'note': fields.text('Notes', translate=True),
     }
 
-    def map_tax(self, cr, uid, fposition_id, taxes, context={}):
+    def map_tax(self, cr, uid, fposition_id, taxes, context=None):
         if not taxes:
             return []
         if not fposition_id:
@@ -51,7 +51,7 @@ class account_fiscal_position(osv.osv):
                 result.append(t.id)
         return result
 
-    def map_account(self, cr, uid, fposition_id, account_id, context={}):
+    def map_account(self, cr, uid, fposition_id, account_id, context=None):
         if not fposition_id:
             return account_id
         for pos in fposition_id.account_ids:
@@ -134,10 +134,10 @@ class res_partner(osv.osv):
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
 
-    def _credit_search(self, cr, uid, obj, name, args, context):
+    def _credit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'receivable', args, context=context)
 
-    def _debit_search(self, cr, uid, obj, name, args, context):
+    def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
     _columns = {

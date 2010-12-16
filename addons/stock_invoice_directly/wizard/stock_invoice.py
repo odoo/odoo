@@ -24,7 +24,7 @@ from osv import fields, osv
 class invoice_directly(osv.osv_memory):
     _inherit = 'stock.partial.picking'
 
-    def do_partial(self, cr, uid, ids, context):
+    def do_partial(self, cr, uid, ids, context=None):
         """ Makes partial moves and pickings done and 
             launches Create invoice wizard if invoice state is To be Invoiced.
         @param self: The object pointer.
@@ -33,10 +33,12 @@ class invoice_directly(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
-        pick = pick_obj.browse(cr, uid, picking_ids, context)[0]
+        pick = pick_obj.browse(cr, uid, picking_ids, context=context)[0]
         if pick.invoice_state == '2binvoiced':
             return {
                 'name': 'Create Invoice',

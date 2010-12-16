@@ -47,11 +47,11 @@ class stock_period(osv.osv):
         'state': 'draft'
     }
     
-    def button_open(self, cr, uid, ids, context):
+    def button_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
     
-    def button_close(self, cr, uid, ids, context):
+    def button_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'})
         return True
 
@@ -192,17 +192,17 @@ class stock_sale_forecast(osv.osv):
     def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        product = product_obj.browse(cr, uid, product_id)
+        product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
         if uom.category_id.id <> product.uom_id.category_id.id:
             coef = coef / product.uos_coeff
         return product.uom_id.factor / coef
 
-    def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context):
+    def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        product = product_obj.browse(cr, uid, product_id)
+        product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
         if uom.category_id.id <> product.uom_id.category_id.id:
@@ -231,7 +231,7 @@ class stock_sale_forecast(osv.osv):
 
     def calculate_sales_history(self, cr, uid, ids, context, *args):
         sales = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],]
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             periods = obj.analyzed_period1_id, obj.analyzed_period2_id, obj.analyzed_period3_id, obj.analyzed_period4_id, obj.analyzed_period5_id
             so_obj = self.pool.get('sale.order')
             so_line_obj = self.pool.get('sale.order.line')
@@ -302,7 +302,7 @@ class stock_planning(osv.osv):
     _name = "stock.planning"
 
     def _get_in_out(self, cr, uid, val, date_start, date_stop, direction, done, context=None):
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
         mapping = {'in': {
@@ -346,7 +346,7 @@ class stock_planning(osv.osv):
         res = self._to_planning_uom(cr, uid, val, planning_qtys, context)
         return res
 
-    def _to_planning_uom(self, cr, uid, val, qtys, context):
+    def _to_planning_uom(self, cr, uid, val, qtys, context=None):
         res_qty = 0
         if qtys:
             uom_obj = self.pool.get('product.uom')
@@ -360,7 +360,7 @@ class stock_planning(osv.osv):
 
     def _get_forecast(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
-        for val in self.browse(cr, uid, ids):
+        for val in self.browse(cr, uid, ids, context=context):
             res[val.id] = {}
             valid_part = val.confirmed_forecasts_only and " AND state = 'validated'" or ""
             cr.execute('SELECT sum(product_qty), product_uom  \
@@ -382,6 +382,8 @@ class stock_planning(osv.osv):
         return res
 
     def _get_stock_start(self, cr, uid, val, date, context=None):
+        if context is None:
+            context = {}
         context['from_date'] = None
         context['to_date'] = date
         locations = [val.warehouse_id.lot_stock_id.id,]
@@ -393,7 +395,7 @@ class stock_planning(osv.osv):
         res = product_obj['qty_available']     # value for stock_start
         return res
 
-    def _get_past_future(self, cr, uid, ids, field_names, arg, context):
+    def _get_past_future(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
         for val in self.browse(cr, uid, ids, context=context):
             if val.period_id.date_stop < time.strftime('%Y-%m-%d'):
@@ -519,7 +521,7 @@ class stock_planning(osv.osv):
     def _to_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        product = product_obj.browse(cr, uid, product_id)
+        product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
         if uom.category_id.id != product.uom_id.category_id.id:
@@ -530,7 +532,7 @@ class stock_planning(osv.osv):
     def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        product = product_obj.browse(cr, uid, product_id)
+        product = product_obj.browse(cr, uid, product_id, context=context)
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
         if uom.category_id.id != product.uom_id.category_id.id:
@@ -592,7 +594,7 @@ class stock_planning(osv.osv):
 # so if UoM is from UoM category it is used as UoM in standard and if product has UoS the UoS will be calcualated.
 # If UoM is from UoS category it is recalculated to basic UoS from product (in planning you can use any UoS from UoS category)
 # and basic UoM is calculated.
-    def _qty_to_standard(self, cr, uid, val, context):
+    def _qty_to_standard(self, cr, uid, val, context=None):
         uos = False
         uos_qty = 0.0
         if val.product_uom.category_id.id == val.product_id.uom_id.category_id.id:
@@ -614,11 +616,11 @@ class stock_planning(osv.osv):
         return uom_qty, uom, uos_qty, uos
 
     def procure_incomming_left(self, cr, uid, ids, context, *args):
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
                 raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'company_id' : obj.company_id.id,
                         'name': _('Manual planning for ') + obj.period_id.name,
@@ -656,7 +658,7 @@ class stock_planning(osv.osv):
         return True
 
     def internal_supply(self, cr, uid, ids, context, *args):
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
                 raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
             if not obj.supply_warehouse_id:
