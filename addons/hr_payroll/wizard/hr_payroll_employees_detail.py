@@ -59,10 +59,10 @@ class hr_payroll_employees_detail(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-
         res = self.read(cr, uid, ids, ['employee_ids', 'date_from', 'date_to'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
+        datas['ids'] = res['employee_ids']
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'employees.salary',
