@@ -21,7 +21,7 @@
 
 import time
 from datetime import datetime
-from dateutil.relativedelta import relativedelta 
+from dateutil.relativedelta import relativedelta
 
 from osv import osv, fields
 
@@ -35,7 +35,7 @@ class stock_period_createlines(osv.osv_memory):
         result = cr.fetchone()
         last_date = result and result[0] or False
         if last_date:
-            period_start = datetime(last_date,"%Y-%m-%d %H:%M:%S")+ relativedelta(days=1)
+            period_start = datetime.strptime(last_date,"%Y-%m-%d %H:%M:%S")+ relativedelta(days=1)
             period_start = period_start - relativedelta(hours=period_start.hour, minutes=period_start.minute, seconds=period_start.second)
         else:
             period_start = datetime.today()
@@ -51,7 +51,7 @@ class stock_period_createlines(osv.osv_memory):
     _defaults={
         'date_start': _get_new_period_start,
     }
-    
+
     def create_stock_periods(self, cr, uid, ids, context=None):
         interval = context.get('interval',0)
         name = context.get('name','Daily')
@@ -59,28 +59,51 @@ class stock_period_createlines(osv.osv_memory):
         lines = []
         for p in self.browse(cr, uid, ids, context=context):
             dt = p.date_start
+            dt_s = p.date_stop
+            dt_stp = datetime.strptime(p.date_stop, '%Y-%m-%d')
             ds = datetime.strptime(p.date_start, '%Y-%m-%d')
-            while ds.strftime('%Y-%m-%d') < p.date_stop:
+            while ds.strftime('%Y-%m-%d') <= p.date_stop:
                 if name =='Daily':
-                    de = ds + relativedelta(days=interval, minutes =-1)
+                    de = ds + relativedelta(days=(interval + 1), seconds =-1)
                     new_name = de.strftime('%Y-%m-%d')
                     new_id = period_obj.create(cr, uid, {
                     'name': new_name,
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
-                    ds = ds + relativedelta(days=interval) + 1
+                    ds = ds + relativedelta(days=(interval + 1))
                 if name =="Weekly":
-                    de = ds + relativedelta(days=interval, minutes =-1)
-                    new_name = de.strftime('%Y, week %W')
+                    de = ds + relativedelta(days=(interval + 1), seconds =-1)
+                    if dt_stp < de:
+                        de = dt_stp + relativedelta(days=1,seconds =-1)
+                    else:
+                        de = ds + relativedelta(days=(interval + 1), seconds =-1)
+                    start_week = ds.strftime('%W')
+                    start_year = ds.strftime('%Y')
+                    end_week = de.strftime('%W')
+                    end_year = de.strftime('%Y')
+                    if start_year <> end_year:
+                        if end_week == '00':
+                            new_name = "Week " + start_week +"-" + start_year
+                        else:
+                            new_name = "Week " + start_week +", " + start_year +" - Week " +end_week +", " + end_year
+                    elif start_week == end_week:
+                        new_name = "Week " + start_week +"-" +start_year
+
+                    else:
+                        new_name = "Week " + start_week +"-" + end_week+", " + start_year
                     new_id = period_obj.create(cr, uid, {
                     'name': new_name,
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
-                    ds = ds + relativedelta(days=interval) + 1
+                    ds = ds + relativedelta(days=(interval + 1))
                 if name == "Monthly":
-                    de = ds + relativedelta(months=interval, minutes=-1)
+                    de = ds + relativedelta(months=interval, seconds=-1)
+                    if dt_stp < de:
+                        de = dt_stp + relativedelta(days=1,seconds =-1)
+                    else:
+                        de = ds + relativedelta(months=interval, seconds=-1)
                     new_name = ds.strftime('%Y/%m')
                     new_id =period_obj.create(cr, uid, {
                     'name': new_name,
