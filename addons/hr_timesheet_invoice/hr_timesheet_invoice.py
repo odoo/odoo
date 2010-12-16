@@ -41,8 +41,6 @@ hr_timesheet_invoice_factor()
 class account_analytic_account(osv.osv):
     def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         obj_invoice = self.pool.get('account.invoice')
-        if context is None:
-            context = {}
         res = {}
 
         cr.execute('SELECT account_id as account_id, l.invoice_id '
@@ -90,14 +88,10 @@ class account_analytic_line(osv.osv):
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
         self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
@@ -114,8 +108,6 @@ class account_analytic_line(osv.osv):
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()
@@ -144,8 +136,6 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()

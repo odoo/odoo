@@ -48,7 +48,7 @@ class hr_timesheet_current_open(osv.osv_memory):
             domain = "[('user_id', '=', uid)]"
         value = {
             'domain': domain,
-            'name': 'Open Timesheet',
+            'name': _('Open Timesheet'),
             'view_type': 'form',
             'view_mode': view_type,
             'res_model': 'hr_timesheet_sheet.sheet',

@@ -44,13 +44,13 @@ class auction_lots_auction_move(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction lots auction move’s IDs.
         """
-        if not context:
+        if context is None:
             context={}
         auction_bid_line_obj = self.pool.get('auction.bid_line')
         auction_lot_history_obj = self.pool.get('auction.lot.history')
         auction_lots_obj = self.pool.get('auction.lots')
         rec_ids =  auction_lots_obj.browse(cr, uid, context.get('active_ids', []))
-        for current in self.browse(cr, uid, ids, context):
+        for current in self.browse(cr, uid, ids, context=context):
             if not (current.auction_id and len(context.get('active_ids', []))):
                 return {}
 

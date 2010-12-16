@@ -53,7 +53,7 @@ class idea_idea(osv.osv):
     _name = 'idea.idea'
     _rec_name = 'name'
 
-    def _vote_avg_compute(self, cr, uid, ids, name, arg, context = None):
+    def _vote_avg_compute(self, cr, uid, ids, name, arg, context=None):
 
         """ compute average for voting
          @param cr: the current row, from the database cursor,
@@ -113,7 +113,7 @@ class idea_idea(osv.osv):
         cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
-    def _vote_read(self, cr, uid, ids, name, arg, context = None):
+    def _vote_read(self, cr, uid, ids, name, arg, context=None):
 
         """ Read Vote
         @param cr: the current row, from the database cursor,
@@ -125,13 +125,13 @@ class idea_idea(osv.osv):
             res[id] = '-1'
         vote_obj = self.pool.get('idea.vote')
         votes_ids = vote_obj.search(cr, uid, [('idea_id', 'in', ids), ('user_id', '=', uid)])
-        vote_obj_id = vote_obj.browse(cr, uid, votes_ids, context)
+        vote_obj_id = vote_obj.browse(cr, uid, votes_ids, context=context)
 
         for vote in vote_obj_id:
             res[vote.idea_id.id] = vote.score
         return res
 
-    def _vote_save(self, cr, uid, id, field_name, field_value, arg, context = None):
+    def _vote_save(self, cr, uid, id, field_name, field_value, arg, context=None):
 
         """ save Vote
         @param cr: the current row, from the database cursor,
@@ -189,7 +189,7 @@ class idea_idea(osv.osv):
     }
     _order = 'id desc'
 
-    def create(self, cr, user, vals, context={}):
+    def create(self, cr, user, vals, context=None):
         """
         Create a new record for a model idea_idea
         @param cr: A database cursor
@@ -203,17 +203,17 @@ class idea_idea(osv.osv):
 
         if vals.get('category_id', False):
             category_pool = self.pool.get('idea.category')
-            category = category_pool.browse(cr, user, vals.get('category_id'), context)
+            category = category_pool.browse(cr, user, vals.get('category_id'), context=context)
             visibility = category.visibility
 
         vals.update({
             'visibility':visibility
         })
 
-        res_id = super(idea_idea, self).create(cr, user, vals, context)
+        res_id = super(idea_idea, self).create(cr, user, vals, context=context)
         return res_id
 
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default={}, context=None):
         """
         Create the new record in idea_idea model from existing one
         @param cr: A database cursor
@@ -231,7 +231,7 @@ class idea_idea(osv.osv):
             'stat_vote_ids':False
 
         })
-        res_id = super(idea_idea, self).copy(cr, uid, id, default, context)
+        res_id = super(idea_idea, self).copy(cr, uid, id, default, context=context)
         return res_id
 
     def write(self, cr, user, ids, vals, context=None):
@@ -246,14 +246,13 @@ class idea_idea(osv.osv):
 
         @return: Returns True on success, False otherwise
         """
-
-        state = self.browse(cr, user, ids[0]).state
+        state = self.browse(cr, user, ids[0], context=context).state
 
         if vals.get('my_vote', False):
             if vals.get('state', state) != 'open':
                 raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled ideas Could not be voted"))
 
-        res = super(idea_idea, self).write(cr, user, ids, vals, context)
+        res = super(idea_idea, self).write(cr, user, ids, vals, context=context)
         return res
 
     def idea_cancel(self, cr, uid, ids):
