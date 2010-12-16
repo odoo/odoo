@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-14 08:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:38+0000\n"
+"X-Launchpad-Export-Date: 2010-12-16 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -34,11 +34,6 @@ msgstr "Saint Helena"
 #: view:ir.actions.report.xml:0
 msgid "Other Configuration"
 msgstr "Övrig Konfiguration"
-
-#. module: base
-#: view:res.lang:0
-msgid "%j - Day of the year as a decimal number [001,366]."
-msgstr "%j - Dagnummer inom året [001,366]."
 
 #. module: base
 #: selection:ir.property,type:0
@@ -245,11 +240,6 @@ msgid "Wizard Name"
 msgstr "Guidenamn"
 
 #. module: base
-#: view:res.lang:0
-msgid "%y - Year without century as a decimal number [00,99]."
-msgstr "%y - År utan århundrade i två siffror [00,99]."
-
-#. module: base
 #: field:res.partner,credit_limit:0
 msgid "Credit Limit"
 msgstr "Kreditgräns"
@@ -278,6 +268,12 @@ msgstr "Konfigurera guidesteg"
 #: model:ir.model,name:base.model_ir_ui_view_sc
 msgid "ir.ui.view_sc"
 msgstr "ir.ui.view_sc"
+
+#. module: base
+#: field:res.widget.user,widget_id:0
+#: field:res.widget.wizard,widget_id:0
+msgid "Widget"
+msgstr ""
 
 #. module: base
 #: view:ir.model.access:0
@@ -392,6 +388,16 @@ msgid "Schedule Upgrade"
 msgstr "Schemalägg Uppgradering"
 
 #. module: base
+#: sql_constraint:res.partner.bank:0
+msgid "The BVR adherent number must be unique !"
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Mister"
+msgstr ""
+
+#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -409,6 +415,11 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Försäljning och inköp"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
+msgid "Corporation"
+msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -443,6 +454,11 @@ msgstr "Anpassade fält måste ha ett namn som börjar med 'x_' !"
 #: help:ir.actions.server,action_id:0
 msgid "Select the Action Window, Report, Wizard to be executed."
 msgstr "Välj händelse, rapport, eller guide som ska köras"
+
+#. module: base
+#: view:res.config.users:0
+msgid "New User"
+msgstr ""
 
 #. module: base
 #: view:base.language.export:0
@@ -564,6 +580,11 @@ msgstr "res.config.users"
 #: selection:base.language.install,lang:0
 msgid "Albanian / Shqip"
 msgstr "Albanien / Shqip"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -715,6 +736,11 @@ msgid "Child Categories"
 msgstr "Underkategori"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_config_parameter
+msgid "ir.config_parameter"
+msgstr ""
+
+#. module: base
 #: selection:base.language.export,format:0
 msgid "TGZ Archive"
 msgstr "TGZ arkiv"
@@ -775,6 +801,12 @@ msgstr "Bidragsgivare"
 #: selection:ir.property,type:0
 msgid "Char"
 msgstr "Tecken"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
+msgid "Contracts"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -908,7 +940,6 @@ msgstr "Funktioner"
 #. module: base
 #: view:ir.module.module:0
 #: report:ir.module.reference.graph:0
-#: field:maintenance.contract.module,version:0
 msgid "Version"
 msgstr "Version"
 
@@ -931,6 +962,12 @@ msgid "No language with code \"%s\" exists"
 msgstr "Inget språk med koden %s existerar"
 
 #. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#, python-format
+msgid "Error during communication with the publisher warranty server."
+msgstr ""
+
+#. module: base
 #: help:ir.actions.server,email:0
 msgid ""
 "Provides the fields that will be used to fetch the email address, e.g. when "
@@ -939,9 +976,22 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: view:res.lang:0
+msgid "%Y - Year with century."
+msgstr ""
+
+#. module: base
 #: report:ir.module.reference.graph:0
 msgid "-"
 msgstr "-"
+
+#. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid ""
+"This wizard helps you register a publisher warranty contract in your OpenERP "
+"system. After the contract has been registered, you will be able to send "
+"issues directly to OpenERP."
+msgstr ""
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1009,12 +1059,6 @@ msgstr "Användarid"
 msgid ""
 "Access all the fields related to the current object using expressions, i.e. "
 "object.partner_id.name "
-msgstr ""
-
-#. module: base
-#: view:maintenance.contract:0
-#: field:maintenance.contract,module_ids:0
-msgid "Covered Modules"
 msgstr ""
 
 #. module: base
@@ -1161,6 +1205,11 @@ msgid "Partners"
 msgstr ""
 
 #. module: base
+#: field:res.partner.category,parent_left:0
+msgid "Left parent"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_widget_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_act_window
 msgid "Homepage Widgets"
@@ -1273,11 +1322,6 @@ msgstr "Finland"
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Tree"
 msgstr "Träd"
-
-#. module: base
-#: view:maintenance.contract.wizard:0
-msgid "Could you check your contract information ?"
-msgstr ""
 
 #. module: base
 #: help:res.config.users,password:0
@@ -1426,6 +1470,14 @@ msgid "Spanish (CL) / Español (CL)"
 msgstr ""
 
 #. module: base
+#: view:res.config.users:0
+msgid ""
+"Create additional users and assign them groups that will allow them to have "
+"access to selected functionalities within the system. Click on 'Done' if you "
+"do not wish to add more users at this stage, you can always do this later."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bz
 msgid "Belize"
 msgstr "Belize"
@@ -1459,11 +1511,6 @@ msgid "To be removed"
 msgstr ""
 
 #. module: base
-#: view:maintenance.contract.wizard:0
-msgid "Maintenance contract added !"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_ir_sequence
 msgid "ir.sequence"
 msgstr "ir.sequence"
@@ -1477,9 +1524,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: field:ir.property,fields_id:0
 #: selection:ir.translation,type:0
-msgid "Wizard Field"
-msgstr "Guidefält"
+#: field:multi_company.default,field_id:0
+msgid "Field"
+msgstr "Fält"
 
 #. module: base
 #: view:ir.rule:0
@@ -1683,6 +1732,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: view:res.lang:0
+msgid "%y - Year without century [00,99]."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.si
 msgid "Slovenia"
 msgstr "Slovenien"
@@ -1714,7 +1768,7 @@ msgid "Company where the user is connected"
 msgstr ""
 
 #. module: base
-#: field:maintenance.contract,date_stop:0
+#: field:publisher_warranty.contract,date_stop:0
 msgid "Ending Date"
 msgstr "Slutdatum"
 
@@ -1768,7 +1822,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Fel! Du kan inte skapa rekursiva företag."
 
 #. module: base
-#: selection:maintenance.contract,state:0
+#: selection:publisher_warranty.contract,state:0
 msgid "Valid"
 msgstr "Giltig"
 
@@ -1795,11 +1849,6 @@ msgid "Cuba"
 msgstr "Cuba"
 
 #. module: base
-#: view:res.lang:0
-msgid "%S - Second as a decimal number [00,61]."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.am
 msgid "Armenia"
 msgstr "Armenia"
@@ -1814,6 +1863,11 @@ msgstr "Konfigurationsparametrar"
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
 msgstr "Ogiltiga argument"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.se
@@ -1847,6 +1901,7 @@ msgstr "Bankkontotyp"
 #: field:base.update.translations,config_logo:0
 #: field:ir.actions.configuration.wizard,config_logo:0
 #: field:ir.wizard.screen,config_logo:0
+#: field:publisher_warranty.contract.wizard,config_logo:0
 #: field:res.config,config_logo:0
 #: field:res.config.installer,config_logo:0
 #: field:res.config.users,config_logo:0
@@ -1857,6 +1912,11 @@ msgstr "Bild"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Iteration Action Configuration"
+msgstr ""
+
+#. module: base
+#: selection:publisher_warranty.contract,state:0
+msgid "Canceled"
 msgstr ""
 
 #. module: base
@@ -1900,7 +1960,7 @@ msgid "Module dependency"
 msgstr ""
 
 #. module: base
-#: selection:maintenance.contract.wizard,state:0
+#: selection:publisher_warranty.contract.wizard,state:0
 msgid "Draft"
 msgstr "Utkast"
 
@@ -2030,11 +2090,6 @@ msgid "Portugese / Português"
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Sir"
-msgstr "Herr"
-
-#. module: base
 #: view:base.module.import:0
 msgid "Select module package to import (.zip file):"
 msgstr "Välj modulpaket att importera (.zip fil)"
@@ -2045,9 +2100,10 @@ msgid "ID Ref."
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "French / Français"
-msgstr "French / Français"
+#: model:ir.actions.server,name:base.action_start_configurator
+#: model:ir.ui.menu,name:base.menu_view_base_module_configuration
+msgid "Start Configuration"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mt
@@ -2112,7 +2168,7 @@ msgid "Separator Format"
 msgstr ""
 
 #. module: base
-#: selection:maintenance.contract.wizard,state:0
+#: selection:publisher_warranty.contract,state:0
 msgid "Unvalidated"
 msgstr ""
 
@@ -2131,12 +2187,6 @@ msgstr "Massutskick per e-post"
 #. module: base
 #: model:res.country,name:base.yt
 msgid "Mayotte"
-msgstr ""
-
-#. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "Unable to find a valid contract"
 msgstr ""
 
 #. module: base
@@ -2282,6 +2332,11 @@ msgid "%x - Appropriate date representation."
 msgstr ""
 
 #. module: base
+#: view:res.lang:0
+msgid "%d - Day of the month [01,31]."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
 msgstr "Tajikistan"
@@ -2290,11 +2345,6 @@ msgstr "Tajikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 eller senare version"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "M."
-msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -2400,11 +2450,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:maintenance.contract,state:0
-msgid "Unvalid"
-msgstr ""
-
-#. module: base
 #: field:ir.module.module,certificate:0
 msgid "Quality Certificate"
 msgstr ""
@@ -2486,6 +2531,11 @@ msgstr "Meny:"
 #. module: base
 #: selection:ir.model.fields,state:0
 msgid "Base Field"
+msgstr ""
+
+#. module: base
+#: view:publisher_warranty.contract:0
+msgid "Validate"
 msgstr ""
 
 #. module: base
@@ -2668,12 +2718,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.actions.act_window.view,view_id:0
-#: field:ir.default,page:0
-#: selection:ir.translation,type:0
-#: field:wizard.ir.model.menu.create.line,view_id:0
-msgid "View"
-msgstr "Visa"
+#: sql_constraint:ir.config_parameter:0
+msgid "Key must be unique."
+msgstr ""
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -2717,6 +2764,11 @@ msgstr "Avancerad sökning"
 #. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Hebrew / עִבְרִי"
 msgstr ""
 
 #. module: base
@@ -2885,6 +2937,12 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#, python-format
+msgid "That contract is already registered in the system."
+msgstr ""
+
+#. module: base
 #: help:ir.sequence,suffix:0
 msgid "Suffix value of the record for the sequence"
 msgstr ""
@@ -2893,6 +2951,11 @@ msgstr ""
 #: selection:base.language.install,lang:0
 msgid "Spanish (PY) / Español (PY)"
 msgstr ""
+
+#. module: base
+#: field:ir.config_parameter,key:0
+msgid "Key"
+msgstr "Nyckel"
 
 #. module: base
 #: field:res.company,rml_header:0
@@ -2966,6 +3029,11 @@ msgstr "Hungary"
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazil"
+
+#. module: base
+#: view:res.lang:0
+msgid "%M - Minute [00,59]."
+msgstr ""
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -3135,6 +3203,7 @@ msgstr "Allmän beskrivning"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_simple_view_form
+#: view:res.config.view:0
 msgid "Configure Your Interface"
 msgstr ""
 
@@ -3191,6 +3260,11 @@ msgid "Kazakhstan"
 msgstr "Kazakhstan"
 
 #. module: base
+#: view:res.lang:0
+msgid "%w - Weekday number [0(Sunday),6]."
+msgstr ""
+
+#. module: base
 #: field:ir.actions.report.xml,name:0
 #: field:ir.actions.todo,name:0
 #: field:ir.cron,name:0
@@ -3205,7 +3279,6 @@ msgstr "Kazakhstan"
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 #: field:ir.values,name:0
-#: field:maintenance.contract.module,name:0
 #: field:multi_company.default,name:0
 #: field:res.bank,name:0
 #: field:res.config.view,name:0
@@ -3292,19 +3365,14 @@ msgid "English (CA)"
 msgstr "Engelska (CA)"
 
 #. module: base
+#: model:ir.model,name:base.model_publisher_warranty_contract
+msgid "publisher_warranty.contract"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.et
 msgid "Ethiopia"
 msgstr "Ethiopia"
-
-#. module: base
-#: view:res.lang:0
-msgid "%H - Hour (24-hour clock) as a decimal number [00,23]."
-msgstr ""
-
-#. module: base
-#: view:res.lang:0
-msgid "%M - Minute as a decimal number [00,59]."
-msgstr ""
 
 #. module: base
 #: help:res.country.state,code:0
@@ -3435,9 +3503,15 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:ir.translation,type:0
-msgid "Wizard Button"
-msgstr "Guideknapp"
+#: view:publisher_warranty.contract.wizard:0
+msgid "Please enter the serial key provided in your contract document:"
+msgstr ""
+
+#. module: base
+#: view:workflow.activity:0
+#: field:workflow.activity,flow_start:0
+msgid "Flow Start"
+msgstr ""
 
 #. module: base
 #: code:addons/__init__.py:0
@@ -3538,8 +3612,8 @@ msgid "Partner Addresses"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Indonesian / Bahasa Indonesia"
+#: view:res.lang:0
+msgid "%S - Seconds [00,61]."
 msgstr ""
 
 #. module: base
@@ -3588,10 +3662,9 @@ msgid "vsep"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.server,name:base.action_start_configurator
-#: model:ir.ui.menu,name:base.menu_view_base_module_configuration
-msgid "Start Configuration"
-msgstr ""
+#: selection:base.language.install,lang:0
+msgid "French / Français"
+msgstr "French / Français"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3660,11 +3733,6 @@ msgid "Sudan"
 msgstr "Sudan"
 
 #. module: base
-#: view:res.lang:0
-msgid "%m - Month as a decimal number [01,12]."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
 msgstr "Micronesia"
@@ -3682,6 +3750,11 @@ msgid "Menus"
 msgstr "Menyer"
 
 #. module: base
+#: view:base.module.upgrade:0
+msgid "The selected modules have been updated / installed !"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Latin) / srpski"
 msgstr ""
@@ -3690,12 +3763,6 @@ msgstr ""
 #: model:res.country,name:base.il
 msgid "Israel"
 msgstr "Israel"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_maintenance_contract_form
-#: model:ir.ui.menu,name:base.menu_maintenance_contract
-msgid "Maintenance Contracts"
-msgstr ""
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_server_action_create
@@ -3743,6 +3810,11 @@ msgid "Subflow"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_res_config
+msgid "res.config"
+msgstr "res.config"
+
+#. module: base
 #: field:workflow.transition,signal:0
 msgid "Signal (button Name)"
 msgstr ""
@@ -3758,16 +3830,6 @@ msgstr "Banker"
 #. module: base
 #: view:res.log:0
 msgid "Unread"
-msgstr ""
-
-#. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
-msgstr ""
-
-#. module: base
-#: view:res.lang:0
-msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
 msgstr ""
 
 #. module: base
@@ -3836,6 +3898,11 @@ msgid "Check this box if the partner is an Employee."
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Limited Company"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -3875,6 +3942,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Indonesian / Bahasa Indonesia"
+msgstr ""
+
+#. module: base
 #: field:ir.ui.view,inherit_id:0
 msgid "Inherited View"
 msgstr "Ärvd vy"
@@ -3900,14 +3972,20 @@ msgid "Cancelled"
 msgstr "Avbruten"
 
 #. module: base
+#: view:res.config.users:0
+msgid "Create User"
+msgstr ""
+
+#. module: base
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
 msgstr "Vill ni rensa Ids ? "
 
 #. module: base
-#: selection:res.request,priority:0
-msgid "Low"
-msgstr "Låg"
+#: field:publisher_warranty.contract,name:0
+#: field:publisher_warranty.contract.wizard,name:0
+msgid "Serial Key"
+msgstr ""
 
 #. module: base
 #: field:res.partner,customer:0
@@ -3924,7 +4002,7 @@ msgstr "Saint Lucia"
 
 #. module: base
 #: model:ir.model,name:base.model_maintenance_contract
-#: view:maintenance.contract:0
+#: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr ""
 
@@ -3981,9 +4059,9 @@ msgid "Field Mapping"
 msgstr ""
 
 #. module: base
-#: field:maintenance.contract,date_start:0
-msgid "Starting Date"
-msgstr "Startdatum"
+#: view:publisher_warranty.contract:0
+msgid "Refresh Validation Dates"
+msgstr ""
 
 #. module: base
 #: view:ir.model:0
@@ -4103,19 +4181,14 @@ msgid "Apply Scheduled Upgrades"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.maintenance
-msgid "Maintenance"
-msgstr ""
-
-#. module: base
 #: view:res.widget:0
 msgid "Widgets"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.mp
-msgid "Northern Mariana Islands"
-msgstr "Northern Mariana Islands"
+#: model:res.country,name:base.cz
+msgid "Czech Republic"
+msgstr "Czech Republic"
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4151,22 +4224,9 @@ msgid "Transition"
 msgstr "Övergång"
 
 #. module: base
-#: field:ir.cron,active:0
-#: field:ir.sequence,active:0
-#: field:res.bank,active:0
-#: field:res.config.users,active:0
-#: field:res.currency,active:0
-#: field:res.lang,active:0
-#: field:res.partner,active:0
-#: field:res.partner.address,active:0
-#: field:res.partner.canal,active:0
-#: field:res.partner.category,active:0
-#: field:res.request,active:0
-#: field:res.users,active:0
-#: view:workflow.instance:0
-#: view:workflow.workitem:0
-msgid "Active"
-msgstr "Aktiv"
+#: field:res.groups,menu_access:0
+msgid "Access Menu"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.na
@@ -4181,8 +4241,8 @@ msgstr "Mongolia"
 #. module: base
 #: code:addons/base/ir/ir_actions.py:0
 #: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/maintenance/maintenance.py:0
 #: code:addons/base/module/module.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #: code:addons/base/res/res_currency.py:0
 #: code:addons/base/res/res_user.py:0
 #, python-format
@@ -4203,6 +4263,7 @@ msgstr "Burundi"
 #: view:base.language.install:0
 #: view:base.module.import:0
 #: view:base.module.update:0
+#: view:publisher_warranty.contract.wizard:0
 #: view:res.request:0
 #: wizard_button:server.action.create,init,end:0
 #: wizard_button:server.action.create,step_1,end:0
@@ -4238,6 +4299,11 @@ msgstr ""
 #: selection:ir.actions.url,target:0
 msgid "This Window"
 msgstr "Detta fönster"
+
+#. module: base
+#: view:publisher_warranty.contract:0
+msgid "Publisher Warranty Contracts"
+msgstr ""
 
 #. module: base
 #: help:res.log,name:0
@@ -4289,8 +4355,6 @@ msgid "Saint Vincent & Grenadines"
 msgstr "Saint Vincent & Grenadines"
 
 #. module: base
-#: field:maintenance.contract,password:0
-#: field:maintenance.contract.wizard,password:0
 #: field:partner.sms.send,password:0
 #: field:res.config.users,password:0
 #: field:res.users,password:0
@@ -4747,6 +4811,12 @@ msgid "Dominica"
 msgstr "Dominica"
 
 #. module: base
+#: sql_constraint:publisher_warranty.contract:0
+msgid ""
+"Your publisher warranty contract is already subscribed in the system !"
+msgstr ""
+
+#. module: base
 #: help:ir.cron,nextcall:0
 msgid "Next planned execution date for this scheduler"
 msgstr ""
@@ -4783,11 +4853,6 @@ msgstr ""
 #. module: base
 #: view:partner.sms.send:0
 msgid "Bulk SMS send"
-msgstr ""
-
-#. module: base
-#: view:res.lang:0
-msgid "%Y - Year with century as a decimal number."
 msgstr ""
 
 #. module: base
@@ -4854,14 +4919,13 @@ msgid "File"
 msgstr "Fil"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
-msgid "Module Upgrade Install"
-msgstr ""
+#: view:res.config.users:0
+msgid "Add User"
+msgstr "Lägg till användare"
 
 #. module: base
-#: view:workflow.activity:0
-#: field:workflow.activity,flow_start:0
-msgid "Flow Start"
+#: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
+msgid "Module Upgrade Install"
 msgstr ""
 
 #. module: base
@@ -4891,15 +4955,9 @@ msgstr ""
 #. module: base
 #: view:base.language.export:0
 #: view:base.language.import:0
-#: view:maintenance.contract.wizard:0
 #: view:wizard.ir.model.menu.create:0
 msgid "_Close"
 msgstr "_Stäng"
-
-#. module: base
-#: selection:maintenance.contract,kind:0
-msgid "Full"
-msgstr "Fullständig"
 
 #. module: base
 #: field:multi_company.default,company_dest_id:0
@@ -4992,9 +5050,9 @@ msgid "You must logout and login again after changing your password."
 msgstr "Du måste logga ut och logga in igen efter att ha bytt lösenord."
 
 #. module: base
-#: model:res.country,name:base.cz
-msgid "Czech Republic"
-msgstr "Czech Republic"
+#: model:res.country,name:base.mp
+msgid "Northern Mariana Islands"
+msgstr "Northern Mariana Islands"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -5022,6 +5080,11 @@ msgstr ""
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
+
+#. module: base
+#: field:res.log,create_date:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -5094,11 +5157,6 @@ msgstr "Flamländska (BE) / Vlaams (BE)"
 #: field:ir.cron,interval_number:0
 msgid "Interval Number"
 msgstr "Intervallnummer"
-
-#. module: base
-#: selection:maintenance.contract,kind:0
-msgid "Partial"
-msgstr "Delvis"
 
 #. module: base
 #: model:res.country,name:base.tk
@@ -5204,6 +5262,11 @@ msgid "Companies"
 msgstr "Företag"
 
 #. module: base
+#: view:res.lang:0
+msgid "%H - Hour (24-hour clock) [00,23]."
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget
 msgid "res.widget"
 msgstr "res.widget"
@@ -5247,6 +5310,7 @@ msgstr "OpenERP's kärna, behövs för alla installationer"
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
+#: view:publisher_warranty.contract.wizard:0
 #: view:res.widget.wizard:0
 msgid "Cancel"
 msgstr "Avbryt"
@@ -5301,6 +5365,16 @@ msgstr "Iceland"
 #: model:ir.actions.act_window,name:base.ir_action_window
 #: model:ir.ui.menu,name:base.menu_ir_action_window
 msgid "Window Actions"
+msgstr ""
+
+#. module: base
+#: view:res.lang:0
+msgid "%I - Hour (12-hour clock) [01,12]."
+msgstr ""
+
+#. module: base
+#: selection:publisher_warranty.contract.wizard,state:0
+msgid "Finished"
 msgstr ""
 
 #. module: base
@@ -5415,6 +5489,14 @@ msgid "Readonly"
 msgstr "Skrivskyddad"
 
 #. module: base
+#: field:ir.actions.act_window.view,view_id:0
+#: field:ir.default,page:0
+#: selection:ir.translation,type:0
+#: field:wizard.ir.model.menu.create.line,view_id:0
+msgid "View"
+msgstr "Visa"
+
+#. module: base
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be installed"
@@ -5454,6 +5536,7 @@ msgid "Notes"
 msgstr "Anteckningar"
 
 #. module: base
+#: field:ir.config_parameter,value:0
 #: field:ir.property,value_binary:0
 #: field:ir.property,value_datetime:0
 #: field:ir.property,value_float:0
@@ -5564,9 +5647,9 @@ msgid "Flow Stop"
 msgstr "Flödesstop"
 
 #. module: base
-#: model:res.country,name:base.ar
-msgid "Argentina"
-msgstr "Argentina"
+#: selection:ir.cron,interval_type:0
+msgid "Weeks"
+msgstr "Veckor"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -5590,7 +5673,7 @@ msgid "Interval Unit"
 msgstr ""
 
 #. module: base
-#: field:maintenance.contract,kind:0
+#: field:publisher_warranty.contract,kind:0
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "Sort"
@@ -5607,7 +5690,6 @@ msgid "Thousands Separator"
 msgstr "Tusentalsseparator"
 
 #. module: base
-#: field:res.log,create_date:0
 #: field:res.request,create_date:0
 msgid "Created Date"
 msgstr "Skapad datum"
@@ -5648,11 +5730,6 @@ msgstr "Filinnehåll"
 #: model:res.country,name:base.pa
 msgid "Panama"
 msgstr "Panama"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Ltd"
-msgstr "AB"
 
 #. module: base
 #: help:workflow.transition,group_id:0
@@ -5747,11 +5824,6 @@ msgid "Attachments"
 msgstr ""
 
 #. module: base
-#: view:maintenance.contract.wizard:0
-msgid "_Validate"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_maintenance_contract_wizard
 msgid "maintenance.contract.wizard"
 msgstr ""
@@ -5770,13 +5842,9 @@ msgstr ""
 
 #. module: base
 #: selection:ir.actions.todo,state:0
+#: view:res.config.users:0
 msgid "Done"
 msgstr ""
-
-#. module: base
-#: selection:maintenance.contract.wizard,state:0
-msgid "Validated"
-msgstr "Validerad"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -5788,6 +5856,11 @@ msgstr "Fröken"
 #: field:ir.model.access,perm_write:0
 #: view:ir.rule:0
 msgid "Write Access"
+msgstr ""
+
+#. module: base
+#: view:res.lang:0
+msgid "%m - Month number [01,12]."
 msgstr ""
 
 #. module: base
@@ -6069,12 +6142,6 @@ msgid "Open Modules"
 msgstr ""
 
 #. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "This error occurs on database %s"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
 msgid "Manage bank records you want to be used in the system."
 msgstr ""
@@ -6142,6 +6209,13 @@ msgid "Stop All"
 msgstr "Stop All"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
+msgstr ""
+
+#. module: base
 #: view:ir.model.data:0
 msgid "Updatable"
 msgstr ""
@@ -6189,6 +6263,12 @@ msgid "Start update"
 msgstr ""
 
 #. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#, python-format
+msgid "Contract validation error"
+msgstr ""
+
+#. module: base
 #: field:res.country.state,name:0
 msgid "State Name"
 msgstr ""
@@ -6209,11 +6289,6 @@ msgstr "Tidzon"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss"
-msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -6338,6 +6413,11 @@ msgid "Ms."
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "Ltd."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
 msgstr "Switzerland"
@@ -6386,9 +6466,9 @@ msgid "Somalia"
 msgstr "Somalia"
 
 #. module: base
-#: model:ir.model,name:base.model_res_config
-msgid "res.config"
-msgstr "res.config"
+#: selection:publisher_warranty.contract,state:0
+msgid "Terminated"
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -6521,6 +6601,11 @@ msgid "Cancel Install"
 msgstr "Avbryt installering"
 
 #. module: base
+#: field:res.partner.category,parent_right:0
+msgid "Right parent"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "Legends for Date and Time Formats"
 msgstr ""
@@ -6634,9 +6719,19 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: base
+#: model:ir.model,name:base.model_publisher_warranty_contract_wizard
+msgid "publisher_warranty.contract.wizard"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,expression:0
 msgid "Loop Expression"
 msgstr ""
+
+#. module: base
+#: field:publisher_warranty.contract,date_start:0
+msgid "Starting Date"
+msgstr "Startdatum"
 
 #. module: base
 #: help:res.partner,website:0
@@ -6685,7 +6780,7 @@ msgstr "Rapporttyp"
 #: view:ir.module.module:0
 #: field:ir.module.module,state:0
 #: field:ir.module.module.dependency,state:0
-#: field:maintenance.contract,state:0
+#: field:publisher_warranty.contract,state:0
 #: field:res.bank,state:0
 #: view:res.country.state:0
 #: field:res.partner.bank,state_id:0
@@ -6848,12 +6943,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Costa Rica"
-
-#. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "Your can't submit bug reports due to uncovered modules: %s"
-msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -7120,6 +7209,11 @@ msgid "Suppliers"
 msgstr ""
 
 #. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register"
+msgstr ""
+
+#. module: base
 #: field:res.request,ref_doc2:0
 msgid "Document Ref 2"
 msgstr ""
@@ -7165,11 +7259,6 @@ msgstr "1.  %c              ==> Fre Dec  5 18:25:20 2008"
 #: model:res.country,name:base.nc
 msgid "New Caledonia (French)"
 msgstr "New Caledonia (French)"
-
-#. module: base
-#: view:maintenance.contract.wizard:0
-msgid "_Cancel"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.cy
@@ -7289,6 +7378,11 @@ msgid "Bulgaria"
 msgstr "Bulgaria"
 
 #. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid "Publisher warranty contract successfully registered!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ao
 msgid "Angola"
 msgstr "Angola"
@@ -7317,11 +7411,6 @@ msgstr "Kanalnamn"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "ltd"
-msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7364,6 +7453,7 @@ msgstr ""
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
+#: field:publisher_warranty.contract.wizard,state:0
 msgid "unknown"
 msgstr "okänd"
 
@@ -7440,13 +7530,6 @@ msgstr ""
 #: selection:ir.model,state:0
 msgid "Base Object"
 msgstr ""
-
-#. module: base
-#: field:ir.property,fields_id:0
-#: selection:ir.translation,type:0
-#: field:multi_company.default,field_id:0
-msgid "Field"
-msgstr "Fält"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -7592,6 +7675,11 @@ msgid "Export"
 msgstr "Exportera"
 
 #. module: base
+#: model:res.country,name:base.hr
+msgid "Croatia"
+msgstr "Croatia"
+
+#. module: base
 #: help:res.bank,bic:0
 msgid "Bank Identifier Code"
 msgstr ""
@@ -7614,11 +7702,6 @@ msgstr ""
 #. module: base
 #: help:workflow.transition,act_to:0
 msgid "The destination activity."
-msgstr ""
-
-#. module: base
-#: sql_constraint:maintenance.contract:0
-msgid "Your maintenance contract is already subscribed in the system !"
 msgstr ""
 
 #. module: base
@@ -7703,6 +7786,11 @@ msgid "Default multi company"
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "Sr."
+msgstr ""
+
+#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Skicka"
@@ -7776,10 +7864,9 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr ""
 
 #. module: base
-#: field:res.widget.user,widget_id:0
-#: field:res.widget.wizard,widget_id:0
-msgid "Widget"
-msgstr ""
+#: model:res.country,name:base.sa
+msgid "Saudi Arabia"
+msgstr "Saudi Arabia"
 
 #. module: base
 #: help:res.partner,supplier:0
@@ -7841,9 +7928,9 @@ msgid "Luxembourg"
 msgstr "Luxembourg"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "The selected modules have been updated / installed !"
-msgstr ""
+#: selection:res.request,priority:0
+msgid "Low"
+msgstr "Låg"
 
 #. module: base
 #: code:addons/base/ir/ir_ui_menu.py:0
@@ -7856,6 +7943,12 @@ msgstr "Fel ! Du kan inte skapa rekursiva menyer."
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
+msgstr ""
+
+#. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#, python-format
+msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
 
 #. module: base
@@ -7876,9 +7969,22 @@ msgid "Albert Cervera Areny's tweets"
 msgstr ""
 
 #. module: base
-#: field:res.groups,menu_access:0
-msgid "Access Menu"
-msgstr ""
+#: field:ir.cron,active:0
+#: field:ir.sequence,active:0
+#: field:res.bank,active:0
+#: field:res.config.users,active:0
+#: field:res.currency,active:0
+#: field:res.lang,active:0
+#: field:res.partner,active:0
+#: field:res.partner.address,active:0
+#: field:res.partner.canal,active:0
+#: field:res.partner.category,active:0
+#: field:res.request,active:0
+#: field:res.users,active:0
+#: view:workflow.instance:0
+#: view:workflow.workitem:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -7893,6 +7999,11 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Romanian / română"
+msgstr ""
+
+#. module: base
+#: view:res.log:0
+msgid "System Logs"
 msgstr ""
 
 #. module: base
@@ -8002,12 +8113,6 @@ msgid "Resource"
 msgstr ""
 
 #. module: base
-#: field:maintenance.contract,name:0
-#: field:maintenance.contract.wizard,name:0
-msgid "Contract ID"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Persian / فارس"
 msgstr ""
@@ -8028,11 +8133,6 @@ msgstr ""
 msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
-msgstr ""
-
-#. module: base
-#: field:maintenance.contract.wizard,state:0
-msgid "States"
 msgstr ""
 
 #. module: base
@@ -8058,14 +8158,19 @@ msgid "Slovak Republic"
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.publisher_warranty
+msgid "Publisher Warranty"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.aw
 msgid "Aruba"
 msgstr "Aruba"
 
 #. module: base
-#: selection:ir.cron,interval_type:0
-msgid "Weeks"
-msgstr "Veckor"
+#: model:res.country,name:base.ar
+msgid "Argentina"
+msgstr "Argentina"
 
 #. module: base
 #: field:res.groups,name:0
@@ -8105,6 +8210,11 @@ msgid "Email & Signature"
 msgstr ""
 
 #. module: base
+#: view:publisher_warranty.contract:0
+msgid "Publisher Warranty Contract"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Bulgarian / български език"
 msgstr ""
@@ -8115,21 +8225,9 @@ msgid "After-Sale Services"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_maintenance_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_maintenance_contract_add
-#: view:maintenance.contract.wizard:0
-msgid "Add Maintenance Contract"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.todo:0
 msgid "Launch"
 msgstr ""
-
-#. module: base
-#: model:res.country,name:base.sa
-msgid "Saudi Arabia"
-msgstr "Saudi Arabia"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -8238,8 +8336,11 @@ msgid "Action Source"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%w - Weekday as a decimal number [0(Sunday),6]."
+#: view:res.config.view:0
+msgid ""
+"If you use OpenERP for the first time we strongly advise you to select the "
+"simplified interface, which has less features but is easier. You can always "
+"switch later from the user preferences."
 msgstr ""
 
 #. module: base
@@ -8310,6 +8411,11 @@ msgstr ""
 #: view:res.company:0
 msgid "Portrait"
 msgstr "Stående"
+
+#. module: base
+#: selection:ir.translation,type:0
+msgid "Wizard Button"
+msgstr "Guideknapp"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -8414,9 +8520,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.hr
-msgid "Croatia"
-msgstr "Croatia"
+#: view:res.lang:0
+msgid "%j - Day of the year [001,366]."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,mobile:0
@@ -8436,6 +8542,11 @@ msgstr ""
 #: view:base.module.upgrade:0
 msgid "System Update"
 msgstr ""
+
+#. module: base
+#: selection:ir.translation,type:0
+msgid "Wizard Field"
+msgstr "Guidefält"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -8524,7 +8635,6 @@ msgid "Delivery"
 msgstr "Leverans"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr ""
@@ -8631,11 +8741,11 @@ msgstr "Russian / русский язык"
 #~ msgid "Background Color"
 #~ msgstr "Bakgrundsfärg"
 
+#~ msgid "Sir"
+#~ msgstr "Herr"
+
 #~ msgid "Report Footer"
 #~ msgstr "Rapportfot"
-
-#~ msgid "Key"
-#~ msgstr "Nyckel"
 
 #~ msgid "Planned Revenue"
 #~ msgstr "Planerad vinst"
@@ -8685,6 +8795,9 @@ msgstr "Russian / русский язык"
 #~ msgid "a5"
 #~ msgstr "A5"
 
+#~ msgid "%j - Day of the year as a decimal number [001,366]."
+#~ msgstr "%j - Dagnummer inom året [001,366]."
+
 #~ msgid "To browse official translations, you can visit this link: "
 #~ msgstr "Bläddra mellan officiella översättningar, kan du besöka denna länk: "
 
@@ -8732,6 +8845,9 @@ msgstr "Russian / русский язык"
 #~ msgstr ""
 #~ "Denna url '%s' måste tillhandahålla en HTML-fil med länkar till modulpaketen "
 #~ "(zip-moduler)"
+
+#~ msgid "%y - Year without century as a decimal number [00,99]."
+#~ msgstr "%y - År utan århundrade i två siffror [00,99]."
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -8850,6 +8966,9 @@ msgstr "Russian / русский язык"
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
 
+#~ msgid "Ltd"
+#~ msgstr "AB"
+
 #~ msgid "Language name"
 #~ msgstr "Språknamn"
 
@@ -8958,9 +9077,6 @@ msgstr "Russian / русский язык"
 #~ msgstr ""
 #~ "Det valda språket har installerats. Du måste ändra inställningar för "
 #~ "användaren och öppna en ny meny för att visa ändringar."
-
-#~ msgid "Add User"
-#~ msgstr "Lägg till användare"
 
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
@@ -9163,3 +9279,12 @@ msgstr "Russian / русский язык"
 
 #~ msgid "Bar Chart"
 #~ msgstr "Stapeldiagram"
+
+#~ msgid "Validated"
+#~ msgstr "Validerad"
+
+#~ msgid "Full"
+#~ msgstr "Fullständig"
+
+#~ msgid "Partial"
+#~ msgstr "Delvis"
