@@ -59,9 +59,6 @@ class project_task(osv.osv):
         @return: Dictionary value which open Project Task form.
         """
 
-        if not context:
-            context = {}
-
         data_pool = self.pool.get('ir.model.data')
         value = {}
         task_form_id = data_pool.get_object(cr, uid, 'project', 'view_task_form2')
@@ -93,7 +90,7 @@ class project_task(osv.osv):
             context = {}
         ids = []
         for val in vals:
-            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.project_time_mode_id
             if not val.get('planned_hours', False):
                 # 'Computes duration' in days
                 plan = 0.0

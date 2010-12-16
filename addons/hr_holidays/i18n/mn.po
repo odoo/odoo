@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-25 19:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -50,34 +50,11 @@ msgid "Leaves Management"
 msgstr "Амралт, чөлөөний удирдлага"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
-"uid, [record.holiday_status_id.id], record.category_id.id, "
-"False)[record.holiday_status_id.id]['remaining_leaves']\n"
-"                    if leaves_rest < leave_asked:\n"
-"                        raise osv.except_osv(_('Warning!"
-msgstr ""
-
-#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
 #: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
-
-#. module: hr_holidays
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
@@ -228,6 +205,14 @@ msgstr ""
 #, python-format
 msgid "Warning !"
 msgstr "Сануулга !"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for category %s while there are too few remaining "
+"leave days."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -427,11 +412,6 @@ msgid "Leaves by Type"
 msgstr "Төрлөөр ангилсан амралт, чөлөө"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Цайвар улбар шар"
@@ -440,6 +420,11 @@ msgstr "Цайвар улбар шар"
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Үр тарианы өнгө"
+
+#. module: hr_holidays
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -470,11 +455,6 @@ msgid "July"
 msgstr "7 сар"
 
 #. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
-
-#. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
 "If its True then its Allocation/Request have to be validated by second "
@@ -501,6 +481,14 @@ msgstr " Сар "
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Leaves By Month"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for employee %s while there are too few remaining "
+"leave days."
 msgstr ""
 
 #. module: hr_holidays
@@ -621,11 +609,6 @@ msgid "Black"
 msgstr "Хар"
 
 #. module: hr_holidays
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"
-
-#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr "Амралт, чөлөө"
@@ -634,32 +617,6 @@ msgstr "Амралт, чөлөө"
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Leaves Allowed"
 msgstr "Зөвшөөрсөн амралт, чөлөөний дээд хэмжээ"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.category_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            else:\n"
-"                nb = record.number_of_days_temp\n"
-"\n"
-"            if record.holiday_type == 'employee' and record.employee_id:\n"
-"                user_id = record.employee_id.user_id and "
-"record.employee_id.user_id.id or uid\n"
-"\n"
-"            self.write(cr, uid, [record.id], {'state':'confirm', "
-"'number_of_days': nb, 'user_id': user_id })\n"
-"        return True\n"
-"\n"
-"    def holidays_refuse(self, cr, uid, ids, *args):\n"
-"        vals = {'state': 'refuse'}\n"
-"        ids2 = self.pool.get('hr.employee"
-msgstr ""
-"Хуваарилагдсан боломжит амралт, чөлөөний хоног нь амралт, чөлөөний хүсэлт "
-"дээрхээс бага тул амралт, чөлөөг батламжилж болохгүй байна( %s) .' "
-"%(record.category_id.name)))"
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
@@ -780,11 +737,6 @@ msgid "Request Type"
 msgstr "Хүсэлтийн төрөл"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr_holidays
 #: help:hr.holidays.status,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
@@ -825,11 +777,6 @@ msgid "Leaves Analysis"
 msgstr "Амралт, чөлөөний шинжилгээ"
 
 #. module: hr_holidays
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
@@ -855,23 +802,10 @@ msgid "Validated"
 msgstr "Батламжилсан"
 
 #. module: hr_holidays
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Амралт, чөлөө хуваарилах хүсэл"
-
-#. module: hr_holidays
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -1043,11 +977,6 @@ msgid "Linked Requests"
 msgstr "Холбоотой амралт, чөлөө"
 
 #. module: hr_holidays
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
-
-#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -1102,6 +1031,33 @@ msgstr ""
 #~ msgid "Leave Days"
 #~ msgstr "Амралт, чөлөөтэй өдрүүд"
 
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for %s while available leaves are less than asked "
+#~ "leaves.' %(record.category_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            else:\n"
+#~ "                nb = record.number_of_days_temp\n"
+#~ "\n"
+#~ "            if record.holiday_type == 'employee' and record.employee_id:\n"
+#~ "                user_id = record.employee_id.user_id and "
+#~ "record.employee_id.user_id.id or uid\n"
+#~ "\n"
+#~ "            self.write(cr, uid, [record.id], {'state':'confirm', "
+#~ "'number_of_days': nb, 'user_id': user_id })\n"
+#~ "        return True\n"
+#~ "\n"
+#~ "    def holidays_refuse(self, cr, uid, ids, *args):\n"
+#~ "        vals = {'state': 'refuse'}\n"
+#~ "        ids2 = self.pool.get('hr.employee"
+#~ msgstr ""
+#~ "Хуваарилагдсан боломжит амралт, чөлөөний хоног нь амралт, чөлөөний хүсэлт "
+#~ "дээрхээс бага тул амралт, чөлөөг батламжилж болохгүй байна( %s) .' "
+#~ "%(record.category_id.name)))"
+
 #, python-format
 #~ msgid ""
 #~ "You cannot validate leaves for %s while available leaves are less than asked "
@@ -1122,3 +1078,18 @@ msgstr ""
 
 #~ msgid "My Leaves by Type"
 #~ msgstr "Өөрийн амралт, чөлөөний төрөл"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"

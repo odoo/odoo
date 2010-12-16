@@ -60,7 +60,7 @@ class procurement_order(osv.osv):
                     return phantom_bom_id 
         return False
     
-    def action_produce_assign_product(self, cr, uid, ids, context={}):
+    def action_produce_assign_product(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign production order to procurements
         @return: True
         """
@@ -69,7 +69,7 @@ class procurement_order(osv.osv):
         res = res.values()
         return len(res) and res[0] or 0
     
-    def make_mo(self, cr, uid, ids, context={}):
+    def make_mo(self, cr, uid, ids, context=None):
         """ Make Manufacturing(production) order from procurement
         @return: New created Production Orders procurement wise 
         """
@@ -79,7 +79,7 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
         procurement_obj = self.pool.get('procurement.order')
-        for procurement in procurement_obj.browse(cr, uid, ids):
+        for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
             newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)

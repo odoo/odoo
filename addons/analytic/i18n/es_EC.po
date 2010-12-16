@@ -2,28 +2,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-22 20:42+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Cuentas Hijas"
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nombre del objeto debe empezar con x_ y no debe contener caracteres "
-"especiales !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -43,11 +35,6 @@ msgid ""
 msgstr ""
 "Modulo para definir objetos en la contabilidad de costos\n"
 "    "
-
-#. module: analytic
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "El nombre del módulo debe ser único !"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -90,11 +77,6 @@ msgid "Pending"
 msgstr "Pendiente"
 
 #. module: analytic
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "El ID del certificado del módulo debe ser único !"
-
-#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Linea Analitica"
@@ -115,11 +97,6 @@ msgstr "Normal"
 #: field:account.analytic.line,company_id:0
 msgid "Company"
 msgstr "Compania"
-
-#. module: analytic
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "¡El nombre del grupo debe ser único!"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
@@ -192,6 +169,11 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
 "If you select the View Type, it means you won't allow to create journal "
@@ -204,11 +186,6 @@ msgstr ""
 #: field:account.analytic.account,date:0
 msgid "Date End"
 msgstr "Fecha Final"
-
-#. module: analytic
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no son compatibles con los objetos osv_memory!"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -233,11 +210,6 @@ msgid "View"
 msgstr "Vista"
 
 #. module: analytic
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
@@ -256,8 +228,3 @@ msgstr "Abierto"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Detalle Analitico"
-
-#. module: analytic
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Tamaño del campo nunca puede ser menor que 1 !"

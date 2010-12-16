@@ -40,7 +40,7 @@ class board_menu_create(osv.osv_memory):
         """
         data = context and context.get('active_id', False) or False
         if data:
-            board = self.pool.get('board.board').browse(cr, uid, data)
+            board = self.pool.get('board.board').browse(cr, uid, data, context=context)
             if not board.line_ids:
                 raise osv.except_osv(_('User Error!'),
                                      _('Please Insert Dashboard View(s) !'))
@@ -55,12 +55,12 @@ class board_menu_create(osv.osv_memory):
         @param ids: List of Board Menu Create's IDs
         @return: Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
 
         context_id = context and context.get('active_id', False) or False
         if context_id:
-            board = self.pool.get('board.board').browse(cr, uid, context_id)
+            board = self.pool.get('board.board').browse(cr, uid, context_id, context=context)
             action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
                 'name': board.name,
                 'view_type': 'form',

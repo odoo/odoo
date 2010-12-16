@@ -38,7 +38,9 @@ class document_file(osv.osv):
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
-    def _data_get(self, cr, uid, ids, name, arg, context):
+    def _data_get(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
         fbrl = self.browse(cr, uid, ids, context=context)
         nctx = nodes.get_node_context(cr, uid, context={})
         # nctx will /not/ inherit the caller's context. Most of
@@ -59,7 +61,7 @@ class document_file(osv.osv):
     #
     # This code can be improved
     #
-    def _data_set(self, cr, uid, id, name, value, arg, context):
+    def _data_set(self, cr, uid, id, name, value, arg, context=None):
         if not value:
             return True
         fbro = self.browse(cr, uid, id, context=context)
@@ -139,7 +141,7 @@ class document_file(osv.osv):
         if 'name' not in default:
             name = self.read(cr, uid, [id])[0]['name']
             default.update({'name': name + " (copy)"})
-        return super(document_file, self).copy(cr, uid, id, default, context)
+        return super(document_file, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         result = False
@@ -222,7 +224,7 @@ class document_file(osv.osv):
         cr.commit() # ?
         return result
 
-    def __get_partner_id(self, cr, uid, res_model, res_id, context):
+    def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
         """ A helper to retrieve the associated partner from any res_model+id
             It is a hack that will try to discover if the mentioned record is
             clearly associated with a partner record.
@@ -246,7 +248,7 @@ class document_file(osv.osv):
         # rolled back) and then unlink the files. The list wouldn't exist
         # after we discard the objects
         ids = self.search(cr, uid, [('id','in',ids)])
-        for f in self.browse(cr, uid, ids, context):
+        for f in self.browse(cr, uid, ids, context=context):
             # TODO: update the node cache
             par = f.parent_id
             storage_id = None
