@@ -216,17 +216,21 @@ class crm_case(object):
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if not context:
             context = {}
+            
         stage_pool = self.pool.get('crm.case.stage')
         stage_type = context and context.get('stage_type','')
+        
         current_seq = False
         next_stage_id = False
+        
         for case in self.browse(cr, uid, ids, context):
             next_stage = False
-            data = {}
+            value = {}
+            if case.section_id.id : 
+                domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
+            else :
+                domain = [('type', '=', stage_type)]
 
-            domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
-            if case.section_id and case.section_id.stage_ids:
-                domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
             
             stages = stage_pool.search(cr, uid, domain, order=order)
             current_seq = case.stage_id.sequence
@@ -238,13 +242,13 @@ class crm_case(object):
     
             if next_stage:
                 next_stage_id = next_stage.id
-                data = {'stage_id': next_stage.id}
+                value.update({'stage_id': next_stage.id})
                 if next_stage.on_change:
-                    data.update({'probability': next_stage.probability})
-            self.write(cr, uid, [case.id], data, context=context)
+                    value.update({'probability': next_stage.probability})
+            self.write(cr, uid, [case.id], value, context=context)
             
      
-        return next_stage_id
+        return next_stage_id #FIXME should return a list of all id
         
         
     def stage_next(self, cr, uid, ids, context=None):
