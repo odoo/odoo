@@ -53,7 +53,7 @@ def check_ean(eancode):
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
-    check = int(10 - math.ceil(total % 10.0))
+    check = int(10 - math.ceil(total % 10.0)) %10
 
     if check != int(eancode[-1]):
         return False
@@ -503,9 +503,9 @@ class product_product(osv.osv):
             if sellers:
                 for s in sellers:
                     mydict = {
-                              'id': product.id, 
-                              'name': s.product_name or product.name, 
-                              'default_code': s.product_code or product.default_code, 
+                              'id': product.id,
+                              'name': s.product_name or product.name,
+                              'default_code': s.product_code or product.default_code,
                               'variants': product.variants
                               }
                     result.append(_name_get(mydict))
