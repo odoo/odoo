@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-09 11:29+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-15 02:45+0000\n"
+"Last-Translator: Joshua Jan <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -42,7 +42,7 @@ msgstr "固定连锁库位"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in a new pack"
-msgstr ""
+msgstr "放到新包装"
 
 #. module: stock
 #: field:stock.move.split.lines,action:0
@@ -58,7 +58,7 @@ msgstr "向上追溯"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "最近的产品盘存单"
 
 #. module: stock
 #: view:stock.move:0
@@ -80,7 +80,7 @@ msgstr ""
 msgid ""
 "This is the list of all delivery orders that must be prepared, according to "
 "your different sales orders and your logistics rules."
-msgstr ""
+msgstr "这是根据不同的销售订单和物流规则所有准备好的发货单据"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -99,7 +99,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "分拣单"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:0
@@ -129,7 +129,7 @@ msgstr "数量"
 #: view:report.stock.move:0
 #: field:report.stock.move,day:0
 msgid "Day"
-msgstr ""
+msgstr "天"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -157,7 +157,7 @@ msgstr "库存业务类型"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr ""
+msgstr "进仓"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -172,12 +172,12 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Missing partial picking data for move #%s"
-msgstr ""
+msgstr "部分分拣单的库存调拨数据丢失#%s"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "送货单"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:0
@@ -197,24 +197,24 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "无效"
 
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "其它参考或序列号"
 
 #. module: stock
 #: field:stock.move,origin:0
 #: view:stock.picking:0
 #: field:stock.picking,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "源"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
 msgid "Configuration"
-msgstr "设置"
+msgstr "配置"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -252,7 +252,7 @@ msgstr ""
 #. module: stock
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "错误!你不能创建递归的分类"
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -279,13 +279,13 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
-msgstr ""
+msgstr "库存调拨是完成的状态不能取消分拣单"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告!"
 
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
@@ -302,6 +302,10 @@ msgid ""
 "   \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"新建的库存调拨状态是‘草稿’\n"
+"然后将为‘确认’\n"
+"如果库存可用状态将为‘可用’\n"
+"当分拣完成状态将为‘完成’"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -325,7 +329,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:0
 #, python-format
 msgid "No invoicing"
-msgstr ""
+msgstr "无发票"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -337,7 +341,7 @@ msgstr "生产批次"
 #. module: stock
 #: help:stock.incoterms,code:0
 msgid "Code for Incoterms"
-msgstr ""
+msgstr "贸易术语编号"
 
 #. module: stock
 #: field:stock.tracking,move_ids:0

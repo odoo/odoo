@@ -46,8 +46,6 @@ class account_analytic_profit(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.analytic.line')
-        if context is None:
-            context = {}
         data = {}
         data['form'] = self.read(cr, uid , ids, [], context=context)[0]
         ids_chk = line_obj.search(cr, uid, [

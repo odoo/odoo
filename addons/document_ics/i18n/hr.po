@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:48+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -27,13 +27,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objekt"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -65,12 +58,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "prisutan"
+msgid "dtstamp"
+msgstr "dtstamp"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -92,11 +87,6 @@ msgstr "Sastanci zajedničkog kalendara"
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
 msgstr "Upravlja helpdesk uslugom"
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nevažeće ime modela u definiciji akcije."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -205,9 +195,9 @@ msgid "location"
 msgstr "lokacija"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "prisutan"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -356,17 +346,8 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Poslovne prilike"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "dtstamp"
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za Arhitekturu Prikaza!"
 
 #~ msgid "Next"
 #~ msgstr "Dalje"
@@ -381,6 +362,11 @@ msgstr ""
 #~ msgstr "Open ERP polje"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
+
+#~ msgid ""
 #~ "This Configuration step use to create Calendars in document for all Case "
 #~ "Sections"
 #~ msgstr ""
@@ -390,6 +376,9 @@ msgstr ""
 #~ msgid "Used by companies to track bugs and support requests on softwares"
 #~ msgstr ""
 #~ "Korišten od tvrtki za praćenje pogrešaka i zahtjeva za podrškom na programima"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nevažeće ime modela u definiciji akcije."
 
 #~ msgid ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "

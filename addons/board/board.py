@@ -38,8 +38,6 @@ class board_board(osv.osv):
         @param ids: List of Board's IDs
         @return: arch of xml view.
         """
-        if not context:
-            context = {}
         board = self.pool.get('board.board').browse(cr, uid, ids, context=context)
         left = []
         right = []
@@ -70,7 +68,7 @@ class board_board(osv.osv):
 
         return arch
 
-    def write(self, cr, uid, ids, vals, context = {}):
+    def write(self, cr, uid, ids, vals, context=None):
 
         """
         Writes values in one or several fields.
@@ -81,10 +79,10 @@ class board_board(osv.osv):
                      dictionary must be with the form: {‘name_of_the_field’: value, ...}.
         @return: True
         """
-        result = super(board_board, self).write(cr, uid, ids, vals, context)
+        result = super(board_board, self).write(cr, uid, ids, vals, context=context)
 
-        board = self.pool.get('board.board').browse(cr, uid, ids[0])
-        view = self.create_view(cr, uid, ids[0], context)
+        board = self.pool.get('board.board').browse(cr, uid, ids[0], context=context)
+        view = self.create_view(cr, uid, ids[0], context=context)
         id = board.view_id.id
         cr.execute("update ir_ui_view set arch=%s where id=%s", (view, id))
         return result
@@ -99,18 +97,16 @@ class board_board(osv.osv):
         @return: id of new created record of board.board.
         """
 
-        if not context:
-            context = {}
 
         if not 'name' in vals:
             return False
-        id = super(board_board, self).create(cr, user, vals, context)
+        id = super(board_board, self).create(cr, user, vals, context=context)
         view_id = self.pool.get('ir.ui.view').create(cr, user, {
             'name': vals['name'],
             'model': 'board.board',
             'priority': 16,
             'type': 'form',
-            'arch': self.create_view(cr, user, id, context),
+            'arch': self.create_view(cr, user, id, context=context),
         })
 
         super(board_board, self).write(cr, user, [id], {'view_id': view_id}, context)
@@ -124,8 +120,6 @@ class board_board(osv.osv):
         @return: Dictionary of Fields, arch and toolbar.
         """
 
-        if not context:
-            context = {}
 
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,\
@@ -135,7 +129,7 @@ class board_board(osv.osv):
                      [('user_id', '=', user), ('ref_id' ,'=', view_id)])
         if vids:
             view_id = vids[0]
-            arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id)
+            arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id, context=context)
             res['arch'] = arch.arch
 
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
@@ -193,13 +187,13 @@ class board_note_type(osv.osv):
 
 board_note_type()
 
-def _type_get(self, cr, uid, context={}):
+def _type_get(self, cr, uid, context=None):
     """
     Get by default Note type.
     """
     obj = self.pool.get('board.note.type')
     ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['name'], context)
+    res = obj.read(cr, uid, ids, ['name'], context=context)
     res = [(r['name'], r['name']) for r in res]
     return res
 

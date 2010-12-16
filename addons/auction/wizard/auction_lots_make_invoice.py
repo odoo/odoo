@@ -50,11 +50,11 @@ class auction_lots_make_invoice(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_lots_make_invoice, self).default_get(cr, uid, fields, context=context)
         lots_obj = self.pool.get('auction.lots') 
-        for lot in lots_obj.browse(cr, uid, context.get('active_ids', [])):
+        for lot in lots_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if 'amount' in fields:
                 res.update({'amount': lot.seller_price})                
             if 'objects' in fields:
@@ -69,13 +69,13 @@ class auction_lots_make_invoice(osv.osv_memory):
         @param ids: List of Auction lots make invoice’s IDs
         @return: dictionary of  account invoice form.
         """
-        if not context:
+        if context is None:
             context={}
         order_obj = self.pool.get('auction.lots')
         mod_obj = self.pool.get('ir.model.data') 
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        lots_ids = order_obj.seller_trans_create(cr, uid, context.get('active_ids', []), context)
+        lots_ids = order_obj.seller_trans_create(cr, uid, context.get('active_ids', []), context=context)
         return {
             'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
             'name': 'Seller invoices', 

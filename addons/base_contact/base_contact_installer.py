@@ -35,7 +35,7 @@ class base_contact_installer(osv.osv_memory):
         """
         This function is used to create contact and address from existing partner address
         """
-        obj = self.pool.get("base.contact.installer").browse(cr, uid, uid)
+        obj = self.pool.get("base.contact.installer").browse(cr, uid, uid, context=context)
         if obj.migrate:
             cr.execute("""DROP TRIGGER  IF EXISTS contactjob on res_partner_contact;
                             DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;

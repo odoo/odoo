@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-23 09:41+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -30,14 +30,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objeto"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -69,13 +61,17 @@ msgstr "Intervalo en horas"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "asistente"
+msgid "dtstamp"
+msgstr "Marca fecha-hora (dtstamp)"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "¡Error! No puede crear equipos de ventas recursivos."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
+msgstr ""
+"El campo del objeto usado en el nombre de fichero. Debe ser un identificador "
+"único."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -96,11 +92,6 @@ msgstr "Reuniones de calendario compartidas"
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
 msgstr "Gestiona un servicio de asistencia/ayuda."
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -202,11 +193,6 @@ msgid "ICS Calendar"
 msgstr "Calendario ICS"
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
 msgstr "Valor ICS"
@@ -217,24 +203,14 @@ msgid "Expression as constant"
 msgstr "Expresión como constante"
 
 #. module: document_ics
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr "¡El código del equipo de ventas debe ser único!"
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "location"
 msgstr "ubicación"
 
 #. module: document_ics
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "asistente"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -386,30 +362,20 @@ msgstr "URL"
 msgid "Business Opportunities"
 msgstr "Oportunidades de negocio"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "Marca fecha-hora (dtstamp)"
-
-#. module: document_ics
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-"El campo del objeto usado en el nombre de fichero. Debe ser un identificador "
-"único."
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "¡Error! No puede crear directorios recursivos."
 
 #~ msgid "Open ERP Field"
 #~ msgstr "Campo OpenERP"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "documento.directorio.ics.campos"
@@ -475,3 +441,21 @@ msgstr ""
 #~ msgstr ""
 #~ "Utilizado por las compañías para el seguimiento de errores y peticiones de "
 #~ "soporte sobre programas informáticos."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
+#~ msgid "Error ! You cannot create recursive Sales team."
+#~ msgstr "¡Error! No puede crear equipos de ventas recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "¡El código del equipo de ventas debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

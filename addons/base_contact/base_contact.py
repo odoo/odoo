@@ -42,7 +42,7 @@ class res_partner_contact(osv.osv):
         all_job_ids = res_partner_job_obj.search(cr, uid, [])
         all_job_names = dict(zip(all_job_ids, res_partner_job_obj.name_get(cr, uid, all_job_ids, context=context)))
 
-        for contact in self.browse(cr, uid, ids, context):
+        for contact in self.browse(cr, uid, ids, context=context):
             if contact.job_ids:
                 res[contact.id] = all_job_names.get(contact.job_ids[0].id, False)
 
@@ -77,7 +77,7 @@ class res_partner_contact(osv.osv):
 
     _order = "name,first_name"
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
 
         """ will return name and first_name.......
             @param self: The object pointer
@@ -119,7 +119,7 @@ res_partner_contact()
 class res_partner_address(osv.osv):
 
     #overriding of the name_get defined in base in order to remove the old contact name
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -131,6 +131,8 @@ class res_partner_address(osv.osv):
         if not len(ids):
             return []
         res = []
+        if context is None: 
+            context = {}
         for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
@@ -168,7 +170,7 @@ class res_partner_job(osv.osv):
             return []
         res = []
 
-        jobs = self.browse(cr, uid, ids)
+        jobs = self.browse(cr, uid, ids, context=context)
 
         contact_ids = [rec.contact_id.id for rec in jobs]
         contact_names = dict(self.pool.get('res.partner.contact').name_get(cr, uid, contact_ids, context=context))
@@ -238,7 +240,7 @@ class res_partner_job(osv.osv):
         partner_id = False
         if address_id:
             address = self.pool.get('res.partner.address')\
-                        .browse(cr, uid, address_id, context)
+                        .browse(cr, uid, address_id, context=context)
             partner_id = address.partner_id.id
         return {'value': {'name': partner_id}}
     

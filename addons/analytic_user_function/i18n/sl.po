@@ -6,25 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-27 05:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Oznaka certifikata modula mora biti enolična!"
-
-#. module: analytic_user_function
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
+msgstr "Proizvod"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:0
@@ -38,27 +33,10 @@ msgid "Timesheet Line"
 msgstr "Postavka časovnice"
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr "Proizvod"
-
-#. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Analitični konto"
-
-#. module: analytic_user_function
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Ime modula mora biti enolično!"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -83,16 +61,33 @@ msgid "Relation table between users and products on a analytic account"
 msgstr "Tabela odnosov med uporabniki in produkti na analitičnem kontu"
 
 #. module: analytic_user_function
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
 msgstr "Analitična uporabniška funkcija"
 
 #. module: analytic_user_function
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Dolžina polja ne sme biti nikoli manj od 1!"
-
-#. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
 msgstr "Uporabniški proizvodi za ta analitični konto"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Dolžina polja ne sme biti nikoli manj od 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Ime modula mora biti enolično!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Oznaka certifikata modula mora biti enolična!"

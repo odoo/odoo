@@ -34,7 +34,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'qtty': 1.0
     }
 
-    def create_invoices(self, cr, uid, ids, context={}):
+    def create_invoices(self, cr, uid, ids, context=None):
         """
              To create invoices.
 
@@ -51,9 +51,11 @@ class sale_advance_payment_inv(osv.osv_memory):
         obj_sale = self.pool.get('sale.order')
         obj_lines = self.pool.get('account.invoice.line')
         inv_obj = self.pool.get('account.invoice')
+        if context is None:
+            context = {}
 
-        for sale_adv_obj in self.browse(cr, uid, ids):
-            for sale in obj_sale.browse(cr, uid, context['active_ids']):
+        for sale_adv_obj in self.browse(cr, uid, ids, context=context):
+            for sale in obj_sale.browse(cr, uid, context.get('active_ids', []), context=context):
                 create_ids = []
                 ids_inv = []
                 if sale.order_policy == 'postpaid':
@@ -151,7 +153,7 @@ class sale_open_invoice(osv.osv_memory):
         if context is None:
             context = {}
         mod_obj = self.pool.get('ir.model.data')
-        for advance_pay in self.browse(cr, uid, ids):
+        for advance_pay in self.browse(cr, uid, ids, context=context):
             form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
             form_id = form_res and form_res[1] or False
             tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
