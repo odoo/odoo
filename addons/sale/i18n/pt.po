@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-12 18:21+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"PO-Revision-Date: 2010-12-15 02:44+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -102,7 +102,7 @@ msgstr "Linha de Ordem de Venda"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete a sale order line which is %s !"
-msgstr ""
+msgstr "Não é possível apagar uma linha de ordem de venda que seja %s!"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -211,7 +211,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sale order"
-msgstr ""
+msgstr "A partir de uma ordem de venda"
 
 #. module: sale
 #: view:sale.order:0
@@ -228,7 +228,7 @@ msgstr "Desconto (%)"
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr ""
+msgstr "Painel de gestão de vendas"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -283,12 +283,12 @@ msgstr "Agosto"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Está a tentar associar a um lote, que não é do mesmo artigo."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
-msgstr "Todas as Cotações"
+msgstr "Todas as cotações"
 
 #. module: sale
 #: report:sale.order:0
@@ -316,7 +316,7 @@ msgstr "Outubro"
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Cotações"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:0
@@ -354,7 +354,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "Data da cotação"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
@@ -430,7 +430,7 @@ msgstr "Notas"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The quotation '%s' has been converted to a sale order."
-msgstr ""
+msgstr "A cotação '%s' foi convertida em ordem de venda"
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
@@ -450,7 +450,7 @@ msgstr "Erro: Código ean inválido"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sale order"
-msgstr ""
+msgstr "Endereço de faturação para a ordem de venda corrente"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -465,7 +465,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sale order"
-msgstr ""
+msgstr "A conta analítica relacionada com uma ordem de venda"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
@@ -516,7 +516,7 @@ msgstr "Endereço da Factura"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "Procurar linhas não faturadas"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -635,7 +635,7 @@ msgstr "Indica que uma fatura foi paga"
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data da ordem"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -720,7 +720,7 @@ msgstr "Endereço para Envio"
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtros avançados"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -784,6 +784,7 @@ msgstr "Sua Referência"
 msgid ""
 "The name and address of the contact who requested the order or quotation."
 msgstr ""
+"O nome e a morada do contacto que fez uma encomenda ou pediu uma cotação"
 
 #. module: sale
 #: help:res.company,security_lead:0
@@ -841,7 +842,7 @@ msgstr "Criar Factura"
 #. module: sale
 #: field:sale.installer,sale_margin:0
 msgid "Margins in Sales Orders"
-msgstr ""
+msgstr "Fusão de ordens de vendas"
 
 #. module: sale
 #: view:sale.order:0
@@ -961,7 +962,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The sale order '%s' has been cancelled."
-msgstr ""
+msgstr "A ordem de venda '%s' foi cancelada."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -981,7 +982,7 @@ msgstr "Entrega Parcial"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr "Confirmar Cotação"
+msgstr "Confirmar cotação"
 
 #. module: sale
 #: view:sale.order:0
@@ -1035,8 +1036,9 @@ msgstr ""
 
 #. module: sale
 #: help:sale.order,picking_ids:0
-msgid "This is a list of picking that has been generated for this sale order"
-msgstr ""
+msgid ""
+"This is the list of picking list that have been generated for this invoice"
+msgstr "Esta é a lista de recolha gerada para esta factura"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1134,7 +1136,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_product_total_price
 msgid "Sales by Product's Category"
-msgstr ""
+msgstr "Venda por categoria de produto"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -1240,7 +1242,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "Cotações antigas"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -1332,7 +1334,7 @@ msgstr "Factura"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
-msgstr ""
+msgstr "Não foi possível cancelar a linha da ordem de venda!"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1381,7 +1383,7 @@ msgstr "Faturação"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sale order is confirmed"
-msgstr ""
+msgstr "Data na qual a ordem de venda foi confirmada"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
@@ -1443,7 +1445,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
-msgstr ""
+msgstr "Endereço de entrega para a ordem de venda corrente"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1845,7 +1847,7 @@ msgstr ""
 #. module: sale
 #: view:sale.open.invoice:0
 msgid "You invoice has been successfully created!"
-msgstr ""
+msgstr "A sua fatura foi criada com êxito!"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1909,7 +1911,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Not enough stock !"
-msgstr ""
+msgstr "Stock insuficiente!"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -1979,13 +1981,13 @@ msgstr "Abril"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The sale order '%s' has been set in draft state."
-msgstr ""
+msgstr "A ordem de venda '%s' foi colocada como 'rascunho'"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Procurar ordens de venda"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -2095,10 +2097,6 @@ msgstr "Factura Baseada em Entregas"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da acção"
-
-#~ msgid ""
-#~ "This is the list of picking list that have been generated for this invoice"
-#~ msgstr "Esta é a lista de recolha gerada para esta factura"
 
 #~ msgid "Customer Ref"
 #~ msgstr "Ref do Cliente"

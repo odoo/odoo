@@ -76,7 +76,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         count = 0
         active_ids = context.get('active_ids',[])
-        for pick in pick_obj.browse(cr, uid, active_ids):
+        for pick in pick_obj.browse(cr, uid, active_ids, context=context):
             if pick.invoice_state != '2binvoiced':
                 count += 1
         if len(active_ids) == 1 and count:

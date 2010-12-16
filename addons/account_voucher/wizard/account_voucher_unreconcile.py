@@ -41,7 +41,7 @@ class account_voucher_unreconcile(osv.osv_memory):
         voucher_pool = self.pool.get('account.voucher')
         reconcile_pool = self.pool.get('account.move.reconcile')
         if context.get('active_id'):
-            voucher = voucher_pool.browse(cr, uid, context.get('active_id'), context)
+            voucher = voucher_pool.browse(cr, uid, context.get('active_id'), context=context)
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:

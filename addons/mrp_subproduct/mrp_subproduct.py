@@ -45,7 +45,7 @@ class mrp_subproduct(osv.osv):
         @return: Dictionary of changed values
         """
         if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id)
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}

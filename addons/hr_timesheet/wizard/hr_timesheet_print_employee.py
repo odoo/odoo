@@ -37,8 +37,6 @@ class analytical_timesheet_employee(osv.osv_memory):
     def _get_user(self, cr, uid, context=None):
 
         emp_obj = self.pool.get('hr.employee')
-        if context is None:
-            context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if not emp_id:
             raise osv.except_osv(_("Warning"), _("No employee defined for this user"))
@@ -51,8 +49,6 @@ class analytical_timesheet_employee(osv.osv_memory):
              }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': [],

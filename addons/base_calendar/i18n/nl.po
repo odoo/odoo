@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-27 04:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -44,10 +44,9 @@ msgstr ""
 "kalender-item"
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Tijdzone"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.event.edit.all,name:0
@@ -258,11 +257,10 @@ msgid "Days"
 msgstr "dagen"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
-msgstr "Niet terugkerend"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
+msgstr "Detail uitnodiging"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:0
@@ -435,11 +433,6 @@ msgid "Attendees"
 msgstr "Deelnemers"
 
 #. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definiëring."
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirm"
 msgstr "Bevestigen"
@@ -465,11 +458,6 @@ msgstr "Type uitnodiging"
 #: view:res.alarm:0
 msgid "Reminder details"
 msgstr "Details herinnering"
-
-#. module: base_calendar
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
@@ -507,11 +495,6 @@ msgstr "E-mail"
 #: view:calendar.attendee:0
 msgid "Event Detail"
 msgstr "Detail gebeurtenis"
-
-#. module: base_calendar
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -590,19 +573,9 @@ msgid "Delegrated To"
 msgstr "Toegewezen aan"
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Ongeldige argumenten"
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Antwoord vereist"
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -692,6 +665,12 @@ msgstr "Eerste"
 #: view:calendar.event:0
 msgid "Privacy"
 msgstr "Privacy"
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Tijdzone"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -809,10 +788,10 @@ msgid "Fri"
 msgstr "Vrij"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
-msgstr "Detail uitnodiging"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.attendee,member:0
@@ -842,21 +821,9 @@ msgid "Attachment"
 msgstr "Bijlage"
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief Menu maken."
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr "Uitnodiging van"
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -995,6 +962,13 @@ msgid "Count"
 msgstr "Aantal"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr "Niet terugkerend"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1046,6 +1020,12 @@ msgstr "Interval"
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
 msgstr "Woensdag"
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,name:0
@@ -1135,6 +1115,11 @@ msgid "Recurrent ID date"
 msgstr "Herhaling ID datum"
 
 #. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,state:0
 #: view:calendar.attendee:0
 #: field:calendar.attendee,state:0
@@ -1196,11 +1181,6 @@ msgstr "res.users"
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
 msgstr "Dinsdag"
-
-#. module: base_calendar
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -1643,8 +1623,19 @@ msgstr "Vijfde"
 #~ "definieert een regel of herhalingspatroon voor een uitzondering op een "
 #~ "herhaling"
 
+#~ msgid "Invalid arguments"
+#~ msgstr "Ongeldige argumenten"
+
 #~ msgid "Select data for ExRule"
 #~ msgstr "Selecteer gegevens voor uitzondering regel"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief Menu maken."
 
 #~ msgid "ExRule"
 #~ msgstr "UitzRegel"
@@ -1663,3 +1654,18 @@ msgstr "Vijfde"
 #~ "bijlage bij een e-mail bericht,\n"
 #~ "                    * Verwijst naar een procedure bron, die wordt "
 #~ "aangeroepen nadat het alarm is afgegaan voor procedure."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definiëring."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

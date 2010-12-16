@@ -26,7 +26,7 @@ class postpone_wizard(osv.osv_memory):
     def button_postpone(self, cr, uid, ids, context=None):
         if context is None:
             context = {}    
-        self.pool.get('project.scrum.product.backlog').button_postpone(cr, uid, context.get('active_ids',[]), context)
+        self.pool.get('project.scrum.product.backlog').button_postpone(cr, uid, context.get('active_ids',[]), context=context)
         return {}
 postpone_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

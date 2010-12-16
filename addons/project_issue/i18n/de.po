@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-28 11:40+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-29 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_issue
@@ -33,14 +33,9 @@ msgid "Working Hours to Open the Issue"
 msgstr "Arbeitszeit für Eröffnung"
 
 #. module: project_issue
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung für diese Aktion."
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Today"
-msgstr "Heute"
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -99,6 +94,11 @@ msgstr ""
 "Sie können das Problem nicht eskalieren.\n"
 "Für das entsprechende Projekt wurde kein Projekt definiert, in das eskaliert "
 "werden kann !"
+
+#. module: project_issue
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -257,11 +257,9 @@ msgid "Convert To Task"
 msgstr "Erzeuge Aufgabe"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
-msgid "Closed"
-msgstr "Beendet"
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Maintenance"
+msgstr "Wartung"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
@@ -287,11 +285,6 @@ msgstr "Nächstes"
 #: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Priorität"
-
-#. module: project_issue
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -360,6 +353,11 @@ msgid "Reset to Draft"
 msgstr "Zurücksetzen"
 
 #. module: project_issue
+#: view:project.issue:0
+msgid "Today"
+msgstr "Heute"
+
+#. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.open_board_project_issue
 #: model:ir.ui.menu,name:project_issue.menu_deshboard_project_issue
 msgid "Project Issue Dashboard"
@@ -392,11 +390,6 @@ msgstr "Stufe"
 #: view:project.issue:0
 msgid "History Information"
 msgstr "Information Historie"
-
-#. module: project_issue
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_current_project_issue_tree
@@ -515,11 +508,6 @@ msgid "Feature Requests"
 msgstr "Feature Anfrage"
 
 #. module: project_issue
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: project_issue
 #: field:project.issue,write_date:0
 msgid "Update Date"
 msgstr "Aktualisiere Datum"
@@ -549,11 +537,6 @@ msgstr ""
 "Komma separierte Auflistung in diesem Feld."
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Wartung"
-
-#. module: project_issue
 #: selection:project.issue,state:0
 #: selection:project.issue.report,state:0
 msgid "Draft"
@@ -566,9 +549,11 @@ msgid "Low"
 msgstr "Gering"
 
 #. module: project_issue
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
+#: field:project.issue,date_closed:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
+msgid "Closed"
+msgstr "Beendet"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -624,11 +609,6 @@ msgstr "Zu erledigen"
 #: selection:project.issue.report,month:0
 msgid "June"
 msgstr "Juni"
-
-#. module: project_issue
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
 
 #. module: project_issue
 #: field:project.issue,day_close:0
@@ -779,14 +759,6 @@ msgid "Issues"
 msgstr "Probleme"
 
 #. module: project_issue
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Object Bezeichnung muss mit x_ beginnen und darf kein Sonderzeichen "
-"haben !"
-
-#. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
 #: model:ir.model,name:project_issue.model_project_issue
@@ -885,11 +857,6 @@ msgstr ""
 "          \n"
 "Wenn der Vorgang vor Weiterbearbeitung geprüft werden soll ist der Status "
 "'Unerledigt' ."
-
-#. module: project_issue
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -1007,5 +974,32 @@ msgstr "Dauer"
 msgid "My Open Issues by Creation Date"
 msgstr "Meine offenen Probleme nach Erstelldatum"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung für diese Aktion."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Object Bezeichnung muss mit x_ beginnen und darf kein Sonderzeichen "
+#~ "haben !"
+
 #~ msgid "Emails"
 #~ msgstr "Emails"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

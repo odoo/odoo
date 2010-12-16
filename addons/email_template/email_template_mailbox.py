@@ -40,7 +40,7 @@ class email_template_mailbox(osv.osv):
         to periodically send emails
         """
         try:
-            self.send_all_mail(cursor, user, context)
+            self.send_all_mail(cursor, user, context=context)
         except Exception, e:
             LOGGER.notifyChannel(
                                  "Email Template",
@@ -196,8 +196,6 @@ class email_template_mailbox(osv.osv):
         It just changes the folder of the item to "Trash", if it is no in Trash folder yet, 
         or completely deletes it if it is already in Trash.
         """
-        if not context:
-            context = {}
         to_update = []
         to_remove = []
         for mail in self.browse(cr, uid, ids, context=context):
