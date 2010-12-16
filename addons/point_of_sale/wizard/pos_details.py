@@ -51,6 +51,7 @@ class pos_details(osv.osv_memory):
         res = self.read(cr, uid, ids, ['date_start', 'date_end'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
+        if res.get('id',False):datas['ids']=[res['id']]
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.details',
