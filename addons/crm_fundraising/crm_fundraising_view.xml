@@ -34,19 +34,7 @@
             <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
         
-        <record id="action_stage_tree_view4" model="ir.actions.act_window.view">
-	        <field eval="1" name="sequence"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
-	        <field name="act_window_id" ref="crm_fundraising_stage_act"/>
-	    </record>
-	        
-	    <record id="action_stage_form_view4" model="ir.actions.act_window.view">
-	    	<field eval="2" name="sequence"/>
-	        <field name="view_mode">form</field>
-	        <field name="view_id" ref="crm.crm_case_stage_form_full"/>
-	        <field name="act_window_id" ref="crm_fundraising_stage_act"/>
-		</record>
+
 
          <menuitem action="crm_fundraising_stage_act"
             groups="base.group_extended" name="Stages"

@@ -46,7 +46,67 @@ AVAILABLE_PRIORITIES = [
 
 class crm_case(object):
     """A simple python class to be used for common functions """
+    
+    def _find_lost_stage(self, cr, uid, type, section_id):
+        return self._find_percent_stage(cr, uid, 0.0, type, section_id)
+        
+    def _find_won_stage(self, cr, uid, type, section_id):
+        return self._find_percent_stage(cr, uid, 100.0, type, section_id)
+    
+    def _find_percent_stage(self, cr, uid, percent, type, section_id):
+        """
+            Return the first stage with a probability == percent
+        """
+        stage_pool = self.pool.get('crm.case.stage')
+        if section_id :
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+        else : 
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type)])
+            
+        if ids:
+            return ids[0]
+        return False
+            
+        
+    def _find_first_stage(self, cr, uid, type, section_id):
+        """
+            return the first stage that has a sequence number equal or higher than sequence
+        """
+        stage_pool = self.pool.get('crm.case.stage')
+        if section_id :
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+        else : 
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type)])
+            
+        if ids:
+            stages = stage_pool.browse(cr, uid, ids)
+            stage_min = stages[0]
+            for stage in stages:
+                if stage_min.sequence > stage.sequence:
+                    stage_min = stage
+            return stage_min.id
+        else : 
+            return False
+        
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
 
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+            
+        
+        print "CALL on change ID"
+        if not stage_id:
+            return {'value':{}}
+
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+
+        if not stage.on_change:
+            return {'value':{}}
+        return {'value':{'probability': stage.probability}}
+    
     def _get_default_partner_address(self, cr, uid, context):
         """Gives id of default address for current user
         @param self: The object pointer
@@ -145,6 +205,9 @@ class crm_case(object):
             return False
             
         next_seq = next_stage.sequence
+        if not current_seq :
+            current_seq = 0
+
         if (abs(next_seq - current_seq)) >= 1:
             return next_stage
         else :
@@ -172,6 +235,7 @@ class crm_case(object):
                 index = stages.index(case.stage_id.id)
 
             next_stage = self._find_next_stage(cr, uid, stages, index, current_seq, stage_pool, context=context)
+    
             if next_stage:
                 next_stage_id = next_stage.id
                 data = {'stage_id': next_stage.id}
@@ -179,6 +243,7 @@ class crm_case(object):
                     data.update({'probability': next_stage.probability})
             self.write(cr, uid, [case.id], data, context=context)
             
+     
         return next_stage_id
         
         
@@ -190,7 +255,6 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        
        
         return self.stage_change(cr, uid, ids, context=context, order='sequence')
         
@@ -253,6 +317,7 @@ class crm_case(object):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+        
         cases = self.browse(cr, uid, ids)
         self._history(cr, uid, cases, _('Open'))
         for case in cases:
@@ -260,7 +325,9 @@ class crm_case(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, case.id, data)
-        self._action(cr, uid, cases, 'open')
+            
+            
+        self._action(cr, uid, cases, 'open')           
         return True
 
     def case_close(self, cr, uid, ids, *args):
