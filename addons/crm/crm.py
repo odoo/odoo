@@ -97,8 +97,6 @@ class crm_case(object):
             @param ids: List of stage’s IDs
             @stage_id: change state id on run time """
             
-        
-        print "CALL on change ID"
         if not stage_id:
             return {'value':{}}
 

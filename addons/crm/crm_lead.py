@@ -391,7 +391,6 @@ class crm_lead(crm_case, osv.osv):
             if case.state in CRM_LEAD_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
-
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):

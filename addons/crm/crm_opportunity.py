@@ -142,7 +142,6 @@ class crm_opportunity(osv.osv):
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
-        print "open opportunity"
         res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
         
         return res
