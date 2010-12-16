@@ -168,7 +168,7 @@ class account_voucher(osv.osv):
                 debit += l.amount
             for l in voucher.line_cr_ids:
                 credit += l.amount
-            res[voucher.id] =  abs(voucher.amount - abs(credit - debit)) 
+            res[voucher.id] =  abs(voucher.amount - abs(credit - debit))
         return res
 
     _name = 'account.voucher'
@@ -827,7 +827,7 @@ class account_voucher_line(osv.osv):
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Originial Amount', store=True),
         'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
-        'company_id': fields.related('voucher_id','company_id', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True),
     }
     _defaults = {
         'name': ''
