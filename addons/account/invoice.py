@@ -108,40 +108,23 @@ class account_invoice(osv.osv):
         data_inv = self.browse(cr, uid, ids)
         cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
-            debit = credit = 0.0
+            if inv.reconciled: 
+                res[inv.id] = 0.0
+                continue
+            inv_total = inv.amount_total
             context_unreconciled = context.copy()
-            # If one of the invoice line is not in the currency of the invoice,
-            # we use the currency of the company to compute the residual amount.
-            # All the lines must use the same currency source (company or invoice)
-            fromcompany = False
-            
             for lines in inv.move_lines:
-                if lines.currency_id and lines.currency_id.id <> inv.currency_id.id:
-                    fromcompany = True
-                    break
-            for lines in inv.move_lines:
-                # If currency conversion needed
-                if fromcompany:
-                    context_unreconciled.update({'date':lines.date})
-                    # If amount currency setted, compute for debit and credit in company currency
-                    if lines.credit:
-                        credit += abs(cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.credit, round=False,context=context_unreconciled))
-                    else:
-                        debit += abs(cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.debit, round=False,context=context_unreconciled))
+                if lines.currency_id and lines.currency_id.id == inv.currency_id.id:
+                   if inv.type in ('out_invoice','in_refund'):
+                        inv_total += lines.amount_currency
+                   else:
+                        inv_total -= lines.amount_currency
                 else:
-                    if lines.amount_currency:
-                        debit += lines.debit > 0 and abs(lines.amount_currency) or 0.00
-                        credit += lines.credit > 0 and abs(lines.amount_currency) or 0.00
-                    else:
-                        debit += lines.debit or 0.00
-                        credit += lines.credit or 0.00
-            
-            if inv.type in ('out_invoice','in_refund'):
-                amount = credit-debit
-            else:
-                amount = debit-credit
-            
-            result = inv.amount_total - amount
+                   context_unreconciled.update({'date': lines.date})
+                   amount_in_invoice_currency = cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id,abs(lines.debit-lines.credit),round=False,context=context_unreconciled)
+                   inv_total -= amount_in_invoice_currency
+
+            result = inv_total 
             res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
         return res
 
