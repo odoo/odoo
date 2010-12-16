@@ -49,6 +49,8 @@ class product_margin(osv.osv_memory):
 
             @return:
         """
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
         id = mod_obj.read(cr, uid, result, ['res_id'])
@@ -62,9 +64,14 @@ class product_margin(osv.osv_memory):
         #get the current product.margin object to obtain the values from it
         product_margin_obj = self.browse(cr,uid,ids)[0]
 
+        context = {'invoice_state' : product_margin_obj.invoice_state}
+        if product_margin_obj.from_date:
+            context.update({'date_from': product_margin_obj.from_date})
+        if product_margin_obj.to_date:
+            context.update({'date_to': product_margin_obj.to_date})
         return {
             'name': _('Product Margins'),
-            'context':{'date_from':product_margin_obj.from_date,'date_to':product_margin_obj.to_date,'invoice_state' : product_margin_obj.invoice_state},
+            'context': context,
             'view_type': 'form',
             "view_mode": 'tree,form,graph',
             'res_model':'product.product',

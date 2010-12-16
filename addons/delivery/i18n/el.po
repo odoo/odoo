@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:24+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -38,6 +38,11 @@ msgid "Net weight"
 msgstr ""
 
 #. module: delivery
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
@@ -47,11 +52,6 @@ msgstr "Καμία διαθέσιμη τιμή!"
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr ""
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -126,13 +126,6 @@ msgid "Delivery Method"
 msgstr "Μέθοδος Παράδοσης"
 
 #. module: delivery
-#: help:delivery.grid,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"grid without removing it."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr ""
@@ -156,9 +149,10 @@ msgid "Net Weight"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
-msgstr "Γραμμές Πίνακα"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr "Προειδοποίηση"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -181,9 +175,9 @@ msgid "Partner"
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Πίνακας Παραδόσεων"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -212,10 +206,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
-msgstr "Προειδοποίηση"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
+msgstr "Γραμμές Πίνακα"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -223,20 +216,16 @@ msgid "Grid"
 msgstr "Πίνακας"
 
 #. module: delivery
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "Έως ΤΚ"
-
-#. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Σφάλμα: η 2η ΜΜ θα πρέπει να είναι σε διαφορετική κατηγορία απο την 1η ΜΜ"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -268,6 +257,13 @@ msgid "Weight"
 msgstr "Βάρος"
 
 #. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr "Μέθοδος Παραδόσεων"
@@ -282,14 +278,6 @@ msgstr ""
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Σφάλμα: Η προκαθορισμένη 1η ΜΜ και η 1η ΜΜ αγορών θα πρέπει να ανήκουν στην "
-"ίδια κατηγορία."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -308,9 +296,9 @@ msgid "Lot"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Πίνακας Παραδόσεων"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -334,9 +322,17 @@ msgid "Condition"
 msgstr "Κατάσταση"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Τιμή Κόστους"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -371,14 +367,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr "Συνεργάτης Μεταφορέας"
@@ -387,6 +375,20 @@ msgstr "Συνεργάτης Μεταφορέας"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Πωλήσεις & Αγορές"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Τιμή Κόστους"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -451,13 +453,6 @@ msgid "Name"
 msgstr "Όνομα"
 
 #. module: delivery
-#: help:delivery.carrier,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"carrier without removing it."
-msgstr ""
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
@@ -512,14 +507,18 @@ msgid "States"
 msgstr "Καταστάσεις"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Σφάλμα: Άκυρος κωδικός EAN"
-
-#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Τύπος Τιμής"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 
 #~ msgid "This delivery method will be used when invoicing from packing."
 #~ msgstr ""
@@ -534,9 +533,19 @@ msgstr "Τύπος Τιμής"
 #~ msgid "Carrier and delivery grids"
 #~ msgstr "Μεταφορέας και πίνακας παραδόσεων"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Σφάλμα: η 2η ΜΜ θα πρέπει να είναι σε διαφορετική κατηγορία απο την 1η ΜΜ"
+
 #, python-format
 #~ msgid "No grid avaible !"
 #~ msgstr "Κανένα διαθέσιμο πλέγμα!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Σφάλμα: Η προκαθορισμένη 1η ΜΜ και η 1η ΜΜ αγορών θα πρέπει να ανήκουν στην "
+#~ "ίδια κατηγορία."
 
 #~ msgid "Notes"
 #~ msgstr "Σημειώσεις"
@@ -566,5 +575,11 @@ msgstr "Τύπος Τιμής"
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Ο ΦΠΑ φαίνεται να μην είναι σωστός."
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Σφάλμα: Άκυρος κωδικός EAN"
+
 #~ msgid "Cancel"
 #~ msgstr "Άκυρο"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-30 18:14+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -41,11 +41,6 @@ msgstr "Appliquer la Remise"
 #: view:pos.order:0
 msgid "Set to draft"
 msgstr "Mettre en brouillon"
-
-#. module: point_of_sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -78,8 +73,8 @@ msgid "All Cashboxes Of the day :"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_box_out
-msgid "Pos Box Out"
+#: view:pos.box.entries:0
+msgid "Put Money"
 msgstr ""
 
 #. module: point_of_sale
@@ -244,11 +239,6 @@ msgid "Total Price"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: point_of_sale
 #: view:product.product:0
 msgid "Miscelleanous"
 msgstr "Divers"
@@ -258,6 +248,12 @@ msgstr "Divers"
 #: report:pos.sales.user:0
 msgid "Sales Report"
 msgstr "Rapport des Ventes"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
+#, python-format
+msgid "No Order Lines"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -292,12 +288,6 @@ msgid "No valid pricelist line found !"
 msgstr "Aucune ligne de Liste de Prix valide trouvée !"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_discount.py:0
-#, python-format
-msgid "No Order Lines"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.lines:0
 #: report:pos.payment.report:0
@@ -326,6 +316,14 @@ msgstr "Qté Totale"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
+#, python-format
+msgid ""
+"You can not open a Cashbox for \"%s\".\n"
+"Please close its related cash register."
 msgstr ""
 
 #. module: point_of_sale
@@ -366,26 +364,6 @@ msgid "August"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related cash register.' %(journal.name)))\n"
-"\n"
-"            number = \n"
-"            if journal.sequence_id:\n"
-"                number = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"            else:\n"
-"                number = sequence_obj.get(cr, uid, 'account.cash.statement"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
-
-#. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "June"
@@ -395,16 +373,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
 msgstr "Ventes par magasin"
-
-#. module: point_of_sale
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
-
-#. module: point_of_sale
-#: view:product.product:0
-msgid "Product Description"
-msgstr "Description du produit"
 
 #. module: point_of_sale
 #: field:pos.order,date_payment:0
@@ -580,9 +548,9 @@ msgid "Cash registers are already closed."
 msgstr ""
 
 #. module: point_of_sale
-#: field:report.cash.register,date:0
-msgid "Create Date"
-msgstr ""
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erreur: code EAN invalide"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -785,11 +753,6 @@ msgstr "Total Facturé"
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
 msgstr ""
-
-#. module: point_of_sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -1036,6 +999,11 @@ msgid "POS"
 msgstr "Point de vente"
 
 #. module: point_of_sale
+#: field:report.cash.register,date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Output Operations"
 msgstr "Opérations de sortie de caisse"
@@ -1214,11 +1182,6 @@ msgid "Print the receipt of the sale"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking
 msgid "Picking List"
 msgstr ""
@@ -1350,11 +1313,6 @@ msgid "Statement Name"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order.line,price_subtotal:0
-msgid "Subtotal w/o Tax"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: model:ir.ui.menu,name:point_of_sale.menu_cash_register
 #: field:pos.box.entries,journal_id:0
@@ -1398,11 +1356,6 @@ msgstr "Aucune lignes de commande pour cette vente."
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: point_of_sale
@@ -1505,14 +1458,6 @@ msgstr "Réf. Commande"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment_report_date
 msgid "Sales lines Report"
 msgstr ""
-
-#. module: point_of_sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
@@ -1629,9 +1574,9 @@ msgid "Mode of Taxes"
 msgstr "Mode des Taxes"
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_cash_journal
-msgid "Cash Journal"
-msgstr ""
+#: view:product.product:0
+msgid "Product Description"
+msgstr "Description du produit"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -1750,8 +1695,8 @@ msgid "Pos order"
 msgstr "Commande Point de Vente"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: code:addons/point_of_sale/wizard/pos_discount.py:0
+#: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1863,6 +1808,11 @@ msgid "Sales Lines"
 msgstr ""
 
 #. module: point_of_sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.discount,discount:0
 msgid "Discount "
 msgstr ""
@@ -1904,8 +1854,8 @@ msgid "Today's Sales by Current User"
 msgstr "Ventes du jour de l'utilisateur courant"
 
 #. module: point_of_sale
-#: view:pos.box.entries:0
-msgid "Put Money"
+#: model:ir.model,name:point_of_sale.model_pos_box_out
+msgid "Pos Box Out"
 msgstr ""
 
 #. module: point_of_sale
@@ -2174,13 +2124,13 @@ msgid "Order lines"
 msgstr "Lignes de commande"
 
 #. module: point_of_sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: field:pos.order.line,price_subtotal:0
+msgid "Subtotal w/o Tax"
 msgstr ""
 
 #. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
+#: view:pos.order:0
+msgid "Add product"
 msgstr ""
 
 #. module: point_of_sale
@@ -2418,6 +2368,9 @@ msgstr ""
 #~ msgid "Get From Order"
 #~ msgstr "Obtenir à partir d'une commande"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "POS Lines of the day"
 #~ msgstr "Lignes du Point de Vente du Jour"
 
@@ -2478,6 +2431,12 @@ msgstr ""
 #~ msgid "Refund order :"
 #~ msgstr "Rembourser la commande :"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
+
 #~ msgid "Pos Payment"
 #~ msgstr "Paiement Point de Vente"
 
@@ -2516,6 +2475,9 @@ msgstr ""
 
 #~ msgid "Company:"
 #~ msgstr "Société :"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom du Modèle non valide dans la définition de l'action."
 
 #~ msgid ","
 #~ msgstr ","

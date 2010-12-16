@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-29 07:54+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "ID certyfikatu modułu musi być unikalne !"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -32,32 +27,14 @@ msgstr ""
 "Wprowadź numer bez kresek i poprzedź go znakami PL. Np. PL2343423123."
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
-
-#. module: base_vat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
 msgstr "Base VAT - Do sprawdzania poprawności numeru NIP."
 
 #. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Nazwa modułu musi być unikalna !"
-
-#. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Notka prawna o NIP i VAT"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -82,9 +59,12 @@ msgid "Partner"
 msgstr ""
 
 #. module: base_vat
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Rozmiar pola nie może być mniejszy od 1 !"
+#: field:res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "Notka prawna o NIP i VAT"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 
 #~ msgid "VAT"
 #~ msgstr "VAT"
@@ -92,3 +72,18 @@ msgstr "Rozmiar pola nie może być mniejszy od 1 !"
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
 #~ msgstr "Włącz numer NIP dla partnera. Sprawdź poprawność numeru NIP."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Nazwa modułu musi być unikalna !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID certyfikatu modułu musi być unikalne !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Rozmiar pola nie może być mniejszy od 1 !"

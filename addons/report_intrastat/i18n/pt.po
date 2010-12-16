@@ -6,56 +6,50 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-10-30 09:03+0000\n"
 "Last-Translator: Madalena_prime <madalena.barreto@prime.cv>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
-
-#. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Canceled Invoice"
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
-msgstr ""
-
-#. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+msgstr "Desc. (%)"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Factura do Fornecedor"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Preço Unitário"
 
 #. module: report_intrastat
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: report_intrastat
@@ -66,22 +60,22 @@ msgstr "Importar"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "VAT :"
-msgstr ""
+msgstr "IVA  :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PRO-FORMA"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Impostos:"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -106,32 +100,32 @@ msgstr "Tipo"
 #. module: report_intrastat
 #: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
 msgid "Invoice Intrastat"
-msgstr ""
+msgstr "Factura Interestadual"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Data da Factura"
 
 #. module: report_intrastat
 #: model:ir.module.module,shortdesc:report_intrastat.module_meta_information
 msgid "Intrastat Reporting - Reporting"
-msgstr ""
+msgstr "Relatório - Relatório Interestadual"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: report_intrastat
 #: view:report.intrastat:0
@@ -141,11 +135,6 @@ msgstr ""
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "January"
-msgstr ""
-
-#. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
 msgstr ""
 
 #. module: report_intrastat
@@ -164,17 +153,17 @@ msgstr "Código interestadual"
 #. module: report_intrastat
 #: view:report.intrastat:0
 msgid "This Month"
-msgstr "Este mês"
+msgstr "Este Mês"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Partner Ref."
-msgstr ""
+msgstr "Referência de Terceiros"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Total (inclu. taxes):"
-msgstr ""
+msgstr "Total (impostos incluídos):"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -194,11 +183,21 @@ msgstr "Relatório Interestadual"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Invoice"
+msgstr "Factura"
+
+#. module: report_intrastat
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
@@ -209,7 +208,7 @@ msgstr ""
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Taxes"
-msgstr ""
+msgstr "Impostos"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -219,12 +218,12 @@ msgstr ""
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Amount"
-msgstr ""
+msgstr "Montante"
 
 #. module: report_intrastat
 #: view:report.intrastat:0
 msgid "Intrastat Data"
-msgstr "Dado interestadual"
+msgstr "Dado Interestadual"
 
 #. module: report_intrastat
 #: field:report.intrastat,value:0
@@ -241,12 +240,12 @@ msgstr "Interestadual"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Rascunho da Factura"
 
 #. module: report_intrastat
 #: field:report.intrastat,supply_units:0
 msgid "Supply Units"
-msgstr ""
+msgstr "Unidades de Fornecimento"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -262,11 +261,16 @@ msgstr "Descrição"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Refund"
-msgstr ""
+msgstr "Reembolso"
 
 #. module: report_intrastat
 #: field:report.intrastat,ref:0
 msgid "Source document"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
 msgstr ""
 
 #. module: report_intrastat
@@ -283,7 +287,7 @@ msgstr ""
 #. module: report_intrastat
 #: field:res.country,intrastat:0
 msgid "Intrastat member"
-msgstr "Membro Interestadual"
+msgstr "Membro interestadual"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -291,9 +295,9 @@ msgid "December"
 msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr ""
+#: report:account.invoice.intrastat:0
+msgid "Tax"
+msgstr "Imposto"
 
 #. module: report_intrastat
 #: field:report.intrastat,code:0
@@ -318,7 +322,7 @@ msgstr "Exportar"
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: report_intrastat
 #: field:report.intrastat,name:0
@@ -328,17 +332,17 @@ msgstr ""
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Reembolso de Fornecedor"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Total (excl. taxes):"
-msgstr ""
+msgstr "Total (impostos excluídos):"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Price"
-msgstr ""
+msgstr "Preço"
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
@@ -346,9 +350,3 @@ msgstr ""
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Código Interestadual"
-
-#~ msgid "Intrastat (this month)"
-#~ msgstr "Interestadual(este mes)"
-
-#~ msgid "All Months"
-#~ msgstr "Todos os meses"

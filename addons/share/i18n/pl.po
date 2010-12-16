@@ -7,19 +7,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-27 04:01+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: share
-#: field:share.wizard.result.line,newly_created:0
-msgid "Newly created"
+#: code:addons/share/web/editors.py:0
+#, python-format
+msgid "Sharing"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid ""
+"This additional data has been automatically added to your current access.\n"
 msgstr ""
 
 #. module: share
@@ -33,9 +41,20 @@ msgid "Group created to set access rights for sharing data with some users."
 msgstr ""
 
 #. module: share
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Sharing Wizard - Step 1"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
@@ -69,11 +88,6 @@ msgid "Next"
 msgstr "Następny"
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Nazwa modułu musi być unikalna !"
-
-#. module: share
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
@@ -97,9 +111,9 @@ msgid "(Copy for sharing)"
 msgstr ""
 
 #. module: share
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr ""
 
 #. module: share
 #: field:share.wizard,share_root_url:0
@@ -140,9 +154,11 @@ msgid "Share wizard: step 1"
 msgstr ""
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "ID certyfikatu modułu musi być unikalne !"
+#: code:addons/share/wizard/share_wizard.py:0
+#: field:share.wizard.result.line,login:0
+#, python-format
+msgid "Username"
+msgstr "Nazwa użytkownika:"
 
 #. module: share
 #: field:res.users,share:0
@@ -182,30 +198,13 @@ msgstr "Nowi użytkownicy"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
-#: field:share.wizard.result.line,login:0
-#, python-format
-msgid "Username"
-msgstr "Nazwa użytkownika:"
-
-#. module: share
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:0
 #, python-format
 msgid "%s (Shared)"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid ""
-"This additional data has been automatically added to your current access.\n"
+#: selection:share.wizard,user_type:0
+msgid "New users (emails required)"
 msgstr ""
 
 #. module: share
@@ -219,8 +218,9 @@ msgid "Sharing Tools"
 msgstr ""
 
 #. module: share
-#: selection:share.wizard,user_type:0
-msgid "New users (emails required)"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Database"
 msgstr ""
 
 #. module: share
@@ -265,16 +265,6 @@ msgstr "Podany użytkownik już istnieje"
 #. module: share
 #: view:share.wizard:0
 msgid "Send Email Notification(s)"
-msgstr ""
-
-#. module: share
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
-
-#. module: share
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: share
@@ -391,9 +381,9 @@ msgid "Action to share"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
+#: code:addons/share/web/editors.py:0
 #, python-format
-msgid "Sharing Wizard - Step 1"
+msgid "Share"
 msgstr ""
 
 #. module: share
@@ -465,3 +455,24 @@ msgstr "Tylko do odczytu"
 #, python-format
 msgid "*usual password*"
 msgstr ""
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Nazwa modułu musi być unikalna !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID certyfikatu modułu musi być unikalne !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
