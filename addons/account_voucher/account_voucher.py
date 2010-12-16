@@ -168,7 +168,7 @@ class account_voucher(osv.osv):
                 debit += l.amount
             for l in voucher.line_cr_ids:
                 credit += l.amount
-            res[voucher.id] =  abs(voucher.amount - abs(credit - debit)) 
+            res[voucher.id] =  abs(voucher.amount - abs(credit - debit))
         return res
 
     _name = 'account.voucher'
@@ -691,7 +691,7 @@ class account_voucher(osv.osv):
             for line in inv.line_ids:
                 if not line.amount:
                     continue
-                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount)
+                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
