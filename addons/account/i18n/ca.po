@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-12-11 13:09+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -358,6 +358,12 @@ msgid ""
 msgstr ""
 "Permet canviar el signe del saldo que es mostra en els informes, per tal que "
 "pugui veure xifres positives en comptes de negatives en comptes de despeses."
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1262,11 +1268,6 @@ msgid "Overdue Payments"
 msgstr "Pagaments fora de termini"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Error: La referència BVR és necessària."
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2054,6 +2055,14 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -3023,7 +3032,10 @@ msgid "Purchase"
 msgstr "Compra"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3499,18 +3511,14 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Tipus de compte"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"El termini de pagament dels proveïdors no té línies de termini de pagament "
+"(Càlcul) definides!"
 
 #. module: account
 #: view:account.state.open:0
@@ -3742,14 +3750,18 @@ msgid "Shortcut"
 msgstr "Abreviació"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"El termini de pagament dels proveïdors no té línies de termini de pagament "
-"(Càlcul) definides!"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Tipus de compte"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4057,10 +4069,13 @@ msgid "Analytic Account Statistics"
 msgstr "Estadístiques compte analític"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
 msgstr ""
+"﻿Permet configurar automàticament el vostre pla comptable, comptes de bancs, "
+"impostos i diaris segons la plantilla seleccionada"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4145,6 +4160,16 @@ msgid ""
 msgstr ""
 "Comproveu l'import de la factura!\n"
 "El total real no concorda amb el total calculat."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Avís"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5694,6 +5719,11 @@ msgid "Default Credit Account"
 msgstr "Compte haver per defecte"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr ""
@@ -5880,6 +5910,11 @@ msgid "Centralisation"
 msgstr "Centralització"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6035,6 +6070,12 @@ msgstr "L'assentament \"%s\" no és vàlid!"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr ""
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6588,11 +6629,6 @@ msgstr "D'acord"
 #: code:addons/account/report/account_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -7320,6 +7356,11 @@ msgid "Invoice's state is Open"
 msgstr ""
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -7881,11 +7922,6 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Error: Número BVR no vàlid (checksum erroni)."
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr ""
@@ -8065,6 +8101,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Estimat Sr./Sra.,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9124,14 +9165,9 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Avís"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -10313,13 +10349,6 @@ msgstr "No podeu eliminar un compte que conté assentaments comptables. "
 #~ msgid "Modify Invoice"
 #~ msgstr "Modifica factura"
 
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "﻿Permet configurar automàticament el vostre pla comptable, comptes de bancs, "
-#~ "impostos i diaris segons la plantilla seleccionada"
-
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Assentaments codificats per apunt"
 
@@ -10568,6 +10597,9 @@ msgstr "No podeu eliminar un compte que conté assentaments comptables. "
 #~ msgid "Journal de vente"
 #~ msgstr "Diari de vendes"
 
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Error: Número BVR no vàlid (checksum erroni)."
+
 #~ msgid "Journal d'extourne"
 #~ msgstr "Diari d'inversió"
 
@@ -10729,6 +10761,9 @@ msgstr "No podeu eliminar un compte que conté assentaments comptables. "
 
 #~ msgid "Journal d'ouverture"
 #~ msgstr "Diari d'obertura"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Error: La referència BVR és necessària."
 
 #~ msgid "Financial Management"
 #~ msgstr "Comptabilitat i finances"
