@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-03 07:15+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"PO-Revision-Date: 2010-12-16 08:38+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -462,7 +462,7 @@ msgstr "Kies het actievenster, overzicht of assistent die u wilt uitvoeren."
 #. module: base
 #: view:res.config.users:0
 msgid "New User"
-msgstr ""
+msgstr "Nieuwe gebruiker"
 
 #. module: base
 #: view:base.language.export:0
@@ -589,7 +589,7 @@ msgstr "Albaans / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Verkoopkansen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -747,7 +747,7 @@ msgstr "Subcategorieën"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "ir.config_parameter"
-msgstr ""
+msgstr "ir.config_parameter"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -815,7 +815,7 @@ msgstr "Char"
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Contracten"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -977,7 +977,7 @@ msgstr "Taal met code \"%s\" bestaat niet"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #, python-format
 msgid "Error during communication with the publisher warranty server."
-msgstr ""
+msgstr "Fout tijdens communicatie met de uitgevers garantie server."
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -993,7 +993,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%Y - Year with century."
-msgstr ""
+msgstr "%Y - Jaar met eeuw."
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -1007,6 +1007,9 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
+"Deze assistent helpt u bij het registreren van een uitgever garantie "
+"contract in uw OpenERP systeem. Nadat het contract is geregistreerd kunt u "
+"problemen rechtstreeks doorsturen naar OpenERP."
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1251,7 +1254,7 @@ msgstr "Relaties"
 #. module: base
 #: field:res.partner.category,parent_left:0
 msgid "Left parent"
-msgstr ""
+msgstr "Links bovenliggende"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_widget_act_window
@@ -1536,6 +1539,9 @@ msgid ""
 "access to selected functionalities within the system. Click on 'Done' if you "
 "do not wish to add more users at this stage, you can always do this later."
 msgstr ""
+"Maak aanvullende gebruikers en ken ze toe aan groepen waarmee ze toegang "
+"krijgen tot specifieke functies in het systeem. Klik op 'Klaar' als u nu "
+"niet meer gebruikers wilt toevoegen; u kunt dit altijd later doen."
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1803,7 +1809,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
-msgstr ""
+msgstr "%y - Jaar zonder eeuw [00,99]."
 
 #. module: base
 #: model:res.country,name:base.si
@@ -1989,7 +1995,7 @@ msgstr "Repeterende actie instelling"
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Geannuleerd"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -2417,7 +2423,7 @@ msgstr "%x - Passende datum weergave"
 #. module: base
 #: view:res.lang:0
 msgid "%d - Day of the month [01,31]."
-msgstr ""
+msgstr "%d - Dag van de maand [01,31]."
 
 #. module: base
 #: model:res.country,name:base.tj
@@ -2629,7 +2635,7 @@ msgstr "Basisveld"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Validate"
-msgstr ""
+msgstr "Bevestigen"
 
 #. module: base
 #: field:ir.actions.todo,restart:0
@@ -2822,7 +2828,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.config_parameter:0
 msgid "Key must be unique."
-msgstr ""
+msgstr "Sleutel moet uniek zijn."
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -2869,9 +2875,18 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Passende weergave datum en tijd"
 
 #. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"Your database is now fully configured.\n"
+"\n"
+"Click 'Continue' and enjoy your OpenERP experience..."
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Hebrew / עִבְרִי"
-msgstr ""
+msgstr "Hebreeuws / עִבְרִי"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -3042,7 +3057,7 @@ msgstr "Benin"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #, python-format
 msgid "That contract is already registered in the system."
-msgstr ""
+msgstr "Dat contract is al geregisteerd in het systeem."
 
 #. module: base
 #: help:ir.sequence,suffix:0
@@ -3135,7 +3150,7 @@ msgstr "Brazilië"
 #. module: base
 #: view:res.lang:0
 msgid "%M - Minute [00,59]."
-msgstr ""
+msgstr "%M - Minuut [00,59]."
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -3377,7 +3392,7 @@ msgstr "Kazachstan"
 #. module: base
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
-msgstr ""
+msgstr "%w - Weekdag nummer [0(Zondag),6]."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -3488,7 +3503,7 @@ msgstr "Engels (CA)"
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr ""
+msgstr "publisher_warranty.contract"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -3628,7 +3643,7 @@ msgstr ""
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Please enter the serial key provided in your contract document:"
-msgstr ""
+msgstr "Vul aub de sleutelcode in die staat in uw contract document:"
 
 #. module: base
 #: view:workflow.activity:0
@@ -3740,7 +3755,7 @@ msgstr "Adressen relatie"
 #. module: base
 #: view:res.lang:0
 msgid "%S - Seconds [00,61]."
-msgstr ""
+msgstr "%S - Seconden [00,61]."
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -3883,7 +3898,7 @@ msgstr "De geselecteerde modules zijn bijgewerkt / geïnstalleerd !"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Latin) / srpski"
-msgstr ""
+msgstr "Servisch (Latijn) / srpski"
 
 #. module: base
 #: model:res.country,name:base.il
@@ -4104,7 +4119,7 @@ msgstr "Geannuleerd"
 #. module: base
 #: view:res.config.users:0
 msgid "Create User"
-msgstr ""
+msgstr "Gebruiker aanmaken"
 
 #. module: base
 #: view:partner.clear.ids:0
@@ -4115,7 +4130,7 @@ msgstr "Wilt u Ids opschonen ? "
 #: field:publisher_warranty.contract,name:0
 #: field:publisher_warranty.contract.wizard,name:0
 msgid "Serial Key"
-msgstr ""
+msgstr "Sleutelcode"
 
 #. module: base
 #: field:res.partner,customer:0
@@ -4192,7 +4207,7 @@ msgstr "Veld-koppelingen"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Refresh Validation Dates"
-msgstr ""
+msgstr "Bevestigingsdata verversen"
 
 #. module: base
 #: view:ir.model:0
@@ -4302,7 +4317,7 @@ msgstr "Faeröereilanden"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Add"
-msgstr ""
+msgstr "Toevoegen"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -4324,7 +4339,7 @@ msgstr "Tsjechië"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
-msgstr ""
+msgstr "Componenten assistent"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -4436,7 +4451,7 @@ msgstr "Dit venster"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contracts"
-msgstr ""
+msgstr "Uitgever garantie contracten"
 
 #. module: base
 #: help:res.log,name:0
@@ -4973,7 +4988,7 @@ msgstr "Dominica"
 #: sql_constraint:publisher_warranty.contract:0
 msgid ""
 "Your publisher warranty contract is already subscribed in the system !"
-msgstr ""
+msgstr "Uw uitgever garantie contract is al geregistreerd in het systeem !"
 
 #. module: base
 #: help:ir.cron,nextcall:0
@@ -5253,7 +5268,7 @@ msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 #. module: base
 #: field:res.log,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum gemaakt"
 
 #. module: base
 #: view:ir.translation:0
@@ -5437,7 +5452,7 @@ msgstr "Bedrijven"
 #. module: base
 #: view:res.lang:0
 msgid "%H - Hour (24-hour clock) [00,23]."
-msgstr ""
+msgstr "%H - Uur (24-uur klok) [00,23]."
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget
@@ -5543,12 +5558,12 @@ msgstr "Venster-acties"
 #. module: base
 #: view:res.lang:0
 msgid "%I - Hour (12-hour clock) [01,12]."
-msgstr ""
+msgstr "%I - Uur (12-uur klok) [01,12]."
 
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
 msgid "Finished"
-msgstr ""
+msgstr "Beëindigd"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -5583,6 +5598,12 @@ msgid ""
 msgstr ""
 "Weergavesoort: zet op 'tree' voor een hierarchische boomstructuur weergave, "
 "of 'form' voor andere weergaves"
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid "Click 'Continue' to configure the next addon..."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,record_id:0
@@ -6048,7 +6069,7 @@ msgstr "Schrijven"
 #. module: base
 #: view:res.lang:0
 msgid "%m - Month number [01,12]."
-msgstr ""
+msgstr "%m - Maandnummer [01,12]."
 
 #. module: base
 #: field:res.bank,city:0
@@ -6414,7 +6435,7 @@ msgstr "Alles stoppen"
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register a Contract"
-msgstr ""
+msgstr "Een contract registreren"
 
 #. module: base
 #: view:ir.model.data:0
@@ -6469,7 +6490,7 @@ msgstr "Start bijwerken"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #, python-format
 msgid "Contract validation error"
-msgstr ""
+msgstr "Contract bevestiging fout"
 
 #. module: base
 #: field:res.country.state,name:0
@@ -6678,7 +6699,7 @@ msgstr "Somalië"
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Terminated"
-msgstr ""
+msgstr "Afgebroken"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -6813,7 +6834,7 @@ msgstr "Installatie afbreken"
 #. module: base
 #: field:res.partner.category,parent_right:0
 msgid "Right parent"
-msgstr ""
+msgstr "Rechts bovenliggende"
 
 #. module: base
 #: view:res.lang:0
@@ -6935,7 +6956,7 @@ msgstr "Instellingen"
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract_wizard
 msgid "publisher_warranty.contract.wizard"
-msgstr ""
+msgstr "publisher_warranty.contract.wizard"
 
 #. module: base
 #: field:ir.actions.server,expression:0
@@ -7206,7 +7227,7 @@ msgstr "Deselecteer het actieve veld op de contactpersoon te verbergen."
 #. module: base
 #: model:ir.model,name:base.model_res_widget_wizard
 msgid "Add a widget for User"
-msgstr ""
+msgstr "Een component voor gebruiker toevoegen"
 
 #. module: base
 #: model:res.country,name:base.dk
@@ -7434,7 +7455,7 @@ msgstr "Leveranciers"
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register"
-msgstr ""
+msgstr "Registreren"
 
 #. module: base
 #: field:res.request,ref_doc2:0
@@ -7620,7 +7641,7 @@ msgstr "Bulgarije"
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Publisher warranty contract successfully registered!"
-msgstr ""
+msgstr "Uitgever garantie contract succesvol geregistreerd!"
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -8106,7 +8127,7 @@ msgstr "Dominicaanse Republiek"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Cyrillic) / српски"
-msgstr ""
+msgstr "Servisch (Cyrillisch) / српски"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -8199,7 +8220,7 @@ msgstr ""
 #: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #, python-format
 msgid "Please check your publisher warranty contract name and validity."
-msgstr ""
+msgstr "Controleer aub uw uitgever garantie contact naam en geldigheid."
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -8254,7 +8275,7 @@ msgstr "Roemeens / Roemenië"
 #. module: base
 #: view:res.log:0
 msgid "System Logs"
-msgstr ""
+msgstr "Systeem Logboeken"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -8417,7 +8438,7 @@ msgstr "Slowakije"
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
 msgid "Publisher Warranty"
-msgstr ""
+msgstr "Uitgever garantie"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -8469,7 +8490,7 @@ msgstr "Email & Handtekening"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Uitgever garantie contract"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8603,6 +8624,9 @@ msgid ""
 "simplified interface, which has less features but is easier. You can always "
 "switch later from the user preferences."
 msgstr ""
+"Als u OpenERP voor de eerste keer gebruikt adviseren we u dringend het "
+"eenvoudige interface te selecteren die minder functies kent maar eenvoudiger "
+"werkt. U kunt later altijd nog omschakelen via de gebruiker voorkeuren."
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -8792,7 +8816,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%j - Day of the year [001,366]."
-msgstr ""
+msgstr "%j - Dag van het jaar [001,366]."
 
 #. module: base
 #: field:ir.actions.server,mobile:0
