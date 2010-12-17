@@ -705,22 +705,18 @@ def GetSearchText(txtProcessor,*args):
     b = check()
     if not b:
         return
-
-    search_box = txtProcessor.GetControl()
-    global search_text
-    if txtProcessor.init_done:
-        win32gui.SendMessage(search_box, win32con.WM_SETTEXT, 0,search_text)
-        return
-
     # Get the selected mail and set the default value for search_text_control to mail.SenderEmailAddress
     ex = txtProcessor.window.manager.outlook.ActiveExplorer()
     assert ex.Selection.Count == 1
     mail = ex.Selection.Item(1)
     try:
-        search_text = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-    except Exception:
-        pass
-    win32gui.SendMessage(search_box, win32con.WM_SETTEXT, 0, search_text)
+        global objects_with_match
+        list_hwnd = win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+        objects_with_match = NewConn.SearchPartners()
+        setList(list_hwnd)
+    except Exception,e:
+        msg=getMessage(e)
+        win32ui.MessageBox('Document can not be loaded.\n'+str(e), "Push", flag_error)
     txtProcessor.init_done=True
 
 def SetNameColumn(listProcessor,*args):
@@ -1695,12 +1691,13 @@ dialog_map = {
                     (CommandButtonProcessor,    "ID_SEARCH ID_SEARCH_TEXT IDC_NAME_LIST", SearchObjectsForText,()),
                     (GroupProcessor,            "IDC_STATIC_GROUP", setCheckList, ()),
                     (CSComboProcessor,          "ID_ATT_METHOD_DROPDOWNLIST", GetConn,()),
-                    (TextProcessor,             "ID_SEARCH_TEXT", GetSearchText, ()),
                     (DialogCommand,             "ID_CREATE_CONTACT ID_SEARCH_TEXT", "IDD_NEW_CONTACT_DIALOG", set_search_text, ()),
                     (CloseButtonProcessor,      "IDCANCEL"),
                     (CommandButtonProcessor,    "ID_MAKE_ATTACHMENT IDC_NAME_LIST IDD_SYNC", MakeAttachment, ()),
                     (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST IDD_SYNC", CreateCase, ()),
-                    (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ())
+                    (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ()),
+                    (TextProcessor,             "ID_SEARCH_TEXT ID_SEARCH_TEXT IDC_NAME_LIST", GetSearchText, ()),
+
                 ),
 
                 "IDD_NEW_CONTACT_DIALOG" : (

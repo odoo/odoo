@@ -204,8 +204,6 @@ class OutlookAddin:
             item.TooltipText = "Click to Open Document that has been pushed to server."
             item.Enabled = True
 
-
-
             # Hook events for the item
 #            item = toolbarweb.Controls.Add(Type = constants.msoControlButton, Temporary = True)
 #            item = self.toolbarButtonPartner = DispatchWithEvents(item, ViewPartners)
