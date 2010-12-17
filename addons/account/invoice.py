@@ -1451,21 +1451,21 @@ class account_invoice_line(osv.osv):
         return res_final
 
     def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
-        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
         warning = {}
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context)
         if 'uos_id' in res['value']:
             del res['value']['uos_id']
         if not uom:
             res['value']['price_unit'] = 0.0
-        if product and uom:    
+        if product and uom:
             prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
             prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
                  warning = {
                     'title': _('Warning!'),
-                    'message': _('You selected an UoM which is not compatible with the product.') 
-                }
-            return {'warning': warning}
+                    'message': _('You selected an Unit of Measure which is not compatible with the product.')
+            }
+            return {'value': res['value'], 'warning': warning}
         return res
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
