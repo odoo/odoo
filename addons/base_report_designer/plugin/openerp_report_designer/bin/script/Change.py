@@ -54,11 +54,11 @@ class Change:
     def __init__(self, aVal= None, sURL=""):
         self.win=DBModalDialog(60, 50, 120, 90, "Connect to Open ERP Server")
 
-        self.win.addFixedText("lblVariable", 38, 12, 60, 15, "Server")
+        self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
 
         self.win.addEdit("txtHost",-2,9,60,15,sURL[sURL.find("/")+2:sURL.rfind(":")])
 
-        self.win.addFixedText("lblReportName",45 , 31, 60, 15, "Port")
+        self.win.addFixedText("lblReportName",45 , 31, 15, 15, "Port  ")
         self.win.addEdit("txtPort",-2,28,60,15,sURL[sURL.rfind(":")+1:])
 
         self.win.addFixedText("lblLoginName", 2, 51, 60, 15, "Protocol Connection")
@@ -92,6 +92,8 @@ class Change:
         global url
         url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")]+self.win.getEditText("txtHost")+":"+self.win.getEditText("txtPort")
         self.sock=RPCSession(url)
+        desktop=getDesktop()
+        doc = desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()        
         docinfo.setUserFieldValue(0,url)
         res=self.sock.listdb()

@@ -6,23 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-12 09:34+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-rating-rated"
-msgstr ""
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -35,20 +30,22 @@ msgid "Stock ups upload"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Variation Account is not specified for Product Category: %s"
+msgstr ""
+
+#. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
 msgstr "Συνδεδεμένη Σταθερή Τοποθεσία"
 
 #. module: stock
+#: view:stock.inventory:0
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in a new pack"
 msgstr "Τοποθέτηση σε νέο πακέτο"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SAVE"
-msgstr "STOCK_SAVE"
 
 #. module: stock
 #: field:stock.move.split.lines,action:0
@@ -56,22 +53,9 @@ msgid "Action"
 msgstr "Ενέργεια"
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid ""
-"There is no journal defined '\\n                                'on the "
-"product category: \"%s\" (id: %d)"
+#: view:stock.production.lot:0
+msgid "Upstream Traceability"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-account"
-msgstr "terp-account"
-
-#. module: stock
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -80,9 +64,9 @@ msgid "Last Product Inventories"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SORT_ASCENDING"
-msgstr "STOCK_SORT_ASCENDING"
+#: view:stock.move:0
+msgid "Today"
+msgstr "Σήμερα"
 
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
@@ -90,27 +74,23 @@ msgid "Revision Number"
 msgstr "Αριθμός Αναθεώρησης"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_FORWARD"
-msgstr "STOCK_MEDIA_FORWARD"
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid ""
-"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
-"            product_qty = partial_data.get('product_qty',0.0)\n"
-"            move_product_qty[move.id] = product_qty\n"
-"            product_uom = partial_data.get('product_uom',False)\n"
-"            product_price = partial_data.get('product_price',0.0)\n"
-"            product_currency = partial_data.get('product_currency',False)\n"
-"            prodlot_ids[move.id] = partial_data.get('prodlot_id"
+#: view:stock.move.memory:0
+msgid "Product Moves"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_inventory_control
-msgid "Inventory Control"
-msgstr "Έλεγχος Παγίων"
+#: model:ir.actions.act_window,help:stock.action_picking_tree
+msgid ""
+"This is the list of all delivery orders that must be prepared, according to "
+"your different sales orders and your logistics rules."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_move_report
+#: model:ir.ui.menu,name:stock.menu_action_stock_move_report
+#: view:report.stock.move:0
+msgid "Moves Analysis"
+msgstr ""
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -120,23 +100,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_100"
-msgstr "STOCK_ZOOM_100"
-
-#. module: stock
-#: model:ir.actions.report.xml,name:stock.report_picking_list
 #: view:stock.picking:0
 msgid "Picking list"
 msgstr "Λίστα Παραλαβής"
 
 #. module: stock
-#: view:board.board:0
-msgid "Outgoing Products delay"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
@@ -147,6 +115,7 @@ msgstr ""
 #: report:stock.inventory.move:0
 #: field:stock.move,product_qty:0
 #: field:stock.move.consume,product_qty:0
+#: field:stock.move.memory,quantity:0
 #: field:stock.move.scrap,product_qty:0
 #: field:stock.move.split,qty:0
 #: field:stock.move.split.lines,quantity:0
@@ -176,6 +145,12 @@ msgid "UoM"
 msgstr "ΜοΜ"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_inventory_form
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form
+msgid "Physical Inventories"
+msgstr ""
+
+#. module: stock
 #: field:product.category,property_stock_journal:0
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
@@ -197,10 +172,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: help:stock.move,address_id:0
-msgid ""
-"Optional address where goods are to be delivered, specifically used for "
-"allotment"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Missing partial picking data for move #%s"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_partial_move
+msgid "Deliver/Receive Products"
 msgstr ""
 
 #. module: stock
@@ -210,9 +189,18 @@ msgid "You cannot delete any record!"
 msgstr "Δεν μπορείτε να διαγράψετε καμμία εγγραφή!"
 
 #. module: stock
-#: field:product.template,property_stock_inventory:0
-msgid "Inventory Location"
-msgstr "Τοποθεσία Αποθήκευσης"
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"The current move line is already assigned to a pack, please remove it first "
+"if you really want to change it '             #                        'for "
+"this product: \"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: selection:stock.picking,invoice_state:0
+msgid "Not Applicable"
+msgstr ""
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -238,10 +226,36 @@ msgstr ""
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.move,picking_id:0
 #: field:stock.picking,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
 msgstr "Παραπομπή"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Products to Process"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_location_form
+msgid ""
+"Define your locations in order to reflect to your warehouse structure and "
+"organization. OpenERP is able to manage physical locations (warehouses, "
+"shelves, bin, etc), partners location (customers, suppliers) and virtual "
+"locations which are the counter-part of the stock operations like the "
+"manufacturing orders consummations, the inventories, etc. Every stock "
+"operation in OpenERP moves the products from one location to another one. "
+"For instance, if you receive products from a supplier, OpenERP will move "
+"products from the Supplier location into the Stock location. Each report can "
+"be performed on physicals, partners or virtual locations."
+msgstr ""
+
+#. module: stock
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -251,13 +265,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_move_split_lines
-msgid "Split lines"
+#: model:ir.actions.act_window,help:stock.action_inventory_form
+msgid ""
+"The Periodical Inventories are used when you count your number of products "
+"available per location. You can use it, once a year, when you do the general "
+"inventory or, once you need it, to correct the current stock level of a "
+"product."
 msgstr ""
 
 #. module: stock
-#: view:stock.production.lot:0
-msgid "Upstream Traceability"
+#: model:ir.model,name:stock.model_stock_move_split_lines
+msgid "Split lines"
 msgstr ""
 
 #. module: stock
@@ -300,6 +318,11 @@ msgstr ""
 #: field:stock.picking,partner_id:0
 msgid "Partner"
 msgstr "Συνεργάτης"
+
+#. module: stock
+#: help:stock.move.memory,currency:0
+msgid "Currency in which Unit cost is expressed"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -352,11 +375,6 @@ msgid "State"
 msgstr "Στάδιο"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mail-forward"
-msgstr ""
-
-#. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
 msgstr "Πραγματική Αξία Αποθέματος"
@@ -405,9 +423,10 @@ msgid "Outgoing Product"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_QUIT"
-msgstr "STOCK_QUIT"
+#: model:ir.actions.act_window,help:stock.action_warehouse_form
+msgid ""
+"Create and manage your warehouses and assign them a location from here"
+msgstr ""
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
@@ -432,29 +451,17 @@ msgid "Split into"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-msgid "Today"
-msgstr "Σήμερα"
-
-#. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_TOP"
-msgstr "STOCK_GOTO_TOP"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ABOUT"
-msgstr "STOCK_ABOUT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-hr"
-msgstr "terp-hr"
+#: help:product.template,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+msgstr ""
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -463,20 +470,15 @@ msgid "Location Type"
 msgstr "Τύπος Τοποθεσίας"
 
 #. module: stock
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: stock
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 msgid "Shipping type specify, goods coming in or going out."
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock_effects-object-colorize"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DELETE"
-msgstr "STOCK_DELETE"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
@@ -548,11 +550,9 @@ msgid "Grand Total:"
 msgstr "Γενικό σύνολο"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_move_report
-#: model:ir.ui.menu,name:stock.menu_action_stock_move_report
-#: view:report.stock.move:0
-msgid "Moves Analysis"
-msgstr ""
+#: model:ir.ui.menu,name:stock.menu_stock_inventory_control
+msgid "Inventory Control"
+msgstr "Έλεγχος Παγίων"
 
 #. module: stock
 #: view:stock.location:0
@@ -571,11 +571,6 @@ msgstr ""
 #, python-format
 msgid "Reception"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FLOPPY"
-msgstr "STOCK_FLOPPY"
 
 #. module: stock
 #: field:stock.tracking,serial:0
@@ -630,9 +625,9 @@ msgid "Packs"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDERLINE"
-msgstr "STOCK_UNDERLINE"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: stock
 #: view:res.partner:0
@@ -645,8 +640,11 @@ msgid "June"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-folder-blue"
+#: model:ir.actions.act_window,help:stock.action_out_picking_move
+msgid ""
+"The 'Deliver Products' menu lists all products you have to deliver to your "
+"customers. You can process the deliveries directly from this list, line by "
+"or line or through the Delivery Orders menu."
 msgstr ""
 
 #. module: stock
@@ -663,11 +661,6 @@ msgstr "Τοποθεσία Παραλαβών"
 #: field:stock.move.split,line_ids:0
 msgid "Production Lots"
 msgstr "Παρτίδες Παραγωγής"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-project"
-msgstr "terp-project"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -691,16 +684,6 @@ msgid "Inventory Line"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_BOLD"
-msgstr "STOCK_BOLD"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-personal+"
-msgstr ""
-
-#. module: stock
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
@@ -711,16 +694,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-graph"
-msgstr "terp-graph"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FIND_AND_REPLACE"
-msgstr "STOCK_FIND_AND_REPLACE"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -734,11 +707,6 @@ msgstr ""
 msgid ""
 "Check this option to select existing lots in the list below, otherwise you "
 "should enter new ones line by line."
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-dialog-close"
 msgstr ""
 
 #. module: stock
@@ -769,24 +737,9 @@ msgid "Production lot is used to put a serial number on the production"
 msgstr "Οι παρτίδες παραγωγής χρησιμεύουν στην αρίθμηση της παραγωγής"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_REWIND"
-msgstr "STOCK_MEDIA_REWIND"
-
-#. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
 msgstr "Είσοδος Τοποθεσίας"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-personal-"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CUT"
-msgstr "STOCK_CUT"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -820,17 +773,9 @@ msgid "Transit Location for Inter-Companies Transfers"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NEW"
-msgstr "STOCK_NEW"
-
-#. module: stock
-#: code:addons/stock/wizard/stock_splitinto.py:0
-#, python-format
-msgid ""
-"Total quantity after split exceeds the quantity to split ' \\n               "
-"                     'for this product: \"%s\" (id: %d)"
-msgstr ""
+#: field:stock.location,stock_virtual_value:0
+msgid "Virtual Stock Value"
+msgstr "Μετακίνηση Πιθανού Αποθέματος"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -858,19 +803,8 @@ msgid "Contains"
 msgstr "Περιέχει"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-dolar"
-msgstr ""
-
-#. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Future Qty"
 msgstr ""
 
 #. module: stock
@@ -901,11 +835,6 @@ msgid "Pack Search"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-jump-to-ltr"
-msgstr ""
-
-#. module: stock
 #: selection:stock.move,priority:0
 msgid "Urgent"
 msgstr "Επείγον"
@@ -913,17 +842,6 @@ msgstr "Επείγον"
 #. module: stock
 #: view:stock.picking:0
 msgid "Journal"
-msgstr ""
-
-#. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Bad Lot Assignation !"
 msgstr ""
 
 #. module: stock
@@ -950,18 +868,15 @@ msgid "Stock by Location"
 msgstr "Απόθεμα ανά Τοποθεσία"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SAVE_AS"
-msgstr "STOCK_SAVE_AS"
+#: help:stock.move,address_id:0
+msgid ""
+"Optional address where goods are to be delivered, specifically used for "
+"allotment"
+msgstr ""
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Month-1"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock_symbol-selection"
 msgstr ""
 
 #. module: stock
@@ -971,11 +886,9 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: help:stock.location,posx:0
-#: help:stock.location,posy:0
-#: help:stock.location,posz:0
-msgid "Optional localization details, for information purpose only"
-msgstr ""
+#: model:ir.actions.report.xml,name:stock.report_picking_list
+msgid "Packing list"
+msgstr "Κατάσταση Συσκευασίας"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -989,46 +902,33 @@ msgid "View"
 msgstr "Προβολή"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_ERROR"
-msgstr "STOCK_DIALOG_ERROR"
-
-#. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
 msgstr "Αριστερός γονέας"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_INDEX"
-msgstr "STOCK_INDEX"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stage"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Delivery Information"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_BOTTOM"
-msgstr "STOCK_GOTO_BOTTOM"
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Stock Inventory is done"
+msgstr ""
 
 #. module: stock
-#: field:stock.move.track,quantity:0
-msgid "Quantity per lot"
-msgstr "Ποσότητα ανά παρτίδα"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
-#: model:ir.actions.act_window,name:stock.action_move_form2
-#: model:ir.ui.menu,name:stock.menu_action_move_form2
-#: view:stock.inventory:0
-#: view:stock.move:0
-#: view:stock.picking:0
-#: view:stock.production.lot:0
-#: view:stock.tracking:0
-msgid "Stock Moves"
-msgstr "Κινήσεις Αποθέματος"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock output account defined for this product: \"%s\" (id: %d)"
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1089,41 +989,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_FORWARD"
-msgstr "STOCK_GO_FORWARD"
-
-#. module: stock
 #: field:stock.production.lot.revision,author_id:0
 msgid "Author"
 msgstr "Δημιουργός"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDELETE"
-msgstr "STOCK_UNDELETE"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Delivery Order"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_EXECUTE"
-msgstr "STOCK_EXECUTE"
-
-#. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
-#, python-format
-msgid "No invoice were created"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_QUESTION"
-msgstr "STOCK_DIALOG_QUESTION"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1147,11 +1021,6 @@ msgid "Expected Shipping Date"
 msgstr "Αναμενόμενη Ημερ/νία Αποστολής"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-accessories-archiver-minus"
-msgstr ""
-
-#. module: stock
 #: selection:report.stock.move,month:0
 msgid "March"
 msgstr ""
@@ -1170,11 +1039,6 @@ msgid "Physical Inventory"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SELECT_FONT"
-msgstr "STOCK_SELECT_FONT"
-
-#. module: stock
 #: help:stock.location,chained_company_id:0
 msgid ""
 "The company the Picking List containing the chained move will belong to "
@@ -1182,9 +1046,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PASTE"
-msgstr "STOCK_PASTE"
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr ""
 
 #. module: stock
 #: view:stock.move.split:0
@@ -1192,34 +1059,24 @@ msgid "Lot number"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.inventory.line,product_uom:0
+#: field:stock.move.consume,product_uom:0
+#: field:stock.move.scrap,product_uom:0
+#, python-format
+msgid "Product UOM"
+msgstr "ΜοΜ Προϊόντος"
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
 msgstr "Τοποθεσίες Συνεργάτη"
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid ""
-"Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
-"                product_qty = partial_data.get('product_qty',0.0)\n"
-"                move_product_qty[move.id] = product_qty\n"
-"                product_uom = partial_data.get('product_uom',False)\n"
-"                product_price = partial_data.get('product_price',0.0)\n"
-"                product_currency = "
-"partial_data.get('product_currency',False)\n"
-"                prodlot_id = partial_data.get('prodlot_id"
-msgstr ""
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total quantity"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_FIT"
-msgstr "STOCK_ZOOM_FIT"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1236,11 +1093,6 @@ msgstr "Ευρωπαίοι Πελάτες"
 #: help:stock.location,chained_delay:0
 msgid "Delay between original move and chained move in days"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-calendar"
-msgstr "terp-calendar"
 
 #. module: stock
 #: view:stock.fill.inventory:0
@@ -1289,17 +1141,9 @@ msgid "is in draft state."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid ""
-"There is no stock output account defined ' \\n                               "
-"             'for this product: \"%s\" (id: %d)"
+#: model:ir.model,name:stock.model_stock_ups_final
+msgid "Stock ups final"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_RECORD"
-msgstr "STOCK_MEDIA_RECORD"
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
@@ -1315,12 +1159,6 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Shop 1"
-msgstr ""
-
-#. module: stock
-#: field:report.stock.inventory,value:0
-#: field:report.stock.move,value:0
-msgid "Total Value"
 msgstr ""
 
 #. module: stock
@@ -1352,14 +1190,10 @@ msgid "Additional Info"
 msgstr ""
 
 #. module: stock
-#: report:stock.inventory.move:0
-msgid "Stock Inventory"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Operation forbidden"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_YES"
-msgstr "STOCK_YES"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1415,11 +1249,6 @@ msgid "Company is not specified in Location"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-report"
-msgstr "terp-report"
-
-#. module: stock
 #: view:report.stock.move:0
 #: field:stock.partial.move,type:0
 msgid "Type"
@@ -1429,11 +1258,6 @@ msgstr "Τύπος"
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Suppliers"
 msgstr "Γενικοί Προμηθευτές ΙΤ"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FILE"
-msgstr "STOCK_FILE"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1454,30 +1278,10 @@ msgid "Address of  customer or supplier."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gdu-smart-failing"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_EDIT"
-msgstr "STOCK_EDIT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CONNECT"
-msgstr "STOCK_CONNECT"
-
-#. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,picking_id:0
 msgid "Packing"
 msgstr "Συσκευασία"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_DOWN"
-msgstr "STOCK_GO_DOWN"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1487,19 +1291,21 @@ msgid "Customer Location"
 msgstr "Τοποεθεσία Πελάτη"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_OK"
-msgstr "STOCK_OK"
-
-#. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Invalid action !"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-emblem-important"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Receive Information"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview
+#: report:lot.stock.overview:0
+msgid "Location Inventory Overview"
 msgstr ""
 
 #. module: stock
@@ -1513,9 +1319,9 @@ msgid "General Informations"
 msgstr "Γενικές Πληροφορίες"
 
 #. module: stock
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: selection:stock.location,chained_location_type:0
+msgid "None"
+msgstr "Κανένα"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1523,8 +1329,20 @@ msgid "Downstream traceability"
 msgstr "Ανιχνευσιμότητα προς τα κάτω"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "No Invoices were created"
+msgstr ""
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_company
 msgid "OpenERP S.A."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Receive"
 msgstr ""
 
 #. module: stock
@@ -1580,18 +1398,8 @@ msgid "Cannot deliver products which are already delivered !"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNINDENT"
-msgstr "STOCK_UNINDENT"
-
-#. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-face-plain"
 msgstr ""
 
 #. module: stock
@@ -1608,11 +1416,6 @@ msgid "were scrapped"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FIND"
-msgstr "STOCK_FIND"
-
-#. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Partial"
@@ -1622,11 +1425,6 @@ msgstr ""
 #: selection:report.stock.move,month:0
 msgid "September"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HELP"
-msgstr "STOCK_HELP"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1641,8 +1439,8 @@ msgid "Stock Statistics"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.move.memory,currency:0
 #, python-format
 msgid "Currency"
 msgstr ""
@@ -1660,24 +1458,16 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid ""
-"Variation Account is not specified for Product Category: %s' % "
-"(product_obj.categ_id.name)))\n"
-"        move_ids = []\n"
-"        loc_ids = location_obj.search(cr, uid,[('usage','=','internal"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDO"
-msgstr "STOCK_UNDO"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gnome-cpu-frequency-applet+"
-msgstr ""
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
+#: model:ir.actions.act_window,name:stock.action_move_form2
+#: model:ir.ui.menu,name:stock.menu_action_move_form2
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+#: view:stock.tracking:0
+msgid "Stock Moves"
+msgstr "Κινήσεις Αποθέματος"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1697,24 +1487,9 @@ msgid "Scheduled date for the processing of this move"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-media-pause"
-msgstr ""
-
-#. module: stock
 #: field:stock.inventory,move_ids:0
 msgid "Created Moves"
 msgstr "Δημιουργημένες Κινήσεις"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock_format-scientific"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_BACK"
-msgstr "STOCK_GO_BACK"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -1722,36 +1497,15 @@ msgid "Shelf 2"
 msgstr ""
 
 #. module: stock
-#: selection:stock.picking,invoice_state:0
-msgid "To Be Invoiced"
-msgstr "Προς Τιμολόγηση"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PRINT"
-msgstr "STOCK_PRINT"
-
-#. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-go-today"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid ""
-"There is no stock input account defined ' \\n                                "
-"            'for this product: \"%s\" (id: %d)"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Back Orders"
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
 msgstr ""
 
 #. module: stock
@@ -1763,6 +1517,11 @@ msgstr "Συμπληρωματικές Ιδιότητες Τοποθεσίας"
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_report_tracklots
+msgid "Stock report by tracking lots"
 msgstr ""
 
 #. module: stock
@@ -1782,11 +1541,6 @@ msgstr ""
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_FILL"
-msgstr "STOCK_JUSTIFY_FILL"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1811,35 +1565,15 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-administration"
-msgstr "terp-administration"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CANCEL"
-msgstr "STOCK_CANCEL"
-
-#. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
 msgstr "Απόθεμα Τοποθεσίας"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_APPLY"
-msgstr "STOCK_APPLY"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
 #, python-format
 msgid "Merging is only allowed on draft inventories."
 msgstr "Η συγχώνευση επιτρέπεται μόνο σε πρόχειρες απογραφές."
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-go-back-rtl"
-msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_dashboard_stock
@@ -1850,16 +1584,6 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-crm"
-msgstr "terp-crm"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_STRIKETHROUGH"
-msgstr "STOCK_STRIKETHROUGH"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1878,11 +1602,6 @@ msgid "Warehouse Dashboard"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mail-"
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not remove a lot line !"
@@ -1897,9 +1616,10 @@ msgid "Scrap Products"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PREFERENCES"
-msgstr "STOCK_PREFERENCES"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot remove the picking which is in %s state !"
+msgstr ""
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -1917,11 +1637,7 @@ msgid "Return Picking"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_location_overview_all
-msgid "Inventory (with child locations)"
-msgstr ""
-
-#. module: stock
+#: view:stock.inventory:0
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Split in production lots"
@@ -1947,21 +1663,6 @@ msgstr "Ταχυδρομική Διεύθυνση :"
 #, python-format
 msgid "Provide the quantities of the returned products."
 msgstr "Παραθέστε τις ποσότητες των επιστρεφομένων προϊόντων"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MISSING_IMAGE"
-msgstr "STOCK_MISSING_IMAGE"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REMOVE"
-msgstr "STOCK_REMOVE"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-call-start"
-msgstr ""
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -1996,24 +1697,17 @@ msgstr ""
 "συγκεκριμένο προμηθευτή."
 
 #. module: stock
-#: selection:stock.picking,invoice_state:0
-msgid "Not from Picking"
-msgstr ""
-
-#. module: stock
 #: field:stock.warehouse,partner_address_id:0
 msgid "Owner Address"
 msgstr "Διεύθυνση Ιδιοκτήτη"
 
 #. module: stock
-#: field:stock.location,parent_right:0
-msgid "Right Parent"
-msgstr "Δεξής γονέας"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_LEFT"
-msgstr "STOCK_JUSTIFY_LEFT"
+#: model:ir.actions.act_window,help:stock.action_stock_move_report
+msgid ""
+"Moves Analysis allows you to easily check and analyse your company stock "
+"moves. Use this report when you want to analyse the different routes taken "
+"by your products and inventory management performance."
+msgstr ""
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2031,9 +1725,9 @@ msgid "Search Inventory"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_report_tracklots
-msgid "Stock report by tracking lots"
-msgstr ""
+#: field:stock.move.track,quantity:0
+msgid "Quantity per lot"
+msgstr "Ποσότητα ανά παρτίδα"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -2044,9 +1738,10 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:report.stock.move,month:0
-msgid "January"
-msgstr ""
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
+msgstr "Παραληφθήσα Ποσ."
 
 #. module: stock
 #: field:stock.production.lot,ref:0
@@ -2061,11 +1756,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HARDDISK"
-msgstr "STOCK_HARDDISK"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
 #: model:ir.model,name:stock.model_stock_fill_inventory
 #: view:stock.fill.inventory:0
@@ -2078,6 +1768,12 @@ msgstr ""
 #: field:stock.warehouse,name:0
 msgid "Name"
 msgstr "Όνομα"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is done."
+msgstr ""
 
 #. module: stock
 #: view:product.product:0
@@ -2133,11 +1829,6 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-locked"
-msgstr ""
-
-#. module: stock
 #: view:stock.change.standard.price:0
 msgid "_Apply"
 msgstr ""
@@ -2151,14 +1842,22 @@ msgid "]"
 msgstr "]"
 
 #. module: stock
+#: field:product.template,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr "Τοποθεσία Αποθήκευσης"
+
+#. module: stock
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total value"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-personal"
+#: model:ir.actions.act_window,help:stock.action_move_form2
+msgid ""
+"This menu gives you the full traceability of inventory operations made on a "
+"specific product. You can filter on the product to see all the past or "
+"future movements made on the product."
 msgstr ""
 
 #. module: stock
@@ -2166,11 +1865,6 @@ msgstr ""
 msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
-msgstr ""
-
-#. module: stock
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: stock
@@ -2185,39 +1879,24 @@ msgid "Creation"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-accessories-archiver"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.move.memory,cost:0
 #, python-format
 msgid "Cost"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_COPY"
-msgstr "STOCK_COPY"
+#: field:product.category,property_stock_account_input_categ:0
+#: field:product.template,property_stock_account_input:0
+#: field:stock.change.standard.price,stock_account_input:0
+msgid "Stock Input Account"
+msgstr "Λογαριασμός Εισερχομένων Αποθεμάτων"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_move
-msgid "Stock Move"
-msgstr "Κίνηση Αποθέματος"
-
-#. module: stock
-#: field:product.category,property_stock_account_output_categ:0
-#: field:product.template,property_stock_account_output:0
-#: field:stock.change.standard.price,stock_account_output:0
-msgid "Stock Output Account"
-msgstr "Λογαριασμός Εξερχομένων"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2234,11 +1913,6 @@ msgstr ""
 #: view:stock.location.product:0
 msgid "Stock Location Analysis"
 msgstr "Ανάλυση Τοποθεσίας Αποθήκευσης"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CDROM"
-msgstr "STOCK_CDROM"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2285,13 +1959,9 @@ msgstr ""
 
 #. module: stock
 #: field:stock.move,product_uom:0
+#: field:stock.move.memory,product_uom:0
 msgid "Unit of Measure"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REFRESH"
-msgstr "STOCK_REFRESH"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2307,15 +1977,21 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_STOP"
-msgstr "STOCK_STOP"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.track_line_old
 #: view:stock.move.track:0
 msgid "Tracking a move"
 msgstr "Ανίχνευση κίνησης"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_picking_tree6
+msgid ""
+"The Internal Moves lists all inventory operations you have to perform in "
+"your warehouse. All operations can be categorized into stock journals, so "
+"that each worker has it's own list of operations to perform in his own "
+"journal. Most operations are prepared automatically by OpenERP according to "
+"your pre-configured logistics rules but you can also record manual stock "
+"operations."
+msgstr ""
 
 #. module: stock
 #: view:product.product:0
@@ -2331,11 +2007,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-go-back-ltr"
 msgstr ""
 
 #. module: stock
@@ -2371,30 +2042,20 @@ msgid "Track Incoming Lots"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_WARNING"
-msgstr "STOCK_DIALOG_WARNING"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mail-replied"
-msgstr ""
-
-#. module: stock
 #: view:board.board:0
 msgid "Warehouse board"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form
-msgid "Physical Inventories"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CONVERT"
-msgstr "STOCK_CONVERT"
+#: field:product.category,property_stock_variation:0
+msgid "Stock Variation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2433,11 +2094,6 @@ msgid "Products"
 msgstr "Προϊόντα"
 
 #. module: stock
-#: selection:stock.location,chained_location_type:0
-msgid "None"
-msgstr "Κανένα"
-
-#. module: stock
 #: view:stock.change.standard.price:0
 msgid "Change Price"
 msgstr ""
@@ -2470,25 +2126,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-partner"
-msgstr "terp-partner"
+#: model:ir.model,name:stock.model_stock_move
+msgid "Stock Move"
+msgstr "Κίνηση Αποθέματος"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ITALIC"
-msgstr "STOCK_ITALIC"
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Operation forbidden"
+#: view:report.stock.move:0
+msgid "Delay(Days)"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock"
-msgstr "terp-stock"
+#: field:stock.move.memory,move_id:0
+msgid "Move"
+msgstr ""
 
 #. module: stock
 #: help:stock.picking,min_date:0
@@ -2502,15 +2152,15 @@ msgid "P&L Qty"
 msgstr "P&L Ποσ."
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-folder-green"
-msgstr ""
-
-#. module: stock
 #: view:stock.production.lot:0
 #: field:stock.production.lot,revisions:0
 msgid "Revisions"
 msgstr "Αναθεωρήσεις"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "This operation will cancel the shipment. Do you want to continue?"
+msgstr ""
 
 #. module: stock
 #: help:product.product,valuation:0
@@ -2520,6 +2170,14 @@ msgid ""
 "inventory variation account set on the product category will represent the "
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_stock_inventory_report
+msgid ""
+"Inventory Analysis allows you to easily check and analyse your company stock "
+"levels. Sort and group by selection criteria in order to better analyse and "
+"manage your company  activities."
 msgstr ""
 
 #. module: stock
@@ -2553,8 +2211,6 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:0
-#: model:ir.actions.report.xml,name:stock.report_location_overview
-#: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
 #: field:stock.inventory.line,inventory_id:0
@@ -2566,19 +2222,16 @@ msgstr "Απογραφή"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
-#: field:stock.move,picking_id:0
 msgid "Picking List"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
+#: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
 #, python-format
 msgid "Currency in which Unit Cost is expressed"
@@ -2618,36 +2271,11 @@ msgid "Fixed Location"
 msgstr "Μόνιμη Τοποεθσία"
 
 #. module: stock
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock_align_left_24"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-folder-orange"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-accessories-archiver+"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-purchase"
-msgstr "terp-purchase"
-
-#. module: stock
-#: help:stock.production.lot,name:0
-msgid "Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"
+"This is the list of all the production lots (serial numbers) you recorded. "
+"After having selected a lot, you can get the up-stream or down-stream "
+"traceability of the products contained in lot."
 msgstr ""
 
 #. module: stock
@@ -2661,14 +2289,13 @@ msgid "Consumable"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_COLOR_PICKER"
-msgstr "STOCK_COLOR_PICKER"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DND"
-msgstr "STOCK_DND"
+#: model:ir.actions.act_window,help:stock.action_stock_line_date
+msgid ""
+"Display the last inventories done on your products and easily sort them with "
+"specific filtering criteria. If you do frequent and partial inventories, you "
+"need this report in order to ensure that the stock of each product is "
+"controlled at least once a year."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2686,20 +2313,10 @@ msgid "Stock Journal"
 msgstr "Ημερολόγιο Αποθέματος"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CLEAR"
-msgstr "STOCK_CLEAR"
-
-#. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
 msgstr "Προμήθειες"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-folder-yellow"
-msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -2724,16 +2341,19 @@ msgid "Scrap Move"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 #: view:stock.move:0
+#, python-format
 msgid "Receive Products"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
-#: model:ir.actions.act_window,name:stock.action_partial_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
+#, python-format
 msgid "Deliver Products"
 msgstr ""
 
@@ -2746,11 +2366,6 @@ msgstr "Προβολή Αποθέματος Προϊόντων"
 #: view:stock.picking:0
 msgid "Internal Picking list"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_UP"
-msgstr "STOCK_GO_UP"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2767,11 +2382,6 @@ msgstr ""
 #: help:stock.tracking,active:0
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-dolar_ok!"
 msgstr ""
 
 #. module: stock
@@ -2806,13 +2416,15 @@ msgid "Company"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PROPERTIES"
-msgstr "STOCK_PROPERTIES"
+#: view:stock.picking:0
+msgid "Back Orders"
+msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-go-year"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: stock
@@ -2824,6 +2436,12 @@ msgstr "Πραγματικό Απόθεμα"
 #: view:stock.fill.inventory:0
 msgid "Fill Inventory"
 msgstr "Συμπλήρωση Απογραφής"
+
+#. module: stock
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -2855,19 +2473,9 @@ msgid "Production Lot Number"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-jump-to-rtl"
-msgstr ""
-
-#. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
 msgstr "Ποσότητα (ΜoΠ)"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_STOP"
-msgstr "STOCK_MEDIA_STOP"
 
 #. module: stock
 #: view:stock.move:0
@@ -2885,27 +2493,6 @@ msgid "Back Order"
 msgstr "Συμπληρωματική Παραλαβή"
 
 #. module: stock
-#: field:stock.production.lot,name:0
-msgid "Serial Number"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DND_MULTIPLE"
-msgstr "STOCK_DND_MULTIPLE"
-
-#. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
-#, python-format
-msgid "New picking invoices"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SPELL_CHECK"
-msgstr "STOCK_SPELL_CHECK"
-
-#. module: stock
 #: field:stock.incoterms,active:0
 #: field:stock.location,active:0
 #: field:stock.tracking,active:0
@@ -2918,11 +2505,6 @@ msgid "Inventory Management"
 msgstr "Διαχείριση Αποθεμάτων"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-idea"
-msgstr ""
-
-#. module: stock
 #: view:product.template:0
 msgid "Properties"
 msgstr "Ιδιότητες"
@@ -2932,15 +2514,6 @@ msgstr "Ιδιότητες"
 #, python-format
 msgid "Error, no partner !"
 msgstr "Σφάλμα! Δεν έχει οριστεί Συνεργάτης"
-
-#. module: stock
-#: code:addons/stock/wizard/stock_splitinto.py:0
-#, python-format
-msgid ""
-"The current move line is already assigned to a pack, please remove it first "
-"if you really want to change it ' \\n            #                        "
-"'for this product: \"%s\" (id: %d)"
-msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2970,11 +2543,6 @@ msgid ""
 "If checked, products contained in child locations of selected location will "
 "be included as well."
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_OUT"
-msgstr "STOCK_ZOOM_OUT"
 
 #. module: stock
 #: field:stock.move.track,tracking_prefix:0
@@ -3021,11 +2589,6 @@ msgid "Warehouse"
 msgstr "Αποθηκευτικός Χώρος"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SELECT_COLOR"
-msgstr "STOCK_SELECT_COLOR"
-
-#. module: stock
 #: view:stock.location.product:0
 msgid ""
 "(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
@@ -3037,11 +2600,6 @@ msgstr ""
 #: view:product.category:0
 msgid "Accounting Stock Properties"
 msgstr "Χαρακτηριστικά Λογιστικού Αποθέματος"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NO"
-msgstr "STOCK_NO"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
@@ -3073,9 +2631,9 @@ msgid "Virtual Locations"
 msgstr "Εικονικές Τοποθεσίες"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_FIRST"
-msgstr "STOCK_GOTO_FIRST"
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "Προς Τιμολόγηση"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
@@ -3095,19 +2653,9 @@ msgid "Not urgent"
 msgstr "Όχι επείγον"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock_format-default"
-msgstr ""
-
-#. module: stock
 #: view:stock.move:0
 msgid "To Do"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CLOSE"
-msgstr "STOCK_CLOSE"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -3121,26 +2669,11 @@ msgid "Responsible"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-check"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-camera_test"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SORT_DESCENDING"
-msgstr "STOCK_SORT_DESCENDING"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -3154,7 +2687,6 @@ msgid "Stock"
 msgstr "Απόθεμα"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
 #: model:ir.model,name:stock.model_product_product
 #: model:ir.ui.menu,name:stock.menu_stock_product
@@ -3169,6 +2701,7 @@ msgstr "Απόθεμα"
 #: view:stock.move:0
 #: field:stock.move,product_id:0
 #: field:stock.move.consume,product_id:0
+#: field:stock.move.memory,product_id:0
 #: field:stock.move.scrap,product_id:0
 #: field:stock.move.split,product_id:0
 #: view:stock.production.lot:0
@@ -3178,11 +2711,6 @@ msgstr "Απόθεμα"
 #, python-format
 msgid "Product"
 msgstr "Προϊόν"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HOME"
-msgstr "STOCK_HOME"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -3208,12 +2736,6 @@ msgid "Product UOS"
 msgstr "ΜoΠ Προϊόντος"
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Received Qty"
-msgstr "Παραληφθήσα Ποσ."
-
-#. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
 msgstr "Ύψος (Ζ)"
@@ -3230,20 +2752,15 @@ msgid "Consume Products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
-#: code:addons/stock/wizard/stock_partial_picking.py:0
-#: field:stock.inventory.line,product_uom:0
-#: field:stock.move.consume,product_uom:0
-#: field:stock.move.scrap,product_uom:0
-#, python-format
-msgid "Product UOM"
-msgstr "ΜοΜ Προϊόντος"
-
-#. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
-msgid "You cannot remove the picking which is in %s state !"
+msgid "Insufficient Stock in Lot !"
 msgstr ""
+
+#. module: stock
+#: field:stock.location,parent_right:0
+msgid "Right Parent"
+msgstr "Δεξής γονέας"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -3267,35 +2784,21 @@ msgid "Suppliers"
 msgstr "Προμηθευτές"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUMP_TO"
-msgstr "STOCK_JUMP_TO"
+#: field:report.stock.inventory,value:0
+#: field:report.stock.move,value:0
+msgid "Total Value"
+msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_INDENT"
-msgstr "STOCK_INDENT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-tools"
-msgstr "terp-tools"
-
-#. module: stock
-#: report:lot.stock.overview:0
-msgid "Location Overview"
-msgstr "Επισκόπηση Τοποθεσίας"
+#: field:stock.move.memory,wizard_id:0
+msgid "Wizard"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
 #: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
 msgstr "Προϊόντα ανά Τοποθεσία"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_INFO"
-msgstr "STOCK_DIALOG_INFO"
 
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
@@ -3308,19 +2811,9 @@ msgid "Shelf 1"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-sale"
-msgstr "terp-sale"
-
-#. module: stock
 #: view:stock.move:0
 msgid "Order"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ADD"
-msgstr "STOCK_ADD"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3335,11 +2828,6 @@ msgid "Source Location"
 msgstr "Τοποθεσία Προέλευσης"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-stop"
-msgstr ""
-
-#. module: stock
 #: view:product.template:0
 msgid "Accounting Entries"
 msgstr "Λογισιτκές Εγγραφές"
@@ -3351,9 +2839,9 @@ msgid "Unit Of Measure"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PAUSE"
-msgstr "STOCK_MEDIA_PAUSE"
+#: report:stock.picking.list:0
+msgid "Total"
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
@@ -3430,11 +2918,6 @@ msgid "Out Qty"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PRINT_PREVIEW"
-msgstr "STOCK_PRINT_PREVIEW"
-
-#. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
 msgstr ""
@@ -3462,6 +2945,15 @@ msgid "Reason"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,help:stock.action_stock_journal_form
+msgid ""
+"The stock journals system allows you assign each stock operation into a "
+"specific journal according to the type of operation to perform or the "
+"worker/team that should perform the operation. Examples of stock journals "
+"may be: quality control, pick lists, packing, etc."
+msgstr ""
+
+#. module: stock
 #: field:stock.location,icon:0
 msgid "Icon"
 msgstr "Εικονίδιο"
@@ -3471,16 +2963,6 @@ msgstr "Εικονίδιο"
 #, python-format
 msgid "UserError"
 msgstr "UserError"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_IN"
-msgstr "STOCK_ZOOM_IN"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-go-week"
-msgstr ""
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -3500,6 +2982,7 @@ msgstr "Πελάτες εκτός Ευρώπης"
 #. module: stock
 #: code:addons/stock/product.py:0
 #: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
 #: code:addons/stock/wizard/stock_splitinto.py:0
 #, python-format
 msgid "Error!"
@@ -3566,26 +3049,18 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PLAY"
-msgstr "STOCK_MEDIA_PLAY"
-
-#. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "is done."
+#: model:ir.actions.act_window,help:stock.action_location_tree
+msgid ""
+"This is the structure of your company's warehouses and locations. You can "
+"click on a location in order to get the list of the products and their stock "
+"level in this particular location and all its children."
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_OPEN"
-msgstr "STOCK_OPEN"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3599,21 +3074,12 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
 #: selection:stock.move,state:0
 #: view:stock.picking:0
 #: selection:stock.picking,state:0
 msgid "Confirmed"
 msgstr "Επιβεβαιωμένο"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_ups_final
-msgid "Stock ups final"
-msgstr ""
-
-#. module: stock
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
@@ -3626,20 +3092,10 @@ msgid "Icon show in  hierarchical tree view"
 msgstr ""
 
 #. module: stock
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 #: view:stock.inventory.merge:0
 msgid "Merge inventories"
 msgstr "Συγχώνευση Απογραφών"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-go-home"
-msgstr ""
 
 #. module: stock
 #: field:product.product,location_id:0
@@ -3669,8 +3125,8 @@ msgid "Back Order of"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
+#: help:stock.move.memory,cost:0
 #, python-format
 msgid "Unit Cost for this product line"
 msgstr ""
@@ -3707,9 +3163,12 @@ msgid "Create invoice"
 msgstr "Δημιουργία τιμολογίου"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NETWORK"
-msgstr "STOCK_NETWORK"
+#: model:ir.actions.act_window,help:stock.action_tracking_form
+msgid ""
+"This is the list of all your packs. After having selected a Pack, you can "
+"get the up-stream or down-stream traceability of the products contained in "
+"the pack."
+msgstr ""
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -3738,6 +3197,12 @@ msgid "Chaining Journal"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Not enough stock, unable to reserve the products."
+msgstr ""
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_customers
 msgid "Customers"
 msgstr "Πελάτες"
@@ -3749,8 +3214,13 @@ msgid "is cancelled."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-document-new"
+#: model:ir.actions.act_window,help:stock.action_reception_picking_move
+msgid ""
+"You will find here the list of all products you are waiting for, according "
+"to your preceding purchase orders. Once you receive an order, you can filter "
+"based on the name of the supplier or the purchase order reference. Then you "
+"can confirm all products received using the buttons on the right of each "
+"line."
 msgstr ""
 
 #. module: stock
@@ -3768,14 +3238,6 @@ msgstr ""
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Deliveries"
-msgstr ""
-
-#. module: stock
-#: help:product.template,property_stock_account_input:0
-msgid ""
-"When doing real-time inventory valuation, counterpart Journal Items for all "
-"incoming stock moves will be posted in this account. If not set on the "
-"product, the one from the product category is used."
 msgstr ""
 
 #. module: stock
@@ -3814,6 +3276,15 @@ msgid "Date Expected"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,help:stock.action_picking_tree4
+msgid ""
+"The Incoming Shipments is the list of all orders you will receive from your "
+"supplier. An incoming shipment contains a list of products to be received "
+"according to the original purchase order. You can validate the shipment "
+"totally or partially."
+msgstr ""
+
+#. module: stock
 #: field:stock.move,auto_validate:0
 msgid "Auto Validate"
 msgstr "Αυτόματη Επικύρωση"
@@ -3834,13 +3305,18 @@ msgid "Automatic Move"
 msgstr "Αυτόματη Κίνηση"
 
 #. module: stock
-#: field:stock.location,stock_virtual_value:0
-msgid "Virtual Stock Value"
-msgstr "Μετακίνηση Πιθανού Αποθέματος"
+#: help:stock.production.lot,name:0
+msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
+msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mail_delete"
+#: view:stock.picking:0
+msgid "Return Products"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Validate Inventory"
 msgstr ""
 
 #. module: stock
@@ -3851,19 +3327,9 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-go-month"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Products Moves"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_LAST"
-msgstr "STOCK_GOTO_LAST"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -3874,11 +3340,6 @@ msgstr "Τιμολογημένο"
 #: field:stock.move,address_id:0
 msgid "Destination Address"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIRECTORY"
-msgstr "STOCK_DIRECTORY"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -3920,9 +3381,10 @@ msgid "Draft"
 msgstr "Πρόχειρο"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_CENTER"
-msgstr "STOCK_JUSTIFY_CENTER"
+#: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
+#: report:stock.inventory.move:0
+msgid "Stock Inventory"
+msgstr ""
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -3935,14 +3397,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: field:stock.move.split.lines,use_exist:0
-msgid "Existing Lot"
+#: view:board.board:0
+msgid "Outgoing Products Delay"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PREVIOUS"
-msgstr "STOCK_MEDIA_PREVIOUS"
+#: field:stock.move.split.lines,use_exist:0
+msgid "Existing Lot"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:0
@@ -3984,11 +3446,6 @@ msgid "Direct Delivery"
 msgstr "Απ' ευθείας Παράδοση"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REVERT_TO_SAVED"
-msgstr "STOCK_REVERT_TO_SAVED"
-
-#. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "None of these picking lists require invoicing."
@@ -4000,6 +3457,7 @@ msgid "November"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
@@ -4028,9 +3486,8 @@ msgid "Check Availability"
 msgstr "Έλεγχος Δαθεσιμότητας"
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Not Available. Moves are not confirmed."
+#: selection:report.stock.move,month:0
+msgid "January"
 msgstr ""
 
 #. module: stock
@@ -4046,18 +3503,8 @@ msgid "Future Stock Moves"
 msgstr "Μελλοντικές Κινήσεις Αποθέματος"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-gtk-select-all"
-msgstr ""
-
-#. module: stock
 #: field:stock.move,move_history_ids2:0
 msgid "Move History (parent moves)"
-msgstr ""
-
-#. module: stock
-#: view:stock.move:0
-msgid "Extended options..."
 msgstr ""
 
 #. module: stock
@@ -4079,14 +3526,15 @@ msgid "XML File"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:0
 #: code:addons/stock/wizard/stock_partial_picking.py:0
 #: model:res.request.link,name:stock.req_link_tracking
 #: field:stock.inventory.line,prod_lot_id:0
 #: report:stock.inventory.move:0
 #: field:stock.move,prodlot_id:0
+#: field:stock.move.memory,prodlot_id:0
 #: field:stock.move.split.lines.exist,prodlot_id:0
 #: view:stock.production.lot:0
+#: field:stock.production.lot,name:0
 #, python-format
 msgid "Production Lot"
 msgstr "Παρτίδα Πραγωγής"
@@ -4103,11 +3551,6 @@ msgstr "Ανιχνευσιμότητα"
 #. module: stock
 #: view:stock.picking:0
 msgid "To invoice"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mail-message-new"
 msgstr ""
 
 #. module: stock
@@ -4128,17 +3571,16 @@ msgid "Prefix"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DISCONNECT"
-msgstr "STOCK_DISCONNECT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-product"
-msgstr "terp-product"
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"Total quantity after split exceeds the quantity to split for this product: "
+"\"%s\" (id: %d)"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.partial.move,product_moves:0
 msgid "Moves"
 msgstr "Κινήσεις"
 
@@ -4159,6 +3601,16 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "quantity."
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_memory
+msgid "stock.move.memory"
+msgstr ""
+
+#. module: stock
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: stock
@@ -4209,9 +3661,10 @@ msgid "May"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_AUTHENTICATION"
-msgstr "STOCK_DIALOG_AUTHENTICATION"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Deliver"
+msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -4227,6 +3680,7 @@ msgid "Upstream traceability"
 msgstr "Ανίχνευσιμότητα προς άνω"
 
 #. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview_all
 #: report:lot.stock.overview_all:0
 msgid "Location Content"
 msgstr ""
@@ -4238,11 +3692,11 @@ msgid "Produced Qty"
 msgstr "Ποσ. Παραγωγής"
 
 #. module: stock
-#: field:product.category,property_stock_account_input_categ:0
-#: field:product.template,property_stock_account_input:0
-#: field:stock.change.standard.price,stock_account_input:0
-msgid "Stock Input Account"
-msgstr "Λογαριασμός Εισερχομένων Αποθεμάτων"
+#: field:product.category,property_stock_account_output_categ:0
+#: field:product.template,property_stock_account_output:0
+#: field:stock.change.standard.price,stock_account_output:0
+msgid "Stock Output Account"
+msgstr "Λογαριασμός Εξερχομένων"
 
 #. module: stock
 #: view:stock.move:0
@@ -4314,24 +3768,6 @@ msgid "Output"
 msgstr "Έξοδος"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_RIGHT"
-msgstr "STOCK_JUSTIFY_RIGHT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mrp"
-msgstr "terp-mrp"
-
-#. module: stock
-#: help:stock.location,chained_picking_type:0
-msgid ""
-"Shipping Type of the Picking List that will contain the chained move (leave "
-"empty to automatically detect the type based on the source and destination "
-"locations)."
-msgstr ""
-
-#. module: stock
 #: selection:stock.move.split.lines,action:0
 msgid "Keep in one lot"
 msgstr ""
@@ -4345,16 +3781,6 @@ msgstr ""
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
 msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_NEXT"
-msgstr "STOCK_MEDIA_NEXT"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REDO"
-msgstr "STOCK_REDO"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4428,11 +3854,26 @@ msgstr ""
 #~ msgid "Available Moves"
 #~ msgstr "Διαθέσιμες Κινήσεις"
 
+#~ msgid "STOCK_SAVE"
+#~ msgstr "STOCK_SAVE"
+
 #~ msgid "Sub Products"
 #~ msgstr "Υπο-Προϊόντα"
 
+#~ msgid "terp-account"
+#~ msgstr "terp-account"
+
+#~ msgid "STOCK_SORT_ASCENDING"
+#~ msgstr "STOCK_SORT_ASCENDING"
+
 #~ msgid "Revision"
 #~ msgstr "Αναθεώρηση"
+
+#~ msgid "STOCK_MEDIA_FORWARD"
+#~ msgstr "STOCK_MEDIA_FORWARD"
+
+#~ msgid "STOCK_ZOOM_100"
+#~ msgstr "STOCK_ZOOM_100"
 
 #~ msgid "Fill Inventory for specific location"
 #~ msgstr "Συμπλήρωση απογαρφής για συγκεκριμένη τοποθεσία"
@@ -4444,8 +3885,32 @@ msgstr ""
 #~ msgid "Futur Productions"
 #~ msgstr "Μελλοντική Παραγωγή"
 
+#~ msgid "STOCK_NEW"
+#~ msgstr "STOCK_NEW"
+
+#~ msgid "STOCK_CANCEL"
+#~ msgstr "STOCK_CANCEL"
+
 #~ msgid "Make Parcel"
 #~ msgstr "Δημιουργία Πακέτου"
+
+#~ msgid "STOCK_QUIT"
+#~ msgstr "STOCK_QUIT"
+
+#~ msgid "STOCK_GOTO_TOP"
+#~ msgstr "STOCK_GOTO_TOP"
+
+#~ msgid "STOCK_ABOUT"
+#~ msgstr "STOCK_ABOUT"
+
+#~ msgid "terp-hr"
+#~ msgstr "terp-hr"
+
+#~ msgid "terp-purchase"
+#~ msgstr "terp-purchase"
+
+#~ msgid "STOCK_DND"
+#~ msgstr "STOCK_DND"
 
 #~ msgid "Products Sent"
 #~ msgstr "Απεσταλμένα Προϊόντα"
@@ -4456,11 +3921,20 @@ msgstr ""
 #~ msgid "Customer Refund"
 #~ msgstr "Επιστροφή από πελάτη"
 
+#~ msgid "STOCK_FLOPPY"
+#~ msgstr "STOCK_FLOPPY"
+
 #~ msgid "Stock location"
 #~ msgstr "Τοποθεσία Αποθήκευσης"
 
+#~ msgid "STOCK_UNINDENT"
+#~ msgstr "STOCK_UNINDENT"
+
 #~ msgid "Unreceived Products"
 #~ msgstr "Μη παραληφθέντα Προϊόντα"
+
+#~ msgid "STOCK_UNDERLINE"
+#~ msgstr "STOCK_UNDERLINE"
 
 #~ msgid "Include all childs for the location"
 #~ msgstr "Να συμπεριληφθούν τα υπό-τμήματα"
@@ -4468,8 +3942,20 @@ msgstr ""
 #~ msgid "Track line"
 #~ msgstr "Ανίχνευση γραμμής"
 
+#~ msgid "STOCK_BOLD"
+#~ msgstr "STOCK_BOLD"
+
+#~ msgid "terp-graph"
+#~ msgstr "terp-graph"
+
+#~ msgid "STOCK_PREFERENCES"
+#~ msgstr "STOCK_PREFERENCES"
+
 #~ msgid "Stock Level 1"
 #~ msgstr "Απόθεμα 1"
+
+#~ msgid "STOCK_MEDIA_REWIND"
+#~ msgstr "STOCK_MEDIA_REWIND"
 
 #~ msgid "Stock Properties"
 #~ msgstr "Χαρακτηριστικά Αποθέματος"
@@ -4479,6 +3965,9 @@ msgstr ""
 
 #~ msgid "Product Id"
 #~ msgstr "Νο Προϊόντος"
+
+#~ msgid "STOCK_CUT"
+#~ msgstr "STOCK_CUT"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
@@ -4494,6 +3983,9 @@ msgstr ""
 #~ "Ο λογαρσιασμός αυτός θα χρησιμοποιηθεί για αποτίμηση των εξερχομένων "
 #~ "προϊόντων"
 
+#~ msgid "STOCK_ZOOM_FIT"
+#~ msgstr "STOCK_ZOOM_FIT"
+
 #~ msgid ""
 #~ "This journal will be used for the accounting move generated by stock move"
 #~ msgstr ""
@@ -4506,14 +3998,44 @@ msgstr ""
 #~ msgid "Track Incomming Lots"
 #~ msgstr "Ανίχενυση Εισερχομένων Παρτίδων"
 
+#~ msgid "STOCK_SAVE_AS"
+#~ msgstr "STOCK_SAVE_AS"
+
+#~ msgid "STOCK_DIALOG_ERROR"
+#~ msgstr "STOCK_DIALOG_ERROR"
+
 #~ msgid "Latest Date of Inventory"
 #~ msgstr "Τελευταία Ημερ/νία Απογραφής"
+
+#~ msgid "STOCK_INDEX"
+#~ msgstr "STOCK_INDEX"
+
+#~ msgid "STOCK_GOTO_BOTTOM"
+#~ msgstr "STOCK_GOTO_BOTTOM"
 
 #~ msgid "Tracking Lot"
 #~ msgstr "Παρτίδα Αναφοράς"
 
+#~ msgid "STOCK_GO_FORWARD"
+#~ msgstr "STOCK_GO_FORWARD"
+
+#~ msgid "STOCK_UNDELETE"
+#~ msgstr "STOCK_UNDELETE"
+
+#~ msgid "STOCK_EXECUTE"
+#~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "STOCK_DIALOG_QUESTION"
+#~ msgstr "STOCK_DIALOG_QUESTION"
+
 #~ msgid "Tracking/Serial"
 #~ msgstr "Αναφορά/Σειριακός"
+
+#~ msgid "STOCK_SELECT_FONT"
+#~ msgstr "STOCK_SELECT_FONT"
+
+#~ msgid "STOCK_PASTE"
+#~ msgstr "STOCK_PASTE"
 
 #~ msgid ""
 #~ "Tracking lot is the code that will be put on the logistical unit/pallet"
@@ -4528,11 +4050,35 @@ msgstr ""
 #~ msgid "Tracking Number"
 #~ msgstr "Αριθμός Αναφοράς"
 
+#~ msgid "terp-stock"
+#~ msgstr "terp-stock"
+
+#~ msgid "STOCK_MEDIA_RECORD"
+#~ msgstr "STOCK_MEDIA_RECORD"
+
 #~ msgid "Available Packing"
 #~ msgstr "Διαθέσιμες Συσκευασίες"
 
+#~ msgid "terp-report"
+#~ msgstr "terp-report"
+
 #~ msgid "Location Content (With children)"
 #~ msgstr "Περιεχόμενα Τοποθεσίας (με υπό-τμήματα)"
+
+#~ msgid "STOCK_FILE"
+#~ msgstr "STOCK_FILE"
+
+#~ msgid "STOCK_EDIT"
+#~ msgstr "STOCK_EDIT"
+
+#~ msgid "STOCK_CONNECT"
+#~ msgstr "STOCK_CONNECT"
+
+#~ msgid "STOCK_GO_DOWN"
+#~ msgstr "STOCK_GO_DOWN"
+
+#~ msgid "STOCK_OK"
+#~ msgstr "STOCK_OK"
 
 #~ msgid "New Internal Packing"
 #~ msgstr "Νέα Εσωτερική Συσκευασία"
@@ -4549,13 +4095,31 @@ msgstr ""
 #~ msgid "All Stock Moves"
 #~ msgstr "Όλες οι Κινήσεις Αποθέματος"
 
+#~ msgid "STOCK_HELP"
+#~ msgstr "STOCK_HELP"
+
 #~ msgid "This account will be used to value the input stock"
 #~ msgstr ""
 #~ "Ο λογαριασμός αυτός θα χρησιμοποιηθεί για αποτίμηση του εισαγόμενου "
 #~ "αποθέματος"
 
+#~ msgid "STOCK_DIALOG_INFO"
+#~ msgstr "STOCK_DIALOG_INFO"
+
 #~ msgid "Date Created"
 #~ msgstr "Ημερ/νία Δημιουργίας"
+
+#~ msgid "STOCK_GO_BACK"
+#~ msgstr "STOCK_GO_BACK"
+
+#~ msgid "STOCK_JUSTIFY_FILL"
+#~ msgstr "STOCK_JUSTIFY_FILL"
+
+#~ msgid "terp-administration"
+#~ msgstr "terp-administration"
+
+#~ msgid "STOCK_APPLY"
+#~ msgstr "STOCK_APPLY"
 
 #~ msgid "The packing has been successfully made !"
 #~ msgstr "Η συσκευασία ολοκληρώθηκε επιτυχώς!"
@@ -4563,8 +4127,23 @@ msgstr ""
 #~ msgid "Dest. Address"
 #~ msgstr "Διεύθυνση Προορισμού"
 
+#~ msgid "terp-crm"
+#~ msgstr "terp-crm"
+
+#~ msgid "STOCK_STRIKETHROUGH"
+#~ msgstr "STOCK_STRIKETHROUGH"
+
+#~ msgid "terp-partner"
+#~ msgstr "terp-partner"
+
 #~ msgid "Qty"
 #~ msgstr "Ποσ."
+
+#~ msgid "STOCK_MISSING_IMAGE"
+#~ msgstr "STOCK_MISSING_IMAGE"
+
+#~ msgid "STOCK_SPELL_CHECK"
+#~ msgstr "STOCK_SPELL_CHECK"
 
 #~ msgid "Stock Tracking Lots"
 #~ msgstr "Παρτίδες Αναφοράς"
@@ -4572,8 +4151,14 @@ msgstr ""
 #~ msgid "Origin Reference"
 #~ msgstr "Συστάσεις Προέλευσης"
 
+#~ msgid "STOCK_HARDDISK"
+#~ msgstr "STOCK_HARDDISK"
+
 #~ msgid "Open Products"
 #~ msgstr "Ανοικτά Προϊόντα"
+
+#~ msgid "STOCK_COPY"
+#~ msgstr "STOCK_COPY"
 
 #, python-format
 #~ msgid "Futur Qty"
@@ -4582,17 +4167,47 @@ msgstr ""
 #~ msgid "Supplier Refund"
 #~ msgstr "Επιστροφή σε Προμηθευτή"
 
+#~ msgid "STOCK_CDROM"
+#~ msgstr "STOCK_CDROM"
+
 #~ msgid "Not from Packing"
 #~ msgstr "Όχι από συσκευασία"
 
 #~ msgid "Internal Ref"
 #~ msgstr "Εσωτερική Παρ."
 
+#~ msgid "STOCK_REFRESH"
+#~ msgstr "STOCK_REFRESH"
+
+#~ msgid "STOCK_STOP"
+#~ msgstr "STOCK_STOP"
+
+#~ msgid "STOCK_FIND_AND_REPLACE"
+#~ msgstr "STOCK_FIND_AND_REPLACE"
+
 #~ msgid "Validate"
 #~ msgstr "Επικύρωση"
 
+#~ msgid "STOCK_DIALOG_WARNING"
+#~ msgstr "STOCK_DIALOG_WARNING"
+
+#~ msgid "STOCK_ZOOM_IN"
+#~ msgstr "STOCK_ZOOM_IN"
+
+#~ msgid "STOCK_CONVERT"
+#~ msgstr "STOCK_CONVERT"
+
 #~ msgid "Partial packing"
 #~ msgstr "Μερική Συσκευασία"
+
+#~ msgid "terp-calendar"
+#~ msgstr "terp-calendar"
+
+#~ msgid "STOCK_ITALIC"
+#~ msgstr "STOCK_ITALIC"
+
+#~ msgid "STOCK_YES"
+#~ msgstr "STOCK_YES"
 
 #~ msgid "Fill From Unreceived Products"
 #~ msgstr "Συμπλήρωση από μη παραληφθέντα προϊόντα"
@@ -4612,8 +4227,17 @@ msgstr ""
 #~ msgid "Invoice Status"
 #~ msgstr "Κατάσταση Τιμολογίου"
 
+#~ msgid "STOCK_JUSTIFY_LEFT"
+#~ msgstr "STOCK_JUSTIFY_LEFT"
+
 #~ msgid "Future Stock Forecast"
 #~ msgstr "Εκτίμηση Μελλοντικού Αποθέματος"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
 
 #~ msgid "Planned Date"
 #~ msgstr "Προγραμματισμένη Ηεμρ/νία"
@@ -4625,14 +4249,38 @@ msgstr ""
 #~ msgid "Outgoing Products"
 #~ msgstr "Εξερχόμενα Προϊόντα"
 
+#~ msgid "STOCK_COLOR_PICKER"
+#~ msgstr "STOCK_COLOR_PICKER"
+
 #~ msgid "Lots by location"
 #~ msgstr "Παρτίδες ανά τοποθεσία"
+
+#~ msgid "STOCK_DELETE"
+#~ msgstr "STOCK_DELETE"
+
+#~ msgid "STOCK_CLEAR"
+#~ msgstr "STOCK_CLEAR"
 
 #~ msgid "Created Date"
 #~ msgstr "Ημερ/νία Δημιουργίας"
 
+#~ msgid "terp-mrp"
+#~ msgstr "terp-mrp"
+
+#~ msgid "STOCK_GO_UP"
+#~ msgstr "STOCK_GO_UP"
+
+#~ msgid "STOCK_SORT_DESCENDING"
+#~ msgstr "STOCK_SORT_DESCENDING"
+
 #~ msgid "Tracking Lots"
 #~ msgstr "Παρτίδες Αναφοράς"
+
+#~ msgid "STOCK_HOME"
+#~ msgstr "STOCK_HOME"
+
+#~ msgid "STOCK_PROPERTIES"
+#~ msgstr "STOCK_PROPERTIES"
 
 #~ msgid "Create invoices"
 #~ msgstr "Δημιουργία Τιμολογίων"
@@ -4643,14 +4291,44 @@ msgstr ""
 #~ msgid "Packing to Process"
 #~ msgstr "Συσκευασία προς Επεξεργασία"
 
+#~ msgid "STOCK_MEDIA_STOP"
+#~ msgstr "STOCK_MEDIA_STOP"
+
 #~ msgid "Make packing"
 #~ msgstr "Δημιουργία Συσκευασίας"
+
+#~ msgid "STOCK_DND_MULTIPLE"
+#~ msgstr "STOCK_DND_MULTIPLE"
+
+#~ msgid "STOCK_REMOVE"
+#~ msgstr "STOCK_REMOVE"
+
+#~ msgid "STOCK_DIALOG_AUTHENTICATION"
+#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#~ msgid "STOCK_ZOOM_OUT"
+#~ msgstr "STOCK_ZOOM_OUT"
 
 #~ msgid "Nearest"
 #~ msgstr "Εγγύτερο"
 
+#~ msgid "STOCK_SELECT_COLOR"
+#~ msgstr "STOCK_SELECT_COLOR"
+
+#~ msgid "STOCK_PRINT"
+#~ msgstr "STOCK_PRINT"
+
+#~ msgid "STOCK_NO"
+#~ msgstr "STOCK_NO"
+
+#~ msgid "STOCK_GOTO_FIRST"
+#~ msgstr "STOCK_GOTO_FIRST"
+
 #~ msgid "Tiny sprl"
 #~ msgstr "Tiny sprl"
+
+#~ msgid "STOCK_CLOSE"
+#~ msgstr "STOCK_CLOSE"
 
 #~ msgid "Return"
 #~ msgstr "Επιστροφή"
@@ -4658,14 +4336,41 @@ msgstr ""
 #~ msgid "Auto-Packing"
 #~ msgstr "Αυτόματη Συσκευασία"
 
+#~ msgid "STOCK_JUMP_TO"
+#~ msgstr "STOCK_JUMP_TO"
+
+#~ msgid "terp-tools"
+#~ msgstr "terp-tools"
+
+#~ msgid "Location Overview"
+#~ msgstr "Επισκόπηση Τοποθεσίας"
+
+#~ msgid "STOCK_UNDO"
+#~ msgstr "STOCK_UNDO"
+
 #~ msgid "Split move line"
 #~ msgstr "Διαχωρισμός γραμμής κίνησης"
+
+#~ msgid "terp-sale"
+#~ msgstr "terp-sale"
+
+#~ msgid "STOCK_ADD"
+#~ msgstr "STOCK_ADD"
 
 #~ msgid "Chained Delay (days)"
 #~ msgstr "Αλυσιδωτή Καθυστέρηση (ημέρες)"
 
+#~ msgid "STOCK_MEDIA_PAUSE"
+#~ msgstr "STOCK_MEDIA_PAUSE"
+
 #~ msgid "Track Outging Lots"
 #~ msgstr "Ανίχνευση Εξερχομένων ΠΑρτίδων"
+
+#~ msgid "STOCK_PRINT_PREVIEW"
+#~ msgstr "STOCK_PRINT_PREVIEW"
+
+#~ msgid "STOCK_FIND"
+#~ msgstr "STOCK_FIND"
 
 #~ msgid ""
 #~ "This is used only if you selected a chained location type.\n"
@@ -4695,8 +4400,20 @@ msgstr ""
 #~ msgid "Max. Planned Date"
 #~ msgstr "Μέγ. Προγραμματισμένη Ημερ/νία"
 
+#~ msgid "STOCK_MEDIA_PLAY"
+#~ msgstr "STOCK_MEDIA_PLAY"
+
+#~ msgid "STOCK_OPEN"
+#~ msgstr "STOCK_OPEN"
+
+#~ msgid "STOCK_MEDIA_PREVIOUS"
+#~ msgstr "STOCK_MEDIA_PREVIOUS"
+
 #~ msgid "Stock Locations Structure"
 #~ msgstr "Δομή Αποθηκευτικών Τοποθεσιών"
+
+#~ msgid "STOCK_DISCONNECT"
+#~ msgstr "STOCK_DISCONNECT"
 
 #~ msgid ""
 #~ "This account will be used, instead of the default one, to value output stock"
@@ -4710,14 +4427,29 @@ msgstr ""
 #~ msgid "Moves Tracked"
 #~ msgstr "Κινήσεις που ανιχνεύθηκαν"
 
+#~ msgid "STOCK_NETWORK"
+#~ msgstr "STOCK_NETWORK"
+
+#~ msgid "terp-project"
+#~ msgstr "terp-project"
+
 #~ msgid "Stock by Lots"
 #~ msgstr "Απόθεμα ανά Παρτίδα"
 
 #~ msgid "Canceled"
 #~ msgstr "Ακυρώθηκε"
 
+#~ msgid "STOCK_GOTO_LAST"
+#~ msgstr "STOCK_GOTO_LAST"
+
+#~ msgid "STOCK_DIRECTORY"
+#~ msgstr "STOCK_DIRECTORY"
+
 #~ msgid "Add"
 #~ msgstr "Προσθήκη"
+
+#~ msgid "STOCK_JUSTIFY_CENTER"
+#~ msgstr "STOCK_JUSTIFY_CENTER"
 
 #~ msgid "Confirmed Packing Waiting Availability"
 #~ msgstr "Επιβεβαιωμένη Συσκευασία σε αναμονή Διαθεσίμων"
@@ -4730,6 +4462,9 @@ msgstr ""
 
 #~ msgid "Do you want to set stocks to zero ?"
 #~ msgstr "Επιθυμείτε να ορίσετε τα αποθέματα σε μηδέν;"
+
+#~ msgid "STOCK_REVERT_TO_SAVED"
+#~ msgstr "STOCK_REVERT_TO_SAVED"
 
 #~ msgid "Track Production Lots"
 #~ msgstr "Ανίχνευση Παρτίδων Παραγωγής"
@@ -4763,6 +4498,9 @@ msgstr ""
 #~ msgid "to be invoiced"
 #~ msgstr "προς τιμολόγηση"
 
+#~ msgid "terp-product"
+#~ msgstr "terp-product"
+
 #~ msgid "Close"
 #~ msgstr "Κλείσιμο"
 
@@ -4778,8 +4516,14 @@ msgstr ""
 #~ msgid "Low Level"
 #~ msgstr "Χαμηλό Επίπεδο"
 
+#~ msgid "STOCK_INDENT"
+#~ msgstr "STOCK_INDENT"
+
 #~ msgid "Locations' Values"
 #~ msgstr "Τιμές Τοποθεσίας"
+
+#~ msgid "STOCK_JUSTIFY_RIGHT"
+#~ msgstr "STOCK_JUSTIFY_RIGHT"
 
 #~ msgid "Inventory line"
 #~ msgstr "Γραμμή Απογραφής"
@@ -4787,11 +4531,14 @@ msgstr ""
 #~ msgid "Others info"
 #~ msgstr "Άλλες Πληροφορίες"
 
+#~ msgid "STOCK_MEDIA_NEXT"
+#~ msgstr "STOCK_MEDIA_NEXT"
+
 #~ msgid "Move State"
 #~ msgstr "Στάδιο Κίνησης"
 
-#~ msgid "Packing list"
-#~ msgstr "Κατάσταση Συσκευασίας"
+#~ msgid "STOCK_REDO"
+#~ msgstr "STOCK_REDO"
 
 #~ msgid "Force to use a Production Lot during receptions"
 #~ msgstr "Υποχρεωτιική καταχώρηση Παρτίδας Παραγωγής κατά την παραλαβή"
@@ -4814,6 +4561,9 @@ msgstr ""
 
 #~ msgid "Packing Done"
 #~ msgstr "Συσκευασία Ολοκληρώθηκε"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #, python-format
 #~ msgid "Invoice state"
@@ -4921,6 +4671,9 @@ msgstr ""
 
 #~ msgid "Total :"
 #~ msgstr "Σύνολο:"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #~ msgid ""
 #~ "Scheduled date for the movement of the products or real date if the move is "

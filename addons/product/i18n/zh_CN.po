@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-19 09:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -27,9 +27,7 @@ msgid "Number of Layers"
 msgstr "层数"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -41,11 +39,6 @@ msgid ""
 "Set a template if this rule only apply to a template of product. Keep empty "
 "for all products"
 msgstr "如果这规则只适合于这产品模板设置模板. (留空为适用所有产品)"
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -206,11 +199,6 @@ msgstr "计量单位"
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "块（片，包等）"
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "模块的认证ID必须唯一"
 
 #. module: product
 #: view:product.template:0
@@ -375,6 +363,7 @@ msgstr "参考此分类的计量单位"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "公开价格"
 
@@ -387,11 +376,6 @@ msgstr "数量5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "IT零部件"
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "群组名称必须唯一"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -498,6 +482,13 @@ msgid "Working Time"
 msgstr ""
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr ""
@@ -577,6 +568,7 @@ msgid "Restaurant Expenses"
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "错误:无效EAN编码"
@@ -643,13 +635,6 @@ msgstr "键盘+鼠标套件"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "价格名称"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -778,11 +763,6 @@ msgstr "如果这规则只适合这产品,设置产品. (留空为适用所有�
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "厨房设计项目"
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -998,11 +978,6 @@ msgid "Price List Items"
 msgstr "价格表明细"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr ""
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr ""
@@ -1059,13 +1034,13 @@ msgid "Stockable"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
 msgstr ""
 
 #. module: product
@@ -1210,8 +1185,8 @@ msgid "Partners"
 msgstr "业务伙伴列表"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: product
@@ -1238,8 +1213,9 @@ msgid "Second UoM"
 msgstr "第二计量单位"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: product
@@ -1337,6 +1313,14 @@ msgid "Regular processor config"
 msgstr "通常处理器配置"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr "开始日期"
@@ -1363,6 +1347,13 @@ msgid "Basic PC"
 msgstr "基础PC"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "当前库存"
@@ -1384,9 +1375,14 @@ msgid ""
 msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "舍入精度"
 
 #. module: product
 #: view:product.uom:0
@@ -1500,11 +1496,6 @@ msgid "Onsite Intervention"
 msgstr "现场调试"
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr "公共价格表"
@@ -1518,12 +1509,6 @@ msgstr ""
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
 msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #. module: product
 #: view:product.product:0
@@ -1650,11 +1635,6 @@ msgid "Company"
 msgstr "公司"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "标价"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "价格类型"
@@ -1775,11 +1755,6 @@ msgid "Supplier Product UoM."
 msgstr ""
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "舍入精度"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1838,13 +1813,6 @@ msgstr ""
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "供应商交货提前期"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1953,6 +1921,11 @@ msgstr "完整的电脑外设"
 #: view:product.template:0
 msgid "Weigths"
 msgstr "重量"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2067,11 +2040,6 @@ msgid "RAM on demand"
 msgstr "内存要求"
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "销售 属性"
@@ -2179,11 +2147,6 @@ msgstr "成本计算方法"
 #: view:product.product:0
 msgid "Palletization"
 msgstr "垫垫板"
-
-#. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -2298,6 +2261,9 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgid "Customer Price"
 #~ msgstr "客户价格"
 
+#~ msgid "List Price"
+#~ msgstr "标价"
+
 #~ msgid "Configuration"
 #~ msgstr "设置"
 
@@ -2339,6 +2305,9 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgid "Factor"
 #~ msgstr "系数"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
 #~ msgid "Currency :"
 #~ msgstr "货币:"
 
@@ -2350,6 +2319,10 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 
 #~ msgid "Printing Date :"
 #~ msgstr "打印日期:"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #~ msgid "units"
 #~ msgstr "单位"
@@ -2489,6 +2462,9 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ "基础单位 = 这单位 * 比率\n"
 #~ "1 / 系数"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
 #~ msgid ""
 #~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
 #~ "that can not be split."
@@ -2511,3 +2487,14 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgstr ""
 #~ "延迟天数是确认采购订单到仓库接收产品之间的延迟天数.\n"
 #~ "用于制定采购订单计划时调度程序自动计算."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "模块的认证ID必须唯一"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "群组名称必须唯一"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"

@@ -37,7 +37,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Working Period">
+                <search string="Search Working Time">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
                        <field name="manager"/>
@@ -76,7 +76,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Working Period">
+                <form string="Working Time">
                     <field name="name"/>
                     <field name="manager"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -91,7 +91,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Working Period">
+                <tree string="Working Time">
                     <field name="name"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
@@ -100,7 +100,7 @@
         </record>
 
         <record id="action_resource_calendar_form" model="ir.actions.act_window">
-            <field name="name">Working Period</field>
+            <field name="name">Working Time</field>
             <field name="res_model">resource.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -116,8 +116,8 @@
                 <tree string="Working Time">
                     <field name="name"/>
                     <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
+                    <field name="hour_from" widget="float_time" />
+                    <field name="hour_to" widget="float_time" />
                 </tree>
             </field>
         </record>
