@@ -28,14 +28,16 @@ class auction_lots_enable(osv.osv_memory):
         'confirm_en':fields.integer('Catalog Number')
     }
     
-    def confirm_enable(self, cr, uid, ids, context={}):
+    def confirm_enable(self, cr, uid, ids, context=None):
         """
         This function Update auction lots object and set taken away field False.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction lots enable’s IDs.
         """
-        self.pool.get('auction.lots').write(cr, uid, context['active_id'], {'ach_emp':False})
+        if context is None: 
+            context = {}
+        self.pool.get('auction.lots').write(cr, uid, context.get('active_id',False), {'ach_emp':False})
         return {}
     
 auction_lots_enable()

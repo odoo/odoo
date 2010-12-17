@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-09-29 10:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_helpdesk
@@ -32,11 +32,6 @@ msgstr "# spraw"
 #: view:crm.helpdesk.report:0
 msgid "Group By..."
 msgstr "Grupuj wg..."
-
-#. module: crm_helpdesk
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -59,11 +54,6 @@ msgstr "Firma"
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
 msgstr "Adresy obserwatorów"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
-msgstr "Sprawy"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
@@ -149,13 +139,6 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Closed"
-msgstr "Zamknięte"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Estimates"
 msgstr "Szacunki"
@@ -164,11 +147,6 @@ msgstr "Szacunki"
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
 msgstr "Sekcja"
-
-#. module: crm_helpdesk
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -375,9 +353,11 @@ msgid "Low"
 msgstr "Niski"
 
 #. module: crm_helpdesk
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:crm.helpdesk,date_closed:0
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Closed"
+msgstr "Zamknięte"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -544,14 +524,6 @@ msgid "Categorization"
 msgstr "Kategorie"
 
 #. module: crm_helpdesk
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
@@ -580,6 +552,13 @@ msgid "Reply"
 msgstr "Odpowiedz"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid ""
+"Create and manage helpdesk categories to better manage and classify your "
+"support request."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr "Opis"
@@ -590,6 +569,15 @@ msgid "May"
 msgstr "Maj"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"'Helpdesk and Support' allows you to track your interventions. Select a "
+"customer, add notes and categorize interventions with partners if necessary "
+"and assign a priority level. Depending on your need, you may consider using "
+"the issues system of OpenERP to manage your support activities."
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
 msgstr "Prawdopodobieństwo (%)"
@@ -597,6 +585,14 @@ msgstr "Prawdopodobieństwo (%)"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
 msgid "# Emails"
+msgstr ""
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid ""
+"Have a general overview of all support requests by sorting them with "
+"specific criteria such as the processing time, number of requests answered, "
+"emails sent and costs."
 msgstr ""
 
 #. module: crm_helpdesk
@@ -689,11 +685,26 @@ msgstr "Rok"
 msgid "Duration"
 msgstr "Czas trwania"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Cases"
+#~ msgstr "Sprawy"
+
 #~ msgid "This Year"
 #~ msgstr "W tym roku"
 
 #~ msgid "Delay to close"
 #~ msgstr "Opóźnienie do zamknięcia"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
 
 #~ msgid "Communication history"
 #~ msgstr "Historia komunikacji"

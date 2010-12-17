@@ -32,7 +32,7 @@ class auction_lots_pay(osv.osv_memory):
     _description = 'Send results to Auction-in-europe.com'
     
     
-    def _date_get(self, cr, uid, context={}):
+    def _date_get(self, cr, uid, context=None):
         selection = context and context.get('selection')
         if selection:
             return [('','')] + selection
@@ -45,7 +45,7 @@ class auction_lots_pay(osv.osv_memory):
         'dates': fields.selection(_date_get,'Auction Date'),
     }
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -55,6 +55,8 @@ class auction_lots_pay(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
+        if context is None: 
+            context = {}
         res = super(auction_lots_pay, self).default_get(cr, uid, fields, context=context)
         if 'uname' in fields and context.get('uname',False):
             res['uname'] = context.get('uname')
@@ -96,7 +98,9 @@ class auction_lots_pay(osv.osv_memory):
             return val
         return post_multipart('auction-in-europe.com', "/bin/catalog_result.cgi", (('uname',uname),('password',passwd),('did',did)),(('file',catalog),))
     
-    def get_dates(self, cr, uid, ids, context):
+    def get_dates(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
         import httplib
         conn = httplib.HTTPConnection('www.auction-in-europe.com')
         data_obj = self.pool.get('ir.model.data')
@@ -124,7 +128,9 @@ class auction_lots_pay(osv.osv_memory):
             'context': context
         }
     
-    def send(self, cr, uid, ids, context):
+    def send(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
         import pickle
         service = netsvc.LocalService("object_proxy")
         datas = self.read(cr, uid, ids[0],['uname','password','dates'])

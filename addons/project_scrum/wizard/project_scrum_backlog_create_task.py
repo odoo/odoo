@@ -34,8 +34,6 @@ class backlog_create_task(osv.osv_memory):
         document_pool = self.pool.get('ir.attachment')
         ids_task = []
 
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         backlogs = backlog_id.browse(cr, uid, context['active_ids'], context=context)
         result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')

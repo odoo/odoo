@@ -81,6 +81,8 @@ class pos_make_payment(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False
         if active_id:
@@ -140,13 +142,15 @@ class pos_make_payment(osv.osv_memory):
         if the order is paid print invoice (if wanted) or ticket.
         """
         order_obj = self.pool.get('pos.order')
+        if context is None:
+            context = {}
         active_id = context and context.get('active_id', False)
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids, context=context)[0]
         # Todo need to check ...
         if data['is_acc']:
-            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context)
+            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context=context)
             amount = order.amount_total - order.amount_paid - price
 
         if amount != 0.0:
@@ -155,28 +159,28 @@ class pos_make_payment(osv.osv_memory):
 
         if order_obj.test_paid(cr, uid, [active_id]):
             if data['partner_id'] and data['invoice_wanted']:
-                order_obj.action_invoice(cr, uid, [active_id], context)
-                order_obj.create_picking(cr, uid, [active_id], context)
+                order_obj.action_invoice(cr, uid, [active_id], context=context)
+                order_obj.create_picking(cr, uid, [active_id], context=context)
                 if context.get('return', False):
                     order_obj.write(cr, uid, [active_id], {'state':'done'}, context=context)
                 else:
                     order_obj.write(cr, uid, [active_id],{'state':'paid'}, context=context)
-                return self.create_invoice(cr, uid, ids, context)
+                return self.create_invoice(cr, uid, ids, context=context)
             else:
                 context.update({'flag': True})
-                order_obj.action_paid(cr, uid, [active_id], context)
+                order_obj.action_paid(cr, uid, [active_id], context=context)
                 if context.get('return', False):
                     order_obj.write(cr, uid, [active_id], {'state':'done'}, context=context)
                 else:
                     order_obj.write(cr, uid, [active_id], {'state':'paid'}, context=context)
-                return self.print_report(cr, uid, ids, context)
+                return self.print_report(cr, uid, ids, context=context)
 
         if order.amount_paid > 0.0:
             context.update({'flag': True})
             # Todo need to check
-            order_obj.action_paid(cr, uid, [active_id], context)
+            order_obj.action_paid(cr, uid, [active_id], context=context)
             order_obj.write(cr, uid, [active_id], {'state': 'advance'}, context=context)
-            return self.print_report(cr, uid, ids, context)
+            return self.print_report(cr, uid, ids, context=context)
         return {}
 
 
@@ -184,6 +188,8 @@ class pos_make_payment(osv.osv_memory):
         """
           Create  a invoice
         """
+        if context is None:
+            context = {}
         active_ids = [context and context.get('active_id', False)]
         datas = {'ids': active_ids}
         return {
@@ -201,7 +207,7 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
-        if not context:
+        if context is None:
             context = {}
         active_id = context.get('active_id', [])
         datas = {'ids' : [active_id]}

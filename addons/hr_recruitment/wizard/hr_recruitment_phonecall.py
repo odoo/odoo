@@ -38,14 +38,14 @@ class job2phonecall(osv.osv_memory):
         case_obj = self.pool.get('hr.applicant')
         if context is None:
             context = {}
-        case = case_obj.browse(cr, uid, context['active_id'], context=context)
+        case = case_obj.browse(cr, uid, context.get('active_id', False), context=context)
         return case.user_id and case.user_id.id or False
 
     def _date_category(self, cr, uid, context=None):
         case_obj = self.pool.get('hr.applicant')
         if context is None:
             context = {}
-        case = case_obj.browse(cr, uid, context['active_id'], context=context)
+        case = case_obj.browse(cr, uid, context.get('active_id', False), context=context)
         categ_id = self.pool.get('crm.case.categ').search(cr, uid, [('name','=','Outbound')], context=context)
         return categ_id and categ_id[0] or case.categ_id and case.categ_id.id or False
 
@@ -53,7 +53,7 @@ class job2phonecall(osv.osv_memory):
         case_obj = self.pool.get('hr.applicant')
         if context is None:
             context = {}
-        case = case_obj.browse(cr, uid, context['active_id'], context=context)
+        case = case_obj.browse(cr, uid, context.get('active_id', False), context=context)
         return case.description or ''
 
     _defaults = {
@@ -81,7 +81,7 @@ class job2phonecall(osv.osv_memory):
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-        for job in job_case_obj.browse(cr, uid, context['active_ids'], context=context):
+        for job in job_case_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             #TODO: Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
                         'name': job.name,

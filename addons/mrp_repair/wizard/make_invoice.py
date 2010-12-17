@@ -30,7 +30,7 @@ class make_invoice(osv.osv_memory):
 	   'group': fields.boolean('Group by partner invoice address'),
     }
 
-    def make_invoices(self, cr, uid, ids, context):
+    def make_invoices(self, cr, uid, ids, context=None):
         """ Generates invoice(s) of selected records.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -39,7 +39,9 @@ class make_invoice(osv.osv_memory):
         @param context: A standard dictionary
         @return: Loads the view of new invoice(s).
         """
-        inv = self.browse(cr, uid, ids[0])
+        if context is None:
+            context = {}
+        inv = self.browse(cr, uid, ids[0], context=context)
         order_obj = self.pool.get('mrp.repair')
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'],
                                                  group=inv.group,context=context)

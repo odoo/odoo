@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-27 14:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -52,11 +52,6 @@ msgstr "Etape des cas"
 #: view:crm.meeting:0
 msgid "Visibility"
 msgstr "Visibilité"
-
-#. module: crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de l'objet invalide dans l'action défini"
 
 #. module: crm
 #: field:crm.lead,title:0
@@ -149,7 +144,6 @@ msgid "Resource's Calendar"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_partner.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:0
@@ -289,11 +283,6 @@ msgstr "Réponses exclues :"
 #: field:crm.case.stage,section_ids:0
 msgid "Sections"
 msgstr "Sections"
-
-#. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -546,11 +535,6 @@ msgid "August"
 msgstr "Août"
 
 #. module: crm
-#: field:crm.segmentation,sales_purchase_active:0
-msgid "Use The Sales Purchase Rules"
-msgstr "Utilise les Règles Ventes - Achats"
-
-#. module: crm
 #: code:addons/crm/crm.py:0
 #: view:crm.lead:0
 #: view:res.partner:0
@@ -662,6 +646,11 @@ msgstr ""
 "Etat d'esprit par défaut pour la période précédent le calcul de l'intervale "
 "maximale. C'est l'état d'esprit par défaut si le partenaire n'a pas "
 "d'évenement."
+
+#. module: crm
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -822,7 +811,6 @@ msgstr ""
 #: selection:crm.lead.report,type:0
 #: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: view:crm.phonecall:0
 #: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
@@ -1062,6 +1050,13 @@ msgid "Mobile"
 msgstr "Téléphone mobile"
 
 #. module: crm
+#: code:addons/crm/wizard/crm_merge_opportunities.py:0
+#, python-format
+msgid ""
+"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+msgstr ""
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Next Stage"
 msgstr ""
@@ -1277,11 +1272,6 @@ msgid "History Information"
 msgstr ""
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: crm
 #: field:base.action.rule,act_mail_to_partner:0
 msgid "Mail to Partner"
 msgstr ""
@@ -1486,6 +1476,11 @@ msgid "Search"
 msgstr ""
 
 #. module: crm
+#: view:board.board:0
+msgid "Opportunities by Categories"
+msgstr ""
+
+#. module: crm
 #: field:crm.meeting,interval:0
 msgid "Interval"
 msgstr ""
@@ -1597,11 +1592,6 @@ msgid "Invite People"
 msgstr "Personne à inviter"
 
 #. module: crm
-#: view:board.board:0
-msgid "Opportunities By Categories"
-msgstr ""
-
-#. module: crm
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive Sales team."
 msgstr ""
@@ -1685,11 +1675,6 @@ msgstr ""
 #. module: crm
 #: field:crm.send.mail.attachment,wizard_id:0
 msgid "Wizard"
-msgstr ""
-
-#. module: crm
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: crm
@@ -1925,10 +1910,8 @@ msgid "Select stages for this Sales Team"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_merge_opportunities.py:0
-#, python-format
-msgid ""
-"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+#: view:board.board:0
+msgid "Opportunities by Stage"
 msgstr ""
 
 #. module: crm
@@ -2011,9 +1994,9 @@ msgid "Priority"
 msgstr "Priorité"
 
 #. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Utilise les Règles Ventes - Achats"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2200,6 +2183,11 @@ msgstr "Réinitialiser à non-confirmé"
 #, python-format
 msgid "Note"
 msgstr "Note"
+
+#. module: crm
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2412,11 +2400,6 @@ msgid "Weekly"
 msgstr "Semaine"
 
 #. module: crm
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr ""
-
-#. module: crm
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
@@ -2448,11 +2431,6 @@ msgstr "Autre"
 #: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Terminé"
-
-#. module: crm
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
@@ -2493,14 +2471,6 @@ msgstr ""
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
 msgstr "Occupé"
-
-#. module: crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: crm
 #: field:crm.installer,crm_helpdesk:0
@@ -2964,6 +2934,11 @@ msgid "Operator"
 msgstr "Opérateur"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Schedule/Log Call"
 msgstr ""
@@ -2983,11 +2958,6 @@ msgstr "Confirmée"
 msgid ""
 "These addresses will receive a copy of this email. To modify the permanent "
 "CC list, edit the global CC field of this case"
-msgstr ""
-
-#. module: crm
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: crm
@@ -3325,6 +3295,11 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm
 #: field:crm.partner2opportunity,probability:0
 #: field:crm.phonecall2opportunity,probability:0
 msgid "Success Probability"
@@ -3422,12 +3397,6 @@ msgid "Delay to Open"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
-#, python-format
-msgid "There is no stage for won opportunities defined for this Sale Team."
-msgstr ""
-
-#. module: crm
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
@@ -3447,7 +3416,6 @@ msgid "No E-Mail ID Found for your Company address!"
 msgstr "Pas de courriel défini dans l'adresse de votre société"
 
 #. module: crm
-#: view:board.board:0
 #: view:crm.lead.report:0
 msgid "Opportunities By Stage"
 msgstr ""
@@ -3492,8 +3460,8 @@ msgid "Need Consulting"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
 msgstr ""
 
 #. module: crm
@@ -3515,6 +3483,11 @@ msgid "Recurrent ID date"
 msgstr ""
 
 #. module: crm
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 #, python-format
 msgid "Merged into Opportunity: %s"
@@ -3527,11 +3500,6 @@ msgstr ""
 #, python-format
 msgid "Close"
 msgstr "Clôturer"
-
-#. module: crm
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -3917,6 +3885,9 @@ msgstr "Bulletin d'information"
 #~ msgid "Mail to these emails"
 #~ msgstr "Mail à ces adresses"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "My Histories"
 #~ msgstr "Mon historique"
 
@@ -4072,6 +4043,12 @@ msgstr "Bulletin d'information"
 
 #~ msgid "Section Code"
 #~ msgstr "Code de la section"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
 
 #~ msgid "General Description"
 #~ msgstr "Description générale"
@@ -4915,6 +4892,9 @@ msgstr "Bulletin d'information"
 
 #~ msgid "Expected Close Date"
 #~ msgstr "Date prévisionelle de clôture"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de l'objet invalide dans l'action défini"
 
 #~ msgid "Case Resource Type"
 #~ msgstr "Type de ressouce pour le cas"

@@ -105,8 +105,6 @@ class partner_event_registration(osv.osv_memory):
         """Overrides orm name_get method
         @param ids: List of partner_event_register ids
         """
-        if not context:
-            context = {}
 
         res = []
         if not ids:
@@ -124,7 +122,7 @@ class partner_event_registration(osv.osv_memory):
         event_obj = self.pool.get('event.event')
         product_obj = self.pool.get('product.product')
         partner_obj = self.pool.get('res.partner')
-        if not context:
+        if context is None:
             context = {}
         partner_id = context.get('active_id', False)
         if event_id:

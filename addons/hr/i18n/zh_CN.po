@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:42+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -62,11 +62,6 @@ msgstr ""
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中使用了无效的模快名。"
 
 #. module: hr
 #: view:hr.employee:0
@@ -278,11 +273,6 @@ msgid "Other information"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "工作地址"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
 msgstr ""
@@ -334,11 +324,6 @@ msgstr ""
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -430,6 +415,21 @@ msgid "Category"
 msgstr "分类"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+
+#. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
 msgstr ""
@@ -440,14 +440,19 @@ msgid "Note"
 msgstr "备注"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "联系信息"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "工作地址"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -458,6 +463,14 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Status"
 msgstr "状态"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Departments Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitements, etc."
+msgstr ""
 
 #. module: hr
 #: field:hr.installer,progress:0
@@ -523,6 +536,11 @@ msgid "Status Description"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -566,12 +584,6 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "个人信息"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: hr
 #: view:res.users:0
@@ -748,6 +760,14 @@ msgid "Generic Payroll system Integrated with Accountings."
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"JJob Positions is used to define jobs and their requirements. You can attach "
+"a survey to a job position. This survey will be used in the recruitment "
+"process to evaluate the applicants for this job position."
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "下属"
@@ -882,5 +902,15 @@ msgstr "下属"
 #~ msgid "Saturday"
 #~ msgstr "六"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
 #~ msgid "Work Email"
 #~ msgstr "工作Email"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"

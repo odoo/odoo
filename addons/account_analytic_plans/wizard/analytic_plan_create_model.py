@@ -30,6 +30,8 @@ class analytic_plan_create_model(osv.osv_memory):
         plan_obj = self.pool.get('account.analytic.plan.instance')
         mod_obj = self.pool.get('ir.model.data')
         anlytic_plan_obj = self.pool.get('account.analytic.plan')
+        if context is None:
+            context = {}
         if 'active_id' in context and context['active_id']:
             plan = plan_obj.browse(cr, uid, context['active_id'], context=context)
             if (not plan.name) or (not plan.code):

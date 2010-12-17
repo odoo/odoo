@@ -51,7 +51,7 @@ class product_margin(osv.osv_memory):
         """
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
-        id = mod_obj.read(cr, uid, result, ['res_id'])
+        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.graph', 'graph'))
         view_res3 = cr.fetchone()[0]
         cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.form.inherit', 'form'))
@@ -60,7 +60,7 @@ class product_margin(osv.osv_memory):
         view_res = cr.fetchone()[0]
 
         #get the current product.margin object to obtain the values from it
-        product_margin_obj = self.browse(cr,uid,ids)[0]
+        product_margin_obj = self.browse(cr, uid, ids, context=context)[0]
 
         return {
             'name': _('Product Margins'),

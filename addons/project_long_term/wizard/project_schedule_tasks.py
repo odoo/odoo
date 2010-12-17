@@ -32,8 +32,6 @@ class project_schedule_task(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         res = super(project_schedule_task, self).default_get(cr, uid, fields_list, context)
         self.compute_date(cr, uid, context=context)
         return res

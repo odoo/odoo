@@ -6,20 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-11-27 12:23+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr ""
+#: field:mrp.production,move_created_ids:0
+#: field:mrp.production,move_created_ids2:0
+msgid "Moves Created"
+msgstr "Gegenereerde boekingen"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -47,20 +48,14 @@ msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,move_created_ids:0
-#: field:mrp.production,move_created_ids2:0
-msgid "Moves Created"
-msgstr "Gegenereerde boekingen"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr ""
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
 msgstr "Manufacturing Resource Planning"
-
-#. module: mrp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
@@ -72,13 +67,6 @@ msgstr ""
 msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
-msgstr ""
-
-#. module: mrp
-#: help:mrp.bom,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the bills of "
-"material without removing it."
 msgstr ""
 
 #. module: mrp
@@ -192,11 +180,6 @@ msgid "Set / Pack"
 msgstr "Set / Pack"
 
 #. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
 msgstr ""
@@ -225,11 +208,6 @@ msgstr ""
 #: view:mrp.production:0
 msgid "UOM"
 msgstr "ME"
-
-#. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -315,12 +293,6 @@ msgid "Sets / Phantom"
 msgstr "Sets / Phantom"
 
 #. module: mrp
-#: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
-msgid "Not urgent"
-msgstr "Niet urgent"
-
-#. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
 msgstr "Refereert aan een positie in een extern plan."
@@ -331,6 +303,11 @@ msgid "August"
 msgstr ""
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
 msgid "Production Order Report"
 msgstr ""
@@ -338,11 +315,6 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "June"
-msgstr ""
-
-#. module: mrp
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: mrp
@@ -368,7 +340,6 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: report:bom.structure:0
-#: field:mrp.product.produce,product_qty:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
 #, python-format
@@ -509,6 +480,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work center per hour."
 msgstr ""
@@ -583,13 +559,6 @@ msgid "Produce"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.production,picking_id:0
-msgid ""
-"This is the internal picking list that brings the finished product to the "
-"production plan"
-msgstr ""
-
-#. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
@@ -612,6 +581,13 @@ msgstr "Stuklijstregels"
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
 msgstr "Tijd vóór prod."
+
+#. module: mrp
+#: help:mrp.routing,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1071,11 +1047,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
 msgstr ""
@@ -1208,10 +1179,10 @@ msgid "Location where the system will stock the finished products."
 msgstr "Locatie waar de eindproducten opgeslagen worden"
 
 #. module: mrp
-#: help:mrp.routing,active:0
+#: help:mrp.production,picking_id:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the routing "
-"without removing it."
+"This is the internal picking list that brings the finished product to the "
+"production plan"
 msgstr ""
 
 #. module: mrp
@@ -1257,11 +1228,6 @@ msgstr ""
 #: field:mrp.production.order,priority:0
 msgid "Priority"
 msgstr "Prioriteit"
-
-#. module: mrp
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
@@ -1382,11 +1348,6 @@ msgid "Hour Account"
 msgstr "Kostenplaats uren"
 
 #. module: mrp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
 msgstr ""
@@ -1486,11 +1447,6 @@ msgid "Change Standard Price"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,origin:0
@@ -1498,11 +1454,10 @@ msgid "Source Document"
 msgstr ""
 
 #. module: mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+#: selection:mrp.production,priority:0
+#: selection:mrp.production.order,priority:0
+msgid "Not urgent"
+msgstr "Niet urgent"
 
 #. module: mrp
 #: help:stock.change.standard.price,change_parent_price:0
@@ -1851,6 +1806,18 @@ msgid "Manufacturing Efficiency"
 msgstr ""
 
 #. module: mrp
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.bom,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,product_rounding:0
 msgid "Product Rounding"
 msgstr "Productafronding"
@@ -2086,6 +2053,11 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: mrp
+#: field:mrp.product.produce,product_qty:0
+msgid "Select Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
@@ -2134,11 +2106,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
 #: view:mrp.bom:0
 #: field:mrp.bom,routing_id:0
@@ -2159,6 +2126,11 @@ msgstr ""
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
+msgstr ""
+
+#. module: mrp
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: mrp
@@ -2471,6 +2443,11 @@ msgstr ""
 #~ msgid "Tool"
 #~ msgstr "Gereedschap"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
 #~ msgid "Purchase Order"
 #~ msgstr "Inkooporder"
 
@@ -2707,6 +2684,9 @@ msgstr ""
 #~ msgid "You can see its bill of material which are used to make product"
 #~ msgstr "U kunt de gebruikte materiaallijst zien voor het te maken product."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
 #~ msgid ""
 #~ "Triggers an automatic procurement for all products that have a virtual stock "
 #~ "under 0. You should probably not use this option, we suggest using a MTO "
@@ -2718,6 +2698,9 @@ msgstr ""
 
 #~ msgid "Exceptions Procurements"
 #~ msgstr "Haperingen in verwervingen"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
 
 #~ msgid "Best price (not yet active!)"
 #~ msgstr "Beste prijs (nog niet actief)"

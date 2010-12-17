@@ -42,7 +42,7 @@ class membership_invoice(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         partner_obj = self.pool.get('res.partner')
         datas = {}
-        if not context:
+        if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)
         if data:

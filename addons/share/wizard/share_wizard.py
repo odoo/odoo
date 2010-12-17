@@ -92,7 +92,7 @@ class share_create(osv.osv_memory):
 
     def _create_new_share_users(self, cr, uid, wizard_data, group_id, context=None):
         user_obj = self.pool.get('res.users')
-        current_user = user_obj.browse(cr, uid, uid)
+        current_user = user_obj.browse(cr, uid, uid, context=context)
         user_ids = []
         if wizard_data.user_type == 'new':
             for new_user in wizard_data.new_users.split('\n'):

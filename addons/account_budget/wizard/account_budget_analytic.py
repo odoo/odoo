@@ -39,7 +39,7 @@ class account_budget_analytic(osv.osv_memory):
         datas = {}
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': context.get('active_ids',[]),
              'model': 'account.analytic.account',

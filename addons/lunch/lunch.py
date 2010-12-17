@@ -64,7 +64,7 @@ class lunch_cashbox(osv.osv):
     _description = "Cashbox for Lunch "
 
 
-    def amount_available(self, cr, uid, ids, field_name, arg, context):
+    def amount_available(self, cr, uid, ids, field_name, arg, context=None):
 
         """ count available amount
         @param cr: the current row, from the database cursor,
@@ -125,7 +125,7 @@ class lunch_order(osv.osv):
          @param context: A standard dictionary for contextual values """
 
         res = {}
-        for price in self.browse(cr, uid, ids):
+        for price in self.browse(cr, uid, ids, context=context):
             res[price.id] = price.product.price
         return res
 
@@ -150,7 +150,7 @@ class lunch_order(osv.osv):
         'state': lambda self, cr, uid, context: 'draft',
     }
 
-    def confirm(self, cr, uid, ids, box, context):
+    def confirm(self, cr, uid, ids, box, context=None):
 
         """ confirm order
         @param cr: the current row, from the database cursor,
@@ -159,7 +159,7 @@ class lunch_order(osv.osv):
         @param context: A standard dictionary for contextual values """
 
         cashmove_ref = self.pool.get('lunch.cashmove')
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             if order.state == 'confirmed':
                 continue
             new_id = cashmove_ref.create(cr, uid, {'name': order.product.name+' order',
@@ -171,7 +171,7 @@ class lunch_order(osv.osv):
             self.write(cr, uid, [order.id], {'cashmove': new_id, 'state': 'confirmed'})
         return {}
 
-    def lunch_order_cancel(self, cr, uid, ids, context):
+    def lunch_order_cancel(self, cr, uid, ids, context=None):
 
         """" cancel order
          @param cr: the current row, from the database cursor,
@@ -179,7 +179,7 @@ class lunch_order(osv.osv):
          @param ids: List of create menu’s IDs
          @param context: A standard dictionary for contextual values """
 
-        orders = self.browse(cr, uid, ids)
+        orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
             if not order.cashmove:
                 continue
