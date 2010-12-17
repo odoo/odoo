@@ -6,25 +6,241 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-12 09:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base_contact
+#: field:res.partner.contact,title:0
+msgid "Title"
+msgstr "Titel"
+
+#. module: base_contact
+#: view:res.partner.address:0
+msgid "# of Contacts"
+msgstr "Antal kontakter"
+
+#. module: base_contact
+#: field:res.partner.job,fax:0
+msgid "Fax"
+msgstr "Fax"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "title"
+msgstr "titel"
+
+#. module: base_contact
+#: help:res.partner.job,date_start:0
+msgid "Start date of job(Joining Date)"
+msgstr "Anställningens startdatum"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
+msgstr ""
+
+#. module: base_contact
+#: help:res.partner.job,function:0
+msgid "Function of this contact with this partner"
+msgstr ""
+
+#. module: base_contact
+#: help:res.partner.job,state:0
+msgid "Status of Address"
+msgstr "Adressstatus"
+
+#. module: base_contact
+#: help:res.partner.job,name:0
+msgid ""
+"You may                     enter Address first,Partner will be linked "
+"automatically if any."
+msgstr ""
+"Du kan registrera adressen först, företaget kopplas automatiskt om det finns."
+
+#. module: base_contact
+#: help:res.partner.job,fax:0
+msgid "Job FAX no."
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,mobile:0
+msgid "Mobile"
+msgstr "Mobil"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,comment:0
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_contacts0
+msgid "People you work with."
+msgstr "Personer du arbetar med."
+
+#. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
+msgid "Define functions and address."
+msgstr "Skapa funktion och adress."
+
+#. module: base_contact
+#: help:res.partner.job,date_stop:0
+msgid "Last date of job"
+msgstr "Senaste arbetsdatum"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+#: field:base.contact.installer,migrate:0
+msgid "Migrate"
+msgstr "Flytta"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.job,name:0
+msgid "Partner"
+msgstr "Företag"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_function0
+msgid "Jobs at a same partner address."
+msgstr "Arbeten på samma företagsadress."
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_partners0
+msgid "Partners"
+msgstr "Företag"
+
+#. module: base_contact
+#: field:res.partner.job,state:0
+msgid "State"
+msgstr "Delstat/Region/Län"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+"Kontakten kab gömmas utan att du behöver ta bort den om du markeras denna."
+
+#. module: base_contact
+#: model:ir.module.module,shortdesc:base_contact.module_meta_information
+#: model:process.process,name:base_contact.process_process_basecontactprocess0
+msgid "Base Contact"
+msgstr "Huvudkontakt"
+
+#. module: base_contact
+#: field:res.partner.job,date_stop:0
+msgid "Date Stop"
+msgstr "Slutdatum"
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
+msgid "Contact's Jobs"
+msgstr "Kontakts  arbete"
+
+#. module: base_contact
+#: view:res.partner:0
+msgid "Categories"
+msgstr "Kategorier"
+
+#. module: base_contact
+#: help:res.partner.job,sequence_partner:0
+msgid ""
+"Order of importance                 of this job title in the list of job "
+"title of the linked partner"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.job,extension:0
+msgid "Extension"
+msgstr "Filändelse"
+
+#. module: base_contact
+#: help:res.partner.job,extension:0
+msgid "Internal/External extension phone number"
+msgstr "Intern/Extern telefonanknytning"
+
+#. module: base_contact
+#: help:res.partner.job,phone:0
+msgid "Job Phone no."
+msgstr "Arbetstelefonnr."
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,job_ids:0
+msgid "Functions and Addresses"
+msgstr "Funktion och adress"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_contact
+#: field:res.partner.job,contact_id:0
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: base_contact
+#: help:res.partner.job,email:0
+msgid "Job E-Mail"
+msgstr "Arbetsepost"
+
+#. module: base_contact
+#: field:res.partner.job,sequence_partner:0
+msgid "Partner Seq."
+msgstr "Företagsserienummer"
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
+msgid "Function to address"
+msgstr "Funktion till adress"
+
+#. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Konfigurationsförlopp"
+
+#. module: base_contact
+#: field:res.partner.contact,name:0
+msgid "Last Name"
+msgstr "Efternamn"
+
+#. module: base_contact
+#: view:res.partner:0
+#: view:res.partner.contact:0
+msgid "Communication"
+msgstr "Kommunikation"
+
+#. module: base_contact
+#: field:base.contact.installer,config_logo:0
+#: field:res.partner.contact,photo:0
+msgid "Image"
+msgstr "Bild"
+
+#. module: base_contact
+#: selection:res.partner.job,state:0
+msgid "Past"
+msgstr "Tidigare"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Företagsadress"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
 msgid "Contact Seq."
 msgstr "Kontakt Sek."
-
-#. module: base_contact
-#: help:base.contact.installer,migrate:0
-msgid "If you select this, all addresses will be migrated."
-msgstr "Om du väljer denna så kommer alla adresser flyttas"
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -42,9 +258,132 @@ msgid "Contacts"
 msgstr "Kontakter"
 
 #. module: base_contact
-#: field:res.partner.job,sequence_partner:0
-msgid "Partner Seq."
-msgstr "Företagsserienummer"
+#: view:base.contact.installer:0
+msgid ""
+"Due to changes in Address and Partner's relation, some of the details from "
+"address are needed to be migrated into contact information."
+msgstr ""
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_addresses0
+msgid "Working and private addresses."
+msgstr "Arbets- och privatadresser."
+
+#. module: base_contact
+#: help:res.partner.job,address_id:0
+msgid "Address which is linked to the Partner"
+msgstr "Adressen som är kopplad till företaget"
+
+#. module: base_contact
+#: field:res.partner.job,function:0
+msgid "Partner Function"
+msgstr "Företagsfunktion"
+
+#. module: base_contact
+#: help:res.partner.job,other:0
+msgid "Additional phone field"
+msgstr "Extra telefonfält"
+
+#. module: base_contact
+#: field:res.partner.contact,website:0
+msgid "Website"
+msgstr "Webbplats"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Otherwise these details will not be visible from address/contact."
+msgstr "Annars kommer dessa uppgifter inte synas från adress/kontakt"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,email:0
+#: field:res.partner.job,email:0
+msgid "E-Mail"
+msgstr "E-post"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_base_contact_installer
+msgid "base.contact.installer"
+msgstr ""
+
+#. module: base_contact
+#: view:res.partner.job:0
+msgid "Contact Functions"
+msgstr "Kontaktfunktion"
+
+#. module: base_contact
+#: field:res.partner.job,phone:0
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Do you want to migrate your Address data in Contact Data?"
+msgstr "Vill du flytta din adress i kontaktinformationen"
+
+#. module: base_contact
+#: field:res.partner.contact,active:0
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: base_contact
+#: field:res.partner.contact,function:0
+msgid "Main Function"
+msgstr "Huvudfunktion"
+
+#. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
+msgid "Define partners and their addresses."
+msgstr "Definiera företag och deras adress."
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Seq."
+msgstr "Sek."
+
+#. module: base_contact
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
+msgstr "Språk"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Extra Information"
+msgstr "Extra information"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_partners0
+msgid "Companies you work with."
+msgstr "Företag du arbetar med."
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Partner Contact"
+msgstr "Företagskontakt"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "General"
+msgstr "Allmänt"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Photo"
+msgstr "Bild"
+
+#. module: base_contact
+#: field:res.partner.contact,birthdate:0
+msgid "Birth Date"
+msgstr "Födelsedatum"
+
+#. module: base_contact
+#: help:base.contact.installer,migrate:0
+msgid "If you select this, all addresses will be migrated."
+msgstr "Om du väljer denna så kommer alla adresser flyttas"
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -67,152 +406,9 @@ msgid "Other"
 msgstr "Övrigt"
 
 #. module: base_contact
-#: help:res.partner.job,state:0
-msgid "Status of Address"
-msgstr "Adressstatus"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_contacttofunction0
-msgid "Contact to function"
-msgstr "Kontakt till funktion"
-
-#. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Företagsfunktion"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
-msgid "Partner to address"
-msgstr "Företag till adress"
-
-#. module: base_contact
-#: view:res.partner.address:0
-msgid "# of Contacts"
-msgstr "Antal kontakter"
-
-#. module: base_contact
-#: help:res.partner.job,other:0
-msgid "Additional phone field"
-msgstr "Extra telefonfält"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to False,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-"Kontakten kab gömmas utan att du behöver ta bort den om du markeras denna."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Seq."
-msgstr "Sek."
-
-#. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
 msgstr "Funktion"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Otherwise these details will not be visible from address/contact."
-msgstr "Annars kommer dessa uppgifter inte synas från adress/kontakt"
-
-#. module: base_contact
-#: field:res.partner.job,fax:0
-msgid "Fax"
-msgstr "Fax"
-
-#. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Konfigurationsförlopp"
-
-#. module: base_contact
-#: field:res.partner.job,phone:0
-msgid "Phone"
-msgstr "Telefon"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_contacttofunction0
-msgid "Defines contacts and functions."
-msgstr "Skapa kontakter och funktioner."
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_base_contact_installer
-msgid "base.contact.installer"
-msgstr ""
-
-#. module: base_contact
-#: field:res.partner.contact,title:0
-msgid "Title"
-msgstr "Titel"
-
-#. module: base_contact
-#: help:res.partner.job,function:0
-msgid "Function of this contact with this partner"
-msgstr ""
-
-#. module: base_contact
-#: view:res.partner.job:0
-msgid "Contact Functions"
-msgstr "Kontaktfunktion"
-
-#. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
-#: model:process.process,name:base_contact.process_process_basecontactprocess0
-msgid "Base Contact"
-msgstr "Huvudkontakt"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid ""
-"Due to changes in Address and Partner's relation, some of the details from "
-"address are needed to be migrated into contact information."
-msgstr ""
-
-#. module: base_contact
-#: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
-msgid "E-Mail"
-msgstr "E-post"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr "Vill du flytta din adress i kontaktinformationen"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_partners0
-msgid "Partners"
-msgstr "Företag"
-
-#. module: base_contact
-#: field:res.partner.job,date_stop:0
-msgid "Date Stop"
-msgstr "Slutdatum"
-
-#. module: base_contact
-#: view:res.partner:0
-#: field:res.partner.job,address_id:0
-msgid "Address"
-msgstr "Adress"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
-msgid "Contact's Jobs"
-msgstr "Kontakts  arbete"
-
-#. module: base_contact
-#: field:res.partner.contact,country_id:0
-msgid "Nationality"
-msgstr "Medborgarskap"
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Postal Address"
-msgstr "Postadress"
 
 #. module: base_contact
 #: field:res.partner.address,job_id:0
@@ -221,132 +417,25 @@ msgid "Main Job"
 msgstr "Huvud arbete"
 
 #. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_contacttofunction0
+msgid "Defines contacts and functions."
+msgstr "Skapa kontakter och funktioner."
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_contacttofunction0
+msgid "Contact to function"
+msgstr "Kontakt till funktion"
+
+#. module: base_contact
 #: view:res.partner:0
-msgid "Categories"
-msgstr "Kategorier"
+#: field:res.partner.job,address_id:0
+msgid "Address"
+msgstr "Adress"
 
 #. module: base_contact
-#: help:res.partner.job,name:0
-msgid ""
-"You may                     enter Address first,Partner will be linked "
-"automatically if any."
-msgstr ""
-"Du kan registrera adressen först, företaget kopplas automatiskt om det finns."
-
-#. module: base_contact
-#: field:res.partner.contact,function:0
-msgid "Main Function"
-msgstr "Huvudfunktion"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
-msgid "Define partners and their addresses."
-msgstr "Definiera företag och deras adress."
-
-#. module: base_contact
-#: field:base.contact.installer,name:0
-msgid "Name"
-msgstr "Namn"
-
-#. module: base_contact
-#: field:res.partner.job,extension:0
-msgid "Extension"
-msgstr "Filändelse"
-
-#. module: base_contact
-#: field:res.partner.contact,mobile:0
-msgid "Mobile"
-msgstr "Mobil"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_contacts0
-msgid "People you work with."
-msgstr "Personer du arbetar med."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.contact,comment:0
-msgid "Notes"
-msgstr "Anteckningar"
-
-#. module: base_contact
-#: help:res.partner.job,extension:0
-msgid "Internal/External extension phone number"
-msgstr "Intern/Extern telefonanknytning"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_partner:0
-msgid ""
-"Order of importance                 of this job title in the list of job "
-"title of the linked partner"
-msgstr ""
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Extra Information"
-msgstr "Extra information"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.contact,job_ids:0
-msgid "Functions and Addresses"
-msgstr "Funktion och adress"
-
-#. module: base_contact
-#: field:res.partner.contact,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: base_contact
-#: help:res.partner.job,phone:0
-msgid "Job Phone no."
-msgstr "Arbetstelefonnr."
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
-msgid "Contact"
-msgstr "Kontakt"
-
-#. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
-msgstr "Språk"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_partners0
-msgid "Companies you work with."
-msgstr "Företag du arbetar med."
-
-#. module: base_contact
-#: help:res.partner.job,email:0
-msgid "Job E-Mail"
-msgstr "Arbetsepost"
-
-#. module: base_contact
-#: field:res.partner.contact,partner_id:0
-msgid "Main Employer"
-msgstr "Huvudarbetsgivare"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
-msgid "Function to address"
-msgstr "Funktion till adress"
-
-#. module: base_contact
-#: help:res.partner.job,date_stop:0
-msgid "Last date of job"
-msgstr "Senaste arbetsdatum"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
-msgid "Address Migration"
-msgstr "Adressmigrering"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Partner Contact"
-msgstr "Företagskontakt"
+#: field:res.partner.contact,country_id:0
+msgid "Nationality"
+msgstr "Medborgarskap"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
@@ -354,9 +443,29 @@ msgid "Open Jobs"
 msgstr "Öppna arbeten"
 
 #. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Företagsadress"
+#: field:base.contact.installer,name:0
+msgid "Name"
+msgstr "Namn"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,partner_id:0
+msgid "Main Employer"
+msgstr "Huvudarbetsgivare"
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
+msgid "Address Migration"
+msgstr "Adressmigrering"
+
+#. module: base_contact
+#: view:res.partner:0
+msgid "Postal Address"
+msgstr "Postadress"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
@@ -365,83 +474,9 @@ msgid "Addresses"
 msgstr "Adresser"
 
 #. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
-msgstr "Delstat/Region/Län"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_addresses0
-msgid "Working and private addresses."
-msgstr "Arbets- och privatadresser."
-
-#. module: base_contact
-#: field:res.partner.contact,name:0
-msgid "Last Name"
-msgstr "Efternamn"
-
-#. module: base_contact
-#: view:res.partner:0
-#: view:res.partner.contact:0
-msgid "Communication"
-msgstr "Kommunikation"
-
-#. module: base_contact
-#: field:base.contact.installer,config_logo:0
-#: field:res.partner.contact,photo:0
-msgid "Image"
-msgstr "Bild"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "title"
-msgstr "titel"
-
-#. module: base_contact
-#: help:res.partner.job,date_start:0
-msgid "Start date of job(Joining Date)"
-msgstr "Anställningens startdatum"
-
-#. module: base_contact
-#: help:res.partner.job,address_id:0
-msgid "Address which is linked to the Partner"
-msgstr "Adressen som är kopplad till företaget"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "General"
-msgstr "Allmänt"
-
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Past"
-msgstr "Tidigare"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-#: field:base.contact.installer,migrate:0
-msgid "Migrate"
-msgstr "Flytta"
-
-#. module: base_contact
-#: help:res.partner.job,fax:0
-msgid "Job FAX no."
-msgstr ""
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Photo"
-msgstr "Bild"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_function0
-msgid "Jobs at a same partner address."
-msgstr "Arbeten på samma företagsadress."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.job,name:0
-msgid "Partner"
-msgstr "Företag"
+#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
+msgid "Partner to address"
+msgstr "Företag till adress"
 
 #. module: base_contact
 #: field:res.partner.job,date_start:0
@@ -449,26 +484,11 @@ msgid "Date Start"
 msgstr "Startdatum"
 
 #. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
-msgid "Define functions and address."
-msgstr "Skapa funktion och adress."
-
-#. module: base_contact
-#: field:res.partner.contact,website:0
-msgid "Website"
-msgstr "Webbplats"
-
-#. module: base_contact
 #: help:res.partner.job,sequence_contact:0
 msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
 msgstr ""
-
-#. module: base_contact
-#: field:res.partner.contact,birthdate:0
-msgid "Birth Date"
-msgstr "Födelsedatum"
 
 #~ msgid "General Information"
 #~ msgstr "Allmän information"

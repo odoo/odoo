@@ -240,13 +240,19 @@ class hr_expense_line(osv.osv):
     _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
+        if context is None:
+            ctx = {}
+        else:
+            # we only want to update it locally
+            ctx = context.copy()
+
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
             # Compute based on pricetype of employee company
-            context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-            amount_unit = product.price_get('standard_price', context)[product.id]
+            ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
+            amount_unit = product.price_get('standard_price', ctx)[product.id]
             res['unit_amount'] = amount_unit
             if not uom_id:
                 res['uom_id'] = product.uom_id.id
