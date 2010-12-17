@@ -6,15 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-11 09:34+0000\n"
 "Last-Translator: Open Net Sàrl <openerp@open-net.ch>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -24,11 +31,6 @@ msgstr ""
 #. module: fetchmail
 #: view:email.server:0
 msgid "Confirm"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
 msgstr ""
 
 #. module: fetchmail
@@ -74,9 +76,11 @@ msgid "Description"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr "Priorité du serveur"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -109,8 +113,8 @@ msgid "Waiting for Verification"
 msgstr ""
 
 #. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
+#: field:email.server,password:0
+msgid "Password"
 msgstr ""
 
 #. module: fetchmail
@@ -199,11 +203,6 @@ msgid "POP/IMAP Server"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr ""
-
-#. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
 msgstr ""
@@ -268,6 +267,16 @@ msgstr ""
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr ""
+
+#. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Priorité du serveur"
 
 #. module: fetchmail
 #: view:mailgate.message:0

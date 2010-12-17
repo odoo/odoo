@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:47+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -41,6 +41,11 @@ msgstr "Tag"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Auftrag stornieren"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -308,11 +313,6 @@ msgid "All Quotations"
 msgstr "Alle Angebote"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Unser Verkäufer"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Juni"
@@ -458,9 +458,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "Das Angebot '%s' wurde zu einen Verkaufsauftrag."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Preisliste Einkauf"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -562,6 +562,11 @@ msgstr "Angebot / Bestellung"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# Positionen"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -889,13 +894,10 @@ msgid "Sale Order Line"
 msgstr "Auftragspositionen"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Erzeuge Rechnung"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preis/ME"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -960,6 +962,8 @@ msgstr "Verkaufspreis"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Konfiguration des Verkaufs"
 
@@ -1002,11 +1006,6 @@ msgstr "Steuert Beschaffung und Rechnungsstellung"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Sequenz Nummer"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Preisliste Verkauf"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1398,10 +1397,13 @@ msgid "Sales"
 msgstr "Verkaufsaufträge"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preis/ME"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Erzeuge Rechnung"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1807,6 +1809,11 @@ msgstr ""
 "oder jedes Produkt nach Verfügbarkeit geliefert wreden soll."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Referenzbeleg"
@@ -1854,6 +1861,7 @@ msgid "Uninvoiced"
 msgstr "Nicht abgerechnet"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1923,11 +1931,6 @@ msgid "Sales Orders"
 msgstr "Verkaufsaufträge"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Zahlungsbedingungen"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1964,6 +1967,11 @@ msgstr "Ihre Rechnung wurde erfolgreich generiert!"
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Januar"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2105,6 +2113,7 @@ msgid "Search Sales Order"
 msgstr "Suche Verkaufsaufträge"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Zahlungsbedingung"
@@ -2321,11 +2330,17 @@ msgstr "Rechnung durch Lieferung"
 #~ msgid "Packing Policy"
 #~ msgstr "Packregeln"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Unser Verkäufer"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Erzeuge weitere Rechnung"
 
 #~ msgid "One procurement for each product."
 #~ msgstr "Ein Beschaffungsvorgang je Produkt"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Preisliste Verkauf"
 
 #~ msgid ""
 #~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
@@ -2404,6 +2419,9 @@ msgstr "Rechnung durch Lieferung"
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Name und Adresse des Kontaktes der das Angebot angefragt hat."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Preisliste Einkauf"
+
 #~ msgid "New Quotation"
 #~ msgstr "Neues Angebot"
 
@@ -2423,6 +2441,9 @@ msgstr "Rechnung durch Lieferung"
 
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Konfiguriere Packliste für Verkaufsauftrag"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Zahlungsbedingungen"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Rechnungskorrektur"

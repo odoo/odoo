@@ -27,7 +27,6 @@ from osv import osv, fields
 import decimal_precision as dp
 from tools.translate import _
 
-
 class account_move_line(osv.osv):
     _inherit = 'account.move.line'
 
@@ -709,7 +708,7 @@ class account_voucher(osv.osv):
             for line in inv.line_ids:
                 if not line.amount:
                     continue
-                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount)
+                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
@@ -845,7 +844,7 @@ class account_voucher_line(osv.osv):
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Originial Amount', store=True),
         'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
-        'company_id': fields.related('voucher_id','company_id', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True),
     }
     _defaults = {
         'name': ''

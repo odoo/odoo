@@ -7,19 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-10-08 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In Configuration"
 msgstr ""
 
@@ -49,6 +50,13 @@ msgid "title"
 msgstr ""
 
 #. module: thunderbird
+#: help:thunderbird.installer,plugin_file:0
+msgid ""
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr ""
+
+#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Skip"
 msgstr ""
@@ -66,6 +74,7 @@ msgstr "Thunderbird epostak"
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In"
 msgstr ""
 
@@ -82,9 +91,10 @@ msgid ""
 msgstr ""
 
 #. module: thunderbird
-#: field:thunderbird.installer,plugin_file:0
-#: field:thunderbird.installer,thunderbird:0
-msgid "Thunderbird Plug-in"
+#: view:thunderbird.installer:0
+msgid ""
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
 
 #. module: thunderbird
@@ -113,10 +123,9 @@ msgid "Image"
 msgstr ""
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
-msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
 msgstr ""
 
 #. module: thunderbird
