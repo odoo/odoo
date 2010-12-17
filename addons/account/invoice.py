@@ -1457,14 +1457,15 @@ class account_invoice_line(osv.osv):
             del res['value']['uos_id']
         if not uom:
             res['value']['price_unit'] = 0.0
-        prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        u = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
-        if prod.uom_id.category_id.id != u.category_id.id:
-             warning = {
-                'title': _('Wrong UoM !'),
-                'message': _('Select correct UoM for your product.') 
-            }
-             return {'warning': warning}
+        if product and uom:    
+            prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
+            prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
+            if prod.uom_id.category_id.id != prod_uom.category_id.id:
+                 warning = {
+                    'title': _('Warning!'),
+                    'message': _('You selected an UoM which is not compatible with the product.') 
+                }
+            return {'warning': warning}
         return res
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
