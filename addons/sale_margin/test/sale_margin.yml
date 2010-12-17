@@ -50,7 +50,7 @@
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so11"))
     ids = self.search(cr, uid, [('origin', '=', so.name),('type', '=', 'out')])
-    self.create_invoice(cr, uid, ids, {"lang": "en_US", "search_default_available":
+    self.action_invoice_create(cr, uid, ids, context={"lang": "en_US", "search_default_available":
       1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
