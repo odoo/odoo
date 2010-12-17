@@ -63,7 +63,7 @@ class crm_phonecall2partner(osv.osv_memory):
 
         @return : Partner id if any for selected phonecall.
         """
-        if not context:
+        if context is None:
             context = {}
 
         phonecall_obj = self.pool.get('crm.phonecall')
@@ -99,8 +99,6 @@ class crm_phonecall2partner(osv.osv_memory):
 
         @return : Dictionary value for next form.
         """
-        if not context:
-            context = {}
 
         view_obj = self.pool.get('ir.ui.view')
         view_id = view_obj.search(cr, uid, [('model', '=', 'crm.phonecall2partner'), \
@@ -127,7 +125,7 @@ class crm_phonecall2partner(osv.osv_memory):
 
         @return : Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
 
         phonecall_obj = self.pool.get('crm.phonecall')
@@ -138,8 +136,8 @@ class crm_phonecall2partner(osv.osv_memory):
 
         rec_ids = context and context.get('active_ids', [])
 
-        for data in self.browse(cr, uid, ids):
-            for phonecall in phonecall_obj.browse(cr, uid, rec_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for phonecall in phonecall_obj.browse(cr, uid, rec_ids, context=context):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
                         'name': phonecall.name or phonecall.name,
@@ -178,10 +176,8 @@ class crm_phonecall2partner(osv.osv_memory):
 
         @return : Dictionary value for created Partner form.
         """
-        if not context:
-            context = {}
 
-        partner_ids = self._create_partner(cr, uid, ids, context)
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])

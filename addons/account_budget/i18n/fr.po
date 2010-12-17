@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-24 09:39+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -34,9 +34,9 @@ msgid "Budgetary Positions"
 msgstr "Positions Budgétaires"
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide pour la définition de l'action."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -60,11 +60,6 @@ msgstr "Confirmer"
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
 msgstr "Valider l'utilisateur"
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
@@ -96,22 +91,16 @@ msgid "at"
 msgstr "à"
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Imprimer les Budgets"
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
 msgstr "Devise"
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -129,14 +118,14 @@ msgid "Percentage"
 msgstr "Pourcentage"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "au"
+
+#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "État"
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -167,9 +156,9 @@ msgid "Company"
 msgstr "Société"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "au"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "À approuver"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -213,11 +202,6 @@ msgstr "Montant en Pratique"
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Date de fin"
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
@@ -311,9 +295,10 @@ msgid "Approve"
 msgstr "Approuver"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "À approuver"
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Date de début"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -331,13 +316,6 @@ msgid "Start of period"
 msgstr "Début de la période"
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr "Imprimer les Budgets"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr ""
@@ -349,22 +327,12 @@ msgid "Theoretical Amt"
 msgstr "Montant théorique"
 
 #. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Select Dates Period"
 msgstr "Sélectionnez la Période de Date"
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -464,11 +432,6 @@ msgid "Budget Lines"
 msgstr "Lignes de Budget"
 
 #. module: account_budget
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -483,10 +446,9 @@ msgid "Budget Management"
 msgstr "Gestion Budgétaire"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Date de début"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -494,13 +456,14 @@ msgstr "Date de début"
 msgid "Analysis from"
 msgstr "Analyse de"
 
-#. module: account_budget
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
 #~ msgid "% performance"
 #~ msgstr "% réalisation"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
 
 #~ msgid "Printing date:"
 #~ msgstr "Date d'impression :"
@@ -532,6 +495,9 @@ msgstr ""
 #~ msgid "Select Options"
 #~ msgstr "Sélectionnez les Options"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "Print Summary of Budgets"
 #~ msgstr "Imprimer le Résumé des Budgets"
 
@@ -546,6 +512,9 @@ msgstr ""
 
 #~ msgid "Select period"
 #~ msgstr "Sélectionnez une période"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom du Modèle non valide pour la définition de l'action."
 
 #~ msgid "Print Budget"
 #~ msgstr "Impression du Budget"

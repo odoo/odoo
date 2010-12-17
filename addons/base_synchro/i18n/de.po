@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-30 17:47+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,29 +15,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_view_base_synchro
 msgid "Base Synchronization"
 msgstr "Base Synchronization"
-
-#. module: base_synchro
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
-
-#. module: base_synchro
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#. module: base_synchro
-#: field:base.synchro,user_id:0
-msgid "Send Result To"
-msgstr "Sende Ergebnis an"
 
 #. module: base_synchro
 #: field:base.synchro.server,server_db:0
@@ -56,19 +40,14 @@ msgid "Field Name"
 msgstr "Feldname"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: base_synchro
 #: field:base.synchro.obj,synchronize_date:0
 msgid "Latest Synchronization"
 msgstr "Letzte Synchronisierung"
 
 #. module: base_synchro
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+#: field:base.synchro,user_id:0
+msgid "Send Result To"
+msgstr "Sende Ergebnis an"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj_avoid
@@ -81,9 +60,9 @@ msgid "_Close"
 msgstr "Beenden"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: view:base.synchro:0
+msgid "Transfer Data To Server"
+msgstr "Transferiere Daten"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj
@@ -155,11 +134,6 @@ msgstr "Nicht Sync. Felder"
 #: selection:base.synchro.obj,action:0
 msgid "Both"
 msgstr "Beide"
-
-#. module: base_synchro
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für Ansicht!"
 
 #. module: base_synchro
 #: field:base.synchro.obj,name:0
@@ -312,15 +286,27 @@ msgstr "Download"
 msgid "Server URL"
 msgstr "Server URL"
 
-#. module: base_synchro
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
 
-#. module: base_synchro
-#: view:base.synchro:0
-msgid "Transfer Data To Server"
-msgstr "Transferiere Daten"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für Ansicht!"
 
 #~ msgid "Synchronized Servers"
 #~ msgstr "Synchronisierte Server"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

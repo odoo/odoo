@@ -82,8 +82,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     _inherit = ['mailgate.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        if context is None:
-            context = {}
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -165,8 +163,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
     def _get_stage(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 
@@ -181,8 +177,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
     def onchange_job(self,cr, uid, ids, job, context=None):
-        if context is None:
-            context = {}
         result = {}
 
         if job:
@@ -200,8 +194,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -219,8 +211,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -291,12 +281,12 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value for print survey form.
         """
-        if not context:
+        if context is None:
             context = {}
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]
         context.update({'survey_id': record.survey.id, 'response_id': [record.response], 'response_no': 0, })
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
     def message_new(self, cr, uid, msg, context=None):
@@ -309,8 +299,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         """
         mailgate_pool = self.pool.get('email.server.tools')
         attach_obj = self.pool.get('ir.attachment')
-        if context is None:
-            context = {}
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -353,8 +341,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs
         """
-        if context is None:
-            context = {}
 
         if isinstance(ids, (str, int, long)):
             ids = [ids]

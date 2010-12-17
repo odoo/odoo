@@ -27,7 +27,7 @@ import pooler
 import tools
 from osv import fields,osv
 
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
     ids = acc_type_obj.search(cr, uid, [])
     res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
@@ -98,9 +98,9 @@ class report_aged_receivable(osv.osv):
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
 
-    def _calc_bal(self, cr, uid, ids, name, args, context):
+    def _calc_bal(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for period in self.read(cr,uid,ids,['name']):
+        for period in self.read(cr, uid, ids, ['name'], context=context):
            date1,date2 = period['name'].split(' to ')
            cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \

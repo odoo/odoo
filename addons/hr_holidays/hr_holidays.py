@@ -36,8 +36,6 @@ class hr_holidays_status(osv.osv):
     _description = "Leave Type"
 
     def get_days_cat(self, cr, uid, ids, category_id, return_false, context=None):
-        if context is None:
-            context = {}
 
         cr.execute("""SELECT id, type, number_of_days, holiday_status_id FROM hr_holidays WHERE category_id = %s AND state='validate' AND holiday_status_id in %s""",
             [category_id, tuple(ids)])
@@ -61,8 +59,6 @@ class hr_holidays_status(osv.osv):
         return res
 
     def get_days(self, cr, uid, ids, employee_id, return_false, context=None):
-        if context is None:
-            context = {}
 
         cr.execute("""SELECT id, type, number_of_days, holiday_status_id FROM hr_holidays WHERE employee_id = %s AND state='validate' AND holiday_status_id in %s""",
             [employee_id, tuple(ids)])
@@ -86,8 +82,6 @@ class hr_holidays_status(osv.osv):
         return res
 
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         return_false = False
         employee_id = False
         res = {}
@@ -133,8 +127,6 @@ class hr_holidays(osv.osv):
     _order = "type desc, date_from asc"
 
     def _employee_get(obj, cr, uid, context=None):
-        if context is None:
-            context = {}
         ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if ids:
             return ids[0]
@@ -177,16 +169,12 @@ class hr_holidays(osv.osv):
 
     def _create_resource_leave(self, cr, uid, vals, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
-        if context is None:
-            context = {}
         obj_res_leave = self.pool.get('resource.calendar.leaves')
         return obj_res_leave.create(cr, uid, vals, context=context)
 
     def _remove_resouce_leave(self, cr, uid, ids, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays cancel/removed'''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
-        if context is None:
-            context = {}
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
         return obj_res_leave.unlink(cr, uid, leave_ids)
 
@@ -205,8 +193,6 @@ class hr_holidays(osv.osv):
         return super(hr_holidays, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
         if 'holiday_type' in vals:
             if vals['holiday_type'] == 'employee':
                 vals.update({'category_id': False})
@@ -245,7 +231,7 @@ class hr_holidays(osv.osv):
                     self.holidays_cancel(cr, uid, list_ids)
                     self.unlink(cr, uid, list_ids)
 
-    def _check_date(self, cr, uid, ids):
+    def _check_date(self, cr, uid, ids, context=None):
         for rec in self.read(cr, uid, ids, ['number_of_days_temp', 'date_from','date_to', 'type']):
             if rec['number_of_days_temp'] < 0:
                 return False
@@ -260,8 +246,6 @@ class hr_holidays(osv.osv):
     _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
 
     def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self._update_user_holidays(cr, uid, ids)
         self._remove_resouce_leave(cr, uid, ids, context=context)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
@@ -283,8 +267,6 @@ class hr_holidays(osv.osv):
         return self.onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context=None):
-        if context is None:
-            context = {}
         warning = {}
         if status:
             brows_obj = self.pool.get('hr.holidays.status').browse(cr, uid, [status], context=context)[0]

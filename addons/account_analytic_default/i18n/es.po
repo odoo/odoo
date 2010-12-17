@@ -6,33 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-19 09:25+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"Last-Translator: Carlos @ smile.fr <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
 msgid "Account Analytic Default"
 msgstr "Cuenta analítica por defecto"
-
-#. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: account_analytic_default
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -74,11 +61,6 @@ msgid "Default end date for this Analytical Account"
 msgstr "Fecha final por defecto para esta cuenta analítica."
 
 #. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Albarán"
@@ -104,11 +86,6 @@ msgstr ""
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sale Order Line"
 msgstr "Línea pedido de venta"
-
-#. module: account_analytic_default
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -149,11 +126,6 @@ msgid "End Date"
 msgstr "Fecha final"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
@@ -184,11 +156,6 @@ msgstr ""
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
-
-#. module: account_analytic_default
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -225,13 +192,32 @@ msgstr ""
 "Indica el orden de la secuencia cuando se muestra una lista de distribución "
 "analítica."
 
-#. module: account_analytic_default
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Seq"
 #~ msgstr "Secuencia"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "Distribuciones analíticas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

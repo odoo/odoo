@@ -12,14 +12,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-22 07:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -68,11 +68,6 @@ msgstr "Nhóm theo"
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr "Địa chỉ thư điện tử công việc"
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: hr
 #: view:hr.employee:0
@@ -261,11 +256,6 @@ msgid "Job Description"
 msgstr "Mô tả công việc"
 
 #. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "Địa điểm văn phòng"
@@ -289,18 +279,8 @@ msgid "Other information"
 msgstr "Thông tin khác"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Địa chỉ làm việc"
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
-
-#. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: hr
@@ -350,11 +330,6 @@ msgstr "Loại"
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML không hợp lệ để xem kiến trúc"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -430,11 +405,6 @@ msgid "hr.department"
 msgstr "hr.department"
 
 #. module: hr
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
 msgstr ""
@@ -476,14 +446,19 @@ msgid "Note"
 msgstr "Ghi chú"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Thông tin liên hệ"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Địa chỉ làm việc"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -567,6 +542,11 @@ msgid "Status Description"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -610,14 +590,6 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Thông tin cá nhân"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
-"nào!"
 
 #. module: hr
 #: view:res.users:0
@@ -890,6 +862,9 @@ msgstr "Người cấp dưới"
 #~ msgid "Parents"
 #~ msgstr "Cha mẹ"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
+
 #~ msgid "Contact  of employee"
 #~ msgstr "Thông tin liên hệ của nhân viên"
 
@@ -1047,6 +1022,9 @@ msgstr "Người cấp dưới"
 
 #~ msgid "Starting Date"
 #~ msgstr "Ngày bắt đầu"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML không hợp lệ để xem kiến trúc"
 
 #~ msgid "Divorced"
 #~ msgstr "Ly hôn"
@@ -1265,6 +1243,12 @@ msgstr "Người cấp dưới"
 
 #~ msgid "Choose your month"
 #~ msgstr "Chọn tháng của bạn"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
+#~ "nào!"
 
 #~ msgid ""
 #~ "No analytic journal available for this employee.\n"

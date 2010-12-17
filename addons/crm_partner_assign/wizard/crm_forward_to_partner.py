@@ -169,7 +169,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         """
         Forward the lead to a partner
         """
-        
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids[0], context=context)
         case_pool = self.pool.get(context.get('active_model'))
         res_id = context and context.get('active_id', False) or False

@@ -7,25 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2010-09-29 10:30+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Production lot"
-msgstr ""
-
-#. module: product_expiry
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: product_expiry
@@ -44,15 +38,14 @@ msgid "Products date of expiry"
 msgstr "Datum isteka roka trajanja"
 
 #. module: product_expiry
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Pogreška: Predefinirana JM i prodajna JM moraju pripadati istoj kategoriji."
-
-#. module: product_expiry
 #: field:product.product,life_time:0
 msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
 
 #. module: product_expiry
@@ -61,8 +54,14 @@ msgid "Product Use Time"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid "The date signifying an alert to notify about the production lot."
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
 msgstr ""
 
 #. module: product_expiry
@@ -71,10 +70,11 @@ msgid "Product"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
-msgid "The date the lot may become dangerous and should not be consumed."
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
 msgstr ""
-"Datum kada serija proizvoda postaje opasna i ne smije se konzumirati."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -85,6 +85,12 @@ msgstr ""
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
 msgstr "Datum uklanjanja"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -112,25 +118,13 @@ msgstr "Kruh"
 #: model:product.uom,name:product_expiry.product_uom_ltr
 #: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
 msgid "LTR"
-msgstr ""
+msgstr "LTR"
 
 #. module: product_expiry
 #: view:product.product:0
 #: view:stock.production.lot:0
 msgid "Dates"
 msgstr "Datumi"
-
-#. module: product_expiry
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Pogreška: UOS mora biti u različitoj kategoriji od JM"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"The number of days after which, needs an alert to notify about the "
-"production lot."
-msgstr ""
 
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
@@ -143,12 +137,6 @@ msgid "Best before Date"
 msgstr "Najbolje prije"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid "The date the lot starts deteriorating without becoming dangerous."
-msgstr ""
-"Datum kada serija proizvoda počinje propadati, a da nije opasna po zdravlje."
-
-#. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
 msgid "French cheese Camenbert"
 msgstr "Francuski sir Camembert"
@@ -158,11 +146,6 @@ msgstr "Francuski sir Camembert"
 msgid "The number of days before a production lot should be removed."
 msgstr ""
 "Broj dana prije  nego što bi trebalo maknuti produkcijsku seriju proizvoda."
-
-#. module: product_expiry
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za arhitekturu View-a"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -188,9 +171,10 @@ msgstr ""
 "konzumirati."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date the lot should be removed."
-msgstr "Datum kada bi trebalo maknuti seriju proizvoda."
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr ""
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
@@ -200,6 +184,25 @@ msgstr ""
 #~ msgid "Product lifetime"
 #~ msgstr "Trajnost proizvoda"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Pogreška: Predefinirana JM i prodajna JM moraju pripadati istoj kategoriji."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za arhitekturu View-a"
+
+#~ msgid "The date the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "Datum kada serija proizvoda postaje opasna i ne smije se konzumirati."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Pogreška: UOS mora biti u različitoj kategoriji od JM"
+
+#~ msgid "The date the lot starts deteriorating without becoming dangerous."
+#~ msgstr ""
+#~ "Datum kada serija proizvoda počinje propadati, a da nije opasna po zdravlje."
+
 #~ msgid "Product usetime"
 #~ msgstr "Trajanje proizvoda"
 
@@ -208,6 +211,9 @@ msgstr ""
 
 #~ msgid "Product removal time"
 #~ msgstr "Vrijeme uklanjanja proizvoda"
+
+#~ msgid "The date the lot should be removed."
+#~ msgstr "Datum kada bi trebalo maknuti seriju proizvoda."
 
 #~ msgid "Product alert time"
 #~ msgstr "Vrijeme alarma proizvoda"

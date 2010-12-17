@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:44+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_mrp
@@ -22,8 +22,8 @@ msgid "For each product, on type service and on order"
 msgstr ""
 
 #. module: project_mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
 msgstr ""
 
 #. module: project_mrp
@@ -32,12 +32,6 @@ msgstr ""
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 #: field:procurement.order,task_id:0
 msgid "Task"
-msgstr ""
-
-#. module: project_mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: project_mrp
@@ -51,13 +45,18 @@ msgid "if product type is 'service' then it creates the task."
 msgstr ""
 
 #. module: project_mrp
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
+
+#. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
 msgstr ""
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: project_mrp

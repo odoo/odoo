@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-11-03 07:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -34,14 +34,34 @@ msgid "Emails for multiple items saved in outbox."
 msgstr "Emailovi za visestruke stavke sacuvane u OutBox-u"
 
 #. module: email_template
+#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#, python-format
+msgid ""
+"No personal email accounts are configured for you. \n"
+"Either ask admin to enforce an account for this template or get yourself a "
+"personal email account."
+msgstr ""
+"Ni jedan locni nalog nije kreiran za vas. \n"
+"Ili pitajte administratora ili napravite sami sebi licni postanski nalog."
+
+#. module: email_template
+#: model:ir.actions.act_window,help:email_template.action_email_template_mailbox
+msgid ""
+"An email template is an email document that will be sent as part of a "
+"marketing campaign. You can personalize it based on specific customer "
+"profile fields so that their names or other partner related information can "
+"be automatically inserted in it."
+msgstr ""
+
+#. module: email_template
 #: view:email_template.mailbox:0
 msgid "Personal Emails"
 msgstr "Licni Emailovi"
 
 #. module: email_template
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcijue."
+#: field:email.template,file_name:0
+msgid "Report Filename"
+msgstr "Izvestaj ImenaFajla"
 
 #. module: email_template
 #: view:email.template:0
@@ -59,16 +79,18 @@ msgid "Plain Text & HTML with no attachments"
 msgstr "Cisti Tekst & HTML bez attachemnta"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
+#: help:email.template,model_object_field:0
 msgid ""
-"Mail from Account %s failed on login. Probable Reason:Could not login to "
-"server\n"
-"Error: %s"
+"Select the field from the model you want to use.\n"
+"If it is a relationship field you will be able to choose the nested values "
+"in the box below\n"
+"(Note:If there are no values make sure you have selected the correct model)"
 msgstr ""
-"Email naloga %s nije uspeo da se uloguje. MOguci Razlozi: Ne mogu se "
-"konektovati ba server\n"
-"Greska: %s"
+"Selektuj polje modela koje zelis da koristis\n"
+"Ako je to vezno polje,. bicete u mogucnosti da izaberete podveze u polju "
+"ispod\n"
+"( Napomena: Ako nema nikakvog izbora budite sigurni da ste izabrali ispravan "
+"model)"
 
 #. module: email_template
 #: field:email_template.preview,body_html:0
@@ -116,15 +138,18 @@ msgid "Send all mails"
 msgstr "Posalji SVE Emailove"
 
 #. module: email_template
+#: help:email_template.account,smtpuname:0
+msgid ""
+"Specify the username if your SMTP server requires authentication, otherwise "
+"leave it empty."
+msgstr ""
+"Specificiraj korisnicko ime ako tvoj SMTP zahteva autorizaciju, inace ostavi "
+"prazno."
+
+#. module: email_template
 #: field:email_template.mailbox,server_ref:0
 msgid "Server Reference of mail"
 msgstr "Referenca Servera Email-a"
-
-#. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid "Reason: %s"
-msgstr "Razlog: %s"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -253,12 +278,6 @@ msgid "Both HTML & Text (Alternative)"
 msgstr "Oba HTML & Tekst ( Aternativno)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Mako templates not installed"
-msgstr "Mako Obrazac nije instaliran"
-
-#. module: email_template
 #: field:email_template.send.wizard,requested:0
 msgid "No of requested Mails"
 msgstr "Br. trazenih Poruka"
@@ -335,9 +354,10 @@ msgid "Subject"
 msgstr "Tema"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "My Emails"
-msgstr "Moji Emailovi"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Reason: %s"
+msgstr "Razlog: %s"
 
 #. module: email_template
 #: field:email_template.mailbox,email_from:0
@@ -345,14 +365,18 @@ msgid "From"
 msgstr "Od"
 
 #. module: email_template
-#: field:email.template,file_name:0
-msgid "Report Filename"
-msgstr "Izvestaj ImenaFajla"
+#: field:email_template.preview,ref_template:0
+#: field:email_template.send.wizard,ref_template:0
+msgid "Template"
+msgstr "Šablon"
 
 #. module: email_template
-#: selection:email_template.mailbox,state:0
-msgid "Sending"
-msgstr "Слање"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason: Server Send Error\n"
+" Description: %s"
+msgstr ""
 
 #. module: email_template
 #: view:email.template:0
@@ -434,17 +458,6 @@ msgid "Sent Items"
 msgstr "Poslate Stavke"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
-"Error: %s"
-msgstr ""
-"Slanje poruke %s nije uspelo. Verovatan uzrok: Ne mogu se logovati na "
-"server\n"
-"Greska: %s"
-
-#. module: email_template
 #: view:email_template.account:0
 msgid "Test Outgoing Connection"
 msgstr "Test Izlazne Konekcije"
@@ -492,24 +505,9 @@ msgid "Report"
 msgstr "Izveštaj"
 
 #. module: email_template
-#: field:email_template.preview,ref_template:0
-#: field:email_template.send.wizard,ref_template:0
-msgid "Template"
-msgstr "Šablon"
-
-#. module: email_template
-#: help:email.template,model_object_field:0
-msgid ""
-"Select the field from the model you want to use.\n"
-"If it is a relationship field you will be able to choose the nested values "
-"in the box below\n"
-"(Note:If there are no values make sure you have selected the correct model)"
-msgstr ""
-"Selektuj polje modela koje zelis da koristis\n"
-"Ako je to vezno polje,. bicete u mogucnosti da izaberete podveze u polju "
-"ispod\n"
-"( Napomena: Ako nema nikakvog izbora budite sigurni da ste izabrali ispravan "
-"model)"
+#: field:email.template,sub_model_object_field:0
+msgid "Sub Field"
+msgstr "Pod Polje"
 
 #. module: email_template
 #: view:email.template:0
@@ -518,9 +516,9 @@ msgid "Advanced"
 msgstr "Napredno"
 
 #. module: email_template
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Neispravni Argumenti"
+#: view:email_template.mailbox:0
+msgid "My Emails"
+msgstr "Moji Emailovi"
 
 #. module: email_template
 #: view:email.template:0
@@ -528,9 +526,13 @@ msgid "Expression Builder"
 msgstr "Gradilac Ekstenizja"
 
 #. module: email_template
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: help:email.template,sub_object:0
+msgid ""
+"When a relation field is used this field will show you the type of field you "
+"have selected"
+msgstr ""
+"Kada se koristi vezno polje, ovo polje ce vam pokazati tip polja koje ste "
+"izabrali"
 
 #. module: email_template
 #: selection:email_template.mailbox,mail_type:0
@@ -612,6 +614,11 @@ msgid "Rec/Sent Date"
 msgstr "Datum Slanja/Prijema"
 
 #. module: email_template
+#: selection:email_template.account,state:0
+msgid "Initiated"
+msgstr "Inicirano"
+
+#. module: email_template
 #: field:email.template,report_template:0
 msgid "Report to send"
 msgstr "Izvestaj za slanje"
@@ -673,14 +680,6 @@ msgid "Window Action"
 msgstr "Radnja prozora"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-msgstr ""
-"Preuzimanje datuma i vremena nije uspelo. Datum:Date:%s \\n \tGreska:%s"
-
-#. module: email_template
 #: selection:email_template.account,send_pref:0
 msgid "HTML, otherwise Text"
 msgstr "HTML, a drugacije Text"
@@ -707,8 +706,7 @@ msgid "Mail Contents"
 msgstr "Sadrzaj Poste"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
+#: sql_constraint:email.template:0
 msgid "The template name must be unique !"
 msgstr "Ime Sablona mora biti jedinstveno"
 
@@ -729,11 +727,6 @@ msgstr "Samo tekst"
 #: view:email_template.account:0
 msgid "Draft"
 msgstr "Priprema"
-
-#. module: email_template
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
 
 #. module: email_template
 #: field:email.template,model_int_name:0
@@ -774,9 +767,10 @@ msgid "Outgoing"
 msgstr "Odlazno"
 
 #. module: email_template
-#: selection:email_template.account,state:0
-msgid "Initiated"
-msgstr "Inicirano"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Datetime Extraction failed.Date:%s                       \tError:%s"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,use_sign:0
@@ -812,20 +806,6 @@ msgid "User Name"
 msgstr "Korisničko ime"
 
 #. module: email_template
-#: field:email.template,sub_model_object_field:0
-msgid "Sub Field"
-msgstr "Pod Polje"
-
-#. module: email_template
-#: help:email.template,attachment_ids:0
-msgid ""
-"You may attach existing files to this template, so they will be added in all "
-"emails created from this template"
-msgstr ""
-"Mozete pridodati postojeci fajl ovom sablonu, tako da ce on biti dodat u "
-"svim poruka,a kreiranih iz ovog sablona"
-
-#. module: email_template
 #: field:email_template.mailbox,user:0
 msgid "User"
 msgstr "Korisnik"
@@ -847,6 +827,16 @@ msgid "Save in Drafts"
 msgstr "Sacuvaj u Pripremi"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason:MIME Error\n"
+"Description: %s"
+msgstr ""
+"Poruka sa Naloga %s nije prosla. MOguci Razlog: MIME GRESKA\n"
+"Opis: %s"
+
+#. module: email_template
 #: field:email_template.account,smtptls:0
 msgid "TLS"
 msgstr "TLS"
@@ -857,9 +847,7 @@ msgid "Language"
 msgstr "Jezik"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
 #: code:addons/email_template/email_template_account.py:0
-#: code:addons/email_template/email_template_mailbox.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
@@ -880,26 +868,10 @@ msgid "Send Mail"
 msgstr "Pošalji poštu"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
-#, python-format
-msgid ""
-"Error sending mail: %s\" % str(e)))\n"
-"        \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"        if ids is None:\n"
-"            ids = []\n"
-"        if context is None:\n"
-"            context = {}\n"
-"        filters = [('folder', '=', 'outbox"
-msgstr ""
-"Greska slanja poruke: %s\" % str(e)))\n"
-"         \n"
-"    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-"if ids is None:\n"
-"ids = []\n"
-"if context is None:\n"
-"context = {}\n"
-"filters = [('folder', '=', 'outbox"
+#: view:email_template.account:0
+#: selection:email_template.account,state:0
+msgid "Suspended"
+msgstr "Суспендован"
 
 #. module: email_template
 #: help:email.template,allowed_groups:0
@@ -935,12 +907,6 @@ msgstr "Izraz"
 #: field:email_template.mailbox,history:0
 msgid "History"
 msgstr "Istorija"
-
-#. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Django templates not installed"
-msgstr "Django Sabloni nisu instalirani"
 
 #. module: email_template
 #: view:email.template:0
@@ -984,16 +950,20 @@ msgid "Close"
 msgstr "Zatvori"
 
 #. module: email_template
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
+msgid "Error sending mail: %s"
+msgstr ""
+
+#. module: email_template
+#: constraint:email_template.account:0
+msgid "Error: You are not allowed to have more than 1 account."
+msgstr ""
+
+#. module: email_template
 #: view:email_template.mailbox:0
 msgid "Body (HTML-Web Client Only)"
 msgstr "Sadrzaj (HTML-Web Client Only)"
-
-#. module: email_template
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
@@ -1002,15 +972,9 @@ msgid "%s (Email Attachment)"
 msgstr "Copy text   \t %s (Email Attachment)"
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
-#, python-format
-msgid ""
-"No personal email accounts are configured for you. \n"
-"Either ask admin to enforce an account for this template or get yourself a "
-"personal email account."
-msgstr ""
-"Ni jedan locni nalog nije kreiran za vas. \n"
-"Ili pitajte administratora ili napravite sami sebi licni postanski nalog."
+#: selection:email_template.mailbox,state:0
+msgid "Sending"
+msgstr "Слање"
 
 #. module: email_template
 #: field:email.template,allowed_groups:0
@@ -1028,10 +992,17 @@ msgid "User Information"
 msgstr "Podaci o korisniku"
 
 #. module: email_template
-#: view:email_template.account:0
-#: selection:email_template.account,state:0
-msgid "Suspended"
-msgstr "Суспендован"
+#: view:email.template:0
+msgid "Actions"
+msgstr "Akcije"
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Server Send Error\n"
+"Description: %s"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,file_name:0
@@ -1043,9 +1014,9 @@ msgstr ""
 "koristiti imenu fajla npr: 2009_SO003.pdf"
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
-msgstr "Fascikla"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
+msgstr "Datum kda je Email poslat ili primljen"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -1054,18 +1025,20 @@ msgid "Trash"
 msgstr "Smeće"
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
-msgstr "Datum kda je Email poslat ili primljen"
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr "Postansko Sanduce"
 
 #. module: email_template
-#: help:email_template.account,smtpuname:0
+#: code:addons/email_template/email_template_mailbox.py:0
+#, python-format
 msgid ""
-"Specify the username if your SMTP server requires authentication, otherwise "
-"leave it empty."
+"Sending of Mail %s failed. Probable Reason:Could not login to server\n"
+"Error: %s"
 msgstr ""
-"Specificiraj korisnicko ime ako tvoj SMTP zahteva autorizaciju, inace ostavi "
-"prazno."
+"Slanje poruke %s nije uspelo. Verovatan uzrok: Ne mogu se logovati na "
+"server\n"
+"Greska: %s"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
@@ -1100,13 +1073,13 @@ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
 msgstr "Upisi ime izlaznog Servera, npr: smtp:yourdomain.com"
 
 #. module: email_template
-#: help:email.template,sub_object:0
+#: help:email.template,attachment_ids:0
 msgid ""
-"When a relation field is used this field will show you the type of field you "
-"have selected"
+"You may attach existing files to this template, so they will be added in all "
+"emails created from this template"
 msgstr ""
-"Kada se koristi vezno polje, ovo polje ce vam pokazati tip polja koje ste "
-"izabrali"
+"Mozete pridodati postojeci fajl ovom sablonu, tako da ce on biti dodat u "
+"svim poruka,a kreiranih iz ovog sablona"
 
 #. module: email_template
 #: help:email.template,message_id:0
@@ -1131,11 +1104,6 @@ msgid "Null Value"
 msgstr "Null вредност"
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
-msgstr "Postansko Sanduce"
-
-#. module: email_template
 #: field:email.template,template_language:0
 msgid "Templating Language"
 msgstr "Jezik Sablona"
@@ -1152,6 +1120,11 @@ msgstr "CC"
 #: view:email_template.mailbox:0
 msgid "Sent"
 msgstr "Poslato"
+
+#. module: email_template
+#: sql_constraint:email_template.account:0
+msgid "Another setting already exists with this email ID !"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,ref_ir_act_window:0
@@ -1267,6 +1240,18 @@ msgid "Corporate"
 msgstr "Saradjivanje"
 
 #. module: email_template
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed on login. Probable Reason:Could not login to "
+"server\n"
+"Error: %s"
+msgstr ""
+"Email naloga %s nije uspeo da se uloguje. MOguci Razlozi: Ne mogu se "
+"konektovati ba server\n"
+"Greska: %s"
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template_send_wizard
 msgid "This is the wizard for sending mail"
 msgstr "Craobnjak Slanja Poste"
@@ -1282,24 +1267,14 @@ msgid "Emails will be sent from this approved account."
 msgstr "Poruke ce biti poslate sa ovog omogucenog naloga"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid ""
-"Mail from Account %s failed. Probable Reason:MIME Error\n"
-"Description: %s"
-msgstr ""
-"Poruka sa Naloga %s nije prosla. MOguci Razlog: MIME GRESKA\n"
-"Opis: %s"
-
-#. module: email_template
 #: field:email_template.account,send_pref:0
 msgid "Mail Format"
 msgstr "Format Poruke"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr "Akcije"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Fascikla"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1361,6 +1336,10 @@ msgstr "Bez Opisa"
 #~ msgid "Download Full Mail"
 #~ msgstr "Download Celu poruku"
 
+#, python-format
+#~ msgid "Mako templates not installed"
+#~ msgstr "Mako Obrazac nije instaliran"
+
 #~ msgid "The default recipient of email.Placeholders can be used here."
 #~ msgstr ""
 #~ "Predlozeni primalac Email-a. Razmaknice se mogu koristiti ( donja crta)"
@@ -1374,11 +1353,26 @@ msgstr "Bez Opisa"
 #~ msgid "eg: yourname@yourdomain.com "
 #~ msgstr "npr: yourname@yourdomain.com "
 
+#~ msgid "Invalid arguments"
+#~ msgstr "Neispravni Argumenti"
+
 #~ msgid "Mailbox"
 #~ msgstr "Postansko Sanduče"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#, python-format
+#~ msgid ""
+#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
+#~ msgstr ""
+#~ "Preuzimanje datuma i vremena nije uspelo. Datum:Date:%s \\n \tGreska:%s"
+
 #~ msgid "SMTP Server"
 #~ msgstr "SMTP server"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
 
 #~ msgid ""
 #~ "Add here all attachments of the current document you want to include in the "
@@ -1390,11 +1384,40 @@ msgstr "Bez Opisa"
 #~ msgstr ""
 #~ "Podrazumevana Tema poruke. Razmaknice se mogu ovde koristiti ( donja crta)"
 
+#, python-format
+#~ msgid ""
+#~ "Error sending mail: %s\" % str(e)))\n"
+#~ "        \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "        if ids is None:\n"
+#~ "            ids = []\n"
+#~ "        if context is None:\n"
+#~ "            context = {}\n"
+#~ "        filters = [('folder', '=', 'outbox"
+#~ msgstr ""
+#~ "Greska slanja poruke: %s\" % str(e)))\n"
+#~ "         \n"
+#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
+#~ "if ids is None:\n"
+#~ "ids = []\n"
+#~ "if context is None:\n"
+#~ "context = {}\n"
+#~ "filters = [('folder', '=', 'outbox"
+
 #~ msgid "File Name Pattern"
 #~ msgstr "Ime fajla paterna"
 
 #~ msgid "Personal Mails"
 #~ msgstr "Licne Poruke"
+
+#, python-format
+#~ msgid "Django templates not installed"
+#~ msgstr "Django Sabloni nisu instalirani"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "SMTP Port "
 #~ msgstr "SMTP Port "
@@ -1441,3 +1464,6 @@ msgstr "Bez Opisa"
 #~ "Omogucava vam , ako zelite da vase izlazne poruke sadrze markera pratnje "
 #~ "koji vam daju mogucnost da kasnije identifikujete odgovore i posaljewte ih "
 #~ "npr stavci Kampanje."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcijue."

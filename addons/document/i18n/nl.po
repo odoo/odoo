@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-12-01 09:45+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-14 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -68,11 +68,6 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr "Soort inhoud map"
@@ -100,6 +95,12 @@ msgid "March"
 msgstr "Maart"
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
@@ -253,11 +254,6 @@ msgid "Documents"
 msgstr "Documenten"
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "Model ID"
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "Fout! U kunt geen recursieve mappen maken"
@@ -294,11 +290,6 @@ msgstr "Soort inhoud"
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Soort"
-
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -347,11 +338,6 @@ msgstr "Overzicht"
 #: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Juli"
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -564,6 +550,11 @@ msgstr ""
 "In dat geval moet de map een resource zijn."
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr "Automatische instellingen-map"
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Naam record invoegen"
@@ -574,9 +565,9 @@ msgid "Attachment"
 msgstr "Bijlage"
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken"
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "Model ID"
 
 #. module: document
 #: field:document.storage,online:0
@@ -756,11 +747,6 @@ msgid "Prefix"
 msgstr "Voorvoegsel"
 
 #. module: document
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
-
-#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr "Laatste plaatsing"
@@ -771,9 +757,9 @@ msgid "File Name"
 msgstr "Bestandsnaam"
 
 #. module: document
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -784,13 +770,6 @@ msgstr "Resource ID"
 #: selection:document.storage,type:0
 msgid "External file storage"
 msgstr "Externe opslag"
-
-#. module: document
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: document
 #: view:board.board:0
@@ -1018,11 +997,6 @@ msgid "Mime Type"
 msgstr "Mime Type"
 
 #. module: document
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
-
-#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr "Volgorde"
@@ -1084,11 +1058,6 @@ msgstr "Zoek documentopslag"
 msgid "Document Type"
 msgstr "Soort document"
 
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
 #~ msgid "Other Resources"
 #~ msgstr "Andere bronnen"
 
@@ -1119,8 +1088,16 @@ msgstr "De modulenaam moet uniek zijn !"
 #~ msgid "Storing Method"
 #~ msgstr "Opslagmethode"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
 #~ msgid "Preview"
 #~ msgstr "Voorbeeld"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #~ msgid "Link"
 #~ msgstr "Verwijzing"
@@ -1131,6 +1108,9 @@ msgstr "De modulenaam moet uniek zijn !"
 #~ msgstr ""
 #~ "Deze assistent zal de URL van de server voor het documentbeheersysteem "
 #~ "instellen."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
 
 #~ msgid ""
 #~ "This wizard will automatically configure the document management system "
@@ -1164,9 +1144,6 @@ msgstr "De modulenaam moet uniek zijn !"
 
 #~ msgid "Document Configuration"
 #~ msgstr "Document instellingen"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Automatische instellingen-map"
 
 #~ msgid ""
 #~ "Check this field if you want that the name of the file start by the record "
@@ -1233,6 +1210,9 @@ msgstr "De modulenaam moet uniek zijn !"
 #~ msgid "All Users files (This month)"
 #~ msgstr "Alle gebruikersbestanden (deze maand)"
 
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken"
+
 #~ msgid ""
 #~ "If you put an object here, this directory template will appear bellow all of "
 #~ "these objects. Don't put a parent directory if you select a parent model."
@@ -1240,3 +1220,18 @@ msgstr "De modulenaam moet uniek zijn !"
 #~ "Als u hier een object plaatst, zal dit mapsjabloon onderaan al deze objecten "
 #~ "verschijnen. Plaats geen bovenliggende map als u een bovenliggend model "
 #~ "kiest."
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
