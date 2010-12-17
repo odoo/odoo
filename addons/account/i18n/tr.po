@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-12-02 07:52+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -368,6 +368,12 @@ msgstr ""
 "Allows you to change the sign of the balance amount displayed in the "
 "reports, so that you can see positive figures instead of negative ones in "
 "expenses accounts."
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1283,11 +1289,6 @@ msgid "Overdue Payments"
 msgstr "Vadesi Geçen Ödemeler"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2092,6 +2093,14 @@ msgstr ""
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
 msgstr "Search Chart of Account Templates"
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
+msgstr ""
 
 #. module: account
 #: view:account.account.type:0
@@ -3083,7 +3092,10 @@ msgid "Purchase"
 msgstr "Alış"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr "Accounting Application Configuration"
 
@@ -3563,18 +3575,14 @@ msgid "#Entries"
 msgstr "#Entries"
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Account Type"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
 
 #. module: account
 #: view:account.state.open:0
@@ -3808,14 +3816,18 @@ msgid "Shortcut"
 msgstr "Kısayol"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Account Type"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4132,10 +4144,11 @@ msgid "Analytic Account Statistics"
 msgstr "Analiz Hesabı İstatistiği"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
-msgstr "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
+msgstr ""
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4220,6 +4233,16 @@ msgid ""
 msgstr ""
 "Please verify the price of the invoice !\n"
 "The real total does not match the computed total."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5798,6 +5821,11 @@ msgid "Default Credit Account"
 msgstr "Varsayılan Alacak Hesabı"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr "  number of days: 30"
@@ -5989,6 +6017,11 @@ msgid "Centralisation"
 msgstr "Centralisation"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6144,6 +6177,12 @@ msgstr "Entry \"%s\" is not valid !"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr "Based On"
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6734,11 +6773,6 @@ msgstr "Tamam"
 #, python-format
 msgid "Unknown Partner"
 msgstr "Bilinmeyen İş Ortağı"
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr "Opening Balance"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -7480,6 +7514,11 @@ msgid "Invoice's state is Open"
 msgstr "Invoice's state is Open"
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -8056,11 +8095,6 @@ msgid "Print Account Partner Balance"
 msgstr "Print Account Partner Balance"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr "Contracts"
@@ -8251,6 +8285,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Dear Sir/Madam,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9331,14 +9370,9 @@ msgid "End period"
 msgstr "End period"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr "Opening Balance"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
