@@ -85,11 +85,11 @@
 	                    </group>
 	                    <newline/>
 	                    <group col="4" colspan="6" name="rrule">
-	                        <separator string="Custom Recurrency Rule" colspan="8"/>
+	                        <separator string="Recurrency Rule" colspan="8"/>
 	                        <group col="6" colspan="4">
-		                        <!--  <field name="freq" /> -->
-                                <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
-                                <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
+                                <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="end_date" attrs="{'invisible': [('readonly','!=',False)]}"/>
 	                        </group>
 	                        <group col="14" colspan="4" name="Select weekdays" 
 	                                attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">

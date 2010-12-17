@@ -1088,8 +1088,8 @@ class calendar_event(osv.osv):
                 if datas.get('rrule_type') :
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
-#                    if datas.get('count', 0) < 0:
-#                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+                    if datas.get('count', 0) < 0:
+                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
                     rrule_custom = self.compute_rule_string(cr, uid, datas, \
                                                          context=context)
                     result[event] = rrule_custom
@@ -1150,7 +1150,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('weekly', 'Weeks'), \
                                 ('monthly', 'Months'), \
                                 ('yearly', 'Years'), ], 'Frequency'),
-        'interval': fields.integer('Interval', help="Repeat every x"),
+        'interval': fields.integer('Interval', help="Repeat every (Days/Week/month/year)"),
         'count': fields.integer('Count', help="Repeat max that times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
@@ -1307,7 +1307,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     for r_date in rdates:
                         if start_date and r_date < start_date:
