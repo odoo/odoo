@@ -240,6 +240,8 @@ class hr_expense_line(osv.osv):
     _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
+        if context is None:
+            context = {}
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
