@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:28+0000\n"
 "Last-Translator: Christophe (OpenERP) <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -43,6 +43,11 @@ msgstr "Өдөр"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Захиалга цуцлах"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -308,11 +313,6 @@ msgid "All Quotations"
 msgstr "Бүх үнийн санал"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Манай борлуулагч"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Зургадугаар сар"
@@ -452,9 +452,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "The quotation '%s' has been converted to a sale order."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Худалдан авалтын үнийн хүснэгт"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -555,6 +555,11 @@ msgstr "Үнийн санал / Захиалга"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "Мөрийн тоо"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -871,13 +876,10 @@ msgid "Sale Order Line"
 msgstr "Борлуулалтын захиалгын шугам"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Нэхэмжлэл үүсгэх"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Нэгж үнэ"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -937,6 +939,8 @@ msgstr "Үнэ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Борлуулалтын модулийн тохиргоо"
 
@@ -979,11 +983,6 @@ msgstr "Нөхөн дүүргэлт хийх болон нэхэмжлэх"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Борлуулалтын үнийн хүснэгт"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1373,10 +1372,13 @@ msgid "Sales"
 msgstr "Борлуулалт"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Нэгж үнэ"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1771,6 +1773,11 @@ msgstr ""
 "тохируулна."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Эх баримт"
@@ -1818,6 +1825,7 @@ msgid "Uninvoiced"
 msgstr "Нэхэмжлээгүй"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1886,11 +1894,6 @@ msgid "Sales Orders"
 msgstr "Борлуулалтын захиалга"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Төлбөрийн нөхцөл"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1926,6 +1929,11 @@ msgstr "Таны нэхэмжлэл амжилттай үүслээ!"
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "1 сар"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2063,6 +2071,7 @@ msgid "Search Sales Order"
 msgstr "Борлуулалтын захиалга хайх"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Төлбөрийн нөхцөл"
@@ -2118,14 +2127,23 @@ msgstr "Жил"
 msgid "Invoice Based on Deliveries"
 msgstr "Хүргэлт дээр үндэслэн нэхэмжлэх"
 
+#~ msgid "Payment Terms"
+#~ msgstr "Төлбөрийн нөхцөл"
+
 #~ msgid "Recreate Procurement"
 #~ msgstr "Дахин нийлүүлэх"
 
 #~ msgid "Procurement Corrected"
 #~ msgstr "Засварласан нийлүүлэлт"
 
+#~ msgid "Sale Pricelists"
+#~ msgstr "Борлуулалтын үнийн хүснэгт"
+
 #~ msgid "Sequence"
 #~ msgstr "Дараалал"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Худалдан авалтын үнийн хүснэгт"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Зассан нэхэмжлэх"
@@ -2166,6 +2184,9 @@ msgstr "Хүргэлт дээр үндэслэн нэхэмжлэх"
 
 #~ msgid "Sales By Partner"
 #~ msgstr "Борлуулалт (Харилцагчаар)"
+
+#~ msgid "Our Salesman"
+#~ msgstr "Манай борлуулагч"
 
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
