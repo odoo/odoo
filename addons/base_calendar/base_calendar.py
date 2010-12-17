@@ -1307,7 +1307,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     for r_date in rdates:
                         if start_date and r_date < start_date:
