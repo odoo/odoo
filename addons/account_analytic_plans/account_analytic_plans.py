@@ -28,7 +28,7 @@ from tools.translate import _
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         res = {}
         for id in ids:
@@ -115,7 +115,7 @@ class account_analytic_plan_instance(osv.osv):
         return super(account_analytic_plan_instance, self).copy(cr, uid, id, default, context=context)
 
     def _default_journal(self, cr, uid, context=None):
-        if not context:
+        if context is None:
             context = {}
         journal_obj = self.pool.get('account.journal')
         if context.has_key('journal_id') and context['journal_id']:
@@ -148,6 +148,8 @@ class account_analytic_plan_instance(osv.osv):
         return self.name_get(cr, uid, ids, context or {})
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
         wiz_id = self.pool.get('ir.actions.act_window').search(cr, uid, [("name","=","analytic.plan.create.model.action")], context=context)
         res = super(account_analytic_plan_instance,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         journal_obj = self.pool.get('account.journal')
@@ -214,6 +216,8 @@ class account_analytic_plan_instance(osv.osv):
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if context is None:
+            context = {}
         this = self.browse(cr, uid, ids[0], context=context)
         invoice_line_obj = self.pool.get('account.invoice.line')
         if this.plan_id and not vals.has_key('plan_id'):
@@ -307,6 +311,8 @@ class account_move_line(osv.osv):
         return data
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for line in self.browse(cr, uid, ids, context=context):
@@ -336,7 +342,9 @@ class account_move_line(osv.osv):
                    analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return result
 
@@ -437,7 +445,7 @@ class account_bank_statement(osv.osv):
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
         account_move_line_pool = self.pool.get('account.move.line')
         account_bank_statement_line_pool = self.pool.get('account.bank.statement.line')
-        st_line = account_bank_statement_line_pool.browse(cr, uid, st_line_id, context)
+        st_line = account_bank_statement_line_pool.browse(cr, uid, st_line_id, context=context)
         result = super(account_bank_statement,self).create_move_from_st_line(cr, uid, st_line_id, company_currency_id, st_line_number, context=context)
         move = st_line.move_ids and st_line.move_ids[0] or False
         if move:
@@ -447,7 +455,7 @@ class account_bank_statement(osv.osv):
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
         super(account_bank_statement,self).button_confirm_bank(cr, uid, ids, context=context)
-        for st in self.browse(cr, uid, ids, context):
+        for st in self.browse(cr, uid, ids, context=context):
             for st_line in st.line_ids:
                 if st_line.analytics_id:
                     if not st.journal_id.analytic_journal_id:

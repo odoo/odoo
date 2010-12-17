@@ -36,7 +36,7 @@ class price_type(osv.osv):
         When a field is a price, you can use it in pricelists to base
         sale and purchase prices based on some fields of the product.
     """
-    def _price_field_get(self, cr, uid, context={}):
+    def _price_field_get(self, cr, uid, context=None):
         mf = self.pool.get('ir.model.fields')
         ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
         res = []
@@ -81,7 +81,7 @@ product_pricelist_type()
 
 
 class product_pricelist(osv.osv):
-    def _pricelist_type_get(self, cr, uid, context={}):
+    def _pricelist_type_get(self, cr, uid, context=None):
         pricelist_type_obj = self.pool.get('product.pricelist.type')
         pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
         pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
@@ -104,11 +104,11 @@ class product_pricelist(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
     }
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         result= []
         if not all(ids):
             return result
-        for pl in self.browse(cr, uid, ids, context):
+        for pl in self.browse(cr, uid, ids, context=context):
             name = pl.name + ' ('+ pl.currency_id.name + ')'
             result.append((pl.id,name))
         return result
@@ -307,7 +307,8 @@ class product_pricelist(osv.osv):
         '''
         price = False
         item_id = 0
-        context = context or {}
+        if context is None:
+            context = {}
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -464,13 +465,13 @@ class product_pricelist_version(osv.osv):
     }
 
     # We desactivate duplicated pricelists, so that dates do not overlap
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default: default= {}
         default['active'] = False
         return super(product_pricelist_version, self).copy(cr, uid, id, default, context)
 
-    def _check_date(self, cursor, user, ids):
-        for pricelist_version in self.browse(cursor, user, ids):
+    def _check_date(self, cursor, user, ids, context=None):
+        for pricelist_version in self.browse(cursor, user, ids, context=context):
             if not pricelist_version.active:
                 continue
             where = []
@@ -499,7 +500,7 @@ class product_pricelist_version(osv.osv):
 product_pricelist_version()
 
 class product_pricelist_item(osv.osv):
-    def _price_field_get(self, cr, uid, context={}):
+    def _price_field_get(self, cr, uid, context=None):
         pt = self.pool.get('product.price.type')
         ids = pt.search(cr, uid, [], context=context)
         result = []
@@ -520,8 +521,8 @@ class product_pricelist_item(osv.osv):
         'price_discount': lambda *a: 0,
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        for obj_list in self.browse(cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
+        for obj_list in self.browse(cr, uid, ids, context=context):
             if obj_list.base == -1:
                 main_pricelist = obj_list.price_version_id.pricelist_id.id
                 other_pricelist = obj_list.base_pricelist_id.id
@@ -562,7 +563,7 @@ class product_pricelist_item(osv.osv):
         (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id'])
     ]
 
-    def product_id_change(self, cr, uid, ids, product_id, context={}):
+    def product_id_change(self, cr, uid, ids, product_id, context=None):
         if not product_id:
             return {}
         prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code','name'])

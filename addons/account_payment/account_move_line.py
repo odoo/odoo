@@ -26,7 +26,7 @@ from tools.translate import _
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
-    def amount_to_pay(self, cr, uid, ids, name, arg={}, context={}):
+    def amount_to_pay(self, cr, uid, ids, name, arg={}, context=None):
         """ Return the amount still to pay regarding all the payemnt orders
         (excepting cancelled orders)"""
         if not ids:
@@ -47,7 +47,7 @@ class account_move_line(osv.osv):
         r = dict(cr.fetchall())
         return r
 
-    def _to_pay_search(self, cr, uid, obj, name, args, context):
+    def _to_pay_search(self, cr, uid, obj, name, args, context=None):
         if not args:
             return []
         line_obj = self.pool.get('account.move.line')

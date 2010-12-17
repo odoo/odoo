@@ -37,22 +37,24 @@ class sale_make_invoice(osv.osv_memory):
         if context is None:
             context = {}
         record_id = context and context.get('active_id', False)
-        order = self.pool.get('sale.order').browse(cr, uid, record_id)
+        order = self.pool.get('sale.order').browse(cr, uid, record_id, context=context)
         if order.state == 'draft':
             raise osv.except_osv(_('Warning !'),'You can not create invoice when sales order is not confirmed.')
         return False
 
-    def make_invoices(self, cr, uid, ids, context={}):
+    def make_invoices(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('sale.order')
         mod_obj = self.pool.get('ir.model.data')
         newinv = []
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids)[0]
         order_obj.action_invoice_create(cr, uid, context.get(('active_ids'), []), data['grouped'], date_inv = data['invoice_date'])
         wf_service = netsvc.LocalService("workflow")
         for id in context.get(('active_ids'), []):
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
 
-        for o in order_obj.browse(cr, uid, context.get(('active_ids'), []), context):
+        for o in order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context):
             for i in o.invoice_ids:
                 newinv.append(i.id)
 

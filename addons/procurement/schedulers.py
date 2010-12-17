@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values        
         '''
-        if not context:
+        if context is None:
             context = {}
 
         try:
@@ -69,13 +69,13 @@ class procurement_order(osv.osv):
             while True:
                 cr.execute("select id from procurement_order where state='confirmed' and procure_method='make_to_order' order by priority,date_planned limit 500 offset %s", (offset,))
                 ids = map(lambda x: x[0], cr.fetchall())
-                for proc in procurement_obj.browse(cr, uid, ids):
+                for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
                     else:
                         offset += 1
                         report_later += 1
-                for proc in procurement_obj.browse(cr, uid, ids):
+                for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if proc.state == 'exception':
                         report.append('PROC %d: on order - %3.2f %-5s - %s' % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -98,7 +98,7 @@ class procurement_order(osv.osv):
                     else:
                         report_later += 1
                     report_total += 1
-                for proc in procurement_obj.browse(cr, uid, report_ids):
+                for proc in procurement_obj.browse(cr, uid, report_ids, context=context):
                     if proc.state == 'exception':
                         report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -148,7 +148,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         """
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
@@ -200,7 +200,7 @@ class procurement_order(osv.osv):
         @return:  Dictionary of values
         """        
         '''
-        if not context:
+        if context is None:
             context = {}
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()

@@ -40,7 +40,7 @@ class report_xml(osv.osv):
             fp = open(addons.get_module_resource('base_report_designer','openerp_sxw2rml', 'normalized_odt2rml.xsl'),'rb')
         return  {'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))}
 
-    def upload_report(self, cr, uid, report_id, file_sxw, file_type, context):
+    def upload_report(self, cr, uid, report_id, file_sxw, file_type, context=None):
         '''
         Untested function
         '''
@@ -57,8 +57,8 @@ class report_xml(osv.osv):
         pool.get('ir.actions.report.xml').register_all(cr)
         return True
 
-    def report_get(self, cr, uid, report_id, context={}):
-        report = self.browse(cr, uid, report_id, context)
+    def report_get(self, cr, uid, report_id, context=None):
+        report = self.browse(cr, uid, report_id, context=context)
         return {
             'file_type' : report.report_type, 
             'report_sxw_content': report.report_sxw_content and base64.encodestring(report.report_sxw_content) or False, 

@@ -143,7 +143,7 @@ class document_directory(osv.osv):
         _parent(dir_id, path)
         return path
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from document_directory where id in ('+','.join(map(str,ids))+')')
@@ -175,8 +175,6 @@ class document_directory(osv.osv):
         """ Return a node object for the given uri.
            This fn merely passes the call to node_context
         """
-        if not context:
-                context = {}
 
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
@@ -198,7 +196,7 @@ class document_directory(osv.osv):
         else:
             raise ValueError("dir node for %s type", dbro.type)
 
-    def _prepare_context(self, cr, uid, nctx, context):
+    def _prepare_context(self, cr, uid, nctx, context=None):
         """ Fill nctx with properties for this database
         @param nctx instance of nodes.node_context, to be filled
         @param context ORM context (dict) for us
@@ -212,7 +210,7 @@ class document_directory(osv.osv):
         """
         return
 
-    def get_dir_permissions(self, cr, uid, ids, context=None ):
+    def get_dir_permissions(self, cr, uid, ids, context=None):
         """Check what permission user 'uid' has on directory 'id'
         """
         assert len(ids) == 1
@@ -237,7 +235,7 @@ class document_directory(osv.osv):
             default ={}
         name = self.read(cr, uid, [id])[0]['name']
         default.update({'name': name+ " (copy)"})
-        return super(document_directory,self).copy(cr, uid, id, default, context)
+        return super(document_directory,self).copy(cr, uid, id, default, context=context)
 
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)

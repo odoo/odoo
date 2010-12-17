@@ -33,7 +33,7 @@ class vat_listing_clients(osv.osv_memory):
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
             }
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         return [(r['id'], r['name'] or '' + ' - ' + r['vat'] or '') \
@@ -52,7 +52,7 @@ class partner_vat(osv.osv_memory):
     """ Vat Listing """
     _name = "partner.vat"
 
-    def get_partner(self, cursor, user, ids, context={}):
+    def get_partner(self, cursor, user, ids, context=None):
         obj_period = self.pool.get('account.period')
         obj_partner = self.pool.get('res.partner')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
@@ -131,14 +131,14 @@ class partner_vat_list(osv.osv_memory):
         'file_save' : fields.binary('Save File', readonly=True),
         }
 
-    def _get_partners(self, cursor, user, context={}):
+    def _get_partners(self, cursor, user, context=None):
         return context.get('partner_ids', [])
 
     _defaults={
         'partner_ids': _get_partners
             }
 
-    def create_xml(self, cursor, user, ids, context={}):
+    def create_xml(self, cursor, user, ids, context=None):
         datas = []
         obj_sequence = self.pool.get('ir.sequence')
         obj_users = self.pool.get('res.users')
