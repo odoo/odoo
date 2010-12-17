@@ -70,6 +70,10 @@ POSTGRES_CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+# List of etree._Element subclasses that we choose to ignore when parsing view architecture.
+# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+
 def last_day_of_current_month():
     today = datetime.date.today()
     last_day = str(calendar.monthrange(today.year, today.month)[1])
@@ -1614,6 +1618,8 @@ class orm_template(object):
 
             while len(toparse):
                 node2 = toparse.pop(0)
+                if isinstance(node2, SKIPPED_ELEMENT_TYPES):
+                    continue
                 if node2.tag == 'data':
                     toparse += [ c for c in doc_dest ]
                     continue
