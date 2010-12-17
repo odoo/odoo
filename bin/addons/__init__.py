@@ -660,7 +660,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
-                logging.getLogger('test').exception('Tests failed to execute in %s module %s', module_name)
+                logging.getLogger('test').exception('Tests failed to execute in module %s', module_name)
             finally:
                 if tools.config.options['test_commit']:
                     cr.commit()
