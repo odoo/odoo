@@ -25,9 +25,9 @@ import pooler
 from osv import fields
 import time
 
-def _launch_wizard(self, cr, uid, data, context):
+def _launch_wizard(self, cr, uid, data, context=None):
     address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
-    m= address_obj.browse(cr,uid,data['id'],context)
+    m= address_obj.browse(cr, uid, data['id'], context=context)
     url=''
     url="http://maps.google.com/maps?oi=map&q="
     if m.street:

@@ -27,8 +27,8 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     
     def move_line_get(self, cr, uid, invoice_id, context=None):
-        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context)
-        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
+        inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id:
@@ -144,7 +144,7 @@ class account_invoice_line(osv.osv):
                 if not oa:
                     oa = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id
             if oa:
-                fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
+                fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id, context=context) or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                 res['value'].update({'account_id':a})            
         return res

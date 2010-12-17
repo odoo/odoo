@@ -38,6 +38,8 @@ class project_scrum_email(osv.osv_memory):
 
         @return : default values of fields.
         """
+        if context is None:
+            context = {}
         meeting_pool = self.pool.get('project.scrum.meeting')
         record_ids = context and context.get('active_ids', []) or []
         res = super(project_scrum_email, self).default_get(cr, uid, fields, context=context)
@@ -65,7 +67,7 @@ class project_scrum_email(osv.osv_memory):
 
     def button_send_scrum_email(self, cr, uid, ids, context=None):
         if context is None:
-            context={}
+            context = {}
 
         active_id = context.get('active_id', False)
         scrum_meeting_pool = self.pool.get('project.scrum.meeting')

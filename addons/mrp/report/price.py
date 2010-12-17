@@ -31,7 +31,7 @@ from tools.translate import _
 
 #FIXME: we should use toxml
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids, datas, context={}):
+    def create_xml(self, cr, uid, ids, datas, context=None):
         number = (datas.get('form', False) and datas['form']['number']) or 1
         pool = pooler.get_pool(cr.dbname)
         product_pool = pool.get('product.product')

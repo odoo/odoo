@@ -33,8 +33,6 @@ class hr_si_so_ask(osv.osv_memory):
         }
 
     def _get_empname(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
@@ -53,14 +51,10 @@ class hr_si_so_ask(osv.osv_memory):
                  }
 
     def sign_in(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         return self.pool.get('hr.sign.in.out').sign_in(cr, uid, data, context)
 
     def sign_out(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         return self.pool.get('hr.sign.in.out').sign_out(cr, uid, data, context)
 
@@ -78,8 +72,6 @@ class hr_sign_in_out(osv.osv_memory):
                 }
 
     def _get_empid(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0]
@@ -87,8 +79,6 @@ class hr_sign_in_out(osv.osv_memory):
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         res = super(hr_sign_in_out, self).default_get(cr, uid, fields_list, context=context)
         res_emp = self._get_empid(cr, uid, context=context)
         res.update(res_emp)
@@ -97,8 +87,6 @@ class hr_sign_in_out(osv.osv_memory):
     def si_check(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
         att_obj = self.pool.get('hr.attendance')
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id)], limit=1, order='name desc')
@@ -124,8 +112,6 @@ class hr_sign_in_out(osv.osv_memory):
     def so_check(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
         att_obj = self.pool.get('hr.attendance')
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id),('action', '!=', 'action')], limit=1, order='name desc')
@@ -177,8 +163,6 @@ class hr_sign_in_out(osv.osv_memory):
         return {} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43:18+0000\n"
-"PO-Revision-Date: 2010-12-03 15:43:18+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05:05+0000\n"
+"PO-Revision-Date: 2010-12-15 15:05:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,18 @@ msgid "City"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
 msgstr ""
 
 #. module: base_setup
@@ -150,6 +155,11 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid "Your company information will be used to personalize documents issued with OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr ""
@@ -170,8 +180,8 @@ msgid "Helps you manage your projects and tasks by tracking them, generating pla
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid "Helps you get the most out of your points of sales with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more."
+#: field:base.setup.company,name:0
+msgid "Company Name"
 msgstr ""
 
 #. module: base_setup
@@ -190,8 +200,8 @@ msgid "Allows you to create your invoices and track the payments. It is an easie
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
 
 #. module: base_setup
@@ -252,6 +262,12 @@ msgid "Lets you install addons geared towards sharing knowledge with and between
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid "Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr ""
@@ -259,6 +275,11 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,logo:0
 msgid "Logo"
+msgstr ""
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid "Helps you get the most out of your points of sales with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more."
 msgstr ""
 
 #. module: base_setup
@@ -368,8 +389,8 @@ msgid "Street"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -378,6 +399,7 @@ msgid "Example: http://openerp.com"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr ""

@@ -30,8 +30,6 @@ class hr_evaluation_reminder(osv.osv_memory):
 
     def send_mail(self, cr, uid, ids, context=None):
         hr_evaluation_interview_obj = self.pool.get('hr.evaluation.interview')
-        if context is None:
-            context = {}
         evaluation_data = self.read(cr, uid, ids, context=context)[0]
         current_interview = hr_evaluation_interview_obj.browse(cr, uid, evaluation_data.get('evaluation_id'))
         if current_interview.state == "waiting_answer" and current_interview.user_to_review_id.work_email :

@@ -48,11 +48,11 @@ class auction_pay_buy(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)
         auction_lots_obj= self.pool.get('auction.lots')       
-        for lot in auction_lots_obj.browse(cr, uid, context.get('active_ids', [])):
+        for lot in auction_lots_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if 'amount' in fields:
                 res.update({'amount': lot.buyer_price})                
             if 'buyer_id' in fields:
@@ -61,7 +61,7 @@ class auction_pay_buy(osv.osv_memory):
                 res.update({'total': lot.buyer_price})     
         return res
     
-    def pay_and_reconcile(self, cr, uid, ids, context):
+    def pay_and_reconcile(self, cr, uid, ids, context=None):
         """
         Pay and Reconcile
         @param cr: the current row, from the database cursor.
@@ -70,15 +70,16 @@ class auction_pay_buy(osv.osv_memory):
         @param context: A standard dictionary 
         @return: 
         """        
+        if context is None: context = {}
         lot_obj = self.pool.get('auction.lots')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         
-        for datas in self.read(cr, uid, ids):
+        for datas in self.read(cr, uid, ids, context=context):
             if not abs(datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])) <0.01:
                 rest = datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])
                 raise osv.except_osv(_('Payment aborted !'), _('You should pay all the total: "%.2f" are missing to accomplish the payment.') %(round(rest, 2)))
     
-            lots = lot_obj.browse(cr, uid, context['active_ids'], context)
+            lots = lot_obj.browse(cr, uid, context.get('active_ids', []), context=context)
             for lot in lots:
                 if datas['buyer_id']:
                     lot_obj.write(cr, uid, [lot.id], {'ach_uid': datas['buyer_id']})
