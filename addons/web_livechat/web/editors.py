@@ -82,8 +82,8 @@ class HeaderTemplateEditor(openobject.templating.TemplateEditor):
                     skill: '0',
                     type: 'text',
                     labels: {
-                      online: '<img src="/web_livechat/static/images/online.png"/>Need Help?',
-                      offline: '<img src="/web_livechat/static/images/offline.png"/>Leave us a message'
+                      online: '<img src="/web_livechat/static/images/available.png"/>Online Support',
+                      offline: '<img src="/web_livechat/static/images/away.png"/>Online Support'
                     }
                   });
                 </script>
