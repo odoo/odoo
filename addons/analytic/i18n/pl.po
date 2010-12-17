@@ -7,28 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-08-03 00:15+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Konta podrzędne"
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -180,6 +172,11 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
 "If you select the View Type, it means you won't allow to create journal "
@@ -190,11 +187,6 @@ msgstr ""
 #: field:account.analytic.account,date:0
 msgid "Date End"
 msgstr "Data końcowa"
-
-#. module: analytic
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -243,6 +235,12 @@ msgstr "Zapisy analityczne"
 #~ "company one."
 #~ msgstr ""
 #~ "Kwota wyrażona w walucie konta, jeśli waluta jest inna niż waluta firmy."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
 
 #~ msgid "The related account currency if not equal to the company one."
 #~ msgstr "Waluta konta, jeśli waluta jest inna niż firmy."

@@ -29,7 +29,7 @@ class stock_return_picking(osv.osv_memory):
     _name = 'stock.return.picking'
     _description = 'Return Picking'
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """
          To get default values for the object.
          @param self: The object pointer.
@@ -39,10 +39,12 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary with default values for all field in ``fields``
         """
+        if context is None:
+            context = {}
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
-        pick = pick_obj.browse(cr, uid, record_id)
+        pick = pick_obj.browse(cr, uid, record_id, context=context)
         if pick:
             if 'invoice_state' in fields:
                 if pick.invoice_state=='invoiced':
@@ -64,11 +66,13 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view with new columns.
         """
+        if context is None:
+            context = {}
         res = super(stock_return_picking, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) 
         if record_id:
             pick_obj = self.pool.get('stock.picking')
-            pick = pick_obj.browse(cr, uid, record_id)
+            pick = pick_obj.browse(cr, uid, record_id, context=context)
             if pick.state not in ['done','confirmed','assigned']:
                 raise osv.except_osv(_('Warning !'), _("You may only return pickings that are Confirmed, Available or Done!"))
             return_history = {}
@@ -78,7 +82,7 @@ class stock_return_picking(osv.osv_memory):
                     return_history[m.id] = 0
                     for rec in m.move_history_ids2:
                         return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
-                    if m.product_qty * m.product_uom.factor > return_history[m.id]:
+                    if m.product_qty * m.product_uom.factor >= return_history[m.id]:
                         valid_lines += 1
                         if 'return%s'%(m.id) not in self._columns:
                             self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
@@ -128,7 +132,7 @@ class stock_return_picking(osv.osv_memory):
             res['arch'] = '\n'.join(arch_lst)
         return res
 
-    def create_returns(self, cr, uid, ids, context):
+    def create_returns(self, cr, uid, ids, context=None):
         """ 
          Creates return picking.
          @param self: The object pointer.
@@ -137,14 +141,16 @@ class stock_return_picking(osv.osv_memory):
          @param ids: List of ids selected 
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
-        """ 
+        """
+        if context is None:
+            context = {} 
         record_id = context and context.get('active_id', False) or False
         move_obj = self.pool.get('stock.move')
         pick_obj = self.pool.get('stock.picking')
         uom_obj = self.pool.get('product.uom')
         wf_service = netsvc.LocalService("workflow")
     
-        pick = pick_obj.browse(cr, uid, record_id)
+        pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0])
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')

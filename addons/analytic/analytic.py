@@ -183,7 +183,7 @@ class account_analytic_account(osv.osv):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
+        if context is None:
             context={}
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:

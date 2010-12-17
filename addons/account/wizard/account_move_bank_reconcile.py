@@ -32,13 +32,15 @@ class account_move_bank_reconcile(osv.osv_memory):
        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
     }
 
-    def action_open_window(self, cr, uid, ids, context={}):
+    def action_open_window(self, cr, uid, ids, context=None):
         """
        @param cr: the current row, from the database cursor,
        @param uid: the current user’s ID for security checks,
        @param ids: account move bank reconcile’s ID or list of IDs
        @return: dictionary of  Open  account move line   on given journal_id.
         """
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         cr.execute('select default_credit_account_id \
                         from account_journal where id=%s', (data['journal_id'],))

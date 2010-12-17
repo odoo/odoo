@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-09-09 07:15+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -37,6 +37,11 @@ msgid "Net weight"
 msgstr ""
 
 #. module: delivery
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
@@ -45,11 +50,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: delivery
@@ -125,13 +125,6 @@ msgid "Delivery Method"
 msgstr "Teslimat Yöntemi"
 
 #. module: delivery
-#: help:delivery.grid,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"grid without removing it."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr ""
@@ -153,8 +146,9 @@ msgid "Net Weight"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: delivery
@@ -178,9 +172,9 @@ msgid "Partner"
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Teslimat Gridi"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -209,9 +203,8 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
 msgstr ""
 
 #. module: delivery
@@ -220,19 +213,16 @@ msgid "Grid"
 msgstr ""
 
 #. module: delivery
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "Bitiş P. Kodu"
-
-#. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Görüntüleme mimarisi için Geçersiz XML"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -264,6 +254,13 @@ msgid "Weight"
 msgstr "Ağırlık"
 
 #. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr "Teslimat Yöntemi"
@@ -277,12 +274,6 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
-
-#. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: delivery
@@ -302,9 +293,9 @@ msgid "Lot"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Teslimat Gridi"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -328,9 +319,17 @@ msgid "Condition"
 msgstr "Koşul"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Maliyeti"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -365,12 +364,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr "Nakliye Şirketi"
@@ -379,6 +372,20 @@ msgstr "Nakliye Şirketi"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Alış & Satış Bilgileri"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Maliyeti"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -443,13 +450,6 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: delivery
-#: help:delivery.carrier,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"carrier without removing it."
-msgstr ""
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
@@ -502,14 +502,12 @@ msgid "States"
 msgstr "Durumlar"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Fiyat Tipi"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #~ msgid "Generate Draft Invoices On Receptions"
 #~ msgstr "Kabuldeki Tedarikçi Faturalarını Oluştur"

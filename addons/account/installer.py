@@ -45,7 +45,7 @@ class account_installer(osv.osv_memory):
         ids = modules.search(cr, uid, [('category_id', '=', 'Account Charts')], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids)),
+                    for m in modules.browse(cr, uid, ids, context=context)),
                    key=itemgetter(1)))
         charts.insert(0, ('configurable', 'Generic Chart Of Account'))
         return charts

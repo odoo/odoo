@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-10-30 16:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -34,15 +34,9 @@ msgid "Partner Category"
 msgstr "Kategorija partnera"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr "Označite ukoliko želite da pravilo šalje podsjetnik korisniku."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Posalji pratiocima(CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -114,6 +108,15 @@ msgstr "Naziv pravila"
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
 msgstr "oznaci ovde ako zelis da pravilo posalje Email podsetnik partnerima"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -240,11 +243,6 @@ msgid "Delay type"
 msgstr "Tip Kasnjenja"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -293,11 +291,6 @@ msgid ""
 msgstr ""
 "Koristi python expresiju da specificiras pravo polje koje ce mo na dalje "
 "koristiti za \" OD\" polje zaglavlja"
-
-#. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -383,6 +376,11 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Opis Objekta"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Akcije Email-a"
@@ -391,13 +389,6 @@ msgstr "Akcije Email-a"
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Informacije Email-a"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -430,9 +421,10 @@ msgid "Mail body"
 msgstr "Telo email-a"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Posalji pratiocima(CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr "Označite ukoliko želite da pravilo šalje podsjetnik korisniku."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -522,3 +514,17 @@ msgstr "Uslovi vezani za Stanja"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Datum Okidanja"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere"
