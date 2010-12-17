@@ -709,7 +709,7 @@ class account_voucher(osv.osv):
             for line in inv.line_ids:
                 if not line.amount:
                     continue
-                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount)
+                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
