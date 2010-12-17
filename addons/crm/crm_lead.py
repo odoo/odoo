@@ -302,6 +302,7 @@ class crm_lead(crm_case, osv.osv):
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            message=''
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead':
                     message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
