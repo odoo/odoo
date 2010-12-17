@@ -933,7 +933,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 if obj:
                     if field not in obj.fields_get_keys(cr, uid):
                         continue
-                    ids = obj.search(cr, uid, [(field, '=', dic['src'])])
+                    # Using search() instead of _search() will limit the
+                    # returned list to the ids visible to uid, which is not
+                    # in the extended view group. We want all of them and use
+                    # _search().
+                    ids = obj._search(cr, uid, [(field, '=', dic['src'])])
 
                     # if the resource id (res_id) is in that list, use it,
                     # otherwise use the whole list
