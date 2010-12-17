@@ -173,9 +173,10 @@
 	                            <label string="" colspan="2"/>
 	                        </group>
 		                    <separator string="Recurrency Rule" colspan="8"/>
-		                    <group col="2" colspan="2">
-		                        <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
-		                        <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
+		                    <group col="3" colspan="3">
+		                        <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
+		                        <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+		                        <field name="end_date" attrs="{'readonly': [('interval','!=',False)]}"/>
 		                    </group>
 		                    <group col="14" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
 		                        <field name="mo" colspan="1" />
