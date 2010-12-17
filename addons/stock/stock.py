@@ -869,7 +869,7 @@ class stock_picking(osv.osv):
         @return {'contact': address, 'invoice': address} for invoice
         """
         partner_obj = self.pool.get('res.partner')
-        partner = picking.address_id.partner_id
+        partner = picking.purchase_id.partner_id
 
         return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
@@ -973,6 +973,7 @@ class stock_picking(osv.osv):
                 continue
             payment_term_id = False
             partner = picking.address_id and picking.address_id.partner_id
+            partner = picking.purchase_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
