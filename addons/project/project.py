@@ -342,7 +342,16 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
-
+    
+    def onchange_project(self, cr, uid, id, project_id):
+        if not project_id:
+            return {}
+        data = self.pool.get('project.project').browse(cr, uid, [project_id])
+        partner_id=data and data[0].parent_id.partner_id
+        if partner_id:
+            return {'value':{'partner_id':partner_id.id}}
+        return {}
+    
     def _default_project(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -475,6 +484,7 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
+
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
