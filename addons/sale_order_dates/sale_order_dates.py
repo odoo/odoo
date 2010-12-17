@@ -30,7 +30,7 @@ class sale_order_dates(osv.osv):
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for pick in order.picking_ids:
                 dates_list.append(pick.date)
@@ -43,7 +43,7 @@ class sale_order_dates(osv.osv):
     def _get_commitment_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for line in order.order_line:
                 dt = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)

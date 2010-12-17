@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44:39+0000\n"
-"PO-Revision-Date: 2010-12-03 15:44:39+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06:29+0000\n"
+"PO-Revision-Date: 2010-12-15 15:06:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,7 @@ msgstr ""
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In Configuration"
 msgstr ""
 
@@ -47,6 +48,11 @@ msgid "title"
 msgstr ""
 
 #. module: thunderbird
+#: help:thunderbird.installer,plugin_file:0
+msgid "Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."
+msgstr ""
+
+#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Skip"
 msgstr ""
@@ -64,6 +70,7 @@ msgstr ""
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In"
 msgstr ""
 
@@ -78,9 +85,8 @@ msgid "Allows you to select an object that you’d like to add to your email and
 msgstr ""
 
 #. module: thunderbird
-#: field:thunderbird.installer,plugin_file:0
-#: field:thunderbird.installer,thunderbird:0
-msgid "Thunderbird Plug-in"
+#: view:thunderbird.installer:0
+msgid "This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."
 msgstr ""
 
 #. module: thunderbird
@@ -109,8 +115,9 @@ msgid "Image"
 msgstr ""
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
-msgid "Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
 msgstr ""
 
 #. module: thunderbird

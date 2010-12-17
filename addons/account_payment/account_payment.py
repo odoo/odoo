@@ -39,7 +39,7 @@ class payment_mode(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
-    def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
+    def suitable_bank_types(self, cr, uid, payment_code=None, context=None):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
         if not payment_code:
@@ -267,10 +267,10 @@ class payment_line(osv.osv):
                     line.amount_currency, context=ctx)
         return res
 
-    def _get_currency(self, cr, uid, context):
+    def _get_currency(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         currency_obj = self.pool.get('res.currency')
-        user = user_obj.browse(cr, uid, uid)
+        user = user_obj.browse(cr, uid, uid, context=context)
 
         if user.company_id:
             return user.company_id.currency_id.id
@@ -284,7 +284,7 @@ class payment_line(osv.osv):
         date = False
 
         if context.get('order_id') and context['order_id']:
-            order = payment_order_obj.browse(cr, uid, context['order_id'], context)
+            order = payment_order_obj.browse(cr, uid, context['order_id'], context=context)
             if order.date_prefered == 'fixed':
                 date = order.date_scheduled
             else:
@@ -364,7 +364,7 @@ class payment_line(osv.osv):
         data['amount_currency'] = data['communication'] = data['partner_id'] = data['reference'] = data['date_created'] = data['bank_id'] = data['amount'] = False
 
         if move_line_id:
-            line = move_line_obj.browse(cr, uid, move_line_id)
+            line = move_line_obj.browse(cr, uid, move_line_id, context=context)
             data['amount_currency'] = line.amount_to_pay
 
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
@@ -413,7 +413,7 @@ class payment_line(osv.osv):
         data['info_partner'] = data['bank_id'] = False
 
         if partner_id:
-            part_obj = partner_obj.browse(cr, uid, partner_id)
+            part_obj = partner_obj.browse(cr, uid, partner_id, context=context)
             partner = part_obj.name or ''
 
             if part_obj.address:

@@ -66,13 +66,13 @@ class account_coda_import(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         line_obj = self.pool.get('account.move.line')
 
-        if not context:
+        if context is None:
             context = {}
 
         data = self.read(cr, uid, ids)[0]
 
         codafile = data['coda']
-        journal_code = journal_obj.browse(cr, uid, data['journal_id'], context).code
+        journal_code = journal_obj.browse(cr, uid, data['journal_id'], context=context).code
 
         period = account_period_obj.find(cr, uid, context=context)[0]
         def_pay_acc = data['def_payable']
@@ -155,7 +155,7 @@ class account_coda_import(osv.osv_memory):
                     bank_ids = partner_bank_obj.search(cr, uid, [('acc_number', '=', st_line_partner_acc)])
                     bank_statement_lines[st_line_name].update({'cntry_number': cntry_number, 'contry_name': contry_name})
                     if bank_ids:
-                        bank = partner_bank_obj.browse(cr, uid, bank_ids[0], context)
+                        bank = partner_bank_obj.browse(cr, uid, bank_ids[0], context=context)
                         if line and bank.partner_id:
                             bank_statement_lines[st_line_name].update({'partner_id': bank.partner_id.id})
                             if bank_statement_lines[st_line_name]['amount'] < 0:
@@ -321,7 +321,7 @@ class account_coda_import(osv.osv_memory):
         }
 
     def action_open_window(self, cr, uid, data, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         return {

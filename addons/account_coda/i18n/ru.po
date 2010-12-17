@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-29 07:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -24,17 +24,10 @@ msgid "Bank Journal"
 msgstr "Банковский журнал"
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "Журнал"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
@@ -62,11 +55,6 @@ msgid "Import Date"
 msgstr "Импортировать дату"
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr "Импортировать журнал"
@@ -80,17 +68,6 @@ msgstr "Импорт"
 #: view:account.coda:0
 msgid "Coda import"
 msgstr ""
-
-#. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
-msgstr "Журнал"
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: account_coda
 #: code:addons/account_coda/account_coda.py:0
@@ -141,11 +118,6 @@ msgid "Coda Import Logs"
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра структуры!"
-
-#. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
 msgid "coda for an Account"
 msgstr ""
@@ -156,9 +128,9 @@ msgid "Default Payable Account"
 msgstr ""
 
 #. module: account_coda
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr ""
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -168,11 +140,6 @@ msgstr "Отменить"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr ""
-
-#. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
 msgstr ""
 
 #. module: account_coda
@@ -198,19 +165,9 @@ msgid "Statements"
 msgstr "Выписки"
 
 #. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Правила не поддерживаются в объектах osv_memory !"
-
-#. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
 msgstr ""
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -287,18 +244,43 @@ msgid "Coda Import"
 msgstr ""
 
 #. module: account_coda
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#. module: account_coda
 #: view:account.coda:0
 #: field:account.coda,journal_id:0
 msgid "Journal"
 msgstr "Журнал"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра структуры!"
 
 #~ msgid "_Close"
 #~ msgstr "_Закрыть"
 
 #~ msgid "_Ok"
 #~ msgstr "_Далее"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Правила не поддерживаются в объектах osv_memory !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"

@@ -36,7 +36,7 @@ class report_creator(osv.osv):
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
         if context is None:
             context = {}
-        data_l = self.read(cr, uid, ids, ['sql_query'], context)
+        data_l = self.read(cr, uid, ids, ['sql_query'], context=context)
         final_datas = []
         #start Loop
         for record in data_l:
@@ -181,7 +181,7 @@ class report_creator(osv.osv):
         }
         return result
 
-    def read(self, cr, user, ids, fields = None, context = None, load = '_classic_read'):
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """
         overrides  orm Read method.Read List of fields for report creator.
         @param cr: the current row, from the database cursor,
@@ -355,13 +355,13 @@ class report_creator(osv.osv):
         """
         return self.model_set_id and 'min('+self.model_set_id+'.id)'
 
-    def _sql_query_get(self, cr, uid, ids, prop, unknow_none, context, where_plus=[], limit=None, offset=None):
+    def _sql_query_get(self, cr, uid, ids, prop, unknow_none, context=None, where_plus=[], limit=None, offset=None):
         """
         Get sql query which return on sql_query field.
         @return: Dictionary of sql query.
         """
         result = {}
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             fields = []
             groupby = []
             i = 0
@@ -449,7 +449,7 @@ class report_creator(osv.osv):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for base creator report form
         """
-        if not context:
+        if context is None:
             context = {}
 
         rep = self.browse(cr, uid, ids, context=context)
@@ -474,7 +474,7 @@ class report_creator(osv.osv):
 
         return value
 
-    def _function_field(self, cr, uid, ids):
+    def _function_field(self, cr, uid, ids, context=None):
         """
         constraints function which specify that
                 not display field which are not stored in Database.
@@ -484,7 +484,7 @@ class report_creator(osv.osv):
         @return: True if display field which are  stored in database.
                      or false if display field which are not store in dtabase.
         """
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             for fld in obj.field_ids:
                 # Allowing to use count(*)
@@ -495,7 +495,7 @@ class report_creator(osv.osv):
                     return False
         return True
 
-    def _aggregation_error(self, cr, uid, ids):
+    def _aggregation_error(self, cr, uid, ids, context=None):
         """
         constraints function which specify that
                 aggregate function to the non calculated field..
@@ -505,10 +505,9 @@ class report_creator(osv.osv):
         @return: True if model colume type is in integer or float.
                      or false model colume type is not in integer or float.
         """
-
         aggregate_columns = ('integer', 'float')
         apply_functions = ('sum', 'min', 'max', 'avg', 'count')
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             for fld in obj.field_ids:
                 # Allowing to use count(*)
@@ -519,9 +518,9 @@ class report_creator(osv.osv):
                     return False
         return True
 
-    def _calander_view_error(self, cr, uid, ids):
+    def _calander_view_error(self, cr, uid, ids, context=None):
         required_types = []
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             if obj.view_type1 == 'calendar' or obj.view_type2 == 'calendar' or obj.view_type3 == 'calendar':
                 for fld in obj.field_ids:

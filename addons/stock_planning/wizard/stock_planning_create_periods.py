@@ -53,6 +53,8 @@ class stock_period_createlines(osv.osv_memory):
     }
     
     def create_stock_periods(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         interval = context.get('interval',0)
         name = context.get('name','Daily')
         period_obj = self.pool.get('stock.period')

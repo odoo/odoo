@@ -62,7 +62,7 @@ class account_payment_populate_statement(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         line_ids = data['lines']
         if not line_ids:
             return {}

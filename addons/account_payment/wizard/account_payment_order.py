@@ -62,7 +62,7 @@ class payment_order_create(osv.osv_memory):
         payment_obj = self.pool.get('payment.line')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         line_ids = data['entries']
         if not line_ids:
             return {}

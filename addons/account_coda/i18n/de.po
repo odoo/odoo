@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-03 15:42+0000\n"
 "PO-Revision-Date: 2010-11-30 14:31+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -24,17 +24,10 @@ msgid "Bank Journal"
 msgstr "Bank Journal"
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-"beinhalten!"
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehler bei Modellbezeichnung der Aktion"
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "Protokoll"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
@@ -62,11 +55,6 @@ msgid "Import Date"
 msgstr "Importiere Datum"
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr "Import Protokoll"
@@ -80,17 +68,6 @@ msgstr "Import"
 #: view:account.coda:0
 msgid "Coda import"
 msgstr "CODA Import"
-
-#. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
-msgstr "Protokoll"
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: account_coda
 #: code:addons/account_coda/account_coda.py:0
@@ -145,11 +122,6 @@ msgid "Coda Import Logs"
 msgstr "Coda Import Protokolle"
 
 #. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
-
-#. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
 msgid "coda for an Account"
 msgstr "CODA für Konto"
@@ -160,11 +132,9 @@ msgid "Default Payable Account"
 msgstr "Standard Kreditoren Konto"
 
 #. module: account_coda
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-"Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-"vorhanden sein !"
+#: help:account.coda,name:0
+msgid "Store the detail of bank statements"
+msgstr "Speiche Details zu Bankauszügen"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -175,11 +145,6 @@ msgstr "Abbrechen"
 #: view:account.coda.import:0
 msgid "Open Statements"
 msgstr "Offene Auszüge"
-
-#. module: account_coda
-#: help:account.coda,name:0
-msgid "Store the detail of bank statements"
-msgstr "Speiche Details zu Bankauszügen"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:0
@@ -204,19 +169,9 @@ msgid "Statements"
 msgstr "Bankauszüge"
 
 #. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regeln werden nur unterstützt für osv_memory Objekte !"
-
-#. module: account_coda
 #: field:account.bank.statement,coda_id:0
 msgid "Coda"
 msgstr "CODA"
-
-#. module: account_coda
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -295,15 +250,16 @@ msgid "Coda Import"
 msgstr "Coda Import"
 
 #. module: account_coda
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: account_coda
 #: view:account.coda:0
 #: field:account.coda,journal_id:0
 msgid "Journal"
 msgstr "Journal"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten!"
 
 #~ msgid "_Open Statement"
 #~ msgstr "Öffne Bankauszug"
@@ -316,6 +272,9 @@ msgstr "Journal"
 
 #~ msgid "Import Coda File"
 #~ msgstr "Import CODA Datei"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehler bei Modellbezeichnung der Aktion"
 
 #~ msgid "Default receivable Account"
 #~ msgstr "Standard Debitoren Konto"
@@ -336,6 +295,9 @@ msgstr "Journal"
 #~ msgid "Generated Bank Statement"
 #~ msgstr "Erzeugter Bankauszug"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
+
 #~ msgid "Coda Statements"
 #~ msgstr "CODA Bankauszüge"
 
@@ -344,3 +306,23 @@ msgstr "Journal"
 
 #~ msgid "Select your bank journal :"
 #~ msgstr "Wähle Bank Journal :"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regeln werden nur unterstützt für osv_memory Objekte !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

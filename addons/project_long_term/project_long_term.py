@@ -153,8 +153,6 @@ class project_phase(osv.osv):
         return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
-       if context is None:
-            context = {}
        """
        Check And Compute date_end of phase if change in date_start < older time.
        """
@@ -175,8 +173,6 @@ class project_phase(osv.osv):
        self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d')}, context=context)
 
     def _check_date_end(self, cr, uid, phase, date_start, context=None):
-       if context is None:
-            context = {}
        """
        Check And Compute date_end of phase if change in date_end > older time.
        """
@@ -277,8 +273,6 @@ class project_phase(osv.osv):
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
         res = {}
-        if context is None:
-            context = {}
         resource_pool = self.pool.get('resource.resource')
         for phase in self.browse(cr, uid, ids, context=context):
             user_ids = map(lambda x:x.resource_id.user_id.id, phase.resource_ids)
@@ -299,8 +293,6 @@ class project_phase(osv.osv):
         resource_pool = self.pool.get('resource.resource')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
-        if context is None:
-           context = {}
         default_uom_id = self._get_default_uom_id(cr, uid)
         for phase in self.browse(cr, uid, ids, context=context):
             if not phase.responsible_id:
@@ -366,8 +358,6 @@ class project_phase(osv.osv):
         """
         task_pool = self.pool.get('project.task')
         resource_pool = self.pool.get('resource.resource')
-        if context is None:
-            context = {}
         resources_list = self.generate_resources(cr, uid, ids, context=context)
         return_msg = {}
         for phase in self.browse(cr, uid, ids, context=context):
@@ -431,8 +421,6 @@ class project(osv.osv):
         """
         res = {}
         resource_pool = self.pool.get('resource.resource')
-        if context is None:
-            context = {}
         for project in self.browse(cr, uid, ids, context=context):
             user_ids = map(lambda x:x.id, project.members)
             calendar_id  = project.resource_calendar_id and project.resource_calendar_id.id or False
@@ -444,8 +432,6 @@ class project(osv.osv):
         """
         Schedule the phases.
         """
-        if context is None:
-            context = {}
         if type(ids) in (long, int,):
             ids = [ids]
         phase_pool = self.pool.get('project.phase')
@@ -471,9 +457,6 @@ class project(osv.osv):
         user_pool = self.pool.get('res.users')
         task_pool = self.pool.get('project.task')
         resource_pool = self.pool.get('resource.resource')
-        if context is None:
-            context = {}
-
         resources_list = self.generate_members(cr, uid, ids, context=context)
         return_msg = {}
         for project in self.browse(cr, uid, ids, context=context):
@@ -507,7 +490,7 @@ class resource_resource(osv.osv):
             context = {}
         if context.get('project_id',False):
             project_pool = self.pool.get('project.project')
-            project_rec = project_pool.browse(cr, uid, context['project_id'])
+            project_rec = project_pool.browse(cr, uid, context['project_id'], context=context)
             user_ids = [user_id.id for user_id in project_rec.members]
             args.append(('user_id','in',user_ids))
         return super(resource_resource, self).search(cr, uid, args, offset, limit, order, context, count)
