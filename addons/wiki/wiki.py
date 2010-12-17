@@ -54,7 +54,7 @@ class wiki_group(osv.osv):
         'method': lambda *a: 'page',
     }
 
-    def open_wiki_page(self, cr, uid, ids, context):
+    def open_wiki_page(self, cr, uid, ids, context=None):
 
         """ Opens Wiki Page of Group
         @param cr: the current row, from the database cursor,
@@ -62,8 +62,6 @@ class wiki_group(osv.osv):
         @param ids: List of open wiki group’s IDs
         @return: dictionay of open wiki window on give group id
         """
-        if not context:
-            context = {}
         if type(ids) in (int,long,):
             ids = [ids]
         group_id = False
@@ -131,7 +129,7 @@ class wiki_wiki2(osv.osv):
         'minor_edit': lambda *a: True,
     }
 
-    def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
+    def onchange_group_id(self, cr, uid, ids, group_id, content, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -140,7 +138,7 @@ class wiki_wiki2(osv.osv):
 
         if (not group_id) or content:
             return {}
-        grp = self.pool.get('wiki.groups').browse(cr, uid, group_id)
+        grp = self.pool.get('wiki.groups').browse(cr, uid, group_id, context=context)
         section = '0'
         for page in grp.page_ids:
             if page.section: section = page.section

@@ -37,7 +37,7 @@ class change_standard_price(osv.osv_memory):
         'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
     }
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -46,6 +46,8 @@ class change_standard_price(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
+        if context is None:
+            context = {}
         product_pool = self.pool.get('product.product')
         product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
         res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)
@@ -67,7 +69,7 @@ class change_standard_price(osv.osv_memory):
 
         return res
 
-    def onchange_price(self, cr, uid, ids, new_price, context = {}):
+    def onchange_price(self, cr, uid, ids, new_price, context=None):
         """ Sets stock input and output account according to the difference
             of old price and new price.
         @param self: The object pointer.
@@ -78,7 +80,9 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return: Dictionary of values
         """
-        product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False))
+        if context is None:
+            context = {}
+        product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False), context=context)
         price = product_obj.standard_price
         diff = price - new_price
         if diff > 0 :
@@ -86,7 +90,7 @@ class change_standard_price(osv.osv_memory):
         else :
             return {'value' : {'enable_stock_in_out_acc':False}}
 
-    def change_price(self, cr, uid, ids, context):
+    def change_price(self, cr, uid, ids, context=None):
         """ Changes the Standard Price of Product.
             And creates an account move accordingly.
         @param self: The object pointer.
@@ -96,10 +100,12 @@ class change_standard_price(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
         prod_obj = self.pool.get('product.product')
-        res = self.browse(cr, uid, ids)
+        res = self.browse(cr, uid, ids, context=context)
         datas = {
             'new_price' : res[0].new_price,
             'stock_output_account' : res[0].stock_account_output.id,

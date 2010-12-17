@@ -26,13 +26,13 @@ from tools.translate import _
 class product_product(osv.osv):
     _inherit = "product.product"    
 
-    def get_product_accounts(self, cr, uid, product_id, context={}):
+    def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
         @param product_id: product id            
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
-        """           
+        """
         product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
-        res = super(product_product,self).get_product_accounts(cr, uid, product_id, context)
+        res = super(product_product,self).get_product_accounts(cr, uid, product_id, context=context)
         stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
         if not stock_input_acc:
             stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
@@ -54,12 +54,14 @@ class product_product(osv.osv):
         "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials'),
     }
 
-    def do_change_standard_price(self, cr, uid, ids, datas, context={}):
+    def do_change_standard_price(self, cr, uid, ids, datas, context=None):
         """ Changes the Standard Price of Product and parent products and creates an account move accordingly.
         @param datas: dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
         change = context.get('change_parent_price', False)
@@ -85,7 +87,7 @@ class product_product(osv.osv):
 
         bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])
 
-        for bom in bom_obj.browse(cr, uid, bom_ids):
+        for bom in bom_obj.browse(cr, uid, bom_ids, context=context):
             _compute_price(bom)
 
 product_product()

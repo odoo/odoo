@@ -366,7 +366,7 @@ class Partner(osv.osv):
         'membership_cancel': False,
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         """Check  Recursive  for Associated Members.
         """
         level = 100
@@ -385,8 +385,6 @@ class Partner(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
         default = default.copy()
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context=context)
@@ -401,8 +399,6 @@ class Partner(osv.osv):
         invoice_tax_obj = self.pool.get('account.invoice.tax')
         product_id = product_id or datas.get('membership_product_id', False)
         amount = datas.get('amount', 0.0)
-        if not context:
-            context={}
         invoice_list = []
         if type(ids) in (int, long,):
             ids = [ids]
@@ -460,6 +456,8 @@ class Product(osv.osv):
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         model_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
 
         if ('product' in context) and (context['product']=='membership_product'):
             model_data_ids_form = model_obj.search(cr, user, [('model','=','ir.ui.view'), ('name', 'in', ['membership_products_form', 'membership_products_tree'])], context=context)
@@ -511,8 +509,6 @@ class account_invoice_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         """Overrides orm write method
         """
-        if not context:
-            context={}
         member_line_obj = self.pool.get('membership.membership_line')
         res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         for line in self.browse(cr, uid, ids, context=context):
@@ -541,8 +537,6 @@ class account_invoice_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         """Remove Membership Line Record for Account Invoice Line
         """
-        if not context:
-            context={}
         member_line_obj = self.pool.get('membership.membership_line')
         for id in ids:
             ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', id)], context=context)

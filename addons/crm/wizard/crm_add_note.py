@@ -19,7 +19,7 @@ class crm_add_note(osv.osv_memory):
     }
 
     def action_add(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):

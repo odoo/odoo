@@ -65,8 +65,6 @@ class calendar_collection(osv.osv):
 
     def get_description(self, cr, uid, ids, context=None):
         #TODO : return description of all calendars
-        if not context:
-            context = {}
         return False
 
     def get_schedule_inbox_URL(self, cr, uid, ids, context=None):

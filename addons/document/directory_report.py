@@ -26,7 +26,7 @@ class ir_action_report_xml(osv.osv):
     _name="ir.actions.report.xml"
     _inherit ="ir.actions.report.xml"
 
-    def _model_get(self, cr, uid, ids, name, arg, context):
+    def _model_get(self, cr, uid, ids, name, arg, context=None):
         res = {}
         model_pool = self.pool.get('ir.model')
         for data in self.read(cr, uid, ids, ['model']):
@@ -39,7 +39,7 @@ class ir_action_report_xml(osv.osv):
                     res[data.get('id')] = False
         return res
 
-    def _model_search(self, cr, uid, obj, name, args, context={}):
+    def _model_search(self, cr, uid, obj, name, args, context=None):
         if not len(args):
             return []
         model_id= args[0][2]

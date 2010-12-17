@@ -32,8 +32,6 @@ class mrp_production(osv.osv):
         @return: Dictionary of values.
         """
         res = {}
-        if context is None:
-            context = {}
         if not field_names:
             field_names = []
         for id in ids:

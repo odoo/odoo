@@ -39,7 +39,7 @@ class account_common_partner_report(osv.osv_memory):
     def pre_print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['result_selection'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['result_selection'], context=context)[0])
         return data
 
 account_common_partner_report()

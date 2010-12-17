@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-13 21:58+0000\n"
-"Last-Translator: Magnus Brandt, Aspirix AB <Unknown>\n"
+"PO-Revision-Date: 2010-12-15 15:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-16 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -44,7 +44,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr ""
+msgstr "Gournal transaktion avstämning"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -89,12 +89,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr ""
+msgstr "Periodiserad reskontra till dagens datum"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr ""
+msgstr "Inkludera avstämda transaktioner"
 
 #. module: account
 #: view:account.pl.report:0
@@ -288,7 +288,7 @@ msgstr "Balansräkning"
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Manuellt återkommande"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -468,6 +468,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
+"När journalen skapades, Statusen är preliminär. När den skrivs ut blir "
+"statusen 'Utskriven'. När alla transaktioner är klara får journalen status "
+"'klar'."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -641,7 +644,7 @@ msgstr "Taxes Mapping"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr ""
+msgstr "Centraliserad journal"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -846,7 +849,7 @@ msgstr "Beräkning"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner to reconcile"
-msgstr ""
+msgstr "Nästa partner som skall stämmas av"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -931,7 +934,7 @@ msgstr "Utökade filter..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr ""
+msgstr "Centraliserad journal"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1026,6 +1029,11 @@ msgid "Landscape Mode"
 msgstr "Landscape Mode"
 
 #. module: account
+#: model:account.account.type,name:account.account_type_liability
+msgid "Bilanzkonten - Passiva - Kapitalkonten"
+msgstr ""
+
+#. module: account
 #: view:board.board:0
 msgid "Customer Invoices to Approve"
 msgstr "Kundfaktura att godkänna"
@@ -1046,7 +1054,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Applicability Options"
-msgstr ""
+msgstr "Tillämplighet alternativ"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1080,7 +1088,7 @@ msgstr "Chef"
 #. module: account
 #: view:account.subscription.generate:0
 msgid "Generate Entries before:"
-msgstr ""
+msgstr "Skapa transaktioner före:"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -1095,7 +1103,7 @@ msgstr "Startdatum"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
-msgstr ""
+msgstr "Bekräfta utdraget"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1957,7 +1965,7 @@ msgstr "Open Entries"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
 msgid ""
-"A supplier refund is a credit note from your supplier indicating that he "
+"A vendor refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
 
@@ -2684,6 +2692,11 @@ msgstr ""
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr "Baskodsbelopp"
+
+#. module: account
+#: model:account.account.type,name:account.account_type_view
+msgid "Ansicht"
+msgstr "Visa"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0

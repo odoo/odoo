@@ -29,7 +29,7 @@ from tools.translate import _
 class project_project(osv.osv):
     _inherit = 'project.project'
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
+        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if result.get('value', False):
             try:
                 d = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
@@ -201,9 +201,9 @@ class task(osv.osv):
         if vals.get('project_id',False) or vals.get('name',False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
-            task_obj_l = self.browse(cr, uid, ids, context)
+            task_obj_l = self.browse(cr, uid, ids, context=context)
             if vals.get('project_id',False):
-                project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'])
+                project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
                 acc_id = project_obj.analytic_account_id.id
 
             for task_obj in task_obj_l:

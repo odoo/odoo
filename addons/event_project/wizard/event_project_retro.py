@@ -55,7 +55,7 @@ class event_project(osv.osv_memory):
         event_obj = self.pool.get('event.event')
         if context is None:
             context = {}
-        event = event_obj.browse(cr, uid, context.get('active_id', False))
+        event = event_obj.browse(cr, uid, context.get('active_id', False), context=context)
         res = datetime.strptime(event.date_end, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
         return res
         
@@ -64,11 +64,11 @@ class event_project(osv.osv_memory):
         'date': _get_date_end
     }
     
-    def create_duplicate(self, cr, uid, ids, context):
+    def create_duplicate(self, cr, uid, ids, context=None):
         event_obj = self.pool.get('event.event')
         project_obj = self.pool.get('project.project')
-        event = event_obj.browse(cr, uid, context.get('active_id', False))
-        for current in self.browse(cr, uid, ids):
+        event = event_obj.browse(cr, uid, context.get('active_id', False), context=context)
+        for current in self.browse(cr, uid, ids, context=context):
             duplicate_project_id = project_obj.copy(cr, uid, current.project_id.id, {
                     'active': True,
                     'date_start':current.date_start,

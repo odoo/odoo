@@ -42,17 +42,15 @@ class audittrail_view_log(osv.osv_memory):
         @param ids: List of audittrail view log’s IDs.
         @return: Dictionary of  audittrail log form on given date range.
         """
-        if not context:
-            context = {}
 
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'audittrail', 'action_audittrail_log_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        result = act_obj.read(cr, uid, [id])[0]
+        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = act_obj.read(cr, uid, [id], context=context)[0]
 
         #start Loop
-        for datas in self.read(cr, uid, ids):
+        for datas in self.read(cr, uid, ids, context=context):
             if not datas.get('from', None):
                 if  datas.get('to') <> time.strftime("%Y-%m-%d %H:%M:%S"):
                     result['domain'] = str([('timestamp', '<', datas.get('to'))])

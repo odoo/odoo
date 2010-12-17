@@ -58,8 +58,8 @@ class account_analytic_line(osv.osv):
         return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _check_company(self, cr, uid, ids):
-        lines = self.browse(cr, uid, ids)
+    def _check_company(self, cr, uid, ids, context=None):
+        lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.move_id and not l.account_id.company_id.id == l.move_id.account_id.company_id.id:
                 return False
@@ -80,7 +80,7 @@ class account_analytic_line(osv.osv):
         analytic_journal_obj =self.pool.get('account.analytic.journal')
         product_price_type_obj = self.pool.get('product.price.type')
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
-        prod = product_obj.browse(cr, uid, prod_id)
+        prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
 
         if j_id.type <> 'sale':
@@ -105,13 +105,13 @@ class account_analytic_line(osv.osv):
         flag = False
         # Compute based on pricetype
         product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','standard_price')], context=context)
-        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+        pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         if journal_id:
-            journal = analytic_journal_obj.browse(cr, uid, journal_id)
+            journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
             if journal.type == 'sale':
                 product_price_type_ids = product_price_type_obj.search(cr, uid, [('field','=','list_price')], context)
                 if product_price_type_ids:
-                    pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context)[0]
+                    pricetype = product_price_type_obj.browse(cr, uid, product_price_type_ids, context=context)[0]
         # Take the company currency as the reference one
         if pricetype.field == 'list_price':
             flag = True
@@ -133,7 +133,9 @@ class account_analytic_line(osv.osv):
             }
         }
 
-    def view_header_get(self, cr, user, view_id, view_type, context):
+    def view_header_get(self, cr, user, view_id, view_type, context=None):
+        if context is None:
+            context = {}
         if context.get('account_id', False):
             # account_id in context may also be pointing to an account.account.id
             cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))

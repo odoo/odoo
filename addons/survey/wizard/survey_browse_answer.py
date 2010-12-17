@@ -60,6 +60,7 @@ class survey_browse_answer(osv.osv_memory):
         @param context: A standard dictionary for contextual values,
         @return : Dictionary value for Open the browse answer wizard.
         """
+        if context is None: context = {}
         record = self.read(cr, uid, ids, [])
         record = record and record[0] or {} 
         if record['response_id']:

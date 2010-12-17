@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-03 15:43+0000\n"
 "PO-Revision-Date: 2010-10-31 08:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-15 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_be
@@ -31,11 +31,6 @@ msgstr "Belastingcode"
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
 msgid "Régime Intra-Communautaire"
 msgstr "Intracommunautair"
-
-#. module: l10n_be
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie definitie"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_intra
@@ -142,11 +137,9 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr "Geen BTW number bepaalt voor het Hoofd Bedrijf!"
 
 #. module: l10n_be
-#: help:partner.vat.intra,period_ids:0
-msgid ""
-"Select here the period(s) you want to include in your intracom declaration"
-msgstr ""
-"Selecteer hier de periode(s) die U wilt opnemen in uw intracom. aangifte"
+#: view:partner.vat.list:0
+msgid "XML File has been Created."
+msgstr "XML bestand is aangemaakt"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -170,14 +163,15 @@ msgid "Régime National"
 msgstr "Nationaal Regime"
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
-msgid "Régime Extra-Communautaire"
-msgstr "Extracommunautair"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_view
-msgid "Vue"
-msgstr "Weergave"
+#: help:partner.vat,test_xml:0
+#: help:partner.vat.intra,test_xml:0
+msgid "Sets the XML output as test file"
+msgstr "Dit zet de XML output als test file"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:0
@@ -200,11 +194,6 @@ msgid "Save"
 msgstr "Opslaan"
 
 #. module: l10n_be
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "Fout ! U kunt geen herhalende sjablonen voor rekeningen maken"
-
-#. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "General Information"
 msgstr "Algemene informatie"
@@ -222,14 +211,11 @@ msgid "Select Fiscal Year"
 msgstr "Selecteer Boekjaar"
 
 #. module: l10n_be
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Fout! U kunt geen herhalende belastingcodes maken"
-
-#. module: l10n_be
-#: field:partner.vat.intra,period_code:0
-msgid "Period Code"
-msgstr "Periode Code"
+#: help:partner.vat.intra,period_ids:0
+msgid ""
+"Select here the period(s) you want to include in your intracom declaration"
+msgstr ""
+"Selecteer hier de periode(s) die U wilt opnemen in uw intracom. aangifte"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
@@ -252,9 +238,10 @@ msgid ""
 msgstr ""
 
 #. module: l10n_be
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: view:partner.vat.list:0
+#: field:partner.vat.list,partner_ids:0
+msgid "Clients"
+msgstr "Klanten"
 
 #. module: l10n_be
 #: field:partner.vat,test_xml:0
@@ -282,11 +269,6 @@ msgstr "Maak een XML file voor Intra. BTW aangifte"
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
 msgstr "BTW Intra"
-
-#. module: l10n_be
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kan geen herhalend Menu maken"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
@@ -340,6 +322,11 @@ msgstr "Bestedingslimiet"
 #: model:ir.model,name:l10n_be.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
+msgid "Régime Extra-Communautaire"
+msgstr "Extracommunautair"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_intra
@@ -406,18 +393,6 @@ msgstr "Periode(s)"
 #: field:vat.listing.clients,name:0
 msgid "Client Name"
 msgstr "Klant Naam"
-
-#. module: l10n_be
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De Object naam moet beginnen met X_ en mag geen speciale karakters bevatten !"
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-msgid "XML File has been Created."
-msgstr "XML bestand is aangemaakt"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:0
@@ -487,16 +462,9 @@ msgid "Periodical VAT Declaration"
 msgstr "Periodieke BTW-aangifte"
 
 #. module: l10n_be
-#: help:partner.vat,test_xml:0
-#: help:partner.vat.intra,test_xml:0
-msgid "Sets the XML output as test file"
-msgstr "Dit zet de XML output als test file"
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-#: field:partner.vat.list,partner_ids:0
-msgid "Clients"
-msgstr "Klanten"
+#: model:account.account.type,name:l10n_be.user_type_view
+msgid "Vue"
+msgstr "Weergave"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
@@ -549,6 +517,11 @@ msgid "File Name"
 msgstr "Bestandsnaam"
 
 #. module: l10n_be
+#: field:partner.vat.intra,period_code:0
+msgid "Period Code"
+msgstr "Periode Code"
+
+#. module: l10n_be
 #: view:partner.vat:0
 msgid ""
 "This wizard will create an XML file for Vat details and total invoiced "
@@ -587,3 +560,20 @@ msgstr "Het geeft aan of een betaling is uitgevoerd of niet?"
 #~ "Dit is dezelfde wizard die wekt  vanuit Financieel Management / Configuratie "
 #~ "/ Financial Accounting / Financiële Rekeningen / Genereer Rekeningsschema  "
 #~ "uit een schema sjabloon."
+
+#~ msgid "Error ! You can not create recursive account templates."
+#~ msgstr "Fout ! U kunt geen herhalende sjablonen voor rekeningen maken"
+
+#~ msgid "Error ! You can not create recursive Tax Codes."
+#~ msgstr "Fout! U kunt geen herhalende belastingcodes maken"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kan geen herhalend Menu maken"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De Object naam moet beginnen met X_ en mag geen speciale karakters bevatten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie definitie"

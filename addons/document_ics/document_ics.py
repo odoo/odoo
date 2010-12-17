@@ -347,7 +347,6 @@ class crm_meeting(osv.osv):
         """
 
         if not default: default = {}
-        if not context: context = {}
         default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.meeting'), 'id': False})
         return super(crm_meeting, self).copy(cr, uid, id, default, context)
 

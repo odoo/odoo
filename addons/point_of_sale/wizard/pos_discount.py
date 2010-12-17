@@ -43,6 +43,8 @@ class pos_discount(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
+        if context is None:
+            context = {}
         super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False
         order = self.pool.get('pos.order').browse(cr, uid, record_id, context=context)

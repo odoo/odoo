@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-01 07:43+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-16 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: resource
@@ -28,22 +28,9 @@ msgstr ""
 "definiert, dann gilt der Feiertag nur für diese Ressource"
 
 #. module: resource
-#: selection:resource.resource,resource_type:0
-msgid "Material"
-msgstr "Material"
-
-#. module: resource
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objektname muss mit \"x_\" beginnen und darf keine Sonderzeichen "
-"beinhalten!"
-
-#. module: resource
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Freitag"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
@@ -62,17 +49,13 @@ msgid "Resources Leaves"
 msgstr "Abwesende Ressourcen"
 
 #. module: resource
+#: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Time"
 msgstr "Arbeitszeit"
-
-#. module: resource
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML-Code für diese Ansicht!"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -91,11 +74,6 @@ msgid "Sunday"
 msgstr "Sonntag"
 
 #. module: resource
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
 msgstr "Suche Ressource"
@@ -112,19 +90,19 @@ msgid "Resources"
 msgstr "Ressourcen"
 
 #. module: resource
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: field:resource.calendar,manager:0
+msgid "Workgroup manager"
+msgstr "Abteilungsleiter"
 
 #. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Period"
-msgstr "Suche Arbeitsperiode"
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Working time will start from"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
-msgstr "Montag"
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -141,9 +119,9 @@ msgid "Company"
 msgstr "Mandant"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Freitag"
+#: selection:resource.resource,resource_type:0
+msgid "Material"
+msgstr "Material"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -154,6 +132,11 @@ msgstr "Wochentag"
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
 msgstr "Anfangsdatum"
+
+#. module: resource
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -217,22 +200,12 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: resource
-#: help:resource.resource,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-"Wenn das Aktiv Feld auf Falsch gesetzt wird, wird die Ressource versteckt "
-"ohne sie zu löschen"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Mittwoch"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
 msgid "Working Period"
 msgstr "Arbeits-/Bürozeiten"
 
@@ -245,6 +218,13 @@ msgstr "Ressource Detail"
 #: field:resource.resource,active:0
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: resource
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -263,11 +243,6 @@ msgid "Define the schedule of resource"
 msgstr "Definire den Einsatzplan für diese Ressource"
 
 #. module: resource
-#: field:resource.calendar.attendance,hour_to:0
-msgid "Work to"
-msgstr "Arbeitszeit bis"
-
-#. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
 msgstr "Arbeitszeit von"
@@ -278,9 +253,14 @@ msgid "Code"
 msgstr "Code"
 
 #. module: resource
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr "Montag"
+
+#. module: resource
+#: field:resource.calendar.attendance,hour_to:0
+msgid "Work to"
+msgstr "Arbeitszeit bis"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -303,11 +283,6 @@ msgid "Tuesday"
 msgstr "Dienstag"
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup manager"
-msgstr "Abteilungsleiter"
-
-#. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working time"
@@ -323,6 +298,11 @@ msgstr "Ressource Abwesenheiten"
 #: view:resource.resource:0
 msgid "General Information"
 msgstr "Generelle Information"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_to:0
+msgid "Working time will end at"
+msgstr ""
 
 #. module: resource
 #: view:resource.resource:0
@@ -366,10 +346,39 @@ msgstr " (copy)"
 msgid "Saturday"
 msgstr "Samstag"
 
-#. module: resource
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objektname muss mit \"x_\" beginnen und darf keine Sonderzeichen "
+#~ "beinhalten!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the resource "
+#~ "record without removing it."
+#~ msgstr ""
+#~ "Wenn das Aktiv Feld auf Falsch gesetzt wird, wird die Ressource versteckt "
+#~ "ohne sie zu löschen"
 
 #~ msgid "Manager"
 #~ msgstr "Manager"
+
+#~ msgid "Search Working Period"
+#~ msgstr "Suche Arbeitsperiode"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."

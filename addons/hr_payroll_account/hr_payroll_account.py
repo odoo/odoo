@@ -104,16 +104,16 @@ class payroll_register(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
     }
 
-    def compute_sheet(self, cr, uid, ids, context={}):
+    def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
-        vals = self.browse(cr, uid, ids)[0]
+        vals = self.browse(cr, uid, ids, context=context)[0]
         emp_ids = emp_pool.search(cr, uid, [])
 
-        for emp in emp_pool.browse(cr, uid, emp_ids):
+        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
             old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)])
             if old_slips:
                 slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]})
@@ -151,24 +151,24 @@ class contrib_register(osv.osv):
     _inherit = 'hr.contibution.register'
     _description = 'Contribution Register'
 
-    def _total_contrib(self, cr, uid, ids, field_names, arg, context={}):
+    def _total_contrib(self, cr, uid, ids, field_names, arg, context=None):
         line_pool = self.pool.get('hr.contibution.register.line')
         period_id = self.pool.get('account.period').search(cr,uid,[('date_start','<=',time.strftime('%Y-%m-%d')),('date_stop','>=',time.strftime('%Y-%m-%d'))])[0]
-        fiscalyear_id = self.pool.get('account.period').browse(cr, uid, period_id).fiscalyear_id
+        fiscalyear_id = self.pool.get('account.period').browse(cr, uid, period_id, context=context).fiscalyear_id
         res = {}
-        for cur in self.browse(cr, uid, ids):
+        for cur in self.browse(cr, uid, ids, context=context):
             current = line_pool.search(cr, uid, [('period_id','=',period_id),('register_id','=',cur.id)])
             years = line_pool.search(cr, uid, [('period_id.fiscalyear_id','=',fiscalyear_id.id), ('register_id','=',cur.id)])
 
             e_month = 0.0
             c_month = 0.0
-            for i in line_pool.browse(cr, uid, current):
+            for i in line_pool.browse(cr, uid, current, context=context):
                 e_month += i.emp_deduction
                 c_month += i.comp_deduction
 
             e_year = 0.0
             c_year = 0.0
-            for j in line_pool.browse(cr, uid, years):
+            for j in line_pool.browse(cr, uid, years, context=context):
                 e_year += i.emp_deduction
                 c_year += i.comp_deduction
 
@@ -235,8 +235,6 @@ class hr_payslip(osv.osv):
     def cancel_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         slip_move = self.pool.get('hr.payslip.account.move')
-        if context is None:
-            context = {}
         move_ids = []
         for slip in self.browse(cr, uid, ids, context=context):
             for line in slip.move_ids:
@@ -256,8 +254,6 @@ class hr_payslip(osv.osv):
         invoice_pool = self.pool.get('account.invoice')
         fiscalyear_pool = self.pool.get('account.fiscalyear')
         period_pool = self.pool.get('account.period')
-        if context is None:
-            context = {}
 
         for slip in self.browse(cr, uid, ids, context=context):
             line_ids = []
@@ -398,14 +394,10 @@ class hr_payslip(osv.osv):
         return True
 
     def account_check_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
         return True
 
     def hr_check_sheet(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
         return True
 
@@ -418,8 +410,6 @@ class hr_payslip(osv.osv):
         property_pool = self.pool.get('ir.property')
         payslip_pool = self.pool.get('hr.payslip.line')
 
-        if context is None:
-            context = {}
         for slip in self.browse(cr, uid, ids, context=context):
             total_deduct = 0.0
 

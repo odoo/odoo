@@ -50,7 +50,7 @@ class calendar_event_subscribe(osv.osv_memory):
             context = context.copy()
         context['uid'] = uid
 
-        for data in self.read(cr, uid, ids):
+        for data in self.read(cr, uid, ids, context=context):
             try:
                 f =  urllib.urlopen(data['url_path'])
                 caldata = f.fp.read()
