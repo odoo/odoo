@@ -565,6 +565,11 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Could not cancel sales order !'),
                         _('You must first cancel all picking attached to this sales order.'))
+                for mov in pick.move_lines:
+                    proc_ids = self.pool.get('procurement.order').search(cr, uid, [('move_id', '=', mov.id)])
+                    if proc_ids:
+                        for proc in proc_ids:
+                            wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
