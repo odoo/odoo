@@ -96,14 +96,14 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
     log.log(netsvc.logging.TEST, "Report %s produced correctly.", rname)
     return True
     
-def try_report_action(cr, uid, action_id, res_model=None, res_ids=None, 
+def try_report_action(cr, uid, action_id, active_model=None, active_ids=None, 
                 wiz_data=None, wiz_buttons=None,
                 context=None, our_module=None):
     """Take an ir.action.act_window and follow it until a report is produced
     
         @param action_id the integer id of an action, or a reference to xml id
                 of the act_window (can search [our_module.]+xml_id
-        @param res_model, res_ids call the action as if it had been launched
+        @param active_model, active_ids call the action as if it had been launched
                 from that model+ids (tree/form view action)
         @param wiz_data a dictionary of values to use in the wizard, if needed.
                 They will override (or complete) the default values of the 
@@ -134,10 +134,10 @@ def try_report_action(cr, uid, action_id, res_model=None, res_ids=None,
         log.log(netsvc.logging.TEST, "  - " + msg, *args)
     
     datas = {}
-    if res_model:
-        datas['model'] = res_model
-    if res_ids:
-        datas['ids'] = res_ids
+    if active_model:
+        datas['model'] = active_model
+    if active_ids:
+        datas['ids'] = active_ids
     
     if not wiz_buttons:
         wiz_buttons = []
