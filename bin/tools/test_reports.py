@@ -93,7 +93,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
         log.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
         return False
 
-    log.log(netsvc.logging.TEST, "Report %s produced correctly.", rname)
+    log.log(netsvc.logging.TEST, "  + Report %s produced correctly.", rname)
     return True
     
 def try_report_action(cr, uid, action_id, active_model=None, active_ids=None, 
@@ -245,9 +245,9 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             res = None
             while buttons and not res:
                 b = buttons.pop()
-                log_test("in the %s form, I will press the %s button.", action_name, b['string'])
+                log_test("in the \"%s\" form, I will press the \"%s\" button.", action_name, b['string'])
                 if not b['type']:
-                    log_test("the %s button has no type, cannot use it", b['string'])
+                    log_test("the \"%s\" button has no type, cannot use it", b['string'])
                     continue
                 if b['type'] == 'object':
                     #there we are! press the button!
@@ -258,7 +258,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                     res = fn(cr, uid, [datas['res_id'],], context)
                     break
                 else:
-                    log.warning("in the %s form, the %s button has unknown type %s", 
+                    log.warning("in the \"%s\" form, the \"%s\" button has unknown type %s", 
                         action_name, b['string'], b['type'])
             return res
         #elif action['type']=='ir.actions.server':
