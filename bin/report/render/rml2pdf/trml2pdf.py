@@ -733,22 +733,26 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import common
                 from reportlab.graphics.barcode import fourstate
                 from reportlab.graphics.barcode import usps
-            except Exception, e:
+                from reportlab.graphics.barcode import createBarcodeDrawing
+                
+            except ImportError:
                 self._logger.warning("Cannot use barcode renderers:", exc_info=True)
                 return None
             args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'int','quiet':'int','width':'unit','stop':'bool','bearers':'int','barWidth':'float','barHeight':'float'})
             codes = {
                 'codabar': lambda x: common.Codabar(x, **args),
                 'code11': lambda x: common.Code11(x, **args),
-                'code128': lambda x: code128.Code128(x, **args),
-                'standard39': lambda x: code39.Standard39(x, **args),
-                'standard93': lambda x: code93.Standard93(x, **args),
+                'code128': lambda x: code128.Code128(str(x), **args),
+                'standard39': lambda x: code39.Standard39(str(x), **args),
+                'standard93': lambda x: code93.Standard93(str(x), **args),
                 'i2of5': lambda x: common.I2of5(x, **args),
-                'extended39': lambda x: code39.Extended39(x, **args),
-                'extended93': lambda x: code93.Extended93(x, **args),
+                'extended39': lambda x: code39.Extended39(str(x), **args),
+                'extended93': lambda x: code93.Extended93(str(x), **args),
                 'msi': lambda x: common.MSI(x, **args),
                 'fim': lambda x: usps.FIM(x, **args),
                 'postnet': lambda x: usps.POSTNET(x, **args),
+                'ean13': lambda x: createBarcodeDrawing('EAN13', value=str(x), **args),
+                'qrcode': lambda x: createBarcodeDrawing('QR', value=x, **args),
             }
             code = 'code128'
             if node.get('code'):
