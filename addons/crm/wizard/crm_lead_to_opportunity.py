@@ -89,7 +89,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
                     'partner_id': lead.partner_id.id
                 }, context=context)
-            self.log(cr, uid, lead.id,
+            leads.log(cr, uid, lead.id,
                 _("Lead '%s' has been converted to an opportunity.") % lead.name)
 
         return {
