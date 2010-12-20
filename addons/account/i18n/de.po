@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-12-14 21:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -378,6 +378,12 @@ msgid ""
 msgstr ""
 "Damit kann das Vorzeichen in Reports umgedreht werden und erlaubt Ausgaben "
 "als positive Werte zu sehen."
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1314,11 +1320,6 @@ msgid "Overdue Payments"
 msgstr "Fällige Rechnungen"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Fehler: Bank Belegnummer ist notwendig"
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2142,6 +2143,14 @@ msgstr ""
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
 msgstr "Suche Kontenplan Vorlage"
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
+msgstr ""
 
 #. module: account
 #: view:account.account.type:0
@@ -3158,7 +3167,10 @@ msgid "Purchase"
 msgstr "Einkauf"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr "Konfiguration der Finanzbuchhaltung"
 
@@ -3651,18 +3663,13 @@ msgid "#Entries"
 msgstr "# Buchungen"
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Kontoart"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"Die Zahlungsbedingungen des Lieferanten haben keine Detailzeilen definiert."
 
 #. module: account
 #: view:account.state.open:0
@@ -3907,13 +3914,18 @@ msgid "Shortcut"
 msgstr "Tastenkombination (Shortcut)"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"Die Zahlungsbedingungen des Lieferanten haben keine Detailzeilen definiert."
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Kontoart"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4241,10 +4253,13 @@ msgid "Analytic Account Statistics"
 msgstr "Auswertungen Analytisches Konto"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
-msgstr "Basiert auf"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
+msgstr ""
+"Automatische Konfiguration Ihres Kontenplans, Bankkontos, Steuern und "
+"Journaldefinition resultierend aus der gewählten Vorlage,"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4329,6 +4344,16 @@ msgid ""
 msgstr ""
 "Bitte überprüfen Sie den Rechnungspreis !\n"
 "Dieser Wert entspricht nicht dem Gesamtbetrag der Rechnung."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5957,6 +5982,11 @@ msgid "Default Credit Account"
 msgstr "Standard Habenkonto"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr "  Anzahl Tage: 30"
@@ -6155,6 +6185,11 @@ msgid "Centralisation"
 msgstr "Zentralisierung"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6313,6 +6348,12 @@ msgstr "Eintrag \"%s\" ist ungültig !"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax:"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr "Basiert auf"
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6941,11 +6982,6 @@ msgstr "OK"
 #, python-format
 msgid "Unknown Partner"
 msgstr "Unbekannter Partner"
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr "Anfangssaldo"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -7711,6 +7747,11 @@ msgid "Invoice's state is Open"
 msgstr "Rechnungsstatus ist Offen"
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -8308,11 +8349,6 @@ msgid "Print Account Partner Balance"
 msgstr "Drucke Partner Saldenliste"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Ungültige Prüfsumme"
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr "Verträge"
@@ -8509,6 +8545,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Sehr geehrte Damen und Herren,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9637,14 +9678,9 @@ msgid "End period"
 msgstr "Ende der Periode"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Warnung"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr "Anfangssaldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -10870,13 +10906,6 @@ msgstr ""
 #~ msgid "Modify Invoice"
 #~ msgstr "Rechnung Bearbeiten"
 
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Automatische Konfiguration Ihres Kontenplans, Bankkontos, Steuern und "
-#~ "Journaldefinition resultierend aus der gewählten Vorlage,"
-
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Erfassen Buchungen"
 
@@ -11118,6 +11147,9 @@ msgstr ""
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Übergeordnetes Analyse Konto"
 
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Ungültige Prüfsumme"
+
 #~ msgid ""
 #~ "Check this box if you don't want new account moves to pass through the "
 #~ "'draft' state and instead goes directly to the 'posted state' without any "
@@ -11208,6 +11240,9 @@ msgstr ""
 
 #~ msgid "Journal de Banque CHF"
 #~ msgstr "Bankjournal CHF"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Fehler: Bank Belegnummer ist notwendig"
 
 #~ msgid "Account Code"
 #~ msgstr "Kontonummer"

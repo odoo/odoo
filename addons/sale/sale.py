@@ -265,7 +265,7 @@ class sale_order(osv.osv):
     _defaults = {
         'picking_policy': 'direct',
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-
+        'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
@@ -559,12 +559,19 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
+        proc_obj = self.pool.get('procurement.order')
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
                         _('Could not cancel sales order !'),
                         _('You must first cancel all picking attached to this sales order.'))
+                if pick.state == 'cancel':
+                    for mov in pick.move_lines:
+                        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
+                        if proc_ids:
+                            for proc in proc_ids:
+                                wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)

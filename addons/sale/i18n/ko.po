@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-15 21:56+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -40,6 +40,11 @@ msgstr ""
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "주문 취소"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -290,11 +295,6 @@ msgid "All Quotations"
 msgstr "모든 견적들"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "우리 판매사원"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr ""
@@ -432,9 +432,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "구매 가격리스트"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -533,6 +533,11 @@ msgstr "견적 / 주문"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
 msgstr ""
 
 #. module: sale
@@ -829,13 +834,10 @@ msgid "Sale Order Line"
 msgstr "판매 주문 라인"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "인보이스 생성"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "유닛 가격"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -893,6 +895,8 @@ msgstr "가격"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -935,11 +939,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "판매 가격리스트"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1304,10 +1303,13 @@ msgid "Sales"
 msgstr "판매"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "유닛 가격"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "인보이스 생성"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1695,6 +1697,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1740,6 +1747,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1807,11 +1815,6 @@ msgid "Sales Orders"
 msgstr "판매 주문"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "결제 조건"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1844,6 +1847,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1982,6 +1990,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "결제 조건"
@@ -2255,6 +2264,9 @@ msgstr "베송에 기초한 인보이스"
 #~ msgid "One procurement for each product."
 #~ msgstr "각 상품 별 하나의 조달"
 
+#~ msgid "Sale Pricelists"
+#~ msgstr "판매 가격리스트"
+
 #~ msgid "Make Invoice"
 #~ msgstr "인보이스 만들기"
 
@@ -2342,6 +2354,9 @@ msgstr "베송에 기초한 인보이스"
 #~ "디폴트로, 시스템은 귀하의 창고와 파트너 위치에 있는 상품들의 복잡한 라우팅과 결오를 관리할 수 있습니다. 이것은 작업자의 한 두 가지 "
 #~ "오퍼레이션을 통해 고객에게 상품을 전달할 가장 일반적이고 간편한 방식을 구성하게 됩니다."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "구매 가격리스트"
+
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "판매 주문을 위한 피킹 정책 구성"
 
@@ -2357,6 +2372,9 @@ msgstr "베송에 기초한 인보이스"
 #~ msgid "Invoice Corrected"
 #~ msgstr "교정된 인보이스"
 
+#~ msgid "Payment Terms"
+#~ msgstr "결제 조건"
+
 #~ msgid "My Sales Order"
 #~ msgstr "내 판매 주문"
 
@@ -2371,6 +2389,9 @@ msgstr "베송에 기초한 인보이스"
 
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Advance Invoice 생성"
+
+#~ msgid "Our Salesman"
+#~ msgstr "우리 판매사원"
 
 #~ msgid "Dashboard for sales"
 #~ msgstr "판매 대시보드"
