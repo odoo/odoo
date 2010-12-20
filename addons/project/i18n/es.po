@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-05 00:10+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 11:11+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -108,7 +108,7 @@ msgstr "Tarea '%s' cerrada"
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
-"¡Error! Fecha de inicio del proyecto debe ser inferior que la fecha final "
+"¡Error! La fecha de inicio del proyecto debe ser anterior a la fecha final "
 "del proyecto."
 
 #. module: project
@@ -358,6 +358,11 @@ msgid "Mail Header"
 msgstr "Cabecera correo"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Tarea realizada"
@@ -432,9 +437,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr "Tiempo estimado para que el usuario delegado cierre esta tarea."
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Trabajo realizado"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Reactivar proyecto"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -490,7 +495,7 @@ msgstr "Empresa"
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "¡Error! No puede crear menús recursivos."
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -558,7 +563,7 @@ msgstr "Mis proyectos"
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: project
 #: view:project.task:0
@@ -783,6 +788,13 @@ msgid "New title of the task delegated to the user"
 msgstr "Nuevo título de la tarea delegada al usuario."
 
 #. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr "Proyecto - Horas planificadas y totales"
@@ -864,9 +876,9 @@ msgid "Project Management"
 msgstr "Proyectos"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso configuración"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -988,9 +1000,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr "Indica el orden de secuencia cuando se muestra una lista de tareas."
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Avisar empresa"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1046,7 +1066,7 @@ msgstr "Tareas de proyecto"
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivos."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1105,9 +1125,9 @@ msgid "Stages"
 msgstr "Etapas"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "Agosto"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1123,6 +1143,11 @@ msgid ""
 msgstr ""
 "Nuevo estado de su propia tarea. En estado Pendiente se volverá a abrir "
 "automáticamente cuando la tarea delegada se cierra."
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Avisar empresa"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1212,6 +1237,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar el proyecto sin eliminarlo."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1263,9 +1289,9 @@ msgid "User's projects"
 msgstr "Proyectos del usuario"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Reactivar proyecto"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progreso configuración"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1562,24 +1588,6 @@ msgid "Bill Time on Tasks"
 msgstr "Facturar tiempo en tareas"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"resources assigned on it. A project can be put into a hierarchy, as a child "
-"of a Parent Project. This allows you to  design large project structure with "
-"different phases spread over the project duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on."
-msgstr ""
-"Un proyecto contiene un conjunto de tareas o cuestiones que se llevará a "
-"cabo por los recursos asignados en él. Un proyecto puede ser puesto en una "
-"jerarquía, como un hijo del padre del proyecto. Esto le permite diseñar la "
-"estructura del proyecto grande con las diferentes fases repartidas en el "
-"ciclo de duración del proyecto. Cada usuario puede configurar su proyecto de "
-"forma predeterminada en sus propias preferencias, con el fin de filtrar de "
-"forma automática las tareas o temas que normalmente trabaja."
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr "Mis horas restantes por proyecto"
@@ -1633,6 +1641,7 @@ msgstr "Tarea: %(name)s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Configuración aplicaciones de proyectos"
 
@@ -1782,7 +1791,7 @@ msgstr "Unidad de tiempo proyecto"
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Horas consumidas"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1854,6 +1863,11 @@ msgstr "Estado de validación"
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Tarea '%s' cancelada"
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Trabajo realizado"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -2348,3 +2362,19 @@ msgstr "Presupuestos"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
+
+#~ msgid ""
+#~ "A project contains a set of tasks or issues that will be performed by your "
+#~ "resources assigned on it. A project can be put into a hierarchy, as a child "
+#~ "of a Parent Project. This allows you to  design large project structure with "
+#~ "different phases spread over the project duration cycle. Each user can set "
+#~ "his default project in his own preferences, in order to filter automatically "
+#~ "the tasks or issues he usually works on."
+#~ msgstr ""
+#~ "Un proyecto contiene un conjunto de tareas o cuestiones que se llevará a "
+#~ "cabo por los recursos asignados en él. Un proyecto puede ser puesto en una "
+#~ "jerarquía, como un hijo del padre del proyecto. Esto le permite diseñar la "
+#~ "estructura del proyecto grande con las diferentes fases repartidas en el "
+#~ "ciclo de duración del proyecto. Cada usuario puede configurar su proyecto de "
+#~ "forma predeterminada en sus propias preferencias, con el fin de filtrar de "
+#~ "forma automática las tareas o temas que normalmente trabaja."

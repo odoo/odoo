@@ -24,7 +24,7 @@ from osv import fields
 
 class calendar_event_edit_all(osv.osv_memory):
 
-    def _default_values(self, cr, uid, context={}):
+    def _default_values(self, cr, uid, context=None):
         """ Get Default value for Start Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -42,7 +42,7 @@ class calendar_event_edit_all(osv.osv_memory):
                 event = model_obj.read(cr, uid, context_id, ['name', 'location', 'alarm_id'])
                 return event['date']
 
-    def _default_deadline(self, cr, uid, context={}):
+    def _default_deadline(self, cr, uid, context=None):
         """ Get Default value for End Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -69,7 +69,7 @@ class calendar_event_edit_all(osv.osv_memory):
         @param ids: List of calendar event edit all’s IDs
         @return: dictionary {}
         """
-        if not context:
+        if context is None:
             context = {}
 
         context_id = context and context.get('active_id', False) or False

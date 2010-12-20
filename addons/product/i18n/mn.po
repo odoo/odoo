@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-25 19:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -28,9 +28,7 @@ msgid "Number of Layers"
 msgstr "Давхаргын тоо"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -46,11 +44,6 @@ msgid ""
 msgstr ""
 "Уг дүрэм нь зөвхөн сонгосон барааны загварт үйлчилнэ. Харин хоосон орхивол "
 "бүх загварт үйлчилнэ"
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -216,11 +209,6 @@ msgstr "Хэмжих нэгж"
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "Ширхэг"
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Модулын сертификат ID давхардах ёсгүй !"
 
 #. module: product
 #: view:product.template:0
@@ -389,6 +377,7 @@ msgstr "Уг ангилалын язгуур хэмжигдэхүүн"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Борлуулах үнэ"
 
@@ -401,11 +390,6 @@ msgstr "Тоо хэмжээ-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr "IT эд ангиуд"
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Группын нэр давхардах ёсгүй !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -512,6 +496,13 @@ msgid "Working Time"
 msgstr "Ажлын цаг"
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr "Төмөр Тах"
@@ -593,6 +584,7 @@ msgid "Restaurant Expenses"
 msgstr "Рестораны Зардал"
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Алдаа: Буруу зураасан код"
@@ -662,14 +654,6 @@ msgstr "Kit гар + Хулгана"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Үнийн нэр"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-"Үнийн хүснэгтийг идэвхигүй болговол энэ үнийн хүснэгт хэрэглэгдэхгүй."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -803,11 +787,6 @@ msgstr ""
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Гал Тогооны Зохиомжийн Төсөл"
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -1036,11 +1015,6 @@ msgid "Price List Items"
 msgstr "Үнийн дүрмүүд"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "Энэ цэсний богино холбоос байна!"
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Сурвалж хэм.нэгж-с их/том"
@@ -1099,14 +1073,14 @@ msgid "Stockable"
 msgstr "Агуулж болох"
 
 #. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr "Модон Тотго 4м"
+
+#. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
 msgstr "кг"
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
@@ -1254,9 +1228,9 @@ msgid "Partners"
 msgstr "Харилцагч"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Модулийн нэр давхардах ёсгүй !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1287,9 +1261,10 @@ msgid "Second UoM"
 msgstr "Хоёрдогч нэгж"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr "Модон Тотго 4м"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1391,6 +1366,14 @@ msgid "Regular processor config"
 msgstr "Энгийн процессор"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr "Эхлэх огноо"
@@ -1422,6 +1405,13 @@ msgid "Basic PC"
 msgstr "Үндсэн PC"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Бодит үлдэгдэл"
@@ -1444,9 +1434,14 @@ msgstr ""
 "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа ! Та рекурсив цэс үүсгэх боломгүй."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Тоймлох нарийвчлал"
 
 #. module: product
 #: view:product.uom:0
@@ -1567,11 +1562,6 @@ msgid "Onsite Intervention"
 msgstr "Орон нутгийн оролцоо"
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr "Нийтийн үнийн жагсаалт"
@@ -1585,14 +1575,6 @@ msgstr "Сурталчилж болох Бараа"
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
 msgstr "Нийлүүлэгчийн барааны код"
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй !"
 
 #. module: product
 #: view:product.product:0
@@ -1719,11 +1701,6 @@ msgid "Company"
 msgstr "Компани"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Зарах үнэ"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Үнийн төрөл"
@@ -1848,11 +1825,6 @@ msgid "Supplier Product UoM."
 msgstr "Нийлүүлэгчийн үнийн саналын хэмжих нэгж"
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Тоймлох нарийвчлал"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1911,13 +1883,6 @@ msgstr "Идэвхигүй хэмжих нэгжийг хэрэглэх боло
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Нийлүүлэлтийн урьтал хугацаа"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr "Идэвхигүй бараа бүтээгдэхүүнийг хэрэглэх боломжгүй болно."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2028,6 +1993,11 @@ msgstr "Иж бүрэн PC"
 #: view:product.template:0
 msgid "Weigths"
 msgstr "Жин"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2148,11 +2118,6 @@ msgid "RAM on demand"
 msgstr "RAM on demand"
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "Борлуулалтын хэрэглэгдэхүүн"
@@ -2266,11 +2231,6 @@ msgid "Palletization"
 msgstr "Палетжуулах"
 
 #. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr "Бүх хэрэглээнд зөвхөн нэг утга хэрэглэгдэнэ!"
-
-#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Дуусах хугацаа"
@@ -2353,6 +2313,41 @@ msgstr ""
 "Уг дүрэм нь сонгосон ангилалын бараануудад үйлчилнэ. Хоосон орхивол бүх "
 "бараанд үйлчилнэ."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "Энэ цэсний богино холбоос байна!"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Үнийн хүснэгтийг идэвхигүй болговол энэ үнийн хүснэгт хэрэглэгдэхгүй."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the product "
+#~ "without removing it."
+#~ msgstr "Идэвхигүй бараа бүтээгдэхүүнийг хэрэглэх боломжгүй болно."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа ! Та рекурсив цэс үүсгэх боломгүй."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Модулийн нэр давхардах ёсгүй !"
+
+#~ msgid "List Price"
+#~ msgstr "Зарах үнэ"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Модулын сертификат ID давхардах ёсгүй !"
+
 #, python-format
 #~ msgid ""
 #~ "Could not resolve product category, ' \\n                                    "
@@ -2362,6 +2357,15 @@ msgstr ""
 #~ "Барааны ангилалыг хэрэглэх боломжгүй, ' \\n'Учир нь рекурсив хэлбэрийн "
 #~ "ангилал тодорхойлсон байна'"
 
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Группын нэр давхардах ёсгүй !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй !"
+
 #, python-format
 #~ msgid ""
 #~ "No active version for the selected pricelist !\n"
@@ -2369,3 +2373,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Сонгосон хүснэгтэд идэвхитэй үнийн хувилбар алга !\n"
 #~ "' \\n                                'Идэвхитэй хувилбар үүсгэн үү!"
+
+#~ msgid "Only one value can be defined for each given usage!"
+#~ msgstr "Бүх хэрэглээнд зөвхөн нэг утга хэрэглэгдэнэ!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"

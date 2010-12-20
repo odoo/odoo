@@ -6,25 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 00:58+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:19+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
 msgid "Title"
 msgstr "Títol"
-
-#. module: base_contact
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -44,6 +39,11 @@ msgstr ""
 #. module: base_contact
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
+msgstr ""
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
 msgstr ""
 
 #. module: base_contact
@@ -117,14 +117,16 @@ msgid "Partners"
 msgstr "Empreses"
 
 #. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Funció a l'empresa"
-
-#. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
 msgstr "Estat"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -153,11 +155,6 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
-
-#. module: base_contact
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -202,6 +199,11 @@ msgid "Function to address"
 msgstr "Càrrec a adreça"
 
 #. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.contact,name:0
 msgid "Last Name"
 msgstr "Cognoms"
@@ -226,6 +228,11 @@ msgstr "Anterior"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
+msgstr ""
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
 msgstr ""
 
 #. module: base_contact
@@ -266,17 +273,9 @@ msgid "Address which is linked to the Partner"
 msgstr ""
 
 #. module: base_contact
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_contact
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
+#: field:res.partner.job,function:0
+msgid "Partner Function"
+msgstr "Funció a l'empresa"
 
 #. module: base_contact
 #: help:res.partner.job,other:0
@@ -294,8 +293,8 @@ msgid "Otherwise these details will not be visible from address/contact."
 msgstr ""
 
 #. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
+#: view:base.contact.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: base_contact
@@ -307,13 +306,6 @@ msgstr "Email"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to true,                 it will allow you to "
-"hide the partner contact without removing it."
 msgstr ""
 
 #. module: base_contact
@@ -454,6 +446,11 @@ msgid "Name"
 msgstr ""
 
 #. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
 msgstr "Empleat principal"
@@ -495,6 +492,12 @@ msgstr ""
 #~ msgstr "res.partner.contacte"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
+#~ msgid ""
 #~ "Order of importance of this job title in the list of job title of the linked "
 #~ "partner"
 #~ msgstr ""
@@ -508,6 +511,9 @@ msgstr ""
 #~ "﻿Ordre d'importància d'aquesta adreça en la llista d'adreces del contacte "
 #~ "relacionat"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
 #~ msgid "Base Contact Process"
 #~ msgstr "Procés contacte base"
 
@@ -516,3 +522,6 @@ msgstr ""
 
 #~ msgid "General Information"
 #~ msgstr "Informació general"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-01 09:32+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,21 +15,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Zwischensumme"
-
-#. module: sale_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten."
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -45,11 +37,6 @@ msgstr "Rabatt (%)"
 #: selection:sale.order.line,layout_type:0
 msgid "Note"
 msgstr "Notiz"
-
-#. module: sale_layout
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -85,16 +72,6 @@ msgstr "Verkaufsauftragsposition"
 #: view:sale.order:0
 msgid "Seq."
 msgstr "Seq."
-
-#. module: sale_layout
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
-msgstr "ME"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -162,19 +139,14 @@ msgid "Sale Order Layout"
 msgstr "Verkaufsauftrag Layout"
 
 #. module: sale_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML-Code für diese Ansicht!"
-
-#. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
 msgid "Sale Order"
 msgstr "Verkaufsauftrag"
 
 #. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Seitenwechsel"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Fax:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -272,14 +244,14 @@ msgid "Extra Info"
 msgstr "Zusatzinfo"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Taxes :"
-msgstr "Umsatzsteuer:"
+#: view:sale.order:0
+msgid "UoM"
+msgstr "ME"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Fax:"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Seitenwechsel"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -292,9 +264,9 @@ msgid "Price"
 msgstr "Preis"
 
 #. module: sale_layout
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: report:sale.order.layout:0
+msgid "Taxes :"
+msgstr "Umsatzsteuer:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -303,3 +275,21 @@ msgstr "Lieferaufträge"
 
 #~ msgid "sale_layout"
 #~ msgstr "sale_layout"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

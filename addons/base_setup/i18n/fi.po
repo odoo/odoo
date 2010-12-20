@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 03:47+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -23,15 +23,9 @@ msgid "City"
 msgstr "Kaupunki"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Asenna"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -39,9 +33,9 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Yrityksen nimi"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -98,10 +92,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
 msgstr ""
 
 #. module: base_setup
@@ -149,6 +142,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr ""
@@ -164,14 +164,16 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.installer:0
-msgid "title"
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Käytä suoraan"
+#: view:base.setup.installer:0
+msgid "title"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
@@ -193,11 +195,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Yrityksen nimi"
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
 msgstr ""
 
 #. module: base_setup
@@ -215,13 +219,8 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
 
 #. module: base_setup
@@ -290,6 +289,14 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr ""
@@ -298,6 +305,14 @@ msgstr ""
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -418,8 +433,8 @@ msgid "Street"
 msgstr "Katuosoite"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -428,6 +443,7 @@ msgid "Example: http://openerp.com"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr ""
@@ -464,12 +480,6 @@ msgstr ""
 msgid "base.setup.config"
 msgstr ""
 
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr ""
-
 #~ msgid "Next"
 #~ msgstr "Seuraava"
 
@@ -493,9 +503,6 @@ msgstr ""
 
 #~ msgid "Define Main Company"
 #~ msgstr "Määritä pääyritys"
-
-#~ msgid "Install"
-#~ msgstr "Asenna"
 
 #~ msgid "Summary"
 #~ msgstr "Yhteenveto"
@@ -535,6 +542,9 @@ msgstr ""
 
 #~ msgid "Installation Done"
 #~ msgstr "Asennus valmis"
+
+#~ msgid "Use Directly"
+#~ msgstr "Käytä suoraan"
 
 #~ msgid "Your new database is now fully installed."
 #~ msgstr "Uusi tietokanta on nyt kokonaan asennettu."

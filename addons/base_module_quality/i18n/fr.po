@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-04 09:48+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-18 20:34+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -34,12 +34,12 @@ msgstr "Erreur de programmation"
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Method Test"
-msgstr ""
+msgstr "Test de méthode"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
 msgid "Base module quality - To check the quality of other modules"
-msgstr ""
+msgstr "Module de base Qualité - pour vérifier la qualité des autres modules"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
@@ -48,6 +48,9 @@ msgid ""
 "\n"
 "Test checks for fields, views, security rules, dependancy level\n"
 msgstr ""
+"\n"
+"Le test vérifie les champs, les vues, les règles de sécurité, le niveau de "
+"dépendance\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -102,6 +105,8 @@ msgid ""
 "This test checks if the module satisfies the current coding standard used by "
 "OpenERP."
 msgstr ""
+"Ce test vérifie que le module suit les conventions de programmation "
+"actuelles d'OpenERP."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
@@ -113,7 +118,7 @@ msgstr "Pas de rapport à enregistrer !"
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of dependancy in %"
-msgstr ""
+msgstr "Résulats de dépendance en %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -121,6 +126,8 @@ msgid ""
 "The test will be completed only if the module is installed or if the test "
 "may be processed on uninstalled module."
 msgstr ""
+"Le test sera complet uniquement si le module est installé, ou si le test "
+"peut être effectué sur un module non installé."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -132,7 +139,7 @@ msgstr "Résultat (/10)"
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Terp Test"
-msgstr ""
+msgstr "Test Terp"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
@@ -150,13 +157,13 @@ msgstr "Enregistrer le rapport"
 #: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
 #, python-format
 msgid "Quality Check"
-msgstr ""
+msgstr "Contrôle qualité"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "Pas efficace"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
@@ -202,7 +209,7 @@ msgstr "Pondération"
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of Security in %"
-msgstr ""
+msgstr "Résultat de sécurité en %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -210,6 +217,8 @@ msgid ""
 "Some tests are more critical than others, so they have a bigger weight in "
 "the computation of final rating"
 msgstr ""
+"Certains tests sont plus importants que d'autres, ils ont donc un poids plus "
+"important dans le calcul de l'évaluation finale"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -252,6 +261,10 @@ msgid ""
 "This test checks where object has workflow or not on it if there is a state "
 "field and several buttons on it and also checks validity of workflow xml file"
 msgstr ""
+"Ce module vérifie si les opérations concernant un objet doivent suivre un "
+"déroulement précis, si l'objet possède un champ \"état\" et plusieurs "
+"boutons, et il vérifie aussi la validité du fichier XML du déroulement des "
+"opérations."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -262,7 +275,7 @@ msgstr "Résultat en %"
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
 msgid "Standard entries"
-msgstr ""
+msgstr "Entrées standards"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
@@ -303,6 +316,9 @@ msgid ""
 "wished.\n"
 "</html>"
 msgstr ""
+"<html>O(1) signifie que le nombre de requêtes SQL pour lire l'objet ne "
+"dépend pas du nombre d'objet que nous sommes en train de lire. Cette "
+"fonctionnalité est très demandée. </html>"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
@@ -331,12 +347,16 @@ msgid ""
 "needed in order to run it.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce test vérifie la vitesse du module. Notez qu'il est nécessaire d'avoir au "
+"moins 5 données de démonstration pour pouvoir le lancer.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Unable to parse the result. Check the details."
-msgstr ""
+msgstr "Impossible d'analyser le résultat. Consultez les détails."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -345,6 +365,8 @@ msgid ""
 "\n"
 "This test checks if the module satisfy tiny structure\n"
 msgstr ""
+"\n"
+"Ce tests vérifie si le module correspond à la structure \"tiny\"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -398,13 +420,13 @@ msgstr "N"
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
 msgid "Report Save"
-msgstr ""
+msgstr "Enregistrement de rapport"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Feedback about structure of module"
-msgstr ""
+msgstr "Retour d'information sur la structure du module"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -425,18 +447,22 @@ msgid ""
 "of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
 " "
 msgstr ""
+"Ce test utilise Pylint et vérifie si le module correspond aux standards de "
+"développement de Python. Visitez http://www.logilab.org/project/name/pylint "
+"pour de plus amples informations.\n"
+" "
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Feed back About Workflow of Module"
-msgstr ""
+msgstr "Retour d'information sur le déroulement des opérations du module"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "No Workflow define"
-msgstr ""
+msgstr "Pas de déroulement d'opérations défini"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -451,7 +477,7 @@ msgstr "Annuler"
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
-msgstr "Final Score (%)"
+msgstr "Score final (%)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -459,23 +485,25 @@ msgstr "Final Score (%)"
 msgid ""
 "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
+"Erreur. Pylint est-il correctement installé ? "
+"(http://pypi.python.org/pypi/pylint)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Efficient"
-msgstr ""
+msgstr "Efficace"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
 msgid "Rated Module"
-msgstr ""
+msgstr "Module noté"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Workflow Test"
-msgstr ""
+msgstr "Test du déroulement des opérations"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
@@ -486,6 +514,10 @@ msgid ""
 "'unit_test/test.py' is needed in module.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce test vérifie les tests unitaires (Pyunit) du module. Notez que le fichier "
+"'unit_test/test.py' doit être présent dans le module.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
@@ -495,6 +527,9 @@ msgid ""
 "This test checks if the module classes are raising exception when calling "
 "basic methods or not.\n"
 msgstr ""
+"\n"
+"Ce test vérifie si les classes du module remontent ou non une exception "
+"quand on appelle une méthode basique.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -505,7 +540,7 @@ msgstr "Détails"
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Warning! Not enough demo data"
-msgstr ""
+msgstr "Avertissement ! Pas assez de données de démonstration"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -567,6 +602,24 @@ msgid ""
 "using it, otherwise it may crash.\n"
 "    "
 msgstr ""
+"\n"
+"Le but de ce module est de vérifier la qualité des autres modules.\n"
+"\n"
+"Il ajoute un assistant sur la liste des modules dans OpenERP, qui vous "
+"permet de\n"
+"les évaluer à partir de différents critères comme : les respect des normes "
+"de développement\n"
+"d'OpenERP, la vitesse d'exécution...\n"
+"\n"
+"Ce module fournit également un cadre de travail générique pour définir vos "
+"propres tests de qualité.\n"
+"Pour plus d'informations, les développeurs peuvent regarder le fichier "
+"base_module_quality/README.txt\n"
+"\n"
+"AVERTISSEMENT : Ce module ne fonctionne pas comme un fichier ZIP, vous devez "
+"le décompresser avant\n"
+"de l'utiliser, sinon il plante.\n"
+"    "
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -583,23 +636,23 @@ msgstr "Nom"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Result of views in %"
-msgstr ""
+msgstr "Résultat des vues en %"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
 msgid "Score (%)"
-msgstr ""
+msgstr "Score (%)"
 
 #. module: base_module_quality
 #: help:quality_detail_save,init,name:0
 msgid "Save report as .html format"
-msgstr ""
+msgstr "Sauvegarder le rapport au format HTML"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "The module has to be installed before running this test."
-msgstr ""
+msgstr "Le module doit être installé avant d'effectuer ce test."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -611,7 +664,7 @@ msgstr "O(1)"
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of fields in %"
-msgstr ""
+msgstr "Résultat des champs en %"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
@@ -649,4 +702,4 @@ msgstr "Qualité"
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Feed back About terp file of Module"
-msgstr ""
+msgstr "Retour d'information sur le fichier terp du module"

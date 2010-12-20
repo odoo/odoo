@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-09-19 00:01+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:38+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -32,22 +32,14 @@ msgid "Trial Period"
 msgstr ""
 
 #. module: hr_contract
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
 msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: hr_contract
 #: view:hr.employee:0
-msgid "Calculations"
+msgid "Function Arguments"
 msgstr ""
-
-#. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "Neto"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -60,9 +52,9 @@ msgid "Company Vehicle"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr ""
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Nombre tipo de salario"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -75,13 +67,13 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor para el costo de hora"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -90,8 +82,8 @@ msgid "Wage Types"
 msgstr "Tipos de salario"
 
 #. module: hr_contract
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:hr.employee:0
+msgid "Calculations"
 msgstr ""
 
 #. module: hr_contract
@@ -107,14 +99,15 @@ msgid "Employee"
 msgstr "Empleado"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: selection:hr.contract.wage.type,type:0
+msgid "Net"
+msgstr "Neto"
 
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
@@ -132,14 +125,15 @@ msgid "Function"
 msgstr "Función"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Salario"
+#: view:hr.employee:0
+msgid "Description"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -159,12 +153,6 @@ msgstr "Contratos"
 #. module: hr_contract
 #: field:hr.employee,manager:0
 msgid "Is a Manager"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
@@ -234,8 +222,8 @@ msgid "Search Wage Type"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_contract
@@ -244,9 +232,9 @@ msgid "End Date"
 msgstr "Fecha final"
 
 #. module: hr_contract
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Salario"
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -264,6 +252,12 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "Notas"
+
+#. module: hr_contract
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,wage_type_id:0
@@ -350,10 +344,9 @@ msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Factor para el costo de hora"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -361,14 +354,9 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
+#: view:hr.employee:0
+msgid "Payslip Line"
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Nombre tipo de salario"
 
 #. module: hr_contract
 #: view:hr.employee:0

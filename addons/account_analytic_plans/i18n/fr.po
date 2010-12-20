@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-04 09:59+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-16 17:59+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -102,7 +102,7 @@ msgstr "Identifiant du Plan"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Le nom du journal doit être unique dans chaque société !"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -207,7 +207,7 @@ msgstr "Entrées par défaut"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Impossible de créer une ligne de transfert sur un compte clos"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -252,7 +252,7 @@ msgstr "Maximum Permis (%)"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "La société doit être la même pour les comptes et périodes liées."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
@@ -286,6 +286,8 @@ msgstr "Ok"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Vous ne pouvez pas créer de lignes d'écriture sur un compte client "
+"débiteur/fournisseur créditeur sans partenaire"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
@@ -336,7 +338,7 @@ msgstr "Imprimer l'analytique croisé"
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -513,7 +515,7 @@ msgstr "Facture"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Le code du journal doit être unique dans chaque société !"
 
 #. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
@@ -530,6 +532,7 @@ msgstr "Date de début"
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr ""
+"Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -545,12 +548,6 @@ msgstr "Société"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "From Date"
 msgstr "Depuis la date"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-#~ "spéciaux !"
 
 #~ msgid "Select Information"
 #~ msgstr "Sélectionner l'information"
@@ -645,3 +642,9 @@ msgstr "Depuis la date"
 #~ "analytiques\n"
 #~ "pour une entrée de compte.\n"
 #~ "        "
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Erreur: la référence BVR est requise."

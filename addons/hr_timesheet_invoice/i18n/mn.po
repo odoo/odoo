@@ -16,14 +16,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-25 19:13+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
@@ -170,19 +170,6 @@ msgid "Random Timesheets Lines"
 msgstr "Гэнэтийн цаг бүртгэлийн мөрүүд"
 
 #. module: hr_timesheet_invoice
-#: view:random.timesheet.lines:0
-#: field:random.timesheet.lines,user_id:0
-#: field:report.random.timesheet,user_id:0
-#: view:report.timesheet.line:0
-#: field:report.timesheet.line,user_id:0
-#: field:report_timesheet.account,user_id:0
-#: field:report_timesheet.account.date,user_id:0
-#: field:report_timesheet.invoice,user_id:0
-#: field:report_timesheet.user,user_id:0
-msgid "User"
-msgstr "Хэрэглэгч"
-
-#. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
 msgstr "Төсөл"
@@ -197,6 +184,11 @@ msgstr "Борлуулалтын үнийн жагсаалт"
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
 msgstr "Дүн"
+
+#. module: hr_timesheet_invoice
+#: view:board.board:0
+msgid "Uninvoice Lines With Billing Rate"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -288,6 +280,11 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: hr_timesheet_invoice
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
 msgid "The time of each work done will be displayed on the invoice"
 msgstr "Хийсэн ажилд зарцуулсан хугацааг нэхэмжлэл дээр харуулна"
@@ -313,11 +310,6 @@ msgid "Final Invoice"
 msgstr "Эцсийн нэхэмжлэл"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Дэлгэцийн үйлдлийн тодорхойлолтод моделийн нэр буруу байна."
-
-#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "Нэхэмжлэлүүдийн мөр бүрийг нарийвчлан харахыг хүсэж байна уу ?"
@@ -334,11 +326,6 @@ msgstr "Нэхэмжлэх үнийн дүн"
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
 msgstr "Аналитик данс"
-
-#. module: hr_timesheet_invoice
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -380,11 +367,6 @@ msgstr ""
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
 msgstr "Нэр"
-
-#. module: hr_timesheet_invoice
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
@@ -450,11 +432,6 @@ msgstr "Гэнэтийн цаг бүртгэлийн тайлан"
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Printing date"
 msgstr "Хэвлэсэн огноо"
-
-#. module: hr_timesheet_invoice
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -546,9 +523,17 @@ msgid "Currency"
 msgstr "Валют"
 
 #. module: hr_timesheet_invoice
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,user_id:0
+#: field:report.random.timesheet,user_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
+#: field:report_timesheet.account,user_id:0
+#: field:report_timesheet.account.date,user_id:0
+#: field:report_timesheet.invoice,user_id:0
+#: field:report_timesheet.user,user_id:0
+msgid "User"
+msgstr "Хэрэглэгч"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -586,9 +571,9 @@ msgid "Invoice rate by user"
 msgstr "Хэрэглэгчээр харах нэхэмжлэлийн харьцаа"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Цаг бүртгэлийг дансаар харах"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
@@ -866,19 +851,6 @@ msgstr ""
 "%s"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
-msgstr "Цаг бүртгэлийг дансаар харах"
-
-#. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
 msgstr "Үйлчлүүлэгчийн шошго"
@@ -962,7 +934,6 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: hr_timesheet_invoice
-#: view:board.board:0
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
 msgid "Uninvoice lines with billing rate"
 msgstr "Тооцооны үнэ бүхий нэхэмжлээгүй мөрүүд"
@@ -1152,6 +1123,9 @@ msgstr "Өртөг"
 msgid "Search Timesheet Lines"
 msgstr "Цаг бүртгэлийн мөрийг хайх"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Дэлгэцийн үйлдлийн тодорхойлолтод моделийн нэр буруу байна."
+
 #, python-format
 #~ msgid ""
 #~ "Please fill in the partner and pricelist field '\n"
@@ -1160,3 +1134,15 @@ msgstr "Цаг бүртгэлийн мөрийг хайх"
 #~ msgstr ""
 #~ "Дараах аналитик данс дээрх харилцагч, үнийн саналыг бөглөнө үү! \n"
 #~ "%s"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"

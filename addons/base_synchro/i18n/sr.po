@@ -7,37 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-13 08:31+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-14 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_view_base_synchro
 msgid "Base Synchronization"
 msgstr "Sinhronizacija Baze"
-
-#. module: base_synchro
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere!"
-
-#. module: base_synchro
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcije."
-
-#. module: base_synchro
-#: field:base.synchro,user_id:0
-msgid "Send Result To"
-msgstr "Posalji rezultat"
 
 #. module: base_synchro
 #: field:base.synchro.server,server_db:0
@@ -61,9 +44,9 @@ msgid "Latest Synchronization"
 msgstr "Poslednja Sinhronizacija"
 
 #. module: base_synchro
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Gredka ! Ne mozes kreirati rekursivni meni."
+#: field:base.synchro,user_id:0
+msgid "Send Result To"
+msgstr "Posalji rezultat"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj_avoid
@@ -152,11 +135,6 @@ msgid "Both"
 msgstr "Oba"
 
 #. module: base_synchro
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za Pregled arhitekture"
-
-#. module: base_synchro
 #: field:base.synchro.obj,name:0
 msgid "Name"
 msgstr "Ime"
@@ -202,8 +180,8 @@ msgstr "Sinhronizacija Baze"
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_base_synchro_server_tree
 #: model:ir.ui.menu,name:base_synchro.synchro_server_tree_menu_id
-msgid "Synchronized Servers"
-msgstr "Sinhronizovani Serveri"
+msgid "Servers to be synchronized"
+msgstr ""
 
 #. module: base_synchro
 #: view:base.synchro.obj:0
@@ -227,6 +205,7 @@ msgstr "Istorija"
 
 #. module: base_synchro
 #: model:ir.ui.menu,name:base_synchro.next_id_62
+#: model:ir.ui.menu,name:base_synchro.synch_config
 msgid "Synchronization"
 msgstr "Sinhronizacija"
 
@@ -303,3 +282,20 @@ msgstr "Download"
 #: field:base.synchro.server,server_url:0
 msgid "Server URL"
 msgstr "URL Servera"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcije."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Gredka ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za Pregled arhitekture"
+
+#~ msgid "Synchronized Servers"
+#~ msgstr "Sinhronizovani Serveri"

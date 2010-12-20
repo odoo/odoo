@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 14:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -23,14 +23,8 @@ msgid "City"
 msgstr "Pilsēta"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:base.setup.installer:0
+msgid "Install"
 msgstr ""
 
 #. module: base_setup
@@ -39,19 +33,14 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Uzņēmuma nosaukums"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Personāla Vadība"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
 msgstr "E-pasts"
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
@@ -175,6 +164,13 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr ""
@@ -182,11 +178,6 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
-msgstr ""
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: base_setup
@@ -204,12 +195,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Uzņēmuma nosaukums"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -231,14 +219,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Personāla Vadība"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -303,6 +286,14 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr ""
@@ -311,6 +302,14 @@ msgstr ""
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logotips"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -425,8 +424,8 @@ msgid "Street"
 msgstr "Iela"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -435,6 +434,7 @@ msgid "Example: http://openerp.com"
 msgstr "Piemērs: http://www.openerp.lv"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr ""
@@ -469,9 +469,4 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""

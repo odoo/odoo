@@ -7,25 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:21+0000\n"
-"Last-Translator: Radoslav Sloboda <rado.sloboda@gmail.com>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-17 22:23+0000\n"
+"Last-Translator: Peter Kohaut <peter.kohaut@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:40+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: board
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  Rok  "
 
 #. module: board
 #: model:ir.model,name:board.model_board_menu_create
 msgid "Menu Create"
-msgstr ""
+msgstr "Vytvoriť menu"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neplatný názov modelu v akcii definície."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Typ poznámky"
 
 #. module: board
 #: view:board.note:0
@@ -36,20 +43,25 @@ msgstr "Autor"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr "Nástenka hlavných modulov"
+msgstr "Nástenka hlavného modulu"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Posledné priraredenia"
 
 #. module: board
 #: code:addons/board/wizard/board_menu_create.py:0
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Používateľská chyba!"
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.open_board_administration_form
 #: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
-msgstr ""
+msgstr "Nástenka správy"
 
 #. module: board
 #: view:board.note:0
@@ -60,41 +72,81 @@ msgstr "Poznámka"
 
 #. module: board
 #: view:board.note:0
+#: view:res.log.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Zoskupiť podľa..."
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
-msgstr ""
+msgstr "Nástenka"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr "Všeobecná týždenná aktivita"
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
-msgstr "Titulok"
+msgstr "Titul"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Názov objektu musí začínať x_ a nesmie obsahovať žiadne špeciálne znaky!"
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr "Počet záznamov"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr ""
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Mesiac"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Otvoriť nástenku"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr "Mesačná aktivita pre každý dokument"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Analýza protokolu"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
 msgstr "Definícia nástenky"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "Marec"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "August"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr "Používateľské prepojenia"
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "Dátum vytvorenia"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -105,14 +157,12 @@ msgstr "Publikovať poznámku"
 #. module: board
 #: view:board.menu.create:0
 msgid "Menu Information"
-msgstr "Informácia ponuky"
+msgstr "Informácie menu"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "Jún"
 
 #. module: board
 #: field:board.note,type:0
@@ -122,7 +172,12 @@ msgstr "Typ poznámky"
 #. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr "Zobrazenie akcií"
+msgstr "Pohľady akcie"
+
+#. module: board
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr "Výkaz protokolu"
 
 #. module: board
 #: view:board.note:0
@@ -131,30 +186,50 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Typ poznámky"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "Júl"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "Rozšírené filtre..."
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr "Deň"
 
 #. module: board
 #: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
-msgstr "Vytvorenie ponuky pre nástenku"
+msgstr "Vytvoriť menu pre nástenku"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neplatný súbor XML pre zobrazenie architektúry!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "Február"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "Október"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
 msgid "Board Line"
-msgstr ""
+msgstr "Riadok nástenky"
 
 #. module: board
 #: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
-msgstr "Rodičovská (základná) ponuka"
+msgstr "Rodičovské menu"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "Január"
 
 #. module: board
 #: view:board.note:0
@@ -162,17 +237,21 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "November"
+
+#. module: board
 #: help:board.board.line,sequence:0
 msgid ""
 "Gives the sequence order                         when displaying a list of "
 "board lines."
-msgstr ""
+msgstr "Nastaví poradie pri zobrazovaní riadkov nástenky"
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:0
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "Apríl"
 
 #. module: board
 #: view:board.board:0
@@ -189,25 +268,30 @@ msgid "Base module for all dashboards."
 msgstr "Základný modul pre všetky nástenky."
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Pozícia"
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr "Akcia"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Otvoriť nástenku"
+#: field:board.board.line,position:0
+msgid "Position"
+msgstr "Umiestnenie"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Model"
+msgstr "Model"
 
 #. module: board
 #: field:board.menu.create,menu_name:0
 msgid "Menu Name"
-msgstr "Názov ponuky"
+msgstr "Meno menu"
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
-msgstr ""
+msgstr "Posledné aktivity"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -217,7 +301,7 @@ msgstr "Vľavo"
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr "Zobraziť panel"
+msgstr "Pohľad nástenky"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -230,15 +314,30 @@ msgid "Width"
 msgstr "Šírka"
 
 #. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr "   Mesiac   "
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
-msgstr "Poradie"
+msgstr "Postupnosť"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "September"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: board
 #: view:board.board:0
 #: view:board.menu.create:0
 msgid "Create Menu"
-msgstr "Vytvorenie ponuky"
+msgstr "Vytvoriť menu"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -248,7 +347,23 @@ msgstr "Výška"
 #. module: board
 #: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
-msgstr "Vytvorenie panela ponuky"
+msgstr "Vytvoriť menu nástenky"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr "Máj"
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Objekt"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr "Rok"
 
 #. module: board
 #: view:board.menu.create:0
@@ -258,13 +373,27 @@ msgstr "Zrušiť"
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
-msgstr "Zobrazenie nástenky"
+msgstr "Pohľad nástenky"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Prosím vložte pohľad(y) nástenky!"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Predmet"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neplatný názov modelu v akcii definície."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Názov objektu musí začínať x_ a nesmie obsahovať žiadne špeciálne znaky!"
 
 #~ msgid "board.board"
 #~ msgstr "board.board"
@@ -274,6 +403,9 @@ msgstr "Predmet"
 
 #~ msgid "board.note"
 #~ msgstr "board.note"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neplatný súbor XML pre zobrazenie architektúry!"
 
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"

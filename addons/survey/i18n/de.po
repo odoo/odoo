@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 07:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 09:18+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -111,9 +111,9 @@ msgid "A Range"
 msgstr "Ein Bereich"
 
 #. module: survey
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: view:survey.response.line:0
+msgid "Table Answer"
+msgstr "Tabelle"
 
 #. module: survey
 #: field:survey.history,date:0
@@ -132,15 +132,13 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)"
 msgstr ""
+"Sie müssen einen oder mehrere Menüpunkte im Zeilenkopf wählen (Leerzeichen "
+"sind nicht erlaubt)"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-#: field:survey.question,descriptive_text:0
-#: selection:survey.question,type:0
-msgid "Descriptive Text"
-msgstr "Beschreibender Text"
+#: field:survey.question.column.heading,in_visible_menu_choice:0
+msgid "Is Menu Choice Invisible??"
+msgstr "Ist die Menüauswahl sichtbar?"
 
 #. module: survey
 #: field:survey.send.invitation,mail:0
@@ -224,11 +222,6 @@ msgstr "survey.name.wiz"
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
 msgstr "Umfrage Fragen"
-
-#. module: survey
-#: view:survey.response.line:0
-msgid "Table Answer"
-msgstr "Tabelle"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -409,6 +402,11 @@ msgid "Text"
 msgstr "Text"
 
 #. module: survey
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: survey
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Letter (8.5\" x 11\")"
@@ -448,14 +446,14 @@ msgid "Late"
 msgstr "Spät"
 
 #. module: survey
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: survey
 #: field:survey.send.invitation,mail_from:0
 msgid "From"
 msgstr "Von"
-
-#. module: survey
-#: selection:survey,state:0
-msgid "Closed"
-msgstr "Abgeschlossen"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -499,12 +497,7 @@ msgstr "Anzahl"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading"
-msgstr ""
-
-#. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+msgstr "Sie müssen eine oder mehrere Menüpunkt im Zeilenkopf auswählen"
 
 #. module: survey
 #: view:survey:0
@@ -554,11 +547,6 @@ msgid "Answer Surveys"
 msgstr "Beantworte Fragen"
 
 #. module: survey
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: survey
 #: selection:survey.response,state:0
 msgid "Not Finished"
 msgstr "Nicht beendet"
@@ -593,7 +581,7 @@ msgstr "Antworten"
 #: code:addons/survey/wizard/survey_answer.py:0
 #, python-format
 msgid "You can not answer because the survey is not open"
-msgstr ""
+msgstr "Sie können nicht antworten da die Umfrage nicht offen ist."
 
 #. module: survey
 #: selection:survey.response,response_type:0
@@ -613,9 +601,13 @@ msgid "Page Nr"
 msgstr "Seitenzahl"
 
 #. module: survey
-#: field:survey.question.column.heading,in_visible_menu_choice:0
-msgid "Is Menu Choice Invisible??"
-msgstr "Ist die Menüauswahl sichtbar?"
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+#: field:survey.question,descriptive_text:0
+#: selection:survey.question,type:0
+msgid "Descriptive Text"
+msgstr "Beschreibender Text"
 
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
@@ -640,11 +632,6 @@ msgstr "Fehlermeldung"
 #, python-format
 msgid "You must enter one or more menu choices in column heading"
 msgstr "Sie müssen einer oder mehrere Menüoptionen in Spalten auswählen"
-
-#. module: survey
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Code für diese Ansicht!"
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -689,7 +676,7 @@ msgstr "Sie müssen einer oder mehr Spaltenüberschriften eingeben."
 #: code:addons/survey/wizard/survey_answer.py:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "Bitte geben Sie einen Integer Wert ein."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_browse_answer
@@ -709,6 +696,8 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
 msgstr ""
+"Die maximale Anzahl benötigter Antworten ist größer als die Anzahl "
+"Antworten. Bitte geben Sie eine Zahl kleiner als %d ein."
 
 #. module: survey
 #: view:survey.request:0
@@ -855,7 +844,7 @@ msgstr "Seitennummer"
 #: code:addons/survey/wizard/survey_answer.py:0
 #, python-format
 msgid "Cannot locate survey for the question wizard!"
-msgstr ""
+msgstr "Kann Umfrage für Fragenassistent nicht finden!"
 
 #. module: survey
 #: view:survey:0
@@ -931,9 +920,9 @@ msgid "survey.print.statistics"
 msgstr ""
 
 #. module: survey
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+#: selection:survey,state:0
+msgid "Closed"
+msgstr "Abgeschlossen"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1026,11 +1015,6 @@ msgstr "Multiple Textbox"
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
 msgstr "Querformat (Horizontal)"
-
-#. module: survey
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
 
 #. module: survey
 #: field:survey.question,no_of_rows:0
@@ -1293,11 +1277,6 @@ msgid "Open"
 msgstr "Öffnen"
 
 #. module: survey
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
 msgstr "Gesamt gestartete Umfragen"
@@ -1312,14 +1291,6 @@ msgstr ""
 "# Erforderliche Antwort die gegeben wurde ist grösser als die Zahl der "
 "vorhandenen Antworten. Bitte geben Sie einen Wert ein, der kleiner ist als "
 "%d."
-
-#. module: survey
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: survey
 #: help:survey,max_response_limit:0
@@ -1397,7 +1368,7 @@ msgstr "Einladung verschicken"
 #: code:addons/survey/wizard/survey_answer.py:0
 #, python-format
 msgid "You cannot select the same answer more than one time"
-msgstr ""
+msgstr "Sie können die selbe Antwort nicht mehr als einmal auswählen."
 
 #. module: survey
 #: view:survey.question:0
@@ -1516,7 +1487,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_answer.py:0
 #, python-format
 msgid "You cannot select same answer more than one time'"
-msgstr ""
+msgstr "Sie können die selbe Antwort nicht mehr als einmal auswählen."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -1768,6 +1739,9 @@ msgstr "Seitenposition"
 #~ msgid "Page :-"
 #~ msgstr "Seite :-"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Code für diese Ansicht!"
+
 #~ msgid "Maximum Response per User"
 #~ msgstr "Maximale Antworten je Benutzer"
 
@@ -1810,6 +1784,12 @@ msgstr "Seitenposition"
 
 #~ msgid "Total Completed Survey :-"
 #~ msgstr "Gesamt abgeschlossene Umfrage :-"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Survey Response"
 #~ msgstr "Umfrage Antwort"
@@ -1860,6 +1840,9 @@ msgstr "Seitenposition"
 #~ "Sie müssen eine oder mehrere Menübeschriftungen  \\n                         "
 #~ "        in der Spaltenüberschrift erfassen"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
 #, python-format
 #~ msgid ""
 #~ "Maximum Required Answer you\\n                                     entered "
@@ -1903,6 +1886,9 @@ msgstr "Seitenposition"
 #~ msgid "You can not give answer for this survey more than %s times"
 #~ msgstr "Sie können nicht häufiger als %s Mal diesen Fragebogen beantworten."
 
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
 #, python-format
 #~ msgid ""
 #~ "Maximum Required Answer is greater \\n                                    "
@@ -1936,3 +1922,9 @@ msgstr "Seitenposition"
 #~ msgstr ""
 #~ "Sie müssen ein oder mehrere Menüs eingeben\\                               "
 #~ "als Auswahl für die Spaltenüberschrift (Leerschritte nicht erlaubt)"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

@@ -85,7 +85,7 @@ class report_webkit_actions(osv.osv_memory):
         
         return res
 
-    def do_action(self, cr, uid, ids, context):
+    def do_action(self, cr, uid, ids, context=None):
         """ This Function Open added Action.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -93,9 +93,11 @@ class report_webkit_actions(osv.osv_memory):
          @param ids: List of report.webkit.actions's ID
          @param context: A standard dictionary 
          @return: Dictionary of ir.values form.
-        """        
+        """
+        if context is None:
+            context = {}        
         report_obj = self.pool.get('ir.actions.report.xml')
-        for current in self.browse(cr, uid, ids):
+        for current in self.browse(cr, uid, ids, context=context):
             report = report_obj.browse(
                                                         cr, 
                                                         uid, 

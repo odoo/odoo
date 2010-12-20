@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 15:39+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 09:44+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_recruitment
@@ -35,7 +34,7 @@ msgstr "Anforderungen"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr "Durch. Zeit b. Eröffn."
+msgstr "Durch. Zeit b. Start"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,nbr:0
@@ -46,11 +45,6 @@ msgstr "# Fälle"
 #: view:hr.applicant:0
 msgid "Group By..."
 msgstr "Gruppierung..."
-
-#. module: hr_recruitment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafter Modellname in der Aktion"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -101,7 +95,7 @@ msgstr "Ziele"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,partner_address_id:0
 msgid "Partner Contact Name"
-msgstr "Partner Kontakt Name"
+msgstr "Partner Kontakt"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -115,11 +109,6 @@ msgstr "Erzeuge Partner"
 #: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Tag"
-
-#. module: hr_recruitment
-#: sql_constraint:crm.case.section:0
-msgid "The code of the sales team must be unique !"
-msgstr "Die Kurzbezeichnung für das Vertriebsteam sollte eindeutig sein !"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -160,7 +149,7 @@ msgstr "Junior Entwickler"
 #: field:hr.applicant,job_id:0
 #: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
-msgstr "Bewerbung"
+msgstr "Arbeitsstelle"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -225,18 +214,12 @@ msgstr "Durch. Gehaltsangebot"
 #: view:hr.applicant:0
 #: field:hr.recruitment.report,available:0
 msgid "Availability"
-msgstr "Verfügbarkeit"
+msgstr "Frühester Beginn"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Previous"
 msgstr "Vorherige"
-
-#. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
-msgid "Closed"
-msgstr "Beendet"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:0
@@ -256,11 +239,6 @@ msgid "Recruitments Statistics"
 msgstr "Personaleinstellungen Statistik"
 
 #. module: hr_recruitment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für Ansicht!"
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Next"
 msgstr "Weiter"
@@ -269,11 +247,6 @@ msgstr "Weiter"
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Description"
 msgstr "Stellenbeschreibung"
-
-#. module: hr_recruitment
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -302,7 +275,7 @@ msgstr "EMail"
 #. module: hr_recruitment
 #: field:hr.applicant,availability:0
 msgid "Availability (Days)"
-msgstr "Verfügbark. (Tage)"
+msgstr "Frühester Beginn in (Tage)"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -415,7 +388,7 @@ msgstr "Bewerber"
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Zeigt Reihenfolge bei Listenansicht"
+msgstr "Zeigt Reihenfolge bei Listenansicht der Einstellungsstufen."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -442,7 +415,7 @@ msgstr "Stufe Personaleinstellung"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 msgid "Stages"
-msgstr "Stufen"
+msgstr "Einstellungsstufen"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -457,7 +430,7 @@ msgstr "Formular Stellenbeschreibung"
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
 msgid "Probability"
-msgstr "Wahrscheinlichk."
+msgstr "Wahrscheinlichkeit"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -513,7 +486,7 @@ msgstr "Kategorie"
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
 msgid "Applicant's Name"
-msgstr "Name d. Bewerbers"
+msgstr "Bewerber"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -529,7 +502,7 @@ msgstr "# Fälle"
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
 msgid "Opened"
-msgstr "Eröffnet"
+msgstr "Start Bearbeitung"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -565,9 +538,10 @@ msgstr ""
 "EMailadressen"
 
 #. module: hr_recruitment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
+msgid "Closed"
+msgstr "Datum Einstellung"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
@@ -582,7 +556,7 @@ msgstr "Antwort"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr "Du. Zeit f. Beend."
+msgstr "Durch. Zeit b. Einstellung"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed:0
@@ -600,7 +574,7 @@ msgstr "Termin"
 #: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
 msgid "Pending"
-msgstr "Unbearbeitet"
+msgstr "In Wartestellung"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -645,7 +619,7 @@ msgstr "Stufen Einstellung"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job7
 msgid "Refused by Company"
-msgstr "Abgesagt d. Untern."
+msgstr "Absage durch Unternehmen"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -686,7 +660,7 @@ msgstr "Rückmeldung"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Licenced"
-msgstr "Abgeschl. Berufsausbildung"
+msgstr "Berufsausbildung"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -773,22 +747,10 @@ msgid "Open"
 msgstr "Offen"
 
 #. module: hr_recruitment
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:0
 #, python-format
 msgid "A partner is already existing with the same name."
 msgstr "Ein Partner mit identischem Namen existiert bereits."
-
-#. module: hr_recruitment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben !"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
@@ -802,14 +764,14 @@ msgstr ""
 #: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
-msgstr "Verantwortlicher"
+msgstr "Verantwortlich"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_report_all
 msgid "Recruitment Analysis"
-msgstr "Analyse Personalbeschaffung"
+msgstr "Statistik Personalbeschaffung"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -860,12 +822,7 @@ msgstr "Mai"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
 msgid "Contract Signed"
-msgstr "Vertrag unterschrieben"
-
-#. module: hr_recruitment
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "Fehler ! Sie können kein rekursives Sales Team haben."
+msgstr "Vertragsunterschrift"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -878,7 +835,7 @@ msgstr "Abgesagt"
 #: code:addons/hr_recruitment/hr_recruitment.py:0
 #, python-format
 msgid "Applicant '%s' is being hired."
-msgstr ""
+msgstr "Bewerber '%s' wird eingestellt."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -891,7 +848,7 @@ msgstr "Eingestellt"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused by Employee"
-msgstr "Abgesagt d. Bewerber"
+msgstr "Absage durch Bewerber"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -908,11 +865,6 @@ msgstr "Ausbildungsabschluss"
 #: view:hr.applicant:0
 msgid "Emails"
 msgstr "EMails"
-
-#. module: hr_recruitment
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -976,3 +928,32 @@ msgstr "Anz. Tg. b. Lösung"
 #: field:hr.job,survey_id:0
 msgid "Survey"
 msgstr "Umfrage"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für Ansicht!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafter Modellname in der Aktion"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "Error ! You cannot create recursive Sales team."
+#~ msgstr "Fehler ! Sie können kein rekursives Sales Team haben."
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "Die Kurzbezeichnung für das Vertriebsteam sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

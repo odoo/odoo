@@ -7,28 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-25 19:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-18 16:58+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Дэд дансууд"
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -38,7 +30,7 @@ msgstr "Дансны нэр"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Тоо ширхэгийг тоолох хэмжээг тооцоолох"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -46,11 +38,8 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
-
-#. module: analytic
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+"Объект шинжилгээний бүртгэлийг тодорхойлох модуль.\n"
+"    "
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -93,11 +82,6 @@ msgid "Pending"
 msgstr "Шийд хүлээсэн"
 
 #. module: analytic
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Аналитик шугам"
@@ -118,11 +102,6 @@ msgstr "Хэвийн"
 #: field:account.analytic.line,company_id:0
 msgid "Company"
 msgstr "Компани"
-
-#. module: analytic
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
@@ -161,11 +140,13 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Бүтээгдэхүүний үнэд өгөгдсөн тоо ширхэгиг үржүүлж тооцоолоогдсон. Үргэлж "
+"компанийн үндсэн мөнгөн тэмдэгтэд илэрхийлэгдсэн."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of quantity of hours."
-msgstr ""
+msgstr "Цагийн тоо хэмжээнд дээд хязгаар тавих"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -193,21 +174,23 @@ msgid "Balance"
 msgstr "Тэнцэл"
 
 #. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
+
+#. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Хэрэв та Харагдацын Төрлийг сонговол, энэ бүртгэлийг ашиглан бүртгэлийн "
+"мэдээлэл оруулах боломжгүй болно."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
 msgstr "Дуусах огноо"
-
-#. module: analytic
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -232,14 +215,9 @@ msgid "View"
 msgstr "Харах"
 
 #. module: analytic
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Харилцагч"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -256,11 +234,6 @@ msgstr "Нээх"
 msgid "Analytic Entries"
 msgstr "Аналитик бичилт"
 
-#. module: analytic
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
 #~ msgid "Currency"
 #~ msgstr "Валют"
 
@@ -269,3 +242,9 @@ msgstr ""
 
 #~ msgid "Associated Partner"
 #~ msgstr "Холбогдох харилцагч"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"

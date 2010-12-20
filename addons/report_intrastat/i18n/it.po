@@ -6,43 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-10-30 13:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
-
-#. module: report_intrastat
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: report_intrastat
 #: report:account.invoice.intrastat:0
-msgid "Canceled Invoice"
-msgstr "Fattura Cancellata"
+msgid "Cancelled Invoice"
+msgstr ""
+
+#. module: report_intrastat
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
 msgid "Disc. (%)"
 msgstr ""
-
-#. module: report_intrastat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -55,8 +47,9 @@ msgid "Unit Price"
 msgstr "Prezzo unitario"
 
 #. module: report_intrastat
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: report_intrastat
@@ -145,11 +138,6 @@ msgid "January"
 msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-msgid "Tax"
-msgstr "Tassa"
-
-#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "July"
 msgstr ""
@@ -198,8 +186,18 @@ msgid "Invoice"
 msgstr "Fattura"
 
 #. module: report_intrastat
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
+msgstr ""
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
 msgstr ""
 
 #. module: report_intrastat
@@ -272,6 +270,11 @@ msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
+msgid "Fiscal Position Remark :"
+msgstr ""
+
+#. module: report_intrastat
+#: report:account.invoice.intrastat:0
 #: field:report.intrastat,weight:0
 msgid "Weight"
 msgstr "Peso"
@@ -292,9 +295,9 @@ msgid "December"
 msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr ""
+#: report:account.invoice.intrastat:0
+msgid "Tax"
+msgstr "Tassa"
 
 #. module: report_intrastat
 #: field:report.intrastat,code:0
@@ -348,14 +351,26 @@ msgstr "Prezzo"
 msgid "Intrastat Code"
 msgstr "Codice Intrastat"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "Intrastat (this month)"
 #~ msgstr "Intrastat (questo mese)"
 
 #~ msgid "All Months"
 #~ msgstr "Tutti i Mesi"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
 #~ msgid "Period"
 #~ msgstr "Periodo"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Fattura Cancellata"
 
 #~ msgid "Origin"
 #~ msgstr "Origine"

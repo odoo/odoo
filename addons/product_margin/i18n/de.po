@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-01 09:32+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -34,9 +34,10 @@ msgid "From"
 msgstr "Von"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+msgstr "Summe Menge x Preis Ausgangsrechnungen"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -44,9 +45,9 @@ msgid "Turnorder - Standard price"
 msgstr "Umsatzpreis- Produktpreis"
 
 #. module: product_margin
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: field:product.margin,to_date:0
+msgid "To"
+msgstr "Bis Datum"
 
 #. module: product_margin
 #: field:product.product,date_to:0
@@ -59,29 +60,10 @@ msgid "From Date"
 msgstr "Von Datum"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Entwurf, Offen und Bezahlt"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
-"Sonderzeichen haben !"
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr "Summe Menge x Preis Ausgangsrechnungen"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -151,16 +133,6 @@ msgstr "Abgerechnet"
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Gesamtkosten"
-
-#. module: product_margin
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -242,11 +214,6 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Summe Marge *100 / Gesamtgewinn"
 
 #. module: product_margin
-#: field:product.margin,to_date:0
-msgid "To"
-msgstr "Bis Datum"
-
-#. module: product_margin
 #: view:product.product:0
 msgid "Analysis Criteria"
 msgstr "Analyse Kriterien"
@@ -275,6 +242,11 @@ msgstr "Produkte Margen"
 #: view:product.margin:0
 msgid "General Information"
 msgstr "Allgemeine Information"
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -307,11 +279,6 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Summe Mengen in Ausgangsrechnungen"
 
 #. module: product_margin
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Produkt Marge"
@@ -321,6 +288,9 @@ msgstr "Produkt Marge"
 
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "Erwartete Verkäufe - Überschüsse"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Erwarteter Verkauf - Normalkosten"
@@ -333,3 +303,24 @@ msgstr "Produkt Marge"
 
 #~ msgid "View Stock of Products"
 #~ msgstr "Ansicht Lagerbestand Produkte"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
+#~ "Sonderzeichen haben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

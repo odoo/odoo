@@ -59,15 +59,17 @@ class XMLRpcConn(object):
     'ArchiveToOpenERP', 'IsCRMInstalled', 'GetPartners', 'GetObjectItems', \
     'CreateCase', 'MakeAttachment', 'CreateContact', 'CreatePartner', 'getitem', 'setitem', \
     'SearchPartnerDetail', 'WritePartnerValues', 'GetAllState', 'GetAllCountry', 'SearchPartner', 'SearchEmailResources', \
-    'GetCountry', 'GetStates', 'FindCountryForState','CreateEmailAttachment']
+    'GetCountry', 'GetStates', 'FindCountryForState','CreateEmailAttachment','SearchPartners']
     _reg_clsctx_ = pythoncom.CLSCTX_INPROC_SERVER
     _reg_clsid_ = "{C6399AFD-763A-400F-8191-7F9D0503CAE2}"
     _reg_progid_ = "Python.OpenERP.XMLRpcConn"
     _reg_policy_spec_ = "win32com.server.policy.EventHandlerPolicy"
-    def __init__(self,server='localhost',port=8069,uri='http://localhost:8069'):
+    def __init__(self,server='localhost',port=8069,uri='http://localhost:8069',webserver='localhost', webport=8080):
         self._server=server
         self._port=port
         self._uri=uri
+        self._webserver=webserver
+        self._webport=webport
         self._obj_list=[]
         self._dbname=''
         self._uname='admin'
@@ -78,6 +80,7 @@ class XMLRpcConn(object):
         self._iscrm=True
         self.partner_id_list=None
         self.protocol=None
+
 
     def getitem(self, attrib):
         v=self.__getattribute__(attrib)
@@ -547,3 +550,14 @@ class XMLRpcConn(object):
         res['res_id'] = obj_id
         id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)
         return id
+
+    def SearchPartners(self):
+        res = []
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        obj = 'res.partner'
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'search',[])
+        recs = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,obj,'read',ids,['id','name'])
+        for rec in recs:
+            name = ustr(rec['name'])
+            res.append((obj,rec['id'],name,obj))
+        return res

@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-26 08:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "ID-ul certificatului trebuie să fie unic !"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -31,32 +26,14 @@ msgstr ""
 "TVA-ul nu pare corect. Ar fi trebuit ca valoarea introdusă sa fie de forma %s"
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
-
-#. module: base_vat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
-
-#. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
 msgstr "TVA de bază - pentru verificarea validității"
 
 #. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Numele modulului trebuie să fie unic !"
-
-#. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Declaraţie de TVA"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -77,9 +54,9 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: base_vat
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Lungimea acestui câmp trebuie să fie cel puţin 1 !"
+#: field:res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "Declaraţie de TVA"
 
 #~ msgid "VAT"
 #~ msgstr "TVA"
@@ -89,3 +66,21 @@ msgstr "Lungimea acestui câmp trebuie să fie cel puţin 1 !"
 #~ msgstr ""
 #~ "Activare cod fiscal pentru TVA partener. Verificare validitate cod fiscal "
 #~ "partener."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+#~ "special !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID-ul certificatului trebuie să fie unic !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Numele modulului trebuie să fie unic !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Lungimea acestui câmp trebuie să fie cel puţin 1 !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-10-12 07:44+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-16 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: resource
@@ -30,13 +30,6 @@ msgstr ""
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Friday"
 msgstr "Vrijdag"
-
-#. module: resource
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
@@ -55,17 +48,13 @@ msgid "Resources Leaves"
 msgstr "Afwezigheid resource"
 
 #. module: resource
+#: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Time"
 msgstr "Gewerkte tijd"
-
-#. module: resource
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -82,11 +71,6 @@ msgstr "Groepeer op.."
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Zondag"
-
-#. module: resource
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: resource
 #: view:resource.resource:0
@@ -110,14 +94,14 @@ msgid "Workgroup manager"
 msgstr "Manager"
 
 #. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Period"
-msgstr "Zoek werkperiode"
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Working time will start from"
+msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
-msgstr "Maandag"
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -149,6 +133,11 @@ msgid "Starting date"
 msgstr "Startdatum"
 
 #. module: resource
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr ""
+
+#. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Reason"
 msgstr ""
@@ -170,6 +159,14 @@ msgid "Search Working Period Leaves"
 msgstr "Zoek afwezigheid werkperiode"
 
 #. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allows you to create and manage resources that should be involved "
+"in a specific project phase. It also allows you to set their efficiency "
+"level and workload based on their weekly working hours"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
 msgstr "Einddatum"
@@ -181,6 +178,7 @@ msgstr "Dagen gesloten"
 
 #. module: resource
 #: model:ir.module.module,shortdesc:resource.module_meta_information
+#: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
@@ -197,22 +195,12 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: resource
-#: help:resource.resource,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-"Als het actief veld is aan staat, kunt u de resource verbergen zonder haar "
-"te verwijderen."
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Woensdag"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
 msgid "Working Period"
 msgstr "Werkperiode"
 
@@ -225,6 +213,13 @@ msgstr "Resource detail"
 #: field:resource.resource,active:0
 msgid "Active"
 msgstr "Actief"
+
+#. module: resource
+#: help:resource.resource,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -251,6 +246,11 @@ msgstr "Werk vanaf"
 #: field:resource.resource,code:0
 msgid "Code"
 msgstr "Code"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr "Maandag"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
@@ -283,12 +283,18 @@ msgstr "Werktijd"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
 msgstr "Afwezigheid resource"
 
 #. module: resource
 #: view:resource.resource:0
 msgid "General Information"
+msgstr ""
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_to:0
+msgid "Working time will end at"
 msgstr ""
 
 #. module: resource
@@ -334,6 +340,20 @@ msgid "Saturday"
 msgstr "Zaterdag"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Search Working Period"
+#~ msgstr "Zoek werkperiode"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
 #~ "\n"
 #~ "    Module for resource management\n"
 #~ "     A resource represent something that can be scheduled\n"
@@ -352,6 +372,13 @@ msgstr "Zaterdag"
 #~ "     Het beheert ook de afwezigheid van elke resource.\n"
 #~ "\n"
 #~ "    "
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the resource "
+#~ "record without removing it."
+#~ msgstr ""
+#~ "Als het actief veld is aan staat, kunt u de resource verbergen zonder haar "
+#~ "te verwijderen."
 
 #~ msgid "Manager"
 #~ msgstr "Manager"

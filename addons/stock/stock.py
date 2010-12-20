@@ -260,7 +260,7 @@ class stock_location(osv.osv):
             context = {}
         product_obj = self.pool.get('product.product')
         # Take the user company and pricetype
-        context['currency_id'] = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        context['currency_id'] = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
 
         # To be able to offer recursive or non-recursive reports we need to prevent recursive quantities by default
         context['compute_child'] = False
@@ -487,8 +487,6 @@ class stock_tracking(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if not context:
-            context = {}
         ids = self.search(cr, user, [('serial', '=', name)]+ args, limit=limit, context=context)
         ids += self.search(cr, user, [('name', operator, name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
@@ -534,7 +532,7 @@ class stock_picking(osv.osv):
             return False
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for pick in self.browse(cr, uid, ids, context):
+        for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
                     date='%s'
                 where
@@ -608,7 +606,7 @@ class stock_picking(osv.osv):
                 "Set a location if you produce at a fixed location. This can be a partner location " \
                 "if you subcontract the manufacturing operations.", select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
-        'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
+        'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
@@ -649,7 +647,7 @@ class stock_picking(osv.osv):
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
-    def action_process(self, cr, uid, ids, context={}):
+    def action_process(self, cr, uid, ids, context=None):
         return {
             'name':_("Products to Process"),
             'view_mode': 'form',
@@ -670,7 +668,7 @@ class stock_picking(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        picking_obj = self.browse(cr, uid, [id], context)[0]
+        picking_obj = self.browse(cr, uid, id, context=context)
         move_obj=self.pool.get('stock.move')
         if ('name' not in default) or (picking_obj.name=='/'):
             seq_obj_name =  'stock.picking.' + picking_obj.type
@@ -679,7 +677,7 @@ class stock_picking(osv.osv):
             default['backorder_id'] = False
         res=super(stock_picking, self).copy(cr, uid, id, default, context)
         if res:
-            picking_obj = self.browse(cr, uid, [res], context)[0]
+            picking_obj = self.browse(cr, uid, res, context=context)
             for move in picking_obj.move_lines:
                 move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False})
         return res
@@ -754,7 +752,7 @@ class stock_picking(osv.osv):
             context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
@@ -820,7 +818,7 @@ class stock_picking(osv.osv):
         """ Changes picking state to cancel.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
@@ -841,7 +839,7 @@ class stock_picking(osv.osv):
         """ Changes move state to assigned.
         @return: True
         """
-        for pick in self.browse(cr, uid, ids):
+        for pick in self.browse(cr, uid, ids, context=context):
             todo = []
             for move in pick.move_lines:
                 if move.state == 'assigned':
@@ -1110,7 +1108,7 @@ class stock_picking(osv.osv):
                     return False
         return True
 
-    def allow_cancel(self, cr, uid, ids, context={}):
+    def allow_cancel(self, cr, uid, ids, context=None):
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 return True
@@ -1333,6 +1331,8 @@ class stock_production_lot(osv.osv):
         """ Gets stock of products for locations
         @return: Dictionary of values
         """
+        if context is None:
+            context = {}
         if 'location_id' not in context:
             locations = self.pool.get('stock.location').search(cr, uid, [('usage', '=', 'internal')], context=context)
         else:
@@ -1392,7 +1392,7 @@ class stock_production_lot(osv.osv):
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, ref)', 'The combination of serial number and internal reference must be unique !'),
     ]
-    def action_traceability(self, cr, uid, ids, context={}):
+    def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
@@ -1447,15 +1447,15 @@ class stock_move(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             res.append((line.id, (line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
         return res
 
-    def _check_tracking(self, cr, uid, ids):
+    def _check_tracking(self, cr, uid, ids, context=None):
         """ Checks if production lot is assigned to stock move or not.
         @return: True or False
         """
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if not move.prodlot_id and \
                (move.state == 'done' and \
                ( \
@@ -1467,11 +1467,11 @@ class stock_move(osv.osv):
                 return False
         return True
 
-    def _check_product_lot(self, cr, uid, ids):
+    def _check_product_lot(self, cr, uid, ids, context=None):
         """ Checks whether move is done or not and production lot is assigned to that move.
         @return: True or False
         """
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.prodlot_id and move.state == 'done' and (move.prodlot_id.product_id.id != move.product_id.id):
                 return False
         return True
@@ -1515,7 +1515,7 @@ class stock_move(osv.osv):
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin", store=True),
 
         # used for colors in tree views:
-        'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped'),
+        'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
     }
     _constraints = [
         (_check_tracking,
@@ -1529,6 +1529,8 @@ class stock_move(osv.osv):
         """ Gets default address of partner for destination location
         @return: Address id or False
         """
+        if context is None:
+            context = {}
         if context.get('move_line', []):
             if context['move_line'][0]:
                 if isinstance(context['move_line'][0], (tuple, list)):
@@ -1545,6 +1547,8 @@ class stock_move(osv.osv):
         """ Gets default address of partner for source location
         @return: Address id or False
         """
+        if context is None:
+            context = {}
         if context.get('move_line', []):
             try:
                 return context['move_line'][0][2]['location_id']
@@ -1569,7 +1573,7 @@ class stock_move(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if uid != 1:
             frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
-            for move in self.browse(cr, uid, ids):
+            for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
                         raise osv.except_osv(_('Operation forbidden'),
@@ -1757,7 +1761,7 @@ class stock_move(osv.osv):
         """ Confirms stock move.
         @return: List of ids.
         """
-        moves = self.browse(cr, uid, ids)
+        moves = self.browse(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
         res_obj = self.pool.get('res.company')
         location_obj = self.pool.get('stock.location')
@@ -1810,14 +1814,14 @@ class stock_move(osv.osv):
         res = self.check_assign(cr, uid, todo)
         return res
 
-    def force_assign(self, cr, uid, ids, context={}):
+    def force_assign(self, cr, uid, ids, context=None):
         """ Changes the state to assigned.
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
-    def cancel_assign(self, cr, uid, ids, context={}):
+    def cancel_assign(self, cr, uid, ids, context=None):
         """ Changes the state to confirmed.
         @return: True
         """
@@ -1872,7 +1876,7 @@ class stock_move(osv.osv):
 
     def setlast_tracking(self, cr, uid, ids, context=None):
         tracking_obj = self.pool.get('stock.tracking')
-        picking = self.browse(cr, uid, ids)[0].picking_id
+        picking = self.browse(cr, uid, ids, context=context)[0].picking_id
         if picking:
             last_track = [line.tracking_id.id for line in picking.move_lines if line.tracking_id]
             if not last_track:
@@ -1895,7 +1899,7 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         pickings = {}
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('confirmed', 'waiting', 'assigned', 'draft'):
                 if move.picking_id:
                     pickings[move.picking_id.id] = True
@@ -2023,22 +2027,23 @@ class stock_move(osv.osv):
         partial_obj=self.pool.get('stock.partial.picking')
         partial_id=partial_obj.search(cr,uid,[])
         if partial_id:
-            partial_datas=partial_obj.read(cr,uid,partial_id)[0]
+            partial_datas = partial_obj.read(cr, uid, partial_id, context=context)[0]
         if context is None:
             context = {}
 
         todo = []
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.state=="draft":
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
-                cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
+                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
+                #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
                     if move.move_dest_id.picking_id:
@@ -2185,7 +2190,7 @@ class stock_move(osv.osv):
 
         res = []
 
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if split_by_qty <= 0 or quantity == 0:
                 return res
 
@@ -2228,7 +2233,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return res
 
-    def action_consume(self, cr, uid, ids, quantity, location_id=False,  context=None):
+    def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
         """ Consumed product with specific quatity from specific source location
         @param cr: the database cursor
         @param uid: the user id
@@ -2312,7 +2317,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         wf_service = netsvc.LocalService("workflow")
 
-        if  context is None:
+        if context is None:
             context = {}
 
         complete, too_many, too_few = [], [], []
@@ -2460,7 +2465,7 @@ class stock_inventory(osv.osv):
         product_context = dict(context, compute_child=False)
 
         location_obj = self.pool.get('stock.location')
-        for inv in self.browse(cr, uid, ids):
+        for inv in self.browse(cr, uid, ids, context=context):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
@@ -2505,7 +2510,7 @@ class stock_inventory(osv.osv):
         """ Cancels the stock move and change inventory state to draft.
         @return: True
         """
-        for inv in self.browse(cr, uid, ids):
+        for inv in self.browse(cr, uid, ids, context=context):
             self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
             self.write(cr, uid, [inv.id], {'state': 'draft'})
         return True
@@ -2514,7 +2519,7 @@ class stock_inventory(osv.osv):
         """ Cancels both stock move and inventory
         @return: True
         """
-        for inv in self.browse(cr,uid,ids):
+        for inv in self.browse(cr, uid, ids, context=context):
             self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
             self.write(cr, uid, [inv.id], {'state':'cancel'})
         return True

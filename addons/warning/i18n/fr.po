@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 14:11+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-16 17:23+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -21,12 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Ligne de Commande d'Achat"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -39,14 +34,15 @@ msgid "Message for Purchase Order Line"
 msgstr "Message pour Ligne de Commande Fournisseur"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Le nom du module doit être unique !"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Liste de colisage"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
@@ -60,11 +56,6 @@ msgid "Warning when Purchasing this Product"
 msgstr "Avertissement lors d'un Achat de ce Produit"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Produit"
@@ -74,6 +65,16 @@ msgstr "Produit"
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Avertissements"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Avertissement"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -101,11 +102,6 @@ msgid "No Message"
 msgstr "Aucun Message"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
@@ -130,9 +126,9 @@ msgid "Sale Order"
 msgstr "Commande Client"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Colisage"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Message pour Facture"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -170,9 +166,9 @@ msgstr ""
 "suivant."
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Message pour Facture"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Colisage"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
@@ -195,7 +191,7 @@ msgstr "Avertissement sur les Commandes d'Achat"
 #: code:addons/warning/warning.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Avertissement pour %s"
 
 #. module: warning
 #: view:res.partner:0
@@ -203,14 +199,9 @@ msgid "Warning on the Sale Order"
 msgstr "Avertissement sur les Commandes de Ventes"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Avertissement"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erreur: Code EAN invalide"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -222,7 +213,14 @@ msgstr "Message pour Colisage"
 msgid "Partner"
 msgstr "Partenaire"
 
-#. module: warning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Le nom du module doit être unique !"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Erreur: la référence BVR est requise."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."

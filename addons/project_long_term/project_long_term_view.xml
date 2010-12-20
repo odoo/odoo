@@ -151,6 +151,7 @@
                         <page string="Task Detail">
                             <field colspan="4" name="task_ids" context="{'default_project_id' :project_id}" nolabel="1">
                                  <tree editable="bottom" string="Project's Tasks">
+                                    <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="planned_hours" widget="float_time"/>
@@ -197,9 +198,9 @@
                                 <field name="sequence"/>
                             </group>
                            <separator colspan="4" string="Previous Phases"/>
-                           <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                           <field colspan="4" name="previous_phase_ids" nolabel="1" domain="[('id','!=',active_id)]"/>
                            <separator colspan="4" string="Next Phases"/>
-                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1" domain="[('id','!=',active_id)]"/>
                         </page>
                     </notebook>
                     <newline/>
@@ -257,7 +258,7 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check" default="1"/>
+	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -377,7 +378,7 @@
         src_model="project.phase"
         view_mode="tree,form"
         context="{'search_default_phase_id': [active_id]}"
-        domain="[('phase_id', '=', active_id)]"
+        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
         />
 
     <act_window
@@ -386,8 +387,21 @@
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
+		domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
-        view_type="form" />
+        view_type="form" 
+		/>
+
+	<act_window
+		context="{'search_default_user_id': [user_id]}"
+        id="act_project_resource"
+        name="Resources"
+        res_model="resource.resource"
+        src_model="project.project"
+		domain="[('user_id', '=',user_id)]"
+        view_mode="tree,form"
+        view_type="form" 
+		/>
 
     # ------------------------------------------------------
     # Menu Items

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-08-03 06:49+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_journal
@@ -22,9 +22,9 @@ msgid "Note"
 msgstr "备注"
 
 #. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
@@ -32,15 +32,17 @@ msgid "Sale Order"
 msgstr ""
 
 #. module: sale_journal
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr ""
 
 #. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used on partners, sales order and delivery orders. You can "
+"create journal to group your invoicing according to customer's needs: daily, "
+"each wednesday, monthly, etc."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -48,19 +50,21 @@ msgid "Sales & Purchases"
 msgstr "销售&采购"
 
 #. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "管理销售和送货分类帐"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "备注"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
 msgstr "开票方式"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and picking."
-msgstr ""
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -80,14 +84,14 @@ msgid "Grouped"
 msgstr "组"
 
 #. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
 msgstr "开票方式"
-
-#. module: sale_journal
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -113,21 +117,9 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
-msgid "Notes"
-msgstr "备注"
-
-#. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the invoice "
-"type without removing it."
-msgstr ""
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr ""
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "管理销售和送货分类帐"
 
 #~ msgid "Set to Draft"
 #~ msgstr "设为草稿"
@@ -219,6 +211,9 @@ msgstr ""
 #~ msgid "assigned"
 #~ msgstr "已指定"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在这动作定义中有无效的模块名"
+
 #~ msgid "Waiting Schedule"
 #~ msgstr "等待日程表"
 
@@ -248,6 +243,9 @@ msgstr ""
 
 #~ msgid "Average Price"
 #~ msgstr "平均价"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
 
 #~ msgid "Total Price"
 #~ msgstr "价格合计"
@@ -365,6 +363,10 @@ msgstr ""
 
 #~ msgid "Open"
 #~ msgstr "待处理"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #~ msgid "Responsible"
 #~ msgstr "有责任"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-30 15:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 09:35+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -34,21 +34,7 @@ msgid "The current step for this item has no email or report to preview."
 msgstr "Der aktuelle Schritt bietet keine EMail oder Report als Vorschau."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
-msgid "Operation not supported"
-msgstr "Vorgang nicht unterstützt"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
-msgid "Sorry, campaign duplication is not supported at the moment."
-msgstr ""
-"Entschuldigung, eine Kopie durch Duplizierung wird aktuell nicht unterstützt"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 "Ein- und ausgehende Verbindungen müssen zur gleichen Kampagne gehören "
@@ -64,9 +50,9 @@ msgstr ""
 "deklarierte Aktivität (oder vorgelagerte Aktivität als Signal zur Auslösung)"
 
 #. module: marketing_campaign
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Zeit"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -106,11 +92,6 @@ msgstr ""
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
 msgstr "Auslöser"
-
-#. module: marketing_campaign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -216,7 +197,7 @@ msgstr "Abgehende Verbindung"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
-msgstr "Zurück"
+msgstr "Zurücksetzen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -227,6 +208,13 @@ msgstr "Letzte Synchronisierung"
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
 msgstr "Jahr(e)"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Sorry, campaign duplication is not supported at the moment."
+msgstr ""
+"Entschuldigung, eine Kopie durch Duplizierung wird aktuell nicht unterstützt"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -370,11 +358,6 @@ msgid "Don't delete workitems"
 msgstr "Lösche keine einzelnen Auftragspositionen der Kampagne"
 
 #. module: marketing_campaign
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,state:0
 #: view:marketing.campaign:0
@@ -485,16 +468,6 @@ msgstr ""
 "Definiere variable Kosten, mit denen zu rechnen ist, wenn diese Aktion an "
 "der Reihe ist. Sie können detaillierte Auswertungen zu Ihrer Kampagne in dem "
 "Reportbereich finden."
-
-#. module: marketing_campaign
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Fehlerhafte Argumente"
-
-#. module: marketing_campaign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht !"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -635,9 +608,19 @@ msgid "Campaign Analysis"
 msgstr "Kampagnen Analyse"
 
 #. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr ""
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
 msgstr "Test in Echtzeit"
+
+#. module: marketing_campaign
+#: sql_constraint:email.template:0
+msgid "The template name must be unique !"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -650,24 +633,17 @@ msgid "Directory"
 msgstr "Verzeichnis"
 
 #. module: marketing_campaign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: marketing_campaign
 #: view:marketing.campaign:0
 #: selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Draft"
 msgstr "Entwurf"
-
-#. module: marketing_campaign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen"
-
-#. module: marketing_campaign
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ starten und darf keine Sonderzeichen beinhalten."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -856,6 +832,12 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Vorgang nicht unterstützt"
+
+#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates for Models"
 msgstr "EMail Vorlagen f. Modelle"
@@ -867,8 +849,7 @@ msgid "Close"
 msgstr "Beenden"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
 "Das Modul für den Filter sollte der Ressource für diese Kampagne entsprechen "
@@ -877,11 +858,6 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
 msgstr "Manuelle Synchronisation"
-
-#. module: marketing_campaign
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -904,11 +880,6 @@ msgstr ""
 "der Erreichbarkeit von Partnern durch speziellen Nachrichtenformate. Eine "
 "Kampagne kann dabei auch aus mehreren Mailvorlagen bestehen, die bereits "
 "früher im System  erzeugt wurden."
-
-#. module: marketing_campaign
-#: selection:marketing.campaign.transition,trigger:0
-msgid "Time"
-msgstr "Zeit"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -1126,3 +1097,29 @@ msgstr "Kosten"
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "Jahr"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Fehlerhafte Argumente"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ starten und darf keine Sonderzeichen beinhalten."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

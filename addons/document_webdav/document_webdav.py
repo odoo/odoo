@@ -45,7 +45,7 @@ class document_davdir(osv.osv):
         else:
             raise ValueError("dir node for %s type", dbro.type)
 
-    def _prepare_context(self, cr, uid, nctx, context):
+    def _prepare_context(self, cr, uid, nctx, context=None):
         nctx.node_file_class = nodes.node_file
         # We can fill some more fields, but avoid any expensive function
         # that might be not worth preparing.

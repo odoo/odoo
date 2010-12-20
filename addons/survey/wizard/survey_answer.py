@@ -74,10 +74,10 @@ class survey_question_wiz(osv.osv_memory):
                     'response': 0
                 }
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
-                sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id)
+                sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id' :wiz_id})
             else:
-                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
+                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
 
             if context.has_key('active_id'):
                 context.pop('active_id')
@@ -96,7 +96,7 @@ class survey_question_wiz(osv.osv_memory):
                     return super(survey_question_wiz, self).\
                                 fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                         toolbar=toolbar, submenu=submenu)
-            sur_rec = survey_obj.browse(cr, uid, survey_id)
+            sur_rec = survey_obj.browse(cr, uid, survey_id, context=context)
             p_id = map(lambda x:x.id, sur_rec.page_ids)
             total_pages = len(p_id)
             pre_button = False
@@ -109,7 +109,7 @@ class survey_question_wiz(osv.osv_memory):
             if not sur_name_rec.page_no + 1 :
                 surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'store_ans':{}})
 
-            sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
+            sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
             page_number = int(sur_name_rec.page_no)
             if sur_name_read.transfer or not sur_name_rec.page_no + 1:
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':False})
@@ -149,7 +149,7 @@ class survey_question_wiz(osv.osv_memory):
                     if sur_name_rec.page_no > 1:
                         pre_button = True
                 if flag:
-                    pag_rec = page_obj.browse(cr, uid, p_id)
+                    pag_rec = page_obj.browse(cr, uid, p_id, context=context)
                     xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title)})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                     if context.has_key('response_id') and context.get('response_id', False) \
@@ -177,7 +177,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     for que in que_ids:
                         qu_no += 1
-                        que_rec = que_obj.browse(cr, uid, que.id)
+                        que_rec = que_obj.browse(cr, uid, que.id, context=context)
                         descriptive_text = ""
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
                         if ((context.has_key('active') and not context.get('active',False)) or not context.has_key('active')) and que_rec.is_require_answer:
@@ -424,7 +424,7 @@ class survey_question_wiz(osv.osv_memory):
                             cr.execute("select email from res_partner_address where id =%s", (resp_id.id,))
                             resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
-                            user_name = user_obj.browse(cr, uid, uid).name
+                            user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
                             tools.email_send(user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attach = attachments)
 
@@ -479,6 +479,8 @@ class survey_question_wiz(osv.osv_memory):
         @return : Dictionary value for fields list with value.
         """
         value = {}
+        if context is None:
+            context = {}
         for field in fields_list:
             if field.split('_')[0] == 'progress':
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id',False))
@@ -558,6 +560,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : True.
         """
+        if context is None: context = {}
         if context.has_key('active') and context.get('active',False):
             return True
 
@@ -1006,7 +1009,7 @@ class survey_question_wiz(osv.osv_memory):
 
         return True
 
-    def action_new_question(self,cr, uid, ids, context):
+    def action_new_question(self,cr, uid, ids, context=None):
         """
         New survey.Question form.
 
@@ -1017,6 +1020,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.Qestion form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1032,7 +1037,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_new_page(self, cr, uid, ids, context):
+    def action_new_page(self, cr, uid, ids, context=None):
         """
         New survey.Page form.
 
@@ -1043,6 +1048,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.page form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1058,7 +1065,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_page(self,cr, uid, ids, context):
+    def action_edit_page(self,cr, uid, ids, context=None):
         """
         Edit survey.page.
 
@@ -1069,6 +1076,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.page form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1085,7 +1094,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_page(self,cr, uid, ids, context):
+    def action_delete_page(self,cr, uid, ids, context=None):
         """
         Delete survey.page.
 
@@ -1096,6 +1105,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open next survey.page form, but delete the selected page.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1116,7 +1127,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_question(self,cr, uid, ids, context):
+    def action_edit_question(self,cr, uid, ids, context=None):
         """
         Edit survey.question.
 
@@ -1127,6 +1138,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.question form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1143,7 +1156,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_question(self,cr, uid, ids, context):
+    def action_delete_question(self,cr, uid, ids, context=None):
         """
         Delete survey.question.
 
@@ -1154,6 +1167,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1186,6 +1201,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous Answer form.
         """
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\
@@ -1216,6 +1233,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next Answer form.
         """
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\
@@ -1246,6 +1265,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next survey.page form.
         """
+        if context is None:
+            context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1271,6 +1292,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous survey.page form.
         """
+        if context is None:
+            context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\

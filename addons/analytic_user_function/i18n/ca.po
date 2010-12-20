@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-10-30 14:54+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
+msgstr "Producte"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:0
@@ -34,33 +34,10 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr "Producte"
-
-#. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Compte analític"
-
-#. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                    "
-"'for this product: \"%s\" (id:%d)"
-msgstr ""
-"No s'ha definit un compte de despeses \r\n"
-"per aquest producte: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
@@ -74,9 +51,20 @@ msgid "User"
 msgstr "Usuari"
 
 #. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
 msgid "Relation table between users and products on a analytic account"
 msgstr "Taula de relació entre usuaris i productes d'un compte analític"
+
+#. module: analytic_user_function
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
@@ -84,16 +72,31 @@ msgid "Analytic User Function"
 msgstr "Funció analítica d'usuari"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                'for "
-"this product: \"%s\" (id:%d)"
-msgstr ""
-"No s'ha definit un compte de despeses \r\n"
-"per aquest producte: \"%s\" (id:%d)"
-
-#. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
 msgstr "Producte de l'usuari per aquesta compte analític"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
+#, python-format
+#~ msgid ""
+#~ "There is no expense account define ' \\n                                'for "
+#~ "this product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "No s'ha definit un compte de despeses \r\n"
+#~ "per aquest producte: \"%s\" (id:%d)"
+
+#, python-format
+#~ msgid ""
+#~ "There is no expense account define ' \\n                                    "
+#~ "'for this product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "No s'ha definit un compte de despeses \r\n"
+#~ "per aquest producte: \"%s\" (id:%d)"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-17 11:07+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-19 00:14+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-19 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -26,15 +26,7 @@ msgstr "Sous-Total"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
-"spécial !"
+msgstr "Note :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -84,19 +76,15 @@ msgid "Unit Price"
 msgstr "Prix unitaire"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "Be Expert with the Experts..."
-msgstr ""
+msgstr "Être expert avec les experts..."
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "TVA :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -133,7 +121,7 @@ msgstr "Produit"
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
-msgstr ""
+msgstr "Donne l'ordre d'affichage de la liste des lignes de facture."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -145,7 +133,7 @@ msgstr "Prix"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Date de la facture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -183,7 +171,7 @@ msgstr "Message Spécial"
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "Message à imprimer au bas du rapport"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -195,17 +183,7 @@ msgstr "Quantité"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
-msgstr ""
-
-#. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+msgstr "Réf. partenaire"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -218,7 +196,7 @@ msgstr "Facture"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Total :"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -251,7 +229,7 @@ msgstr "Montant"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tél. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -267,7 +245,7 @@ msgstr "Numéro Séquence"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
 msgid "Account Invoice Special Message"
-msgstr ""
+msgstr "Message spécial des factures"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -288,7 +266,7 @@ msgstr "Ligne de séparation"
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Amélioration de la présentation des factures"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -297,20 +275,9 @@ msgid "Supplier Invoice"
 msgstr "Facture fournisseur"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
 msgid "Print"
 msgstr "Imprimer"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -321,13 +288,13 @@ msgstr "Taxe"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Ligne de facture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Total net :"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -338,7 +305,7 @@ msgstr "Ecrire un avis"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -357,11 +324,6 @@ msgid "Message"
 msgstr "Message"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Tous les Messages de Notification"
@@ -378,6 +340,9 @@ msgstr "Tous les Messages de Notification"
 #~ msgid "Tel. :"
 #~ msgstr "Tél. :"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "VAT :"
 #~ msgstr "TVA :"
 
@@ -389,3 +354,12 @@ msgstr "Tous les Messages de Notification"
 
 #~ msgid "account_invoice_layout"
 #~ msgstr "account_invoice_layout"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom du Modèle non valide dans la définition de l'action."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
+#~ "spécial !"

@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-03 18:04+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-16 17:26+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-04 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -133,6 +134,8 @@ msgstr "Demande d'entretien"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Erreur ! Vous ne pouvez pas sélectionner un département dont l'employé est "
+"le responsable."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -197,6 +200,12 @@ msgid ""
 "OpenERP manages all kind of evaluations: bottom-up, top-down, self "
 "evaluation and final evaluation by the manager."
 msgstr ""
+"Chaque employé peut être affecté à un plan d'évaluation. Ces plans "
+"définissent la fréquence et la façon dont vous gérez votre propre évaluation "
+"périodique. Vous pourrez définir des étapes et associer des formulaires "
+"d'interview à chaque étape. OpenERP gère tous les types d'évaluations: de "
+"bas en haut, de haut en bas, l'auto-évaluation et l'évaluation finale par le "
+"gestionnaire."
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:0
@@ -218,6 +227,21 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Cher(e) %(employee_name)s,\n"
+"\n"
+"Je fais une évaluation concernant %(eval_name)s.\n"
+"\n"
+"Veuillez soumettre votre réponse.\n"
+"\n"
+"\n"
+"Merci,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -273,7 +297,7 @@ msgstr "(date)s : date actuelle"
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid "Regarding "
-msgstr ""
+msgstr "Concernant "
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -481,6 +505,9 @@ msgid ""
 "employees evaluation plan. Each user receives automatic emails and requests "
 "to perform evaluation of their collegues periodically."
 msgstr ""
+"Les demandes d'interview sont générées automatiquement par OpenERP, selon le "
+"plan d'évaluation des employés. Chaque utilisateur reçoit des messages "
+"automatiques et demandes pour évaluer ses collègues périodiquement."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -577,6 +604,7 @@ msgstr "Filtres étendus..."
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
+"Erreur ! Vous ne pouvez pas créer de hiérarchie d'employés récursives."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0

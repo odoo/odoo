@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-25 20:06+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-09 11:46+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -113,9 +113,19 @@ msgid "Select Partners to Remind"
 msgstr "Seleccionar empresas a recordar"
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
+
+#. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "Fecha envío del seguimiento"
+
+#. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -192,11 +202,6 @@ msgid "Not Litigation"
 msgstr "No litigio"
 
 #. module: account_followup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
 msgstr "%(user_signature)s: Nombre de usuario"
@@ -225,11 +230,6 @@ msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
 "Indica el orden de secuencia cuando se muestra una lista de líneas de "
 "seguimiento."
-
-#. module: account_followup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -292,14 +292,17 @@ msgstr ""
 "Saludos cordiales,\n"
 
 #. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "Enviar correo en el idioma de la empresa"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+"No puede crear una línea de movimiento en una cuenta a cobrar/a pagar sin "
+"una empresa."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -441,19 +444,9 @@ msgid "Select Partners"
 msgstr "Seleccionar empresas"
 
 #. module: account_followup
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
 msgstr "Configuración de correo electrónico"
-
-#. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -496,6 +489,11 @@ msgid "Journal Items"
 msgstr "Registros del diario"
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+
+#. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
 msgstr "Enviar correo electrónico de confirmación"
@@ -509,6 +507,11 @@ msgid ""
 msgstr ""
 "Todos los correos han sido enviados a las empresas correctamente:.\n"
 "\n"
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -596,11 +599,6 @@ msgid "Follow-Up Lines"
 msgstr "Líneas de seguimiento"
 
 #. module: account_followup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
 msgstr "Litigio"
@@ -609,14 +607,6 @@ msgstr "Litigio"
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
 msgstr "Nivel superior seguimiento máx."
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -770,6 +760,11 @@ msgstr "Fecha último seguimiento"
 msgid "Follow-Up Criteria"
 msgstr "Criterios seguimiento"
 
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
+
 #~ msgid "All payable entries"
 #~ msgstr "Todas los asientos cuentas a pagar"
 
@@ -785,8 +780,17 @@ msgstr "Criterios seguimiento"
 #~ msgid "Follow-Ups Criteria"
 #~ msgstr "Criterios de seguimientos"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "Select partners to remind"
 #~ msgstr "Seleccionar empresas para recordar"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "All receivable entries"
 #~ msgstr "Todos los asientos cuentas a cobrar"
@@ -914,6 +918,9 @@ msgstr "Criterios seguimiento"
 #~ "Saludos cordiales,\n"
 #~ "\t\t\t"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
 #, python-format
 #~ msgid ""
 #~ "\n"
@@ -925,3 +932,15 @@ msgstr "Criterios seguimiento"
 #~ "\n"
 #~ "Correo enviado a las siguientes empresas correctamente.\n"
 #~ "\n"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."

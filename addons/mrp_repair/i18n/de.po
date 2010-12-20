@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 09:32+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 09:39+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -40,8 +40,8 @@ msgstr ""
 "Reparaturanfrage erstellt, die noch nicht bestätigt ist.\n"
 "* Der 'Bestätigt' Status erfolgt eben durch einen Klick auf den Button "
 "'Bestätigen'.\n"
-"* Der 'Startbereit zur Reparatur' Status beginnt mit einem Klick auf "
-"'Beginne Reparatur'.\n"
+"* Der 'Bereit zur Reparatur' Status beginnt mit einem Klick auf 'Beginne "
+"Reparatur'.\n"
 " * Der Status 'Abrechenbar' erscheint, wenn die Reparatur erfolgreich "
 "beendet wurde und somit der Auftrag abrechenbar ist. \n"
 "* Der 'Erledigt' Status erscheint, wenn die Reparatur erfolgreich beendet "
@@ -59,9 +59,9 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
+msgstr "Wiedererstellung Rechnung"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -103,7 +103,7 @@ msgstr "Gruppiere nach Adressen"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No product defined on Fees!"
-msgstr "Kein Produkt für die Reparaturgebühren definiert !"
+msgstr "Kein Produkt für den Reparaturaufwand definiert !"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -113,7 +113,7 @@ msgstr "Setze auf Entwurf"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
-msgstr "Rechnungsstellung Fehler"
+msgstr "Abrechnungsfehler"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
@@ -230,11 +230,6 @@ msgstr "Bestätigt"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Wiedererstellung Rechnung"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Reparaturauftrag"
 
@@ -261,20 +256,10 @@ msgid "Repair Order N° :"
 msgstr "ReparaturNr."
 
 #. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr "Fertigungslos"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "In Reparatur"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -289,17 +274,12 @@ msgstr "Typ"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Fees Line(s)"
-msgstr "Gebührenposition(en)"
+msgstr "Aufwandspositionen"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
 msgstr "Abrechenbar"
-
-#. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -342,11 +322,6 @@ msgid "Total :"
 msgstr "Bruttobetrag :"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr "Referenz Reparatur"
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -373,11 +348,6 @@ msgid "Warning!"
 msgstr "Warnung !"
 
 #. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
 msgstr "Suche Reparaturaufträge"
@@ -385,7 +355,7 @@ msgstr "Suche Reparaturaufträge"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Add)"
-msgstr "(Hinzu)"
+msgstr "(Ersatz)"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
@@ -460,7 +430,7 @@ msgstr "Erzeuge Rechnungen"
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "(Remove)"
-msgstr "(Entferne)"
+msgstr "(Ausbau)"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -473,9 +443,9 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Wollen Sie wirklich die Rechnung(en) erstellen ?"
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
+msgstr "Referenz Reparatur"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
@@ -483,17 +453,14 @@ msgid "Repair Order"
 msgstr "Reparaturauftrag"
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "In Reparatur"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr "Fertig zur Reparatur"
+msgstr "Bereit zur Reparatur"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -534,7 +501,7 @@ msgstr "Datum"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr "Reparaturgebühren"
+msgstr "Reparaturaufwendungen"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -618,9 +585,9 @@ msgid ""
 msgstr ""
 "Die Garantiefrist wird folgendermassen berechnet: Letzte Lagerbuchung + "
 "Garantiezeit des Produkts. Wenn das aktuelle Datum vor der Garantiefrist "
-"liegt, wird automatisch für jeden Vorgang der Reparatur und für die Gebühren "
-"der Reparatur 'nicht abzurechen' standardmässig zugewiesen. Beachten Sie "
-"auch, dass Sie dieses per Hand im Auftrag ändern können."
+"liegt, wird automatisch für jeden Vorgang der Reparatur und für die "
+"Aufwendungen der Reparatur 'nicht abzurechen' standardmässig zugewiesen. "
+"Beachten Sie auch, dass Sie dieses per Hand im Auftrag ändern können."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -642,11 +609,6 @@ msgstr "Abgebrochen"
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Ziel"
-
-#. module: mrp_repair
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -694,7 +656,7 @@ msgstr "Vorgangspositionen"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "invoiced"
-msgstr "abgerechenet"
+msgstr "Abgerechnet"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -732,7 +694,7 @@ msgstr "Umsatzsteuer :"
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr "Warenauswahl"
+msgstr "Lieferauftrag"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -856,6 +818,9 @@ msgstr "Kein Partner"
 #~ msgid "Repairs in progress"
 #~ msgstr "Reparaturen in Arbeit"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid ""
 #~ "The garantee limit is computed as: last move date + warranty defined on "
 #~ "selected product. If the current date is below the garantee limit, each "
@@ -869,6 +834,12 @@ msgstr "Kein Partner"
 
 #~ msgid "New Repair"
 #~ msgstr "Neue Reparatur"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "Status"
 #~ msgstr "Status"
@@ -920,3 +891,18 @@ msgstr "Kein Partner"
 
 #~ msgid "Quality"
 #~ msgstr "Qualität"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:51+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-16 17:21+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -34,9 +33,10 @@ msgid "Budgetary Positions"
 msgstr "Posiciones presupuestarias"
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr ""
+"Este asistente es utilizado para imprimir el resúmen de los presupuestos"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -50,6 +50,15 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"Un presupuesto es una previsión de ingresos y gastos esperados de su empresa "
+"durante un período futuro. Con un presupuesto, una empresa es capaz de mirar "
+"cuidadosamente la cantidad de dinero que manejará durante un período "
+"determinado, y decidir la mejor manera de dividirlo entre diferentes "
+"categorías. Llevando el seguimiento de dónde va su dinero, usted puede ser "
+"menos propenso a gastar en exceso, y tiene más probabilidades de alcanzar "
+"sus metas financieras. Programe un presupuesto detallando los ingresos "
+"previstos por cuenta analítica y controle su evolución sobre la base de los "
+"datos reales ejecutados durante ese período."
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -60,11 +69,6 @@ msgstr "Confirmar"
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
 msgstr "Validar usuario"
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
@@ -96,22 +100,16 @@ msgid "at"
 msgstr "a las"
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos"
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Imprimir presupuestos"
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
 msgstr "Moneda:"
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -129,15 +127,14 @@ msgid "Percentage"
 msgstr "Porcentaje"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "hasta"
+
+#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Estado"
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr ""
-"Este asistente es utilizado para imprimir el resúmen de los presupuestos"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -168,9 +165,9 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "hasta"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Para aprobar"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -214,11 +211,6 @@ msgstr "Importe real"
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Fecha final"
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
@@ -312,9 +304,10 @@ msgid "Approve"
 msgstr "Aprobar"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "Para aprobar"
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Fecha de inicio"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -332,13 +325,6 @@ msgid "Start of period"
 msgstr "Inicio del período"
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr "Imprimir presupuestos"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr "Informe cruzado resumido presupuesto contable"
@@ -350,22 +336,12 @@ msgid "Theoretical Amt"
 msgstr "Importe teórico"
 
 #. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
 #: view:account.budget.report:0
 msgid "Select Dates Period"
 msgstr "Seleccione fechas del período"
-
-#. module: account_budget
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -471,11 +447,6 @@ msgid "Budget Lines"
 msgstr "Líneas de presupuesto"
 
 #. module: account_budget
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#. module: account_budget
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 #: view:account.budget.crossvered.summary.report:0
@@ -490,10 +461,9 @@ msgid "Budget Management"
 msgstr "Gestión presupuestaria"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Fecha de inicio"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
 
 #. module: account_budget
 #: report:account.budget:0
@@ -501,13 +471,14 @@ msgstr "Fecha de inicio"
 msgid "Analysis from"
 msgstr "Análisis desde"
 
-#. module: account_budget
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
 #~ msgid "% performance"
 #~ msgstr "% rendimiento"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Printing date:"
 #~ msgstr "Fecha impresión:"
@@ -539,6 +510,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 #~ msgid "Select Options"
 #~ msgstr "Seleccionar opciones"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "Print Summary of Budgets"
 #~ msgstr "Imprimir resumen de presupuestos"
 
@@ -565,6 +539,9 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #~ msgid "Spreading"
 #~ msgstr "Difusión"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
 
 #~ msgid "Budget Item Detail"
 #~ msgstr "Detalle de elemento presupuestario"
@@ -626,3 +603,21 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 #~ "la difusión, para las cuentas analíticas seleccionadas, de los presupuestos "
 #~ "principales por presupuestos.\n"
 #~ "\n"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"

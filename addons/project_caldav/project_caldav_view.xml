@@ -57,7 +57,7 @@
                 </field>
             </field>
         </record>
-
+        
         <record id="view_project_caldav_task_form2" model="ir.ui.view">
             <field name="name">project.task.caldav.form2</field>
             <field name="model">project.task</field>
@@ -65,61 +65,67 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="progress" position="after">
-                    <group colspan="2" col="4" >
-                           <field name="rrule_type" string="Recurrency" colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
-                           <button string="Edit All"
-                               help="Edit all Ourrences of recurrent Task"
-                               attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                               name="open_task" icon="gtk-edit"
-                               type="object" />
-                           <button string="Exclude range" groups="base.group_extended"
-                                help="Add Exception Rule"
-                                name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
-                                context="{'model' : 'project.task'}"
-                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
-                    </group>
-                    <newline/>
-                    <group col="4" colspan="6" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
-                        <separator string="Custom Recurrency Rule" colspan="8"/>
-                        <group col="8" colspan="4">
-                        <field name="interval" />
-                        <field name="freq" />
-                        <field name="count" />
-                        <field name="end_date" />
-                        </group>
-                        <group col="14" colspan="4" name="Select weekdays" 
-                                attrs="{'invisible': [('freq','=','weekly')]}">
-                        <field name="mo" colspan="1" />
-                        <field name="tu" colspan="1" />
-                        <field name="we" colspan="1" />
-                        <field name="th" colspan="1" />
-                        <field name="fr" colspan="1" />
-                        <field name="sa" colspan="1" />
-                        <field name="su" colspan="1" />
-                        <newline />
-                        </group>
-                        <group col="10" colspan="4" attrs="{'invisible': [('freq','!=','monthly'), ('freq','!=','yearly')]}">
-                            <group col="2" colspan="1">
-                            <field name="select1" />
-                            </group>
-                            <group col="2" colspan="1" attrs="{'invisible' : [('select1','=','day')]}">
-                            <field name="day" attrs="{'required' : [('select1','=','date')]}" />
-                            </group>
-                            <group col="3" colspan="1" attrs="{'invisible' : [('select1','=','date')]}">
-                            <field name="byday" string="The" attrs="{'required' : [('select1','=','day')]}" />
-                            <field name="week_list" nolabel="1" attrs="{'required' : [('select1','=','day')]}" />
-                            </group>
-                            <group col="1" colspan="1" attrs="{'invisible' : [('freq','!=','yearly')]}">
-                            <field name="month_list" string="of" colspan="1" attrs="{'required' : [('freq','=','yearly')]}" />
-                            </group>
-                        </group>
-                    </group>
+                    <field name="recurrency"/>      
+                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
+                                on_change="onchange_edit_all(rrule_type,edit_all)"/>                    
                 </field>
             </field>
         </record>
 
-    <record id="view_project_caldav_task_form3" model="ir.ui.view">
+        <record id="view_project_caldav_task_form3" model="ir.ui.view">
             <field name="name">project.task.caldav.form3</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook colspan="4" position="inside">
+                    <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
+	                    <group colspan="2" col="4" >
+	                         <field name="rrule_type" string="Recurrency" colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
+	                    </group>
+	                    <newline/>
+	                    <group col="4" colspan="6" name="rrule">
+	                        <separator string="Recurrency Rule" colspan="8"/>
+	                        <group col="6" colspan="4">
+                                <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="end_date" attrs="{'invisible': [('readonly','!=',False)]}"/>
+	                        </group>
+	                        <group col="14" colspan="4" name="Select weekdays" 
+	                                attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
+		                        <field name="mo" colspan="1" />
+		                        <field name="tu" colspan="1" />
+		                        <field name="we" colspan="1" />
+		                        <field name="th" colspan="1" />
+		                        <newline/>
+		                        <field name="fr" colspan="1" />
+		                        <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+		                        <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+		                        <newline />
+	                        </group>
+	                        <group col="10" colspan="4" attrs="{'invisible': [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
+	                            <group col="2" colspan="1">
+	                            <field name="select1" />
+	                            </group>
+	                            <group col="2" colspan="1" attrs="{'invisible' : [('select1','=','day')]}">
+	                            <field name="day" attrs="{'required' : [('select1','=','date')]}" />
+	                            </group>
+	                            <group col="3" colspan="1" attrs="{'invisible' : [('select1','=','date')]}">
+	                            <field name="byday" string="The" attrs="{'required' : [('select1','=','day')]}" />
+	                            <field name="week_list" nolabel="1" attrs="{'required' : [('select1','=','day')]}" />
+	                            </group>
+	                            <group col="1" colspan="1" attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
+	                            <field name="month_list" string="of" colspan="1" attrs="{'required' : [('rrule_type','=','yearly')]}" />
+	                            </group>
+	                        </group>
+	                    </group>
+                    </page>
+                 </notebook>
+            </field>
+        </record>
+
+    <record id="view_project_caldav_task_form4" model="ir.ui.view">
+            <field name="name">project.task.caldav.form4</field>
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="type">form</field>

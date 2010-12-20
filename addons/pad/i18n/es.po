@@ -7,26 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 09:41+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 11:44+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: pad
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#. module: pad
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la estructura de la vista!"
 
 #. module: pad
 #: code:addons/pad/web/editors.py:0
@@ -41,19 +31,19 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
-msgstr "La URL raíz de la instancia pad de la compañía"
-
-#. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
 msgstr "Compañías"
 
 #. module: pad
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No puede crear compañías recursivas."
+
+#. module: pad
+#: help:res.company,pad_index:0
+msgid "The root URL of the company's pad instance"
+msgstr "La URL raíz de la instancia pad de la compañía"
 
 #. module: pad
 #: field:res.company,pad_index:0
@@ -72,18 +62,14 @@ msgstr "Pad"
 msgid "Enhanced support for (Ether)Pad attachments"
 msgstr "Soporte mejorado para adjuntos (Ether)Pad"
 
-#. module: pad
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
 
-#. module: pad
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la estructura de la vista!"
 
 #~ msgid ""
 #~ "\n"
@@ -100,3 +86,12 @@ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 #~ "los nuevos pads\n"
 #~ "(por defecto, pad.openerp.com)\n"
 #~ "    "
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

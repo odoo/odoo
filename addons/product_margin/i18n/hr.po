@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-09-29 08:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -33,9 +33,12 @@ msgid "From"
 msgstr "Od"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
+"Suma umnoška kataloške cijene proizvoda i količinama proizvoda na fakturama "
+"kupca"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -58,29 +61,10 @@ msgid "From Date"
 msgstr "Od datuma"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Nacrt, Otvoreno i Plaćeno"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
-"Suma umnoška kataloške cijene proizvoda i količinama proizvoda na fakturama "
-"kupca"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -150,11 +134,6 @@ msgstr "# Fakturirano"
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Totalni trošak"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za arhitekturu View-a!"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -266,6 +245,11 @@ msgid "General Information"
 msgstr ""
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Razmak u kupovini"
@@ -305,6 +289,9 @@ msgstr ""
 
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "Očekivana prodaja - Zarada"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za arhitekturu View-a!"
 
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Očekivana prodaja - Normalan trošak"

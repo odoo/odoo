@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-29 07:34+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-17 13:40+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "System payment"
-msgstr ""
+msgstr "Σύστημα πληρωμών"
 
 #. module: account
 #: view:account.journal:0
@@ -52,7 +52,7 @@ msgstr "Συμψηφηστική εγγραφή Ημερολογίου"
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr ""
+msgstr "Διαχείριση παραστατικών"
 
 #. module: account
 #: view:account.account:0
@@ -98,6 +98,13 @@ msgstr "Παλαιωμένα εισπρακτέα μέχρι σήμερα"
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
 msgstr "Να συμπεριληφθούν Συμφωνημένες Εγγραφές"
+
+#. module: account
+#: view:account.pl.report:0
+msgid ""
+"The Profit and Loss report gives you an overview of your company profit and "
+"loss in a single document"
+msgstr ""
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -161,6 +168,15 @@ msgstr "Παραπομπή"
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
 msgstr "Επιλογή Οικονομικού Έτους "
+
+#. module: account
+#: help:account.payment.term,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the payment "
+"term without removing it."
+msgstr ""
+"Εάν το ενεργό πεδίο είναι Ψευδές, σας επιτρέπει να αποκρύψετε τον όρο "
+"πληρωμής χωρίς να τον διαγράψετε."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -290,7 +306,7 @@ msgstr "Κλείσιμο Οικονομικού Έτους"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr ""
+msgstr "Επιτρέψτε διαγραφή"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -356,6 +372,12 @@ msgstr ""
 "αναφορές, ώστε να μη βλέπετε αρνητικές τιμές στους λογαριασμούς εξόδων."
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr "Παραμετροποίηση"
+
+#. module: account
 #: selection:account.entries.report,month:0
 #: selection:account.invoice.report,month:0
 #: selection:analytic.entries.report,month:0
@@ -396,7 +418,7 @@ msgstr "Επιστροφή Αγοράς"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr ""
+msgstr "Άνοιγμα / Κλείσιμο Κατάστασης"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -472,6 +494,11 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
+"Το Σχέδιο Φόρων είναι μια προβολή δέντρου που αντικατοπτρίζει την δομή των "
+"Φόρων (η κωδικών φόρων) και δείχνει την τρέχουσα κατάσταση φόρου.Το σχέδιο "
+"φόρων αντιπροσωπεύει την ποσότητα δηλώσεων φόρου στην χώρα σου. Εμφανίζεται "
+"σε ιεραρχική μορφή , που μπορεί να παραμετροποιηθεί ανάλογα με τις ανάγκες "
+"σου."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -481,6 +508,7 @@ msgstr ""
 #: report:account.central.journal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,journal_id:0
+#: report:account.general.ledger:0
 #: view:account.invoice:0
 #: field:account.invoice,journal_id:0
 #: view:account.invoice.report:0
@@ -498,6 +526,7 @@ msgstr ""
 #: report:account.third_party_ledger_other:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
+#: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
@@ -512,6 +541,11 @@ msgstr "Επιβεβαίωση των επιλεγμένων τιμολογίω�
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
 msgstr "Γονικός Στόχος"
+
+#. module: account
+#: field:account.bank.statement,account_id:0
+msgid "Account used in this journal"
+msgstr "Ο Λογαριασμός χρησιμοποιείτε από το ημερολόγιο"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -556,7 +590,7 @@ msgstr "Μή συμφωνηθείσες συναλλαγές"
 #: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "CashBox Balance is not matching with Calculated Balance !"
-msgstr ""
+msgstr "Το υπόλοιπο Ταμείου δεν συμφωνεί με το υπολογιζόμενο Υπόλοιπο"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -568,7 +602,7 @@ msgstr "Χάρτης Φόρων"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr ""
+msgstr "account.installer.modules"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -630,6 +664,11 @@ msgstr "Χαρτογράφηση Φόρων"
 #: report:account.central.journal:0
 msgid "Centralized Journal"
 msgstr "Συγκεντρωτικό Ημερολόγιο"
+
+#. module: account
+#: sql_constraint:account.sequence.fiscalyear:0
+msgid "Main Sequence must be different from current !"
+msgstr ""
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -768,11 +807,6 @@ msgstr "Παραπομπή συνεργατη για το τιμολόγιο"
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
 msgstr "Ακύρωση Συμφωνίας"
-
-#. module: account
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_Journal_report
@@ -915,6 +949,11 @@ msgid "Extended Filters..."
 msgstr "Εκτεταμένα Φίλτρα..."
 
 #. module: account
+#: model:ir.ui.menu,name:account.menu_account_central_journal
+msgid "Centralizing Journal"
+msgstr ""
+
+#. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
 msgstr ""
@@ -976,6 +1015,7 @@ msgstr "Δεν ορίστηκε Αναλυτικό Ημερολόγιο!"
 
 #. module: account
 #: report:account.partner.balance:0
+#: view:account.partner.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_balance
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
@@ -1051,7 +1091,6 @@ msgstr "Κέρδη & Ζημίες(Λογαριασμοί Εξόδων)"
 
 #. module: account
 #: report:account.analytic.account.journal:0
-#: report:account.journal.period.print:0
 #: report:account.move.voucher:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1155,12 +1194,6 @@ msgid "Others"
 msgstr "Άλλα"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "UnknownError"
-msgstr "Άγνωστο Λάθος"
-
-#. module: account
 #: view:account.account:0
 #: report:account.account.balance:0
 #: view:account.analytic.line:0
@@ -1172,6 +1205,7 @@ msgstr "Άγνωστο Λάθος"
 #: field:account.invoice.line,account_id:0
 #: field:account.invoice.report,account_id:0
 #: field:account.journal,account_control_ids:0
+#: report:account.journal.period.print:0
 #: field:account.model.line,account_id:0
 #: view:account.move.line:0
 #: field:account.move.line,account_id:0
@@ -1206,6 +1240,7 @@ msgstr "Επίπεδο"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
+#: view:account.invoice.line:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -1298,11 +1333,9 @@ msgid "Account Receivable"
 msgstr "Λογαριασμός Εισπρακτέος"
 
 #. module: account
-#: field:account.installer,config_logo:0
-#: field:account.installer.modules,config_logo:0
-#: field:wizard.multi.charts.accounts,config_logo:0
-msgid "Image"
-msgstr "Εικόνα"
+#: model:ir.actions.report.xml,name:account.account_central_journal
+msgid "Central Journal"
+msgstr "Κεντρικό Ημερολόγιο"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -1439,11 +1472,6 @@ msgid "Template for Fiscal Position"
 msgstr "Πρότυπο για Φορολογική Θέση"
 
 #. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
 msgstr "Συμφωνημένες συναλλαγές"
@@ -1477,11 +1505,17 @@ msgstr "Αφορολόγητο"
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Go to next partner"
-msgstr ""
+msgstr "Πήγαινετε στον επόμενο έταιρο"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Search Bank Statements"
+msgstr "Αναζήτηση στην κατάσταση κινήσεων Λογαριασμού Τραπέζης"
+
+#. module: account
+#: sql_constraint:account.model.line:0
+msgid ""
+"Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
 msgstr ""
 
 #. module: account
@@ -1533,7 +1567,7 @@ msgstr "Παραστατικό"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr ""
+msgstr "Αναλυτικό κόστος προς τιμολόγιση"
 
 #. module: account
 #: view:ir.sequence:0
@@ -1544,13 +1578,6 @@ msgstr ""
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
 msgstr "Διαχωρισμένες Ιεραρχήσεις Ημερολογίου"
-
-#. module: account
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #. module: account
 #: view:account.invoice:0
@@ -1600,7 +1627,7 @@ msgstr "Άθροισμα Έτους"
 #. module: account
 #: model:ir.actions.report.xml,name:account.report_account_voucher_new
 msgid "Print Voucher"
-msgstr ""
+msgstr "Εκτύπωση παραστατικού"
 
 #. module: account
 #: view:account.change.currency:0
@@ -1632,6 +1659,13 @@ msgid "Values"
 msgstr "Τιμές"
 
 #. module: account
+#: help:account.journal.period,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the journal "
+"period without removing it."
+msgstr ""
+
+#. module: account
 #: view:res.partner:0
 msgid "Supplier Debit"
 msgstr "Χρέωση Προμηθευτή"
@@ -1660,7 +1694,7 @@ msgstr ""
 #. module: account
 #: selection:account.partner.balance,display_partner:0
 msgid "All Partners"
-msgstr ""
+msgstr "Όλοι οι έταιροι"
 
 #. module: account
 #: report:account.move.voucher:0
@@ -1701,18 +1735,23 @@ msgstr "Πρόχειρη κίνηση"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Credit Notes"
-msgstr ""
+msgstr "Φορολογική Δήλωση:Πιστωτικά Σημειώματα"
 
 #. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr ""
+msgstr "Δεν μπορείτε να απενεργοποιήσετε έναν λογαριασμό που έχει κινηθεί"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
 msgid "Credit amount"
 msgstr "Ποσό πίστωσης"
+
+#. module: account
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -1728,16 +1767,16 @@ msgid "Reserve And Profit/Loss Account"
 msgstr ""
 
 #. module: account
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account
 #: view:account.invoice.report:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
 msgstr ""
-
-#. module: account
-#: report:account.journal.period.print:0
-msgid "A/c No."
-msgstr "Αρ. Λογ."
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -1763,22 +1802,27 @@ msgstr ""
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Εγγραφή Ημερολογίου"
 
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Invoices"
-msgstr ""
+msgstr "Φορολογική Δήλωση :Τιμολόγια"
 
 #. module: account
 #: field:account.cashbox.line,subtotal:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Υποσύνολο"
 
 #. module: account
 #: view:account.account:0
 msgid "Treasury Analysis"
 msgstr ""
+
+#. module: account
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Σφάλμα! Υπάρχει εταιρεία με την ίδια περιγραφή"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1801,12 +1845,12 @@ msgstr "Έγκυρο"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr ""
+msgstr "Εκτύπωση Ημερολογίου Λογαριασμού"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Κατηγορία Προϊόντος"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -1827,7 +1871,7 @@ msgstr ""
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Comparison between accounting and payment entries"
-msgstr ""
+msgstr "Σύγκριση μεταξύ λογιστικών εγγραφών και εγγραφών πληρωμής"
 
 #. module: account
 #: view:account.tax:0
@@ -1866,14 +1910,11 @@ msgid "Account Profit And Loss"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: view:account.account.template:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-msgid "Payable Accounts"
-msgstr "Λογαριασμοί Πληρωτέοι"
+#: field:account.installer,config_logo:0
+#: field:account.installer.modules,config_logo:0
+#: field:wizard.multi.charts.accounts,config_logo:0
+msgid "Image"
+msgstr "Εικόνα"
 
 #. module: account
 #: view:account.account:0
@@ -1888,13 +1929,20 @@ msgstr "Λογαριασμοί Εισπρακτέοι"
 #. module: account
 #: report:account.move.voucher:0
 msgid "Canceled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: account
 #: view:account.invoice:0
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
 msgstr "Αφορολόγητο Ποσό"
+
+#. module: account
+#: help:account.tax,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the tax "
+"without removing it."
+msgstr ""
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -1937,7 +1985,7 @@ msgstr ""
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr ""
+msgstr "Λογαριασμοί για Εκκαθάριση"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -1947,7 +1995,7 @@ msgstr ""
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
 msgid "Import from invoice"
-msgstr ""
+msgstr "Εισαγωγή από τιμολόγιο"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1956,22 +2004,22 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "January"
-msgstr ""
+msgstr "Ιανουάριος"
 
 #. module: account
 #: view:account.journal:0
 msgid "Validations"
-msgstr ""
+msgstr "Επικυρώσεις"
 
 #. module: account
 #: model:account.journal,name:account.close_journal
 msgid "End of Year"
-msgstr ""
+msgstr "Τέλος του Έτους"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "This F.Year"
-msgstr ""
+msgstr "Αυτό το  ΟΙΚ.Έτος"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -1999,7 +2047,7 @@ msgstr "Pro-forma"
 #: code:addons/account/installer.py:0
 #, python-format
 msgid " Journal"
-msgstr ""
+msgstr " Ημερολόγιο"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -2024,6 +2072,14 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -2077,7 +2133,6 @@ msgid "Accounting Properties"
 msgstr "Λογιστικά Χαρακτηριστικά"
 
 #. module: account
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
@@ -2086,17 +2141,17 @@ msgstr "Εγγραφές Ταξινομημένες Ανά"
 #. module: account
 #: field:account.change.currency,currency_id:0
 msgid "Change to"
-msgstr ""
+msgstr "Αλλαγή σε"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "# of Products Qty "
-msgstr ""
+msgstr "# από Προίόντα Ποσ "
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Πρότυπο Προϊόντος"
 
 #. module: account
 #: report:account.account.balance:0
@@ -2271,7 +2326,7 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ημέρα"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_renew_view
@@ -2318,7 +2373,7 @@ msgstr "Επιλέξτε περίοδο"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_pp_statements
 msgid "Statements"
-msgstr ""
+msgstr "Καταστάσεις Αποτελεσμάτων"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -2331,6 +2386,17 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
+
+#. module: account
+#: view:account.print.journal:0
+msgid ""
+"This report gives you an overview of the situation of a specific journal"
+msgstr ""
+
+#. module: account
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Σφάλμα! Υπάρχει κατηγορία με την ίδια περιγραφή."
 
 #. module: account
 #: model:account.account.type,name:account.account_type_tax
@@ -2360,7 +2426,7 @@ msgstr "Λογαριασμός Αναλυτικής"
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr ""
+msgstr "Λογαριασμοί"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -2372,7 +2438,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Μέση Τιμή"
 
 #. module: account
 #: report:account.move.voucher:0
@@ -2387,6 +2453,11 @@ msgid ""
 "You cannot modify company of this journal as its related record exist in "
 "Entry Lines"
 msgstr ""
+
+#. module: account
+#: report:account.journal.period.print:0
+msgid "Label"
+msgstr "Ετικέτα"
 
 #. module: account
 #: view:account.tax:0
@@ -2412,18 +2483,16 @@ msgstr "Εκπτ.(%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.journal.period.print:0
 #: report:account.overdue:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
 msgid "Ref"
 msgstr "Παραπομπή"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
-msgstr ""
-
-#. module: account
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account
@@ -2460,7 +2529,7 @@ msgstr "Αληθές"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Dates"
-msgstr ""
+msgstr "Ημερομηνίες"
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -2486,6 +2555,13 @@ msgstr "Ενηλικιωμένο ισοζύγιο Συνεργάτη"
 #: model:process.transition,name:account.process_transition_entriesreconcile0
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries"
+msgstr "Λογιστικές Εγγραφές"
+
+#. module: account
+#: report:account.journal.period.print:0
+msgid ""
+"given a period and a journal, the sum of debit will always be equal to the "
+"sum of credit, so there is no point to display it"
 msgstr ""
 
 #. module: account
@@ -2525,11 +2601,6 @@ msgstr ""
 #: code:addons/account/account.py:0
 #, python-format
 msgid "No sequence defined on the journal !"
-msgstr ""
-
-#. module: account
-#: report:account.invoice:0
-msgid "Cancelled Invoice"
 msgstr ""
 
 #. module: account
@@ -2613,7 +2684,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Line 2:"
-msgstr ""
+msgstr "Γραμμή 2:"
 
 #. module: account
 #: field:account.journal.column,required:0
@@ -2632,6 +2703,12 @@ msgstr "Λογαριασμός Εξόδων"
 msgid "Keep empty to use the period of the validation(invoice) date."
 msgstr ""
 "Αφήστε το κενό για να χρησιμοποιήσετε την περίοδο της ημερομηνίας επικύρωσης."
+
+#. module: account
+#: help:account.bank.statement,account_id:0
+msgid ""
+"used in statement reconciliation domain, but shouldn't be used elswhere."
+msgstr ""
 
 #. module: account
 #: field:account.invoice.tax,base_amount:0
@@ -2662,6 +2739,7 @@ msgid "Financial Accounting"
 msgstr "Οικονομική Λογιστική"
 
 #. module: account
+#: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
 msgid "Profit And Loss"
 msgstr ""
@@ -2933,20 +3011,20 @@ msgstr "Διατηρήστε κενό για να χρησιμοποιήσετε
 #: field:account.common.report,journal_ids:0
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
-#: report:account.general.ledger:0
 #: view:account.journal.period:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
+#: view:account.print.journal:0
 #: field:account.print.journal,journal_ids:0
 #: field:account.report.general.ledger,journal_ids:0
 #: field:account.vat.declaration,journal_ids:0
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.actions.act_window,name:account.action_account_journal_period_tree
-#: model:ir.actions.report.xml,name:account.account_journal
 #: model:ir.ui.menu,name:account.menu_account_print_journal
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
+#: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
 msgstr "Ημερολόγια"
@@ -2974,7 +3052,10 @@ msgid "Purchase"
 msgstr "Αγορά"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3151,6 +3232,16 @@ msgstr ""
 msgid ""
 "You cannot change the type of account from '%s' to '%s' type as it contains "
 "account entries!"
+msgstr ""
+
+#. module: account
+#: report:account.general.ledger:0
+msgid "Counterpart"
+msgstr ""
+
+#. module: account
+#: view:account.journal:0
+msgid "Invoicing Data"
 msgstr ""
 
 #. module: account
@@ -3379,11 +3470,6 @@ msgid "Qty"
 msgstr ""
 
 #. module: account
-#: report:account.journal.period.print:0
-msgid "Move/Entry label"
-msgstr ""
-
-#. module: account
 #: field:account.invoice.report,address_contact_id:0
 msgid "Contact Address Name"
 msgstr ""
@@ -3445,18 +3531,12 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Τύπος Λογαριασμού"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr "Δεν έωουν οριστεί Γραμμές Υπολογισμού Όρων Πληρωμής στο Συνεργάτη!"
 
 #. module: account
 #: view:account.state.open:0
@@ -3537,11 +3617,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: report:account.journal.period.print:0
-msgid "Entry No"
-msgstr ""
-
-#. module: account
 #: view:account.analytic.line:0
 msgid "General Accounting"
 msgstr ""
@@ -3588,6 +3663,11 @@ msgstr ""
 #: view:account.invoice:0
 msgid "Validate"
 msgstr "Επικύρωση"
+
+#. module: account
+#: sql_constraint:account.model.line:0
+msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -3648,6 +3728,7 @@ msgstr "Ρυθμίσεις"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
+#: model:account.payment.term,note:account.account_payment_term
 msgid "30 Days End of Month"
 msgstr "30 Ημέρες Τέλος Μήνα"
 
@@ -3662,6 +3743,13 @@ msgstr "Αναλυτικό Ισοζύγιο"
 #: code:addons/account/report/account_profit_loss.py:0
 #, python-format
 msgid "Net Loss"
+msgstr ""
+
+#. module: account
+#: help:account.account,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
 msgstr ""
 
 #. module: account
@@ -3681,15 +3769,22 @@ msgid "Shortcut"
 msgstr "Συντόμευση"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr "Δεν έωουν οριστεί Γραμμές Υπολογισμού Όρων Πληρωμής στο Συνεργάτη!"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Τύπος Λογαριασμού"
 
 #. module: account
 #: report:account.account.balance:0
+#: view:account.balance.report:0
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
@@ -3914,12 +4009,10 @@ msgid "Reconcile Writeoff"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"Tax base different !\n"
-"Click on compute to update tax base"
-msgstr ""
+#: field:account.model.line,date_maturity:0
+#: report:account.overdue:0
+msgid "Maturity date"
+msgstr "Ημερ/νία Λήξης"
 
 #. module: account
 #: view:account.account.template:0
@@ -3996,13 +4089,17 @@ msgid "Analytic Account Statistics"
 msgstr "Στατιστικά Αναλυτικού Λογαριασμού"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
 msgstr ""
+"Αυτό θα ρυθμίσει αυτόματα το λογιστικό σας σχέδιο, τους τραπεζικούς "
+"λογαριασμούς, τους φόρους και τα ημερολόγια, με βάση το επιλεγμένο πρότυπο."
 
 #. module: account
 #: field:account.tax,price_include:0
+#: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
 msgstr "Ο Φόρος Περιέχεται στην Τιμή"
 
@@ -4085,6 +4182,16 @@ msgstr ""
 "Το πραγματικό σύνολο δεν συμπίπτει με την υπολογιζόμενη τιμή."
 
 #. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: account
 #: view:account.subscription.generate:0
 #: model:ir.actions.act_window,name:account.action_account_subscription_generate
 #: model:ir.ui.menu,name:account.menu_generate_subscription
@@ -4118,8 +4225,8 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: account
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: report:account.invoice:0
+msgid "Cancelled Invoice"
 msgstr ""
 
 #. module: account
@@ -4135,13 +4242,6 @@ msgid ""
 "Couldn't create move with currency different from the secondary currency of "
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
-msgstr ""
-
-#. module: account
-#: help:account.payment.term,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the payment "
-"term without removing it."
 msgstr ""
 
 #. module: account
@@ -4314,6 +4414,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
+#: code:addons/account/account_cash_statement.py:0
 #: code:addons/account/account_move_line.py:0
 #: code:addons/account/report/common_report_header.py:0
 #: code:addons/account/wizard/account_change_currency.py:0
@@ -4515,6 +4616,12 @@ msgid "Column Name"
 msgstr "Όνομα Στήλης"
 
 #. module: account
+#: view:account.general.journal:0
+msgid ""
+"This report gives you an overview of the situation of your general journals"
+msgstr ""
+
+#. module: account
 #: field:account.entries.report,year:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,year:0
@@ -4563,11 +4670,6 @@ msgid "Description on invoices"
 msgstr "Περιγραφή των τιμολογίων"
 
 #. module: account
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
 msgstr ""
@@ -4584,6 +4686,7 @@ msgid "Reconciliation result"
 msgstr "Αποτελέσματα Εκκαθάρισης"
 
 #. module: account
+#: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
 msgid "Balance Sheet"
@@ -4681,6 +4784,12 @@ msgid "Tax on Children"
 msgstr "Φόροι σε Υποκατηγορίες"
 
 #. module: account
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+
+#. module: account
 #: code:addons/account/account.py:0
 #: code:addons/account/wizard/account_use_model.py:0
 #, python-format
@@ -4763,8 +4872,8 @@ msgid "Bank Journal "
 msgstr "Ημερολόγιο Τράπεζας "
 
 #. module: account
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: account
@@ -5054,8 +5163,8 @@ msgid "Valid Up to"
 msgstr ""
 
 #. module: account
-#: view:account.journal:0
-msgid "Invoicing Data"
+#: view:board.board:0
+msgid "Aged Receivables"
 msgstr ""
 
 #. module: account
@@ -5283,13 +5392,6 @@ msgid "Entries are not of the same account or already reconciled ! "
 msgstr "Οι εγγραφές δεν είναι του ίδιου λογαριασμού ή έχουν ήδη συμφωνηθεί! "
 
 #. module: account
-#: help:account.tax,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the tax "
-"without removing it."
-msgstr ""
-
-#. module: account
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
@@ -5497,6 +5599,11 @@ msgid "Reporting Configuration"
 msgstr ""
 
 #. module: account
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account
 #: field:account.tax,type:0
 #: field:account.tax.template,type:0
 msgid "Tax Type"
@@ -5634,6 +5741,11 @@ msgstr "Λοιπές Πληροφορίες"
 #: field:account.journal,default_credit_account_id:0
 msgid "Default Credit Account"
 msgstr "Προεπιλεγμένος Λογαριασμός Πίστωσης"
+
+#. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5812,13 +5924,6 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: account
-#: help:account.journal.period,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the journal "
-"period without removing it."
-msgstr ""
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Γραμμές εγγραφής"
@@ -5827,6 +5932,11 @@ msgstr "Γραμμές εγγραφής"
 #: field:account.move.line,centralisation:0
 msgid "Centralisation"
 msgstr "Συγκεντροποίηση"
+
+#. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
 
 #. module: account
 #: view:account.account:0
@@ -5867,8 +5977,6 @@ msgstr "Μονάδα Μέτρησης"
 
 #. module: account
 #: constraint:account.payment.term.line:0
-#: code:addons/account/account.py:0
-#, python-format
 msgid ""
 "Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for "
 "2% "
@@ -5920,11 +6028,6 @@ msgstr ""
 #, python-format
 msgid "Invoice is already reconciled"
 msgstr "Το τιμολόγιο είναι ήδη συμφωνημένο"
-
-#. module: account
-#: view:board.board:0
-msgid "Aged receivables"
-msgstr "Παλαιωμένα εισπρακτέα"
 
 #. module: account
 #: view:account.account:0
@@ -5991,6 +6094,12 @@ msgid "Fax :"
 msgstr "Φαξ:"
 
 #. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr ""
+
+#. module: account
 #: help:res.partner,property_account_receivable:0
 msgid ""
 "This account will be used instead of the default one as the receivable "
@@ -6053,10 +6162,17 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/account_invoice_refund.py:0
 #: code:addons/account/wizard/account_use_model.py:0
-#: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "Error !"
 msgstr "Σφάλμα !"
+
+#. module: account
+#: report:account.journal.period.print:0
+msgid ""
+"o.journal_id.currency and formatLang((sum_debit(o.period_id.id, "
+"o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ "
+"o.journal_id.currency and o.journal_id.currency.symbol"
+msgstr ""
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -6111,9 +6227,12 @@ msgid "Display Ledger Report with One partner per page"
 msgstr ""
 
 #. module: account
-#: view:account.state.open:0
-msgid "Yes"
-msgstr "Ναι"
+#: view:account.partner.balance:0
+#: view:account.partner.ledger:0
+msgid ""
+"This report is an analysis done by a partner. It is a PDF report containing "
+"one line per partner representing the cumulative credit balance"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
@@ -6145,6 +6264,12 @@ msgid "All Entries"
 msgstr "Όλες οι Εγγραφές"
 
 #. module: account
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
 msgstr ""
@@ -6167,6 +6292,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
 #: model:ir.ui.menu,name:account.menu_general_ledger
@@ -6176,6 +6302,15 @@ msgstr "Γενικό Καθολικό"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 msgid "The payment order is sent to the bank."
+msgstr ""
+
+#. module: account
+#: view:account.balance.report:0
+#: view:account.bs.report:0
+msgid ""
+"This report allows you to print or generate a pdf of your trial balance "
+"allowing you to quickly check the balance of each of your accounts in a "
+"single report"
 msgstr ""
 
 #. module: account
@@ -6333,6 +6468,15 @@ msgid "Taxes:"
 msgstr "Φόροι:"
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+"Ο λογαριασμός τραπέζης του συνεργάτη προς πληρωμή\n"
+"Διατηρήστε κενό για να χρησιμοποιηθεί η προκαθορισμένη"
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6416,12 +6560,6 @@ msgstr ""
 #: view:account.state.open:0
 msgid "Are you sure you want to open this invoice ?"
 msgstr "Είστε βέβαιοι ότι θέλετε να ανοίξετε αυτό το τιμολόγιο;"
-
-#. module: account
-#: model:ir.actions.report.xml,name:account.account_central_journal
-#: model:ir.ui.menu,name:account.menu_account_central_journal
-msgid "Central Journals"
-msgstr ""
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -6514,11 +6652,6 @@ msgid "Unknown Partner"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr ""
-
-#. module: account
 #: help:account.journal,centralisation:0
 msgid ""
 "Check this box to determine that each entry of this journal won't create a "
@@ -6558,13 +6691,6 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Επιβεβαίωση"
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"Bank Account Number, Company bank account if Invoice is customer or supplier "
-"refund, otherwise Partner bank account number."
-msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -6689,14 +6815,13 @@ msgid "You can not have two open register for the same journal"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:0
-#, python-format
-msgid "You cannot create a bank or cash register without a journal!"
+#: view:account.payment.term.line:0
+msgid "  day of the month= -1"
 msgstr ""
 
 #. module: account
-#: view:account.payment.term.line:0
-msgid "  day of the month= -1"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: account
@@ -6798,11 +6923,6 @@ msgid "Expenses Journal - (test)"
 msgstr ""
 
 #. module: account
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: account
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
@@ -6844,6 +6964,16 @@ msgstr ""
 #: selection:report.account_type.sales,month:0
 msgid "May"
 msgstr ""
+
+#. module: account
+#: view:account.account:0
+#: view:account.account.template:0
+#: selection:account.aged.trial.balance,result_selection:0
+#: selection:account.common.partner.report,result_selection:0
+#: selection:account.partner.balance,result_selection:0
+#: selection:account.partner.ledger,result_selection:0
+msgid "Payable Accounts"
+msgstr "Λογαριασμοί Πληρωτέοι"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -6911,10 +7041,16 @@ msgstr ""
 
 #. module: account
 #: help:account.tax,price_include:0
+#: help:account.tax.template,price_include:0
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr "Επιλέξτε το αν η τιμή τιμολόγησης προϊόντος περιέχει αυτό το φόρο."
+
+#. module: account
+#: view:account.state.open:0
+msgid "Yes"
+msgstr "Ναι"
 
 #. module: account
 #: view:report.account_type.sales:0
@@ -6990,9 +7126,11 @@ msgid "CashBox Line"
 msgstr ""
 
 #. module: account
+#: view:account.partner.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
+#: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
 msgstr "Βιβλίο Συνεργατών"
@@ -7064,12 +7202,6 @@ msgstr ""
 #: field:report.invoice.created,partner_id:0
 msgid "Partner"
 msgstr "Συνεργάτης"
-
-#. module: account
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
-"Σφάλμα! Δεν μπορείτε να δημιουργήσετε ανάδρομους αναλυτικούς λογαριασμούς."
 
 #. module: account
 #: help:account.change.currency,currency_id:0
@@ -7152,6 +7284,11 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_electronicfile0
 msgid "Automatic entry"
+msgstr ""
+
+#. module: account
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
 
 #. module: account
@@ -7238,17 +7375,17 @@ msgid "Invoice's state is Open"
 msgstr ""
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
 msgstr "Βιβλίο Κόστους"
-
-#. module: account
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr ""
 
 #. module: account
 #: view:account.invoice:0
@@ -7510,10 +7647,7 @@ msgstr "Ημερολόγιο Επιστροφών"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 msgid "Filter By"
 msgstr ""
 
@@ -7989,6 +8123,11 @@ msgid "Dear Sir/Madam,"
 msgstr "Αγαπητέ/ή Κύριε/α"
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
 msgid ""
 "Create and manage accounts you will need to record financial entries in. "
@@ -8095,11 +8234,6 @@ msgid "Best regards."
 msgstr "Με εκτίμηση"
 
 #. module: account
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account
 #: view:account.invoice:0
 msgid "Unpaid"
 msgstr ""
@@ -8116,6 +8250,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
 msgstr "Έγγραφο: Λογιστική κατάσταση πελάτη"
+
+#. module: account
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:0
@@ -8163,7 +8302,6 @@ msgstr "Διατηρήστε το κενό για να χρησιμοποιηθ�
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
-#: report:account.journal.period.print:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8182,7 +8320,6 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
-#: report:account.general.ledger:0
 msgid "Display Account"
 msgstr ""
 
@@ -8272,7 +8409,10 @@ msgid "Receiver's Signature"
 msgstr ""
 
 #. module: account
+#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
 msgid "Filters By"
 msgstr ""
 
@@ -8284,6 +8424,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.journal.period.print:0
 #: field:account.move.line,move_id:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
@@ -8311,11 +8452,6 @@ msgstr "Κατάσταση Κίνησης Τραπεζικού Λογαριασ�
 #: help:account.addtmpl.wizard,cparent_id:0
 msgid ""
 "Creates an account with the selected template under this existing parent."
-msgstr ""
-
-#. module: account
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: account
@@ -8436,10 +8572,12 @@ msgid "Account Subscription"
 msgstr "Προεγγραφή λογαριασμού"
 
 #. module: account
-#: field:account.model.line,date_maturity:0
-#: report:account.overdue:0
-msgid "Maturity date"
-msgstr "Ημερ/νία Λήξης"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"Tax base different !\n"
+"Click on compute to update tax base"
+msgstr ""
 
 #. module: account
 #: view:account.subscription:0
@@ -8528,13 +8666,6 @@ msgid "Suppliers Payment Management"
 msgstr ""
 
 #. module: account
-#: help:account.analytic.journal,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the analytic "
-"journal without removing it."
-msgstr ""
-
-#. module: account
 #: field:account.period,name:0
 msgid "Period Name"
 msgstr "Όνομα Περιόδου"
@@ -8552,6 +8683,12 @@ msgstr "Κωδικός/ Ημερομ."
 #: field:account.tax,active:0
 msgid "Active"
 msgstr "Ενεργό"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Unknown Error"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -8626,7 +8763,7 @@ msgid "Through :"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_general_journal
+#: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr ""
@@ -8782,6 +8919,13 @@ msgid "Remove Lines"
 msgstr "Αφαίρεση Γραμμών"
 
 #. module: account
+#: view:account.report.general.ledger:0
+msgid ""
+"This report allows you to print or generate a pdf of your general ledger "
+"with details of all your account journals"
+msgstr ""
+
+#. module: account
 #: selection:account.account,type:0
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
@@ -8864,6 +9008,7 @@ msgstr "Ημερομηνία Λήξης"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
 msgstr "Ακύρωση Εγγραφών Ανοίγματος"
 
@@ -8902,11 +9047,7 @@ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
-msgid "Partner Other Ledger"
-msgstr "Άλλο καθολικό συνεργάτη"
-
-#. module: account
+#: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "JNRL"
@@ -8938,13 +9079,6 @@ msgstr "Καταστάσεις"
 #: field:report.invoice.created,amount_total:0
 msgid "Total"
 msgstr "Σύνολο"
-
-#. module: account
-#: help:account.account,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the account "
-"without removing it."
-msgstr ""
 
 #. module: account
 #: field:account.account,company_id:0
@@ -9051,13 +9185,8 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -9135,6 +9264,11 @@ msgstr "Γραμμές Τιμολογίου"
 msgid ""
 "This account will be used for invoices to value expenses for the current "
 "product category"
+msgstr ""
+
+#. module: account
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
 msgstr ""
 
 #. module: account
@@ -9330,6 +9464,7 @@ msgstr "Αριθμός Περιόδων"
 
 #. module: account
 #: report:account.general.journal:0
+#: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
 msgstr "Γενικό Ημερολόγιο"
 
@@ -9404,11 +9539,6 @@ msgid "Manual Invoice Taxes"
 msgstr "Μη Αυτόματοι Φόροι Τιμολόγησης"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_low_level
-msgid "Low Level"
-msgstr ""
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -9431,6 +9561,7 @@ msgstr ""
 #. module: account
 #: field:account.aged.trial.balance,result_selection:0
 #: field:account.common.partner.report,result_selection:0
+#: report:account.general.ledger:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,result_selection:0
 #: field:account.partner.ledger,result_selection:0
@@ -9447,9 +9578,14 @@ msgid "Fiscal Years"
 msgstr "Λογιστικές Χρήσεις"
 
 #. module: account
+#: help:account.analytic.journal,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the analytic "
+"journal without removing it."
+msgstr ""
+
+#. module: account
 #: field:account.analytic.line,ref:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 msgid "Ref."
 msgstr "Παρ."
 
@@ -9721,13 +9857,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Επιλέξτε τα τιμολόγια που θέλετε να πληρώσετε και διαχειριστείτε προκαταβολές"
 
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Ο λογαριασμός τραπέζης του συνεργάτη προς πληρωμή\n"
-#~ "Διατηρήστε κενό για να χρησιμοποιηθεί η προκαθορισμένη"
-
 #~ msgid "Account to reconcile"
 #~ msgstr "Λογαριασμός προς συμφωνία"
 
@@ -9760,6 +9889,9 @@ msgstr ""
 
 #~ msgid "          Start date"
 #~ msgstr "          Ημερομηνία έναρξης"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 
 #~ msgid "Analytic Journal Report"
 #~ msgstr "Αναφορά Αναλυτικού Ημερολογίου"
@@ -10282,9 +10414,6 @@ msgstr ""
 #~ msgid "Pay and reconcile"
 #~ msgstr "Πληρωμή και συμφωνία"
 
-#~ msgid "Central Journal"
-#~ msgstr "Κεντρικό Ημερολόγιο"
-
 #~ msgid "Balance brought forward"
 #~ msgstr "Υπόλοιπο από μεταφορά"
 
@@ -10379,6 +10508,11 @@ msgstr ""
 
 #~ msgid "Search Entries"
 #~ msgstr "Αναζήτηση Εγγραφών"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #~ msgid ""
 #~ "This field is used for payable and receivable entries. You can put the limit "
@@ -10512,13 +10646,6 @@ msgstr ""
 #~ msgid "Number of entries are generated"
 #~ msgstr "ο αριθμός των εγγραφών δημιουργήθηκε"
 
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Αυτό θα ρυθμίσει αυτόματα το λογιστικό σας σχέδιο, τους τραπεζικούς "
-#~ "λογαριασμούς, τους φόρους και τα ημερολόγια, με βάση το επιλεγμένο πρότυπο."
-
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Κωδικοποίηση Εγγραφών ανά Κίνηση"
 
@@ -10555,6 +10682,9 @@ msgstr ""
 
 #~ msgid "General Credit"
 #~ msgstr "Γενική Πίστωση"
+
+#~ msgid "A/c No."
+#~ msgstr "Αρ. Λογ."
 
 #~ msgid "Account cost and revenue by journal (This Month)"
 #~ msgstr "Κόστος και έσοδα λογαριασμού ανά ημερολόγιο (Τρέχων Μήνας)"
@@ -10697,6 +10827,9 @@ msgstr ""
 #~ "πωληθέντων προϊόντων. Η ποσότητα δεν είναι υποχρεωτική από το νόμο, αλλά "
 #~ "είναι πολύ χρήσιη για κάποιες αναφορές."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+
 #~ msgid "Specify The Message for the Overdue Payment Report."
 #~ msgstr "Καθορίστε το μήνυμα της αναφοράς καθυστερημένης πληρωμής."
 
@@ -10729,6 +10862,10 @@ msgstr ""
 
 #~ msgid "Print Aged Trial Balance"
 #~ msgstr "Εκτύπωση ενηλικιωμένου δοκιμαστικού ισοζυγίου"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr ""
+#~ "Σφάλμα! Δεν μπορείτε να δημιουργήσετε ανάδρομους αναλυτικούς λογαριασμούς."
 
 #~ msgid "to :"
 #~ msgstr "σε :"
@@ -10811,6 +10948,9 @@ msgstr ""
 #~ msgid "Statement reconcile"
 #~ msgstr "Ισοζύγιση κίνησης"
 
+#~ msgid "Partner Other Ledger"
+#~ msgstr "Άλλο καθολικό συνεργάτη"
+
 #~ msgid "The Account can either be a base tax code or tax code account."
 #~ msgstr ""
 #~ "Ο λογαριασμός μπορεί να είναι είτε λογαριασμός βάσης του φόρου ή  "
@@ -10838,6 +10978,9 @@ msgstr ""
 
 #~ msgid "Costs to invoice"
 #~ msgstr "Κόστη για τιμολόγηση"
+
+#~ msgid "Aged receivables"
+#~ msgstr "Παλαιωμένα εισπρακτέα"
 
 #~ msgid "Board for accountant"
 #~ msgstr "Πίνακας Λογιστηρίου"
@@ -11031,3 +11174,10 @@ msgstr ""
 
 #~ msgid "Fiscal Mappings"
 #~ msgstr "Οικονομικές Απεικονίσεις"
+
+#, python-format
+#~ msgid "UnknownError"
+#~ msgstr "Άγνωστο Λάθος"
+
+#~ msgid "Tax Code Test"
+#~ msgstr "Τεστ Φορολογικού Κώδικα"

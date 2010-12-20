@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-27 07:21+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-11 16:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -47,11 +47,6 @@ msgstr ""
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
 msgid "Air Ticket"
 msgstr "Bilet de avion"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acțiunii."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -262,11 +257,6 @@ msgid "Total Price"
 msgstr "Preț Total"
 
 #. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "ID-ul certificatului trebuie să fie unic !"
-
-#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
 msgstr ""
@@ -329,16 +319,6 @@ msgstr ""
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
 msgstr "Rambursare"
-
-#. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: hr_expense
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -435,14 +415,6 @@ msgid "  Year  "
 msgstr "  Anul  "
 
 #. module: hr_expense
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Eroare: unitatea de masura implicita si unitatea de masura furnizor trebuie "
-"sa faca parte din aceeasi categorie."
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -464,11 +436,6 @@ msgstr "Creare factură client"
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr ""
-
-#. module: hr_expense
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Eroare ! Nu este posibilă crearea unui meniu recursiv."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -515,11 +482,6 @@ msgstr ""
 #: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "Utilizator"
-
-#. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Numele modulului trebuie să fie unic !"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -608,33 +570,15 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: hr_expense
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr ""
-
-#. module: hr_expense
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Lungimea acestui câmp trebuie să fie cel puţin 1 !"
 
 #. module: hr_expense
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
 msgstr "Cheltuielile pentru toți angajații"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -820,11 +764,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: hr_expense
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
 msgstr "Secvenţa"
@@ -845,7 +784,7 @@ msgstr "Cheltuieli"
 #. module: hr_expense
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Eroare: Cod de bare EAN invalid"
+msgstr "Eroare : cod EAN invalid"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -882,3 +821,30 @@ msgstr ""
 
 #~ msgid "Can be Expensed"
 #~ msgstr "Poate fi cheltuit"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acțiunii."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID-ul certificatului trebuie să fie unic !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Eroare ! Nu este posibilă crearea unui meniu recursiv."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Eroare: unitatea de masura implicita si unitatea de masura furnizor trebuie "
+#~ "sa faca parte din aceeasi categorie."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Numele modulului trebuie să fie unic !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Lungimea acestui câmp trebuie să fie cel puţin 1 !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+#~ "special !"

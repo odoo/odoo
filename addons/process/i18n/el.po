@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:48+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 11:29+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -27,35 +27,16 @@ msgid "Process Node"
 msgstr "Κόμβος Διεργασίας"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "Help URL"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Σχετικό Μενού"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -66,7 +47,7 @@ msgstr "Κουμπιά"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ομαδοποίηση ανά..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -79,9 +60,9 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "URL Βοήθειας"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -171,9 +152,10 @@ msgid "Dummy"
 msgstr "Εικονικό"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -223,11 +205,6 @@ msgstr "Ενεργά"
 #: view:process.transition:0
 msgid "Associated Groups"
 msgstr ""
-
-#. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Σχετικό Μενού"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -338,11 +315,20 @@ msgstr "Διεργασίες"
 msgid "Object Method"
 msgstr "Μέθοδος Αντικειμένων"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου πρέπει να ξεκινάει από x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "Ρόλοι από Ροή Εργασίας"
 
 #~ msgid "Details"
 #~ msgstr "Λεπτομέρειες"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "Roles"
 #~ msgstr "Ρόλοι"
@@ -355,3 +341,6 @@ msgstr "Μέθοδος Αντικειμένων"
 
 #~ msgid "Enterprise Processes"
 #~ msgstr "Επιχειρηματικές Διεργασίες"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
