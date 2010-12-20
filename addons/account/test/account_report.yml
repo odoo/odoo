@@ -100,22 +100,15 @@
        file(os.path.join(tools.config['test_report_directory'], 'account-account_balance_sheet.'+format), 'wb+').write(data)
 
 -
-  Print the Account Balance Report in Normal mode - From Account Chart
+  Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
   !python {model: account.account}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.account', 'form': {'chart_account_id':ref('account.chart0'),'select_account': False,'display_account':'bal_all','format_perc':0,'filter': 'filter_no','show_columns' :0, 'account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': ref('account.data_fiscalyear') ,'target_move': 'all','periods': [],'id':ref('account.bal'),'context':{'state':'all'}}}
-    (data, format) = netsvc.LocalService('report.account.account.balance').create(cr, uid, [ref('account.bal'),ref('account.gpf')], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-normal.'+format), 'wb+').write(data)
-
-    data_dict.update({'model': 'ir.ui.menu'})
-    data_dict['form'].update({'active_ids':[ref('account.bal'),ref('account.gpf')]})
-
-    (data, format) = netsvc.LocalService('report.account.account.balance').create(cr, uid, [], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance-normal-menu.'+format), 'wb+').write(data)
-
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'target_move': 'all','display_account':'bal_all'}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Central Journal Report - From Account
 -
