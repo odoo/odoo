@@ -466,7 +466,7 @@
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
         <record id="action_invoice_tree3" model="ir.actions.act_window">
-            <field name="name">Credit Memo</field>
+            <field name="name">Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -474,7 +474,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Credit Memo helps you manage the credit notes issued/to be issued for your customers. A refund invoice is a document that cancels an invoice or a part of it. You can easily generate refunds and reconcile them from the invoice form.</field>
+            <field name="help">This menu helps you manage the credit notes issued/to be issued for your customers. A refund invoice is a document that cancels an invoice or a part of it. You can easily generate refunds and reconcile them from the invoice form.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
