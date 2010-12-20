@@ -308,6 +308,7 @@ class crm_lead(crm_case, osv.osv):
                     message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
                 elif case.type == 'opportunity':
                     message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     
     def stage_next(self, cr, uid, ids, context=None):
