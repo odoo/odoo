@@ -25,6 +25,7 @@ from StringIO import StringIO
 import base64
 import pooler
 import addons
+import sys 
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
