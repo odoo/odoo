@@ -705,8 +705,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -737,8 +737,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
