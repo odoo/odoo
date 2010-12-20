@@ -2235,12 +2235,12 @@ class orm(orm_template):
                 if v is None:
                     r[key] = False
                 if key in self._columns.keys():
-                    type = self._columns[key]._type
+                    field = self._columns[key]
                 elif key in self._inherit_fields.keys():
-                    type = self._inherit_fields[key][2]._type
+                    field = self._inherit_fields[key][2]
                 else:
                     continue
-                if type == 'reference' and v:
+                if field._type == 'reference' and getattr(field, 'store', True) and v:
                     model,ref_id = v.split(',')
                     table = self.pool.get(model)._table
                     cr.execute('select id from "%s" where id=%%s' % (table,), (ref_id,))
