@@ -289,6 +289,9 @@ class crm_lead(crm_case, osv.osv):
         return value
 
     def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
+            
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
             
