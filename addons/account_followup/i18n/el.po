@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-15 10:07+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-16 01:30+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-16 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -26,6 +26,31 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
+msgstr "Αναζήτηση Επαλύθευσης"
+
+#. module: account_followup
+#: model:ir.module.module,description:account_followup.module_meta_information
+msgid ""
+"\n"
+"    Modules to automate letters for unpaid invoices, with multi-level "
+"recalls.\n"
+"\n"
+"    You can define your multiple levels of recall through the menu:\n"
+"        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
+"\n"
+"    Once it is defined, you can automatically print recalls every day\n"
+"    through simply clicking on the menu:\n"
+"        Accounting/Periodical Processing/Billing/Send followups\n"
+"\n"
+"    It will generate a PDF with all the letters according to the the\n"
+"    different levels of recall defined. You can define different policies\n"
+"    for different companies. You can also send mail to the customer.\n"
+"\n"
+"    Note that if you want to change the followup level for a given "
+"partner/account entry, you can do from in the menu:\n"
+"        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+"Sent\n"
+"\n"
 msgstr ""
 
 #. module: account_followup
@@ -49,6 +74,7 @@ msgstr "Follow-Up"
 #: field:account_followup.followup,company_id:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
 msgstr "Εταιρία"
 
@@ -63,6 +89,14 @@ msgid "Email Subject"
 msgstr "Θέμα Email"
 
 #. module: account_followup
+#: model:ir.actions.act_window,help:account_followup.action_followup_stat
+msgid ""
+"Follow up on the reminders sent over to your partners for unpaid invoices."
+msgstr ""
+"Επαλήθευσετε τις υπενθυμίσεις που έχουνε σταλεί στους συνεργάτες για "
+"απλήρωτα τιμολόγια"
+
+#. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "Legend"
@@ -74,9 +108,24 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Select Partners to Remind"
+msgstr "Επιλέξτε Συνεργάτες για Υπενθύμιση"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "Follow-up Sending Date"
+
+#. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -90,9 +139,9 @@ msgid "Follow-Ups"
 msgstr "Follow-Ups"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "VAT:"
-msgstr "ΦΠΑ:"
+#: view:account_followup.stat.by.partner:0
+msgid "Balance > 0"
+msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -110,7 +159,14 @@ msgid "Follow-up"
 msgstr "Follow-up"
 
 #. module: account_followup
-#: field:account_followup.stat,name:0
+#: report:account_followup.followup.print:0
+msgid "VAT:"
+msgstr "ΦΠΑ:"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
 msgid "Partner"
 msgstr "Συνεργάτης"
 
@@ -123,6 +179,12 @@ msgstr "Ημερομηνία :"
 #: field:account.followup.print.all,partner_ids:0
 msgid "Partners"
 msgstr "Συνεργάτες"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Invoices Reminder"
+msgstr "Υπενθύμιση Τιμολογίων"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -150,9 +212,12 @@ msgid "Debit"
 msgstr "Χρέωση"
 
 #. module: account_followup
-#: field:account_followup.stat,account_type:0
-msgid "Account Type"
-msgstr "Τύπος Λογαριασμού"
+#: view:account.followup.print:0
+msgid ""
+"This feature allows you to send reminders to partners with pending invoices. "
+"You can send them the default message for unpaid invoices or manually enter "
+"a message should you need to remind them of a specific information."
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -177,6 +242,7 @@ msgstr "Follow-up Level"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
+#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "Latest followup"
 
@@ -205,19 +271,15 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "Αποστολή Email στην Γλώσσα του Συνεργάτη"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-msgid "Select partners to remind"
-msgstr "Επιλογή συνεργατών για υπενθύμιση"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -237,6 +299,11 @@ msgstr "Εκτύπωση Μηνύματος"
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
 msgstr "Send followups"
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:0
+msgid "Partner to Remind"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -260,16 +327,6 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
-#, python-format
-msgid ""
-"All E-mails have been successfully sent to Partners:.\n"
-"\n"
-msgstr ""
-"Όλα τα E-mails έχουν αποσταλεί στους Συνεργάτες:.\n"
-"\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -302,6 +359,11 @@ msgid "Currency"
 msgstr "Νόμισμα"
 
 #. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Followup Statistics by Partner"
+msgstr ""
+
+#. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
 msgstr "Accounting follow-ups management"
@@ -331,19 +393,9 @@ msgid "Select Partners"
 msgstr "Επιλογή Συνεργατών"
 
 #. module: account_followup
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Λάθος ! Δεν μπορείτε να δημιουργήσετε κενό Μενού"
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
 msgstr "Ρυθμίσεις Email"
-
-#. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -386,9 +438,29 @@ msgid "Journal Items"
 msgstr ""
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
 msgstr "Αποστολή email επιβεβαίωσης"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
+"\n"
+msgstr ""
+"Όλα τα E-mails έχουν αποσταλεί στους Συνεργάτες:.\n"
+"\n"
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -433,6 +505,7 @@ msgstr "%(company_currency)s: Νόμισμα Εταιρίας Χρήστη"
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
 msgstr "Ισοζύγιο"
 
@@ -449,6 +522,7 @@ msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
 msgstr "Τελευταία κίνηση"
 
@@ -463,14 +537,6 @@ msgid "Period"
 msgstr "Περίοδος"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
-#, python-format
-msgid ""
-"E-Mail not sent to following Partners, Email not available !\n"
-"\n"
-msgstr ""
-
-#. module: account_followup
 #: view:account.followup.print:0
 #: view:account.followup.print.all:0
 msgid "Cancel"
@@ -482,27 +548,14 @@ msgid "Follow-Up Lines"
 msgstr "Follow-Up Lines"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
-#, python-format
-msgid ""
-"\n"
-"\n"
-"E-Mail sent to following Partners successfully. !\n"
-"\n"
-msgstr ""
-
-#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
 msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην εμπεριέχει "
-"ειδικούς χαρακτήρες!"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -571,6 +624,7 @@ msgstr "Όνομα"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
 msgstr "Πρώτη κίνηση"
 
@@ -583,6 +637,14 @@ msgstr "γρ."
 #: report:account_followup.followup.print:0
 msgid "Maturity"
 msgstr "Ενηλικίωση"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"E-Mail not sent to following Partners, Email not available !\n"
+"\n"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -645,6 +707,11 @@ msgstr ""
 msgid "Follow-Up Criteria"
 msgstr ""
 
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
 #~ msgid "Select partners"
 #~ msgstr "Επιλογή συνεργατών"
 
@@ -653,6 +720,9 @@ msgstr ""
 
 #~ msgid "Amount In Currency"
 #~ msgstr "Ποσό σε Νόμισμα"
+
+#~ msgid "Account Type"
+#~ msgstr "Τύπος Λογαριασμού"
 
 #, python-format
 #~ msgid ""
@@ -680,6 +750,9 @@ msgstr ""
 
 #~ msgid "Follow-Ups Criteria"
 #~ msgstr "Follow-Ups Criteria"
+
+#~ msgid "Select partners to remind"
+#~ msgstr "Επιλογή συνεργατών για υπενθύμιση"
 
 #~ msgid ""
 #~ "\n"
@@ -713,11 +786,20 @@ msgstr ""
 #~ msgid "Follow-up and Date Selection"
 #~ msgstr "Follow-up and Date Selection"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
 #~ msgid "All receivable entries"
 #~ msgstr "Όλες οι εισπρακτέες εγγραφές"
 
 #~ msgid "Lines"
 #~ msgstr "Γραμμές"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην εμπεριέχει "
+#~ "ειδικούς χαρακτήρες!"
 
 #~ msgid "Followup statistics"
 #~ msgstr "Followup statistics"
@@ -810,3 +892,9 @@ msgstr ""
 
 #~ msgid "Print Follow Ups & Send Mails"
 #~ msgstr "Εκτύπωση Follow Ups & Αποστολή Mail"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος ! Δεν μπορείτε να δημιουργήσετε κενό Μενού"

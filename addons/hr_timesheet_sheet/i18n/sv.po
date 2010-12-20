@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-22 21:07+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -50,11 +50,6 @@ msgstr "No employee defined for your user !"
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -281,8 +276,8 @@ msgid "Timesheet lines"
 msgstr "Timesheet lines"
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -307,11 +302,6 @@ msgstr ""
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "New"
-
-#. module: hr_timesheet_sheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -344,6 +334,11 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,cost:0
 msgid "#Cost"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -380,11 +375,6 @@ msgid ""
 "You cannot create a timesheet for an employee that does not have any user "
 "defined !"
 msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
@@ -512,11 +502,6 @@ msgstr "Draft"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -659,12 +644,6 @@ msgid "General Account"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0
-#: field:timesheet.report,to_invoice:0
-msgid "Type of Invoicing"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
@@ -705,11 +684,6 @@ msgid "State is 'draft'."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "Cancel"
 msgstr ""
@@ -725,21 +699,9 @@ msgid "Open"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Timesheet by Accounts"
-
-#. module: hr_timesheet_sheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -915,8 +877,9 @@ msgid "Analytic accounts"
 msgstr "Analytic accounts"
 
 #. module: hr_timesheet_sheet
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: view:timesheet.report:0
+#: field:timesheet.report,to_invoice:0
+msgid "Type of Invoicing"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -973,8 +936,16 @@ msgstr "Total"
 msgid "Journal"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "Review end of day check day is complete"
 #~ msgstr "Review end of day check day is complete"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
 
 #~ msgid "My timesheets to confirm"
 #~ msgstr "My timesheets to confirm"
@@ -1056,6 +1027,9 @@ msgstr ""
 
 #~ msgid "Confirmed Timesheet"
 #~ msgstr "Confirmed Timesheet"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
 
 #~ msgid "Timesheets by period"
 #~ msgstr "Timesheets by period"

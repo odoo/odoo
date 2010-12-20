@@ -6,36 +6,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 09:34+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 10:56+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_subproduct
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Producto"
 
 #. module: mrp_subproduct
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Sub Product"
-msgstr "Sub producto"
-
-#. module: mrp_subproduct
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra "
+"products on BoMs !"
+msgstr ""
+"Todas las cantidades de producto deben de ser superiores a cero.\n"
+"¡Debe instalar el módulo mrp_subproduct si quiere gestionar productos extra "
+"en las LdM!"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -56,14 +52,9 @@ msgstr ""
 "fabricación"
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Producto"
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
-msgstr "sub_productos"
+#: view:mrp.bom:0
+msgid "Sub Products"
+msgstr "Sub productos"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -91,9 +82,14 @@ msgid "BoM"
 msgstr "Lista de materiales (LdM)"
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
-msgstr "Sub productos"
+#: constraint:mrp.bom:0
+msgid "Error ! You can not create recursive BoM."
+msgstr "¡Error! No puede crear Listas de Material recursivas."
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
+msgstr "sub_productos"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -101,25 +97,40 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: mrp_subproduct
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr "¡La cantidad ordenada no puede ser negativa o cero!"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
+msgstr "Sub producto"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
 msgstr "Fijo"
 
-#. module: mrp_subproduct
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Mrp Sub Product"
 #~ msgstr "Sub producto MRP"
 
 #~ msgid "MRP Sub Product"
 #~ msgstr "Subproducto MRP"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

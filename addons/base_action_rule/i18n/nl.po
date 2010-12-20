@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-27 07:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-18 10:01+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:55+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,17 +36,9 @@ msgid "Partner Category"
 msgstr "Relatiecategorie"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige naam van het model in de actie definitie."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Vink dit aan wanneer u wilt dat de regel de gebruiker via de mail een "
-"herinnering stuurt."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "E-mail naar toeschouwers (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -166,11 +158,6 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Speciale sleutelwoorden die in het bericht kunnen worden gebruikt"
 
 #. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
@@ -179,11 +166,6 @@ msgstr "Status"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr "Email-id van de personen waarvan de mail wordt verstuurd"
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -271,11 +253,6 @@ msgid "Delay type"
 msgstr "Soort vertraging"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -325,11 +302,6 @@ msgid ""
 msgstr ""
 "Gebruik een python expressie om het juiste veld te specificeren die we dan "
 "gaan gebruiken voor het 'Van' veld in de kop"
-
-#. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -413,26 +385,19 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Object omschrijving"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr "Fout: De mail is niet juist geformatteerd"
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Email acties"
 
 #. module: base_action_rule
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Email Informatie"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -465,9 +430,12 @@ msgid "Mail body"
 msgstr "E-mail berichttekst"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "E-mail naar toeschouwers (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Vink dit aan wanneer u wilt dat de regel de gebruiker via de mail een "
+"herinnering stuurt."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -558,5 +526,28 @@ msgstr "Voorwaarden op status"
 msgid "Trigger Date"
 msgstr "Activeerdatum"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige naam van het model in de actie definitie."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
 #~ msgid "%(object_date)s = Creation date"
 #~ msgstr "%(object_date)s = Aanmaakdatum"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

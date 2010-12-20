@@ -7,37 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:39+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-11 22:14+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_view_base_synchro
 msgid "Base Synchronization"
-msgstr ""
-
-#. module: base_synchro
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: base_synchro
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
-
-#. module: base_synchro
-#: field:base.synchro,user_id:0
-msgid "Send Result To"
 msgstr ""
 
 #. module: base_synchro
@@ -57,19 +39,14 @@ msgid "Field Name"
 msgstr "Название поля"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным !"
-
-#. module: base_synchro
 #: field:base.synchro.obj,synchronize_date:0
 msgid "Latest Synchronization"
 msgstr "Последняя синхронизация"
 
 #. module: base_synchro
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: field:base.synchro,user_id:0
+msgid "Send Result To"
+msgstr ""
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj_avoid
@@ -82,9 +59,9 @@ msgid "_Close"
 msgstr ""
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+#: view:base.synchro:0
+msgid "Transfer Data To Server"
+msgstr "Передача данных на сервер"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj
@@ -158,11 +135,6 @@ msgid "Both"
 msgstr "Оба"
 
 #. module: base_synchro
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: base_synchro
 #: field:base.synchro.obj,name:0
 msgid "Name"
 msgstr "Название"
@@ -209,7 +181,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base_synchro.action_base_synchro_server_tree
 #: model:ir.ui.menu,name:base_synchro.synchro_server_tree_menu_id
 msgid "Servers to be synchronized"
-msgstr ""
+msgstr "Сервера для синхронизации"
 
 #. module: base_synchro
 #: view:base.synchro.obj:0
@@ -235,12 +207,12 @@ msgstr "История"
 #: model:ir.ui.menu,name:base_synchro.next_id_62
 #: model:ir.ui.menu,name:base_synchro.synch_config
 msgid "Synchronization"
-msgstr ""
+msgstr "Синхронизация"
 
 #. module: base_synchro
 #: field:base.synchro.obj,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Домен"
 
 #. module: base_synchro
 #: view:base.synchro:0
@@ -250,12 +222,12 @@ msgstr ""
 #. module: base_synchro
 #: view:base.synchro:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: base_synchro
 #: field:base.synchro.server,name:0
 msgid "Server name"
-msgstr ""
+msgstr "Имя сервера"
 
 #. module: base_synchro
 #: field:base.synchro.obj,sequence:0
@@ -311,12 +283,23 @@ msgstr ""
 msgid "Server URL"
 msgstr ""
 
-#. module: base_synchro
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
 
-#. module: base_synchro
-#: view:base.synchro:0
-msgid "Transfer Data To Server"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"

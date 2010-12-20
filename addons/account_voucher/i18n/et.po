@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2009-11-09 16:29+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "Bank Receipt Voucher"
@@ -34,11 +34,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Form view not available for Payment Lines"
 msgstr ""
 
 #. module: account_voucher
@@ -67,11 +62,6 @@ msgstr ""
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
-
-#. module: account_voucher
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -122,6 +112,15 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_unreconcile
 msgid "Account voucher unreconcile"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When you sell products to a customer, you can give him a sales receipt or an "
+"invoice. When the sales receipt is confirmed, it creates journal items "
+"automatically and you can record the customer payment related to this sales "
+"receipt."
 msgstr ""
 
 #. module: account_voucher
@@ -188,8 +187,23 @@ msgid "Due Date"
 msgstr ""
 
 #. module: account_voucher
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
+msgid ""
+"Sales payment allows you to register the payments you receive from your "
+"customers. In order to record a payment, you must enter the customer, the "
+"payment method (=the journal) and the payment amount. OpenERP will propose "
+"to you automatically the reconciliation of this payment with the open "
+"invoices or sales receipts."
 msgstr ""
 
 #. module: account_voucher
@@ -216,6 +230,11 @@ msgstr "Summa"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Options"
+msgstr ""
+
+#. module: account_voucher
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_voucher
@@ -251,8 +270,19 @@ msgid "Supplier Vouchers"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+#: view:account.voucher.unreconcile:0
+msgid "Unreconcile"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_journal_id:0
+msgid "Write-Off journal"
 msgstr ""
 
 #. module: account_voucher
@@ -262,6 +292,7 @@ msgid "Amount (in words) :"
 msgstr "Summa (sõnadega) :"
 
 #. module: account_voucher
+#: field:account.voucher,analytic_id:0
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
 msgstr "Analüütiline konto"
@@ -269,6 +300,12 @@ msgstr "Analüütiline konto"
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
 msgid "Journal:"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
 msgstr ""
 
 #. module: account_voucher
@@ -396,11 +433,6 @@ msgid "Unreconciliation"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
-
-#. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Vendor Payment"
@@ -480,8 +512,8 @@ msgid "Draft"
 msgstr "Mustand"
 
 #. module: account_voucher
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:account.voucher,writeoff_acc_id:0
+msgid "Write-Off account"
 msgstr ""
 
 #. module: account_voucher
@@ -490,15 +522,19 @@ msgid "Currency:"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
-msgstr ""
-
-#. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"The supplier payment form allows you to track the payment you do to your "
+"suppliers. When you select a supplier, the payment method and an amount for "
+"the payment, OpenERP will propose to reconcile your payment with the open "
+"supplier invoices or bills."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -527,7 +563,7 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Compute Tax"
+msgid "Are you sure to unreconcile this record ?"
 msgstr ""
 
 #. module: account_voucher
@@ -542,9 +578,13 @@ msgid "Post"
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Number:"
+#: view:account.voucher:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
 msgstr ""
 
 #. module: account_voucher
@@ -563,9 +603,19 @@ msgid "Previous Payments ?"
 msgstr ""
 
 #. module: account_voucher
+#: field:account.voucher,comment:0
+msgid "Comment"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Compute Tax"
 msgstr ""
 
 #. module: account_voucher
@@ -573,11 +623,6 @@ msgstr ""
 #: report:voucher.cash_receipt.drcr:0
 msgid "Credit"
 msgstr "Krediit"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Extended options..."
-msgstr ""
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:0
@@ -589,6 +634,11 @@ msgstr ""
 #: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Through :"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Without Write-off"
 msgstr ""
 
 #. module: account_voucher
@@ -607,9 +657,9 @@ msgid "Bill Date"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: view:account.voucher.unreconcile:0
-msgid "Unreconcile"
+#: report:voucher.cash_receipt.drcr:0
+#: report:voucher.print:0
+msgid "Number:"
 msgstr ""
 
 #. module: account_voucher
@@ -689,11 +739,9 @@ msgid "Customer Payment"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:account.move.line,amount_unreconciled:0
+msgid "Unreconciled Amount"
 msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -714,6 +762,11 @@ msgstr "Deebet"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Are you sure to confirm this record ?"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Payment Method"
 msgstr ""
 
@@ -729,9 +782,8 @@ msgid "Canceled"
 msgstr "Tühistatud"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Please change partner and try again !"
+#: view:account.voucher:0
+msgid "Vendor Invoices and Outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
@@ -740,6 +792,11 @@ msgstr ""
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Päevik"
+
+#. module: account_voucher
+#: field:account.voucher,payment_option:0
+msgid "Payment Option"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -755,6 +812,11 @@ msgstr ""
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_amount:0
+msgid "Writeoff Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -786,6 +848,11 @@ msgid "Customer"
 msgstr ""
 
 #. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "With Write-off"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
 msgstr ""
@@ -802,17 +869,6 @@ msgid "Account Entry"
 msgstr "Konto kirje"
 
 #. module: account_voucher
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:0
-#, python-format
-msgid "Invalid Error !"
-msgstr ""
-
-#. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
 msgstr ""
@@ -822,11 +878,6 @@ msgstr ""
 msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Vendor Invoices and Outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
@@ -851,6 +902,11 @@ msgstr ""
 msgid "Memo"
 msgstr ""
 
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
 #~ msgid "Bank Receipts"
 #~ msgstr "Pangakviitungid"
 
@@ -862,6 +918,9 @@ msgstr ""
 
 #~ msgid "None"
 #~ msgstr "Puudub"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
 
 #~ msgid "Cash Receipts"
 #~ msgstr "Kassakviitungid"
@@ -887,6 +946,11 @@ msgstr ""
 #~ msgid "Bank Payments"
 #~ msgstr "Pangamaksed"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
 #~ msgid "Other Info"
 #~ msgstr "Muu info"
 
@@ -904,6 +968,9 @@ msgstr ""
 
 #~ msgid "Cash Payments"
 #~ msgstr "Kassamaksed"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #~ msgid "Account Entry Line"
 #~ msgstr "Raamatupidamiskande rida"

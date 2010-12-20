@@ -32,8 +32,6 @@ class project_timebox_fill(osv.osv_memory):
     }
 
     def _get_from_tb(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         ids = self.pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 
@@ -50,11 +48,9 @@ class project_timebox_fill(osv.osv_memory):
     }
 
     def process(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not ids:
             return {}
-        data = self.read(cr, uid, ids, [])
+        data = self.read(cr, uid, ids, [], context=context)
         if not data[0]['task_ids']:
             return {}
         self.pool.get('project.task').write(cr, uid, data[0]['task_ids'], {'timebox_id':data[0]['timebox_to_id']})

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-23 09:48+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 08:48+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -29,9 +29,9 @@ msgid "Pulled Paths"
 msgstr "Caminos arrastrados"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistic Flow"
-msgstr "Flujo logística"
+#: selection:product.pulled.flow,type_proc:0
+msgid "Move"
+msgstr "Movimiento"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -67,19 +67,14 @@ msgid "Pulled Flows"
 msgstr "Flujos arrastrados"
 
 #. module: stock_location
-#: field:product.pulled.flow,type_proc:0
-msgid "Type of Procurement"
-msgstr "Tipo de abastecimiento"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Ubicación utilizada por la ubicación de destino para suministar."
-
-#. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -110,20 +105,6 @@ msgid "Invoice Status"
 msgstr "Estado factura"
 
 #. module: stock_location
-#: selection:product.pulled.flow,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-msgid "Not from Picking"
-msgstr "No desde albarán"
-
-#. module: stock_location
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
 "This is used to define paths the product has to follow within the location "
@@ -151,9 +132,9 @@ msgid "Pack Zone"
 msgstr "Zona empaquetado"
 
 #. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
+#: field:product.pulled.flow,name:0
+msgid "Name"
+msgstr "Nombre"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -251,9 +232,9 @@ msgstr ""
 "Este campo rellenará el origen del albarán y el nombre de sus movimientos."
 
 #. module: stock_location
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: field:product.pulled.flow,type_proc:0
+msgid "Type of Procurement"
+msgstr "Tipo de abastecimiento"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -262,9 +243,9 @@ msgstr ""
 "Se usa para saber a que compañía pertenece los albaranes y movimientos."
 
 #. module: stock_location
-#: field:product.pulled.flow,name:0
-msgid "Name"
-msgstr "Nombre"
+#: view:product.product:0
+msgid "Logistics Flow"
+msgstr "Flujo de logística"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -313,11 +294,6 @@ msgid "Is the destination location that needs supplying"
 msgstr "Es la ubicación destino que necesita suministro."
 
 #. module: stock_location
-#: sql_constraint:stock.warehouse.orderpoint:0
-msgid "Qty Multiple must be greater than zero."
-msgstr "El múltiplo de la cantidad debe ser más grande que cero."
-
-#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Productos"
@@ -332,6 +308,12 @@ msgstr "Arrastrado desde otra ubicación vía abastecimiento %d"
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
 msgstr "Control calidad"
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Not Applicable"
+msgstr "No aplicable"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -364,6 +346,11 @@ msgstr ""
 "original %s, regla de arrastre %s, vía abastecimiento original %s (#%d)"
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Está intentando asignar un lote que no es del mismo producto"
+
+#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 msgid "Location Source"
 msgstr "Ubicación original"
@@ -388,17 +375,12 @@ msgstr "De entrada"
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr "Tipo acción"
+msgstr "Tipo de acción"
 
 #. module: stock_location
-#: selection:product.pulled.flow,type_proc:0
-msgid "Move"
-msgstr "Movimiento"
-
-#. module: stock_location
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Código EAN no válido"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -441,11 +423,38 @@ msgstr "Cancelar cascada"
 msgid "Invoiced"
 msgstr "Facturado"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "Stock Location Paths"
 #~ msgstr "Rutas ubicación stock"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "stock.location.path"
 #~ msgstr "stock.ubicacion.ruta"
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "Abastecimiento y Ubicaciones"
+
+#~ msgid "Logistic Flow"
+#~ msgstr "Flujo logística"
+
+#~ msgid "Not from Picking"
+#~ msgstr "No desde albarán"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Qty Multiple must be greater than zero."
+#~ msgstr "El múltiplo de la cantidad debe ser más grande que cero."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

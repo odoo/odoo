@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-08-02 14:52+0000\n"
 "Last-Translator: CSro <choongsan@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -32,17 +32,6 @@ msgstr "위키 페이지"
 #: field:wiki.groups,method:0
 msgid "Display Method"
 msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "객체 이름은 x_로 시작해야 하며, 특수문자를 포함하면 안됩니다 !"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "액션 정의에서 유효하지 않은 모델 이름"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -70,11 +59,6 @@ msgstr "섹션"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "섹션 만들기 ?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -115,8 +99,8 @@ msgid "Parent Menu"
 msgstr "부모 메뉴"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -260,9 +244,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "뷰 아키텍처의 XML이 유효하지 않습니다 !"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "섹션 만들기 ?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -348,11 +332,6 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
-
-#. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
@@ -385,6 +364,15 @@ msgstr "최소 하나 또는 최대 두 개의 히스토리 리비전을 선택�
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -470,6 +458,10 @@ msgstr ""
 #~ msgid "Wiki Groups Links"
 #~ msgstr "위키 그룹 링크"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "객체 이름은 x_로 시작해야 하며, 특수문자를 포함하면 안됩니다 !"
+
 #~ msgid "Create a Menu"
 #~ msgstr "메뉴 만들기"
 
@@ -491,6 +483,9 @@ msgstr ""
 #~ msgid "Document Management"
 #~ msgstr "문서 관리"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "뷰 아키텍처의 XML이 유효하지 않습니다 !"
+
 #~ msgid "Parent Group"
 #~ msgstr "부모 그룹"
 
@@ -509,3 +504,6 @@ msgstr ""
 
 #~ msgid "Tags"
 #~ msgstr "태그"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "액션 정의에서 유효하지 않은 모델 이름"

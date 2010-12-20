@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-01 08:44+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -22,6 +22,7 @@ msgid "# Leads"
 msgstr "# Leads"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
@@ -52,11 +53,6 @@ msgstr "Stadium dossier"
 #: view:crm.meeting:0
 msgid "Visibility"
 msgstr "Zichtbaarheid"
-
-#. module: crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: crm
 #: field:crm.lead,title:0
@@ -149,7 +145,6 @@ msgid "Resource's Calendar"
 msgstr "Resource's agenda"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_partner.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:0
@@ -203,10 +198,11 @@ msgid "Warning!"
 msgstr "Waarschuwing!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_send_email.py:0
-#, python-format
-msgid "Can not send mail!"
-msgstr "Kan geen email versturen!"
+#: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Verkoopkansen analyse"
 
 #. module: crm
 #: field:crm.lead,partner_id:0
@@ -297,11 +293,6 @@ msgid "Sections"
 msgstr "Secties"
 
 #. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: crm
 #: view:crm.merge.opportunity:0
 msgid "_Merge"
 msgstr "Sa_menvoegen"
@@ -390,6 +381,11 @@ msgid "Contact"
 msgstr "Contactpersoon"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Enhance your core CRM Application with additional functionalities."
+msgstr ""
+
+#. module: crm
 #: field:crm.case.stage,on_change:0
 msgid "Change Probability Automatically"
 msgstr "Wijzig waarschijnlijkheid automatisch"
@@ -422,6 +418,7 @@ msgid "When a real project/opportunity is detected"
 msgstr "Wanneer een echt project/verkoopkans is ontdekt"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: field:crm.installer,crm_fundraising:0
 msgid "Fundraising"
 msgstr "Fondsenwerving"
@@ -549,16 +546,9 @@ msgid "Create Opportunity"
 msgstr "Maak verkoopkans"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
-#: selection:crm.meeting,month_list:0
-#: selection:crm.phonecall.report,month:0
-msgid "August"
-msgstr "Augustus"
-
-#. module: crm
-#: field:crm.segmentation,sales_purchase_active:0
-msgid "Use The Sales Purchase Rules"
-msgstr "Gebruik Verkoop-/Inkoop-regels"
+#: view:crm.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -674,6 +664,16 @@ msgstr ""
 "Standaard loyaliteit voor de periode die voorafgaat aan 'Maximum Interval' "
 "berekening. Dit is de beginwaarde van de loyaliteit als er nog geen "
 "gebeurtenissen voor deze relatie hebben plaatsgevonden."
+
+#. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Claim"
+msgstr ""
+
+#. module: crm
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -835,12 +835,12 @@ msgstr "Statistisch dashboard"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:0
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
 #: field:crm.lead2opportunity,name:0
 #: field:crm.meeting,opportunity_id:0
-#: view:crm.phonecall:0
 #: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
@@ -1112,6 +1112,14 @@ msgid "Mobile"
 msgstr "Mobiel"
 
 #. module: crm
+#: code:addons/crm/wizard/crm_merge_opportunities.py:0
+#, python-format
+msgid ""
+"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+msgstr ""
+"Er zijn geen andere 'Open' of 'Wachtend' verkoopkansen voor de relatie '%s'."
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Next Stage"
 msgstr "Volgende stadium"
@@ -1234,6 +1242,7 @@ msgstr "Stadium:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
+#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Gewonnen"
@@ -1254,6 +1263,7 @@ msgid "HTML formatting?"
 msgstr "HTML formaat?"
 
 #. module: crm
+#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
 #: view:crm.meeting:0
@@ -1281,6 +1291,13 @@ msgstr "Laagste"
 #: field:crm.send.mail.attachment,binary:0
 msgid "Attachment"
 msgstr "Bijlage"
+
+#. module: crm
+#: selection:crm.lead.report,month:0
+#: selection:crm.meeting,month_list:0
+#: selection:crm.phonecall.report,month:0
+msgid "August"
+msgstr "Augustus"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1337,11 +1354,6 @@ msgid "History Information"
 msgstr "Historie informatie"
 
 #. module: crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: crm
 #: field:base.action.rule,act_mail_to_partner:0
 msgid "Mail to Partner"
 msgstr "Mail naar relatie"
@@ -1372,7 +1384,9 @@ msgstr "Conditie dossier velden"
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Fases"
 
@@ -1549,6 +1563,11 @@ msgid "Search"
 msgstr "Zoeken"
 
 #. module: crm
+#: view:board.board:0
+msgid "Opportunities by Categories"
+msgstr ""
+
+#. module: crm
 #: field:crm.meeting,interval:0
 msgid "Interval"
 msgstr "Interval"
@@ -1661,11 +1680,6 @@ msgid "Invite People"
 msgstr "Personen uitnodigen"
 
 #. module: crm
-#: view:board.board:0
-msgid "Opportunities By Categories"
-msgstr "Verkoopkansen op categorie"
-
-#. module: crm
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive Sales team."
 msgstr "Fout ! U kunt geen recursief verkoopteam maken."
@@ -1760,11 +1774,6 @@ msgstr "De"
 #: field:crm.send.mail.attachment,wizard_id:0
 msgid "Wizard"
 msgstr "Assistent"
-
-#. module: crm
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -2007,12 +2016,9 @@ msgid "Select stages for this Sales Team"
 msgstr "Selecteer stadia voor dit verkoopteam"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_merge_opportunities.py:0
-#, python-format
-msgid ""
-"There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
+#: view:board.board:0
+msgid "Opportunities by Stage"
 msgstr ""
-"Er zijn geen andere 'Open' of 'Wachtend' verkoopkansen voor de relatie '%s'."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -2094,9 +2100,9 @@ msgid "Priority"
 msgstr "Prioriteit"
 
 #. module: crm
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Gebruik Verkoop-/Inkoop-regels"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
@@ -2289,6 +2295,11 @@ msgstr "Terugzetten naar onbevestigd"
 #, python-format
 msgid "Note"
 msgstr "Opmerking"
+
+#. module: crm
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2530,16 +2541,10 @@ msgid "Weekly"
 msgstr "Wekelijks"
 
 #. module: crm
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr "Dit menu heeft al een snelkoppeling!"
-
-#. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
-msgstr "Verkoopkansen analyse"
+#: code:addons/crm/wizard/crm_send_email.py:0
+#, python-format
+msgid "Can not send mail!"
+msgstr "Kan geen email versturen!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2569,11 +2574,6 @@ msgstr "Overig"
 #: selection:crm.phonecall,state:0
 msgid "Done"
 msgstr "Klaar"
-
-#. module: crm
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
 
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
@@ -2614,13 +2614,6 @@ msgstr "Woonplaats"
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
 msgstr "Bezet"
-
-#. module: crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: crm
 #: field:crm.installer,crm_helpdesk:0
@@ -2810,6 +2803,11 @@ msgid "Continue Process"
 msgstr "Vervolg proces"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Configure Your CRM Application"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
 msgstr "Telefoongesprek met relatie"
@@ -2942,7 +2940,6 @@ msgstr "Uitnodigingen"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
-#: field:crm.case.stage,object_id:0
 msgid "Object Name"
 msgstr "Objectnaam"
 
@@ -3101,6 +3098,11 @@ msgid "Operator"
 msgstr "Operator"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Telefoongesprek naar telefoongesprek"
+
+#. module: crm
 #: view:crm.lead:0
 msgid "Schedule/Log Call"
 msgstr "Plan/log gesprek"
@@ -3123,11 +3125,6 @@ msgid ""
 msgstr ""
 "Deze adressen krijgen een kopie van deze email. Wijzig het globale CC veld "
 "van dit dossier om de permanente CC lijst te wijzigen"
-
-#. module: crm
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout! U kunt geen recursief menu maken."
 
 #. module: crm
 #: view:crm.meeting:0
@@ -3176,6 +3173,7 @@ msgstr "Succes ratio (%)"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
+#: model:crm.case.stage,name:crm.stage_opportunity1
 msgid "New"
 msgstr "Nieuw"
 
@@ -3275,6 +3273,7 @@ msgid "Prospect Opportunity"
 msgstr "Verkoopkans prospect"
 
 #. module: crm
+#: view:crm.installer:0
 #: model:ir.actions.act_window,name:crm.action_crm_installer
 msgid "CRM Application Configuration"
 msgstr "CRM Applicatie configuratie"
@@ -3322,6 +3321,7 @@ msgstr "Dossieroverleg"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
+#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr "Kwalificatie"
 
@@ -3480,6 +3480,11 @@ msgstr ""
 "email adressen met een comma"
 
 #. module: crm
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: crm
 #: field:crm.partner2opportunity,probability:0
 #: field:crm.phonecall2opportunity,probability:0
 msgid "Success Probability"
@@ -3577,14 +3582,6 @@ msgid "Delay to Open"
 msgstr "Vertraging tot openen"
 
 #. module: crm
-#: code:addons/crm/crm_opportunity.py:0
-#, python-format
-msgid "There is no stage for won opportunities defined for this Sale Team."
-msgstr ""
-"Er is geen stadium voor gewonnen verkoopkansen gedefinieerd voor dit "
-"verkoopteam."
-
-#. module: crm
 #: field:crm.lead.report,user_id:0
 #: field:crm.phonecall.report,user_id:0
 msgid "User"
@@ -3604,7 +3601,6 @@ msgid "No E-Mail ID Found for your Company address!"
 msgstr "Geen email-ID gevonden voor uw bedrijfsadres!"
 
 #. module: crm
-#: view:board.board:0
 #: view:crm.lead.report:0
 msgid "Opportunities By Stage"
 msgstr "Verkoopkansen op stadium"
@@ -3620,6 +3616,15 @@ msgstr "Plan telefoongesprek"
 #: selection:crm.phonecall.report,month:0
 msgid "January"
 msgstr "Januari"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_opportunity_stage_act
+msgid ""
+"Create specific stages that will help your sales better organise their sales "
+"pipeline by maintaining them to their sales opportunities. It will allow "
+"them to easily track how is positioned a specific opportunity in the sales "
+"cycle."
+msgstr ""
 
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
@@ -3649,9 +3654,9 @@ msgid "Need Consulting"
 msgstr "Heeft dienstverlening nodig"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr "Telefoongesprek naar telefoongesprek"
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:0
@@ -3672,6 +3677,11 @@ msgid "Recurrent ID date"
 msgstr "Herhaling ID datum"
 
 #. module: crm
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 #, python-format
 msgid "Merged into Opportunity: %s"
@@ -3684,11 +3694,6 @@ msgstr "Samengevoegd in verkoopkans: %s"
 #, python-format
 msgid "Close"
 msgstr "Afsluiten"
-
-#. module: crm
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3832,6 +3837,7 @@ msgstr "Plan een afspraak"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Verloren"
@@ -3885,6 +3891,7 @@ msgstr "Optie"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
+#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr "Onderhandeling"
 
@@ -3921,6 +3928,7 @@ msgstr "Tweede"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
+#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr "Voorstel"
 
@@ -4217,6 +4225,9 @@ msgstr "Nieuwsbrief"
 #~ msgid "%(case_subject)s = Case subject"
 #~ msgstr "%(case_subject)s = Onderwerp dossier"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid ""
 #~ "The generic Open ERP Customer Relationship Management\n"
 #~ "system enables a group of people to intelligently and efficiently manage\n"
@@ -4351,6 +4362,11 @@ msgstr "Nieuwsbrief"
 
 #~ msgid "General Description"
 #~ msgstr "Algemene omschrijving"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the user."
@@ -5471,6 +5487,9 @@ msgstr "Nieuwsbrief"
 #~ msgid "Meetings Tree"
 #~ msgstr "Afspraken"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
 #, python-format
 #~ msgid "is converted to Opportunity."
 #~ msgstr "is omgezet naar verkoopkans."
@@ -5482,11 +5501,41 @@ msgstr "Nieuwsbrief"
 #~ msgid "Closed/Cancelled \\nLeads Could not convert into Opportunity"
 #~ msgstr "Gesloten/Geannuleerd \\nLeads konden niet omgezet in verkoopkans"
 
+#~ msgid "Opportunities By Categories"
+#~ msgstr "Verkoopkansen op categorie"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
+
 #, python-format
 #~ msgid "Lead "
 #~ msgstr "Lead "
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout! U kunt geen recursief menu maken."
+
+#, python-format
+#~ msgid "There is no stage for won opportunities defined for this Sale Team."
+#~ msgstr ""
+#~ "Er is geen stadium voor gewonnen verkoopkansen gedefinieerd voor dit "
+#~ "verkoopteam."
 
 #, python-format
 #~ msgid "Closed/Cancelled Phone \\nCall Could not convert into Opportunity"
 #~ msgstr ""
 #~ "Gesloten/geannuleerde telefoongesprek \\nKon niet omzetten naar verkoopkans"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Shortcut for this menu already exists!"
+#~ msgstr "Dit menu heeft al een snelkoppeling!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

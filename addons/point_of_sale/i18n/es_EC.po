@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-06 15:41+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-07 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -41,11 +41,6 @@ msgstr "Aplicar descuento"
 #: view:pos.order:0
 msgid "Set to draft"
 msgstr "Cambiar a borrador"
-
-#. module: point_of_sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -78,14 +73,9 @@ msgid "All Cashboxes Of the day :"
 msgstr "Todas las cajas del dia"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_close_statement
-msgid "Close Registers"
-msgstr "Cerrar registradores"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_box_out
-msgid "Pos Box Out"
-msgstr "Pos Box Out"
+#: view:pos.box.entries:0
+msgid "Put Money"
+msgstr "Put Money"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
@@ -104,11 +94,6 @@ msgstr "Detalles de ventas"
 #: view:pos.close.statement:0
 msgid "Are you sure you want to close the statements ?"
 msgstr "Are you sure you want to close the statements ?"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
-msgid "Open Register"
-msgstr "Abrir registrador"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_scan_product
@@ -158,15 +143,6 @@ msgid "Amount"
 msgstr "Monto"
 
 #. module: point_of_sale
-#: help:pos.order,user_id:0
-msgid ""
-"Person who uses the the register. It could be a reliever, a student or an "
-"interim employee."
-msgstr ""
-"Person who uses the the register. It could be a reliever, a student or an "
-"interim employee."
-
-#. module: point_of_sale
 #: report:pos.lines:0
 msgid "VAT"
 msgstr "Impuesto"
@@ -180,12 +156,6 @@ msgstr "Impuesto"
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
 msgstr "Total transacción"
-
-#. module: point_of_sale
-#: selection:report.cash.register,month:0
-#: selection:report.pos.order,month:0
-msgid "May"
-msgstr "May"
 
 #. module: point_of_sale
 #: help:account.journal,special_journal:0
@@ -280,6 +250,12 @@ msgid "Sales Report"
 msgstr "Reporte de Ventas"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
+#, python-format
+msgid "No Order Lines"
+msgstr ""
+
+#. module: point_of_sale
 #: view:pos.order:0
 msgid "Other Information"
 msgstr "Otra información"
@@ -301,12 +277,12 @@ msgid "Max Discount(%)"
 msgstr "Max Discount(%)"
 
 #. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
-msgstr "Sortie de caisse"
+#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
+msgid "Cash register management"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "No valid pricelist line found !"
@@ -333,11 +309,6 @@ msgid "Discount (%)"
 msgstr "Descuento (%)"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
-msgid "Register management"
-msgstr "Administracion de Registradores"
-
-#. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
 msgstr "Ctd. total"
@@ -346,6 +317,14 @@ msgstr "Ctd. total"
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
 msgstr "Sales by user monthly"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
+#, python-format
+msgid ""
+"You can not open a Cashbox for \"%s\".\n"
+"Please close its related cash register."
+msgstr ""
 
 #. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
@@ -383,11 +362,6 @@ msgstr "Are you sure you want to close your sales ?"
 #: selection:report.pos.order,month:0
 msgid "August"
 msgstr "Agosto"
-
-#. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Trata de asignar un paquete que nos es del mismo producto"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -428,12 +402,6 @@ msgstr "To count"
 #: report:pos.details_summary:0
 msgid "Summary"
 msgstr "Summary"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "You don't have enough access to validate this sale!"
-msgstr "You don't have enough access to validate this sale!"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -556,11 +524,6 @@ msgid "Ending Balance"
 msgstr "Saldo final"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
-msgid "Today's Sales"
-msgstr "Today's Sales"
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
 msgid "Products for Output Operations"
 msgstr "Products for Output Operations"
@@ -571,7 +534,7 @@ msgid "Sale by Date and User"
 msgstr "Sale by Date and User"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid ""
 "Cannot delete a point of sale which is closed or contains confirmed "
@@ -581,9 +544,15 @@ msgstr ""
 "cashboxes!"
 
 #. module: point_of_sale
-#: field:report.cash.register,date:0
-msgid "Create Date"
-msgstr "Create Date"
+#: code:addons/point_of_sale/wizard/pos_close_statement.py:0
+#, python-format
+msgid "Cash registers are already closed."
+msgstr ""
+
+#. module: point_of_sale
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -631,20 +600,18 @@ msgid "March"
 msgstr "March"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                'Please set one before choosing a product."
-msgstr ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                'Please set one before choosing a product."
-
-#. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
 msgstr "User's Product"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"You have to select a pricelist in the sale form !\n"
+"Please set one before choosing a product."
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -663,26 +630,6 @@ msgstr "Partner Ref."
 #: view:pos.close.statement:0
 msgid "Close Statements"
 msgstr "Close Statements"
-
-#. module: point_of_sale
-#: field:pos.box.entries,journal_id:0
-#: field:pos.box.out,journal_id:0
-msgid "Register"
-msgstr "Registrador"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product\" \\n                   "
-" \" and quantity.\n"
-"You have to change either the product,\" \\n                    \" the "
-"quantity or the pricelist."
-msgstr ""
-"Couldn't find a pricelist line matching this product\" \\n                   "
-" \" and quantity.\n"
-"You have to change either the product,\" \\n                    \" the "
-"quantity or the pricelist."
 
 #. module: point_of_sale
 #: view:account.journal:0
@@ -754,9 +701,9 @@ msgid "Creation Date"
 msgstr "Fecha creación"
 
 #. module: point_of_sale
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Error número Bvr invalido"
+#: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
+msgid "Today's Sales"
+msgstr "Today's Sales"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -775,7 +722,7 @@ msgid "Total :"
 msgstr "Total :"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Create line failed !"
 msgstr "Create line failed !"
@@ -787,7 +734,7 @@ msgid "Product Name"
 msgstr "Producto"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Invalid action !"
 msgstr "Accion Invalida !"
@@ -809,11 +756,6 @@ msgstr "Total Facturado"
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
 msgstr "# de Cant"
-
-#. module: point_of_sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -990,6 +932,12 @@ msgid "Input Operations"
 msgstr "Operaciones Entrantes"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_report_cash_register
+#: view:report.cash.register:0
+msgid "Point of Sale Cash Register Analysis"
+msgstr "Point of Sale Cash Register Analysis"
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sales_user_today
 msgid "Sale by Users"
 msgstr "Ventas por usuario"
@@ -1021,6 +969,12 @@ msgid "Amount total"
 msgstr "Importe total"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
+#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
+msgid "Cash Registers"
+msgstr ""
+
+#. module: point_of_sale
 #: view:account.journal:0
 #: field:account.journal,journal_users:0
 msgid "Users"
@@ -1048,6 +1002,11 @@ msgid "POS"
 msgstr "POS"
 
 #. module: point_of_sale
+#: field:report.cash.register,date:0
+msgid "Create Date"
+msgstr "Create Date"
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Output Operations"
 msgstr "Operaciones Salientes"
@@ -1067,6 +1026,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
+msgid "Open Cash Registers"
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.lines:0
 #: report:pos.payment.report:0
@@ -1075,6 +1039,11 @@ msgstr "Nombre"
 #: report:pos.user.product:0
 msgid "]"
 msgstr "]"
+
+#. module: point_of_sale
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1105,7 +1074,7 @@ msgid "All Closed CashBox"
 msgstr "Todas las cajas cerradas"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No Pricelist !"
 msgstr "No hay list de precios"
@@ -1186,11 +1155,6 @@ msgid "Special Journal"
 msgstr "Diario Especial"
 
 #. module: point_of_sale
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Error: referencia BVR es requerida"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_all_closed_cashbox_of_the_day
 msgid "All closed cashbox of the day"
 msgstr "Todos los cierre de caja del dia"
@@ -1214,16 +1178,6 @@ msgstr "Connected Salesman"
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr "Metodo para precio"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:0
-#, python-format
-msgid ""
-"The maximum value you can still withdraw is exceeded. \n"
-" Remaining value is equal to %d "
-msgstr ""
-"The maximum value you can still withdraw is exceeded. \n"
-" Remaining value is equal to %d "
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -1261,37 +1215,13 @@ msgid "Sale by User"
 msgstr "Ventas por usuario"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:0
 #: code:addons/point_of_sale/wizard/pos_box_out.py:0
 #, python-format
 msgid "Error !"
 msgstr "Error !"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related Register.' %(journal.name)))\n"
-"            \n"
-"            number = ''\n"
-"            if journal.sequence_id:\n"
-"                number = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"            else:\n"
-"                number = sequence_obj.get(cr, uid, 'account.cash.statement"
-msgstr ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related Register.' %(journal.name)))\n"
-"            \n"
-"            number = ''\n"
-"            if journal.sequence_id:\n"
-"                number = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"            else:\n"
-"                number = sequence_obj.get(cr, uid, 'account.cash.statement"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
@@ -1315,7 +1245,7 @@ msgid "July"
 msgstr "Julio"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Please provide an account for the product: %s"
 msgstr "Por favor configure una cuenta para el producto: %s"
@@ -1334,6 +1264,11 @@ msgstr "Número de copias"
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
 msgstr "Pago de punto de venta"
+
+#. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Sortie de caisse"
+msgstr "Sortie de caisse"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1363,20 +1298,6 @@ msgid "Is accompte"
 msgstr "Segun"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product\" \\n                \" "
-"and quantity.\n"
-"You have to change either the product,\" \\n                \" the quantity "
-"or the pricelist."
-msgstr ""
-"Couldn't find a pricelist line matching this product\" \\n                \" "
-"and quantity.\n"
-"You have to change either the product,\" \\n                \" the quantity "
-"or the pricelist."
-
-#. module: point_of_sale
 #: view:report.cash.register:0
 #: field:report.cash.register,month:0
 #: view:report.pos.order:0
@@ -1397,6 +1318,8 @@ msgstr "Estado de Cuenta"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: model:ir.ui.menu,name:point_of_sale.menu_cash_register
+#: field:pos.box.entries,journal_id:0
+#: field:pos.box.out,journal_id:0
 #: field:pos.make.payment,journal:0
 msgid "Cash Register"
 msgstr "Caja registradora"
@@ -1428,12 +1351,7 @@ msgid "Customer Note"
 msgstr "Observaciones de cliente"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
-msgid "Open Registers"
-msgstr "Abrir registradores"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No order lines defined for this sale."
 msgstr "No order lines defined for this sale."
@@ -1442,11 +1360,6 @@ msgstr "No order lines defined for this sale."
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
 msgstr "Saldo inicial"
-
-#. module: point_of_sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Error ! No puedes crear menus recursivos"
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0
@@ -1466,11 +1379,6 @@ msgstr "All sales lines"
 #: selection:report.cash.register,state:0
 msgid "Quotation"
 msgstr "Cotizacion"
-
-#. module: point_of_sale
-#: view:pos.make.payment:0
-msgid "The register must be opened to be able to execute a payment."
-msgstr "The register must be opened to be able to execute a payment."
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -1497,19 +1405,16 @@ msgid "Statement lines"
 msgstr "Statement lines"
 
 #. module: point_of_sale
+#: help:pos.order,user_id:0
+msgid ""
+"Person who uses the the cash register. It could be a reliever, a student or "
+"an interim employee."
+msgstr ""
+
+#. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
 msgstr "Num. Factura"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                    'Please set one before choosing a product."
-msgstr ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                    'Please set one before choosing a product."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
@@ -1558,19 +1463,6 @@ msgid "Sales lines Report"
 msgstr "Reporte de Ventas"
 
 #. module: point_of_sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
-msgid "Close Register"
-msgstr "Cerrar Registrador"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
 #: view:pos.box.entries:0
 msgid "Box Entries"
@@ -1592,16 +1484,6 @@ msgstr "Net margin per Qty"
 #: view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
 msgstr "Sales by User Margin"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"There is no receivable account defined for this journal:'\\n                 "
-"   ' \"%s\" (id:%d)"
-msgstr ""
-"There is no receivable account defined for this journal:'\\n                 "
-"   ' \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1678,10 +1560,15 @@ msgid "Yes"
 msgstr "Si"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_cash_register
-#: view:report.cash.register:0
-msgid "Point of Sale Cash Register Analysis"
-msgstr "Point of Sale Cash Register Analysis"
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.make.payment:0
+msgid "The cash register must be opened to be able to execute a payment."
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1693,12 +1580,6 @@ msgstr "Tributacion"
 #: view:product.product:0
 msgid "Product Description"
 msgstr "Descripción del producto"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
-#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
-msgid "Registers"
-msgstr "Registradores"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -1721,6 +1602,11 @@ msgstr "Total"
 #: view:pos.sale.user:0
 msgid "Sale By User"
 msgstr "Ventas por usuario"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
+msgid "Open Cash Register"
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1776,6 +1662,14 @@ msgid "Invoice Date"
 msgstr "Fecha Facturacion"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,serial_number:0
 msgid "Serial Number"
 msgstr "Num Serie"
@@ -1786,7 +1680,7 @@ msgid "Reprint"
 msgstr "Reimprimir"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:0
 #: code:addons/point_of_sale/wizard/pos_box_out.py:0
 #, python-format
@@ -1804,6 +1698,7 @@ msgid "Pos order"
 msgstr "Venta TPV"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Error!"
@@ -1863,6 +1758,11 @@ msgid "Add Discount"
 msgstr "Agregar Desc."
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
+msgid "Close Cash Register"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,qty_rfd:0
 msgid "Refunded Quantity"
 msgstr "Devolver cantidad"
@@ -1911,6 +1811,11 @@ msgid "Sales Lines"
 msgstr "Sales Lines"
 
 #. module: point_of_sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.discount,discount:0
 msgid "Discount "
 msgstr "Discount "
@@ -1926,7 +1831,7 @@ msgid "Supplier Invoice"
 msgstr "Supplier Invoice"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Modify line failed !"
 msgstr "Modify line failed !"
@@ -1935,12 +1840,6 @@ msgstr "Modify line failed !"
 #: field:pos.make.payment,payment_name:0
 msgid "Payment name"
 msgstr "Payment name"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_close_statement.py:0
-#, python-format
-msgid "Registers are already closed."
-msgstr "Registers are already closed."
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -1958,9 +1857,14 @@ msgid "Today's Sales by Current User"
 msgstr "Today's Sales by Current User"
 
 #. module: point_of_sale
-#: view:pos.box.entries:0
-msgid "Put Money"
-msgstr "Put Money"
+#: model:ir.model,name:point_of_sale.model_pos_box_out
+msgid "Pos Box Out"
+msgstr "Pos Box Out"
+
+#. module: point_of_sale
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -1973,20 +1877,16 @@ msgid "Starting Date"
 msgstr "Starting Date"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"There is no income '\\n                        'account defined for this "
-"product: \"%s\" (id:%d)"
-msgstr ""
-"There is no income '\\n                        'account defined for this "
-"product: \"%s\" (id:%d)"
-
-#. module: point_of_sale
 #: field:pos.order,date_validation:0
 #: field:report.pos.order,date_validation:0
 msgid "Validation Date"
 msgstr "Validation Date"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid "You don't have enough access to validate this sale!"
+msgstr "You don't have enough access to validate this sale!"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
@@ -2102,10 +2002,17 @@ msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Please provide a partner for the sale."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"There is no receivable account defined for this journal: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,user_salesman_id:0
@@ -2159,7 +2066,7 @@ msgid "POS Orders lines"
 msgstr "POS Orders lines"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -2186,6 +2093,11 @@ msgstr "Please create an invoice for this sale."
 #: field:report.pos.order,date:0
 msgid "Date Order"
 msgstr "Date Order"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_close_statement
+msgid "Close Cash Registers"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2219,9 +2131,9 @@ msgid "Subtotal w/o Tax"
 msgstr "Subtotal w/o Tax"
 
 #. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Debe asignar un paquete a este producto"
+#: view:pos.order:0
+msgid "Add product"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2265,9 +2177,10 @@ msgid "Description"
 msgstr "Description"
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_cash_journal
-msgid "Cash Journal"
-msgstr "Diario de Efectivo"
+#: selection:report.cash.register,month:0
+#: selection:report.pos.order,month:0
+msgid "May"
+msgstr "May"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -2327,6 +2240,16 @@ msgstr "February"
 #: view:report.cash.register:0
 msgid "    Today    "
 msgstr "    Today    "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_box_out.py:0
+#, python-format
+msgid ""
+"The maximum value you can still withdraw is exceeded. \n"
+" Remaining value is equal to %d "
+msgstr ""
+"The maximum value you can still withdraw is exceeded. \n"
+" Remaining value is equal to %d "
 
 #. module: point_of_sale
 #: field:pos.order,remboursed:0

@@ -7,31 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-08-02 22:01+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
 msgstr "계정4 ID"
-
-#. module: account_analytic_plans
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_analytic_plans
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -109,6 +98,11 @@ msgid "Plan Id"
 msgstr "플랜 ID"
 
 #. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
 msgstr "분석 배분 모델"
@@ -129,19 +123,14 @@ msgid "Distribution Code"
 msgstr "배분 코드"
 
 #. module: account_analytic_plans
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "액션 정의에서 유효하지 않은 모델 이름"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Percentage"
+msgstr "퍼센트"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Printing date"
 msgstr "인쇄 날짜"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Percentage"
-msgstr "퍼센트"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -214,6 +203,11 @@ msgid "Default Entries"
 msgstr "디폴트 엔트리"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
 #, python-format
@@ -254,6 +248,11 @@ msgid "Maximum Allowed (%)"
 msgstr "최대 허용 수준 (%)"
 
 #. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
 msgstr "루트 계정"
@@ -271,11 +270,6 @@ msgid "Analytic Plan Instance"
 msgstr "분석 플랜 인스턴스"
 
 #. module: account_analytic_plans
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
-
-#. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
 msgstr "배분 모델"
@@ -283,6 +277,12 @@ msgstr "배분 모델"
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Ok"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -329,6 +329,11 @@ msgstr "금액"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
 msgid "Print Crossovered Analytic"
+msgstr ""
+
+#. module: account_analytic_plans
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -469,6 +474,11 @@ msgid "Invoice"
 msgstr ""
 
 #. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
 #: view:analytic.plan.create.model:0
 msgid "Cancel"
@@ -478,6 +488,11 @@ msgstr "취소"
 #: field:account.crossovered.analytic,date1:0
 msgid "Start Date"
 msgstr "시작 날짜"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -582,3 +597,13 @@ msgstr ""
 
 #~ msgid "Printing date:"
 #~ msgstr "인쇄 날짜:"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자를 포함하면 안 됩니다 !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "액션 정의에서 유효하지 않은 모델 이름"

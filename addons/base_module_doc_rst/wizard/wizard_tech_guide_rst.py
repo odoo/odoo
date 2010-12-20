@@ -404,7 +404,7 @@ class wizard_tech_guide_rst(wizard.interface):
             'name': 'modules_technical_guide_rst.tgz'
         }
 
-    def _get_views(self, cr, uid, module_id, context={}):
+    def _get_views(self, cr, uid, module_id, context=None):
         pool = pooler.get_pool(cr.dbname)
         module_module_obj = pool.get('ir.module.module')
         res = {}

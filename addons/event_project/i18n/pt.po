@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-08 12:40+0000\n"
-"Last-Translator: Madalena_prime <madalena.barreto@prime.cv>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-11 21:26+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
@@ -49,21 +49,20 @@ msgid ""
 msgstr ""
 
 #. module: event_project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: event_project
 #: view:event.project:0
 #: model:ir.actions.act_window,name:event_project.action_event_project
 msgid "Retro-Planning"
 msgstr ""
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+#: view:event.event:0
+msgid "Create Retro-Planning"
+msgstr "Criar Retro-Planeamento"
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr "Erro! A data de fim não pode ser anterior à data de início."
 
 #. module: event_project
 #: field:event.event,project_id:0
@@ -73,16 +72,11 @@ msgstr "Projecto"
 #. module: event_project
 #: field:event.project,project_id:0
 msgid "Template of Project"
-msgstr ""
+msgstr "Modelo de projeto"
 
 #. module: event_project
 #: model:ir.module.module,shortdesc:event_project.module_meta_information
 msgid "Event Project - Create Retro-Planning to manage your Events"
-msgstr ""
-
-#. module: event_project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: event_project
@@ -94,22 +88,22 @@ msgstr "Tarefas"
 #. module: event_project
 #: field:event.event,task_ids:0
 msgid "Project tasks"
-msgstr "Tarefas do projecto"
+msgstr "Tarefas do Projecto"
 
 #. module: event_project
 #: view:event.project:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: event_project
 #: field:event.project,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Data de início"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Create Retro-Planning"
-msgstr "Criar Retro-Planeamento"
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr "Erro! Não se pode criar eventos recursivamente."
 
 #. module: event_project
 #: model:ir.model,name:event_project.model_event_event
@@ -119,10 +113,7 @@ msgstr "Evento"
 #. module: event_project
 #: view:event.event:0
 msgid "Tasks management"
-msgstr "Gestão de tarefas"
-
-#~ msgid "Remaining Tasks"
-#~ msgstr "Tarefas restantes"
+msgstr "Gestão de Tarefas"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"

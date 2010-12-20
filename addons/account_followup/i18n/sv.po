@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-30 16:02+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-09 11:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -110,30 +110,40 @@ msgid "Select Partners to Remind"
 msgstr "Välj partner att påminna"
 
 #. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr ""
 
 #. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr ""
+msgstr "Nettodagar"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr ""
+msgstr "Uppföljningar"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Balans > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "Total debet"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -143,7 +153,7 @@ msgstr ""
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
-msgstr ""
+msgstr "Uppföljning"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -176,12 +186,12 @@ msgstr "Fakturapåminnelser"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr ""
+msgstr "Kontouppföljning"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "End of Month"
-msgstr ""
+msgstr "Månadsslut"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -189,19 +199,14 @@ msgid "Not Litigation"
 msgstr ""
 
 #. module: account_followup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Namnet på modulen måste vara unikt!"
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
-msgstr ""
+msgstr "%(user_signature)er: Användarnamn"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
-msgstr ""
+msgstr "Debet"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -214,17 +219,12 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr ""
+msgstr "Ref"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
-
-#. module: account_followup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -268,14 +268,15 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ogiltig XML för Vy-arkitektur!"
-
-#. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "Skicka email på partnerns språk"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -347,7 +348,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "Skicka mail"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -367,7 +368,7 @@ msgstr "Accounting follow-ups management"
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Blockerad"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -387,19 +388,9 @@ msgid "Select Partners"
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
 msgstr "E-postinställningar"
-
-#. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -419,12 +410,12 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Balance:"
-msgstr ""
+msgstr "Balans:"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "Uppföljning statistik"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -439,12 +430,17 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
+msgstr "Journalrader"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
 msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
-msgstr ""
+msgstr "Skicka bekräftelse epost"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:0
@@ -452,6 +448,11 @@ msgstr ""
 msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
+msgstr ""
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: account_followup
@@ -540,11 +541,6 @@ msgid "Follow-Up Lines"
 msgstr ""
 
 #. module: account_followup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
 msgstr ""
@@ -553,13 +549,6 @@ msgstr ""
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
 msgstr ""
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -708,3 +697,25 @@ msgstr ""
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
 msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ogiltig XML för Vy-arkitektur!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."

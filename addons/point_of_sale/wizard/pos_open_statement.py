@@ -40,6 +40,8 @@ class pos_open_statement(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
+        if context is None:
+            context = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
                     "WHERE user_id = %s ORDER BY journal_id"% (uid, ))

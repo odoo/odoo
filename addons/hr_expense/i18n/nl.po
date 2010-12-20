@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-02 07:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -47,11 +47,6 @@ msgstr "Groepeer op..."
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
 msgid "Air Ticket"
 msgstr "Vliegticket"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -269,11 +264,6 @@ msgid "Total Price"
 msgstr "Totaalprijs"
 
 #. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
 msgstr "Sommige kosten kunnen doorbelast worden aan de klant"
@@ -336,16 +326,6 @@ msgstr "Na aanmaken factuur, kosten vergoeden"
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
 msgstr "Vergoeden"
-
-#. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: hr_expense
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fout: UOS moet in andere categorie staan dan UOM"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -442,13 +422,6 @@ msgid "  Year  "
 msgstr "  Jaar  "
 
 #. module: hr_expense
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fout: De standaard UOM en de inkoop UOM moeten in dezelfde categorie staan."
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -470,11 +443,6 @@ msgstr "Klantfactuur maken"
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Concept"
-
-#. module: hr_expense
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -521,11 +489,6 @@ msgstr "Klantproject"
 #: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "Gebruiker"
-
-#. module: hr_expense
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -614,32 +577,15 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: hr_expense
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
-
-#. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
 msgstr "Doorbelasten"
-
-#. module: hr_expense
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #. module: hr_expense
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
 msgstr "Alle medewerker declaraties"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -839,11 +785,6 @@ msgid "Total"
 msgstr "Totaal"
 
 #. module: hr_expense
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
-
-#. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
 msgstr "Volgorde"
@@ -891,6 +832,11 @@ msgstr ""
 msgid "Reinvoicing"
 msgstr "Doorbelasten"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
 
@@ -936,12 +882,18 @@ msgstr "Doorbelasten"
 #~ msgid "Can be Expensed"
 #~ msgstr "Kan gedeclareerd worden"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
 #~ "selection from an HR expense sheet line."
 #~ msgstr ""
 #~ "Controleer of het product zichtbaar kan zijn in de productlijst binnen een "
 #~ "keuze van een HR-declaratieformulier."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
 
 #~ msgid "My Draft expenses"
 #~ msgstr "Mijn conceptdeclaraties"
@@ -951,3 +903,29 @@ msgstr "Doorbelasten"
 
 #~ msgid "Extended filters..."
 #~ msgstr "Uitgebreide filters..."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Fout: UOS moet in andere categorie staan dan UOM"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fout: De standaard UOM en de inkoop UOM moeten in dezelfde categorie staan."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

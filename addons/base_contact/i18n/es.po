@@ -6,26 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-23 09:25+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 11:46+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
 msgid "Title"
 msgstr "Título"
-
-#. module: base_contact
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -46,6 +41,11 @@ msgstr "título"
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
 msgstr "Fecha inicial del trabajo (fecha de unión)."
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
+msgstr ""
 
 #. module: base_contact
 #: help:res.partner.job,function:0
@@ -120,24 +120,18 @@ msgid "Partners"
 msgstr "Empresas"
 
 #. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Función en empresa"
-
-#. module: base_contact
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
 msgstr "Estado"
 
 #. module: base_contact
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+"Si el campo activo se desmarca, permite ocultar el contacto de la empresa "
+"sin eliminarlo."
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -168,11 +162,6 @@ msgid ""
 msgstr ""
 "Orden de importancia de este título de trabajo en la lista de títulos de "
 "trabajo de la empresa relacionada."
-
-#. module: base_contact
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -217,6 +206,11 @@ msgid "Function to address"
 msgstr "Cargo a dirección"
 
 #. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progreso configuración"
+
+#. module: base_contact
 #: field:res.partner.contact,name:0
 msgid "Last Name"
 msgstr "Apellido"
@@ -242,6 +236,11 @@ msgstr "Anterior"
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
 msgstr "Direcciones de empresa"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -284,17 +283,9 @@ msgid "Address which is linked to the Partner"
 msgstr "Dirección que está relacionada con la empresa."
 
 #. module: base_contact
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: base_contact
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#: field:res.partner.job,function:0
+msgid "Partner Function"
+msgstr "Función en empresa"
 
 #. module: base_contact
 #: help:res.partner.job,other:0
@@ -312,9 +303,9 @@ msgid "Otherwise these details will not be visible from address/contact."
 msgstr "Sino estos detalles no serán visibles desde direcciones/contactos."
 
 #. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso configuración"
+#: view:base.contact.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -326,15 +317,6 @@ msgstr "Correo electrónico"
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
 msgstr "base.contacto.instalador"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to true,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-"Si el campo Activo está marcado, permitirá ocultar el contacto de la empresa "
-"sin eliminarlo."
 
 #. module: base_contact
 #: view:res.partner.job:0
@@ -400,11 +382,6 @@ msgstr "General"
 #: view:res.partner.contact:0
 msgid "Photo"
 msgstr "Foto"
-
-#. module: base_contact
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
@@ -479,6 +456,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
 msgstr "Empleado principal"
@@ -522,6 +504,12 @@ msgstr ""
 #~ msgstr "res.partner.contact"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid ""
 #~ "Order of importance of this job title in the list of job title of the linked "
 #~ "partner"
 #~ msgstr ""
@@ -535,6 +523,9 @@ msgstr ""
 #~ "Orden de importancia de esta dirección en la lista de direcciones del "
 #~ "contacto relacionado"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "Base Contact Process"
 #~ msgstr "Proceso contacto base"
 
@@ -543,3 +534,25 @@ msgstr ""
 
 #~ msgid "General Information"
 #~ msgstr "Información general"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid ""
+#~ "If the active field is set to true,                 it will allow you to "
+#~ "hide the partner contact without removing it."
+#~ msgstr ""
+#~ "Si el campo Activo está marcado, permitirá ocultar el contacto de la empresa "
+#~ "sin eliminarlo."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

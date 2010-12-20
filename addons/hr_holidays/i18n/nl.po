@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-02 07:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -50,34 +50,11 @@ msgid "Leaves Management"
 msgstr "Verlofbeheer"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = obj_hr_holiday_status.get_days_cat( cr, "
-"uid, [record.holiday_status_id.id], record.category_id.id, "
-"False)[record.holiday_status_id.id]['remaining_leaves']\n"
-"                    if leaves_rest < leave_asked:\n"
-"                        raise osv.except_osv(_('Warning!"
-msgstr ""
-
-#. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
 #: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr "Groepeer op..."
-
-#. module: hr_holidays
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
@@ -228,6 +205,14 @@ msgstr "Controle"
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing!"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for category %s while there are too few remaining "
+"leave days."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -449,11 +434,6 @@ msgid "Leaves by Type"
 msgstr "Verlof per soort"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
 msgstr "Lichtzalm"
@@ -462,6 +442,11 @@ msgstr "Lichtzalm"
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
 msgstr "Tarwe"
+
+#. module: hr_holidays
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -492,11 +477,6 @@ msgid "July"
 msgstr "Juli"
 
 #. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
-
-#. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
 "If its True then its Allocation/Request have to be validated by second "
@@ -524,6 +504,14 @@ msgstr " Maand "
 #: view:board.board:0
 msgid "Leaves By Month"
 msgstr "Verlof per maand"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for employee %s while there are too few remaining "
+"leave days."
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -643,11 +631,6 @@ msgid "Black"
 msgstr "Zwart"
 
 #. module: hr_holidays
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr "Vakantie"
@@ -656,46 +639,6 @@ msgstr "Vakantie"
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Leaves Allowed"
 msgstr "Maximaal toegestane verlofdagen"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.category_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            else:\n"
-"                nb = record.number_of_days_temp\n"
-"\n"
-"            if record.holiday_type == 'employee' and record.employee_id:\n"
-"                user_id = record.employee_id.user_id and "
-"record.employee_id.user_id.id or uid\n"
-"\n"
-"            self.write(cr, uid, [record.id], {'state':'confirm', "
-"'number_of_days': nb, 'user_id': user_id })\n"
-"        return True\n"
-"\n"
-"    def holidays_refuse(self, cr, uid, ids, *args):\n"
-"        vals = {'state': 'refuse'}\n"
-"        ids2 = self.pool.get('hr.employee"
-msgstr ""
-"U kunt geen verlof goedkeuren voor %s als het beschikbare verlof minder is "
-"dan het gevraagde verlof.' %(record.category_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            else:\n"
-"                nb = record.number_of_days_temp\n"
-"\n"
-"            if record.holiday_type == 'employee' and record.employee_id:\n"
-"                user_id = record.employee_id.user_id and "
-"record.employee_id.user_id.id or uid\n"
-"\n"
-"            self.write(cr, uid, [record.id], {'state':'confirm', "
-"'number_of_days': nb, 'user_id': user_id })\n"
-"        return True\n"
-"\n"
-"    def holidays_refuse(self, cr, uid, ids, *args):\n"
-"        vals = {'state': 'refuse'}\n"
-"        ids2 = self.pool.get('hr.employee"
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
@@ -818,11 +761,6 @@ msgid "Request Type"
 msgstr "Soort aanvraag"
 
 #. module: hr_holidays
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: hr_holidays
 #: help:hr.holidays.status,active:0
 msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
@@ -863,11 +801,6 @@ msgid "Leaves Analysis"
 msgstr "Verlof analyse"
 
 #. module: hr_holidays
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
@@ -893,22 +826,10 @@ msgid "Validated"
 msgstr "Goedgekeurd"
 
 #. module: hr_holidays
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Reserveringsaanvraag"
-
-#. module: hr_holidays
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -1078,11 +999,6 @@ msgstr "Goedkeuren"
 #: field:hr.holidays,linked_request_ids:0
 msgid "Linked Requests"
 msgstr "Gekoppelde aanvragen"
-
-#. module: hr_holidays
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
@@ -1287,6 +1203,14 @@ msgstr ""
 #~ msgid "Validate"
 #~ msgstr "Bevestig"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
 #~ msgid "Employee Holidays"
 #~ msgstr "Verlof werknemer"
 
@@ -1319,6 +1243,9 @@ msgstr ""
 
 #~ msgid "Encoding of annual available holidays."
 #~ msgstr "Vastleggen van jaarlijks beschikbare verlofdagen"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
 
 #~ msgid "Report Options"
 #~ msgstr "Opties overzicht"
@@ -1444,6 +1371,47 @@ msgstr ""
 #~ msgid "Leave Days"
 #~ msgstr "Verlofdagen"
 
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate leaves for %s while available leaves are less than asked "
+#~ "leaves.' %(record.category_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            else:\n"
+#~ "                nb = record.number_of_days_temp\n"
+#~ "\n"
+#~ "            if record.holiday_type == 'employee' and record.employee_id:\n"
+#~ "                user_id = record.employee_id.user_id and "
+#~ "record.employee_id.user_id.id or uid\n"
+#~ "\n"
+#~ "            self.write(cr, uid, [record.id], {'state':'confirm', "
+#~ "'number_of_days': nb, 'user_id': user_id })\n"
+#~ "        return True\n"
+#~ "\n"
+#~ "    def holidays_refuse(self, cr, uid, ids, *args):\n"
+#~ "        vals = {'state': 'refuse'}\n"
+#~ "        ids2 = self.pool.get('hr.employee"
+#~ msgstr ""
+#~ "U kunt geen verlof goedkeuren voor %s als het beschikbare verlof minder is "
+#~ "dan het gevraagde verlof.' %(record.category_id.name)))\n"
+#~ "                nb = -(record.number_of_days_temp)\n"
+#~ "            else:\n"
+#~ "                nb = record.number_of_days_temp\n"
+#~ "\n"
+#~ "            if record.holiday_type == 'employee' and record.employee_id:\n"
+#~ "                user_id = record.employee_id.user_id and "
+#~ "record.employee_id.user_id.id or uid\n"
+#~ "\n"
+#~ "            self.write(cr, uid, [record.id], {'state':'confirm', "
+#~ "'number_of_days': nb, 'user_id': user_id })\n"
+#~ "        return True\n"
+#~ "\n"
+#~ "    def holidays_refuse(self, cr, uid, ids, *args):\n"
+#~ "        vals = {'state': 'refuse'}\n"
+#~ "        ids2 = self.pool.get('hr.employee"
+
 #~ msgid "Extended options..."
 #~ msgstr "Uitgebreide opties..."
 
@@ -1472,3 +1440,18 @@ msgstr ""
 
 #~ msgid " Leave Type"
 #~ msgstr " Verlofsoort"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42:49+0000\n"
-"PO-Revision-Date: 2010-12-03 15:42:49+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04:35+0000\n"
+"PO-Revision-Date: 2010-12-15 15:04:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -326,6 +326,12 @@ msgstr ""
 #. module: account
 #: help:account.account.type,sign:0
 msgid "Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts."
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
 msgstr ""
 
 #. module: account
@@ -1374,11 +1380,6 @@ msgid "Template for Fiscal Position"
 msgstr ""
 
 #. module: account
-#: model:account.tax.code,name:account.account_tax_code_0
-msgid "Tax Code Test"
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
 msgstr ""
@@ -1941,6 +1942,11 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid "The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -2845,7 +2851,10 @@ msgid "Purchase"
 msgstr ""
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3293,17 +3302,9 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
 msgstr ""
 
 #. module: account
@@ -3521,9 +3522,17 @@ msgid "Shortcut"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
 msgstr ""
 
 #. module: account
@@ -3819,9 +3828,8 @@ msgid "Analytic Account Statistics"
 msgstr ""
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid "This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template"
 msgstr ""
 
 #. module: account
@@ -3903,6 +3911,16 @@ msgstr ""
 #, python-format
 msgid "Please verify the price of the invoice !\n"
 "The real total does not match the computed total."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: account
@@ -5374,6 +5392,11 @@ msgid "Default Credit Account"
 msgstr ""
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr ""
@@ -5545,6 +5568,11 @@ msgid "Centralisation"
 msgstr ""
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -5692,6 +5720,12 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fax :"
+msgstr ""
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
 msgstr ""
 
 #. module: account
@@ -6022,6 +6056,12 @@ msgid "Taxes:"
 msgstr ""
 
 #. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid "The partner bank account to pay\n"
+"Keep empty to use the default"
+msgstr ""
+
+#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6183,11 +6223,6 @@ msgid "Unknown Partner"
 msgstr ""
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr ""
-
-#. module: account
 #: help:account.journal,centralisation:0
 msgid "Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."
 msgstr ""
@@ -6220,11 +6255,6 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Confirm"
-msgstr ""
-
-#. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid "Bank Account Number, Company bank account if Invoice is customer or supplier refund, otherwise Partner bank account number."
 msgstr ""
 
 #. module: account
@@ -6851,6 +6881,11 @@ msgstr ""
 #: model:process.node,note:account.process_node_invoiceinvoice0
 #: model:process.node,note:account.process_node_supplierinvoiceinvoice0
 msgid "Invoice's state is Open"
+msgstr ""
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
 msgstr ""
 
 #. module: account
@@ -7538,6 +7573,11 @@ msgstr ""
 #. module: account
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
+msgstr ""
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
 msgstr ""
 
 #. module: account
@@ -8536,13 +8576,8 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
 msgstr ""
 
 #. module: account

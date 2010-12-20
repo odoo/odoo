@@ -50,7 +50,9 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
      }
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -100,7 +102,7 @@ class crm_opportunity(osv.osv):
                 message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
-
+    
     def case_cancel(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting probability
         @param self: The object pointer
@@ -138,7 +140,7 @@ class crm_opportunity(osv.osv):
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
 
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -147,8 +149,8 @@ class crm_opportunity(osv.osv):
             @stage_id: change state id on run time """
         if not stage_id:
             return {'value':{}}
-
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+        
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
 
         if not stage.on_change:
             return {'value':{}}
@@ -171,7 +173,7 @@ class crm_opportunity(osv.osv):
         @return : Dictionary value for created Meeting view
         """
         value = {}
-        for opp in self.browse(cr, uid, ids):
+        for opp in self.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
 
             # Get meeting views

@@ -41,11 +41,11 @@ class account_unreconcile_reconcile(osv.osv_memory):
 
     def trans_unrec_reconcile(self, cr, uid, ids, context=None):
         obj_move_reconcile = self.pool.get('account.move.reconcile')
-        rec_ids = context['active_ids']
         if context is None:
             context = {}
+        rec_ids = context['active_ids']
         if rec_ids:
-            obj_move_reconcile.unlink(cr, uid, rec_ids)
+            obj_move_reconcile.unlink(cr, uid, rec_ids, context=context)
         return {}
 
 account_unreconcile_reconcile()

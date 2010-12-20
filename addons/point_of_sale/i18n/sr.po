@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-14 21:38+0000\n"
+"Last-Translator: Christophe (OpenERP) <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -42,11 +42,6 @@ msgstr "Prihvati Popust"
 #: view:pos.order:0
 msgid "Set to draft"
 msgstr "Postavi za obradu"
-
-#. module: point_of_sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -79,14 +74,9 @@ msgid "All Cashboxes Of the day :"
 msgstr "Sve Kase NA dan :"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_close_statement
-msgid "Close Registers"
-msgstr "Zatvori Registre"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_box_out
-msgid "Pos Box Out"
-msgstr "POS ne Radi"
+#: view:pos.box.entries:0
+msgid "Put Money"
+msgstr "Stavi Novac"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
@@ -105,11 +95,6 @@ msgstr "Detalji Prodaje"
 #: view:pos.close.statement:0
 msgid "Are you sure you want to close the statements ?"
 msgstr "Jeste li sigurni da zelite da zatvorite stavke ?"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
-msgid "Open Register"
-msgstr "Otvori Registre"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_scan_product
@@ -159,15 +144,6 @@ msgid "Amount"
 msgstr "Iznos"
 
 #. module: point_of_sale
-#: help:pos.order,user_id:0
-msgid ""
-"Person who uses the the register. It could be a reliever, a student or an "
-"interim employee."
-msgstr ""
-"Osoba koja koristi registre. To mogu biti volonteri, studenti ili privremeni "
-"radnici."
-
-#. module: point_of_sale
 #: report:pos.lines:0
 msgid "VAT"
 msgstr "PDV"
@@ -181,12 +157,6 @@ msgstr "Porez"
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
 msgstr "Ukupna Transakcija"
-
-#. module: point_of_sale
-#: selection:report.cash.register,month:0
-#: selection:report.pos.order,month:0
-msgid "May"
-msgstr "Maj"
 
 #. module: point_of_sale
 #: help:account.journal,special_journal:0
@@ -281,6 +251,12 @@ msgid "Sales Report"
 msgstr "Izvestaj Prodaje"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
+#, python-format
+msgid "No Order Lines"
+msgstr ""
+
+#. module: point_of_sale
 #: view:pos.order:0
 msgid "Other Information"
 msgstr "Ostale Informacije"
@@ -302,12 +278,12 @@ msgid "Max Discount(%)"
 msgstr "Max Popust(%)"
 
 #. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
-msgstr "Gotovina Van"
+#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
+msgid "Cash register management"
+msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "NIje pronadjen odgovarajuci cenovnik"
@@ -334,11 +310,6 @@ msgid "Discount (%)"
 msgstr "Popust (%)"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
-msgid "Register management"
-msgstr "Menadzment Registara"
-
-#. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
 msgstr "Ukupna kol."
@@ -347,6 +318,14 @@ msgstr "Ukupna kol."
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
 msgstr "Mesecna prodaja po korisniku"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
+#, python-format
+msgid ""
+"You can not open a Cashbox for \"%s\".\n"
+"Please close its related cash register."
+msgstr ""
 
 #. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
@@ -384,11 +363,6 @@ msgstr "Jesi li siguran da zelis da zatvoris svoje prodaje?"
 #: selection:report.pos.order,month:0
 msgid "August"
 msgstr "Avgust"
-
-#. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Pokusavate da pridodate lot koji nije iz istog proizvoda"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
@@ -429,12 +403,6 @@ msgstr "Za Proracun"
 #: report:pos.details_summary:0
 msgid "Summary"
 msgstr "Sumarno"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "You don't have enough access to validate this sale!"
-msgstr "Nemate dovoljan status da pristupite i da potvrdite ovu prodaju !"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -557,11 +525,6 @@ msgid "Ending Balance"
 msgstr "Krajnje Stanje"
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
-msgid "Today's Sales"
-msgstr "Danasnje Prodaje"
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
 msgid "Products for Output Operations"
 msgstr "Proizvodi za Izlazne Operacije"
@@ -572,7 +535,7 @@ msgid "Sale by Date and User"
 msgstr "Prodaja po Datumu i Korisniku"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid ""
 "Cannot delete a point of sale which is closed or contains confirmed "
@@ -580,9 +543,15 @@ msgid ""
 msgstr "Ne mozete brisati POS koji je zatvoren ili sadrzi potvrdjene Kase!"
 
 #. module: point_of_sale
-#: field:report.cash.register,date:0
-msgid "Create Date"
-msgstr "Datum Kreacije"
+#: code:addons/point_of_sale/wizard/pos_close_statement.py:0
+#, python-format
+msgid "Cash registers are already closed."
+msgstr ""
+
+#. module: point_of_sale
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -630,20 +599,18 @@ msgid "March"
 msgstr "Mart"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                'Please set one before choosing a product."
-msgstr ""
-"Trebas selektovati cenovnik u formi prodaje !\n"
-"' \\n 'Molim selektujte jedan pre izbora proizvoda."
-
-#. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
 msgstr "Korisnicki Proizvod"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"You have to select a pricelist in the sale form !\n"
+"Please set one before choosing a product."
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -662,24 +629,6 @@ msgstr "Ref. Partner"
 #: view:pos.close.statement:0
 msgid "Close Statements"
 msgstr "Zatvori Izjavu"
-
-#. module: point_of_sale
-#: field:pos.box.entries,journal_id:0
-#: field:pos.box.out,journal_id:0
-msgid "Register"
-msgstr "Registar"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product\" \\n                   "
-" \" and quantity.\n"
-"You have to change either the product,\" \\n                    \" the "
-"quantity or the pricelist."
-msgstr ""
-"Ne mogu naci u cenovniku proizvod \" \\n \" i kolicinu.\n"
-"treba da promenis ili proizvod, \" \\n \" kolicine, ili cenovnik,"
 
 #. module: point_of_sale
 #: view:account.journal:0
@@ -750,9 +699,9 @@ msgid "Creation Date"
 msgstr "Datum kreiranja"
 
 #. module: point_of_sale
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Greska: Neispravan Bvr Borj ( pogresan cheksum)"
+#: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
+msgid "Today's Sales"
+msgstr "Danasnje Prodaje"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -771,7 +720,7 @@ msgid "Total :"
 msgstr "Ukupno:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Create line failed !"
 msgstr "Neuspesno Kreiranje linije"
@@ -783,7 +732,7 @@ msgid "Product Name"
 msgstr "Ime Proizvoda"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Invalid action !"
 msgstr "Nedozvoljena Akcija !"
@@ -805,11 +754,6 @@ msgstr "Ukupno fakturisano"
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
 msgstr "# Kol"
-
-#. module: point_of_sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -986,6 +930,12 @@ msgid "Input Operations"
 msgstr "operacije Unosa"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_report_cash_register
+#: view:report.cash.register:0
+msgid "Point of Sale Cash Register Analysis"
+msgstr "Izvestaj POS registara"
+
+#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sales_user_today
 msgid "Sale by Users"
 msgstr "Prodaja po Korisniku"
@@ -1017,6 +967,12 @@ msgid "Amount total"
 msgstr "Ukupan Iznos"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
+#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
+msgid "Cash Registers"
+msgstr ""
+
+#. module: point_of_sale
 #: view:account.journal:0
 #: field:account.journal,journal_users:0
 msgid "Users"
@@ -1044,6 +1000,11 @@ msgid "POS"
 msgstr "POS"
 
 #. module: point_of_sale
+#: field:report.cash.register,date:0
+msgid "Create Date"
+msgstr "Datum Kreacije"
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Output Operations"
 msgstr "Izlazne Operacije"
@@ -1063,6 +1024,11 @@ msgid "Name"
 msgstr "Ime"
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
+msgid "Open Cash Registers"
+msgstr ""
+
+#. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.lines:0
 #: report:pos.payment.report:0
@@ -1071,6 +1037,11 @@ msgstr "Ime"
 #: report:pos.user.product:0
 msgid "]"
 msgstr "]"
+
+#. module: point_of_sale
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1101,7 +1072,7 @@ msgid "All Closed CashBox"
 msgstr "Sve zatvorene Kase"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No Pricelist !"
 msgstr "Nema Cenovnika !"
@@ -1182,11 +1153,6 @@ msgid "Special Journal"
 msgstr "Specijalni Dnevnik"
 
 #. module: point_of_sale
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "GRESKA: BVR referenca je neophodna"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_all_closed_cashbox_of_the_day
 msgid "All closed cashbox of the day"
 msgstr "Sve zatvorene kase na dan"
@@ -1210,16 +1176,6 @@ msgstr "Konektovani Prodavac"
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr "Metod Cena"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:0
-#, python-format
-msgid ""
-"The maximum value you can still withdraw is exceeded. \n"
-" Remaining value is equal to %d "
-msgstr ""
-"Maksimalna vrednost koju i dalje mozete povuci je prekoracena.\n"
-" Preostala vrednost jednaka je %d "
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -1257,37 +1213,13 @@ msgid "Sale by User"
 msgstr "Prodaja po Korisniku"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #: code:addons/point_of_sale/report/pos_invoice.py:0
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:0
 #: code:addons/point_of_sale/wizard/pos_box_out.py:0
 #, python-format
 msgid "Error !"
 msgstr "Greska !"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_open_statement.py:0
-#, python-format
-msgid ""
-"You can not open a Cashbox for \"%s\".\n"
-"Please close its related Register.' %(journal.name)))\n"
-"            \n"
-"            number = ''\n"
-"            if journal.sequence_id:\n"
-"                number = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"            else:\n"
-"                number = sequence_obj.get(cr, uid, 'account.cash.statement"
-msgstr ""
-"Ne mozete otvoriti kasu za \"%s\".\n"
-"Molim zatvorite dati Registar.' %(journal.name)))\n"
-"             \n"
-"             broj = \"\n"
-"             ako je journal.sequence_id:\n"
-"                 broj = sequence_obj.get_id(cr, uid, "
-"journal.sequence_id.id)\n"
-"             inace\n"
-"                 broj = sequence_obj.get(cr, uid, 'account.cash.statement"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
@@ -1311,7 +1243,7 @@ msgid "July"
 msgstr "Juli"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Please provide an account for the product: %s"
 msgstr "Molim prosledite nalog za proizvod: %s"
@@ -1330,6 +1262,11 @@ msgstr "Br. Odstampanih"
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
 msgstr "POS Placanja"
+
+#. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Sortie de caisse"
+msgstr "Gotovina Van"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1359,18 +1296,6 @@ msgid "Is accompte"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product\" \\n                \" "
-"and quantity.\n"
-"You have to change either the product,\" \\n                \" the quantity "
-"or the pricelist."
-msgstr ""
-"Ne mogu naci u cenovniku proizvod \" \\n\"  date kolicine.\n"
-"Moras promeniti ili proizvod, \" \\n \" kolicinu ili cenovnik."
-
-#. module: point_of_sale
 #: view:report.cash.register:0
 #: field:report.cash.register,month:0
 #: view:report.pos.order:0
@@ -1391,6 +1316,8 @@ msgstr "Ime Izjave"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: model:ir.ui.menu,name:point_of_sale.menu_cash_register
+#: field:pos.box.entries,journal_id:0
+#: field:pos.box.out,journal_id:0
 #: field:pos.make.payment,journal:0
 msgid "Cash Register"
 msgstr "Kasa"
@@ -1422,12 +1349,7 @@ msgid "Customer Note"
 msgstr "Napomena Musterije"
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_open_statement
-msgid "Open Registers"
-msgstr "Otvori Registre"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "No order lines defined for this sale."
 msgstr "Nema narudzbenica definisanih za ovu prodaju."
@@ -1436,11 +1358,6 @@ msgstr "Nema narudzbenica definisanih za ovu prodaju."
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
 msgstr "Stanje pri otvaranju"
-
-#. module: point_of_sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
 
 #. module: point_of_sale
 #: field:pos.order,amount_paid:0
@@ -1460,11 +1377,6 @@ msgstr "Sve prodajne linije"
 #: selection:report.cash.register,state:0
 msgid "Quotation"
 msgstr "Upit"
-
-#. module: point_of_sale
-#: view:pos.make.payment:0
-msgid "The register must be opened to be able to execute a payment."
-msgstr "REgistar mora biti otvoren da bi bio u mogucnosti da primi uplatu."
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -1491,19 +1403,16 @@ msgid "Statement lines"
 msgstr "LInije Izjave"
 
 #. module: point_of_sale
+#: help:pos.order,user_id:0
+msgid ""
+"Person who uses the the cash register. It could be a reliever, a student or "
+"an interim employee."
+msgstr ""
+
+#. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
 msgstr "Rbr Fakture"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"You have to select a pricelist in the sale form !\n"
-"' \\n                    'Please set one before choosing a product."
-msgstr ""
-"Trebas selektovati cenovnik iz forme prodaje !\n"
-" ' \\n ' Molim izaberi neki pre nego izaberis proizvod."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
@@ -1552,18 +1461,6 @@ msgid "Sales lines Report"
 msgstr "Izvestaj prodaje"
 
 #. module: point_of_sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
-msgid "Close Register"
-msgstr "Zatvori Registar"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
 #: view:pos.box.entries:0
 msgid "Box Entries"
@@ -1585,15 +1482,6 @@ msgstr "Neto marza po kolicini"
 #: view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
 msgstr "Prodaja po marzi Korisnika"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"There is no receivable account defined for this journal:'\\n                 "
-"   ' \"%s\" (id:%d)"
-msgstr ""
-"Ne postoji prijemni nalog definisan za ovaj dnevnik: '\\n ' \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1670,10 +1558,15 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_report_cash_register
-#: view:report.cash.register:0
-msgid "Point of Sale Cash Register Analysis"
-msgstr "Izvestaj POS registara"
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.make.payment:0
+msgid "The cash register must be opened to be able to execute a payment."
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1685,12 +1578,6 @@ msgstr "Vrste Poreza"
 #: view:product.product:0
 msgid "Product Description"
 msgstr "Opis Proizvoda"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
-#: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
-msgid "Registers"
-msgstr "Registri"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -1713,6 +1600,11 @@ msgstr "Ukupno"
 #: view:pos.sale.user:0
 msgid "Sale By User"
 msgstr "Prodaja po Korisniku"
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
+msgid "Open Cash Register"
+msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1768,6 +1660,14 @@ msgid "Invoice Date"
 msgstr "Datum Fakture"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,serial_number:0
 msgid "Serial Number"
 msgstr "Serijski Broj"
@@ -1778,7 +1678,7 @@ msgid "Reprint"
 msgstr "Reprint"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:0
 #: code:addons/point_of_sale/wizard/pos_box_out.py:0
 #, python-format
@@ -1796,6 +1696,7 @@ msgid "Pos order"
 msgstr "Pos narudzba"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_discount.py:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
 msgid "Error!"
@@ -1855,6 +1756,11 @@ msgid "Add Discount"
 msgstr "Dodaj Popust"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
+msgid "Close Cash Register"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,qty_rfd:0
 msgid "Refunded Quantity"
 msgstr "Refundirana kolicina"
@@ -1903,6 +1809,11 @@ msgid "Sales Lines"
 msgstr "Linije Prodaje"
 
 #. module: point_of_sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.discount,discount:0
 msgid "Discount "
 msgstr "Popust "
@@ -1918,7 +1829,7 @@ msgid "Supplier Invoice"
 msgstr "Faktura Dobavljaca"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Modify line failed !"
 msgstr "Neuspesno modifikovanje linije !"
@@ -1927,12 +1838,6 @@ msgstr "Neuspesno modifikovanje linije !"
 #: field:pos.make.payment,payment_name:0
 msgid "Payment name"
 msgstr "Naziv Isplate"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_close_statement.py:0
-#, python-format
-msgid "Registers are already closed."
-msgstr "Registri su vec zatvoreni"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -1950,9 +1855,14 @@ msgid "Today's Sales by Current User"
 msgstr "Dnevna Prodaja po datom korisniku"
 
 #. module: point_of_sale
-#: view:pos.box.entries:0
-msgid "Put Money"
-msgstr "Stavi Novac"
+#: model:ir.model,name:point_of_sale.model_pos_box_out
+msgid "Pos Box Out"
+msgstr "POS ne Radi"
+
+#. module: point_of_sale
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -1965,19 +1875,16 @@ msgid "Starting Date"
 msgstr "Pocetni Datum"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid ""
-"There is no income '\\n                        'account defined for this "
-"product: \"%s\" (id:%d)"
-msgstr ""
-"Ne postoji ulazni '\\n ' nalog definisan za ovaj proizvod: \"%s\" (id:%d)"
-
-#. module: point_of_sale
 #: field:pos.order,date_validation:0
 #: field:report.pos.order,date_validation:0
 msgid "Validation Date"
 msgstr "Datum Validacije"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid "You don't have enough access to validate this sale!"
+msgstr "Nemate dovoljan status da pristupite i da potvrdite ovu prodaju !"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
@@ -2093,10 +2000,17 @@ msgid "PRO-FORMA"
 msgstr "Predračun"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Molim postavi partnera za prodaju"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/point_of_sale.py:0
+#, python-format
+msgid ""
+"There is no receivable account defined for this journal: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,user_salesman_id:0
@@ -2150,7 +2064,7 @@ msgid "POS Orders lines"
 msgstr "Linije POS ZAhteva"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:0
 #, python-format
 msgid "Error"
 msgstr "Greska"
@@ -2177,6 +2091,11 @@ msgstr "MOlim kreiraj Fakturu za ovu prodaju"
 #: field:report.pos.order,date:0
 msgid "Date Order"
 msgstr "Datum zahteva"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_close_statement
+msgid "Close Cash Registers"
+msgstr ""
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2210,9 +2129,9 @@ msgid "Subtotal w/o Tax"
 msgstr "Medjuzbir w/o poreza"
 
 #. module: point_of_sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Moras da pridodas produkcionu seriju za ovaj prozivod"
+#: view:pos.order:0
+msgid "Add product"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2256,9 +2175,10 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_cash_journal
-msgid "Cash Journal"
-msgstr "Dnevnik Gotovine"
+#: selection:report.cash.register,month:0
+#: selection:report.pos.order,month:0
+msgid "May"
+msgstr "Maj"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -2318,6 +2238,16 @@ msgstr "Februar"
 #: view:report.cash.register:0
 msgid "    Today    "
 msgstr "    Danas    "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_box_out.py:0
+#, python-format
+msgid ""
+"The maximum value you can still withdraw is exceeded. \n"
+" Remaining value is equal to %d "
+msgstr ""
+"Maksimalna vrednost koju i dalje mozete povuci je prekoracena.\n"
+" Preostala vrednost jednaka je %d "
 
 #. module: point_of_sale
 #: field:pos.order,remboursed:0
@@ -2401,6 +2331,9 @@ msgstr "Godina"
 #~ msgid "Discount :"
 #~ msgstr "Popust :"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
 #~ msgid ","
 #~ msgstr ","
 
@@ -2427,6 +2360,9 @@ msgstr "Godina"
 
 #~ msgid "Ma_ke Payment"
 #~ msgstr "Izvrsi Uplatu"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
 
 #~ msgid "Add products"
 #~ msgstr "Dodaj proizvod"
@@ -2472,6 +2408,11 @@ msgstr "Godina"
 
 #~ msgid "Pos Payment"
 #~ msgstr "POS Isplate"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "Refund "
 #~ msgstr "Refunidraj "
@@ -2562,3 +2503,128 @@ msgstr "Godina"
 
 #~ msgid "This is the salesman actually making the order."
 #~ msgstr "Ovaj prodavac upravo pravi nalog"
+
+#~ msgid "Close Registers"
+#~ msgstr "Zatvori Registre"
+
+#~ msgid "Open Register"
+#~ msgstr "Otvori Registre"
+
+#~ msgid ""
+#~ "Person who uses the the register. It could be a reliever, a student or an "
+#~ "interim employee."
+#~ msgstr ""
+#~ "Osoba koja koristi registre. To mogu biti volonteri, studenti ili privremeni "
+#~ "radnici."
+
+#~ msgid "Register management"
+#~ msgstr "Menadzment Registara"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Pokusavate da pridodate lot koji nije iz istog proizvoda"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                   "
+#~ " \" and quantity.\n"
+#~ "You have to change either the product,\" \\n                    \" the "
+#~ "quantity or the pricelist."
+#~ msgstr ""
+#~ "Ne mogu naci u cenovniku proizvod \" \\n \" i kolicinu.\n"
+#~ "treba da promenis ili proizvod, \" \\n \" kolicine, ili cenovnik,"
+
+#~ msgid "Register"
+#~ msgstr "Registar"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the sale form !\n"
+#~ "' \\n                'Please set one before choosing a product."
+#~ msgstr ""
+#~ "Trebas selektovati cenovnik u formi prodaje !\n"
+#~ "' \\n 'Molim selektujte jedan pre izbora proizvoda."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Greska: Neispravan Bvr Borj ( pogresan cheksum)"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "GRESKA: BVR referenca je neophodna"
+
+#, python-format
+#~ msgid ""
+#~ "You can not open a Cashbox for \"%s\".\n"
+#~ "Please close its related Register.' %(journal.name)))\n"
+#~ "            \n"
+#~ "            number = ''\n"
+#~ "            if journal.sequence_id:\n"
+#~ "                number = sequence_obj.get_id(cr, uid, "
+#~ "journal.sequence_id.id)\n"
+#~ "            else:\n"
+#~ "                number = sequence_obj.get(cr, uid, 'account.cash.statement"
+#~ msgstr ""
+#~ "Ne mozete otvoriti kasu za \"%s\".\n"
+#~ "Molim zatvorite dati Registar.' %(journal.name)))\n"
+#~ "             \n"
+#~ "             broj = \"\n"
+#~ "             ako je journal.sequence_id:\n"
+#~ "                 broj = sequence_obj.get_id(cr, uid, "
+#~ "journal.sequence_id.id)\n"
+#~ "             inace\n"
+#~ "                 broj = sequence_obj.get(cr, uid, 'account.cash.statement"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                \" "
+#~ "and quantity.\n"
+#~ "You have to change either the product,\" \\n                \" the quantity "
+#~ "or the pricelist."
+#~ msgstr ""
+#~ "Ne mogu naci u cenovniku proizvod \" \\n\"  date kolicine.\n"
+#~ "Moras promeniti ili proizvod, \" \\n \" kolicinu ili cenovnik."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "Open Registers"
+#~ msgstr "Otvori Registre"
+
+#~ msgid "The register must be opened to be able to execute a payment."
+#~ msgstr "REgistar mora biti otvoren da bi bio u mogucnosti da primi uplatu."
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the sale form !\n"
+#~ "' \\n                    'Please set one before choosing a product."
+#~ msgstr ""
+#~ "Trebas selektovati cenovnik iz forme prodaje !\n"
+#~ " ' \\n ' Molim izaberi neki pre nego izaberis proizvod."
+
+#~ msgid "Close Register"
+#~ msgstr "Zatvori Registar"
+
+#, python-format
+#~ msgid ""
+#~ "There is no receivable account defined for this journal:'\\n                 "
+#~ "   ' \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Ne postoji prijemni nalog definisan za ovaj dnevnik: '\\n ' \"%s\" (id:%d)"
+
+#~ msgid "Registers"
+#~ msgstr "Registri"
+
+#, python-format
+#~ msgid "Registers are already closed."
+#~ msgstr "Registri su vec zatvoreni"
+
+#, python-format
+#~ msgid ""
+#~ "There is no income '\\n                        'account defined for this "
+#~ "product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Ne postoji ulazni '\\n ' nalog definisan za ovaj proizvod: \"%s\" (id:%d)"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Moras da pridodas produkcionu seriju za ovaj prozivod"
+
+#~ msgid "Cash Journal"
+#~ msgstr "Dnevnik Gotovine"

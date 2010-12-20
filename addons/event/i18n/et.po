@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 06:13+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -49,9 +49,9 @@ msgid "Minimum Registrations"
 msgstr "Miinimum registreerimised"
 
 #. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
+#: model:ir.model,name:event.model_event_confirm_registration
+msgid "Confirmation for Event Registration"
+msgstr ""
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -124,11 +124,6 @@ msgstr ""
 #. module: event
 #: field:event.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
-
-#. module: event
-#: help:event.event,pricelist_id:0
-msgid "Pricelist version for current event."
 msgstr ""
 
 #. module: event
@@ -214,6 +209,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: event
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr ""
+
+#. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To"
 msgstr ""
@@ -260,37 +260,15 @@ msgid "Emails"
 msgstr ""
 
 #. module: event
-#: model:ir.module.module,description:event.module_meta_information
-msgid ""
-"Oraganization and management of Event.\n"
-"\n"
-"    This module allow you\n"
-"        * to manage your events and their registrations\n"
-"        * to use emails to automatically confirm and send acknowledgements "
-"for any registration to an event\n"
-"        * ...\n"
-"    A dashboard for associations that includes:\n"
-"    * Registration by Events (graph)\n"
-"    Note that:\n"
-"    - You can define new types of events in\n"
-"                Events / Configuration / Types of Events\n"
-"    - You can access predefined reports about number of registration per "
-"event or per event category in:\n"
-"                Events / Reporting\n"
-msgstr ""
-
-#. module: event
 #: view:event.registration:0
 msgid "Extra Info"
 msgstr "Täiendav info"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
-msgid "Registration"
-msgstr "Registreerimine"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Customer Invoices"
+msgstr ""
 
 #. module: event
 #: selection:event.event,state:0
@@ -342,8 +320,8 @@ msgid "Registration Confirmation"
 msgstr "Registreerimise kinnitus"
 
 #. module: event
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:event.event,pricelist_id:0
+msgid "Pricelist version for current event."
 msgstr ""
 
 #. module: event
@@ -382,8 +360,11 @@ msgid "Warning !"
 msgstr ""
 
 #. module: event
-#: view:event.registration:0
-msgid "Send New Email"
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low-level object used by meeting and others documents that have "
+"to be synchronized with mobile or calendar applications through caldav. Most "
+"of the users should work on the Calendar menu, and not on the list of events."
 msgstr ""
 
 #. module: event
@@ -427,12 +408,6 @@ msgstr "Tehakse arve"
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
-
-#. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:0
-#, python-format
-msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
 msgstr ""
 
 #. module: event
@@ -489,11 +464,6 @@ msgid "Event Organization"
 msgstr ""
 
 #. module: event
-#: model:ir.model,name:event.model_event_confirm_registration
-msgid "Event Registraion"
-msgstr ""
-
-#. module: event
 #: view:event.registration:0
 msgid "History Information"
 msgstr ""
@@ -510,15 +480,18 @@ msgid "Confirm Anyway"
 msgstr "Kinnita siiski"
 
 #. module: event
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
+#: code:addons/event/wizard/event_confirm_registration.py:0
+#, python-format
+msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
+msgstr ""
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
-#, python-format
-msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+#: view:event.event:0
+#: view:event.registration:0
+#: field:event.registration.badge,registration_id:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+msgid "Registration"
+msgstr "Registreerimine"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
@@ -556,11 +529,6 @@ msgstr ""
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr ""
-
-#. module: event
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: event
 #: view:board.board:0
@@ -642,8 +610,23 @@ msgid "Event Done"
 msgstr "Sündmus valmis"
 
 #. module: event
-#: help:event.event,register_current:0
-msgid "Total of Open and Done Registrations"
+#: model:ir.module.module,description:event.module_meta_information
+msgid ""
+"Organization and management of Event.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements "
+"for any registration to an event\n"
+"        * ...\n"
+"    A dashboard for associations that includes:\n"
+"    * Registration by Events (graph)\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per "
+"event or per event category in:\n"
+"                Events / Reporting\n"
 msgstr ""
 
 #. module: event
@@ -685,18 +668,16 @@ msgid "Create invoices"
 msgstr ""
 
 #. module: event
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
-
-#. module: event
 #: help:event.registration,email_cc:0
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
+msgstr ""
+
+#. module: event
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: event
@@ -713,13 +694,6 @@ msgstr ""
 #: field:event.registration,date_closed:0
 msgid "Closed"
 msgstr ""
-
-#. module: event
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: event
 #: view:event.event:0
@@ -805,6 +779,11 @@ msgstr ""
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
+msgstr ""
+
+#. module: event
+#: help:event.event,register_current:0
+msgid "Total of Open and Done Registrations"
 msgstr ""
 
 #. module: event
@@ -922,6 +901,12 @@ msgstr "Alguskuupäev"
 #: field:event.registration,invoice_id:0
 msgid "Invoice"
 msgstr "Arve"
+
+#. module: event
+#: view:report.event.registration:0
+#: field:report.event.registration,year:0
+msgid "Year"
+msgstr ""
 
 #. module: event
 #: code:addons/event/event.py:0
@@ -1135,9 +1120,9 @@ msgid "Country"
 msgstr ""
 
 #. module: event
-#: view:report.event.registration:0
-#: field:report.event.registration,year:0
-msgid "Year"
+#: code:addons/event/wizard/event_make_invoice.py:0
+#, python-format
+msgid "Registration is set as Cannot be invoiced"
 msgstr ""
 
 #. module: event
@@ -1210,11 +1195,6 @@ msgid "Invoice cannot be created if the registration is in %s state."
 msgstr ""
 
 #. module: event
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Viga: Vigane EAN kood"
-
-#. module: event
 #: view:event.confirm:0
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
@@ -1251,6 +1231,9 @@ msgstr ""
 
 #~ msgid "Case section"
 #~ msgstr "Juhtumi jaotis"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
 
 #~ msgid "Configuration"
 #~ msgstr "Seadistus"
@@ -1291,6 +1274,11 @@ msgstr ""
 #~ msgid "Badge Name"
 #~ msgstr "Embleemi nimi"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
+
 #~ msgid "Events On Registrations"
 #~ msgstr "Registreerimiste sündmused"
 
@@ -1317,6 +1305,11 @@ msgstr ""
 
 #~ msgid "Registration By Event Types"
 #~ msgstr "Registreerimine sündmuse liigijärgi"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #~ msgid "Badge"
 #~ msgstr "Tunnusmärk"
@@ -1354,11 +1347,20 @@ msgstr ""
 #~ msgid "Payments"
 #~ msgstr "Maksed"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Viga: Vigane EAN kood"
+
 #~ msgid "Label Invoice"
 #~ msgstr "Märgista arve"
 
 #~ msgid "List Register Partners"
 #~ msgstr "Registreeritud partnerite nimekiri"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "Viga! Sa ei saa luua rekursiivseid sektsioone."

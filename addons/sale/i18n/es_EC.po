@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-07 01:29+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-08 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -36,18 +31,6 @@ msgstr ""
 "¿acepta envíos parciales o no?"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"Usted seleccionó una cantidad de %d unidades.\n"
-"Pero no es compatible con el Paquete seleccionado.\n"
-"Esta es una proposition de cantidades de acuerdo al empaquetamiento: "
-
-#. module: sale
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
@@ -60,10 +43,9 @@ msgid "Cancel Order"
 msgstr "Cancelar pedido"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Ventas por Empresa"
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -191,6 +173,13 @@ msgid "Ordered Quantities"
 msgstr "Cantidades ordenadas"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
+
+#. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
 msgstr "Movimientos de inventario"
@@ -217,9 +206,13 @@ msgid "Dates"
 msgstr "Fechas"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"Here is a list of each sales order line to be invoiced. This view allows you "
+"to invoice sales orders partially, by lines of sales order. You don't need "
+"this list if you invoice based on the delivery orders or if you invoice "
+"sales totally."
+msgstr ""
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -234,6 +227,11 @@ msgstr ""
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sale order"
 msgstr "De una orden de pedido"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Packing"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -281,11 +279,6 @@ msgstr "Cambiar a borrador"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Procurement Corrected"
-msgstr "Abastecimiento corregido"
-
-#. module: sale
-#: view:sale.order:0
 msgid "Conditions"
 msgstr "Condiciones"
 
@@ -306,20 +299,14 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
 msgstr "Todas las peticiones"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Nuestro vendedor"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -345,6 +332,19 @@ msgid "Quotations"
 msgstr "Peticiones"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:0
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sale Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sale Order Line is Invoiced!"
+msgstr ""
+"La factura no puede ser creada para esta pedido de venta por 2 razones:\n"
+"1. El estado de este pedido es \"Borrador\" o \"Cancelado\"\n"
+"2. ¡El pedido ya fue facturado!"
+
+#. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
 msgid "Quantity"
@@ -359,6 +359,13 @@ msgstr "Sólo orden de entrega"
 #: report:sale.order:0
 msgid "TVA :"
 msgstr "TVA :"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -382,16 +389,6 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You have to select a customer in the sale form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
-"¡Debe selectionar un cliente en el formulario de venta!\n"
-"Por favor seleccione un cliente antes de escoger un producto."
-
-#. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
 msgstr "Número paquetes"
@@ -412,6 +409,12 @@ msgstr "En proceso"
 #: view:sale.shop:0
 msgid "Accounting"
 msgstr "Contabilidad"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -448,22 +451,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "La petición '%s' fue convertida en un pedido de venta."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Tarifas de compra"
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the the shipping of the "
-"products to the customer"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
-"Número de días entre la confirmación de envio de los productos a el cliente."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Invoice Corrected"
-msgstr "Factura corregida"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -516,16 +506,6 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"There is no income account defined ' \\n                                     "
-"   'for this product: \"%s\" (id:%d)"
-msgstr ""
-"No existe cuenta income definida ' \\n\n"
-"                                        'para este producto: \"%s\" (id:%d)"
-
-#. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Subtotal"
@@ -540,6 +520,11 @@ msgstr "Dirección factura:"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "¡No es posible eliminar ordenes de pedidos que fueron confirmadas!"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -569,6 +554,11 @@ msgstr "Petición / Pedido"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# de líneas"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -681,11 +671,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr "Indica que una factura ha sido pagada"
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr "Fecha de orden"
@@ -746,8 +731,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "¿Está seguro de crear la(s) factura(s)?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr "Ventas Mensuales"
@@ -763,6 +746,11 @@ msgid "Procurement of sold material"
 msgstr "Abastecimiento de material sólido"
 
 #. module: sale
+#: view:sale.order:0
+msgid "Create Final Invoice"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "Dirección de envío"
@@ -776,6 +764,11 @@ msgstr "Filtros extendidos..."
 #: selection:sale.order.line,state:0
 msgid "Exception"
 msgstr "Excepción"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Envío directo"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -809,6 +802,19 @@ msgstr ""
 "pedido, al mismo tiempo que la orden de abastecimiento. Esto representa la "
 "asignación de partes a la orden de pedido. Hay un solo paquete de productos "
 "por orden de pedido la cual esta formada por las partes disponbles."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"Sales Orders helps you manage quotations and orders done with your "
+"customers. OpenERP suggests that you to start by creating a quotation. Once "
+"the order is confirmed, the quotation is converted into a Sale Order. "
+"OpenERP can handle several types of products so that a sales order can "
+"trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
+"Based on the configuration of the sale order, a draft invoice will be "
+"generated so that you just have to confirm it when you want to bill your "
+"customer."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -867,14 +873,10 @@ msgid "Sale Order Line"
 msgstr "Línea de pedido"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Crear factura"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Precio por unidad"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -901,6 +903,12 @@ msgstr ""
 "ventas que son usados en las transacciones comerciales."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Contacto que realiza el pedido"
@@ -912,6 +920,15 @@ msgid "Open Invoice"
 msgstr "Factura pendiente"
 
 #. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sale order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sale order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
+msgstr ""
+
+#. module: sale
 #: report:sale.order:0
 #: view:sale.order.line:0
 msgid "Price"
@@ -919,6 +936,8 @@ msgstr "Precio"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Aplicación de configuración de Ventas"
 
@@ -963,24 +982,9 @@ msgid "Sequence Number"
 msgstr "Secuencia Numerica"
 
 #. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Tarifas de venta"
-
-#. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
 msgstr "Crear orden de entrega"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"¡Planea vender %.2f %s pero solo dispone de  %.2f %s!\n"
-"El stock real es %.2f %s. (sin reservaciones)"
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -988,10 +992,9 @@ msgid "Delivery Costs"
 msgstr "Costos de entrega"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "The sale order '%s' has been set in draft state."
-msgstr "La orden de pedido '%s' fue marcada como borrador."
+#: view:sale.order:0
+msgid "Total Tax Included"
+msgstr "Total de impuestos incluidos"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1013,11 +1016,6 @@ msgstr "Ventas por categoría de producto"
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
 msgstr "Envío parcial"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Procurement"
-msgstr "Recrear abastecimiento"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1117,17 +1115,6 @@ msgstr "Pedido de venta"
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Impuestos"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"A sale order generates an invoice, as soon as it is confirmed by the "
-"salesman. Depending on the Invoicing control of the sale order, the invoice "
-"is based on delivered or on ordered quantities."
-msgstr ""
-"Una orden de pedido genera una factura imediatamenteal confirmarla por el "
-"vendedor. Dependiendo del control de facturación de la orden de pedido, la "
-"factura está basada en la entrega o en la cantidad ordenada."
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -1281,12 +1268,6 @@ msgid "Sales Management"
 msgstr "Ventas"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Quantity: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr "Para ser reviado por el cliente."
@@ -1303,22 +1284,9 @@ msgid "Create invoices"
 msgstr "Crear facturas"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
-"categoría."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
 msgstr "Crear factura de la línea de pedido"
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No se puede crear menús recursivos."
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1398,7 +1366,6 @@ msgstr "Orden de pedido confirmada para facturar."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-#: model:ir.ui.menu,name:sale.menu_config_sale
 #: model:process.process,name:sale.process_process_salesprocess0
 #: view:sale.order:0
 #: view:sale.report:0
@@ -1406,10 +1373,13 @@ msgid "Sales"
 msgstr "Ventas"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Precio por unidad"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Crear factura"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1440,14 +1410,6 @@ msgstr "¡No puede cancelar la línea de pedido!"
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr "Paquete de productos y Orden de entrega"
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1530,13 +1492,6 @@ msgid "Product UoM"
 msgstr "UdM del producto"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr "Ventas por vendedor"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Logistic"
 msgstr "Logística"
@@ -1547,9 +1502,30 @@ msgid "Order"
 msgstr "Orden"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr ""
+
+#. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sale order"
 msgstr "Dirección de envío de la actual orden de pedido"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+"¡Planea vender %.2f %s pero solo dispone de  %.2f %s!\n"
+"El stock real es %.2f %s. (sin reservaciones)"
 
 #. module: sale
 #: view:sale.order:0
@@ -1694,6 +1670,23 @@ msgid "Warning"
 msgstr "Advertencia"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr "Pedido de venta"
@@ -1704,12 +1697,6 @@ msgid "Quantity (UoS)"
 msgstr "Cantidad (UdV)"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr " Tipo of ul: "
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -1718,6 +1705,11 @@ msgstr "Confirmado"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Confirmar"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1790,6 +1782,11 @@ msgstr ""
 "todos los productos esten disponibles."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Documento de origen"
@@ -1817,6 +1814,16 @@ msgid "Image"
 msgstr "Imagen"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
+"¡Debe selectionar un cliente en el formulario de venta!\n"
+"Por favor seleccione un cliente antes de escoger un producto."
+
+#. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax"
 msgstr "El monto sin impuestos"
@@ -1827,6 +1834,7 @@ msgid "Uninvoiced"
 msgstr "No facturada"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1896,14 +1904,12 @@ msgid "Sales Orders"
 msgstr "Pedidos de ventas"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Terminos de pago"
-
-#. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Envío directo"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1933,17 +1939,9 @@ msgid "January"
 msgstr "Enero"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:0
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sale Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sale Order Line is Invoiced!"
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
-"La factura no puede ser creada para esta pedido de venta por 2 razones:\n"
-"1. El estado de este pedido es \"Borrador\" o \"Cancelado\"\n"
-"2. ¡El pedido ya fue facturado!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1973,11 +1971,6 @@ msgid "Assign"
 msgstr "Asignar"
 
 #. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Reglas no están soportadas para objetos osv_memory!"
-
-#. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
 msgstr "Fecha de pedido"
@@ -1992,11 +1985,6 @@ msgstr "desde stock"
 #: view:sale.shop:0
 msgid "Sale Shop"
 msgstr "Tienda de ventas"
-
-#. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr "Ventas por cliente"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2015,26 +2003,29 @@ msgid "Not enough stock !"
 msgstr "!Stock insuficiente!"
 
 #. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
 msgstr "Líneas del pedido de venta"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"If you have more than one shops reselling your company products, you can "
+"create and manage them from here. Whenever you will record a new quotation "
+"or sale order, it has to be linked to a shop. The shop also defines the "
+"warehouse from which the products will be delivered for each particular sale."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
 #: field:sale.order.line,name:0
 msgid "Description"
 msgstr "Descripción"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order \\n                             "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"No se puede hacer un anticipo del pedido de venta \\n\n"
-"                             que está definido como 'Facturación automática "
-"después de la entrega'"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2069,14 +2060,20 @@ msgstr ""
 "diferentes tipos de facturación: diario, semanal, etc."
 
 #. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Picking Default Policy"
+msgstr "Política de paquete de productos por defecto"
+
+#. module: sale
 #: selection:sale.report,month:0
 msgid "April"
 msgstr "Abril"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "Total de impuestos incluidos"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "The sale order '%s' has been set in draft state."
+msgstr "La orden de pedido '%s' fue marcada como borrador."
 
 #. module: sale
 #: view:sale.order:0
@@ -2085,6 +2082,7 @@ msgid "Search Sales Order"
 msgstr "Buscar pedidos de ventas"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Plazo de pago"
@@ -2103,9 +2101,14 @@ msgstr ""
 "de ventas. "
 
 #. module: sale
-#: field:sale.config.picking_policy,picking_policy:0
-msgid "Picking Default Policy"
-msgstr "Política de paquete de productos por defecto"
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0

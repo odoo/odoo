@@ -35,7 +35,7 @@ class base_action_rule(osv.osv):
     _name = 'base.action.rule'
     _description = 'Action Rules'
     
-    def _state_get(self, cr, uid, context={}):
+    def _state_get(self, cr, uid, context=None):
         """ Get State
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -43,7 +43,7 @@ class base_action_rule(osv.osv):
             @param context: A standard dictionary for contextual values """
         return self.state_get(cr, uid, context=context)
 
-    def state_get(self, cr, uid, context={}):
+    def state_get(self, cr, uid, context=None):
         """ Get State
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -51,7 +51,7 @@ class base_action_rule(osv.osv):
             @param context: A standard dictionary for contextual values """
         return [('', '')]
   
-    def priority_get(self, cr, uid, context={}):
+    def priority_get(self, cr, uid, context=None):
         """ Get Priority
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -157,7 +157,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     def _create(self, old_create, model, context=None):
-        if not context:
+        if context is None:
             context  = {}
         def make_call_old(cr, uid, vals, context=context):
             new_id = old_create(cr, uid, vals, context=context)
@@ -167,7 +167,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return make_call_old
     
     def _write(self, old_write, model, context=None):
-        if not context:
+        if context is None:
             context  = {}
         def make_call_old(cr, uid, ids, vals, context=context):
             if isinstance(ids, (str, int, long)):
@@ -178,7 +178,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return make_call_old
 
     def _register_hook(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.model_id.model
@@ -190,12 +190,12 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         return True
     def create(self, cr, uid, vals, context=None):
-        res_id = super(base_action_rule, self).create(cr, uid, vals, context)
+        res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
         self._register_hook(cr, uid, [res_id], context=context)        
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
-        res = super(base_action_rule, self).write(cr, uid, ids, vals, context)
+        res = super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         self._register_hook(cr, uid, ids, context=context)
         return res
 
@@ -396,7 +396,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if not scrit:
             scrit = []
 
-        for action in self.browse(cr, uid, ids, context):
+        for action in self.browse(cr, uid, ids, context=context):
             model_obj = self.pool.get(action.model_id.model)
             for obj in objects:
                 ok = self.do_check(cr, uid, action, obj, context=context)
@@ -454,7 +454,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         empty = orm.browse_null()
         rule_obj = self.pool.get('base.action.rule')
-        for rule in self.browse(cr, uid, ids):
+        for rule in self.browse(cr, uid, ids, context=context):
             if rule.act_mail_body:
                 try:
                     rule_obj.format_mail(empty, rule.act_mail_body)

@@ -6,30 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
-
-#. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: crm_profiling
@@ -45,18 +34,23 @@ msgid "Open Questionnaire"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr ""
-
-#. module: crm_profiling
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: crm_profiling
@@ -109,11 +103,6 @@ msgid "Use a questionnaire"
 msgstr ""
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -147,6 +136,11 @@ msgstr ""
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
+msgstr ""
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
 msgstr ""
 
 #. module: crm_profiling

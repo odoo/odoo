@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-11-30 15:05+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,29 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: account_anglo_saxon
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: account_anglo_saxon
-#: help:product.category,property_account_creditor_price_difference_categ:0
-#: help:product.template,property_account_creditor_price_difference:0
-msgid ""
-"This account will be used to value price difference between purchase price "
-"and cost price."
-msgstr ""
-"Dieses Konto wird genutzt, um Unterschiede zwischen Einkaufs- und "
-"Verkaufspreis der Rechnung und Durchschnittspreisen zum Zeitpunkt des "
-"Warenzu- oder Warenabgangs als Preisdifferenz zu buchen."
-
-#. module: account_anglo_saxon
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehler in XML Quellen für diese Ansicht"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
@@ -44,17 +23,20 @@ msgid "Product Category"
 msgstr "Produkt Kategorie"
 
 #. module: account_anglo_saxon
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
-"Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-"haben !"
 
 #. module: account_anglo_saxon
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -128,9 +110,15 @@ msgstr ""
 "mitsamt Preisdifferenz ausgeglichen."
 
 #. module: account_anglo_saxon
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: help:product.category,property_account_creditor_price_difference_categ:0
+#: help:product.template,property_account_creditor_price_difference:0
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and cost price."
+msgstr ""
+"Dieses Konto wird genutzt, um Unterschiede zwischen Einkaufs- und "
+"Verkaufspreis der Rechnung und Durchschnittspreisen zum Zeitpunkt des "
+"Warenzu- oder Warenabgangs als Preisdifferenz zu buchen."
 
 #~ msgid " Accounting Property"
 #~ msgstr " Finanzkonten Einstellungen"
@@ -168,3 +156,21 @@ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #~ msgid "Stock Account"
 #~ msgstr "Lagerbestandskonto"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehler in XML Quellen für diese Ansicht"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
+#~ "haben !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 08:03+0000\n"
 "Last-Translator: vir (Open ERP) <vir@tinyerp.com>\n"
 "Language-Team: Hindi <hi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -48,9 +48,9 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "कार्य की परिभाषा में मॉडल का नाम अमान्य है."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
+msgstr "फिर से चालान बनाने"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -213,13 +213,18 @@ msgstr "पुष्टि"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "फिर से चालान बनाने"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "मरम्मत के आदेश"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allows you to organize your reparations on the products. On a "
+"repair order, you can detail the components you remove, add or replace and "
+"record the time you spent on the different operations. The repair order uses "
+"the warranty date on the production lot in order to know if you have to "
+"invoice the reparation to the customer or not."
+msgstr ""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -231,11 +236,6 @@ msgstr "मरम्मत के आदेश N °:"
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "मरम्मत के तहत"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -291,11 +291,6 @@ msgid "Total :"
 msgstr "कुल:"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -318,11 +313,6 @@ msgstr ""
 #, python-format
 msgid "Warning!"
 msgstr ""
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "संरचना देखने के लिए अमान्य XML!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -420,8 +410,8 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
@@ -430,10 +420,9 @@ msgid "Repair Order"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "मरम्मत के तहत"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -762,6 +751,9 @@ msgstr ""
 msgid "No partner !"
 msgstr ""
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "कार्य की परिभाषा में मॉडल का नाम अमान्य है."
+
 #~ msgid "Repair Order Ref"
 #~ msgstr "मरम्मत के आदेश संदर्भ"
 
@@ -776,6 +768,9 @@ msgstr ""
 
 #~ msgid "Gives the state of the Repair Order"
 #~ msgstr "मरम्मत के आदेश की स्थिति देना"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "संरचना देखने के लिए अमान्य XML!"
 
 #~ msgid "Packing"
 #~ msgstr "पैकिंग"

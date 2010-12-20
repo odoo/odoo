@@ -104,16 +104,12 @@ class project(osv.osv):
         return res
 
     def _get_project_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
             if task.project_id: result[task.project_id.id] = True
         return result.keys()
 
     def _get_project_work(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id and work.task_id.project_id: result[work.task_id.project_id.id] = True
@@ -168,12 +164,12 @@ class project(osv.osv):
     }
 
     # TODO: Why not using a SQL contraints ?
-    def _check_dates(self, cr, uid, ids):
-         for leave in self.read(cr, uid, ids, ['date_start', 'date']):
+    def _check_dates(self, cr, uid, ids, context=None):
+        for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
              if leave['date_start'] and leave['date']:
                  if leave['date_start'] > leave['date']:
                      return False
-         return True
+        return True
 
     _constraints = [
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
@@ -346,7 +342,16 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
-
+    
+    def onchange_project(self, cr, uid, id, project_id):
+        if not project_id:
+            return {}
+        data = self.pool.get('project.project').browse(cr, uid, [project_id])
+        partner_id=data and data[0].parent_id.partner_id
+        if partner_id:
+            return {'value':{'partner_id':partner_id.id}}
+        return {}
+    
     def _default_project(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -362,7 +367,7 @@ class task(osv.osv):
         default['active'] = True
         default['type_id'] = False
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+            default['name'] = self.browse(cr, uid, id, context=context).name
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -382,8 +387,6 @@ class task(osv.osv):
         return res
 
     def _get_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
@@ -451,8 +454,8 @@ class task(osv.osv):
 
     _order = "sequence, priority, date_start, id"
 
-    def _check_recursion(self, cr, uid, ids):
-        obj_task = self.browse(cr, uid, ids[0])
+    def _check_recursion(self, cr, uid, ids, context=None):
+        obj_task = self.browse(cr, uid, ids[0], context=context)
         parent_ids = [x.id for x in obj_task.parent_ids]
         children_ids = [x.id for x in obj_task.child_ids]
 
@@ -482,12 +485,13 @@ class task(osv.osv):
     # Override view according to the company definition
     #
 
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
 
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, 1, uid).company_id.project_time_mode_id
+        obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
@@ -537,8 +541,6 @@ class task(osv.osv):
         """
         Close Task
         """
-        if context is None:
-            context = {}
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
@@ -569,8 +571,6 @@ class task(osv.osv):
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         request = self.pool.get('res.request')
 
         for task in self.browse(cr, uid, ids, context=context):
@@ -629,8 +629,6 @@ class task(osv.osv):
         """
         Delegate Task to another users.
         """
-        if context is None:
-            context = {}
         task = self.browse(cr, uid, task_id, context=context)
         new_task_id = self.copy(cr, uid, task.id, {
             'name': delegate_data['name'],
@@ -642,17 +640,17 @@ class task(osv.osv):
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []
-        }, context)
+        }, context=context)
         newname = delegate_data['prefix'] or ''
         self.write(cr, uid, [task.id], {
             'remaining_hours': delegate_data['planned_hours_me'],
             'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
             'name': newname,
-        }, context)
+        }, context=context)
         if delegate_data['state'] == 'pending':
             self.do_pending(cr, uid, [task.id], context)
         else:
-            self.do_close(cr, uid, [task.id], context)
+            self.do_close(cr, uid, [task.id], context=context)
         user_pool = self.pool.get('res.users')
         delegate_user = user_pool.browse(cr, uid, delegate_data['user_id'], context=context)
         message = _("The task '%s' has been delegated to %s.") % (delegate_data['name'], delegate_user.name)
@@ -715,11 +713,11 @@ class project_work(osv.osv):
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
-            for work in self.browse(cr, uid, ids, context):
+            for work in self.browse(cr, uid, ids, context=context):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
         return super(project_work,self).write(cr, uid, ids, vals, context)
 

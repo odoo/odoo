@@ -205,6 +205,8 @@ def resetConnAttribs(window):
     NewConn.setitem('_uname', config['uname'])
     NewConn.setitem('_pwd', config['pwd'])
     NewConn.setitem('_login', str(config['login']))
+    NewConn.setitem('_webserver',manager.config['webserver'])
+    NewConn.setitem('_webport',manager.config['webport'])
     return
 
 def setConnAttribs(server, port, manager):
@@ -224,6 +226,8 @@ def setConnAttribs(server, port, manager):
     NewConn.setitem('_pwd', manager.config['pwd'])
     NewConn.setitem('_login', str(manager.config['login']))
     NewConn.setitem('_obj_list', manager.config['objects'])
+    NewConn.setitem('_webserver',manager.config['webserver'])
+    NewConn.setitem('_webport',manager.config['webport'])
     return
 
 def getConnAttributes(manager):
@@ -235,6 +239,13 @@ def getConnAttributes(manager):
     manager.config['uname'] = NewConn.getitem('_uname')
     manager.config['pwd'] = NewConn.getitem('_pwd')
     manager.config['login'] = NewConn.getitem('_login')
+    manager.config['webserver'] = NewConn.getitem('_webserver')
+    manager.config['webport'] = NewConn.getitem('_webport')
+    return
+def setWebConnAttribs(server, port, manager):
+    manager.config = manager.LoadConfig()
+    NewConn.setitem('_webserver',server)
+    NewConn.setitem('_webport',port)
     return
 
 def getMessage(e):
@@ -306,6 +317,7 @@ class WEBOKButtonProcessor(ButtonProcessor):
         if server.strip() == "" or server.strip() == "http:\\\\":
             win32ui.MessageBox("Invalid web Server address.", "OpenERP Connection", flag_excl)
             return
+        setWebConnAttribs(server, port, self.mngr)
         web_server = server
         web_server_port = port
         win32gui.EndDialog(self.window.hwnd, id)
@@ -693,22 +705,18 @@ def GetSearchText(txtProcessor,*args):
     b = check()
     if not b:
         return
-
-    search_box = txtProcessor.GetControl()
-    global search_text
-    if txtProcessor.init_done:
-        win32gui.SendMessage(search_box, win32con.WM_SETTEXT, 0,search_text)
-        return
-
     # Get the selected mail and set the default value for search_text_control to mail.SenderEmailAddress
     ex = txtProcessor.window.manager.outlook.ActiveExplorer()
     assert ex.Selection.Count == 1
     mail = ex.Selection.Item(1)
     try:
-        search_text = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-    except Exception:
-        pass
-    win32gui.SendMessage(search_box, win32con.WM_SETTEXT, 0, search_text)
+        global objects_with_match
+        list_hwnd = win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+        objects_with_match = NewConn.SearchPartners()
+        setList(list_hwnd)
+    except Exception,e:
+        msg=getMessage(e)
+        win32ui.MessageBox('Document can not be loaded.\n'+str(e), "Push", flag_error)
     txtProcessor.init_done=True
 
 def SetNameColumn(listProcessor,*args):
@@ -831,6 +839,7 @@ def CreateContact(btnProcessor,*args):
         win32ui.MessageBox("Contact name or Email id is Missing\nPlease fill those information", "Create Contact", flag_error)
         return
     try:
+        NewConn.CreateContact(str(res))
         if not partner:
             msg="New contact created."
         else:
@@ -848,14 +857,22 @@ def SetAllText(txtProcessor,*args):
     # Set values for url, uname, pwd from config file
     global web_server
     global web_server_port
-    serverBox = txtProcessor.GetControl(txtProcessor.other_ids[2])
-    win32gui.SendMessage(serverBox, win32con.WM_SETTEXT, 0, "http:\\\\"+str(web_server)+":"+str(web_server_port))
     url = NewConn.getitem('_uri')
     tbox = txtProcessor.GetControl()
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(url))
+
     uname = NewConn.getitem('_uname')
     tbox = txtProcessor.GetControl(txtProcessor.other_ids[0])
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(uname))
+
+    passbox = txtProcessor.GetControl(txtProcessor.other_ids[1])
+    pwd = NewConn.getitem('_pwd')
+    win32gui.SendMessage(passbox, win32con.WM_SETTEXT, 0, str(pwd))
+    serverBox = txtProcessor.GetControl(txtProcessor.other_ids[2])
+    web_server = NewConn.getitem('_webserver')
+    web_server_port = NewConn.getitem('_webport')
+    webstr = "http:\\\\"+str(web_server)+":"+str(web_server_port)
+    win32gui.SendMessage(serverBox, win32con.WM_SETTEXT, 0, str(webstr))
 
 def SetDefaultList(listProcessor,*args):
     import win32api
@@ -956,6 +973,9 @@ def SetDefaultContact(txtProcessor,*args):
     txtProcessor.init_done = True
 
 def setCheckList(groupProcessor,*args):
+    b = check()
+    if not b:
+        return
     try:
         hinst = win32gui.dllhandle
         objs = groupProcessor.window.manager.config['objects']
@@ -1382,8 +1402,11 @@ def OpenPartnerForm(txtProcessor,*args):
     	txtProcessor.init_done=True
     	return
     try:
-    	linktopartner = "http:\\\\"+web_server+":"+str(web_server_port)+"\\openerp\\form\\view?model=res.partner&id="+str(vals)
-    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, linktopartner)
+        import urllib
+        next =  urllib.urlencode({'next' : '/openerp/form/view?model=res.partner&id=' +str(vals) })
+        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        linktopartner = weburl + '?' + next
+        win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, str(linktopartner))
     except Exception,e:
     	win32ui.MessageBox("Error While Opening Partner.\n"+str(e),"Open Partner", flag_error)
     webbrowser.open_new(linktopartner)
@@ -1439,7 +1462,10 @@ def SerachOpenDocuemnt(txtProcessor,*args):
         txtProcessor.init_done=True
         return
     try:
-        linktodoc = "http:\\\\" +web_server+ ":"+str(web_server_port)+"\\openerp\\form\\view?model="+vals[0][1]+"&id="+str(vals[1][1])
+        import urllib
+        next =  urllib.urlencode({'next' : '/openerp/form/view?model='+vals[0][1]+'&id='+str(vals[1][1])})
+        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        linktodoc = weburl + '?' + next
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, str(linktodoc))
     except Exception,e:
         win32ui.MessageBox("Error While Opening Document.\n"+str(e),"Open Document", flag_error)
@@ -1665,12 +1691,13 @@ dialog_map = {
                     (CommandButtonProcessor,    "ID_SEARCH ID_SEARCH_TEXT IDC_NAME_LIST", SearchObjectsForText,()),
                     (GroupProcessor,            "IDC_STATIC_GROUP", setCheckList, ()),
                     (CSComboProcessor,          "ID_ATT_METHOD_DROPDOWNLIST", GetConn,()),
-                    (TextProcessor,             "ID_SEARCH_TEXT", GetSearchText, ()),
                     (DialogCommand,             "ID_CREATE_CONTACT ID_SEARCH_TEXT", "IDD_NEW_CONTACT_DIALOG", set_search_text, ()),
                     (CloseButtonProcessor,      "IDCANCEL"),
                     (CommandButtonProcessor,    "ID_MAKE_ATTACHMENT IDC_NAME_LIST IDD_SYNC", MakeAttachment, ()),
                     (CommandButtonProcessor,    "ID_CREATE_CASE ID_ATT_METHOD_DROPDOWNLIST IDC_NAME_LIST IDD_SYNC", CreateCase, ()),
-                    (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ())
+                    (ListBoxProcessor,          "IDC_NAME_LIST", SetNameColumn, ()),
+                    (TextProcessor,             "ID_SEARCH_TEXT ID_SEARCH_TEXT IDC_NAME_LIST", GetSearchText, ()),
+
                 ),
 
                 "IDD_NEW_CONTACT_DIALOG" : (

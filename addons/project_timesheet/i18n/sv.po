@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-22 20:14+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_timesheet
@@ -33,14 +33,13 @@ msgstr ""
 "Fill in the timesheet tab of the employee form."
 
 #. module: project_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
 msgstr ""
 
 #. module: project_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:account.analytic.line:0
+msgid "Search Analytic Lines"
 msgstr ""
 
 #. module: project_timesheet
@@ -54,11 +53,12 @@ msgid "Project Task Work"
 msgstr ""
 
 #. module: project_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
 msgstr ""
 
 #. module: project_timesheet
+#: view:account.analytic.line:0
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
 msgstr ""
@@ -69,24 +69,34 @@ msgid "Trigger invoices from sale order lines"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr ""
-
-#. module: project_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: selection:report.timesheet.task.user,month:0
+msgid "October"
 msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
 msgstr ""
 
 #. module: project_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr ""
+
+#. module: project_timesheet
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr ""
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:0
+msgid " Year "
+msgstr ""
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Product"
 msgstr ""
 
 #. module: project_timesheet
@@ -115,16 +125,14 @@ msgid "May"
 msgstr ""
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
-#, python-format
-msgid ""
-"No product and product category property account defined on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
 msgstr ""
-"No product and product category property account defined on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Journal"
+msgstr ""
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -132,14 +140,13 @@ msgid "June"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,user_id:0
-msgid "User"
+#: view:account.analytic.line:0
+msgid "My Entries"
 msgstr ""
 
 #. module: project_timesheet
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
 msgstr ""
 
 #. module: project_timesheet
@@ -148,8 +155,30 @@ msgid "Invoice Tasks Work"
 msgstr ""
 
 #. module: project_timesheet
+#: view:account.analytic.line:0
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr ""
+
+#. module: project_timesheet
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr ""
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr ""
+
+#. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
+msgstr ""
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Extended Filters..."
 msgstr ""
 
 #. module: project_timesheet
@@ -163,28 +192,23 @@ msgid "Invoiceable"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
+#: view:project.project:0
+msgid "Customer"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
+#: view:account.analytic.line:0
+msgid "Account"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
+msgid "Bill Tasks Works"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "This Year"
-msgstr ""
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
 msgstr ""
 
 #. module: project_timesheet
@@ -228,13 +252,14 @@ msgstr ""
 "Fill in the timesheet tab of the employee form."
 
 #. module: project_timesheet
+#: view:account.analytic.line:0
 #: model:ir.model,name:project_timesheet.model_project_project
 msgid "Project"
 msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "April"
+#: view:report.timesheet.task.user:0
+msgid " Month-1 "
 msgstr ""
 
 #. module: project_timesheet
@@ -243,13 +268,13 @@ msgid "Invoicing Data"
 msgstr ""
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
+#: view:account.analytic.line:0
+msgid "Fin.Account"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
+#: view:report.timesheet.task.user:0
+msgid " Month "
 msgstr ""
 
 #. module: project_timesheet
@@ -274,10 +299,8 @@ msgid "Work on task"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
 msgstr ""
 
 #. module: project_timesheet
@@ -301,8 +324,9 @@ msgid "report.timesheet.task.user"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -311,14 +335,32 @@ msgid "Project Timesheet"
 msgstr "Projekt tidrapport"
 
 #. module: project_timesheet
+#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
+msgid "Encode how much time u spent on your task"
+msgstr ""
+
+#. module: project_timesheet
 #: view:project.project:0
 msgid "Invoice Task Work"
 msgstr ""
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid ""
+"No product and product category property account defined on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+"No product and product category property account defined on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
+msgid "Task Hours Per Month"
 msgstr ""
 
 #. module: project_timesheet
@@ -327,11 +369,8 @@ msgid "Fill Timesheet"
 msgstr ""
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "This Month"
-msgstr ""
-
-#. module: project_timesheet
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"This lists show you every task work you can invoice to the customer. Select "
+"the lines in order to generate the invoices automatically."
 msgstr ""

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44:27+0000\n"
-"PO-Revision-Date: 2010-12-03 15:44:27+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06:17+0000\n"
+"PO-Revision-Date: 2010-12-15 15:06:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,6 +79,12 @@ msgid "B7  21  88 x 125 mm"
 msgstr ""
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:0
+#, python-format
+msgid "Webkit render"
+msgstr ""
+
+#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Folio 27  210 x 330 mm"
 msgstr ""
@@ -139,6 +145,11 @@ msgstr ""
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B2  17  500 x 707 mm"
+msgstr ""
+
+#. module: report_webkit
+#: model:ir.model,name:report_webkit.model_ir_header_img
+msgid "ir.header_img"
 msgstr ""
 
 #. module: report_webkit
@@ -400,8 +411,8 @@ msgid "Set Webkit Report Header"
 msgstr ""
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_header_img
-msgid "ir.header_img"
+#: field:ir.header_webkit,format:0
+msgid "Paper size"
 msgstr ""
 
 #. module: report_webkit
@@ -484,11 +495,6 @@ msgstr ""
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
-msgstr ""
-
-#. module: report_webkit
-#: field:ir.header_webkit,format:0
-msgid "Paper size"
 msgstr ""
 
 #. module: report_webkit

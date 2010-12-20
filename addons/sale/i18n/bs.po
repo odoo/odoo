@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-27 13:25+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 20:56+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravan naziv modela u definiciji zadatka."
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -43,9 +43,8 @@ msgid "Cancel Order"
 msgstr "Otkaži naruđbu"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
 msgstr ""
 
 #. module: sale
@@ -156,11 +155,6 @@ msgid "Total Price"
 msgstr ""
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
 msgstr ""
@@ -169,6 +163,13 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Naručena količina"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -204,11 +205,6 @@ msgid ""
 "this list if you invoice based on the delivery orders or if you invoice "
 "sales totally."
 msgstr ""
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Greška : UOS mora biti u drugoj kategoriji od UOM"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -290,20 +286,14 @@ msgid "August"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
-
-#. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Naš Prodavač"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Sve Ponude"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -405,6 +395,12 @@ msgid "Accounting"
 msgstr "Računovodstvo"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
@@ -437,9 +433,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Nabavni cjenovnik"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -508,6 +504,11 @@ msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr ""
 
 #. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
 msgstr "Adresa fakture (kupca)"
@@ -533,6 +534,11 @@ msgstr "Ponuda / Nalog"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
 msgstr ""
 
 #. module: sale
@@ -632,11 +638,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr ""
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za arhitekturu prikaza!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr ""
@@ -648,9 +649,10 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Sve Ponude"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -696,8 +698,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr ""
@@ -733,12 +733,9 @@ msgid "Exception"
 msgstr "Izuzetak"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Direktna isporuka"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -827,15 +824,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -875,6 +863,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Kontakt pri naručivanju"
@@ -902,6 +896,8 @@ msgstr "Cijena"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -946,18 +942,8 @@ msgid "Sequence Number"
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Cjenovnik"
-
-#. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: sale
@@ -1019,12 +1005,6 @@ msgstr ""
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Raspored čekanja"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr ""
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1162,11 +1142,6 @@ msgid "Shipped Quantities"
 msgstr "Isporučena količina"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Faktura kreirana na osnovu Prodajnog naloga"
@@ -1177,9 +1152,11 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "sa zaliha"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1231,12 +1208,6 @@ msgid "Sales Management"
 msgstr "Upravljanje Prodajom"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr ""
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1253,20 +1224,8 @@ msgid "Create invoices"
 msgstr "Kreiraj Fakturu"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Greška: Standardna JM i nabavna JM moraju pripadati istoj kategoriji."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale
@@ -1373,11 +1332,6 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1387,13 +1341,6 @@ msgstr ""
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1476,15 +1423,8 @@ msgid "Product UoM"
 msgstr "Proizvod JM"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr ""
 
 #. module: sale
@@ -1652,6 +1592,23 @@ msgid "Warning"
 msgstr ""
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1662,12 +1619,6 @@ msgid "Quantity (UoS)"
 msgstr "Količina (JM)"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr ""
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Potvrđeno"
@@ -1676,6 +1627,11 @@ msgstr "Potvrđeno"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Potvrdi"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1742,6 +1698,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1787,6 +1748,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1856,14 +1818,12 @@ msgid "Sales Orders"
 msgstr "Prodajni nalozi"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Uvjeti plaćanja"
-
-#. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Direktna isporuka"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1890,6 +1850,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1925,11 +1890,9 @@ msgid "Date Order"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "sa zaliha"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -1938,19 +1901,9 @@ msgid "Sale Shop"
 msgstr "Prodavnica"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr ""
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Zatvori"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -1961,6 +1914,11 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Not enough stock !"
+msgstr ""
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: sale
@@ -2035,6 +1993,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Uslovi plaćanja"
@@ -2134,6 +2093,11 @@ msgstr "Račun sa referencom na isporuku"
 #~ msgid "Packing Default Policy"
 #~ msgstr "Standardni način pakiranja"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Greška: Standardna JM i nabavna JM moraju pripadati istoj kategoriji."
+
 #~ msgid "Sales Process"
 #~ msgstr "Proces Prodaje"
 
@@ -2155,14 +2119,25 @@ msgstr "Račun sa referencom na isporuku"
 #~ msgid "One procurement for each product."
 #~ msgstr "Pojedinačna nabavka za svaki proizvod."
 
+#~ msgid "Sale Pricelists"
+#~ msgstr "Cjenovnik"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Kreiraj Predračun"
+
+#~ msgid "Our Salesman"
+#~ msgstr "Naš Prodavač"
 
 #~ msgid "Sales order lines"
 #~ msgstr "Stavke Prodajnog naloga"
 
 #~ msgid "Sequence"
 #~ msgstr "Slijed"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
 
 #~ msgid "Advance Payment"
 #~ msgstr "Plaćanje unaprijed"
@@ -2186,8 +2161,14 @@ msgstr "Račun sa referencom na isporuku"
 #~ msgid "Deliver"
 #~ msgstr "Isporuka"
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Nabavni cjenovnik"
+
 #~ msgid "My Sales Order"
 #~ msgstr "Moj Prodajni nalog"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravan naziv modela u definiciji zadatka."
 
 #~ msgid "Automatic Declaration"
 #~ msgstr "Automatska deklaracija"
@@ -2249,6 +2230,12 @@ msgstr "Račun sa referencom na isporuku"
 
 #~ msgid "Payment accounts"
 #~ msgstr "Računi plaćanja"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Greška : UOS mora biti u drugoj kategoriji od UOM"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za arhitekturu prikaza!"
 
 #~ msgid "Sales orders"
 #~ msgstr "Prodajni nalozi"
@@ -2349,6 +2336,9 @@ msgstr "Račun sa referencom na isporuku"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Faktura ispravljena"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Uvjeti plaćanja"
 
 #~ msgid "After confirming order, Create the invoice."
 #~ msgstr "Nakon potvrde Prodajnog naloga, kreirati Fakturu"

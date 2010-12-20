@@ -458,7 +458,7 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet Lines">
                    <group col='15' colspan='4'>
-                        <filter icon="terp-check" string="Current" default="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-check" string="Current" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                       <field name="user_id" widget="selection"/>
                       <field name="product_id" widget="selection"/>

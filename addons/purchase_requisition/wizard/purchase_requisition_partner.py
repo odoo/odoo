@@ -35,9 +35,11 @@ class purchase_requisition_partner(osv.osv_memory):
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         res = super(purchase_requisition_partner, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False
-        tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id)
+        tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
         if not tender.line_ids:
             raise osv.except_osv(_('Error!'), _('No Product in Tender'))
         True
@@ -49,7 +51,7 @@ class purchase_requisition_partner(osv.osv_memory):
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         return {'value':{'partner_address_id': addr['default']}}
 
-    def create_order(self, cr, uid, ids, context):
+    def create_order(self, cr, uid, ids, context=None):
         """
              To Create a purchase orders .
 
@@ -61,6 +63,8 @@ class purchase_requisition_partner(osv.osv_memory):
              @return: {}
 
         """
+        if context is None:
+            context = {}
         record_ids = context and context.get('active_ids', False)
         if record_ids:
             data =  self.read(cr, uid, ids)
@@ -75,12 +79,12 @@ class purchase_requisition_partner(osv.osv_memory):
             acc_pos_obj = self.pool.get('account.fiscal.position')
             partner_id = data[0]['partner_id']
 
-            supplier_data = partner_obj.browse(cr, uid,[ partner_id])[0]
+            supplier_data = partner_obj.browse(cr, uid, partner_id, context=context)
 
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             list_line=[]
             purchase_order_line={}
-            for tender in tender_obj.browse(cr, uid, record_ids):
+            for tender in tender_obj.browse(cr, uid, record_ids, context=context):
                 for line in tender.line_ids:
                     partner_list = sorted([(partner.sequence, partner) for partner in  line.product_id.seller_ids if partner])
                     partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 14:05+0000\n"
-"Last-Translator: Alexsandro Haag <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-11 14:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -125,11 +125,6 @@ msgstr "Empresa"
 #: field:event.make.invoice,invoice_date:0
 msgid "Invoice Date"
 msgstr "Data de Faturamento"
-
-#. module: event
-#: help:event.event,pricelist_id:0
-msgid "Pricelist version for current event."
-msgstr "Versão da Lista de Preços para o evento atual."
 
 #. module: event
 #: code:addons/event/wizard/partner_event_registration.py:0
@@ -265,26 +260,6 @@ msgid "Emails"
 msgstr "Emails"
 
 #. module: event
-#: model:ir.module.module,description:event.module_meta_information
-msgid ""
-"Oraganization and management of Event.\n"
-"\n"
-"    This module allow you\n"
-"        * to manage your events and their registrations\n"
-"        * to use emails to automatically confirm and send acknowledgements "
-"for any registration to an event\n"
-"        * ...\n"
-"    A dashboard for associations that includes:\n"
-"    * Registration by Events (graph)\n"
-"    Note that:\n"
-"    - You can define new types of events in\n"
-"                Events / Configuration / Types of Events\n"
-"    - You can access predefined reports about number of registration per "
-"event or per event category in:\n"
-"                Events / Reporting\n"
-msgstr ""
-
-#. module: event
 #: view:event.registration:0
 msgid "Extra Info"
 msgstr "Info. Extra"
@@ -345,9 +320,9 @@ msgid "Registration Confirmation"
 msgstr "Confirmação de Inscrição"
 
 #. module: event
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro! Você não pode criar um Menu recursivo."
+#: help:event.event,pricelist_id:0
+msgid "Pricelist version for current event."
+msgstr "Versão da Lista de Preços para o evento atual."
 
 #. module: event
 #: help:event.event,product_id:0
@@ -383,11 +358,6 @@ msgstr "Número de Inscrições ou Bilhetes"
 #, python-format
 msgid "Warning !"
 msgstr "Aviso !"
-
-#. module: event
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -435,21 +405,10 @@ msgid "To be Invoiced"
 msgstr "Para ser Faturado"
 
 #. module: event
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
-
-#. module: event
 #: code:addons/event/event.py:0
 #, python-format
 msgid "Error !"
 msgstr "Erro!"
-
-#. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:0
-#, python-format
-msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr "Aviso: O Evento '%s' atingiu o Limite Máximo (%s)"
 
 #. module: event
 #: field:event.registration,create_date:0
@@ -523,11 +482,10 @@ msgid "Confirm Anyway"
 msgstr "Confirmar assim mesmo"
 
 #. module: event
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erro: Unidade de venda precisa ser de categoria diferente da unidade de "
-"medida"
+#: code:addons/event/wizard/event_confirm_registration.py:0
+#, python-format
+msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
+msgstr "Aviso: O Evento '%s' atingiu o Limite Máximo (%s)"
 
 #. module: event
 #: view:event.event:0
@@ -573,11 +531,6 @@ msgstr "Últimos 30 Dias"
 #: model:ir.model,name:event.model_res_partner
 msgid "Partner"
 msgstr "Parceiro"
-
-#. module: event
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
 
 #. module: event
 #: view:board.board:0
@@ -659,9 +612,24 @@ msgid "Event Done"
 msgstr "Evento Concluído"
 
 #. module: event
-#: help:event.event,register_current:0
-msgid "Total of Open and Done Registrations"
-msgstr "Total de Inscrições Abertas e Concluídas"
+#: model:ir.module.module,description:event.module_meta_information
+msgid ""
+"Organization and management of Event.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements "
+"for any registration to an event\n"
+"        * ...\n"
+"    A dashboard for associations that includes:\n"
+"    * Registration by Events (graph)\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per "
+"event or per event category in:\n"
+"                Events / Reporting\n"
+msgstr ""
 
 #. module: event
 #: field:event.confirm.registration,msg:0
@@ -702,13 +670,6 @@ msgid "Create invoices"
 msgstr "Criar Nota(s) Fiscai(s)"
 
 #. module: event
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: A unidade padrão e a unidade de compra presisam ser da mesma categoria."
-
-#. module: event
 #: help:event.registration,email_cc:0
 msgid ""
 "These email addresses will be added to the CC field of all inbound and "
@@ -718,6 +679,11 @@ msgstr ""
 "Estes endereços de email serão adicionados para o campo CC de todas entradas "
 "e saídas de emails para este registro antes de ser enviado. Separe múltiplos "
 "endereços de email com vírgula."
+
+#. module: event
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erro ! Você não pode criar membros recursivos associados."
 
 #. module: event
 #: view:event.make.invoice:0
@@ -733,19 +699,6 @@ msgstr "Data de Início"
 #: field:event.registration,date_closed:0
 msgid "Closed"
 msgstr "Fechado"
-
-#. module: event
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
-
-#. module: event
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
 
 #. module: event
 #: view:event.event:0
@@ -836,6 +789,11 @@ msgstr ""
 #: selection:report.event.registration,month:0
 msgid "October"
 msgstr "Outubro"
+
+#. module: event
+#: help:event.event,register_current:0
+msgid "Total of Open and Done Registrations"
+msgstr "Total de Inscrições Abertas e Concluídas"
 
 #. module: event
 #: field:event.event,language:0
@@ -982,11 +940,6 @@ msgstr "Eventos por Inscrição"
 #, python-format
 msgid "Open"
 msgstr "Abrir"
-
-#. module: event
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
 
 #. module: event
 #: field:event.event,user_id:0
@@ -1251,11 +1204,6 @@ msgid "Invoice cannot be created if the registration is in %s state."
 msgstr "Nota Fiscal não pode ser criada se a inscrição está no estado %s."
 
 #. module: event
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: código EAN invalido"
-
-#. module: event
 #: view:event.confirm:0
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
@@ -1284,8 +1232,45 @@ msgstr "Fornecer o Número Mínimo de Inscrições"
 msgid "Speaker Confirmed"
 msgstr "Orador Confirmado"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
+
 #~ msgid "Reporting"
 #~ msgstr "Relatórios"
 
 #~ msgid "Configuration"
 #~ msgstr "Configuração"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Erro: Unidade de venda precisa ser de categoria diferente da unidade de "
+#~ "medida"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A unidade padrão e a unidade de compra presisam ser da mesma categoria."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: código EAN invalido"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Você não pode criar um Menu recursivo."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

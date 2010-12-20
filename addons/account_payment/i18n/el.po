@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-11-15 08:29+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-16 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -44,9 +44,9 @@ msgid "Group By..."
 msgstr "Ομαδοποίηση Κατά..."
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Γραμμές Πληρωμής"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -77,13 +77,9 @@ msgstr ""
 "μείον το ποσό που είναι ήδη σε εντολή πληρωμής"
 
 #. module: account_payment
-#: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr ""
-"Εάν δεν υπάρχει καθορισμένη ημερομηνία πληρωμής, η τράπεζα θα αντιμετωπίσει "
-"αυτήν την γραμμή πληρωμής άμεσα"
+#: field:payment.mode,company_id:0
+msgid "Company"
+msgstr "Εταιρία"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -112,6 +108,11 @@ msgid "Due Date"
 msgstr "Ημερομηνία Λήξης"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "Γραμμή Εγγραφής Λογαριασμού"
@@ -132,6 +133,11 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Ποσό"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -155,6 +161,11 @@ msgid "Reference"
 msgstr "Αναφορά"
 
 #. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -166,10 +177,12 @@ msgid "Directly"
 msgstr "Άμεσα"
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
 #: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Πρόχειρο"
+msgid "Payment Line"
+msgstr "Γραμμή Πληρωμής"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -186,11 +199,6 @@ msgstr "Επιβεβαιωμένο"
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Ημερομηνία Εφαρμογής Τιμολογίου"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Γραμμές Πληρωμής"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -261,6 +269,11 @@ msgid "Execution date"
 msgstr "Ημερομηνία εκτέλεσης"
 
 #. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "Καθορισμένη ημερομηνία"
@@ -282,9 +295,10 @@ msgid "Search Payment Orders"
 msgstr "Αναζήτηση Παραγγελίες Πληρωμής"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -347,9 +361,13 @@ msgid "Address of the Main Partner"
 msgstr "Διεύθυνση του κύριου Συνεργάτη"
 
 #. module: account_payment
-#: field:payment.mode,company_id:0
-msgid "Company"
-msgstr "Εταιρία"
+#: help:payment.line,date:0
+msgid ""
+"If no payment date is specified, the bank will treat this payment line "
+"directly"
+msgstr ""
+"Εάν δεν υπάρχει καθορισμένη ημερομηνία πληρωμής, η τράπεζα θα αντιμετωπίσει "
+"αυτήν την γραμμή πληρωμής άμεσα"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -377,17 +395,10 @@ msgid "Payment amount in the partner currency"
 msgstr "Ποσό Πληρωμής στο νόμισμα του συνεργάτη"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
 #: view:payment.order:0
-msgid "Payment Line"
-msgstr "Γραμμή Πληρωμής"
-
-#. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Λάθος! Δεν μπορείτε να δημιουργήσετε κενό Μενού."
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Πρόχειρο"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -437,6 +448,11 @@ msgstr "Γραμμές Πληρωμής"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Στοιχεία Ημερολογίου"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -554,14 +570,6 @@ msgid "Information"
 msgstr "Πληροφορίες"
 
 #. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
@@ -598,9 +606,10 @@ msgid "Are you sure you want to make payment?"
 msgstr "Είστε σίγουρος ότι θέλετε να κάνετε αυτή την πληρωμή;"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Cash Journal for the Payment Mode"
-msgstr "Ημερολόγιο Μετρητών για την Κατάσταση Πληρωμών"
+#: view:payment.mode:0
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Ημερολόγιο"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -677,8 +686,12 @@ msgid "Total"
 msgstr "Σύνολο"
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request that your company does in order to pay "
+"a supplier invoice or a customer credit note. Here you can register all "
+"payment orders that should be done, keep track of all payment orders and "
+"mention the invoice reference and the partner the payment should be done for."
 msgstr ""
 
 #. module: account_payment
@@ -704,10 +717,9 @@ msgid "Bank Account for the Payment Mode"
 msgstr "Λογαριασμός Τραπέζης για την Κατάσταση Πληρωμής"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Ημερολόγιο"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #~ msgid "Execution date:"
 #~ msgstr "Ημερομηνία εκτέλεσης:"
@@ -717,6 +729,9 @@ msgstr "Ημερολόγιο"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Άκυρο"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 
 #~ msgid "Reference:"
 #~ msgstr "Αναφορά:"
@@ -739,8 +754,17 @@ msgstr "Ημερολόγιο"
 #~ msgid "Draft Payment Order"
 #~ msgstr "Διάταξη Πρόχειρων Πληρωμών"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
 #~ msgid "Pay"
 #~ msgstr "Πληρωμή"
+
+#~ msgid "Cash Journal for the Payment Mode"
+#~ msgstr "Ημερολόγιο Μετρητών για την Κατάσταση Πληρωμών"
 
 #~ msgid "_Add"
 #~ msgstr "_Προσθήκη"
@@ -765,3 +789,9 @@ msgstr "Ημερολόγιο"
 
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Επιλέξτε τον Τύπο Πληρωμής για την Κατάσταση Πληρωμής."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος! Δεν μπορείτε να δημιουργήσετε κενό Μενού."

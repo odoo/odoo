@@ -57,9 +57,8 @@ class email_server(osv.osv):
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'note': fields.text('Description'),
-        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]", 
-                                    help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
-        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model."),
+        'action_id':fields.many2one('ir.actions.server', 'Email Server Action', required=False, domain="[('state','=','email')]", help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
+        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
         'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
@@ -72,9 +71,9 @@ class email_server(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
-    def check_duplicate(self, cr, uid, ids):
-	# RFC *-* Why this limitation? why not in SQL constraint?
-        vals = self.read(cr, uid, ids, ['user', 'password'])[0]
+    def check_duplicate(self, cr, uid, ids, context=None):
+        # RFC *-* Why this limitation? why not in SQL constraint?
+        vals = self.read(cr, uid, ids, ['user', 'password'], context=context)[0]
         cr.execute("select count(id) from email_server where user=%s and password=%s", (vals['user'], vals['password']))
         res = cr.fetchone()
         if res:
@@ -82,8 +81,19 @@ class email_server(osv.osv):
                 return False
         return True
 
+    def check_model(self, cr, uid, ids, context = None):
+        if context is None:
+            context = {}
+        current_rec = self.read(cr, uid, ids, context)[0]
+        if current_rec:
+            model = self.pool.get(current_rec.get('object_id')[1])
+            if hasattr(model, 'message_new'):
+                return True
+        return False
+
     _constraints = [
-        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password'])
+        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
+        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -95,15 +105,16 @@ class email_server(osv.osv):
 
         return {'value':{'port':port}}
 
-    def set_draft(self, cr, uid, ids, context={}):
+    def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
     
-    def button_confirm_login(self, cr, uid, ids, context={}):
-        for server in self.browse(cr, uid, ids, context):
+    def button_confirm_login(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for server in self.browse(cr, uid, ids, context=context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
-            count = 0
             try:
                 if server.type == 'imap':
                     imap_server = None
@@ -135,20 +146,22 @@ class email_server(osv.osv):
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
         return True
 
-    def button_fetch_mail(self, cr, uid, ids, context={}):
+    def button_fetch_mail(self, cr, uid, ids, context=None):
         self.fetch_mail(cr, uid, ids, context=context)
         return True
 
-    def _fetch_mails(self, cr, uid, ids=False, context={}):
+    def _fetch_mails(self, cr, uid, ids=False, context=None):
         if not ids:
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context=context)
 
-    def fetch_mail(self, cr, uid, ids, context={}):
+    def fetch_mail(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         email_tool = self.pool.get('email.server.tools')
         action_pool = self.pool.get('ir.actions.server')
         context.update({'get_server': True})
-        for server in self.browse(cr, uid, ids, context):
+        for server in self.browse(cr, uid, ids, context=context):
             count = 0
             user = server.user_id.id or uid
             try:
@@ -160,7 +173,7 @@ class email_server(osv.osv):
                         result, data = imap_server.fetch(num, '(RFC822)')
                         res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                             imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
@@ -177,7 +190,7 @@ class email_server(osv.osv):
                         msg = '\n'.join(msges)
                         res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
 
@@ -206,7 +219,7 @@ class mailgate_message(osv.osv):
     _order = 'id desc'
 
     def create(self, cr, uid, values, context=None):
-        if not context:
+        if context is None:
             context={}
         server_id = context.get('server_id',False)
         server_type = context.get('server_type',False)
@@ -218,7 +231,7 @@ class mailgate_message(osv.osv):
         return res
 
     def write(self, cr, uid, ids, values, context=None):
-        if not context:
+        if context is None:
             context={}
         server_id = context.get('server_id',False)
         server_type = context.get('server_type',False)

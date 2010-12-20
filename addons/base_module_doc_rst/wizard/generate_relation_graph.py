@@ -28,7 +28,7 @@ form_rep = '''<?xml version="1.0"?>
     <label colspan="2" string="(Relationship Graphs generated)" align="0.0"/>
 </form>'''
 
-def _get_graph(self, cr, uid, datas, context={}):
+def _get_graph(self, cr, uid, datas, context=None):
     mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
     modules = mod_obj.browse(cr, uid, datas['ids'], context=context)
     for module in modules:

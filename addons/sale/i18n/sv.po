@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-11-27 13:23+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-18 11:09+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Invalid model name in the action definition."
+#: help:sale.installer,delivery:0
+msgid "Allows you to compute delivery costs on your quotations."
+msgstr "Ger dig möjlighet att beräkna frkatkostnad på dina offerter."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -33,7 +33,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
-msgstr "Dag"
+msgstr "Day"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -42,10 +42,9 @@ msgid "Cancel Order"
 msgstr "Avbryt order"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-#: view:sale.report:0
-msgid "Sales By Partner"
-msgstr "Försäljning per företag"
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -56,6 +55,7 @@ msgstr "Betalning före leverans"
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sale order request."
 msgstr ""
+"Refererande till dokumentet som låg till underlag för försäljningsordern."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:0
@@ -73,6 +73,8 @@ msgstr "Moms"
 #, python-format
 msgid "You must first cancel stock moves attached to this sale order line."
 msgstr ""
+"Du måste först avbryta lagerförflyttningen som är kopplad till denna "
+"försäljningsorderrad."
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -133,7 +135,7 @@ msgstr "Standard betalningsvillkor"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr ""
+msgstr "Konfigurerar plockpolicyn för försäljningsorder"
 
 #. module: sale
 #: view:sale.order:0
@@ -141,7 +143,7 @@ msgstr ""
 #: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: sale
 #: report:sale.order:0
@@ -155,19 +157,21 @@ msgid "Total Price"
 msgstr "Totalt belopp"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
-
-#. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Markera checkboxen för att gruppera fakturorna per kund."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Beställt antal"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
+#: view:sale.report:0
+msgid "Sales by Salesman"
+msgstr "Försäljning per säljare"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -205,16 +209,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fel: Säljenhet måste tillhöra en annan kategori än standardenhet"
-
-#. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
 msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"Fakturan skapas med automatik om plockpolicyn är 'fakturera från plock' "
+"eller 'fakturera från order efter leverans'."
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -291,20 +292,14 @@ msgid "August"
 msgstr "Augusti"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "EAN: "
-msgstr "EAN: "
-
-#. module: sale
-#: help:sale.installer,delivery:0
-msgid "Allows you to compute delivery costs on your quotations."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Vår säljare"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+msgid "All Quotations"
+msgstr "Alla offerter"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -410,6 +405,12 @@ msgid "Accounting"
 msgstr "Redovisning"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "(n/a)"
+msgstr ""
+
+#. module: sale
 #: help:sale.advance.payment.inv,product_id:0
 msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
@@ -442,9 +443,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Inköpsprislista"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -494,7 +495,7 @@ msgstr "Andelsföretag"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -511,6 +512,11 @@ msgstr "Fakturaadress :"
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr "Cannot delete Sale Order(s) which are already confirmed !"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales by Customer"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -539,6 +545,11 @@ msgstr "Quotation / Order"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "rader"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -637,11 +648,6 @@ msgid "It indicates that an invoice has been paid"
 msgstr ""
 
 #. module: sale
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Order Date"
 msgstr ""
@@ -653,9 +659,10 @@ msgid "Shipped"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Alla offerter"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "invalid mode for test_state"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -701,8 +708,6 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "Vill du verkligen skapa fakturan/fakturorna ?"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 #: view:sale.report:0
 msgid "Sales By Month"
 msgstr ""
@@ -738,12 +743,9 @@ msgid "Exception"
 msgstr "Undantag"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
-#, python-format
-msgid ""
-"You cannot make an advance on a sale order                              that "
-"is defined as 'Automatic Invoice after delivery'."
-msgstr ""
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Direktleverans"
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -832,18 +834,6 @@ msgid "Pricelist version for current sale order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-msgstr ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging: "
-
-#. module: sale
 #: field:sale.installer,sale_order_dates:0
 msgid "Sales Order Dates"
 msgstr ""
@@ -883,6 +873,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sales_by_partner
+#: view:sale.report:0
+msgid "Sales by Partner"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
 msgstr "Ordering Contact"
@@ -910,6 +906,8 @@ msgstr "Pris"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -954,18 +952,8 @@ msgid "Sequence Number"
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Kundorder prislista"
-
-#. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: sale
@@ -1027,12 +1015,6 @@ msgstr ""
 #: selection:sale.report,state:0
 msgid "Waiting Schedule"
 msgstr "Schemalagd väntan"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "invalid mode for test_state"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -1170,11 +1152,6 @@ msgid "Shipped Quantities"
 msgstr "Levererat antal"
 
 #. module: sale
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
 msgstr "Fakturera utgående från kundorder"
@@ -1185,9 +1162,11 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "från lager"
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sale order becomes 'In "
+"progress' or 'Manual in progress'."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1239,12 +1218,6 @@ msgid "Sales Management"
 msgstr "Säljhantering"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Quantity: "
-msgstr " Quantity: "
-
-#. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
 msgstr ""
@@ -1261,20 +1234,8 @@ msgid "Create invoices"
 msgstr "Skapa fakturor"
 
 #. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fel: Standardmåttenheten och inköpsmåttenheten måste vara i samma kategori."
-
-#. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
-
-#. module: sale
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: sale
@@ -1381,11 +1342,6 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: sale
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order line!"
@@ -1395,13 +1351,6 @@ msgstr ""
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
 msgstr ""
-
-#. module: sale
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1484,15 +1433,8 @@ msgid "Product UoM"
 msgstr "Produkt"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-#: view:sale.report:0
-msgid "Sales By Salesman"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
-msgid "Logistics"
+msgid "Logistic"
 msgstr ""
 
 #. module: sale
@@ -1660,6 +1602,23 @@ msgid "Warning"
 msgstr "Warning"
 
 #. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
+msgid "Sales by Month"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging:\n"
+"\n"
+"EAN: %s Quantity: %s Type of ul: %s"
+msgstr ""
+
+#. module: sale
 #: view:sale.order:0
 msgid "Sales Order"
 msgstr ""
@@ -1670,12 +1629,6 @@ msgid "Quantity (UoS)"
 msgstr "Antal"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid " Type of ul: "
-msgstr " Type of ul: "
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr "Bekräftad"
@@ -1684,6 +1637,11 @@ msgstr "Bekräftad"
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
 msgstr "Bekräfta"
+
+#. module: sale
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1750,6 +1708,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1797,6 +1760,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1865,14 +1829,12 @@ msgid "Sales Orders"
 msgstr "Kundorder"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Betalningsvillkor"
-
-#. module: sale
-#: selection:sale.config.picking_policy,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Direktleverans"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order                              that "
+"is defined as 'Automatic Invoice after delivery'."
+msgstr ""
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -1899,6 +1861,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1934,11 +1901,9 @@ msgid "Date Order"
 msgstr ""
 
 #. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sale order becomes 'In "
-"progress' or 'Manual in progress'."
-msgstr ""
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "från lager"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -1947,19 +1912,9 @@ msgid "Sale Shop"
 msgstr "Sale Shop"
 
 #. module: sale
-#: view:board.board:0
-msgid "Sales By Customer"
-msgstr ""
-
-#. module: sale
 #: view:sale.open.invoice:0
 msgid "Close"
 msgstr "Stäng"
-
-#. module: sale
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: sale
 #: field:sale.order,shipped:0
@@ -1970,6 +1925,11 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Not enough stock !"
+msgstr ""
+
+#. module: sale
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: sale
@@ -2044,6 +2004,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Betalningsvillkor"
@@ -2098,6 +2059,11 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ msgid "Sequence"
 #~ msgstr "Sekvens"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "Make Invoice"
 #~ msgstr "Skapa faktura"
 
@@ -2149,8 +2115,14 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ msgid "Sales Configuration"
 #~ msgstr "Kundorder inställningar"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Vår säljare"
+
 #~ msgid "Status"
 #~ msgstr "Status"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Kundorder prislista"
 
 #~ msgid "My Sales Order"
 #~ msgstr "Mina kundorder"
@@ -2163,6 +2135,9 @@ msgstr "Fakturera utgående ifrån leveranser"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Fakturan rättad"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Betalningsvillkor"
 
 #~ msgid "Total amount"
 #~ msgstr "Totalt belopp"
@@ -2208,6 +2183,9 @@ msgstr "Fakturera utgående ifrån leveranser"
 
 #~ msgid "Invoice from the Packing"
 #~ msgstr "Fakturera utgående från packningen"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Inköpsprislista"
 
 #~ msgid ""
 #~ "The name and address of the contact that requested the order or quotation."
@@ -2278,6 +2256,11 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ "En faktura skapas när man klickar på 'Skapa faktura' efter att kundordern "
 #~ "godkänts. Denna transaktion skapar en faktura utgående från kundordern"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fel: Standardmåttenheten och inköpsmåttenheten måste vara i samma kategori."
+
 #~ msgid "Packing OUT is created for stockable products."
 #~ msgstr "Packning ut skapas för lagerförda produkter"
 
@@ -2313,6 +2296,19 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ "försäljningenordern. Denna transaktion flyttar försäljningsorder till "
 #~ "plocklista."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+#~ msgstr ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging: "
+
 #~ msgid "Automatic Declaration"
 #~ msgstr "Automatic Declaration"
 
@@ -2345,8 +2341,15 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
 #~ "will automatic create after delivery."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
 #~ msgid "Related Packing"
 #~ msgstr "Related Packing"
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Quantity: "
 
 #~ msgid ""
 #~ "In sale order , procuerement for each line and it comes into the procurement "
@@ -2354,6 +2357,14 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ msgstr ""
 #~ "In sale order , procuerement for each line and it comes into the procurement "
 #~ "order"
+
+#, python-format
+#~ msgid " Type of ul: "
+#~ msgstr " Type of ul: "
+
+#, python-format
+#~ msgid "EAN: "
+#~ msgstr "EAN: "
 
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
@@ -2427,6 +2438,15 @@ msgstr "Fakturera utgående ifrån leveranser"
 #~ "in your warehouse and partner locations. This will configure the most common "
 #~ "and simple methods to deliver products to the customer in one or two "
 #~ "operations by the worker."
+
+#~ msgid "Sales By Partner"
+#~ msgstr "Försäljning per företag"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Fel: Säljenhet måste tillhöra en annan kategori än standardenhet"
 
 #~ msgid "Configure Sale Order Logistics"
 #~ msgstr "Konfigurera kundorder logistik"

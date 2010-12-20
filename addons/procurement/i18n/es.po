@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 09:48+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-17 22:02+0000\n"
+"Last-Translator: Carlos @ smile.fr <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -54,11 +53,6 @@ msgstr "Planificación"
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "¡No se ha definido un proveedor para este producto!"
-
-#. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -223,19 +217,14 @@ msgstr ""
 "OpenERP lo completa automáticamente."
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Regla de inventario mínimo"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: procurement
 #: field:procurement.order,priority:0
 msgid "Priority"
 msgstr "Prioridad"
-
-#. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -284,11 +273,6 @@ msgid "Product & Location"
 msgstr "Producto y Ubicación"
 
 #. module: procurement
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
 msgstr "Calcular abastecimiento"
@@ -329,7 +313,8 @@ msgstr "Cantidad"
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "No suficiente stock y no se ha definido una regla de stock mínimo."
+msgstr ""
+"No hay suficiente stock y no se ha definido una regla de stock mínimo."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -348,14 +333,9 @@ msgid "Configuration"
 msgstr "Configuración"
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Argumentos no válidos"
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la estructura de la vista!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Ctdad múltiple"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -367,19 +347,9 @@ msgstr ""
 "\"Obtener bajo pedido\"."
 
 #. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistic Scheduler"
-msgstr "Planificador MRP y Logística"
-
-#. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
 msgstr "Abastecimientos automáticos"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,qty_multiple:0
-msgid "The procurement quantity will by rounded up to this multiple."
-msgstr "La cantidad abastecida será redondeada hacia arriba a este múltiplo."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
@@ -465,16 +435,29 @@ msgstr ""
 "inferior a 1!"
 
 #. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"orderpoint without removing it."
+msgstr ""
+"Si el campo activo es falso, le permitirá ocultar el punto de pedido sin "
+"eliminarlo."
+
+#. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 msgid ""
 "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
+"Cuando el stock virtual se sitúa por debajo de la cantidad mínima, OpenERP "
+"genera un abastecimiento para situar el stock virtual a la cantidad máxima."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
-msgstr "Si el stock de un producto es menor que 0, actuará como una orden"
+msgstr ""
+"Si el stock de un producto es menor que 0, actuará como una regla de stock "
+"mínimo."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -504,17 +487,9 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
-
-#. module: procurement
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
+msgstr "Este asistente planificará abastecimientos."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -553,17 +528,9 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr "Este asistente planificará abastecimientos."
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the orderpoint "
-"without removing it."
-msgstr ""
-"Si el campo activo se desmarca, permite ocultar la orden sin eliminarla."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -597,9 +564,9 @@ msgid "Automatic Order Point"
 msgstr "Orden automática"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Ctdad múltiple"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Regla de inventario mínimo"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -615,6 +582,11 @@ msgstr "Información extra"
 #: help:procurement.order,name:0
 msgid "Procurement name."
 msgstr "Nombre abastecimiento."
+
+#. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -695,9 +667,9 @@ msgid "Done"
 msgstr "Realizada"
 
 #. module: procurement
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
+msgstr "La cantidad abastecida será redondeada hacia arriba a este múltiplo."
 
 #. module: procurement
 #: view:make.procurement:0
@@ -708,11 +680,6 @@ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: procurement
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -857,6 +824,11 @@ msgstr ""
 "compra."
 
 #. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr "Planificador de MRP y logística"
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -911,7 +883,7 @@ msgstr "Muy urgente"
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr "Orden automática"
+msgstr "Punto de pedido automático"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -919,12 +891,49 @@ msgid "Procurement Details"
 msgstr "Detalles de abastecimiento"
 
 #. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
-
-#. module: procurement
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la estructura de la vista!"
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "Planificador MRP y Logística"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Argumentos no válidos"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the orderpoint "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar la orden sin eliminarla."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"

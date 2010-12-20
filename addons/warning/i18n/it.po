@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-24 09:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -21,14 +21,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Riga Ordine d'Acquisto"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve cominciare con \"x_\" e non deve contenere "
-"caratteri speciali!"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -41,9 +33,9 @@ msgid "Message for Purchase Order Line"
 msgstr "Messaggio per Riga Ordine di Acquisto"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere univoco!"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
@@ -62,11 +54,6 @@ msgid "Warning when Purchasing this Product"
 msgstr "Avviso sull'acquisto di questo prodotto"
 
 #. module: warning
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID del certificato del modulo deve essere unico!"
-
-#. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Prodotto"
@@ -76,6 +63,16 @@ msgstr "Prodotto"
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Avvertimenti"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Avviso"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -103,11 +100,6 @@ msgid "No Message"
 msgstr "Nessun messaggio"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
@@ -130,9 +122,9 @@ msgid "Sale Order"
 msgstr "Ordine di Vendita"
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Prelievo di Magazzino"
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Messaggio per Fattura"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -169,9 +161,9 @@ msgstr ""
 "bloccherà il flusso. Il messaggio deve essere scritto nel campo successivo."
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Messaggio per Fattura"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Prelievo di Magazzino"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
@@ -200,14 +192,9 @@ msgid "Warning on the Sale Order"
 msgstr "Avviso sull'Ordine di Vendita"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Avviso"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -219,7 +206,20 @@ msgstr "Messaggio per Prelievo Magazzino"
 msgid "Partner"
 msgstr "Partner"
 
-#. module: warning
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere inferiore ad 1!"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere inferiore ad 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere univoco!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID del certificato del modulo deve essere unico!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve cominciare con \"x_\" e non deve contenere "
+#~ "caratteri speciali!"

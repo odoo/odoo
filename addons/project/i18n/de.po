@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-12-01 09:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 11:49+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -37,11 +38,6 @@ msgstr "Die Aufgabe '%s' wurde delegiert an %s."
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr "Die ausgew. Firma ist nicht zugelassen für diesen Benutzer"
-
-#. module: project
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "2 Benuzter können nicht den gleichen Login Code haben."
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -159,9 +155,7 @@ msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
 #. module: project
-#: code:addons/project/project.py:0
 #: constraint:project.task:0
-#, python-format
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
@@ -271,7 +265,7 @@ msgstr "Aufgaben"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr "Mitglieder"
+msgstr "Mitarbeiter"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -363,6 +357,11 @@ msgid "Mail Header"
 msgstr "EMail Kopf"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Erledigte Aufgaben"
@@ -427,18 +426,21 @@ msgid "res.users"
 msgstr ""
 
 #. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the project "
-"without removing it."
-msgstr ""
-"Wenn dieses Feld aktiviert ist , kann ein Projekt ausgeblendet werden, ohne "
-"dieses vollständig zu entfernen."
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
+msgstr "Softwaretest"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Arbeit erledigt"
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr ""
+"Erwarteter Zeitbedarf für die Bearbeitung der delegierten Aufgabe durch den "
+"zugewiesenen Mitarbeiter"
+
+#. module: project
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Reaktiviere Projekt"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -539,9 +541,9 @@ msgid "Date Stop: %(date)s"
 msgstr "Ende Datum: %(date)s"
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
-msgstr "Softwaretest"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "2 Benuzter können nicht den gleichen Login Code haben."
 
 #. module: project
 #: view:project.project:0
@@ -549,9 +551,9 @@ msgid "Reset as Project"
 msgstr "Zurücksetzen als Projekt"
 
 #. module: project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+#: selection:project.vs.hours,state:0
+msgid "Template"
+msgstr "Vorlage"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -564,9 +566,9 @@ msgid "My projects"
 msgstr "Meine Projekte"
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -577,11 +579,6 @@ msgstr "Nächste"
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
 msgstr "Vom Entwurf Stadium ausgehend ist der nächste Status Offen."
-
-#. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -682,11 +679,6 @@ msgid "Medium"
 msgstr "Medium"
 
 #. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
-msgstr "Vorlage"
-
-#. module: project
 #: view:project.task:0
 #: field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
@@ -700,7 +692,7 @@ msgstr "Verbleibende Stunden"
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr "erledigte Aufgaben"
+msgstr "Erledigte Aufgaben"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_board_note_tree
@@ -802,6 +794,13 @@ msgid "New title of the task delegated to the user"
 msgstr "Neue Bezeichnung der delegierten Aufgabe."
 
 #. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr "Projektstunden vs. geplante und gesamte Stunden"
@@ -860,14 +859,14 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: view:project.task.reevaluate:0
+msgid "_Evaluate"
+msgstr "Bestätige"
 
 #. module: project
 #: view:board.board:0
 msgid "My Board"
-msgstr "Mein Pinnwand"
+msgstr "Meine Pinnwand"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:0
@@ -882,9 +881,9 @@ msgid "Project Management"
 msgstr "Projekte"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Abfolge Konfiguration"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "August"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -1008,9 +1007,17 @@ msgstr ""
 "Definition der Reihenfolge von Aufgaben, bei der Anzeige von Aufgabenlisten."
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Warne Partner"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1064,9 +1071,9 @@ msgid "Project Tasks"
 msgstr "Projekt Aufgaben"
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
-msgstr "Erwarteter Zeitbedarf pro User"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1086,14 +1093,9 @@ msgid "Low"
 msgstr "Ausreichend"
 
 #. module: project
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#. module: project
 #: view:project.project:0
 msgid "Performance"
-msgstr "Leistungsfähigkeit"
+msgstr "Bearbeitungsdauer"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
@@ -1130,9 +1132,9 @@ msgid "Stages"
 msgstr "Stufen"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "August"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1151,6 +1153,11 @@ msgstr ""
 "wird."
 
 #. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Warne Partner"
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
 msgstr "Juni"
@@ -1165,11 +1172,6 @@ msgstr ""
 "durch die SCRUM Methodik."
 
 #. module: project
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
-
-#. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
@@ -1179,7 +1181,7 @@ msgstr "Tage f. Beend."
 #: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.ui.menu,name:project.menu_board_project
 msgid "Project Dashboard"
-msgstr "Projektmitarbeiter Pinnwand"
+msgstr "Pinnwand Projektmitarbeiter"
 
 #. module: project
 #: view:project.project:0
@@ -1238,9 +1240,11 @@ msgid "Manager Email"
 msgstr "EMail Manager"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
-msgstr "Januar"
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1293,9 +1297,9 @@ msgid "User's projects"
 msgstr "Benutzer Projekte"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Reaktiviere Projekt"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Abfolge Konfiguration"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1355,7 +1359,8 @@ msgid ""
 msgstr ""
 "Projekt Management Module ermöglicht über multi-level Projekte eine "
 "Auswertung von ,\n"
-"* geplanten und erledigten Aufgaben,* Mitglieder dieses Projekts.\n"
+"* geplanten und erledigten Aufgaben,\n"
+"* Mitglieder dieses Projekts.\n"
 "    "
 
 #. module: project
@@ -1426,11 +1431,6 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: project
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
-
-#. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.project:0
@@ -1448,11 +1448,6 @@ msgstr "Beenden"
 #: selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Offen"
-
-#. module: project
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1474,14 +1469,6 @@ msgstr "ID: %(task_id)s"
 #: selection:task.by.days,state:0
 msgid "In Progress"
 msgstr "In Bearbeitung"
-
-#. module: project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:0
@@ -1583,11 +1570,6 @@ msgid "Re-evaluate Task"
 msgstr "Neuberechnung verbleibender Stunden"
 
 #. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
-msgstr "Bestätige"
-
-#. module: project
 #: help:project.installer,project_long_term:0
 msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
@@ -1605,25 +1587,6 @@ msgstr "Softwareentwicklung"
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
 msgstr "Berechne geleistete Arbeitszeit"
-
-#. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"resources assigned on it. A project can be put into a hierarchy, as a child "
-"of a Parent Project. This allows you to  design large project structure with "
-"different phases spread over the project duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on."
-msgstr ""
-"Ein Projekt besteht aus einzelnen Aufgaben oder Problemstellungen, die durch "
-"zugewiesene Mitarbeiter bearbeitet werden sollen. Ein Projekt kann durch "
-"eine hierachische Struktur ein Teilprojekt eines Hauptprojektes sein. Dieses "
-"ermöglicht die Gestaltung komplexer Projektstrukturen mit verschiedenen "
-"Projektphasen über die Gesamtdauer eines Projektdurchlaufs. Jeder Benutzer "
-"kann ein Standard Projekt in seinen persönlichen Einstellungen hinterlegen, "
-"um exakt die Aufgaben oder Probleme herauszufiltern, an denen der Benutzer "
-"arbeiten soll."
 
 #. module: project
 #: view:board.board:0
@@ -1679,6 +1642,7 @@ msgstr "Aufgabe:%(name)s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Konfiguration der Anwendungen für Projekte"
 
@@ -1697,6 +1661,11 @@ msgstr "Geleistete Stunden"
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Meine abrechenbaren Zeiten"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
+msgstr "Januar"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1820,6 +1789,11 @@ msgid "Project Time Unit"
 msgstr "Projekt Zeiteinheit"
 
 #. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' is pending."
@@ -1852,11 +1826,6 @@ msgstr "Benutzer"
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
 msgstr "Aufgaben mit Verzug"
-
-#. module: project
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -1893,6 +1862,11 @@ msgstr "Validierung Status"
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Aufgabe '%s' ist storniert"
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Arbeit erledigt"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -2074,6 +2048,9 @@ msgstr "Budgets"
 #~ msgid "Contact"
 #~ msgstr "Kontakt"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Task type"
 #~ msgstr "Aufgabentyp"
 
@@ -2152,6 +2129,12 @@ msgstr "Budgets"
 #~ msgid "Create a Task"
 #~ msgstr "Erzeuge Aufgabe"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
 #~ msgid "Parent Task"
 #~ msgstr "(Ober-) Aufgabe"
 
@@ -2227,6 +2210,9 @@ msgstr "Budgets"
 #~ "to project."
 #~ msgstr ""
 #~ "Wenn ein [?] im Projektnamen ist, dann ist kein Analyse Konto definiert"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #~ msgid "All Attachments"
 #~ msgstr "Alle Anhänge"
@@ -2348,3 +2334,48 @@ msgstr "Budgets"
 
 #~ msgid "Closed Tasks"
 #~ msgstr "Abgeschlossene Aufgaben"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the project "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Wenn dieses Feld aktiviert ist , kann ein Projekt ausgeblendet werden, ohne "
+#~ "dieses vollständig zu entfernen."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
+
+#~ msgid ""
+#~ "A project contains a set of tasks or issues that will be performed by your "
+#~ "resources assigned on it. A project can be put into a hierarchy, as a child "
+#~ "of a Parent Project. This allows you to  design large project structure with "
+#~ "different phases spread over the project duration cycle. Each user can set "
+#~ "his default project in his own preferences, in order to filter automatically "
+#~ "the tasks or issues he usually works on."
+#~ msgstr ""
+#~ "Ein Projekt besteht aus einzelnen Aufgaben oder Problemstellungen, die durch "
+#~ "zugewiesene Mitarbeiter bearbeitet werden sollen. Ein Projekt kann durch "
+#~ "eine hierachische Struktur ein Teilprojekt eines Hauptprojektes sein. Dieses "
+#~ "ermöglicht die Gestaltung komplexer Projektstrukturen mit verschiedenen "
+#~ "Projektphasen über die Gesamtdauer eines Projektdurchlaufs. Jeder Benutzer "
+#~ "kann ein Standard Projekt in seinen persönlichen Einstellungen hinterlegen, "
+#~ "um exakt die Aufgaben oder Probleme herauszufiltern, an denen der Benutzer "
+#~ "arbeiten soll."

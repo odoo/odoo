@@ -32,7 +32,7 @@ class sale_order_line(osv.osv):
         line_obj = self.pool.get('account.invoice.line')
         create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, context=context)
         i = 0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             line_obj.write(cr, uid, [create_ids[i]], {'analytics_id': line.analytics_id.id})
             i = i + 1
         return create_ids

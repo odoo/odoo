@@ -7,26 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-29 07:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-09 08:02+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: project_messages
-#: field:project.messages,from_id:0
-msgid "From"
-msgstr "De"
-
-#. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Error! No puede crear un menú recursivo."
 
 #. module: project_messages
 #: field:project.messages,to_id:0
@@ -34,27 +24,14 @@ msgid "To"
 msgstr "Para"
 
 #. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción"
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
+msgstr "project.messages"
 
 #. module: project_messages
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: project_messages
-#: view:project.messages:0
-msgid "Today"
-msgstr "Hoy"
-
-#. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El Id del certificado debe ser único!"
+#: field:project.messages,from_id:0
+msgid "From"
+msgstr "De"
 
 #. module: project_messages
 #: help:project.messages,to_id:0
@@ -64,22 +41,18 @@ msgstr "Mantenga este vacío para transmitir el mensaje."
 #. module: project_messages
 #: field:project.messages,create_date:0
 msgid "Creation Date"
-msgstr "Fecha creación"
+msgstr "Fecha de creación"
 
 #. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
-msgstr "project.messages"
-
-#. module: project_messages
-#: model:ir.module.module,shortdesc:project_messages.module_meta_information
-msgid "In-Project Messaging System"
-msgstr "Sistema de mensajes en proyectos"
-
-#. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la definición de la vista!"
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid ""
+"An in-project messagery system permits an efficient and trackable "
+"communication between project members. The messages are kept in the system "
+"and can then be used for post-analysis."
+msgstr ""
+"Un sistema de mensajes en proyectos permite una comunicación eficiente y "
+"trazable entre los miembros del proyecto. Los mensajes se conservan en el "
+"sistema y se pueden utilizar para análisis posteriores."
 
 #. module: project_messages
 #: model:ir.actions.act_window,name:project_messages.act_project_messages
@@ -99,36 +72,23 @@ msgstr "Proyecto"
 
 #. module: project_messages
 #: view:project.messages:0
-msgid "Message To"
-msgstr "Mensaje a"
-
-#. module: project_messages
-#: model:ir.actions.act_window,help:project_messages.messages_form
-msgid ""
-"An in-project messagery system permits an efficient and trackable "
-"communication between project members. The messages are kept in the system "
-"and can then be used for post-analysis."
-msgstr ""
-"Un sistema de mensajes en proyectos permite una comunicación eficiente y "
-"trazable entre los miembros del proyecto. Los mensajes se conservan en el "
-"sistema y se pueden utilizar para análisis posteriores."
-
-#. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
-#: view:project.messages:0
-msgid "Project Messages"
-msgstr "Mensajes de proyectos"
-
-#. module: project_messages
-#: view:project.messages:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: project_messages
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
+#: view:project.messages:0
+msgid "Today"
+msgstr "Hoy"
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Message To"
+msgstr "Mensaje a"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr "¡Error! No puede asignar un escalado al mismo proyecto."
 
 #. module: project_messages
 #: view:project.messages:0
@@ -143,6 +103,44 @@ msgid "Message From"
 msgstr "Mensajes de"
 
 #. module: project_messages
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+#: view:project.messages:0
+msgid "Project Messages"
+msgstr "Mensajes de proyectos"
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr ""
+"¡Error! La fecha de inicio del proyecto debe ser anterior a la fecha final "
+"del proyecto."
+
+#. module: project_messages
+#: model:ir.module.module,shortdesc:project_messages.module_meta_information
+msgid "In-Project Messaging System"
+msgstr "Sistema de mensajes en proyectos"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El Id del certificado debe ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Error! No puede crear un menú recursivo."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la definición de la vista!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

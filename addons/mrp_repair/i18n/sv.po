@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 09:41+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-09 10:02+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -47,8 +47,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
 msgstr ""
 
 #. module: mrp_repair
@@ -101,7 +101,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Leveransadress"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -212,11 +212,6 @@ msgstr "Bekräftad"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr ""
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr ""
 
@@ -236,19 +231,9 @@ msgid "Repair Order N° :"
 msgstr ""
 
 #. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
 msgstr ""
 
 #. module: mrp_repair
@@ -269,11 +254,6 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
-
-#. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: mrp_repair
@@ -310,11 +290,6 @@ msgid "Total :"
 msgstr "Totalt:"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -337,11 +312,6 @@ msgstr ""
 #, python-format
 msgid "Warning!"
 msgstr ""
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -373,7 +343,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0
 msgid "Repaired"
-msgstr ""
+msgstr "Reparerad"
 
 #. module: mrp_repair
 #: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
@@ -394,7 +364,7 @@ msgstr "Avbruten"
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Innan reparation"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
@@ -439,8 +409,8 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
@@ -449,11 +419,9 @@ msgid "Repair Order"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
 msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -565,7 +533,7 @@ msgstr ""
 #: field:mrp.repair.line,price_unit:0
 #: report:repair.order:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Pris per enhet"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -601,11 +569,6 @@ msgstr "Avbryt"
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr ""
-
-#. module: mrp_repair
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
 msgstr ""
 
 #. module: mrp_repair
@@ -774,7 +737,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Totalt"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -786,6 +749,14 @@ msgstr ""
 #, python-format
 msgid "No partner !"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"
 
 #~ msgid "Products Repairs Module"
 #~ msgstr "Products Repairs Module"

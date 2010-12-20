@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-25 19:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll_account
@@ -26,22 +26,6 @@ msgstr "Гүйлгээний мөрүүд"
 #: field:hr.payslip,bank_journal_id:0
 msgid "Bank Journal"
 msgstr "Банкны журнал"
-
-#. module: hr_payroll_account
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Обьектын нэр x_-ээр эхэлж, ямар тусгай тэмдэгт агуулж болохгүй !"
-
-#. module: hr_payroll_account
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr_payroll_account
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contibution_register_line
@@ -83,11 +67,6 @@ msgstr "Өргөтгөсөн журнал"
 #: field:hr.employee,salary_account:0
 msgid "Salary Account"
 msgstr "Цалингийн данс"
-
-#. module: hr_payroll_account
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payroll_register
@@ -155,9 +134,9 @@ msgid "Expanse account when Salary Expanse will be recorded"
 msgstr "Цалингийн зардал бичигдэх өргөтгөсөн данс"
 
 #. module: hr_payroll_account
-#: field:hr.contibution.register,yearly_total_by_emp:0
-msgid "Total By Employee"
-msgstr "Ажилтны хувь бүгд"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -206,6 +185,12 @@ msgid "Accounting Vouchers"
 msgstr "Санхүүгийн батлан даалт(ваучер)"
 
 #. module: hr_payroll_account
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_payroll_account
 #: help:hr.payroll.register,period_id:0
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
@@ -244,14 +229,14 @@ msgid "General Account"
 msgstr "Ерөнхий данс"
 
 #. module: hr_payroll_account
+#: field:hr.contibution.register,yearly_total_by_emp:0
+msgid "Total By Employee"
+msgstr "Ажилтны хувь бүгд"
+
+#. module: hr_payroll_account
 #: field:hr.payslip.account.move,sequence:0
 msgid "Sequence"
 msgstr "Дараалал"
-
-#. module: hr_payroll_account
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payslip.account.move,slip_id:0
@@ -338,3 +323,10 @@ msgstr "Харилцагчийн өглөгийн дансыг тодорхой�
 #, python-format
 msgid "Integrity Error !"
 msgstr "Өгөгдөл бүрэн биш алдаа !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Обьектын нэр x_-ээр эхэлж, ямар тусгай тэмдэгт агуулж болохгүй !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"

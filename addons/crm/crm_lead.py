@@ -41,7 +41,7 @@ class crm_lead(crm_case, osv.osv):
     _description = "Lead"
     _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
-    def _compute_day(self, cr, uid, ids, fields, args, context={}):
+    def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -53,7 +53,7 @@ class crm_lead(crm_case, osv.osv):
         res_obj = self.pool.get('resource.resource')
 
         res = {}
-        for lead in self.browse(cr, uid, ids , context):
+        for lead in self.browse(cr, uid, ids, context=context):
             for field in fields:
                 res[lead.id] = {}
                 duration = 0
@@ -135,7 +135,7 @@ class crm_lead(crm_case, osv.osv):
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -150,6 +150,19 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+    
+    def _get_stage_id(self, cr, uid, context=None):
+        """Finds type of stage according to object.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        type = context and context.get('stage_type', '')
+        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
+        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -160,6 +173,7 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'stage_id': _get_stage_id,
     }
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -234,7 +248,7 @@ class crm_lead(crm_case, osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Value of action in dict
         """
-        if not context:
+        if context is None:
             context = {}
         context.update({'active_ids': ids})
 
@@ -281,23 +295,23 @@ class crm_lead(crm_case, osv.osv):
                         }
         return value
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'date_closed' in vals:
-            return super(crm_lead,self).write(cr, uid, ids, vals, context)
+            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
             
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            message=''
             for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead':
+                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
                     message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
                 elif case.type == 'opportunity':
                     message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
-                self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     
     def stage_next(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             if stage_obj.on_change:
@@ -305,7 +319,7 @@ class crm_lead(crm_case, osv.osv):
                 self.write(cr, uid, ids, data)
         return stage
     
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
 
@@ -313,7 +327,6 @@ class crm_lead(crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject')
@@ -350,14 +363,13 @@ class crm_lead(crm_case, osv.osv):
 
         return res
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 

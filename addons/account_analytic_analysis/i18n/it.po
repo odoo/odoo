@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-21 07:57+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-12 10:11+0000\n"
+"Last-Translator: Lorenzo Battistini - agilebg.com "
+"<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-22 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -24,19 +25,6 @@ msgid ""
 msgstr ""
 "Numero di ore che possono essere fatturate più quelle che sono già state "
 "fatturate."
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
-
-#. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -61,24 +49,14 @@ msgid "Theorical Revenue"
 msgstr "Reddito teorico"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Ultima data di fatturazione"
-
-#. module: account_analytic_analysis
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico!"
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
 msgstr "Data dell'ultima fattura creata per questo conto analitico"
 
 #. module: account_analytic_analysis
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore! Non è possibile creare un menù ricorsivo."
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Ultima data di fatturazione"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -94,11 +72,6 @@ msgstr "Margine teorico"
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Tasso di margine reale (%)"
-
-#. module: account_analytic_analysis
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID del certificato del modulo deve essere unico!"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -174,11 +147,6 @@ msgstr "Ore non fatturate"
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
 msgstr "Data dell'ultimo lavoro fatto su questo conto."
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
@@ -308,9 +276,9 @@ msgid "Hours Tot"
 msgstr "Ore tot."
 
 #. module: account_analytic_analysis
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Errore! Non è possibile creare conti analitici ricorsivi."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -330,6 +298,15 @@ msgstr ""
 #~ msgid "All Analytic Accounts"
 #~ msgstr "Elenco contabilità analitiche"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "New Analytic Account"
 #~ msgstr "Nuovo conto analitico"
 
@@ -347,6 +324,9 @@ msgstr ""
 
 #~ msgid "My Current Accounts"
 #~ msgstr "I miei attuali Conti"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Conto analitico attuale"
@@ -366,3 +346,15 @@ msgstr ""
 #~ "dati importanti per il Responsabile dei Progetti di una Compagnia di "
 #~ "servizi.\n"
 #~ "Aggiunge un menù per mostrare informazioni di nota per ogni Responsabile."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID del certificato del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"

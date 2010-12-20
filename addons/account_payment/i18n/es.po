@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-04 10:01+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-09 11:45+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -109,7 +109,7 @@ msgstr "Fecha de vencimiento"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -136,7 +136,7 @@ msgstr "Importe"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -162,7 +162,7 @@ msgstr "Referencia"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "¡El nombre de la línea de pago debe ser única!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -298,6 +298,8 @@ msgstr "Buscar órdenes de pago"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"No puede crear una línea de movimiento en una cuenta a cobrar/a pagar sin "
+"una empresa."
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -450,7 +452,7 @@ msgstr "Registros del diario"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -721,7 +723,7 @@ msgstr "Cuenta bancaria para el modo de pago"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "Execution date:"
 #~ msgstr "Fecha de ejecución:"

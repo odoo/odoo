@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-26 22:21+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 23:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -28,9 +28,7 @@ msgid "Number of Layers"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -46,11 +44,6 @@ msgid ""
 msgstr ""
 "Thiết lập một bản mẫu nếu quy tắc này chỉ áp dụng đối với một bản mẫu của "
 "sản phẩm. Để trống cho tất cả sản phẩm"
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -213,11 +206,6 @@ msgstr "ĐVĐ"
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
 msgstr "PCE"
-
-#. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
 
 #. module: product
 #: view:product.template:0
@@ -385,6 +373,7 @@ msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Giá công bố"
 
@@ -397,11 +386,6 @@ msgstr "Số lượng-5"
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
 msgstr ""
-
-#. module: product
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Tên nhóm phải duy nhất !"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -508,6 +492,13 @@ msgid "Working Time"
 msgstr "Thời gian làm việc"
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
 msgstr ""
@@ -585,9 +576,10 @@ msgid "Restaurant Expenses"
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Lỗi: mã EAN không hợp lệ"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -654,13 +646,6 @@ msgstr ""
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Tên giá"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -793,11 +778,6 @@ msgid "Kitchen Design Project"
 msgstr ""
 
 #. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML không hợp lệ để xem kiến trúc!"
-
-#. module: product
 #: model:product.uom,name:product.uom_hour
 msgid "Hour"
 msgstr "Giờ"
@@ -907,7 +887,7 @@ msgstr "Thông tin về nhà cung cấp sản phẩm"
 #. module: product
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Bộ lọc mở rộng..."
 
 #. module: product
 #: view:product.product:0
@@ -1011,11 +991,6 @@ msgid "Price List Items"
 msgstr "Các món trong bảng giá"
 
 #. module: product
-#: sql_constraint:ir.ui.view_sc:0
-msgid "Shortcut for this menu already exists!"
-msgstr ""
-
-#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr ""
@@ -1072,13 +1047,13 @@ msgid "Stockable"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
 msgstr ""
 
 #. module: product
@@ -1228,8 +1203,8 @@ msgid "Partners"
 msgstr "Đối tác"
 
 #. module: product
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: product
@@ -1256,8 +1231,9 @@ msgid "Second UoM"
 msgstr "Đơn vị đo thứ hai"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: product
@@ -1355,6 +1331,14 @@ msgid "Regular processor config"
 msgstr ""
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr "Ngày bắt đầu"
@@ -1383,6 +1367,13 @@ msgid "Basic PC"
 msgstr ""
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Số lượng hàng tồn kho thực"
@@ -1404,9 +1395,14 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Làm tròn chính xác"
 
 #. module: product
 #: view:product.uom:0
@@ -1521,11 +1517,6 @@ msgid "Onsite Intervention"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
 msgstr "Bảng giá công bố"
@@ -1539,14 +1530,6 @@ msgstr ""
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
 msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
-"nào!"
 
 #. module: product
 #: view:product.product:0
@@ -1673,11 +1656,6 @@ msgid "Company"
 msgstr "Công ty"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Bảng giá"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Loại giá"
@@ -1799,11 +1777,6 @@ msgid "Supplier Product UoM."
 msgstr ""
 
 #. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Làm tròn chính xác"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1862,13 +1835,6 @@ msgstr ""
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Thời gian chờ đợi nhận hàng"
-
-#. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1978,6 +1944,11 @@ msgstr ""
 #: view:product.template:0
 msgid "Weigths"
 msgstr "Khối lượng"
+
+#. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2093,11 +2064,6 @@ msgid "RAM on demand"
 msgstr ""
 
 #. module: product
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
 msgstr "Sở hữu bán hàng"
@@ -2207,11 +2173,6 @@ msgstr "Phương pháp giá vốn"
 #: view:product.product:0
 msgid "Palletization"
 msgstr "Lưu trữ và vận chuyển hàng bằng palet"
-
-#. module: product
-#: sql_constraint:decimal.precision:0
-msgid "Only one value can be defined for each given usage!"
-msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -2347,6 +2308,9 @@ msgstr ""
 #~ msgid "Procure Method"
 #~ msgstr "Phương thức mua hàng"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
+
 #~ msgid "Product Process"
 #~ msgstr "Quy trình sản phẩm"
 
@@ -2356,6 +2320,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Số lượng được tính sẽ là một bội số của giá trị này. Sử dụng 1.0 cho các sản "
 #~ "phẩm không thể chia nhỏ."
+
+#~ msgid "List Price"
+#~ msgstr "Bảng giá"
 
 #~ msgid "The number of layer on a palet or box"
 #~ msgstr "Số lượng các lớp trên một palet hoặc trong một hộp"
@@ -2387,6 +2354,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Bảng giá này sẽ được sử dụng thay cho bảng giá mặc định,                    "
 #~ "đối với các đơn hàng bán cho đối tác hiện tại"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML không hợp lệ để xem kiến trúc!"
 
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
@@ -2473,6 +2443,12 @@ msgstr ""
 
 #~ msgid "The total number of products you can put by palet or box."
 #~ msgstr "Tổng số lượng sản phẩm bạn có thể xếp trên palet hoặc trong hộp."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Tên đối tượng phải bắt đầu bằng x_ và không bao gồm bất kỳ ký tự đặc biệt "
+#~ "nào!"
 
 #~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
@@ -2601,3 +2577,9 @@ msgstr ""
 
 #~ msgid "KGM"
 #~ msgstr "KGM"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Tên nhóm phải duy nhất !"

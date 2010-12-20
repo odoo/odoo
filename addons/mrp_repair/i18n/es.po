@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-23 08:43+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-16 17:42+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -36,6 +35,18 @@ msgid ""
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
+" *El estado 'Borrador' se utiliza cuando un usuario está introduciendo una "
+"nueva orden de reparación sin confirmar             \n"
+"*El estado 'Confirmado' se utiliza cuando un usuario cofnirma la orden de "
+"reparación.             \n"
+"*El estado 'Listo para reparar' se utiliza para iniciar la reparación, el "
+"usuario puede iniciar la reparación solo depués de la confirmación de la "
+"orden de reparación \n"
+"*El estado 'A facturar' se utiliza pra generar la factura antes o depués de "
+"la realización de la reparación.\n"
+"*El estado 'Realizado' se utiliza cuando la reapración ha sido terminada.\n"
+"*El estado 'Cancelado' se utiliza cuando un usuario cancela la orden de "
+"reparación."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -48,9 +59,9 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
+msgstr "Recrear factura"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
@@ -219,11 +230,6 @@ msgstr "Confirmada"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Recrear factura"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Órdenes de reparación"
 
@@ -248,20 +254,10 @@ msgid "Repair Order N° :"
 msgstr "Orden de reparación Nº :"
 
 #. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "¡El nombre del módulo debe ser único!"
-
-#. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
 msgstr "Número de lote"
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
-msgstr "En reparación"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -282,11 +278,6 @@ msgstr "Línea(s) cargo"
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
 msgstr "Para ser facturado"
-
-#. module: mrp_repair
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "¡El ID del certificado del módulo debe ser único!"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -322,11 +313,6 @@ msgid "Total :"
 msgstr "Total :"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr "Referencia reparación"
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -351,11 +337,6 @@ msgstr "Notas del presupuesto"
 #, python-format
 msgid "Warning!"
 msgstr "¡Aviso!"
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -454,9 +435,9 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr "¿Desea crear la(s) factura(s)?"
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
+msgstr "Referencia reparación"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
@@ -464,12 +445,9 @@ msgid "Repair Order"
 msgstr "Orden reparación"
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "En reparación"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -623,11 +601,6 @@ msgstr "Cancelar"
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Ubicación destino"
-
-#. module: mrp_repair
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -849,6 +822,15 @@ msgstr "¡No existe empresa!"
 #~ msgid "Quality"
 #~ msgstr "Calidad"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Make invoices"
 #~ msgstr "Realizar facturas"
 
@@ -890,6 +872,9 @@ msgstr "¡No existe empresa!"
 #~ "establecerá como \"no facturable\" por defecto. Destacar que puede "
 #~ "cambiarlos manualmente a posteriori."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
 #~ msgid ""
 #~ "This operation  will  cancel the  Repair process, but  will not cancel it's "
 #~ "Invoice. Do you want to continue?"
@@ -902,3 +887,15 @@ msgstr "¡No existe empresa!"
 
 #~ msgid "Repairs Ready to Start"
 #~ msgstr "Reparaciones listas para comenzar"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 16:35+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: caldav
@@ -38,7 +38,6 @@ msgid "Provide path for Remote Calendar"
 msgstr "Vul het pad naar de remote agenda in"
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_import
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
 msgid "Import .ics File"
 msgstr "Importeren .ics bestand"
@@ -53,6 +52,11 @@ msgstr "_Sluiten"
 #: selection:basic.calendar.lines,name:0
 msgid "Attendee"
 msgstr "Deelnemer"
+
+#. module: caldav
+#: sql_constraint:basic.calendar.fields:0
+msgid "Can not map a field more than once"
+msgstr ""
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -96,6 +100,7 @@ msgstr "Fout!"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/wizard/calendar_event_import.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -163,11 +168,6 @@ msgid "Error! You can not create recursive Directories."
 msgstr "Fout ! U kunt geen recursieve mappen maken."
 
 #. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: caldav
 #: field:basic.calendar,type:0
 #: field:basic.calendar.attributes,type:0
 #: field:basic.calendar.fields,type_id:0
@@ -179,11 +179,6 @@ msgstr "Soort"
 #: field:basic.calendar,description:0
 msgid "description"
 msgstr "omschrijving"
-
-#. module: caldav
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
@@ -200,11 +195,6 @@ msgstr "Fout !"
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
 msgstr "Agenda kenmerken"
-
-#. module: caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -245,9 +235,17 @@ msgid "Calendar"
 msgstr "Agenda"
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
-msgstr "Te doen"
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid ""
+"Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/wizard/calendar_event_import.py:0
+#, python-format
+msgid "Invalid format of the ics, file can not be imported"
+msgstr ""
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -265,21 +263,6 @@ msgid "Message..."
 msgstr "Bericht..."
 
 #. module: caldav
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: caldav
-#: model:ir.model,name:caldav.model_basic_calendar
-msgid "basic.calendar"
-msgstr "basic.calendar"
-
-#. module: caldav
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in actie definitie."
-
-#. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
@@ -294,6 +277,7 @@ msgstr "Agenda mappen"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:0
+#: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
 msgstr "Dezelfde bestandsnaam kan niet gebruikt worden voor twee records!"
@@ -359,16 +343,9 @@ msgid "Fields Mapping"
 msgstr "Velden verdeling"
 
 #. module: caldav
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: caldav
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+#: model:ir.model,name:caldav.model_basic_calendar
+msgid "basic.calendar"
+msgstr "basic.calendar"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -463,10 +440,20 @@ msgid "Attendee must have an Email Id"
 msgstr "Deelnemer moet een emailadres hebben"
 
 #. module: caldav
-#: model:ir.actions.act_window,name:caldav.action_calendar_event_export
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
 msgstr "Exporteren .ics bestand"
+
+#. module: caldav
+#: code:addons/caldav/calendar.py:0
+#, python-format
+msgid "vobject Import Error!"
+msgstr ""
+
+#. module: caldav
+#: view:basic.calendar:0
+msgid "MY"
+msgstr "MIJN"
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
@@ -490,8 +477,8 @@ msgstr "Kleur"
 
 #. module: caldav
 #: view:basic.calendar:0
-msgid "MY"
-msgstr "MIJN"
+msgid "Todo"
+msgstr "Te doen"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
@@ -524,3 +511,26 @@ msgstr "basic.calendar.todo"
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
 "Voor ondersteunende clients, de volgorde van deze map onder de agenda's"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in actie definitie."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

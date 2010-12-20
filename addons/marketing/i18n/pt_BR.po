@@ -7,33 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-26 11:53+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-27 04:55+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
+#: model:ir.module.module,description:marketing.module_meta_information
+msgid "Menu for Marketing"
+msgstr "Menu para Marketing"
 
 #. module: marketing
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
-
-#. module: marketing
-#: constraint:ir.model:0
+#: help:marketing.installer,marketing_campaign:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"Helps you to manage marketing campaigns and automate actions and "
+"communication steps."
 msgstr ""
-"O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-"especial!"
+"Ajuda você a gerenciar campanhas de marketing, automatizar ações e etapas de "
+"comunicação."
 
 #. module: marketing
 #: field:marketing.installer,progress:0
@@ -56,18 +52,9 @@ msgid "Image"
 msgstr "Imagem"
 
 #. module: marketing
-#: help:marketing.installer,marketing_campaign:0
-msgid ""
-"Helps you to manage marketing campaigns and automate actions and "
-"communication steps."
+#: view:marketing.installer:0
+msgid "Configure Your Marketing Application"
 msgstr ""
-"Ajuda você a gerenciar campanhas de marketing, automatizar ações e etapas de "
-"comunicação."
-
-#. module: marketing
-#: model:ir.module.module,description:marketing.module_meta_information
-msgid "Menu for Marketing"
-msgstr "Menu para Marketing"
 
 #. module: marketing
 #: help:marketing.installer,email_template:0
@@ -79,24 +66,9 @@ msgstr ""
 "processos."
 
 #. module: marketing
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "O nome do grupo precisa ser único!"
-
-#. module: marketing
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
-
-#. module: marketing
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
-
-#. module: marketing
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
+#: model:ir.model,name:marketing.model_marketing_installer
+msgid "marketing.installer"
+msgstr "marketing.installer"
 
 #. module: marketing
 #: model:ir.actions.act_window,name:marketing.action_marketing_installer
@@ -107,6 +79,18 @@ msgstr "Configuração da Aplicação de Marketing"
 #: field:marketing.installer,crm_profiling:0
 msgid "Profiling Tools"
 msgstr "Ferramentas para Perfilagem"
+
+#. module: marketing
+#: view:marketing.installer:0
+msgid ""
+"OpenERP provides Addons to better manage your sales and marketing processes. "
+"Select the ones you would be interested in."
+msgstr ""
+
+#. module: marketing
+#: view:marketing.installer:0
+msgid "Marketing Application Configuration"
+msgstr ""
 
 #. module: marketing
 #: field:marketing.installer,marketing_campaign:0
@@ -123,6 +107,30 @@ msgstr ""
 "segmentados"
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_installer
-msgid "marketing.installer"
-msgstr "marketing.installer"
+#: view:marketing.installer:0
+msgid "Configure"
+msgstr ""
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "O nome do grupo precisa ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

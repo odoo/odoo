@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-12-01 09:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-15 00:14+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -25,14 +25,7 @@ msgstr "Delsumma"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgstr "Anteckningar:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -50,7 +43,7 @@ msgstr "Titel"
 #: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
 msgid "Invoices with Layout and Message"
-msgstr ""
+msgstr "Fakturor med layout och meddelande"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -66,7 +59,7 @@ msgstr "Notering"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
-msgstr ""
+msgstr "Meddelande med meddelande"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -81,25 +74,21 @@ msgid "Unit Price"
 msgstr "Pris"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fel! Ni kan inte skapa rekursiva menyer"
-
-#. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "Be Expert with the Experts..."
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Felaktigt namn för modellen i händelsedefinitionen."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "Moms:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -120,7 +109,7 @@ msgstr "Pos"
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
 msgid "Notification Message"
-msgstr ""
+msgstr "Varningsmeddelande"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -153,7 +142,7 @@ msgstr "Moms:"
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr ""
+msgstr "Källkonto"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
@@ -192,17 +181,7 @@ msgstr "Antal"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
-msgstr "Företagsreferense"
-
-#. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
+msgstr "Företagsreference"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -215,7 +194,7 @@ msgstr "Faktura"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -294,20 +273,9 @@ msgid "Supplier Invoice"
 msgstr "Leverantörsfaktura"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Namnet på modulen måste vara unikt!"
-
-#. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
 msgid "Print"
 msgstr "Skriv ut"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr "Moms:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -354,14 +322,32 @@ msgid "Message"
 msgstr "Meddelande"
 
 #. module: account_invoice_layout
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "account_invoice_layout"
 #~ msgstr "account_invoice_layout"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modellen i händelsedefinitionen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Fel: Ej godkänt Bvr nummer (fel checksumma)"
