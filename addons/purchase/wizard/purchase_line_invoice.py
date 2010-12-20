@@ -52,6 +52,7 @@ class purchase_line_invoice(osv.osv_memory):
             invoices = {}
             invoice_obj=self.pool.get('account.invoice')
             purchase_line_obj=self.pool.get('purchase.order.line')
+            purchase_obj = self.pool.get('purchase.order')
             property_obj=self.pool.get('ir.property')
             account_fiscal_obj=self.pool.get('account.fiscal.position')
             invoice_line_obj=self.pool.get('account.invoice.line')
@@ -108,6 +109,8 @@ class purchase_line_invoice(osv.osv_memory):
                     'fiscal_position': partner.property_account_position.id
                 }
                 inv_id = invoice_obj.create(cr, uid, inv)
+                for order in orders:
+                    order.write({'invoice_ids': [(4, inv_id)]})
                 return inv_id
 
             for line in purchase_line_obj.browse(cr,uid,record_ids):
@@ -141,8 +144,7 @@ class purchase_line_invoice(osv.osv_memory):
                         'note': line.notes,
                         'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
                     })
-                    cr.execute('insert into purchase_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
-                    purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True})
+                    purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True, 'invoice_lines': [(4, inv_id)]})
                     invoices[line.partner_id.id].append((line,inv_id))
 
             res = []
