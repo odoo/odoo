@@ -1237,7 +1237,7 @@ class orm_template(object):
                         res[f][arg] = getattr(field_col, arg)
 
                 if field_col.string:
-                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', field_col.string)
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                     if res_trans:
                         res[f]['string'] = res_trans
                 if field_col.help:
