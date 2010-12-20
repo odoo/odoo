@@ -52,7 +52,7 @@ class report_custom(report_int):
 
     """ Create Custom Report """
 
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-01 08:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -64,9 +64,9 @@ msgid "Personal Emails"
 msgstr "Persoonlijke e-mails"
 
 #. module: email_template
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: field:email.template,file_name:0
+msgid "Report Filename"
+msgstr "Bestandsnaam overzicht"
 
 #. module: email_template
 #: view:email.template:0
@@ -157,12 +157,6 @@ msgid "Server Reference of mail"
 msgstr "Server referentie van email"
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#, python-format
-msgid "Reason: %s"
-msgstr "Reden: %s"
-
-#. module: email_template
 #: view:email_template.account:0
 #: selection:email_template.account,state:0
 msgid "Approved"
@@ -197,12 +191,6 @@ msgstr ""
 "De omschrijving wordt gebruikt als zendernaam samen met het opgegeven Van "
 "emailadres, behalve als het al is opgegeven bij het Van emailadres, bijv.: "
 "John Doe <john@doe.com>"
-
-#. module: email_template
-#: field:email_template.preview,to:0
-#: field:email_template.send.wizard,to:0
-msgid "To"
-msgstr "Aan"
 
 #. module: email_template
 #: field:email.template,from_account:0
@@ -297,12 +285,6 @@ msgid "Both HTML & Text (Alternative)"
 msgstr "Zowel HTML & Tekst (Alternatief)"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Mako templates not installed"
-msgstr "Mako sjablonen niet geïnstalleerd"
-
-#. module: email_template
 #: field:email_template.send.wizard,requested:0
 msgid "No of requested Mails"
 msgstr "Aantal gevraagde mails"
@@ -378,9 +360,10 @@ msgid "Subject"
 msgstr "Onderwerp"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "My Emails"
-msgstr "Mijn emails"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid "Reason: %s"
+msgstr "Reden: %s"
 
 #. module: email_template
 #: field:email_template.mailbox,email_from:0
@@ -388,14 +371,18 @@ msgid "From"
 msgstr "Van"
 
 #. module: email_template
-#: field:email.template,file_name:0
-msgid "Report Filename"
-msgstr "Bestandsnaam overzicht"
+#: field:email_template.preview,ref_template:0
+#: field:email_template.send.wizard,ref_template:0
+msgid "Template"
+msgstr "Sjabloon"
 
 #. module: email_template
-#: selection:email_template.mailbox,state:0
-msgid "Sending"
-msgstr "Bezig met zenden"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Mail from Account %s failed. Probable Reason: Server Send Error\n"
+" Description: %s"
+msgstr ""
 
 #. module: email_template
 #: view:email.template:0
@@ -461,11 +448,6 @@ msgid "Mail from Account %s successfully Sent."
 msgstr "Mail van account %s met succes verstuurd."
 
 #. module: email_template
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr "Mako Sjablonen"
@@ -529,12 +511,6 @@ msgid "Report"
 msgstr "Overzicht"
 
 #. module: email_template
-#: field:email_template.preview,ref_template:0
-#: field:email_template.send.wizard,ref_template:0
-msgid "Template"
-msgstr "Sjabloon"
-
-#. module: email_template
 #: field:email.template,sub_model_object_field:0
 msgid "Sub Field"
 msgstr "Sub-veld"
@@ -546,9 +522,9 @@ msgid "Advanced"
 msgstr "Geavanceerd"
 
 #. module: email_template
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Ongeldige argumenten"
+#: view:email_template.mailbox:0
+msgid "My Emails"
+msgstr "Mijn emails"
 
 #. module: email_template
 #: view:email.template:0
@@ -556,9 +532,13 @@ msgid "Expression Builder"
 msgstr "Expressie-bouwer"
 
 #. module: email_template
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
+#: help:email.template,sub_object:0
+msgid ""
+"When a relation field is used this field will show you the type of field you "
+"have selected"
+msgstr ""
+"Wanneer een relatieveld wordt gebruikt, toont dit veld u het veldtype dat u "
+"gekozen heeft."
 
 #. module: email_template
 #: selection:email_template.mailbox,mail_type:0
@@ -732,8 +712,7 @@ msgid "Mail Contents"
 msgstr "Inhoud mailbericht"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
+#: sql_constraint:email.template:0
 msgid "The template name must be unique !"
 msgstr "De sjabloon naam moet uniek zijn!"
 
@@ -754,11 +733,6 @@ msgstr "Gewone tekst"
 #: view:email_template.account:0
 msgid "Draft"
 msgstr "Concept"
-
-#. module: email_template
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: email_template
 #: field:email.template,model_int_name:0
@@ -839,15 +813,6 @@ msgid "User Name"
 msgstr "Gebruikersnaam"
 
 #. module: email_template
-#: help:email.template,attachment_ids:0
-msgid ""
-"You may attach existing files to this template, so they will be added in all "
-"emails created from this template"
-msgstr ""
-"U mag bestaande bestanden bijvoegen bij dit sjabloon, zodat ze in alle e-"
-"mails worden toegevoegd die met dit sjabloon worden gemaakt"
-
-#. module: email_template
 #: field:email_template.mailbox,user:0
 msgid "User"
 msgstr "Gebruiker"
@@ -889,7 +854,6 @@ msgid "Language"
 msgstr "Taal"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
 #: code:addons/email_template/email_template_account.py:0
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
@@ -909,6 +873,12 @@ msgstr "Versturen/ontvangen"
 #: view:email_template.mailbox:0
 msgid "Send Mail"
 msgstr "Verstuur bericht"
+
+#. module: email_template
+#: view:email_template.account:0
+#: selection:email_template.account,state:0
+msgid "Suspended"
+msgstr "Geblokkeerd"
 
 #. module: email_template
 #: help:email.template,allowed_groups:0
@@ -946,12 +916,6 @@ msgid "History"
 msgstr "Historie"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#, python-format
-msgid "Django templates not installed"
-msgstr "Django sjablonen niet geïnstalleerd"
-
-#. module: email_template
 #: view:email.template:0
 #: view:email_template.mailbox:0
 #: field:email_template.mailbox,attachments_ids:0
@@ -961,9 +925,10 @@ msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: email_template
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
+#: field:email_template.preview,to:0
+#: field:email_template.send.wizard,to:0
+msgid "To"
+msgstr "Aan"
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -998,9 +963,9 @@ msgid "Error sending mail: %s"
 msgstr "Fout bij het verzenden van mail: %s"
 
 #. module: email_template
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+#: constraint:email_template.account:0
+msgid "Error: You are not allowed to have more than 1 account."
+msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -1008,17 +973,15 @@ msgid "Body (HTML-Web Client Only)"
 msgstr "Berichttekst (HTML-Alleen web-client)"
 
 #. module: email_template
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #, python-format
 msgid "%s (Email Attachment)"
 msgstr "%s (Email bijlage)"
+
+#. module: email_template
+#: selection:email_template.mailbox,state:0
+msgid "Sending"
+msgstr "Bezig met zenden"
 
 #. module: email_template
 #: field:email.template,allowed_groups:0
@@ -1041,10 +1004,12 @@ msgid "Actions"
 msgstr "Acties"
 
 #. module: email_template
-#: view:email_template.account:0
-#: selection:email_template.account,state:0
-msgid "Suspended"
-msgstr "Geblokkeerd"
+#: code:addons/email_template/email_template_account.py:0
+#, python-format
+msgid ""
+"Server Send Error\n"
+"Description: %s"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,file_name:0
@@ -1115,13 +1080,13 @@ msgid "Enter name of outgoing server, eg: smtp.yourdomain.com"
 msgstr "Vul naam in van uitgaande server, bijv. smtp.uwdomein.nl"
 
 #. module: email_template
-#: help:email.template,sub_object:0
+#: help:email.template,attachment_ids:0
 msgid ""
-"When a relation field is used this field will show you the type of field you "
-"have selected"
+"You may attach existing files to this template, so they will be added in all "
+"emails created from this template"
 msgstr ""
-"Wanneer een relatieveld wordt gebruikt, toont dit veld u het veldtype dat u "
-"gekozen heeft."
+"U mag bestaande bestanden bijvoegen bij dit sjabloon, zodat ze in alle e-"
+"mails worden toegevoegd die met dit sjabloon worden gemaakt"
 
 #. module: email_template
 #: help:email.template,message_id:0
@@ -1162,6 +1127,11 @@ msgstr "CC"
 #: view:email_template.mailbox:0
 msgid "Sent"
 msgstr "Verstuurd"
+
+#. module: email_template
+#: sql_constraint:email_template.account:0
+msgid "Another setting already exists with this email ID !"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,ref_ir_act_window:0
@@ -1354,6 +1324,12 @@ msgstr "Heeft bijlagen"
 msgid "No Description"
 msgstr "Geen beschrijving"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Ongeldige argumenten"
+
 #, python-format
 #~ msgid ""
 #~ "Error sending mail: %s\" % str(e)))\n"
@@ -1375,7 +1351,35 @@ msgstr "Geen beschrijving"
 #~ "        filters = [('folder', '=', 'outbox"
 
 #, python-format
+#~ msgid "Mako templates not installed"
+#~ msgstr "Mako sjablonen niet geïnstalleerd"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#, python-format
 #~ msgid ""
 #~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
 #~ msgstr ""
 #~ "Datumtijd extractie mislukt.Datum:%s \\n                      \tFout:%s"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#, python-format
+#~ msgid "Django templates not installed"
+#~ msgstr "Django sjablonen niet geïnstalleerd"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

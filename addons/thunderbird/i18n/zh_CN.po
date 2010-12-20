@@ -7,32 +7,81 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-04-28 19:35+0000\n"
-"Last-Translator: Luis Miguel D.P. <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 13:07+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
+msgid "Thunderbird Plug-In Configuration"
+msgstr "Thunderbird 插件设置"
+
+#. module: thunderbird
+#: field:thunderbird.installer,pdf_file:0
+msgid "Installation Manual"
+msgstr "安装手册"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Configure"
+msgstr "设置"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr "thunderbird.installer"
+
+#. module: thunderbird
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "描述"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "title"
+msgstr "标题"
+
+#. module: thunderbird
+#: help:thunderbird.installer,plugin_file:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须是以x_开头并且不能含有特殊字符"
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
+msgstr "Thunderbird 插件。存为文件并在 Thunderbird 里安装这个插件。"
 
 #. module: thunderbird
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:thunderbird.installer:0
+msgid "Skip"
+msgstr "略过"
 
 #. module: thunderbird
-#: field:thunderbird.installer,plugin_file:0
-#: field:thunderbird.installer,thunderbird:0
-msgid "Thunderbird Plug-in"
-msgstr ""
+#: field:thunderbird.installer,name:0
+#: field:thunderbird.installer,pdf_name:0
+msgid "File name"
+msgstr "文件名"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid mails"
+msgstr "Thunderbid邮件"
+
+#. module: thunderbird
+#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
+msgid "Thunderbird Plug-In"
+msgstr "Thunderbird 插件"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "_Close"
+msgstr "关闭(_C)"
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -42,56 +91,21 @@ msgid ""
 msgstr ""
 
 #. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
+#: view:thunderbird.installer:0
 msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
 msgid "The documentation file :- how to install Thunderbird Plug-in."
-msgstr ""
-
-#. module: thunderbird
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "文件 :- 如何安装 Thunderbird 插件。"
 
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_email_server_tools
 msgid "Email Server Tools"
-msgstr ""
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "_Close"
-msgstr ""
-
-#. module: thunderbird
-#: field:thunderbird.installer,pdf_file:0
-msgid "Installation Manual"
-msgstr ""
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr ""
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "title"
-msgstr ""
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid mails"
-msgstr "Thunderbid邮件"
-
-#. module: thunderbird
-#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
-msgid "Thunderbird Plug-In"
-msgstr ""
+msgstr "邮件服务器工具"
 
 #. module: thunderbird
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
@@ -99,57 +113,35 @@ msgid "Thunderbird Interface"
 msgstr "Thunderbird接口"
 
 #. module: thunderbird
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_installer
-msgid "thunderbird.installer"
-msgstr ""
-
-#. module: thunderbird
-#: field:thunderbird.installer,name:0
-#: field:thunderbird.installer,pdf_name:0
-msgid "File name"
-msgstr ""
-
-#. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr ""
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
-
-#. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "描述"
-
-#. module: thunderbird
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
-msgid "Thunderbird Plug-In Configuration"
-msgstr ""
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Skip"
-msgstr ""
+msgstr "安装和设置步骤"
 
 #. module: thunderbird
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "图片"
+
+#. module: thunderbird
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
+msgstr "Thunderbird 插件"
+
+#. module: thunderbird
+#: field:thunderbird.installer,progress:0
+msgid "Configuration Progress"
+msgstr "设置进度"
 
 #~ msgid "Reference"
 #~ msgstr "参考"
 
 #~ msgid "Copy To"
 #~ msgstr "复制到"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须是以x_开头并且不能含有特殊字符"
 
 #~ msgid "Subject"
 #~ msgstr "主题"

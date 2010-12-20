@@ -7,19 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-29 07:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
-#: view:email.server:0
-msgid "Search Email Servers"
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
 msgstr ""
 
 #. module: fetchmail
@@ -28,32 +30,9 @@ msgid "Confirmed"
 msgstr "Подтверждено"
 
 #. module: fetchmail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: fetchmail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#. module: fetchmail
 #: view:email.server:0
 msgid "Confirm"
 msgstr "Подтвердить"
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
-msgstr ""
-
-#. module: fetchmail
-#: view:email.server:0
-msgid "Server & Login"
-msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
@@ -70,11 +49,6 @@ msgstr "Состояние"
 #: view:email.server:0
 msgid "Set to Draft"
 msgstr "Установить в \"Черновик\""
-
-#. module: fetchmail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -97,19 +71,16 @@ msgid "Fetchmail Server"
 msgstr ""
 
 #. module: fetchmail
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#. module: fetchmail
 #: view:email.server:0
 #: field:email.server,note:0
 msgid "Description"
 msgstr "Описание"
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
 msgstr ""
 
 #. module: fetchmail
@@ -133,11 +104,6 @@ msgid "User"
 msgstr "Пользователь"
 
 #. module: fetchmail
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Название модуля должно быть уникальным!"
-
-#. module: fetchmail
 #: field:email.server,date:0
 msgid "Date"
 msgstr "Дата"
@@ -148,9 +114,9 @@ msgid "Waiting for Verification"
 msgstr ""
 
 #. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
-msgstr ""
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Пароль"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -159,14 +125,14 @@ msgid "Emails"
 msgstr "Письма"
 
 #. module: fetchmail
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Недопустимые аргументы"
+#: view:email.server:0
+msgid "Search Email Servers"
+msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Некорректный формат XML для структуры вида!"
+#: view:email.server:0
+msgid "Server & Login"
+msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
@@ -238,9 +204,9 @@ msgid "POP/IMAP Server"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr "Пароль"
+#: constraint:email.server:0
+msgid "Warning! Can't have duplicate server configuration!"
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,type:0
@@ -304,17 +270,46 @@ msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr ""
 
 #. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr ""
+
+#. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
 msgstr ""
 
 #. module: fetchmail
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: fetchmail
 #: view:email.server:0
 msgid "Fetch Emails"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Недопустимые аргументы"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Некорректный формат XML для структуры вида!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным!"

@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-22 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID certificato del modulo deve essere unico!"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -32,32 +27,14 @@ msgstr ""
 "simile a: %s"
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: base_vat
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve cominbiare per \"x_\" e non deve contenere "
-"caratteri speciali!"
-
-#. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
 msgstr "Base VAT - Per controllare la correttezza della Partita IVA"
 
 #. module: base_vat
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico!"
-
-#. module: base_vat
-#: field:res.partner,vat_subjected:0
-msgid "VAT Legal Statement"
-msgstr "Soggetto a dichiarazione IVA"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -80,9 +57,12 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_vat
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
+#: field:res.partner,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "Soggetto a dichiarazione IVA"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
 
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
@@ -91,3 +71,18 @@ msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #~ msgid "VAT"
 #~ msgstr "Partita IVA"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve cominbiare per \"x_\" e non deve contenere "
+#~ "caratteri speciali!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"

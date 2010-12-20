@@ -6,21 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
-"PO-Revision-Date: 2010-12-01 07:26+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 13:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: share
-#: field:share.wizard.result.line,newly_created:0
-msgid "Newly created"
-msgstr "Neu erzeugt"
+#: code:addons/share/web/editors.py:0
+#, python-format
+msgid "Sharing"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid ""
+"This additional data has been automatically added to your current access.\n"
+msgstr ""
+"Diese weiteren Daten wurden automatisch zu Ihren bisherigen Rechten "
+"hinzugefügt.\n"
 
 #. module: share
 #: view:share.wizard:0
@@ -35,9 +45,20 @@ msgstr ""
 "zwischen freigegebenen Benutzern."
 
 #. module: share
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Sharing Wizard - Step 1"
+msgstr "Freigabeassistent - Schritt 1"
 
 #. module: share
 #: view:share.wizard:0
@@ -75,11 +96,6 @@ msgid "Next"
 msgstr "Weiter"
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: share
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
@@ -105,9 +121,9 @@ msgid "(Copy for sharing)"
 msgstr "(Kopie für Freigabe)"
 
 #. module: share
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können kein rekursives Menü erstellen."
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr "Neu erzeugt"
 
 #. module: share
 #: field:share.wizard,share_root_url:0
@@ -150,9 +166,11 @@ msgid "Share wizard: step 1"
 msgstr "Freigabeassistent: Schritt 1"
 
 #. module: share
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+#: code:addons/share/wizard/share_wizard.py:0
+#: field:share.wizard.result.line,login:0
+#, python-format
+msgid "Username"
+msgstr "Benutzername"
 
 #. module: share
 #: field:res.users,share:0
@@ -195,33 +213,14 @@ msgstr "Neue Benutzer"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
-#: field:share.wizard.result.line,login:0
-#, python-format
-msgid "Username"
-msgstr "Benutzername"
-
-#. module: share
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-"beinhalten!"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:0
 #, python-format
 msgid "%s (Shared)"
 msgstr "%s (Veröffentlicht)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid ""
-"This additional data has been automatically added to your current access.\n"
-msgstr ""
-"Diese weiteren Daten wurden automatisch zu Ihren bisherigen Rechten "
-"hinzugefügt.\n"
+#: selection:share.wizard,user_type:0
+msgid "New users (emails required)"
+msgstr "Neue Benutzer (Email erforderlich)"
 
 #. module: share
 #: sql_constraint:res.groups:0
@@ -234,9 +233,10 @@ msgid "Sharing Tools"
 msgstr "Tools für Freigaben"
 
 #. module: share
-#: selection:share.wizard,user_type:0
-msgid "New users (emails required)"
-msgstr "Neue Benutzer (Email erforderlich)"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Database"
+msgstr ""
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -281,16 +281,6 @@ msgstr "Benutzer existiert bereits"
 #: view:share.wizard:0
 msgid "Send Email Notification(s)"
 msgstr "Sende EMail Bestätigung(en)"
-
-#. module: share
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
-
-#. module: share
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #. module: share
 #: model:ir.model,name:share.model_res_groups
@@ -419,10 +409,10 @@ msgid "Action to share"
 msgstr "Freizugebende Aufgabe"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
+#: code:addons/share/web/editors.py:0
 #, python-format
-msgid "Sharing Wizard - Step 1"
-msgstr "Freigabeassistent - Schritt 1"
+msgid "Share"
+msgstr "Freigabe"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -496,9 +486,33 @@ msgstr "Schreiben"
 msgid "*usual password*"
 msgstr "* übliches Passwort*"
 
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten!"
+
 #, python-format
 #~ msgid ""
 #~ "Please specify \"share_root_url\" in server configuration or in context"
 #~ msgstr ""
 #~ "Bitte spezifiere \"share_root_url\" in der Server Konfiguration oder im "
 #~ "Kontext."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

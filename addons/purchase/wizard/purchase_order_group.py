@@ -40,14 +40,14 @@ class purchase_order_group(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view.
         """
-        if not context:
+        if context is None:
             context={}
         res = super(purchase_order_group, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if context.get('active_model','') == 'purchase.order' and len(context['active_ids']) < 2:
             raise osv.except_osv(_('Warning'),
             _('Please select multiple order to merge in the list view.'))
         return res
-    def merge_orders(self, cr, uid, ids, context):
+    def merge_orders(self, cr, uid, ids, context=None):
         """
              To merge similar type of purchase orders.
 
@@ -63,6 +63,8 @@ class purchase_order_group(osv.osv_memory):
         order_obj = self.pool.get('purchase.order')
         proc_obj = self.pool.get('procurement.order')
         mod_obj =self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         result = mod_obj._get_id(cr, uid, 'purchase', 'view_purchase_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
 

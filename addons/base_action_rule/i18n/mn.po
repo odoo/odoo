@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-25 19:35+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-17 10:43+0000\n"
+"Last-Translator: sugi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -22,12 +22,12 @@ msgstr ""
 msgid ""
 "Check this if you want the rule to send an email to the responsible person."
 msgstr ""
-"Хэрэв танд эзэн хариуцагч руу мэйл илгээх дүрэм хэрэгтэй бол үүснийг сонго"
+"Хэрэв та хариуцах хүнрүү э-мэйлийн дүрмийг илгээхийг хүсвэл үүнийг чеклэнэ."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_partner:0
 msgid "Remind Partner"
-msgstr "Харилцагчид сануулах"
+msgstr "Харилцагчийн сануулга"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_categ_id:0
@@ -35,16 +35,9 @@ msgid "Partner Category"
 msgstr "Харилцагчийн ангилал"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Хэрэв танд хэрэглэгч рүү сануулга илгээх дүрэм хэрэгтэй бол үүнийг сонго"
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Ажиглагчруу илгээх (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -59,22 +52,22 @@ msgstr "Объект"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_email:0
 msgid "Mail to these Emails"
-msgstr "Эдгээр имэйлийг илгээх"
+msgstr "Эдгээр хаягуудруу илгээх"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
-msgstr "Төсвийг өөрчлөх нь"
+msgstr "Ноороглох"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_email_from:0
 msgid "Email From"
-msgstr "Хаанаас ирсэн"
+msgstr "Э-мэйлээс"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Body"
-msgstr "Имэйлийн агуулга"
+msgstr "Имэйлийн гол утга"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -130,12 +123,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
-msgstr "Харилцагчийн моделийн нөхцөл"
+msgstr "Эцэг модел дээрх нөхцөл"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Deadline"
-msgstr "Эцсийн хугацаа"
+msgstr "Товлосон хугацаа"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_id:0
@@ -145,22 +138,17 @@ msgstr "Харилцагч"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_subject)s = Object subject"
-msgstr "%(object_subject)s = Обьектын гарчиг"
+msgstr "%(object_subject)s = Объектын гарчиг"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Reminders"
-msgstr "Имэйл сануулга"
+msgstr "Имэйл сануулагууд"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Special Keywords to Be Used in The Body"
-msgstr "Гол агуулгад тусгай тэмдэгтүүд хэрэглэгдсэн"
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Модулийн нэр давхцах ёсгүй !"
+msgstr "Их биенд тусгай түлхүүр үгсийг хэрэглэсэн байх"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
@@ -173,20 +161,15 @@ msgid "Email-id of the persons whom mail is to be sent"
 msgstr ""
 
 #. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Модулийн сертификат ID давхцах ёсгүй !"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 #: model:ir.module.module,shortdesc:base_action_rule.module_meta_information
 msgid "Action Rule"
-msgstr "Үйлдлийн дүрэм"
+msgstr "Үйл ажиллаагааны дүрэм"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr "Солих талбар"
+msgstr "Солих утгууд"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -196,7 +179,7 @@ msgstr "Үүсгэсэн Огноо"
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
 msgid "Last Action Date"
-msgstr "Сүүлчийн үйлдлийн огноо"
+msgstr "Сүүлийн үйл ажиллагааны огноо"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -211,12 +194,12 @@ msgstr "%(object_id)s=Объектын дугаар"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr "Бэлтгэл хугацаа (минут)"
+msgstr "Саатлын дараах гарааны огноо"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
 msgid "Remind with Attachment"
-msgstr "Хавсралттай сануулга"
+msgstr "Хавсралтын сануулга"
 
 #. module: base_action_rule
 #: constraint:ir.cron:0
@@ -226,7 +209,7 @@ msgstr "Алдаатай аргумент"
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible to"
-msgstr ""
+msgstr "Хариуцуулах"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -256,11 +239,6 @@ msgstr ""
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
 msgstr "Саатлын төрөл"
-
-#. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
 
 #. module: base_action_rule
 #: help:base.action.rule,regex_name:0
@@ -306,11 +284,6 @@ msgid ""
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа ! Та рекурс меню үүсгэхгүй"
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
 msgstr "Саатсаны дараах гарааны огноо"
@@ -327,6 +300,9 @@ msgid ""
 "need a delay before the trigger date, like sending a reminder 15 minutes "
 "before a meeting."
 msgstr ""
+"Delay After Trigger Date,specifies you can put a negative number. Хэрэв та "
+"гол огнооны өмнө зогсох хэргтэй бол, уулзалтаас 15 минутын өмнө анхааруулга "
+"илгээж байна."
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -375,6 +351,8 @@ msgid ""
 "Describes the action name.\n"
 "eg:on which object which action to be taken on basis of which condition"
 msgstr ""
+"Үйлдлийн нэрийг дүрслэх.\n"
+"ЖНЬ:on which object which action to be taken on basis of which condition"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_ir_cron
@@ -384,7 +362,12 @@ msgstr "ir.cron"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_description)s = Object description"
-msgstr "%(object_description)s = Тодорхойлолт"
+msgstr "%(object_description)s = Object description"
+
+#. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -392,22 +375,9 @@ msgid "Email Actions"
 msgstr "Имэйл үйл ажиллагаанууд"
 
 #. module: base_action_rule
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Имэйлийн мэдээлэл"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй !"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -427,7 +397,7 @@ msgstr "Хариуцлагатай"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(partner_email)s = Partner Email"
-msgstr "%(partner_email)s = Түншийн имэйл"
+msgstr "%(partner_email)s = Харилцагчийн Э-мэйл"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -437,12 +407,14 @@ msgstr "%(object_user_email)s = Хариуцлагатай имэйл"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_body:0
 msgid "Mail body"
-msgstr "Имэйлийн гол утга"
+msgstr "Э-мэйлийн гол утга"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Ажиглагчруу илгээх (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Хэрэв хэрэглэгчид э-мэйл-ээр анхааруулга илгээхийг хүсвэл үүнийг чеклэнэ."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -462,7 +434,7 @@ msgstr "Сонирхогч нэмэх"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Fields"
-msgstr "Модел талбрууд дахь нөхцөл"
+msgstr "Модел талбарууд дахь нөхцөл"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -485,7 +457,7 @@ msgstr ""
 msgid ""
 "Check this if you want that all documents attached to the object be attached "
 "to the reminder email sent."
-msgstr ""
+msgstr "Хэрэв та"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -532,3 +504,6 @@ msgstr "Гарааны огноо"
 
 #~ msgid "%(object_date)s = Creation date"
 #~ msgstr "%(object_date)s = Үүсгэх огноо"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."

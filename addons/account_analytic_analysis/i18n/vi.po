@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-11-27 14:47+0000\n"
 "Last-Translator: Phong Nguyen <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -23,17 +23,6 @@ msgid ""
 "Number of hours that can be invoiced plus those that already have been "
 "invoiced."
 msgstr "Số giờ mà có thể làm hóa cộng với số giờ đã được làm hóa đơn"
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -58,24 +47,14 @@ msgid "Theorical Revenue"
 msgstr "Thu nhập theo lý thuyết"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Ngày lập hóa đơn gần nhất"
-
-#. module: account_analytic_analysis
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
 msgstr "Ngày của hóa đơn mới nhất được tạo cho tài khoản kế toán này."
 
 #. module: account_analytic_analysis
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Ngày lập hóa đơn gần nhất"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -90,11 +69,6 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -164,11 +138,6 @@ msgstr ""
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
 msgstr ""
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML không hợp lệ với kiến trúc ngữ cảnh!"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
@@ -292,8 +261,8 @@ msgid "Hours Tot"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -309,5 +278,11 @@ msgstr ""
 #~ msgid "Hours summary by user"
 #~ msgstr "Giờ được tổng kết bởi người dùng"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML không hợp lệ với kiến trúc ngữ cảnh!"
+
 #~ msgid "All Analytic Accounts"
 #~ msgstr "Tất cả tài khoản kế toán"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Tên mô hình không hợp lệ trong định nghĩa hành động."

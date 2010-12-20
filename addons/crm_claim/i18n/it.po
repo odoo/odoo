@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-08 08:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: crm_claim
-#: field:crm.claim,planned_revenue:0
-msgid "Planned Revenue"
-msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -34,9 +29,14 @@ msgid "Group By..."
 msgstr "Ragguppato per..."
 
 #. module: crm_claim
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modello non valido nella definizione dell'azione."
+#: view:crm.claim:0
+msgid "Responsibilities"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -47,6 +47,11 @@ msgstr "Marzo"
 #: field:crm.claim.report,delay_close:0
 msgid "Delay to close"
 msgstr "Ritardo per Chiusura"
+
+#. module: crm_claim
+#: field:crm.claim,resolution:0
+msgid "Resolution"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -66,9 +71,12 @@ msgid "#Claim"
 msgstr "# Iniziative"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Cases"
-msgstr "Casi"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid ""
+"You can create claim stages to categorize the status of every claim entered "
+"in the system. The stages define all the steps required for the resolution "
+"of a claim."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -95,9 +103,9 @@ msgid ""
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,partner_mobile:0
-msgid "Mobile"
-msgstr "Cellulare"
+#: view:crm.claim:0
+msgid "Claim Description"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -121,11 +129,6 @@ msgid "Preventive"
 msgstr "Preventivo"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "Corretto"
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "Contatto Partner"
@@ -146,7 +149,7 @@ msgid "Reference"
 msgstr "Riferimento"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
+#: field:crm.claim,action_next:0
 msgid "Next Action"
 msgstr "Prossima Azione"
 
@@ -157,8 +160,10 @@ msgstr "Reimposta come Bozza"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Extra Info"
-msgstr "Informazioni Aggiuntive"
+#: field:crm.claim,date_deadline:0
+#: field:crm.claim.report,date_deadline:0
+msgid "Deadline"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -175,20 +180,18 @@ msgid "Preventive Action"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,date_closed:0
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Sezione"
 
 #. module: crm_claim
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:crm.claim:0
+msgid "Root Causes"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,user_fault:0
+msgid "Trouble Responsible"
 msgstr ""
 
 #. module: crm_claim
@@ -220,11 +223,6 @@ msgid "Email"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,canal_id:0
-msgid "Channel"
-msgstr ""
-
-#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
@@ -236,10 +234,15 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date_deadline:0
-#: field:crm.claim.report,date_deadline:0
-msgid "Deadline"
+#: field:crm.claim,name:0
+msgid "Claim Subject"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
 msgstr ""
 
 #. module: crm_claim
@@ -307,16 +310,6 @@ msgid "CRM Claim Report"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "References"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Status and Categorization"
-msgstr ""
-
-#. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim1
 msgid "Accepted as Claim"
 msgstr "Accettato come reclamo"
@@ -332,8 +325,8 @@ msgid "September"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Communication"
+#: selection:crm.claim.report,month:0
+msgid "December"
 msgstr ""
 
 #. module: crm_claim
@@ -359,11 +352,6 @@ msgid "Salesman"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,ref2:0
-msgid "Reference 2"
-msgstr ""
-
-#. module: crm_claim
 #: field:crm.claim,categ_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,categ_id:0
@@ -378,16 +366,6 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "  Year  "
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Closure Date"
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim,planned_cost:0
-msgid "Planned Costs"
 msgstr ""
 
 #. module: crm_claim
@@ -412,8 +390,10 @@ msgid "Low"
 msgstr ""
 
 #. module: crm_claim
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:crm.claim,date_closed:0
+#: selection:crm.claim,state:0
+#: selection:crm.claim.report,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: crm_claim
@@ -461,14 +441,9 @@ msgid "User"
 msgstr ""
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim,active:0
-msgid "Active"
-msgstr "Attivo"
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+msgid "Claim Categories"
+msgstr "Categorie reclami"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -502,17 +477,13 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: field:crm.claim,date:0
 msgid "Claim Date"
 msgstr "Data reclamo"
 
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "These people will receive email."
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim,date:0
-msgid "Date"
 msgstr ""
 
 #. module: crm_claim
@@ -551,6 +522,16 @@ msgid "Attachments"
 msgstr ""
 
 #. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"Record and track your customers' claims. Claims can be linked to a sales "
+"order or a lot. You can send emails with attachments and get the history of "
+"everything that happened on a specific claim (emails sent, interventions "
+"type and so on..). Claims can be automatically linked to an email address "
+"using the mail gateway module."
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,state:0
 #: view:crm.claim.report:0
@@ -560,18 +541,13 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Claim Info"
-msgstr "Informazioni reclamo"
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr ""
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
+#: view:crm.claim:0
+msgid "Claim Reporter"
 msgstr ""
 
 #. module: crm_claim
@@ -599,21 +575,10 @@ msgid "In Progress"
 msgstr ""
 
 #. module: crm_claim
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,user_id:0
 msgid "Responsible"
 msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Date of Claim"
-msgstr "Data del reclamo"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -636,6 +601,11 @@ msgid "Reply"
 msgstr ""
 
 #. module: crm_claim
+#: field:crm.claim,cause:0
+msgid "Root Cause"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim/Action Description"
 msgstr "Descrizione reclamo/azione"
@@ -651,8 +621,19 @@ msgid "Search Claims"
 msgstr "Cerca reclami"
 
 #. module: crm_claim
+#: field:crm.claim,section_id:0
+#: view:crm.claim.report:0
+msgid "Sales Team"
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "May"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Resolution Actions"
 msgstr ""
 
 #. module: crm_claim
@@ -662,20 +643,18 @@ msgid "Report a Claim"
 msgstr "Riporta un reclamo"
 
 #. module: crm_claim
-#: field:crm.claim,probability:0
-msgid "Probability (%)"
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,partner_name:0
-msgid "Employee's Name"
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
 msgstr ""
 
 #. module: crm_claim
-#: help:crm.claim,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
+#: view:crm.claim:0
+msgid "Follow Up"
 msgstr ""
 
 #. module: crm_claim
@@ -693,11 +672,6 @@ msgstr ""
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "February"
-msgstr ""
-
-#. module: crm_claim
-#: field:crm.claim,name:0
-msgid "Name"
 msgstr ""
 
 #. module: crm_claim
@@ -721,16 +695,21 @@ msgid "ID"
 msgstr ""
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Actions"
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "High"
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
-msgid "Sales Team"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid ""
+"Create claim categories to better manage and classify your claims. Some "
+"example of claims can be: preventive action, corrective action."
 msgstr ""
 
 #. module: crm_claim
@@ -739,26 +718,25 @@ msgid "Create Date"
 msgstr ""
 
 #. module: crm_claim
-#: field:crm.claim,date_action_last:0
-msgid "Last Action"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim.report:0
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr ""
 
-#. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
-msgid "Claim Categories"
-msgstr "Categorie reclami"
-
 #~ msgid "This Year"
 #~ msgstr "Anno attuale"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."
+
 #~ msgid "Claim Type"
 #~ msgstr "Tipo di richiesta"
+
+#~ msgid "Mobile"
+#~ msgstr "Cellulare"
+
+#~ msgid "Cases"
+#~ msgstr "Casi"
 
 #~ msgid ""
 #~ "The channels represent the different communicationmodes available with the "
@@ -771,3 +749,18 @@ msgstr "Categorie reclami"
 
 #~ msgid "My Case"
 #~ msgstr "I miei Casi"
+
+#~ msgid "Fixed"
+#~ msgstr "Corretto"
+
+#~ msgid "Extra Info"
+#~ msgstr "Informazioni Aggiuntive"
+
+#~ msgid "Active"
+#~ msgstr "Attivo"
+
+#~ msgid "Date of Claim"
+#~ msgstr "Data del reclamo"
+
+#~ msgid "Claim Info"
+#~ msgstr "Informazioni reclamo"

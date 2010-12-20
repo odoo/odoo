@@ -6,28 +6,69 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-11-22 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-23 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: association
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:profile.association.config.install_modules_wizard,wiki:0
+msgid "Wiki"
+msgstr "Wiki"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid "Event Management"
+msgstr "Gestione Eventi"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,project_gtd:0
+msgid "Getting Things Done"
+msgstr "Getting Things Done (GTD)"
+
+#. module: association
+#: model:ir.module.module,description:association.module_meta_information
+msgid "This module is to create Profile for Associates"
 msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid ""
+"Here are specific applications related to the Association Profile you "
+"selected."
+msgstr ""
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid "title"
+msgstr "titolo"
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,event_project:0
 msgid "Helps you to manage and organize your events."
 msgstr "Aiuta a gestire e organizzare gli eventi."
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,config_logo:0
+msgid "Image"
+msgstr "Imagine"
+
+#. module: association
+#: help:profile.association.config.install_modules_wizard,hr_expense:0
+msgid ""
+"Tracks and manages employee expenses, and can automatically re-invoice "
+"clients if the expenses are project-related."
+msgstr ""
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,project_gtd:0
@@ -40,71 +81,14 @@ msgstr ""
 "il modulo di Gestione Progetti di OpenERP."
 
 #. module: association
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Il nome del modulo deve essere unico!"
-
-#. module: association
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome di modulo non valido nella definizione dell'azione."
-
-#. module: association
 #: view:profile.association.config.install_modules_wizard:0
 msgid "Resources Management"
 msgstr "Gestione Risorse"
 
 #. module: association
-#: field:profile.association.config.install_modules_wizard,event_project:0
-msgid "Events"
-msgstr "Eventi"
-
-#. module: association
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID certificato del modulo deve essere unico!"
-
-#. module: association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "Event Management"
-msgstr "Gestione Eventi"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,progress:0
-msgid "Configuration Progress"
-msgstr ""
-
-#. module: association
-#: view:profile.association.config.install_modules_wizard:0
-msgid "title"
-msgstr "titolo"
-
-#. module: association
-#: help:profile.association.config.install_modules_wizard,hr_expense:0
-msgid ""
-"Tracks and manages employee expenses, and can automatically re-invoice "
-"clients if the expenses are project-related."
-msgstr ""
-
-#. module: association
 #: model:ir.module.module,shortdesc:association.module_meta_information
 msgid "Association profile"
 msgstr ""
-
-#. module: association
-#: model:ir.module.module,description:association.module_meta_information
-msgid "This module is to create Profile for Associates"
-msgstr ""
-
-#. module: association
-#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
-msgid "profile.association.config.install_modules_wizard"
-msgstr "profile.association.config.install_modules_wizard"
-
-#. module: association
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: association
 #: field:profile.association.config.install_modules_wizard,hr_expense:0
@@ -113,31 +97,8 @@ msgstr "Monitoraggio spese"
 
 #. module: association
 #: view:profile.association.config.install_modules_wizard:0
-#: field:profile.association.config.install_modules_wizard,project:0
-msgid "Project Management"
-msgstr "Gestione progetti"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,wiki:0
-msgid "Wiki"
-msgstr "Wiki"
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,project_gtd:0
-msgid "Getting Things Done"
-msgstr "Getting Things Done (GTD)"
-
-#. module: association
-#: help:profile.association.config.install_modules_wizard,project:0
-msgid ""
-"Helps you manage your projects and tasks by tracking them, generating "
-"plannings, etc..."
+msgid "Association Application Configuration"
 msgstr ""
-
-#. module: association
-#: field:profile.association.config.install_modules_wizard,config_logo:0
-msgid "Image"
-msgstr "Imagine"
 
 #. module: association
 #: help:profile.association.config.install_modules_wizard,wiki:0
@@ -147,9 +108,38 @@ msgid ""
 msgstr ""
 
 #. module: association
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
+#: help:profile.association.config.install_modules_wizard,project:0
+msgid ""
+"Helps you manage your projects and tasks by tracking them, generating "
+"plannings, etc..."
+msgstr ""
+
+#. module: association
+#: model:ir.model,name:association.model_profile_association_config_install_modules_wizard
+msgid "profile.association.config.install_modules_wizard"
+msgstr "profile.association.config.install_modules_wizard"
+
+#. module: association
+#: field:profile.association.config.install_modules_wizard,event_project:0
+msgid "Events"
+msgstr "Eventi"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+#: field:profile.association.config.install_modules_wizard,project:0
+msgid "Project Management"
+msgstr "Gestione progetti"
+
+#. module: association
+#: view:profile.association.config.install_modules_wizard:0
+msgid "Configure"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
 
 #~ msgid "Relationship Management"
 #~ msgstr "Gestione deile Relazioni"
@@ -166,11 +156,17 @@ msgstr "La dimensione del campo non può mai essere minore di 1!"
 #~ "sistema). Esso apre un accesso FTP per gli utenti per meglio sfogliare i "
 #~ "documenti associati."
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome di modulo non valido nella definizione dell'azione."
+
 #~ msgid "Segmentation"
 #~ msgstr "Segmentazione"
 
 #~ msgid "Document Management"
 #~ msgstr "Gestione documenti"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
 
 #~ msgid "Install"
 #~ msgstr "Installa"
@@ -189,3 +185,12 @@ msgstr "La dimensione del campo non può mai essere minore di 1!"
 
 #~ msgid "Cancel"
 #~ msgstr "Annulla"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"

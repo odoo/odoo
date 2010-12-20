@@ -37,30 +37,3 @@
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so11"))
     assert so.margin, "No margin !" 
--
-  I verify that the picking has been generated for the sale order
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so11"))
-    assert so.picking_ids,"Picking has not been generated"
--
-  Then I click on the 'Create Invoice' button of 'Outgoing Orders'
--
-  !python {model: stock.picking}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so11"))
-    ids = self.search(cr, uid, [('origin', '=', so.name),('type', '=', 'out')])
-    self.create_invoice(cr, uid, ids, {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
-      })
--
-  I verify that an invoice has been generated from picking
--
-  !python {model: stock.picking}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so11"))
-    pick_ids = self.search(cr, uid, [('origin', '=', so.name)])
-    pick_brw = self.browse(cr, uid, pick_ids[0])
-    assert pick_brw.invoice_ids,"Invoice has not been created"
-    

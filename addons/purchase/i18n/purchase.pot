@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44:25+0000\n"
-"PO-Revision-Date: 2010-12-03 15:44:25+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06:14+0000\n"
+"PO-Revision-Date: 2010-12-15 15:06:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -268,15 +268,19 @@ msgid "Net Total :"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: purchase
@@ -552,10 +556,8 @@ msgid "Error !"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
+#: view:purchase.order.line:0
+msgid "General Information"
 msgstr ""
 
 #. module: purchase
@@ -720,8 +722,8 @@ msgid "This is computed as the minimum scheduled date of all purchase order line
 msgstr ""
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
+#: selection:purchase.report,month:0
+msgid "August"
 msgstr ""
 
 #. module: purchase
@@ -926,8 +928,8 @@ msgid "From the Purchase Orders menu, you can track the status of your orders: p
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
+#: view:purchase.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: purchase
@@ -1133,12 +1135,13 @@ msgid "Default Purchase Pricelist Version"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
+#: view:purchase.installer:0
+msgid "Extend your Purchases Management Application with additional functionalities."
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr ""
 
@@ -1379,6 +1382,12 @@ msgid "Reservation"
 msgstr ""
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
@@ -1570,6 +1579,13 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,name:0
 msgid "Year"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
 msgstr ""
 
 #. module: purchase

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-29 07:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll
@@ -50,11 +50,6 @@ msgstr "Детали заработной платы"
 #: report:employees.salary:0
 msgid "Allowances with Basic:"
 msgstr ""
-
-#. module: hr_payroll
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -286,14 +281,6 @@ msgstr "Страна выдачи"
 #. module: hr_payroll
 #: field:hr.contibution.register.line,emp_deduction:0
 msgid "Employee Deduction"
-msgstr ""
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error: %s ' % (e)))\n"
-"                elif line.amount_type in ('fix', 'func"
 msgstr ""
 
 #. module: hr_payroll
@@ -547,11 +534,6 @@ msgid "Email"
 msgstr "Эл. почта"
 
 #. module: hr_payroll
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
 #, python-format
 msgid "Error !"
@@ -567,14 +549,6 @@ msgstr "Лист сверки"
 #: help:hr.contract,working_days_per_week:0
 msgid "No of Working days / week for an employee"
 msgstr ""
-
-#. module: hr_payroll
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Имя Объекта должно начинаться с x_ и не должно содержать специальных "
-"символов!"
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
@@ -663,11 +637,6 @@ msgid "To"
 msgstr "Кому"
 
 #. module: hr_payroll
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Некорректный формат XML для структуры вида!"
-
-#. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
 #, python-format
 msgid "Variable Error !"
@@ -687,15 +656,6 @@ msgstr "Начисление зарплаты"
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,name:0
 msgid "Bank Account A/C"
-msgstr ""
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error: %s ' % (e)))\n"
-"\n"
-"                if sal_type in ('gross', 'net"
 msgstr ""
 
 #. module: hr_payroll
@@ -868,11 +828,6 @@ msgstr "Черновик"
 #: report:payslip.pdf:0
 msgid "Earnings"
 msgstr "Сборы"
-
-#. module: hr_payroll
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
@@ -1229,11 +1184,6 @@ msgid "Current Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Размер поля не может быть меньше 1 !"
-
-#. module: hr_payroll
 #: report:salary.structure:0
 msgid "Salary"
 msgstr "Заработная плата"
@@ -1415,37 +1365,14 @@ msgid "Wage Type"
 msgstr "Тип зарплаты"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error: %s ' % (e)))\n"
-"\n"
-"                if not calculate:\n"
-"                    continue\n"
-"\n"
-"                percent = 0.0\n"
-"                value = 0.0\n"
-"                base = False\n"
-"#                company_contrib = 0.0\n"
-"                base = line.category_id.base\n"
-"\n"
-"                try:\n"
-"                    #Please have a look at the configuration guide.\n"
-"                    amt = eval(base, obj)\n"
-"                except Exception, e:\n"
-"                    raise osv.except_osv(_('Variable Error !"
-msgstr ""
-
-#. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
 msgid "Net Sal."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.employees.detail:0
-#: view:hr.payroll.year.salary:0
-msgid "Year Salary"
-msgstr "Годовая зарплата"
+#: sql_constraint:hr.passport:0
+msgid "The Passport No must be unique !"
+msgstr ""
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,name:0
@@ -1637,6 +1564,12 @@ msgid "Letter Content"
 msgstr ""
 
 #. module: hr_payroll
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
+msgid "Year Salary"
+msgstr "Годовая зарплата"
+
+#. module: hr_payroll
 #: view:hr.payroll.register:0
 msgid "Allowance / Deduction"
 msgstr "Доплаты / Удержания"
@@ -1665,10 +1598,8 @@ msgstr "Всего"
 msgid "Contributions"
 msgstr "При участии"
 
-#. module: hr_payroll
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
 
 #~ msgid "Analytic Account for Salary Analysis"
 #~ msgstr "Аналитический счет для анализа заработной платы"
@@ -1746,6 +1677,9 @@ msgstr ""
 #~ msgid "Please defined the Partner in Home Address !!"
 #~ msgstr "Пожалуйста, задайте Партнера через домашний адрес!!"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Некорректный формат XML для структуры вида!"
+
 #~ msgid "Account Lines"
 #~ msgstr "Строки счета"
 
@@ -1769,6 +1703,12 @@ msgstr ""
 
 #~ msgid "Bank Journal"
 #~ msgstr "Банковский журнал"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Имя Объекта должно начинаться с x_ и не должно содержать специальных "
+#~ "символов!"
 
 #~ msgid "Salary Account"
 #~ msgstr "Зарплатный счет"
@@ -1826,3 +1766,12 @@ msgstr ""
 
 #~ msgid "Select Bank Account from where Salary Expanse will be Paid"
 #~ msgstr "Выберите банковский счет для списания зарплаты"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля не может быть меньше 1 !"

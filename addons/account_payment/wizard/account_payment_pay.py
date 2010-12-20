@@ -31,6 +31,8 @@ class account_payment_make_payment(osv.osv_memory):
         If type is manual. just confirm the order.
         """
         obj_payment_order = self.pool.get('payment.order')
+        if context is None:
+            context = {}
 #        obj_model = self.pool.get('ir.model.data')
 #        obj_act = self.pool.get('ir.actions.act_window')
 #        order = obj_payment_order.browse(cr, uid, context['active_id'], context)

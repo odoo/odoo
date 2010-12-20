@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-08 08:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-09 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -42,10 +42,9 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Strefa czasowa"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.event.edit.all,name:0
@@ -184,9 +183,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr ""
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Alarm podstawowy"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -219,17 +218,16 @@ msgid "Tue"
 msgstr "Wto"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Co roku"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Koniec zdarzenia"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -257,11 +255,10 @@ msgid "Days"
 msgstr "Dni"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
-msgstr "Bez powtarzania"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
+msgstr "Szczegóły zaproszenia"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:0
@@ -321,11 +318,10 @@ msgid "Secondly"
 msgstr "W drugiej kolejności"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Data wydarzenia"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Koniec zdarzenia"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -433,11 +429,6 @@ msgstr "Edytuj wszystkie zdarzenia"
 #: field:calendar.todo,attendee_ids:0
 msgid "Attendees"
 msgstr "Uczestnicy"
-
-#. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -580,19 +571,9 @@ msgid "Delegrated To"
 msgstr "Przydzielono dla"
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Nieprawidłowe parametry"
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Wymagana odpowiedź"
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -682,6 +663,12 @@ msgstr "Pierwszy"
 #: view:calendar.event:0
 msgid "Privacy"
 msgstr "Prywatność"
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Strefa czasowa"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -799,10 +786,10 @@ msgid "Fri"
 msgstr "Pią"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
-msgstr "Szczegóły zaproszenia"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.attendee,member:0
@@ -832,22 +819,9 @@ msgid "Attachment"
 msgstr "Załącznik"
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr "Zaproszenie od"
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -921,9 +895,11 @@ msgid "June"
 msgstr "Czerwiec"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Alarm podstawowy"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Data wydarzenia"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -982,6 +958,13 @@ msgid "Count"
 msgstr "Liczba"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr "Bez powtarzania"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1033,6 +1016,12 @@ msgstr "Interwał"
 #: selection:calendar.todo,week_list:0
 msgid "Wednesday"
 msgstr "Środa"
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,name:0
@@ -1120,6 +1109,11 @@ msgstr ""
 #: field:calendar.todo,recurrent_id:0
 msgid "Recurrent ID date"
 msgstr "Data ID powtarzalności"
+
+#. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,state:0
@@ -1290,10 +1284,9 @@ msgid "Month"
 msgstr "Miesiąc"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Zaproś uczestników"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1352,6 +1345,12 @@ msgstr ""
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
 msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Zaproś uczestników"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
@@ -1572,8 +1571,10 @@ msgid "Duration"
 msgstr "Czas trwania"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that can be assigned to calendar events or "
+"meetings."
 msgstr ""
 
 #. module: base_calendar
@@ -1594,3 +1595,21 @@ msgstr "Sobota"
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "Piąty"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Nieprawidłowe parametry"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."

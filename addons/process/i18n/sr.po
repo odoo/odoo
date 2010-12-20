@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-04 08:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-06 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -25,36 +25,16 @@ msgid "Process Node"
 msgstr "Procesni čvor"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr "Proces"
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "URL za Pomoc"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
-"Ako je aktivno polje postavljeno na ISTINA, omogucava ti da sakrijes proces "
-"bez njegovog uklanjanja."
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Referentni Meni"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -78,9 +58,9 @@ msgid "Kind Of Node"
 msgstr "Vrsta Cvora"
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "URL za Pomoc"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -170,9 +150,10 @@ msgid "Dummy"
 msgstr "Lažni"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr "Proces"
 
 #. module: process
 #: field:process.condition,name:0
@@ -222,11 +203,6 @@ msgstr "Aktivan"
 #: view:process.transition:0
 msgid "Associated Groups"
 msgstr "Asocirane Grupe"
-
-#. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Referentni Meni"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -340,6 +316,14 @@ msgstr "Metoda Objekta"
 #~ msgid "Roles from Workflow"
 #~ msgstr "Uloge iz TokaPosla"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
 #~ msgid "Details"
 #~ msgstr "Detalji"
 
@@ -349,8 +333,21 @@ msgstr "Metoda Objekta"
 #~ msgid "Roles"
 #~ msgstr "Uloge"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "Extra Information"
 #~ msgstr "Dodatne INformacije"
 
 #~ msgid "Enterprise Processes"
 #~ msgstr "Preocesi Preduzeca"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the process "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Ako je aktivno polje postavljeno na ISTINA, omogucava ti da sakrijes proces "
+#~ "bez njegovog uklanjanja."

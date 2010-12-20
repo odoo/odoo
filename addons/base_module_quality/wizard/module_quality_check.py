@@ -28,7 +28,7 @@ from osv import osv, fields
 
 class quality_check(wizard.interface):
 
-    def _create_quality_check(self, cr, uid, data, context={}):
+    def _create_quality_check(self, cr, uid, data, context=None):
         pool = pooler.get_pool(cr.dbname)
         obj_quality = pool.get('module.quality.check')
         objs = []

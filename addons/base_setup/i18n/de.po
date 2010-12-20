@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 14:59+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -23,17 +23,9 @@ msgid "City"
 msgstr "Stadt"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
-"beinhalten !"
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Installiere"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -41,19 +33,14 @@ msgid "Invoicing"
 msgstr "Offene Posten Buchhaltung"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Unternehmensname"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Personal & Zeiterfassung"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
 msgstr "E-Mail"
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
@@ -185,6 +172,13 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "Bezeichnung"
@@ -193,11 +187,6 @@ msgstr "Bezeichnung"
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr "Knowledge & Dokumente"
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -218,15 +207,9 @@ msgstr ""
 "Kosten ..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
-"Applikation für Ihren Point of Sales mit Schnellerfassung von Verkäufen, "
-"vereinfachter Zahlungserfassung, automatische Lieferscheinerstellung u.a. "
-"Anwendungen."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Unternehmensname"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -253,14 +236,9 @@ msgstr ""
 "genutzt werden, die keine ausgewiesenen Buchhaltungsexperten sind."
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht !"
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Personal & Zeiterfassung"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -333,6 +311,14 @@ msgstr ""
 "Dokumenten."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr "Konfiguration Unternehmen"
@@ -341,6 +327,17 @@ msgstr "Konfiguration Unternehmen"
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Applikation für Ihren Point of Sales mit Schnellerfassung von Verkäufen, "
+"vereinfachter Zahlungserfassung, automatische Lieferscheinerstellung u.a. "
+"Anwendungen."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -464,8 +461,8 @@ msgid "Street"
 msgstr "Strasse"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -474,6 +471,7 @@ msgid "Example: http://openerp.com"
 msgstr "Beispiel: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr "Installiere Module"
@@ -517,11 +515,6 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
 msgstr ""
-
-#. module: base_setup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -584,11 +577,29 @@ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 #~ msgid "Select a Profile"
 #~ msgstr "Wähle ein Profil"
 
-#~ msgid "Install"
-#~ msgstr "Installiere"
-
 #~ msgid "Zip code"
 #~ msgstr "Postleitzahl"
 
 #~ msgid "Previous"
 #~ msgstr "Vorherig"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

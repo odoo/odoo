@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2009-06-15 07:19+0000\n"
 "Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -32,13 +32,6 @@ msgid "Object"
 msgstr "Αντικείμενο"
 
 #. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "uid"
 msgstr "uid"
@@ -55,6 +48,11 @@ msgid "Jobs Hiring Process"
 msgstr ""
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr ""
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr ""
@@ -66,12 +64,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "attendee"
+msgid "dtstamp"
+msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -85,9 +85,10 @@ msgid "Calendar of Meetings"
 msgstr ""
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Συσκέψεις Κοινού Ημερολογίου"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -95,14 +96,14 @@ msgid "Manages an Helpdesk service."
 msgstr ""
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "dtend"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "summary"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -206,9 +207,9 @@ msgid "location"
 msgstr "location"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "attendee"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -224,6 +225,11 @@ msgstr ""
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Τομέας"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -271,14 +277,19 @@ msgid "categories"
 msgstr "categories"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Τομέας"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr ""
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -318,9 +329,9 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "summary"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -333,9 +344,9 @@ msgid "document.ics.crm.wizard"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr ""
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Συσκέψεις Κοινού Ημερολογίου"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -357,17 +368,10 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr ""
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Σφάλμα! Υπάρχει φάκελλος με ίδια περιγραφή."
@@ -380,6 +384,9 @@ msgstr ""
 
 #~ msgid "dt-stamp"
 #~ msgstr "dt-stamp"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "document.directory.ics.fields"

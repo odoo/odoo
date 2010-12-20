@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-10-30 13:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: board
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_menu_create
@@ -23,9 +28,11 @@ msgid "Menu Create"
 msgstr "Kreiraj Meni"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Tip Napomene"
 
 #. module: board
 #: view:board.note:0
@@ -37,6 +44,11 @@ msgstr "Autor"
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
 msgstr "Glavna tabla osnovnog modula"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Poslednje konekcije"
 
 #. module: board
 #: code:addons/board/wizard/board_menu_create.py:0
@@ -60,6 +72,7 @@ msgstr "Napomena"
 
 #. module: board
 #: view:board.note:0
+#: view:res.log.report:0
 msgid "Group By..."
 msgstr "Grupirano po..."
 
@@ -69,9 +82,11 @@ msgid "Board"
 msgstr "Tabla"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
@@ -79,22 +94,59 @@ msgid "Title"
 msgstr "Naslov"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
 msgstr ""
-"Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr "Tip Napomene"
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Otvori Glavnu Tablu"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
 msgstr "Definicija Glavne Table"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr ""
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -108,11 +160,9 @@ msgid "Menu Information"
 msgstr "Informacije Menija"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Poslednje konekcije"
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr ""
 
 #. module: board
 #: field:board.note,type:0
@@ -125,16 +175,31 @@ msgid "Action Views"
 msgstr "Pregled Akcija"
 
 #. module: board
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Tip Napomene"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr ""
 
 #. module: board
 #: view:board.menu.create:0
@@ -142,9 +207,14 @@ msgid "Create Menu For Dashboard"
 msgstr "Kreiraj Meni za Glavnu Tablu"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
@@ -157,9 +227,19 @@ msgid "Parent Menu"
 msgstr "Roditeljski Meni"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: board
 #: view:board.note:0
 msgid "Notes"
 msgstr "Napomene"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr ""
 
 #. module: board
 #: help:board.board.line,sequence:0
@@ -169,10 +249,9 @@ msgid ""
 msgstr "Daje redosled sekvenci pri prikazu liste linija table."
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:0
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Molimo da umetnete pogled(e) Glavne Table !"
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
@@ -189,14 +268,19 @@ msgid "Base module for all dashboards."
 msgstr "Bazni modul za sve glavne table"
 
 #. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr ""
+
+#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
 msgstr "Pozicija"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Otvori Glavnu Tablu"
+#: view:res.log.report:0
+msgid "Model"
+msgstr ""
 
 #. module: board
 #: field:board.menu.create,menu_name:0
@@ -230,9 +314,24 @@ msgid "Width"
 msgstr "širina"
 
 #. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr ""
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Sekvenca"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr ""
 
 #. module: board
 #: view:board.board:0
@@ -251,6 +350,22 @@ msgid "Create Board Menu"
 msgstr "Kreiraj Meni Table"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr ""
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr ""
+
+#. module: board
 #: view:board.menu.create:0
 msgid "Cancel"
 msgstr "Otkaži"
@@ -261,10 +376,24 @@ msgid "Dashboard View"
 msgstr "Pregled table"
 
 #. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Molimo da umetnete pogled(e) Glavne Table !"
+
+#. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Tema"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "board.board"
 #~ msgstr "tabla.tabla"
@@ -275,6 +404,9 @@ msgstr "Tema"
 #~ msgid "board.note"
 #~ msgstr "Napomena.tabla"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "board.note.type"
 #~ msgstr "Tabla.napomene.tip"
 
@@ -283,3 +415,9 @@ msgstr "Tema"
 
 #~ msgid "Dashboards"
 #~ msgstr "Glavna Tabla"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "NOte Type"
+#~ msgstr "Tip Napomene"

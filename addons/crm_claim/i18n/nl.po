@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-01 08:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: crm_claim
-#: field:crm.claim,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Geplande omzet"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -34,9 +29,14 @@ msgid "Group By..."
 msgstr "Groepeer op.."
 
 #. module: crm_claim
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: view:crm.claim:0
+msgid "Responsibilities"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -47,6 +47,11 @@ msgstr "Maart"
 #: field:crm.claim.report,delay_close:0
 msgid "Delay to close"
 msgstr "Vertraging tot sluiting"
+
+#. module: crm_claim
+#: field:crm.claim,resolution:0
+msgid "Resolution"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -103,9 +108,9 @@ msgstr ""
 "verantwoordelijke gebruiker en email account voor mail gateway."
 
 #. module: crm_claim
-#: field:crm.claim,partner_mobile:0
-msgid "Mobile"
-msgstr "Mobiel"
+#: view:crm.claim:0
+msgid "Claim Description"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -129,11 +134,6 @@ msgid "Preventive"
 msgstr "Preventief"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "Opgelost"
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "Contactpersoon relatie"
@@ -154,7 +154,7 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
+#: field:crm.claim,action_next:0
 msgid "Next Action"
 msgstr "Volgende actie"
 
@@ -165,8 +165,10 @@ msgstr "Terugzetten naar Concept"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Extra Info"
-msgstr "Extra info"
+#: field:crm.claim,date_deadline:0
+#: field:crm.claim.report,date_deadline:0
+msgid "Deadline"
+msgstr "Uiterste datum"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -177,22 +179,10 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: crm_claim
-#: field:crm.claim,active:0
-msgid "Active"
-msgstr "Actief"
-
-#. module: crm_claim
 #: selection:crm.claim,type_action:0
 #: selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
 msgstr "Preventieve actie"
-
-#. module: crm_claim
-#: field:crm.claim,date_closed:0
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-msgid "Closed"
-msgstr "Gesloten"
 
 #. module: crm_claim
 #: field:crm.claim.report,section_id:0
@@ -200,9 +190,14 @@ msgid "Section"
 msgstr "Afdeling"
 
 #. module: crm_claim
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
+#: view:crm.claim:0
+msgid "Root Causes"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,user_fault:0
+msgid "Trouble Responsible"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
@@ -210,11 +205,6 @@ msgstr "Ongeldige XML voor weergave opbouw!"
 #: field:crm.claim.report,priority:0
 msgid "Priority"
 msgstr "Prioriteit"
-
-#. module: crm_claim
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -238,11 +228,6 @@ msgid "Email"
 msgstr "Email"
 
 #. module: crm_claim
-#: field:crm.claim,canal_id:0
-msgid "Channel"
-msgstr "Kanaal"
-
-#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
@@ -254,6 +239,11 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: crm_claim
+#: field:crm.claim,name:0
+msgid "Claim Subject"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
 msgid ""
 "Have a general overview of all claims processed in the system by sorting "
@@ -261,13 +251,6 @@ msgid ""
 msgstr ""
 "Krijg een algemeen overzicht van alle klachten in het systeem door ze "
 "volgens specifieke criteria te sorteren."
-
-#. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date_deadline:0
-#: field:crm.claim.report,date_deadline:0
-msgid "Deadline"
-msgstr "Uiterste datum"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -334,16 +317,6 @@ msgid "CRM Claim Report"
 msgstr "CRM Klachtenrapport"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "References"
-msgstr "Verwijzingen"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Status and Categorization"
-msgstr "Status en and indeling"
-
-#. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim1
 msgid "Accepted as Claim"
 msgstr "Geaccepteerd als klacht"
@@ -359,9 +332,9 @@ msgid "September"
 msgstr "September"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Communication"
-msgstr "Communicatie"
+#: selection:crm.claim.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -386,11 +359,6 @@ msgid "Salesman"
 msgstr "Verkoper"
 
 #. module: crm_claim
-#: field:crm.claim,ref2:0
-msgid "Reference 2"
-msgstr "Referentie 2"
-
-#. module: crm_claim
 #: field:crm.claim,categ_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,categ_id:0
@@ -406,16 +374,6 @@ msgstr "Waarde klachten"
 #: view:crm.claim.report:0
 msgid "  Year  "
 msgstr "  Jaar  "
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Closure Date"
-msgstr "Afsluitdatum"
-
-#. module: crm_claim
-#: field:crm.claim,planned_cost:0
-msgid "Planned Costs"
-msgstr "Verwachte kosten"
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -442,9 +400,11 @@ msgid "Low"
 msgstr "Laag"
 
 #. module: crm_claim
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: field:crm.claim,date_closed:0
+#: selection:crm.claim,state:0
+#: selection:crm.claim.report,state:0
+msgid "Closed"
+msgstr "Gesloten"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -491,11 +451,6 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "Wacht op reactie"
-
-#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr "Klachtcategoriën"
@@ -532,6 +487,7 @@ msgstr "Januari"
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: field:crm.claim,date:0
 msgid "Claim Date"
 msgstr "Klachtdatum"
 
@@ -539,11 +495,6 @@ msgstr "Klachtdatum"
 #: help:crm.claim,email_from:0
 msgid "These people will receive email."
 msgstr "Deze personen ontvangen email."
-
-#. module: crm_claim
-#: field:crm.claim,date:0
-msgid "Date"
-msgstr "Datum"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -605,19 +556,14 @@ msgstr "Status"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Claim Info"
-msgstr "Klacht Informatie"
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Klaar"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
-msgstr "December"
+#: view:crm.claim:0
+msgid "Claim Reporter"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -639,32 +585,15 @@ msgid "Open"
 msgstr "Open"
 
 #. module: crm_claim
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "In Progress"
 msgstr "In behandeling"
-
-#. module: crm_claim
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,user_id:0
 msgid "Responsible"
 msgstr "Verantwoordelijke"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Date of Claim"
-msgstr "Klachtdatum"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -687,6 +616,11 @@ msgid "Reply"
 msgstr "Beantwoorden"
 
 #. module: crm_claim
+#: field:crm.claim,cause:0
+msgid "Root Cause"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim/Action Description"
 msgstr "Klacht/actie omschrijving"
@@ -702,7 +636,6 @@ msgid "Search Claims"
 msgstr "Zoek klachten"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: field:crm.claim,section_id:0
 #: view:crm.claim.report:0
 msgid "Sales Team"
@@ -714,29 +647,30 @@ msgid "May"
 msgstr "Mei"
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Resolution Actions"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 msgid "Report a Claim"
 msgstr "Rapporteer een klacht"
 
 #. module: crm_claim
-#: field:crm.claim,probability:0
-msgid "Probability (%)"
-msgstr "Waarschijnlijkheid (%)"
-
-#. module: crm_claim
-#: field:crm.claim,partner_name:0
-msgid "Employee's Name"
-msgstr "Werknemernaam"
-
-#. module: crm_claim
-#: help:crm.claim,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
 msgstr ""
-"Het kanalen vertegenwoordigen de verschillende beschikbare "
-"communicatievormen met de klant."
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr ""
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -758,19 +692,9 @@ msgstr ""
 "Als het dossier moet worden nagekeken, wordt de status op 'Wachtend' gezet."
 
 #. module: crm_claim
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "February"
 msgstr "Februari"
-
-#. module: crm_claim
-#: field:crm.claim,name:0
-msgid "Name"
-msgstr "Naam"
 
 #. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim3
@@ -793,6 +717,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Actions"
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "High"
@@ -813,11 +742,6 @@ msgid "Create Date"
 msgstr "Aanmaakdatum"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_last:0
-msgid "Last Action"
-msgstr "Laatste actie"
-
-#. module: crm_claim
 #: view:crm.claim.report:0
 #: field:crm.claim.report,name:0
 msgid "Year"
@@ -826,11 +750,29 @@ msgstr "Jaar"
 #~ msgid "This Year"
 #~ msgstr "Dit jaar"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid "Mobile"
+#~ msgstr "Mobiel"
+
 #~ msgid "Cases"
 #~ msgstr "Dossiers"
 
+#~ msgid "Fixed"
+#~ msgstr "Opgelost"
+
+#~ msgid "Active"
+#~ msgstr "Actief"
+
+#~ msgid "Channel"
+#~ msgstr "Kanaal"
+
 #~ msgid "Claim Resource Type"
 #~ msgstr "Klacht Actie Soorten"
+
+#~ msgid "Reference 2"
+#~ msgstr "Referentie 2"
 
 #~ msgid "7 Days"
 #~ msgstr "7 Dagen"
@@ -853,14 +795,40 @@ msgstr "Jaar"
 #~ "klachten kunt maken op basis van ingekomen emails.\n"
 #~ "    "
 
+#~ msgid "Awaiting Response"
+#~ msgstr "Wacht op reactie"
+
 #~ msgid "Resource Type"
 #~ msgstr "Actie Soort"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Communication"
+#~ msgstr "Communicatie"
+
+#~ msgid "Claim Info"
+#~ msgstr "Klacht Informatie"
+
+#~ msgid "Date of Claim"
+#~ msgstr "Klachtdatum"
+
+#~ msgid "Name"
+#~ msgstr "Naam"
 
 #~ msgid "This Month"
 #~ msgstr "Deze maand"
 
 #~ msgid "Communication history"
 #~ msgstr "Communicatiegeschiedenis"
+
+#~ msgid "Last Action"
+#~ msgstr "Laatste actie"
 
 #~ msgid "Claim Type"
 #~ msgstr "Soort klacht"
@@ -877,5 +845,51 @@ msgstr "Jaar"
 #~ msgid "My Case"
 #~ msgstr "Mijn klacht"
 
+#~ msgid "Extra Info"
+#~ msgstr "Extra info"
+
 #~ msgid "Stage: "
 #~ msgstr "Fase: "
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Status and Categorization"
+#~ msgstr "Status en and indeling"
+
+#~ msgid "Closure Date"
+#~ msgstr "Afsluitdatum"
+
+#~ msgid "Planned Costs"
+#~ msgstr "Verwachte kosten"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Probability (%)"
+#~ msgstr "Waarschijnlijkheid (%)"
+
+#~ msgid "Employee's Name"
+#~ msgstr "Werknemernaam"
+
+#~ msgid "References"
+#~ msgstr "Verwijzingen"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Geplande omzet"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr ""
+#~ "Het kanalen vertegenwoordigen de verschillende beschikbare "
+#~ "communicatievormen met de klant."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

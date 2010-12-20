@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 18:22+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
@@ -27,9 +27,11 @@ msgid "Menu Create"
 msgstr "Maak menu"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Soort opmerking"
 
 #. module: board
 #: view:board.note:0
@@ -52,11 +54,6 @@ msgstr "Laatste verbindingen"
 #, python-format
 msgid "User Error!"
 msgstr "Gebruikersfout !"
-
-#. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: board
 #: view:board.board:0
@@ -84,11 +81,6 @@ msgid "Board"
 msgstr "Board"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
 #: view:res.log.report:0
@@ -99,13 +91,6 @@ msgstr "Wekelijkse globale activiteit"
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Titel"
-
-#. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: board
 #: field:res.log.report,nbr:0
@@ -124,21 +109,11 @@ msgid "Open Dashboard"
 msgstr "Open dashboard"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr "Soort opmerking"
-
-#. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
 #: view:res.log.report:0
 msgid "Monthly Activity per Document"
 msgstr "Maandelijkse activiteit per document"
-
-#. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: board
 #: view:res.log.report:0
@@ -274,11 +249,6 @@ msgstr "Bepaalt de volgorde bij het tonen van de board regel lijst."
 
 #. module: board
 #: selection:res.log.report,month:0
-msgid "September"
-msgstr "September"
-
-#. module: board
-#: selection:res.log.report,month:0
 msgid "April"
 msgstr "April"
 
@@ -323,11 +293,6 @@ msgid "Latest Activities"
 msgstr "Laatste activiteiten"
 
 #. module: board
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
 msgstr "Links"
@@ -358,10 +323,9 @@ msgid "Sequence"
 msgstr "Volgorde"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Soort opmerking"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "September"
 
 #. module: board
 #: selection:res.log.report,month:0
@@ -417,11 +381,6 @@ msgid "Please Insert Dashboard View(s) !"
 msgstr "Voeg dashboard weergave(s) toe !"
 
 #. module: board
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
@@ -444,3 +403,29 @@ msgstr "Onderwerp"
 
 #~ msgid "board.board.line"
 #~ msgstr "board.board.line"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "NOte Type"
+#~ msgstr "Soort opmerking"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

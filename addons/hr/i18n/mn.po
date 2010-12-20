@@ -13,14 +13,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
-"PO-Revision-Date: 2010-11-25 19:26+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 17:21+0000\n"
+"PO-Revision-Date: 2010-12-17 18:46+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -69,11 +69,6 @@ msgstr "Бүлэглэх..."
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr "Ажлын Э-мэйл"
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Моделийн нэр алдаатай тодорхойлсон байна."
 
 #. module: hr
 #: view:hr.employee:0
@@ -165,6 +160,11 @@ msgstr "Цалингийн үндсэн систем"
 #: view:hr.employee:0
 msgid "My Departments Employee"
 msgstr "Манай хэлтсийн ажилчид"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+msgid "Married"
+msgstr "Гэрлэсэн"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -267,11 +267,6 @@ msgid "Job Description"
 msgstr "Ажлын байрны тодорхойлолт"
 
 #. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "Ажлын байршил"
@@ -295,19 +290,10 @@ msgid "Other information"
 msgstr "Бусад мэдээлэл"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Ажлын хаяг"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_installer
-msgid "Human Resources Application Configuration"
-msgstr "Хүний нөөцийн модулийн тохиргоо"
-
-#. module: hr
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Нэр"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -348,6 +334,15 @@ msgid "Configuration"
 msgstr "Тохиргоо"
 
 #. module: hr
+#: view:hr.installer:0
+msgid ""
+"You can enhance the base HR Application by installing few HR-related "
+"functionalities."
+msgstr ""
+"ХН-н аппликешн баазыг хэдэн ХН-тэй холбоотой функцууд суулган өргөтгөх "
+"боломжтой."
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Categories"
 msgstr "Зэрэглэл"
@@ -358,14 +353,14 @@ msgid "Expected Employees"
 msgstr "Нийт орон тоо"
 
 #. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Харагдацын архитектурын xml алдаатай !"
-
-#. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
 msgstr "Нийгмийн даатгалын дугаар"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+msgid "Divorced"
+msgstr "Салсан"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -400,6 +395,11 @@ msgstr "Өөрийн хянах самбар"
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "эр"
+
+#. module: hr
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Тохиргооны явц"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -438,11 +438,6 @@ msgid "hr.department"
 msgstr "Хэлтэс"
 
 #. module: hr
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
-
-#. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
 msgstr "Энэ нь хэлтсийн менежертэй холбоотой байна"
@@ -472,6 +467,14 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Энд та ажилтнуудаа үүсгэн тэднийг системдэх тодорхойm төлөв байдалд руу "
+"оруулан өөрийн ажиллах хүчнээ удирдах боломжтой. Ажилтнуудтай холбоотой бүх "
+"мэдээлэл болон ажилтнуудад зориулсан бүх бичлэгүүдийг хадгална уу. Хувийн "
+"мэдээллийн таб нь хувь хүн бүрийн мэдээллийг хадгалахад туслана. Категориуд "
+"таб нь ажилтнуудыг албан тушаал, үйл ажиллагаа дээр нь тулгуурлан холбогдох "
+"категорид хамруулна. Категори нь компани дотор эсвэл хэлтэс дотор ахлах "
+"түвшин болох юм. Цаг бүртгэл таб нь ажилтнуудыг тодорхой цагийн бүртгэлд "
+"болон шинжилгээний бүртгэлд системийн туршид хамруулна."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -484,14 +487,20 @@ msgid "Note"
 msgstr "Тэмдэглэл"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Гэрээний мэдээлэл"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Ажлын хаяг"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -510,11 +519,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitements, etc."
 msgstr ""
+"Таны Компанийн Хэлтсийн Бүтэц нь хэлтэс дэх ажилтнуудтай холбоотой бүх бичиг "
+"баримтуудыг удирдана: зардлын болон цаг бүргэлийн баталгаажуулалт, хоцролт "
+"болон ажилд авах г.м."
 
 #. module: hr
-#: field:hr.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Тохиргооны явц"
+#: view:hr.installer:0
+msgid "Configure"
+msgstr "Тохируулах"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -575,6 +587,11 @@ msgid "Status Description"
 msgstr "Гэрлэлтийн байдлын тайлбар"
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -618,14 +635,6 @@ msgstr "Цалингийн санхүү бүртгэл"
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Хувийн мэдээлэл"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr
 #: view:res.users:0
@@ -685,6 +694,11 @@ msgid "Payroll"
 msgstr "Цалингийн цэс"
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+msgid "Single"
+msgstr "Ганц бие"
+
+#. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
 msgstr "Ажлын байрны нэр"
@@ -728,10 +742,10 @@ msgid "Resource"
 msgstr "Нөөц"
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Нэр"
+#: view:hr.installer:0
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr "Хүний нөөцийн модулийн тохиргоо"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -787,6 +801,11 @@ msgid "Coach"
 msgstr "Дадлагажуулагч"
 
 #. module: hr
+#: view:hr.installer:0
+msgid "Configure Your Human Resources Application"
+msgstr "Хүний Нөөцийн Аппликэшныг Тохируулах"
+
+#. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
 msgstr "Зардал"
@@ -800,6 +819,11 @@ msgid "Manager"
 msgstr "Менежер"
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+msgid "Widower"
+msgstr "Бэлэвсэн"
+
+#. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
 msgstr "Санхүү бүртгэлтэй нэгдмэл цалингийн ерөнхий систем"
@@ -811,6 +835,10 @@ msgid ""
 "a survey to a job position. This survey will be used in the recruitment "
 "process to evaluate the applicants for this job position."
 msgstr ""
+"JJob Positions нь ажлын байр болон ажлын байрны шаардлагыг тодорхойлоход "
+"ашиглагдана. Ажлын байранд мөн санал асуулга хавсаргаж болно. Энэ санал "
+"асуулгыг энэхүү ажлын байранд орох ажил горилогчийг үнэлэхэд ашиглах "
+"боломжтой."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -844,6 +872,12 @@ msgstr "Харьяалагдсан"
 #~ msgid "Starting date"
 #~ msgstr "Эхлэл огноо"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
 #~ msgid "Thursday"
 #~ msgstr "Пүрэв"
 
@@ -874,9 +908,6 @@ msgstr "Харьяалагдсан"
 #~ msgid "Unmaried"
 #~ msgstr "Гэрлээгүй"
 
-#~ msgid "Divorced"
-#~ msgstr "Салсан"
-
 #~ msgid "Create openerp user"
 #~ msgstr "Openerp хэрэглэгч үүсгэх"
 
@@ -906,3 +937,12 @@ msgstr "Харьяалагдсан"
 
 #~ msgid "All Employees"
 #~ msgstr "Бүх ажилчид"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Моделийн нэр алдаатай тодорхойлсон байна."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Харагдацын архитектурын xml алдаатай !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"

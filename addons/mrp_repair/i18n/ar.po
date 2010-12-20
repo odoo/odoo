@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2009-02-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -47,8 +47,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:mrp.repair:0
+msgid "Recreate Invoice"
 msgstr ""
 
 #. module: mrp_repair
@@ -212,12 +212,17 @@ msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
+msgid "Repairs order"
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Repairs order"
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allows you to organize your reparations on the products. On a "
+"repair order, you can detail the components you remove, add or replace and "
+"record the time you spent on the different operations. The repair order uses "
+"the warranty date on the production lot in order to know if you have to "
+"invoice the reparation to the customer or not."
 msgstr ""
 
 #. module: mrp_repair
@@ -229,11 +234,6 @@ msgstr ""
 #: field:mrp.repair,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
 msgstr ""
 
 #. module: mrp_repair
@@ -290,11 +290,6 @@ msgid "Total :"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Reference"
-msgstr ""
-
-#. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
@@ -316,11 +311,6 @@ msgstr ""
 #: code:addons/mrp_repair/wizard/cancel_repair.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: mrp_repair
@@ -419,8 +409,8 @@ msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
 msgstr ""
 
 #. module: mrp_repair
@@ -429,9 +419,8 @@ msgid "Repair Order"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
 msgstr ""
 
 #. module: mrp_repair

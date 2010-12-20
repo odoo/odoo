@@ -7,37 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-01 09:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_synchro
 #: model:ir.actions.act_window,name:base_synchro.action_view_base_synchro
 msgid "Base Synchronization"
 msgstr ""
-
-#. module: base_synchro
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: base_synchro
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Felaktigt namn för modell i händelsedefinitionen."
-
-#. module: base_synchro
-#: field:base.synchro,user_id:0
-msgid "Send Result To"
-msgstr "Skicka resultat till"
 
 #. module: base_synchro
 #: field:base.synchro.server,server_db:0
@@ -56,19 +39,14 @@ msgid "Field Name"
 msgstr "Fältnamn"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Namnet på modulen måste vara unikt!"
-
-#. module: base_synchro
 #: field:base.synchro.obj,synchronize_date:0
 msgid "Latest Synchronization"
 msgstr "Senaste synkroniseringen"
 
 #. module: base_synchro
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fel! Ni kan inte skapa rekursiva menyer"
+#: field:base.synchro,user_id:0
+msgid "Send Result To"
+msgstr "Skicka resultat till"
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj_avoid
@@ -81,9 +59,9 @@ msgid "_Close"
 msgstr "_Stäng"
 
 #. module: base_synchro
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Certifikat ID för modulen måste vara unik!"
+#: view:base.synchro:0
+msgid "Transfer Data To Server"
+msgstr ""
 
 #. module: base_synchro
 #: model:ir.model,name:base_synchro.model_base_synchro_obj
@@ -155,11 +133,6 @@ msgstr "Fält som inte blev synkroniserade"
 #: selection:base.synchro.obj,action:0
 msgid "Both"
 msgstr "Både"
-
-#. module: base_synchro
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
 
 #. module: base_synchro
 #: field:base.synchro.obj,name:0
@@ -310,12 +283,22 @@ msgstr ""
 msgid "Server URL"
 msgstr ""
 
-#. module: base_synchro
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Namnet på modulen måste vara unikt!"
 
-#. module: base_synchro
-#: view:base.synchro:0
-msgid "Transfer Data To Server"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Felaktigt namn för modell i händelsedefinitionen."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Certifikat ID för modulen måste vara unik!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Felaktig XML för Vyarkitektur!"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-02 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-03 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -25,11 +25,6 @@ msgstr "Tijdregistratie"
 #: view:hr.attendance:0
 msgid "Group By..."
 msgstr "Groepeer op..."
-
-#. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -72,11 +67,9 @@ msgid "The sign-out date must be in the past"
 msgstr "De uitklokdatum moet in het verleden liggen"
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Inklokken"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Dagtekening"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -114,6 +107,12 @@ msgstr "Ok"
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
 msgstr "Aanwezigheidsreden definieren"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
@@ -179,20 +178,10 @@ msgid "Max. Delay (Min)"
 msgstr "Maximale vertraging (min)"
 
 #. module: hr_attendance
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
-
-#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 msgid "Print"
 msgstr "Afdrukken"
-
-#. module: hr_attendance
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -221,11 +210,6 @@ msgstr "Overzicht aanwezigheidsfoutmeldingen"
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
 msgstr "Startdatum"
-
-#. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -315,11 +299,6 @@ msgid "hr.sign.out.ask"
 msgstr "hr.sign.out.ask"
 
 #. module: hr_attendance
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "August"
 msgstr "Augustus"
@@ -356,6 +335,11 @@ msgid "November"
 msgstr "November"
 
 #. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "October"
 msgstr "Oktober"
@@ -371,9 +355,11 @@ msgid "January"
 msgstr "Januari"
 
 #. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Dagtekening"
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign in"
+msgstr "Inklokken"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -410,12 +396,6 @@ msgstr ""
 "invoeren met deze actieknop."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
-#, python-format
-msgid "No records found for your selection!"
-msgstr "Geen gegevens gevonden voor uw selectie !"
-
-#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr "Afdrukken weekaanwezigheid overzicht"
@@ -427,29 +407,12 @@ msgid "Empoyee ID"
 msgstr "Medewerker ID"
 
 #. module: hr_attendance
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
-
-#. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Annuleren"
-
-#. module: hr_attendance
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#. module: hr_attendance
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -586,9 +549,10 @@ msgstr ""
 "Onder deze vertraging wordt de fout verondersteld vrijwillig te zijn."
 
 #. module: hr_attendance
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
+msgstr "Geen gegevens gevonden voor uw selectie !"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -609,6 +573,11 @@ msgstr "Jaar"
 msgid "hr.sign.in.out.ask"
 msgstr "hr.sign.in.out.ask"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
 #~ msgid "Action reason"
 #~ msgstr "Actiereden"
 
@@ -621,8 +590,14 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "You are now ready to sign in or out of the attendance follow up"
 #~ msgstr "U bent nu klaar om in- of uit te klokken"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid "Select a time span"
 #~ msgstr "Kies een tijdspanne"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #~ msgid "Print Timesheet by week"
 #~ msgstr "Druk urenstaat per week af"
@@ -658,3 +633,21 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Select a month"
 #~ msgstr "Kies een maand"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

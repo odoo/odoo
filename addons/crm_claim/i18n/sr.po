@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-03 08:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: crm_claim
-#: field:crm.claim,planned_revenue:0
-msgid "Planned Revenue"
-msgstr "Planirani Prihod"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -34,9 +29,14 @@ msgid "Group By..."
 msgstr "Grupisano po"
 
 #. module: crm_claim
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcije"
+#: view:crm.claim:0
+msgid "Responsibilities"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,date_action_next:0
+msgid "Next Action Date"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -47,6 +47,11 @@ msgstr "Mart"
 #: field:crm.claim.report,delay_close:0
 msgid "Delay to close"
 msgstr "Kasnjenje do Zatvaranja"
+
+#. module: crm_claim
+#: field:crm.claim,resolution:0
+msgid "Resolution"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -66,9 +71,12 @@ msgid "#Claim"
 msgstr "#Zahtev"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Cases"
-msgstr "Slucajevi"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
+msgid ""
+"You can create claim stages to categorize the status of every claim entered "
+"in the system. The stages define all the steps required for the resolution "
+"of a claim."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -97,9 +105,9 @@ msgstr ""
 "nalog za slanje Emailova."
 
 #. module: crm_claim
-#: field:crm.claim,partner_mobile:0
-msgid "Mobile"
-msgstr "Mobilni"
+#: view:crm.claim:0
+msgid "Claim Description"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -123,11 +131,6 @@ msgid "Preventive"
 msgstr "Preventiva"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr ""
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "KOntakt Partnera"
@@ -148,7 +151,7 @@ msgid "Reference"
 msgstr "Referenca"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_next:0
+#: field:crm.claim,action_next:0
 msgid "Next Action"
 msgstr "Sledeca Akcija"
 
@@ -159,8 +162,10 @@ msgstr "Postavi 'U Pripremu'"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Extra Info"
-msgstr "Dodatne Informacije"
+#: field:crm.claim,date_deadline:0
+#: field:crm.claim.report,date_deadline:0
+msgid "Deadline"
+msgstr "Krajnji Rok"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -177,21 +182,19 @@ msgid "Preventive Action"
 msgstr "Preventivna Akcija"
 
 #. module: crm_claim
-#: field:crm.claim,date_closed:0
-#: selection:crm.claim,state:0
-#: selection:crm.claim.report,state:0
-msgid "Closed"
-msgstr "Zatvoreno"
-
-#. module: crm_claim
 #: field:crm.claim.report,section_id:0
 msgid "Section"
 msgstr "Sekcija"
 
 #. module: crm_claim
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za pregled Arhitekture!"
+#: view:crm.claim:0
+msgid "Root Causes"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim,user_fault:0
+msgid "Trouble Responsible"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
@@ -222,11 +225,6 @@ msgid "Email"
 msgstr "Email"
 
 #. module: crm_claim
-#: field:crm.claim,canal_id:0
-msgid "Channel"
-msgstr "Kanal"
-
-#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
@@ -238,11 +236,16 @@ msgid "Creation Date"
 msgstr "Datum Kreiranja"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,date_deadline:0
-#: field:crm.claim.report,date_deadline:0
-msgid "Deadline"
-msgstr "Krajnji Rok"
+#: field:crm.claim,name:0
+msgid "Claim Subject"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
+msgid ""
+"Have a general overview of all claims processed in the system by sorting "
+"them with specific criteria."
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -309,16 +312,6 @@ msgid "CRM Claim Report"
 msgstr "Izvestaj CRM Zahteva"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "References"
-msgstr "Reference"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Status and Categorization"
-msgstr "Status i Kategorizacija"
-
-#. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim1
 msgid "Accepted as Claim"
 msgstr "Prihvaceno kao Zahtev"
@@ -334,9 +327,9 @@ msgid "September"
 msgstr "Septembar"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Communication"
-msgstr "Komunikacija"
+#: selection:crm.claim.report,month:0
+msgid "December"
+msgstr "Decembar"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -361,11 +354,6 @@ msgid "Salesman"
 msgstr "Prodavac"
 
 #. module: crm_claim
-#: field:crm.claim,ref2:0
-msgid "Reference 2"
-msgstr "Referenca 2"
-
-#. module: crm_claim
 #: field:crm.claim,categ_id:0
 #: view:crm.claim.report:0
 #: field:crm.claim.report,categ_id:0
@@ -381,16 +369,6 @@ msgstr "vrednost Zahteva"
 #: view:crm.claim.report:0
 msgid "  Year  "
 msgstr "  Godina  "
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Closure Date"
-msgstr "Datum zatvaranja"
-
-#. module: crm_claim
-#: field:crm.claim,planned_cost:0
-msgid "Planned Costs"
-msgstr "Planirani Troskovi"
 
 #. module: crm_claim
 #: help:crm.claim,email_cc:0
@@ -416,9 +394,11 @@ msgid "Low"
 msgstr "Nizak"
 
 #. module: crm_claim
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+#: field:crm.claim,date_closed:0
+#: selection:crm.claim,state:0
+#: selection:crm.claim.report,state:0
+msgid "Closed"
+msgstr "Zatvoreno"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -465,14 +445,9 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "Čeka se odgovor"
-
-#. module: crm_claim
-#: field:crm.claim,active:0
-msgid "Active"
-msgstr "Aktivan"
+#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
+msgid "Claim Categories"
+msgstr "Kategorije Potrazivanja"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -506,6 +481,7 @@ msgstr "Januar"
 
 #. module: crm_claim
 #: view:crm.claim:0
+#: field:crm.claim,date:0
 msgid "Claim Date"
 msgstr "Datum Zahteva"
 
@@ -513,11 +489,6 @@ msgstr "Datum Zahteva"
 #: help:crm.claim,email_from:0
 msgid "These people will receive email."
 msgstr "Ovi ce ljudi primiti Email"
-
-#. module: crm_claim
-#: field:crm.claim,date:0
-msgid "Date"
-msgstr "Datum"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -555,6 +526,16 @@ msgid "Attachments"
 msgstr "Dodatak"
 
 #. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"Record and track your customers' claims. Claims can be linked to a sales "
+"order or a lot. You can send emails with attachments and get the history of "
+"everything that happened on a specific claim (emails sent, interventions "
+"type and so on..). Claims can be automatically linked to an email address "
+"using the mail gateway module."
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,state:0
 #: view:crm.claim.report:0
@@ -564,19 +545,14 @@ msgstr "Stanje"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Claim Info"
-msgstr "Info Potraživanja"
-
-#. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Zavrseno"
 
 #. module: crm_claim
-#: selection:crm.claim.report,month:0
-msgid "December"
-msgstr "Decembar"
+#: view:crm.claim:0
+msgid "Claim Reporter"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -603,22 +579,10 @@ msgid "In Progress"
 msgstr "U Progresu"
 
 #. module: crm_claim
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"
-
-#. module: crm_claim
 #: view:crm.claim:0
 #: field:crm.claim,user_id:0
 msgid "Responsible"
 msgstr "Odgovoran"
-
-#. module: crm_claim
-#: view:crm.claim:0
-msgid "Date of Claim"
-msgstr "Datum Potrazivanja"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -641,6 +605,11 @@ msgid "Reply"
 msgstr "Odgovori"
 
 #. module: crm_claim
+#: field:crm.claim,cause:0
+msgid "Root Cause"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim/Action Description"
 msgstr "Opis Potrazivanja/Akcije"
@@ -656,9 +625,20 @@ msgid "Search Claims"
 msgstr "Opis"
 
 #. module: crm_claim
+#: field:crm.claim,section_id:0
+#: view:crm.claim.report:0
+msgid "Sales Team"
+msgstr "Prodajni Tim"
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "May"
 msgstr "Maj"
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Resolution Actions"
+msgstr ""
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
@@ -667,23 +647,19 @@ msgid "Report a Claim"
 msgstr "Izvestaj Potrazivanja"
 
 #. module: crm_claim
-#: field:crm.claim,probability:0
-msgid "Probability (%)"
-msgstr "Verovatnoca (%)"
-
-#. module: crm_claim
-#: field:crm.claim,partner_name:0
-msgid "Employee's Name"
-msgstr "Ime Zaposlenog"
-
-#. module: crm_claim
-#: help:crm.claim,canal_id:0
-msgid ""
-"The channels represent the different communication  modes available with the "
-"customer."
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
 msgstr ""
-"Kanal reprezentuje razlicite komunikacione nacine dostupnih za komunikaciju "
-"sa Klijentom"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr ""
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr ""
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -712,11 +688,6 @@ msgid "February"
 msgstr "Februar"
 
 #. module: crm_claim
-#: field:crm.claim,name:0
-msgid "Name"
-msgstr "Ime"
-
-#. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim3
 msgid "Won't fix"
 msgstr "Nece popraviti"
@@ -737,17 +708,22 @@ msgid "ID"
 msgstr "ID"
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Actions"
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "High"
 msgstr "Visoko"
 
 #. module: crm_claim
-#: view:crm.claim:0
-#: field:crm.claim,section_id:0
-#: view:crm.claim.report:0
-msgid "Sales Team"
-msgstr "Prodajni Tim"
+#: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
+msgid ""
+"Create claim categories to better manage and classify your claims. Some "
+"example of claims can be: preventive action, corrective action."
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
@@ -755,17 +731,88 @@ msgid "Create Date"
 msgstr "Datum Kreiranja"
 
 #. module: crm_claim
-#: field:crm.claim,date_action_last:0
-msgid "Last Action"
-msgstr "Poslednja Akcija"
-
-#. module: crm_claim
 #: view:crm.claim.report:0
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Godina"
 
-#. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
-msgid "Claim Categories"
-msgstr "Kategorije Potrazivanja"
+#~ msgid "Cases"
+#~ msgstr "Slucajevi"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Planirani Prihod"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcije"
+
+#~ msgid "Mobile"
+#~ msgstr "Mobilni"
+
+#~ msgid "Extra Info"
+#~ msgstr "Dodatne Informacije"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za pregled Arhitekture!"
+
+#~ msgid "Channel"
+#~ msgstr "Kanal"
+
+#~ msgid "Status and Categorization"
+#~ msgstr "Status i Kategorizacija"
+
+#~ msgid "References"
+#~ msgstr "Reference"
+
+#~ msgid "Communication"
+#~ msgstr "Komunikacija"
+
+#~ msgid "Planned Costs"
+#~ msgstr "Planirani Troskovi"
+
+#~ msgid "Closure Date"
+#~ msgstr "Datum zatvaranja"
+
+#~ msgid "Reference 2"
+#~ msgstr "Referenca 2"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "Active"
+#~ msgstr "Aktivan"
+
+#~ msgid "Awaiting Response"
+#~ msgstr "Čeka se odgovor"
+
+#~ msgid "Date"
+#~ msgstr "Datum"
+
+#~ msgid "Claim Info"
+#~ msgstr "Info Potraživanja"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"
+
+#~ msgid "Date of Claim"
+#~ msgstr "Datum Potrazivanja"
+
+#~ msgid "Probability (%)"
+#~ msgstr "Verovatnoca (%)"
+
+#~ msgid "Employee's Name"
+#~ msgstr "Ime Zaposlenog"
+
+#~ msgid "Name"
+#~ msgstr "Ime"
+
+#~ msgid ""
+#~ "The channels represent the different communication  modes available with the "
+#~ "customer."
+#~ msgstr ""
+#~ "Kanal reprezentuje razlicite komunikacione nacine dostupnih za komunikaciju "
+#~ "sa Klijentom"
+
+#~ msgid "Last Action"
+#~ msgstr "Poslednja Akcija"

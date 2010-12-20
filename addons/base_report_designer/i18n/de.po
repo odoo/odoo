@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 18:19+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
@@ -23,16 +23,9 @@ msgid "base.report.sxw"
 msgstr ""
 
 #. module: base_report_designer
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:base_report_designer.installer:0
+msgid "OpenERP Report Designer Configuration"
 msgstr ""
-"Das Objekt muss mit einem x_ starten und darf keine Sonderzeichen haben!"
-
-#. module: base_report_designer
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: base_report_designer
 #: model:ir.module.module,shortdesc:base_report_designer.module_meta_information
@@ -40,24 +33,21 @@ msgid "Report designer interface module"
 msgstr "Berichts Designer Module"
 
 #. module: base_report_designer
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Quellcode für diese Ansicht !"
+#: view:base_report_designer.installer:0
+msgid ""
+"This plug-in allows you to create/modify OpenERP Reports into OpenOffice "
+"Writer."
+msgstr ""
 
 #. module: base_report_designer
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+#: view:base.report.file.sxw:0
+msgid "Upload the modified report"
+msgstr "Upload Reportmodifikation"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
 msgid "The .SXW report"
 msgstr "Der .SXW Report"
-
-#. module: base_report_designer
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_designer_installer
@@ -90,11 +80,6 @@ msgid "title"
 msgstr ""
 
 #. module: base_report_designer
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
-
-#. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
 #: field:base.report.sxw,report_id:0
 msgid "Report"
@@ -104,11 +89,6 @@ msgstr "Bericht"
 #: model:ir.model,name:base_report_designer.model_base_report_rml_save
 msgid "base.report.rml.save"
 msgstr ""
-
-#. module: base_report_designer
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -127,11 +107,7 @@ msgid "Get a report"
 msgstr "Generiere Report"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid "Upload the modified report"
-msgstr "Upload Reportmodifikation"
-
-#. module: base_report_designer
+#: view:base_report_designer.installer:0
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_wizard
 msgid "OpenERP Report Designer"
 msgstr "OpenERP Report Designer"
@@ -217,11 +193,6 @@ msgid "OpenObject Report Designer Plug-in"
 msgstr "OpenObject Report Designer Plug-in"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr ""
-
-#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
 msgstr "OpenERP Report Designer Installation"
@@ -234,9 +205,9 @@ msgid "Cancel"
 msgstr "Abbruch"
 
 #. module: base_report_designer
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr ""
 
 #. module: base_report_designer
 #: view:base.report.sxw:0
@@ -289,3 +260,29 @@ msgstr "Wählen Sie Ihren Report"
 #~ ".SXW Datei und öffnen diesen mit OpenOffice. Vergessen Sie nicht das OpenERP "
 #~ "OpenOffice Paket zu installieren. Nach der Änderung verwenden Sie diesen "
 #~ "Assistenten um den Bericht in OpenERP zu laden."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ starten und darf keine Sonderzeichen haben!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Quellcode für diese Ansicht !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

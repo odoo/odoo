@@ -7,25 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-08-03 03:12+0000\n"
 "Last-Translator: Bundo <bundo@bundo.biz>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_no_autopicking
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
-
-#. module: stock_no_autopicking
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -39,16 +33,24 @@ msgid "Auto Picking"
 msgstr "자동 피킹"
 
 #. module: stock_no_autopicking
-#: model:ir.model,name:stock_no_autopicking.model_product_product
-msgid "Product"
-msgstr ""
-
-#. module: stock_no_autopicking
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
 msgstr "생산 주문의 원자재를 위한 자동 피킹"
 
 #. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: stock_no_autopicking
 #: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
 msgid "Stock No Auto-Picking"
 msgstr "재고 - 자동 피킹 없음"
+
+#. module: stock_no_autopicking
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"

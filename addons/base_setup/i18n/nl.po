@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
-"PO-Revision-Date: 2010-11-20 07:53+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-18 09:57+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-21 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,16 +22,9 @@ msgid "City"
 msgstr "Woonplaats"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Installeren"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -39,19 +32,14 @@ msgid "Invoicing"
 msgstr "Facturatie"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Bedrijfsnaam"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Personeel"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
 msgstr "E-mail"
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
@@ -183,6 +171,15 @@ msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+"Uw bedrijfsinformatie wordt gebruikt voor het personaliseren van OpenERP "
+"documenten zoals facturen, verkooporders en nog veel meer."
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "titel"
@@ -191,11 +188,6 @@ msgstr "titel"
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr "Kennisbeheer"
-
-#. module: base_setup
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "De modulenaam moet uniek zijn !"
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -216,14 +208,9 @@ msgstr ""
 "genereren, etc..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
-"Helpt u het meeste te halen uit uw kassa's met snelle codering, eenvoudige "
-"betaalmethode codering, automatische piklijst generatie en meer."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Bedrijfsnaam"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -249,14 +236,9 @@ msgstr ""
 "van de boekhoud module voor managers die geen boekhouders zijn."
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Personeel"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -328,6 +310,16 @@ msgstr ""
 "en tussen uw medewerkers."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+"Selecteer de applicaties waar uw systeem in moet voorzien. Als u nu niet "
+"zeker bent van uw behoeftes, kunt u ze later eenvoudig installeren."
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr "Bedrijf configuratie"
@@ -336,6 +328,16 @@ msgstr "Bedrijf configuratie"
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Helpt u het meeste te halen uit uw kassa's met snelle codering, eenvoudige "
+"betaalmethode codering, automatische piklijst generatie en meer."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -460,9 +462,9 @@ msgid "Street"
 msgstr "Adres"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
-msgstr "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
+msgstr "Uw bedrijfsinformatie configureren"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
@@ -470,6 +472,7 @@ msgid "Example: http://openerp.com"
 msgstr "Voorbeeld: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr "Installeer applicaties"
@@ -513,11 +516,6 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
 msgstr "base.setup.config"
-
-#. module: base_setup
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -577,9 +575,6 @@ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 #~ msgid "Summary"
 #~ msgstr "Samenvatting"
 
-#~ msgid "Install"
-#~ msgstr "Installeren"
-
 #~ msgid "Installation Done"
 #~ msgstr "Installatie Gereed"
 
@@ -591,3 +586,23 @@ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
 #~ msgid "Previous"
 #~ msgstr "Vorige"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

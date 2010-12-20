@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 15:00+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,16 +36,9 @@ msgid "Partner Category"
 msgstr "Partner Kategorie"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modulbezeichnung für diese Aktion"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Aktiviere Feld, wenn diese Regel eine EMail an den Benutzer senden soll."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Email Kopie an Empfänger"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -164,11 +157,6 @@ msgid "Special Keywords to Be Used in The Body"
 msgstr "Schlüsselwörter zur Benutzung im Haupttext"
 
 #. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
@@ -177,11 +165,6 @@ msgstr "Status"
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
 msgstr "Email Adressen der Empfänger"
-
-#. module: base_action_rule
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -269,11 +252,6 @@ msgid "Delay type"
 msgstr "Typ Zeitverzug"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode bei dieser Ansicht"
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -323,11 +301,6 @@ msgid ""
 msgstr ""
 "Benutze Python Ausdruck zur Spezifizierung des richtigen Datenfeldes für das "
 "'Von' Feld im Emailkopf."
-
-#. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -414,26 +387,19 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Objekt Beschreibung"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "EMail Aktion"
 
 #. module: base_action_rule
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "EMail Information"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben!"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -466,9 +432,11 @@ msgid "Mail body"
 msgstr "EMail Haupttext"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Email Kopie an Empfänger"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Aktiviere Feld, wenn diese Regel eine EMail an den Benutzer senden soll."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -558,3 +526,26 @@ msgstr "Bedingungen zu Status"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Auslösetermin"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode bei dieser Ansicht"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modulbezeichnung für diese Aktion"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

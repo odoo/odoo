@@ -45,7 +45,7 @@ class survey(osv.osv):
     _description = 'Survey'
     _rec_name = 'title'
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         data = super(survey, self).default_get(cr, uid, fields, context)
         return data
 
@@ -93,7 +93,7 @@ class survey(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel' })
         return True
         
-    def copy(self, cr, uid, ids, default=None, context={}):
+    def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         title = current_rec.get('title') + ' (Copy)'
@@ -110,7 +110,7 @@ class survey(osv.osv):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for print survey form.
         """
-        if not context:
+        if context is None:
             context = {}
         datas = {}
         if 'response_id' in context:
@@ -176,7 +176,9 @@ class survey_page(osv.osv):
         'sequence': lambda * a: 1
     }
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
         data = super(survey_page, self).default_get(cr, uid, fields, context)
         if context.get('line_order',False):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
@@ -185,7 +187,9 @@ class survey_page(osv.osv):
             data['survey_id'] = context['survey_id']
         return data
 
-    def survey_save(self, cr, uid, ids, context):
+    def survey_save(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -200,7 +204,7 @@ class survey_page(osv.osv):
             'context': context
         }
 
-    def copy(self, cr, uid, ids, default=None, context={}):
+    def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         title = current_rec.get('title') + ' (Copy)'
@@ -215,7 +219,7 @@ class survey_question(osv.osv):
     _rec_name = 'question'
     _order = 'sequence'
 
-    def _calc_response(self, cr, uid, ids, field_name, arg, context):
+    def _calc_response(self, cr, uid, ids, field_name, arg, context=None):
         if len(ids) == 0:
             return {}
         val = {}
@@ -446,7 +450,7 @@ class survey_question(osv.osv):
 
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context):
+    def create(self, cr, uid, vals, context=None):
         minimum_ans = 0
         maximum_ans = 0
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
@@ -482,7 +486,9 @@ class survey_question(osv.osv):
         res = super(survey_question, self).create(cr, uid, vals, context)
         return res
 
-    def survey_save(self, cr, uid, ids, context):
+    def survey_save(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -497,7 +503,9 @@ class survey_question(osv.osv):
             'context': context
         }
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
         if context.get('line_order',False):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
@@ -515,11 +523,15 @@ class survey_question_column_heading(osv.osv):
     _description = 'Survey Question Column Heading'
     _rec_name = 'title'
 
-    def _get_in_visible_rating_weight(self,cr, uid, context={}):
+    def _get_in_visible_rating_weight(self,cr, uid, context=None):
+        if context is None:
+            context = {}
         if context.get('in_visible_rating_weight', False):
             return context['in_visible_rating_weight']
         return False
-    def _get_in_visible_menu_choice(self,cr, uid, context={}):
+    def _get_in_visible_menu_choice(self,cr, uid, context=None):
+        if context is None:
+            context = {}
         if context.get('in_visible_menu_choice', False):
             return context['in_visible_menu_choice']
         return False
@@ -544,9 +556,9 @@ class survey_answer(osv.osv):
     _rec_name = 'answer'
     _order = 'sequence'
 
-    def _calc_response_avg(self, cr, uid, ids, field_name, arg, context):
+    def _calc_response_avg(self, cr, uid, ids, field_name, arg, context=None):
         val = {}
-        for rec in self.browse(cr, uid, ids, context):
+        for rec in self.browse(cr, uid, ids, context=context):
             cr.execute("select count(question_id) ,(select count(answer_id) \
                 from survey_response_answer sra, survey_response_line sa \
                 where sra.response_id = sa.id and sra.answer_id = %d \
@@ -564,7 +576,9 @@ class survey_answer(osv.osv):
             }
         return val
 
-    def _get_in_visible_answer_type(self,cr, uid, context={}):
+    def _get_in_visible_answer_type(self,cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('in_visible_answer_type', False)
 
     _columns = {
@@ -585,7 +599,9 @@ class survey_answer(osv.osv):
          'in_visible_answer_type':_get_in_visible_answer_type,
     }
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
         if context.get('line_order', False):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
@@ -615,14 +631,14 @@ class survey_response(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['user_id','date_create'], context)
+        reads = self.read(cr, uid, ids, ['user_id','date_create'], context=context)
         res = []
         for record in reads:
             name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
 
 survey_response()
@@ -723,7 +739,7 @@ class survey_request(osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         if user_id:
             user_obj = self.pool.get('res.users')
-            user = user_obj.browse(cr, uid, user_id)
+            user = user_obj.browse(cr, uid, user_id, context=context)
             return {'value': {'email': user.address_id.email}}
         return {}
 
