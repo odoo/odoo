@@ -33,28 +33,28 @@
             <field name="type">make_to_stock</field>
         </record>
 
-        <assert id="test_order_1" model="sale.order" severity="error" string="The amount of the sale order is correctly computed">
+        <assert id="test_order_1" model="sale.order" severity="error" string="The amount of the sales order is correctly computed">
             <test expr="sum([l.price_subtotal for l in order_line]) == amount_untaxed"/>
         </assert>
 
         <workflow action="order_confirm" model="sale.order" ref="test_order_1"/>
 
-        <assert id="test_order_1" model="sale.order" string="the sale order is now in 'Manual in progress' state">
+        <assert id="test_order_1" model="sale.order" string="the sales order is now in 'Manual in progress' state">
             <test expr="state">manual</test>
         </assert>
 
         <workflow action="manual_invoice" model="sale.order" ref="test_order_1" uid="base.user_root"/>
 
-        <assert id="test_order_1" model="sale.order" string="the sale order is now in progress">
+        <assert id="test_order_1" model="sale.order" string="the sales order is now in progress">
             <test expr="state">progress</test>
         </assert>
 
         <!-- Treat generated invoice -->
-        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sale order has now a corresponding invoice">
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order has now a corresponding invoice">
             <test expr="len(invoice_ids) == 1"/>
         </assert>
 
-        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sale order's has the same amount and is currently a draft">
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's has the same amount and is currently a draft">
             <test expr="invoice_ids[0].amount_untaxed == amount_untaxed"/>
             <test expr="invoice_ids[0].amount_total == amount_total"/>
             <test expr="invoice_ids[0].state">draft</test>
@@ -75,16 +75,16 @@
             <value eval="ref('account.bank_journal')"/>
         </function>
 
-        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sale order's invoice is now paid">
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's invoice is now paid">
             <test expr="invoice_ids[0].state">paid</test>
         </assert>
 
         <!-- Treat generated picking -->
-        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sale order has now a correspending picking">
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order has now a correspending picking">
             <test expr="len(picking_ids) == 1"/>
         </assert>
 
-        <assert id="test_order_1" model="sale.order" severity="error" string="the sale order's picking will be sent to the good address and is already confirmed">
+        <assert id="test_order_1" model="sale.order" severity="error" string="the sales order's picking will be sent to the good address and is already confirmed">
             <test expr="picking_ids[0].address_id == partner_shipping_id"/>
             <!-- test expr="picking_ids[0].state">confirmed</test # Desactivated because of MRP_JIT -->
         </assert>
@@ -94,7 +94,7 @@
             <value eval="[obj(ref('test_order_1')).picking_ids[0].id]" model="sale.order"/>
         </function>
 
-        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sale order's picking is now assigned">
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's picking is now assigned">
             <test expr="picking_ids[0].state">assigned</test>
         </assert>
 
@@ -107,14 +107,14 @@
             <value eval="obj(ref('test_order_1')).picking_ids[0].id" model="sale.order"/>
         </workflow>
 
-        <assert id="test_order_1" model="sale.order" string="the sale order's picking is now done">
+        <assert id="test_order_1" model="sale.order" string="the sales order's picking is now done">
             <test expr="picking_ids[0].state">done</test>
         </assert>
 
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
 
-        <assert id="test_order_1" model="sale.order" string="the sale order is now done">
+        <assert id="test_order_1" model="sale.order" string="the sales order is now done">
             <test expr="state">done</test>
         </assert>
     </data>

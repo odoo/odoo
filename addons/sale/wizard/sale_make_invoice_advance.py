@@ -23,7 +23,7 @@ from tools.translate import _
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
-    _description = "Sale Advance Payment Invoice"
+    _description = "Sales Advance Payment Invoice"
     _columns = {
         'product_id': fields.many2one('product.product', 'Advance Product', required=True,
             help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
@@ -61,7 +61,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 if sale.order_policy == 'postpaid':
                     raise osv.except_osv(
                         _('Error'),
-                        _("You cannot make an advance on a sale order \
+                        _("You cannot make an advance on a sales order \
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
                         uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
@@ -136,7 +136,7 @@ sale_advance_payment_inv()
 
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
-    _description = "Sale Open Invoice"
+    _description = "Sales Open Invoice"
 
     def open_invoice(self, cr, uid, ids, context=None):
 

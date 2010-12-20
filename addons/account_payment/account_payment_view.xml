@@ -39,7 +39,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="6"/>
+        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
 
         <record id="view_payment_mode_search" model="ir.ui.view">
             <field name="name">payment.mode.search</field>
@@ -88,7 +88,7 @@
             <field name="name">Payment Mode</field>
             <field name="res_model">payment.mode</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
 
