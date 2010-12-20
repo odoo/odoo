@@ -1940,10 +1940,10 @@ class stock_move(osv.osv):
         journal_id = accounts['stock_journal']
 
         if acc_dest == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Variant account on category of this product is same.'))
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Variant account on category of this product are same.'))
 
         if acc_src == acc_variation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Variant account on category of this product is same.'))
+            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Variant account on category of this product are same.'))
 
         if not acc_src:
             raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
@@ -2462,7 +2462,7 @@ class stock_inventory(osv.osv):
         return self.pool.get('stock.move').create(cr, uid, move_vals)
 
     def action_done(self, cr, uid, ids, context=None):
-        """ Finished the inventory
+        """ Finish the inventory
         @return: True
         """
 
