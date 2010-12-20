@@ -567,7 +567,7 @@ class orm_template(object):
                 r = row
                 i = 0
                 while i < len(f):
-                    if f[i] == 'db_id':
+                    if f[i] == '.id':
                         r = r['id']
                     elif f[i] == 'id':
                         model_data = self.pool.get('ir.model.data')
@@ -583,17 +583,16 @@ class orm_template(object):
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        if not context.get('import_comp', False):# Allow external name only if its not import compatible
-                            cols = False
-                            if f[i] in self._columns.keys():
-                                cols = self._columns[f[i]]
-                            elif f[i] in self._inherit_fields.keys():
-                                cols = selection_field(self._inherits)
-                            if cols and cols._type == 'selection':
-                                sel_list = cols.selection
-                                if r and type(sel_list) == type([]):
-                                    r = [x[1] for x in sel_list if r==x[0]]
-                                    r = r and r[0] or False
+                        cols = False
+                        if f[i] in self._columns.keys():
+                            cols = self._columns[f[i]]
+                        elif f[i] in self._inherit_fields.keys():
+                            cols = selection_field(self._inherits)
+                        if cols and cols._type == 'selection':
+                            sel_list = cols.selection
+                            if r and type(sel_list) == type([]):
+                                r = [x[1] for x in sel_list if r==x[0]]
+                                r = r and r[0] or False
                     if not r:
                         if f[i] in self._columns:
                             r = check_type(self._columns[f[i]]._type)
@@ -647,7 +646,7 @@ class orm_template(object):
         :param uid: current user id
         :param ids: list of ids
         :param fields_to_export: list of fields
-        :param context: context arguments, like lang, time zone, may contain import_comp(default: False) to make exported data compatible with import_data()
+        :param context: context arguments, like lang, time zone
         :rtype: dictionary with a *datas* matrix
 
         This method is used when exporting data via client menu
@@ -655,28 +654,17 @@ class orm_template(object):
         """
         if context is None:
             context = {}
-        imp_comp = context.get('import_comp', False)
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        fields_to_export = map(lambda x: x.split('/'), fields_to_export)
+        def fsplit(x):
+            if x=='.id': return [x]
+            return x.replace(':id','/id').replace('.id','/.id').split('/')
+        fields_to_export = map(fsplit, fields_to_export)
         fields_export = fields_to_export + []
         warning = ''
         warning_fields = []
-        for field in fields_export:
-            if imp_comp and len(field) > 1:
-                warning_fields.append('/'.join(map(lambda x: x in cols and cols[x].string or x,field)))
-            elif len (field) <= 1:
-                if imp_comp and cols.get(field and field[0], False):
-                    if ((isinstance(cols[field[0]], fields.function) and not cols[field[0]].store) \
-                                     or isinstance(cols[field[0]], fields.related)\
-                                     or isinstance(cols[field[0]], fields.one2many)):
-                        warning_fields.append('/'.join(map(lambda x: x in cols and cols[x].string or x,field)))
         datas = []
-        if imp_comp and len(warning_fields):
-            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' % ('\n'.join(warning_fields))
-            cr.rollback()
-            return {'warning': warning}
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
         return {'datas': datas}
@@ -687,7 +675,6 @@ class orm_template(object):
 
         :param cr: database cursor
         :param uid: current user id
-        :param ids: list of ids
         :param fields: list of fields
         :param data: data to import
         :param mode: 'init' or 'update' for record creation
@@ -705,6 +692,11 @@ class orm_template(object):
         fields = map(lambda x: x.split('/'), fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
+
+
+
+
+
 
         def _check_db_id(self, model_name, db_id):
             obj_model = self.pool.get(model_name)
@@ -737,14 +729,14 @@ class orm_template(object):
                 if prefix and not prefix[0] in field:
                     continue
 
-                if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
-                        # Database ID
+                if (len(field)==len(prefix)+1) and field[len(prefix)].endswith('.id') and (field[len(prefix)]<>'.id'):
+                    # Database ID
                     res = False
                     if line[i]:
-                        field_name = field[0].split(':')[0]
+                        field_name = field[0].split('.')[0]
                         model_rel = fields_def[field_name]['relation']
 
-                        if fields_def[field[len(prefix)][:-6]]['type'] == 'many2many':
+                        if fields_def[field[len(prefix)][:-3]]['type'] == 'many2many':
                             res_id = []
                             for db_id in line[i].split(config.get('csv_internal_sep')):
                                 try:
@@ -756,14 +748,14 @@ class orm_template(object):
                                               tools.exception_to_unicode(e))
                             if len(res_id):
                                 res = [(6, 0, res_id)]
-                            else:
-                                try:
-                                    _check_db_id(self, model_rel, line[i])
-                                    res = line[i]
-                                except Exception, e:
-                                    warning += [tools.exception_to_unicode(e)]
-                                    logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                              tools.exception_to_unicode(e))
+                        else:
+                            try:
+                                _check_db_id(self, model_rel, line[i])
+                                res = line[i]
+                            except Exception, e:
+                                warning += [tools.exception_to_unicode(e)]
+                                logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                          tools.exception_to_unicode(e))
                         row[field_name] = res or False
                         continue
 
@@ -825,9 +817,10 @@ class orm_template(object):
                             warning += [_("Id is not the same than existing one: %s") % (is_db_id)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                     _("Id is not the same than existing one: %s") % (is_db_id))
+                        data_res_id = db_id
                         continue
 
-                    if field[len(prefix)] == "db_id":
+                    if field[len(prefix)] == ".id":
                         # Database ID
                         try:
                             _check_db_id(self, model_name, line[i])
@@ -926,7 +919,7 @@ class orm_template(object):
                 warning = warning + w2
                 reduce(lambda x, y: x and y, newrow)
                 row[field] = newrow and (reduce(lambda x, y: x or y, newrow.values()) and \
-                        [(0, 0, newrow)]) or []
+                        [(data_res_id2 and 1 or 0, data_res_id2 or 0, newrow)]) or []
                 i = max2
                 while (position+i) < len(datas):
                     ok = True
@@ -941,7 +934,7 @@ class orm_template(object):
                             self, datas, prefix+[field], current_module, relation_obj._name, newfd, position+i)
                     warning = warning + w2
                     if newrow and reduce(lambda x, y: x or y, newrow.values()):
-                        row[field].append((0, 0, newrow))
+                        row[field].append((data_res_id2 and 1 or 0, data_res_id2 or 0, newrow))
                     i += max2
                     nbrmax = max(nbrmax, i)
 
