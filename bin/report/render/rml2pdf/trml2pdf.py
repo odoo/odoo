@@ -256,8 +256,7 @@ class _rml_doc(object):
         from reportlab.pdfbase.ttfonts import TTFont
 
         if fontname not in pdfmetrics._fonts:
-            pdfmetrics.registerFont(TTFont(name, fname ))
-        pdfmetrics.registerFont(TTFont(fontname, filename ))
+            pdfmetrics.registerFont(TTFont(fontname, filename ))
         if (mode == 'all'):
             addMapping(face, 0, 0, fontname)    #normal
             addMapping(face, 0, 1, fontname)    #italic
