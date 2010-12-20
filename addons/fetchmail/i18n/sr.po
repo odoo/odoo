@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-10-17 07:58+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -26,11 +33,6 @@ msgstr "Potvrđeno"
 #: view:email.server:0
 msgid "Confirm"
 msgstr ""
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
-msgstr "Odgovori na Email"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -75,9 +77,11 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr "Prioritet Servera"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -110,9 +114,9 @@ msgid "Waiting for Verification"
 msgstr "Cekanje na Potvrdu"
 
 #. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
-msgstr ""
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Lozinka"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -200,11 +204,6 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP Server"
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr "Lozinka"
-
-#. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
 msgstr ""
@@ -278,6 +277,16 @@ msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr "Vaznost izmedju 0 i 10,  izaberi i definisi redosled Procesuiranja"
 
 #. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Prioritet Servera"
+
+#. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
@@ -298,6 +307,9 @@ msgstr "Hvata Emailove"
 
 #~ msgid "IMAP Servers"
 #~ msgstr "IMAP Serveri"
+
+#~ msgid "Reply Email"
+#~ msgstr "Odgovori na Email"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Greska! Ne mozete kreirati rekursivni meni."

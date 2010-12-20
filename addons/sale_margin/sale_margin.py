@@ -76,16 +76,16 @@ class stock_picking(osv.osv):
         'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type', '=', 'out_invoice')]),
     }
 
-    def create_invoice(self, cr, uid, ids, *args):
+    def action_invoice_create(self, cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None):
         # need to carify with new requirement
         invoice_ids = []
-        margin_deduce = 0.0
         picking_obj = self.pool.get('stock.picking')
-        picking_obj.write(cr, uid, ids, {'invoice_state': '2binvoiced'})
-        res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
+        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None)
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
-        return True
+        return res
 
 stock_picking()
 

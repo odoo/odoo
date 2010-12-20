@@ -7,22 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-01 09:44+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-17 16:24+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: knowledge
-#: help:knowledge.installer,wiki_faq:0
-msgid ""
-"Creates a skeleton internal FAQ pre-filled with documentation about "
-"OpenERP's Document Management System."
-msgstr ""
+#: model:ir.ui.menu,name:knowledge.menu_document
+msgid "Knowledge"
+msgstr "Баримт"
+
+#. module: knowledge
+#: help:knowledge.installer,wiki_quality_manual:0
+msgid "Creates an example skeleton for a standard quality manual."
+msgstr "Стандарт чанарын зааварчилгаа бүхий  загвар жишээ үүсгэнэ."
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Share information within the company with these specific Addons."
+msgstr "Энэхүү тодорхой Addons ээр компани дотроо мэдээллийг хуваалцах"
+
+#. module: knowledge
+#: field:knowledge.installer,document_ftp:0
+msgid "Shared Repositories (FTP)"
+msgstr "Дундын агуулах  (FTP)"
+
+#. module: knowledge
+#: model:ir.module.module,shortdesc:knowledge.module_meta_information
+msgid "Knowledge Management System"
+msgstr "Баримтын удирдлагын систем"
+
+#. module: knowledge
+#: field:knowledge.installer,wiki:0
+msgid "Collaborative Content (Wiki)"
+msgstr "Хамтарсан агуулга (Вики)"
 
 #. module: knowledge
 #: help:knowledge.installer,document_ftp:0
@@ -30,6 +53,8 @@ msgid ""
 "Provides an FTP access to your OpenERP's Document Management System. It lets "
 "you access attachments and virtual documents through a standard FTP client."
 msgstr ""
+"OpenERP-н Баримтын удирдлагын систем рүү FTP хандалт гаргана. Стандарт файл "
+"браузер ашиглан хавсралт, FTP клиентрүү хандах боломжтой. болно."
 
 #. module: knowledge
 #: help:knowledge.installer,document_webdav:0
@@ -38,75 +63,13 @@ msgid ""
 "you access attachments and virtual documents through your standard file "
 "browser."
 msgstr ""
+"OpenERP-н Баримтын удирдлагын систем рүү WebDAV хандалт гаргана. Стандарт "
+"файл браузер ашиглан хавсралт, баримтууд руу хандах боломжтой болно."
 
 #. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr "Хамтарсан агуулга (Вики)"
-
-#. module: knowledge
-#: help:knowledge.installer,wiki_quality_manual:0
-msgid "Creates an example skeleton for a standard quality manual."
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_quality_manual:0
-msgid "Quality Manual"
-msgstr "Чанартай удирдлага"
-
-#. module: knowledge
-#: field:knowledge.installer,config_logo:0
-msgid "Image"
-msgstr "Зураг"
-
-#. module: knowledge
-#: field:knowledge.installer,wiki_faq:0
-msgid "Internal FAQ"
-msgstr "Дотоод түгээмэл тавигддаг асуултууд(ТТА)"
-
-#. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
-msgid "Knowledge Application Configuration"
-msgstr ""
-
-#. module: knowledge
-#: model:ir.module.module,shortdesc:knowledge.module_meta_information
-msgid "Knowledge Management System"
-msgstr "Баримтын удирдлагын систем"
-
-#. module: knowledge
-#: model:ir.module.module,description:knowledge.module_meta_information
-msgid ""
-"Installer for knowledge-based tools\n"
-"    "
-msgstr ""
-"Мэдлэг-суурьтай багажуудын суулгагч\n"
-"    "
-
-#. module: knowledge
-#: model:ir.model,name:knowledge.model_knowledge_installer
-msgid "knowledge.installer"
-msgstr "Баримт суулгагч"
-
-#. module: knowledge
-#: field:knowledge.installer,document_webdav:0
-msgid "Shared Repositories (WebDAV)"
-msgstr "Дундын хадгалах газар (WebDAV)"
-
-#. module: knowledge
-#: field:knowledge.installer,document_ftp:0
-msgid "Shared Repositories (FTP)"
-msgstr "Дундын хадгалах газар (FTP)"
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr "Баримт"
-
-#. module: knowledge
-#: field:knowledge.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Тохиргооны явц"
+#: view:knowledge.installer:0
+msgid "Configure"
+msgstr "Тохируулах"
 
 #. module: knowledge
 #: view:knowledge.installer:0
@@ -114,9 +77,68 @@ msgid "title"
 msgstr "гарчиг"
 
 #. module: knowledge
+#: model:ir.module.module,description:knowledge.module_meta_information
+msgid ""
+"Installer for knowledge-based tools\n"
+"    "
+msgstr ""
+"Мэдлэгийн багажуудад зориулсан суулгагч\n"
+"    "
+
+#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
 msgid "Configuration"
 msgstr "Тохиргоо"
+
+#. module: knowledge
+#: field:knowledge.installer,wiki_quality_manual:0
+msgid "Quality Manual"
+msgstr "Чанарын зааварчилгаа"
+
+#. module: knowledge
+#: field:knowledge.installer,document_webdav:0
+msgid "Shared Repositories (WebDAV)"
+msgstr "Дундын агуулах (WebDAV)"
+
+#. module: knowledge
+#: field:knowledge.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Тохиргооны явц"
+
+#. module: knowledge
+#: help:knowledge.installer,wiki_faq:0
+msgid ""
+"Creates a skeleton internal FAQ pre-filled with documentation about "
+"OpenERP's Document Management System."
+msgstr ""
+"OpenERP-н Баримтын удирдлагын системийн тухай мэдээлэл бүхий дотоод ТТА "
+"хуудас үүсгэнэ."
+
+#. module: knowledge
+#: field:knowledge.installer,wiki_faq:0
+msgid "Internal FAQ"
+msgstr "Дотоод түгээмэл тавигддаг асуултууд(ТТА)"
+
+#. module: knowledge
+#: field:knowledge.installer,config_logo:0
+msgid "Image"
+msgstr "Зураг"
+
+#. module: knowledge
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+#: view:knowledge.installer:0
+msgid "Knowledge Application Configuration"
+msgstr "Баримтын програмын тохиргоо"
+
+#. module: knowledge
+#: model:ir.model,name:knowledge.model_knowledge_installer
+msgid "knowledge.installer"
+msgstr "knowledge.installer"
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Configure Your Knowledge Application"
+msgstr "Мэдлэгийн Аппликэшнийг Тохируулах"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki:0
@@ -141,17 +163,5 @@ msgstr "Агуулгын загвар"
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Үйлдэлийн тодорхойлолтод буруу моделийн нэр заасан байна."
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Модулийн сертификат ID давхцах ёсгүй !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Модулийн нэр давхцах ёсгүй !"
