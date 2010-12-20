@@ -1338,13 +1338,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         weekstring = ''
         monthstring = ''
         yearstring = ''
-        freq=''
-        if freq == 'None':
+        freq=datas.get('rrule_type')
+        if  freq == 'none':
             return ''
-        if datas.get('rrule_type')=='daily_working':
-            freq ='weekly'
-        else:
-            freq=datas.get('rrule_type')    
+            
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         if freq == 'weekly':
