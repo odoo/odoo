@@ -214,7 +214,6 @@ class procurement_order(osv.osv):
         report = []
         offset = 0
         ids = [1]
-        newdate = datetime.today()
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
         while ids:
