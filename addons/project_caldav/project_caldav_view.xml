@@ -66,7 +66,8 @@
             <field name="arch" type="xml">
                 <field name="progress" position="after">
                     <field name="recurrency"/>      
-                    <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"/>
+                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
+                                on_change="onchange_edit_all(rrule_type,edit_all)"/>                    
                 </field>
             </field>
         </record>
@@ -84,25 +85,25 @@
 	                    </group>
 	                    <newline/>
 	                    <group col="4" colspan="6" name="rrule">
-	                        <separator string="Custom Recurrency Rule" colspan="8"/>
+	                        <separator string="Recurrency Rule" colspan="8"/>
 	                        <group col="6" colspan="4">
-		                        <field name="freq" />
-                                <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
-                                <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
+                                <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="end_date" attrs="{'invisible': [('readonly','!=',False)]}"/>
 	                        </group>
 	                        <group col="14" colspan="4" name="Select weekdays" 
-	                                attrs="{'invisible': [('freq','!=','weekly')]}">
+	                                attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
 		                        <field name="mo" colspan="1" />
 		                        <field name="tu" colspan="1" />
 		                        <field name="we" colspan="1" />
 		                        <field name="th" colspan="1" />
 		                        <newline/>
 		                        <field name="fr" colspan="1" />
-		                        <field name="sa" colspan="1" />
-		                        <field name="su" colspan="1" />
+		                        <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+		                        <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
 		                        <newline />
 	                        </group>
-	                        <group col="10" colspan="4" attrs="{'invisible': [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+	                        <group col="10" colspan="4" attrs="{'invisible': [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
 	                            <group col="2" colspan="1">
 	                            <field name="select1" />
 	                            </group>
@@ -113,8 +114,8 @@
 	                            <field name="byday" string="The" attrs="{'required' : [('select1','=','day')]}" />
 	                            <field name="week_list" nolabel="1" attrs="{'required' : [('select1','=','day')]}" />
 	                            </group>
-	                            <group col="1" colspan="1" attrs="{'invisible' : [('freq','!=','yearly')]}">
-	                            <field name="month_list" string="of" colspan="1" attrs="{'required' : [('freq','=','yearly')]}" />
+	                            <group col="1" colspan="1" attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
+	                            <field name="month_list" string="of" colspan="1" attrs="{'required' : [('rrule_type','=','yearly')]}" />
 	                            </group>
 	                        </group>
 	                    </group>

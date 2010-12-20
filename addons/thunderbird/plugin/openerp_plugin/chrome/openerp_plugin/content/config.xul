@@ -4,7 +4,7 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.register();myPrefObserver.webregister();"  unload="myPrefObserver.unregister()" height="410" width="900">
+	title="&title.label;" onload="myPrefObserver.register();myPrefObserver.webregister();"  unload="myPrefObserver.unregister()" height="430" width="900">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -88,7 +88,7 @@
                         <button id="btobjectdelete" label="&documentdelete.label;" oncommand="deleteDocument();" image="&imagecancel.value;"/>
 					</hbox>
 					
-					<listbox id="listObjectListBox" flex="1" rows="10">
+					<listbox id="listObjectListBox" flex="1" rows="12">
 				        <listhead>
 						<listheader label="Title"/>
 				        	<listheader label="&listDocumentListBox.header;"/>
@@ -110,20 +110,24 @@
     <tabpanel id="abouttab">
 		<groupbox id="gpAbout" width="770" align="center">
 			<caption label="&gpAbout.label;"/>
-			<image src="chrome://openerp_plugin/skin/developped_by.png" sizemode="stretch" align="center"/>
+			<description>&openerp.paresent;</description>
+			<image src="chrome://openerp_plugin/skin/logo.png" sizemode="stretch" align="center"/>
+
 			<description> </description>
 			<description> </description>
 			<description>&develop.value;</description>
+			<image src="chrome://openerp_plugin/skin/developped_by.png" sizemode="stretch" align="center"/>
 			<description> </description>
 			<description> </description>
 			<description>&information.value;</description>
 			<description><html:a href="&openerp.value;">&openerp.value;</html:a></description>
+			
 			<description><html:a href="&axelor.value;">&axelor.value;</html:a></description>
 			<description><html:a href="&tinyerp.value;">&tinyerp.value;</html:a></description>
 			<description> </description>
 			<description> </description>
 			<description>Copyright © 2006-TODAY OpenERP SA All Rights Reserved.</description>
-			<description>OpenERP is a trademark of the OpenERP SA Company. OpenERP Web is jointly developed by OpenERP SA and Axelor.</description>
+			<description>OpenERP is a trademark of the OpenERP SA Company. OpenERP Web is jointly developed by OpenERP SA &amp; Axelor.</description>
 			<description>Licenced under the terms of <html:a href="https://tiny.odoo.com/LICENSE.txt"> OpenERP Public License (OEPL) v1.1 (https://tiny.odoo.com/LICENSE.txt)</html:a> </description>
 		</groupbox>
     </tabpanel>

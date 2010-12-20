@@ -43,7 +43,7 @@
                     <field name="location" />
                     <field name="alarm_id" string="Reminder"
                         widget="selection" />
-                    <group colspan="2" col="4">
+                    <group colspan="2" col="4" >
                            <field name="recurrency"/>      
                            <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
                                 on_change="onchange_edit_all(rrule_type,edit_all)"/>
@@ -80,14 +80,11 @@
                     <separator colspan="4"/>
                     <group col="8" colspan="4" groups="base.group_extended">
                         <field name="state" />
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open" type="object"
-                            icon="gtk-cancel" />
                         <button name="case_close" string="Done"
                             states="open" type="object"
                             icon="gtk-jump-to" />
                         <button name="case_reset" string="Reset to Unconfirmed"
-                            states="open,done,cancel" type="object"
+                            states="open,done" type="object"
                             icon="gtk-convert" />
                         <button name="case_open" string="Confirm"
                             states="draft" type="object"
@@ -176,25 +173,24 @@
 	                            <label string="" colspan="2"/>
 	                        </group>
 		                    <separator string="Recurrency Rule" colspan="8"/>
-		                    <group col="6" colspan="4">
-		                        <field name="freq" />
-		                        <field name="interval" string="Repeat Times" attrs="{'invisible': [('end_date','!=',False)]}"/>
-		                        <field name="end_date" attrs="{'invisible': [('interval','!=',False)]}"/>
+		                   <group col="6" colspan="4">
+		                        <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
+		                        <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+		                        <field name="end_date" attrs="{'readonly': [('interval','!=',False)]}"/>
 		                    </group>
-		                    <group col="14" colspan="4" name="Select weekdays"
-		                        attrs="{'invisible' : [('freq','!=','weekly')]}">
+		                    <group col="14" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
 		                        <field name="mo" colspan="1" />
 		                        <field name="tu" colspan="1" />
 		                        <field name="we" colspan="1" />
 		                        <field name="th" colspan="1" />
 		                        <newline/>
 		                        <field name="fr" colspan="1" />
-		                        <field name="sa" colspan="1" />
-		                        <field name="su" colspan="1" />
+		                        <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+		                        <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
 		                        <newline />
 		                    </group>
 		                    <group col="10" colspan="4"
-		                        attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+		                        attrs="{'invisible' : [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
 		                        <group col="2" colspan="1">
 		                            <field name="select1" />
 		                        </group>
@@ -211,13 +207,14 @@
 		                                attrs="{'required' : [('select1','=','day')]}" />
 		                        </group>
 		                        <group col="1" colspan="1"
-		                            attrs="{'invisible' : [('freq','!=','yearly')]}">
+		                            attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
 		                            <field name="month_list" string="of"
 		                                colspan="1"
-		                                attrs="{'required' : [('freq','=','yearly')]}" />
+		                                attrs="{'required' : [('rrule_type','=','yearly')]}" />
 		                        </group>
 		                    </group>
 		                </group>
+
 	                </page>
                 </notebook>
             </form>
@@ -243,11 +240,8 @@
                 <field name="state" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="show_as" invisible="1" string="Show time as"/>
-                <button name="case_cancel" string="Cancel"
-                   states="draft,open" type="object"
-                   icon="gtk-cancel" />
                 <button name="case_reset" string="Reset to Unconfirmed"
-                   states="open,done,cancel" type="object"
+                   states="open,done" type="object"
                    icon="gtk-convert" />
                 <button name="case_open" string="Confirm"
                    states="draft" type="object"

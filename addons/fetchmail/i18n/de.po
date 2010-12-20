@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 15:28+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,8 +14,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -26,11 +33,6 @@ msgstr "Bestätigt"
 #: view:email.server:0
 msgid "Confirm"
 msgstr "Bestätigen"
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
-msgstr "Antwort EMail"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -75,9 +77,11 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr "Priorität Server"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -110,9 +114,9 @@ msgid "Waiting for Verification"
 msgstr "Warte auf Verifizierung"
 
 #. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
-msgstr "OpenObject Modell. Erstellt einen Datensatz von diesem Modell."
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Passwort"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -200,11 +204,6 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP Server"
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr "Passwort"
-
-#. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
 msgstr ""
@@ -280,6 +279,16 @@ msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr "Priorität 0 bis 10, wähle entsprechende Reihenfolge"
 
 #. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Priorität Server"
+
+#. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
@@ -301,6 +310,9 @@ msgstr "Abholen Emails"
 
 #~ msgid "IMAP Servers"
 #~ msgstr "IMAP Server"
+
+#~ msgid "Reply Email"
+#~ msgstr "Antwort EMail"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
@@ -328,6 +340,9 @@ msgstr "Abholen Emails"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "OpenObject Model. Generates a record of this model."
+#~ msgstr "OpenObject Modell. Erstellt einen Datensatz von diesem Modell."
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

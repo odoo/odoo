@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-11-27 08:01+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -356,6 +356,12 @@ msgid ""
 msgstr ""
 "Permite schimbarea semnului sumei soldului tipărit în rapoarte, astfel încât "
 "veţi vedea sume pozitive în loc de sume negative în conturile de cheltuieli."
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1259,11 +1265,6 @@ msgid "Overdue Payments"
 msgstr "Plăţi restante"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Eroare: referinţa BVR este obligatorie."
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2049,6 +2050,14 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -3018,7 +3027,10 @@ msgid "Purchase"
 msgstr "Cumpărare"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3491,18 +3503,13 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Tip cont"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"Termenul de plată al furnizorul nu are definite scadenţe (calculate) !"
 
 #. module: account
 #: view:account.state.open:0
@@ -3734,13 +3741,18 @@ msgid "Shortcut"
 msgstr "Scurtătură"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"Termenul de plată al furnizorul nu are definite scadenţe (calculate) !"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Tip cont"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4048,10 +4060,13 @@ msgid "Analytic Account Statistics"
 msgstr "Statistici conturi analitice"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
 msgstr ""
+"Vor fi configurate automat planul de conturi, conturile de bancă, taxele şi "
+"jurnalele conform modelului ales"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4136,6 +4151,16 @@ msgid ""
 msgstr ""
 "Verificaţi preţul de pe factură !\n"
 "Totalul specificat este diferit de totalul calculat."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Avertizare"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5686,6 +5711,11 @@ msgid "Default Credit Account"
 msgstr "Cont credit implicit"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr ""
@@ -5872,6 +5902,11 @@ msgid "Centralisation"
 msgstr "Centralizare"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6025,6 +6060,12 @@ msgstr "Înregistrarea \"%s\" nu este validă !"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr ""
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6576,11 +6617,6 @@ msgstr "OK"
 #: code:addons/account/report/account_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -7306,6 +7342,11 @@ msgid "Invoice's state is Open"
 msgstr ""
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -7865,11 +7906,6 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Eroare: Număr BVR invalid (suma de control eronată)."
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr ""
@@ -8049,6 +8085,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Stimate domnule/doamnă,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9109,14 +9150,9 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Avertizare"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -10088,6 +10124,9 @@ msgstr ""
 #~ msgid "Untaxed amount"
 #~ msgstr "Suma fără taxe"
 
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Eroare: Număr BVR invalid (suma de control eronată)."
+
 #~ msgid "No Filter"
 #~ msgstr "Fără filtre"
 
@@ -10475,13 +10514,6 @@ msgstr ""
 #~ msgid "Filter on Partners"
 #~ msgstr "Filtru după partener"
 
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Vor fi configurate automat planul de conturi, conturile de bancă, taxele şi "
-#~ "jurnalele conform modelului ales"
-
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Codare înregistrări după mişcare"
 
@@ -10718,6 +10750,9 @@ msgstr ""
 
 #~ msgid "Overdue Payment Message"
 #~ msgstr "Mesaj plată restantă"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Eroare: referinţa BVR este obligatorie."
 
 #~ msgid ""
 #~ "This type is used to differenciate types with special effects in Open ERP: "
