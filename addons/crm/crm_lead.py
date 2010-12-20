@@ -151,18 +151,6 @@ class crm_lead(crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
     
-    def _get_stage_id(self, cr, uid, context=None):
-        """Finds type of stage according to object.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-        if context is None:
-            context = {}
-        type = context and context.get('stage_type', '')
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
-        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -173,8 +161,10 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        'stage_id': _get_stage_id,
+        #'stage_id': _get_stage_id,
     }
+    
+    
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
@@ -198,27 +188,30 @@ class crm_lead(crm_case, osv.osv):
         @param ids: List of case's Ids
         @param *args: Give Tuple Value
         """
-        old_state = self.read(cr, uid, ids, ['state'])[0]['state']
-        old_stage_id = self.read(cr, uid, ids, ['stage_id'])[0]['stage_id']
+        leads = self.browse(cr, uid, ids)
+        
+        
+        
+        for i in xrange(0, len(ids)): 
+            if leads[i].state == 'draft':
+                value = {}
+                if not leads[i].stage_id :
+                    stage_id = self._find_first_stage(cr, uid, leads[i].type, leads[i].section_id.id or False)
+                    value.update({'stage_id' : stage_id})
+                value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+                self.write(cr, uid, [ids[i]], value)
+            self.log_open( cr, uid, leads[i])
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
-        if old_state == 'draft':
-            value = {}
-            if not old_stage_id:
-                stage_id = super(crm_lead, self).stage_next(cr, uid, ids, *args)
-                if stage_id:
-                    value.update(self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value'])
-            value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, ids, value)
-
-        for case in self.browse(cr, uid, ids):
-            if case.type == 'lead':
-                message = _("The lead '%s' has been opened.") % case.name
-            elif case.type == 'opportunity':
-                message = _("The opportunity '%s' has been opened.") % case.name
-            else:
-                message = _("The case '%s' has been opened.") % case.name
-            self.log(cr, uid, case.id, message)
         return res
+        
+    def log_open(self, cr, uid, case):
+        if case.type == 'lead':
+            message = _("The lead '%s' has been opened.") % case.name
+        elif case.type == 'opportunity':
+            message = _("The opportunity '%s' has been opened.") % case.name
+        else:
+            message = _("The case '%s' has been opened.") % case.name
+        self.log(cr, uid, case.id, message)
 
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting close date
@@ -228,7 +221,7 @@ class crm_lead(crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_lead, self).case_close(cr, uid, ids, args)
+        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for case in self.browse(cr, uid, ids):
             if case.type == 'lead':
@@ -399,7 +392,6 @@ class crm_lead(crm_case, osv.osv):
             if case.state in CRM_LEAD_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
-
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):

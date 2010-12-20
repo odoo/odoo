@@ -53,6 +53,28 @@ class crm_opportunity(osv.osv):
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
      }
     
+    def _case_close_generic(self, cr, uid, ids, find_stage, *args):
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, *args)
+        for case in self.browse(cr, uid, ids):
+            #if the case is not an opportunity close won't change the stage
+            if not case.type == 'opportunity':
+                return res
+                
+            value = {}
+            stage_id = find_stage(cr, uid, 'opportunity', case.section_id.id or False)
+            if stage_id:
+                stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+                value.update({'stage_id': stage_id})
+                if stage_obj.on_change:
+                    value.update({'probability': stage_obj.probability})
+                
+            #Done un crm.case
+            #value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+            
+
+            self.write(cr, uid, ids, value)
+        return res
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -61,16 +83,8 @@ class crm_opportunity(osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead5')
-        stage_id = data_obj.browse(cr, uid, data_id).res_id
-        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
-        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id}
-        if stage_obj.on_change:
-            value.update({'probability': stage_obj.probability})
-
-        self.write(cr, uid, ids, value)
+        res = self._case_close_generic(cr, uid, ids, self._find_won_stage, *args)
+        
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
@@ -86,16 +100,8 @@ class crm_opportunity(osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'stage_lead6')
-        stage_id = data_obj.browse(cr, uid, data_id).res_id
-        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
-        value = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id}
-        if stage_obj.on_change:
-            value.update({'probability': stage_obj.probability})
-
-        self.write(cr, uid, ids, value)
+        res = self._case_close_generic(cr, uid, ids, self._find_lost_stage, *args)
+        
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
@@ -137,7 +143,7 @@ class crm_opportunity(osv.osv):
         @param *args: Give Tuple Value
         """
         res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        
         return res
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
