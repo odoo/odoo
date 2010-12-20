@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-15 01:41+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-15 21:40+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
@@ -279,11 +279,6 @@ msgid "Unreconcile"
 msgstr "Storno Ausgleich"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Steuer"
@@ -375,11 +370,6 @@ msgid "Date:"
 msgstr "Datum:"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Directly"
-msgstr "Buche Einzahlung sofort"
-
-#. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
@@ -414,9 +404,9 @@ msgid "Supplier Voucher"
 msgstr "Buchen von Ausgaben"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Zahlungsbuchungen"
 
 #. module: account_voucher
 #: report:voucher.cash_receipt.drcr:0
@@ -482,9 +472,9 @@ msgid "Paid Amount"
 msgstr "Einzahlung"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Expense Lines"
-msgstr "Aufwandspositionen"
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Buche Einzahlung sofort"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,line_ids:0
@@ -603,10 +593,9 @@ msgid "Extended Filters..."
 msgstr "Erweiterter Filter..."
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Number:"
-msgstr "Nummer:"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_voucher
 #: field:account.bank.statement.line,amount_reconciled:0
@@ -614,14 +603,19 @@ msgid "Amount reconciled"
 msgstr "Betrag Ausgeglichen"
 
 #. module: account_voucher
-#: field:account.voucher,comment:0
-msgid "Comment"
-msgstr ""
+#: view:account.voucher:0
+msgid "Expense Lines"
+msgstr "Aufwandspositionen"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
 msgstr "Vorherige Zahlungen?"
+
+#. module: account_voucher
+#: field:account.voucher,comment:0
+msgid "Comment"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
@@ -673,9 +667,10 @@ msgid "Bill Date"
 msgstr "Rechnungsdatum"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
+#: report:voucher.cash_receipt.drcr:0
+#: report:voucher.print:0
+msgid "Number:"
+msgstr "Nummer:"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -901,11 +896,6 @@ msgstr ""
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
 msgstr "Nettobetrag"
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
-msgid "Vouchers Entries"
-msgstr "Zahlungsbuchungen"
 
 #. module: account_voucher
 #: view:account.voucher:0

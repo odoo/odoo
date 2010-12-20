@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-14 21:35+0000\n"
-"Last-Translator: Christophe (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 17:24+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -39,6 +39,11 @@ msgstr "天"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "取消订单"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -289,11 +294,6 @@ msgid "All Quotations"
 msgstr "所有报价单"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "业务员"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr ""
@@ -431,9 +431,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "采购价格表"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -533,6 +533,11 @@ msgstr "报价单/订单"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "明细#"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -828,13 +833,10 @@ msgid "Sale Order Line"
 msgstr "销售订单明细"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "创建发票"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "单价"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -892,6 +894,8 @@ msgstr "价格"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -934,11 +938,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "销售价格表"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1303,10 +1302,13 @@ msgid "Sales"
 msgstr "销售"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "单价"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "创建发票"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1694,6 +1696,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1739,6 +1746,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1805,11 +1813,6 @@ msgid "Sales Orders"
 msgstr "销售订单"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "付款条件"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1842,6 +1845,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1980,6 +1988,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "付款条件"
@@ -2109,6 +2118,9 @@ msgstr "发票基于送货单"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "已更正发票"
+
+#~ msgid "Payment Terms"
+#~ msgstr "付款条件"
 
 #~ msgid "Status"
 #~ msgstr "状态"
@@ -2255,8 +2267,14 @@ msgstr "发票基于送货单"
 #~ msgid "Packing Policy"
 #~ msgstr "包装方式"
 
+#~ msgid "Our Salesman"
+#~ msgstr "业务员"
+
 #~ msgid "One procurement for each product."
 #~ msgstr "每个产品的产品需求"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "销售价格表"
 
 #~ msgid ""
 #~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
@@ -2338,6 +2356,9 @@ msgstr "发票基于送货单"
 
 #~ msgid "Make invoices"
 #~ msgstr "建立发票"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "采购价格表"
 
 #~ msgid "New Quotation"
 #~ msgstr "新报价单"

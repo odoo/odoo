@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-14 21:02+0000\n"
-"Last-Translator: Christophe (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-15 21:51+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -376,6 +376,12 @@ msgstr ""
 "Staat u toe om het teken van het balansbedrag te wijzigen in overzichten, "
 "zodat er positieve bedragen onstaan in plaats van negatieve- in "
 "kostenrekeningen."
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1280,11 +1286,6 @@ msgid "Overdue Payments"
 msgstr "Betalingsherinnering"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Fout: Referentie omzetbelasting is verplicht."
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2090,6 +2091,14 @@ msgstr ""
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
 msgstr "Rekeningschema sjablonen zoeken"
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
+msgstr ""
 
 #. module: account
 #: view:account.account.type:0
@@ -3061,7 +3070,10 @@ msgid "Purchase"
 msgstr "Koop in"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3538,18 +3550,14 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Rekeningsoort"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"De betalingstermijn van de leverancier heeft geen betalingstermijn-regels "
+"(berekening) gedefinieerd!"
 
 #. module: account
 #: view:account.state.open:0
@@ -3781,14 +3789,18 @@ msgid "Shortcut"
 msgstr "Afkorting"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"De betalingstermijn van de leverancier heeft geen betalingstermijn-regels "
-"(berekening) gedefinieerd!"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Rekeningsoort"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4096,10 +4108,13 @@ msgid "Analytic Account Statistics"
 msgstr "Analytische rekening statistieken"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
 msgstr ""
+"Dit zal uw grootboek rekeningschema, bankrekeningen, belastingen en "
+"dagboeken automatisch instellen volgens de gekozen sjabloon"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4184,6 +4199,16 @@ msgid ""
 msgstr ""
 "Controleer het bedrag op de factuur !\n"
 "Het reële totaal komt niet overeen met het berekende totaal."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Waarschuwing"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5726,6 +5751,11 @@ msgid "Default Credit Account"
 msgstr "Std. grootboekkaart credit"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr ""
@@ -5912,6 +5942,11 @@ msgid "Centralisation"
 msgstr "Centralisatie"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6067,6 +6102,12 @@ msgstr "Invoer \"%s\" is ongeldig !"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr ""
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6620,11 +6661,6 @@ msgstr "Akkoord"
 #: code:addons/account/report/account_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -7353,6 +7389,11 @@ msgid "Invoice's state is Open"
 msgstr ""
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -7914,11 +7955,6 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Fout: ongeldig nummer omzetbelasting (verkeerd controlegetal)"
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr ""
@@ -8098,6 +8134,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Geachte heer/mevrouw"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9161,14 +9202,9 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Waarschuwing"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -10387,13 +10423,6 @@ msgstr "U kunt geen rekening met boekingen verwijderen! "
 #~ msgid "Modify Invoice"
 #~ msgstr "Factuur bewerken"
 
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Dit zal uw grootboek rekeningschema, bankrekeningen, belastingen en "
-#~ "dagboeken automatisch instellen volgens de gekozen sjabloon"
-
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Boekingen maken per journaalpost"
 
@@ -10761,6 +10790,9 @@ msgstr "U kunt geen rekening met boekingen verwijderen! "
 #~ msgid "Journal de frais"
 #~ msgstr "Onkostendagboek"
 
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Fout: Referentie omzetbelasting is verplicht."
+
 #~ msgid ""
 #~ "This account will be used to value outgoing stock for the current product "
 #~ "category"
@@ -10816,6 +10848,9 @@ msgstr "U kunt geen rekening met boekingen verwijderen! "
 #~ msgstr ""
 #~ "Vink dit aan om ook de boekingen af te drukken. Standaard wordt alleen "
 #~ "gesaldeerd."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Fout: ongeldig nummer omzetbelasting (verkeerd controlegetal)"
 
 #~ msgid "Debit Trans."
 #~ msgstr "Debetboekingen"

@@ -6,25 +6,245 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-09 08:07+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base_contact
+#: field:res.partner.contact,title:0
+msgid "Title"
+msgstr "Título"
+
+#. module: base_contact
+#: view:res.partner.address:0
+msgid "# of Contacts"
+msgstr "Num. de Contatos"
+
+#. module: base_contact
+#: field:res.partner.job,fax:0
+msgid "Fax"
+msgstr "Fax"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "title"
+msgstr "título"
+
+#. module: base_contact
+#: help:res.partner.job,date_start:0
+msgid "Start date of job(Joining Date)"
+msgstr "Data de Início do Trabalho (Unindo Datas)"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
+msgstr ""
+
+#. module: base_contact
+#: help:res.partner.job,function:0
+msgid "Function of this contact with this partner"
+msgstr "A função deste contato com este parceiro"
+
+#. module: base_contact
+#: help:res.partner.job,state:0
+msgid "Status of Address"
+msgstr "Situação do Endereço"
+
+#. module: base_contact
+#: help:res.partner.job,name:0
+msgid ""
+"You may                     enter Address first,Partner will be linked "
+"automatically if any."
+msgstr ""
+"Você pode informar endereços primeiro, Os parceiros serão vinculados "
+"automaticamente se existir algum."
+
+#. module: base_contact
+#: help:res.partner.job,fax:0
+msgid "Job FAX no."
+msgstr "FAX"
+
+#. module: base_contact
+#: field:res.partner.contact,mobile:0
+msgid "Mobile"
+msgstr "Celular"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,comment:0
+msgid "Notes"
+msgstr "Notas"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_contacts0
+msgid "People you work with."
+msgstr "As pessoas com quem trabalha."
+
+#. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
+msgid "Define functions and address."
+msgstr "Definir Funções e Endereços"
+
+#. module: base_contact
+#: help:res.partner.job,date_stop:0
+msgid "Last date of job"
+msgstr "Último dia de Trabalho"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+#: field:base.contact.installer,migrate:0
+msgid "Migrate"
+msgstr "Migrar"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.job,name:0
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_function0
+msgid "Jobs at a same partner address."
+msgstr "Trabalhos em um mesmo endereço de parceiro."
+
+#. module: base_contact
+#: model:process.node,name:base_contact.process_node_partners0
+msgid "Partners"
+msgstr "Parceiros"
+
+#. module: base_contact
+#: field:res.partner.job,state:0
+msgid "State"
+msgstr "Estado"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+"Se o campo ativo é definido como falso, isso permitirá que você ocultar o "
+"contato do parceiro sem removê-lo."
+
+#. module: base_contact
+#: model:ir.module.module,shortdesc:base_contact.module_meta_information
+#: model:process.process,name:base_contact.process_process_basecontactprocess0
+msgid "Base Contact"
+msgstr "Contato Base"
+
+#. module: base_contact
+#: field:res.partner.job,date_stop:0
+msgid "Date Stop"
+msgstr "Data de Parada"
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
+msgid "Contact's Jobs"
+msgstr "Trabalhos do Contato"
+
+#. module: base_contact
+#: view:res.partner:0
+msgid "Categories"
+msgstr "Categorias"
+
+#. module: base_contact
+#: help:res.partner.job,sequence_partner:0
+msgid ""
+"Order of importance                 of this job title in the list of job "
+"title of the linked partner"
+msgstr ""
+"Ordem de importância deste título de trabalho na lista de títulos de "
+"trabalho do parceiro vinculado"
+
+#. module: base_contact
+#: field:res.partner.job,extension:0
+msgid "Extension"
+msgstr "Extensão"
+
+#. module: base_contact
+#: help:res.partner.job,extension:0
+msgid "Internal/External extension phone number"
+msgstr "Numero do Ramal Interno/Externo"
+
+#. module: base_contact
+#: help:res.partner.job,phone:0
+msgid "Job Phone no."
+msgstr "Nro do telefone do trabalho"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+#: field:res.partner.contact,job_ids:0
+msgid "Functions and Addresses"
+msgstr "Funções e Endereços"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_contact
+#: field:res.partner.job,contact_id:0
+msgid "Contact"
+msgstr "Contato"
+
+#. module: base_contact
+#: help:res.partner.job,email:0
+msgid "Job E-Mail"
+msgstr "E-Mail do trabalho"
+
+#. module: base_contact
+#: field:res.partner.job,sequence_partner:0
+msgid "Partner Seq."
+msgstr "Seq. Parceiro"
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
+msgid "Function to address"
+msgstr "Função de Tratar"
+
+#. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progresso da configuração"
+
+#. module: base_contact
+#: field:res.partner.contact,name:0
+msgid "Last Name"
+msgstr "Sobrenome"
+
+#. module: base_contact
+#: view:res.partner:0
+#: view:res.partner.contact:0
+msgid "Communication"
+msgstr "Comunicação"
+
+#. module: base_contact
+#: field:base.contact.installer,config_logo:0
+#: field:res.partner.contact,photo:0
+msgid "Image"
+msgstr "Imagem"
+
+#. module: base_contact
+#: selection:res.partner.job,state:0
+msgid "Past"
+msgstr "Passado"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_res_partner_address
+msgid "Partner Addresses"
+msgstr "Endereços do parceiro"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
 msgid "Contact Seq."
 msgstr "Seq. Contato"
-
-#. module: base_contact
-#: help:base.contact.installer,migrate:0
-msgid "If you select this, all addresses will be migrated."
-msgstr "Se você selecionar isso, todos os endereços serão migrados."
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -42,9 +262,135 @@ msgid "Contacts"
 msgstr "Contatos"
 
 #. module: base_contact
-#: field:res.partner.job,sequence_partner:0
-msgid "Partner Seq."
-msgstr "Seq. Parceiro"
+#: view:base.contact.installer:0
+msgid ""
+"Due to changes in Address and Partner's relation, some of the details from "
+"address are needed to be migrated into contact information."
+msgstr ""
+"Devido a alterações nos Endereços e relacionamentos de Parceiros, alguns "
+"detalhes dos endereços precisam ser migrados para as informações do contato."
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_addresses0
+msgid "Working and private addresses."
+msgstr "Endereços de trabalho e privado."
+
+#. module: base_contact
+#: help:res.partner.job,address_id:0
+msgid "Address which is linked to the Partner"
+msgstr "Endereço que está vinculado ao Parceiro"
+
+#. module: base_contact
+#: field:res.partner.job,function:0
+msgid "Partner Function"
+msgstr "Função do parceiro"
+
+#. module: base_contact
+#: help:res.partner.job,other:0
+msgid "Additional phone field"
+msgstr "Campo de Telefone adicional"
+
+#. module: base_contact
+#: field:res.partner.contact,website:0
+msgid "Website"
+msgstr "Página da Web"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Otherwise these details will not be visible from address/contact."
+msgstr ""
+"Caso contrário estes detalhes de endereço/contato não estarão visíveis."
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,email:0
+#: field:res.partner.job,email:0
+msgid "E-Mail"
+msgstr "E-mail"
+
+#. module: base_contact
+#: model:ir.model,name:base_contact.model_base_contact_installer
+msgid "base.contact.installer"
+msgstr "base.contact.installer"
+
+#. module: base_contact
+#: view:res.partner.job:0
+msgid "Contact Functions"
+msgstr "Funções do Contato"
+
+#. module: base_contact
+#: field:res.partner.job,phone:0
+msgid "Phone"
+msgstr "Telefone"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Do you want to migrate your Address data in Contact Data?"
+msgstr "Você deseja migrar seus dados de endereço para os dados do contato?"
+
+#. module: base_contact
+#: field:res.partner.contact,active:0
+msgid "Active"
+msgstr "Ativo"
+
+#. module: base_contact
+#: field:res.partner.contact,function:0
+msgid "Main Function"
+msgstr "Função Principal"
+
+#. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
+msgid "Define partners and their addresses."
+msgstr "Definir Parceiros e seus Endereços"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Seq."
+msgstr "Seq."
+
+#. module: base_contact
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
+msgstr "Idioma"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Extra Information"
+msgstr "Informação Extra"
+
+#. module: base_contact
+#: model:process.node,note:base_contact.process_node_partners0
+msgid "Companies you work with."
+msgstr "Empresas com as quais você trabalha."
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Partner Contact"
+msgstr "Contato do Parceiro"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "General"
+msgstr "Geral"
+
+#. module: base_contact
+#: view:res.partner.contact:0
+msgid "Photo"
+msgstr "Foto"
+
+#. module: base_contact
+#: field:res.partner.contact,birthdate:0
+msgid "Birth Date"
+msgstr "Data de Nascimento"
+
+#. module: base_contact
+#: help:base.contact.installer,migrate:0
+msgid "If you select this, all addresses will be migrated."
+msgstr "Se você selecionar isso, todos os endereços serão migrados."
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -67,156 +413,9 @@ msgid "Other"
 msgstr "Outro"
 
 #. module: base_contact
-#: help:res.partner.job,state:0
-msgid "Status of Address"
-msgstr "Situação do Endereço"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_contacttofunction0
-msgid "Contact to function"
-msgstr "Função do Contato"
-
-#. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Função do parceiro"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
-msgid "Partner to address"
-msgstr "Endereço do Parceiro"
-
-#. module: base_contact
-#: view:res.partner.address:0
-msgid "# of Contacts"
-msgstr "Num. de Contatos"
-
-#. module: base_contact
-#: help:res.partner.job,other:0
-msgid "Additional phone field"
-msgstr "Campo de Telefone adicional"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to False,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-"Se o campo ativo é definido como falso, isso permitirá que você ocultar o "
-"contato do parceiro sem removê-lo."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Seq."
-msgstr "Seq."
-
-#. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
 msgstr "Função"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Otherwise these details will not be visible from address/contact."
-msgstr ""
-"Caso contrário estes detalhes de endereço/contato não estarão visíveis."
-
-#. module: base_contact
-#: field:res.partner.job,fax:0
-msgid "Fax"
-msgstr "Fax"
-
-#. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progresso da configuração"
-
-#. module: base_contact
-#: field:res.partner.job,phone:0
-msgid "Phone"
-msgstr "Telefone"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_contacttofunction0
-msgid "Defines contacts and functions."
-msgstr "Definir Contatos e Funções"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_base_contact_installer
-msgid "base.contact.installer"
-msgstr "base.contact.installer"
-
-#. module: base_contact
-#: field:res.partner.contact,title:0
-msgid "Title"
-msgstr "Título"
-
-#. module: base_contact
-#: help:res.partner.job,function:0
-msgid "Function of this contact with this partner"
-msgstr "A função deste contato com este parceiro"
-
-#. module: base_contact
-#: view:res.partner.job:0
-msgid "Contact Functions"
-msgstr "Funções do Contato"
-
-#. module: base_contact
-#: model:ir.module.module,shortdesc:base_contact.module_meta_information
-#: model:process.process,name:base_contact.process_process_basecontactprocess0
-msgid "Base Contact"
-msgstr "Contato Base"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid ""
-"Due to changes in Address and Partner's relation, some of the details from "
-"address are needed to be migrated into contact information."
-msgstr ""
-"Devido a alterações nos Endereços e relacionamentos de Parceiros, alguns "
-"detalhes dos endereços precisam ser migrados para as informações do contato."
-
-#. module: base_contact
-#: field:res.partner.contact,email:0
-#: field:res.partner.job,email:0
-msgid "E-Mail"
-msgstr "E-mail"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr "Você deseja migrar seus dados de endereço para os dados do contato?"
-
-#. module: base_contact
-#: model:process.node,name:base_contact.process_node_partners0
-msgid "Partners"
-msgstr "Parceiros"
-
-#. module: base_contact
-#: field:res.partner.job,date_stop:0
-msgid "Date Stop"
-msgstr "Data de Parada"
-
-#. module: base_contact
-#: view:res.partner:0
-#: field:res.partner.job,address_id:0
-msgid "Address"
-msgstr "Endereço"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_res_partner_job
-msgid "Contact's Jobs"
-msgstr "Trabalhos do Contato"
-
-#. module: base_contact
-#: field:res.partner.contact,country_id:0
-msgid "Nationality"
-msgstr "Nacionalidade"
-
-#. module: base_contact
-#: view:res.partner:0
-msgid "Postal Address"
-msgstr "Endereço Postal"
 
 #. module: base_contact
 #: field:res.partner.address,job_id:0
@@ -225,135 +424,25 @@ msgid "Main Job"
 msgstr "Trabalho Principal"
 
 #. module: base_contact
+#: model:process.transition,note:base_contact.process_transition_contacttofunction0
+msgid "Defines contacts and functions."
+msgstr "Definir Contatos e Funções"
+
+#. module: base_contact
+#: model:process.transition,name:base_contact.process_transition_contacttofunction0
+msgid "Contact to function"
+msgstr "Função do Contato"
+
+#. module: base_contact
 #: view:res.partner:0
-msgid "Categories"
-msgstr "Categorias"
+#: field:res.partner.job,address_id:0
+msgid "Address"
+msgstr "Endereço"
 
 #. module: base_contact
-#: help:res.partner.job,name:0
-msgid ""
-"You may                     enter Address first,Partner will be linked "
-"automatically if any."
-msgstr ""
-"Você pode informar endereços primeiro, Os parceiros serão vinculados "
-"automaticamente se existir algum."
-
-#. module: base_contact
-#: field:res.partner.contact,function:0
-msgid "Main Function"
-msgstr "Função Principal"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_partnertoaddress0
-msgid "Define partners and their addresses."
-msgstr "Definir Parceiros e seus Endereços"
-
-#. module: base_contact
-#: field:base.contact.installer,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: base_contact
-#: field:res.partner.job,extension:0
-msgid "Extension"
-msgstr "Extensão"
-
-#. module: base_contact
-#: field:res.partner.contact,mobile:0
-msgid "Mobile"
-msgstr "Celular"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_contacts0
-msgid "People you work with."
-msgstr "As pessoas com quem trabalha."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.contact,comment:0
-msgid "Notes"
-msgstr "Notas"
-
-#. module: base_contact
-#: help:res.partner.job,extension:0
-msgid "Internal/External extension phone number"
-msgstr "Numero do Ramal Interno/Externo"
-
-#. module: base_contact
-#: help:res.partner.job,sequence_partner:0
-msgid ""
-"Order of importance                 of this job title in the list of job "
-"title of the linked partner"
-msgstr ""
-"Ordem de importância deste título de trabalho na lista de títulos de "
-"trabalho do parceiro vinculado"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Extra Information"
-msgstr "Informação Extra"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.contact,job_ids:0
-msgid "Functions and Addresses"
-msgstr "Funções e Endereços"
-
-#. module: base_contact
-#: field:res.partner.contact,active:0
-msgid "Active"
-msgstr "Ativo"
-
-#. module: base_contact
-#: help:res.partner.job,phone:0
-msgid "Job Phone no."
-msgstr "Nro do telefone do trabalho"
-
-#. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_contact
-#: field:res.partner.job,contact_id:0
-msgid "Contact"
-msgstr "Contato"
-
-#. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
-msgstr "Idioma"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_partners0
-msgid "Companies you work with."
-msgstr "Empresas com as quais você trabalha."
-
-#. module: base_contact
-#: help:res.partner.job,email:0
-msgid "Job E-Mail"
-msgstr "E-Mail do trabalho"
-
-#. module: base_contact
-#: field:res.partner.contact,partner_id:0
-msgid "Main Employer"
-msgstr "Principal Empregador"
-
-#. module: base_contact
-#: model:process.transition,name:base_contact.process_transition_functiontoaddress0
-msgid "Function to address"
-msgstr "Função de Tratar"
-
-#. module: base_contact
-#: help:res.partner.job,date_stop:0
-msgid "Last date of job"
-msgstr "Último dia de Trabalho"
-
-#. module: base_contact
-#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
-msgid "Address Migration"
-msgstr "Migração de Endereço"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Partner Contact"
-msgstr "Contato do Parceiro"
+#: field:res.partner.contact,country_id:0
+msgid "Nationality"
+msgstr "Nacionalidade"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
@@ -361,9 +450,29 @@ msgid "Open Jobs"
 msgstr "Trabalhos Abertos"
 
 #. module: base_contact
-#: model:ir.model,name:base_contact.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Endereços do parceiro"
+#: field:base.contact.installer,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,partner_id:0
+msgid "Main Employer"
+msgstr "Principal Empregador"
+
+#. module: base_contact
+#: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
+msgid "Address Migration"
+msgstr "Migração de Endereço"
+
+#. module: base_contact
+#: view:res.partner:0
+msgid "Postal Address"
+msgstr "Endereço Postal"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
@@ -372,98 +481,14 @@ msgid "Addresses"
 msgstr "Endereços"
 
 #. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
-msgstr "Estado"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_addresses0
-msgid "Working and private addresses."
-msgstr "Endereços de trabalho e privado."
-
-#. module: base_contact
-#: field:res.partner.contact,name:0
-msgid "Last Name"
-msgstr "Sobrenome"
-
-#. module: base_contact
-#: view:res.partner:0
-#: view:res.partner.contact:0
-msgid "Communication"
-msgstr "Comunicação"
-
-#. module: base_contact
-#: field:base.contact.installer,config_logo:0
-#: field:res.partner.contact,photo:0
-msgid "Image"
-msgstr "Imagem"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-msgid "title"
-msgstr "título"
-
-#. module: base_contact
-#: help:res.partner.job,date_start:0
-msgid "Start date of job(Joining Date)"
-msgstr "Data de Início do Trabalho (Unindo Datas)"
-
-#. module: base_contact
-#: help:res.partner.job,address_id:0
-msgid "Address which is linked to the Partner"
-msgstr "Endereço que está vinculado ao Parceiro"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "General"
-msgstr "Geral"
-
-#. module: base_contact
-#: selection:res.partner.job,state:0
-msgid "Past"
-msgstr "Passado"
-
-#. module: base_contact
-#: view:base.contact.installer:0
-#: field:base.contact.installer,migrate:0
-msgid "Migrate"
-msgstr "Migrar"
-
-#. module: base_contact
-#: help:res.partner.job,fax:0
-msgid "Job FAX no."
-msgstr "FAX"
-
-#. module: base_contact
-#: view:res.partner.contact:0
-msgid "Photo"
-msgstr "Foto"
-
-#. module: base_contact
-#: model:process.node,note:base_contact.process_node_function0
-msgid "Jobs at a same partner address."
-msgstr "Trabalhos em um mesmo endereço de parceiro."
-
-#. module: base_contact
-#: view:res.partner.contact:0
-#: field:res.partner.job,name:0
-msgid "Partner"
-msgstr "Parceiro"
+#: model:process.transition,name:base_contact.process_transition_partnertoaddress0
+msgid "Partner to address"
+msgstr "Endereço do Parceiro"
 
 #. module: base_contact
 #: field:res.partner.job,date_start:0
 msgid "Date Start"
 msgstr "Data de Início"
-
-#. module: base_contact
-#: model:process.transition,note:base_contact.process_transition_functiontoaddress0
-msgid "Define functions and address."
-msgstr "Definir Funções e Endereços"
-
-#. module: base_contact
-#: field:res.partner.contact,website:0
-msgid "Website"
-msgstr "Página da Web"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_contact:0
@@ -473,11 +498,6 @@ msgid ""
 msgstr ""
 "Ordem de importância deste endereço na lista de endereços vinculada ao "
 "contato"
-
-#. module: base_contact
-#: field:res.partner.contact,birthdate:0
-msgid "Birth Date"
-msgstr "Data de Nascimento"
 
 #~ msgid "res.partner.contact"
 #~ msgstr "res.partner.contact"

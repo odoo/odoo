@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:09+0000\n"
 "Last-Translator: Christophe (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -39,6 +39,11 @@ msgstr ""
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Anulează comanda"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -289,11 +294,6 @@ msgid "All Quotations"
 msgstr "Toate ofertele"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Agentul nostru de vânzări"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr ""
@@ -431,9 +431,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Lista de preţuri aprovizionare"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -532,6 +532,11 @@ msgstr "Ofertă / Comandă"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
 msgstr ""
 
 #. module: sale
@@ -828,13 +833,10 @@ msgid "Sale Order Line"
 msgstr "Poziţie comandă vânzare"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Creare factură"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preţ unitar"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -892,6 +894,8 @@ msgstr "Preț"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -934,11 +938,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Listă de preţuri de catalog"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1304,10 +1303,13 @@ msgid "Sales"
 msgstr "Vinzari"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preţ unitar"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Creare factură"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1696,6 +1698,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1741,6 +1748,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1807,11 +1815,6 @@ msgid "Sales Orders"
 msgstr ""
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1844,6 +1847,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1982,6 +1990,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr ""
@@ -2042,8 +2051,17 @@ msgstr ""
 #~ msgid "Manual in progress"
 #~ msgstr "Comandă procesată manual - în curs"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Agentul nostru de vânzări"
+
 #~ msgid "Sales order"
 #~ msgstr "Comenzi"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Listă de preţuri de catalog"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Lista de preţuri aprovizionare"
 
 #~ msgid "Reference"
 #~ msgstr "Referinta"
