@@ -7,16 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-09 08:32+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"PO-Revision-Date: 2010-12-18 17:18+0000\n"
+"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -27,11 +33,6 @@ msgstr "Confirmado"
 #: view:email.server:0
 msgid "Confirm"
 msgstr "Confimar"
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
-msgstr "Email respuesta"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -76,9 +77,11 @@ msgid "Description"
 msgstr "Descripción"
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr "Prioridad servidor"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -111,9 +114,9 @@ msgid "Waiting for Verification"
 msgstr "Esperando verificación"
 
 #. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
-msgstr "Modelo OpenObject. Genera un registro de este modelo."
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Contraseña"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -201,11 +204,6 @@ msgid "POP/IMAP Server"
 msgstr "Servidor POP/IMAP"
 
 #. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr "Contraseña"
-
-#. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
 msgstr "¡Aviso! No puede tener la configuración del servidor duplicada."
@@ -281,6 +279,16 @@ msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr "Prioridad entre 0 y 10, define el orden de proceso."
 
 #. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Prioridad servidor"
+
+#. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
@@ -306,6 +314,9 @@ msgstr "Recuperar emails"
 #~ msgid "IMAP Servers"
 #~ msgstr "Servidores IMAP"
 
+#~ msgid "Reply Email"
+#~ msgstr "Email respuesta"
+
 #~ msgid "Invalid arguments"
 #~ msgstr "Argumentos no válidos"
 
@@ -323,3 +334,6 @@ msgstr "Recuperar emails"
 
 #~ msgid "Email History"
 #~ msgstr "Historial email"
+
+#~ msgid "OpenObject Model. Generates a record of this model."
+#~ msgstr "Modelo OpenObject. Genera un registro de este modelo."

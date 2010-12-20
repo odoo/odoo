@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-15 23:20+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-17 19:18+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -41,6 +41,11 @@ msgstr "Día"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Cancelar pedido"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr "Configurar logística pedidos de venta"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -308,11 +313,6 @@ msgid "All Quotations"
 msgstr "Todos los presupuestos"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Nuestro comercial"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Junio"
@@ -461,9 +461,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "El presupuesto '%s' ha sido convertido a un pedido de venta."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Tarifas de compra"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr "Optimizar su aplicación de ventas con funcionalidades adicionales."
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -566,6 +566,11 @@ msgstr "Presupuesto / Pedido"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# de líneas"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -883,13 +888,10 @@ msgid "Sale Order Line"
 msgstr "Línea pedido de venta"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Crear factura"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Precio unidad"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -949,6 +951,8 @@ msgstr "Precio"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Configuración aplicaciones de ventas"
 
@@ -991,11 +995,6 @@ msgstr "Genera abastecimiento y facturación"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Número secuencia"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Tarifas de venta"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1387,10 +1386,13 @@ msgid "Sales"
 msgstr "Ventas"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Precio unidad"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Crear factura"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1797,6 +1799,11 @@ msgstr ""
 "esperar a que todos los productos están disponibles."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr "Configurar"
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Documento origen"
@@ -1844,6 +1851,7 @@ msgid "Uninvoiced"
 msgstr "No facturada"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1913,11 +1921,6 @@ msgid "Sales Orders"
 msgstr "Pedidos de ventas"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Plazos de pago"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1953,6 +1956,11 @@ msgstr "¡La factura ha sido creada correctamente!"
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Enero"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr "Configurar su aplicación de gestión de ventas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2098,6 +2106,7 @@ msgid "Search Sales Order"
 msgstr "Buscar pedido de venta"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Plazo de pago"
@@ -2310,11 +2319,17 @@ msgstr "Facturar desde albaranes"
 #~ msgid "Status"
 #~ msgstr "Estado"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Nuestro comercial"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Crear anticipo factura"
 
 #~ msgid "One procurement for each product."
 #~ msgstr "Un abastecimiento por cada producto."
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Tarifas de venta"
 
 #~ msgid ""
 #~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
@@ -2393,6 +2408,9 @@ msgstr "Facturar desde albaranes"
 #~ msgstr ""
 #~ "El nombre y la dirección del contacto que solicita el pedido o presupuesto."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Tarifas de compra"
+
 #~ msgid "New Quotation"
 #~ msgstr "Nuevo presupuesto"
 
@@ -2401,6 +2419,9 @@ msgstr "Facturar desde albaranes"
 
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Configurar política de envío para el pedido de venta"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Plazos de pago"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Factura corregida"

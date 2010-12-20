@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:41+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -41,6 +41,11 @@ msgstr ""
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Отказ на поръчка"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -291,11 +296,6 @@ msgid "All Quotations"
 msgstr "Всички оферти"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Лице за контакт"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr ""
@@ -433,9 +433,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Ценова листа на поръчка"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -535,6 +535,11 @@ msgstr "Оферта / Поръчка"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# от редове"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -830,13 +835,10 @@ msgid "Sale Order Line"
 msgstr "Ред от поръчка за продажба"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Създаване на фактура"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Единична цена"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -894,6 +896,8 @@ msgstr "Цена"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -936,11 +940,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Ценови лист за продажба"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1305,10 +1304,13 @@ msgid "Sales"
 msgstr "Продажби"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Единична цена"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Създаване на фактура"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1696,6 +1698,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1741,6 +1748,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1810,11 +1818,6 @@ msgid "Sales Orders"
 msgstr "Поръчки за продажба"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Условия за плащане"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1847,6 +1850,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1985,6 +1993,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Условие за плащане"
@@ -2153,6 +2162,9 @@ msgstr "Фактура базирана на доставки"
 #~ "Грешка: Мерните единици по подразбиране и мерните единици на поръчката "
 #~ "трябва да са в една и съща категория"
 
+#~ msgid "Sale Pricelists"
+#~ msgstr "Ценови лист за продажба"
+
 #~ msgid "Packing OUT is created for stockable products."
 #~ msgstr "За продуктите от склад бе създадено пакетиране ОТ"
 
@@ -2220,11 +2232,17 @@ msgstr "Фактура базирана на доставки"
 #~ "конфигурирани най-често срещаните и прости методи за доставка на продукт при "
 #~ "клиента чрез на една или две операции при работника."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Ценова листа на поръчка"
+
 #~ msgid "Related invoices"
 #~ msgstr "Свързани поръчки"
 
 #~ msgid "Delivery Delay"
 #~ msgstr "Забаване на доставка"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Условия за плащане"
 
 #~ msgid "My Sales Order"
 #~ msgstr "Моите поръчки за продажба"
@@ -2361,6 +2379,9 @@ msgstr "Фактура базирана на доставки"
 
 #~ msgid "New Quotation"
 #~ msgstr "Нова оферта"
+
+#~ msgid "Our Salesman"
+#~ msgstr "Лице за контакт"
 
 #~ msgid "Quotation (A sale order in draft state)"
 #~ msgstr "Оферта (поръчка за продажба в етап на проект)"

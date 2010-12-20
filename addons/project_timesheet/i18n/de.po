@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-30 15:13+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_timesheet
@@ -41,6 +41,11 @@ msgid "Timesheet task"
 msgstr "Zeiterfassung Aufgaben"
 
 #. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Search Analytic Lines"
+msgstr ""
+
+#. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
 msgid "Related Timeline Id"
 msgstr "Bezug Zeiterfassung"
@@ -51,6 +56,12 @@ msgid "Project Task Work"
 msgstr "Projekt Arbeitszeit"
 
 #. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "Februar"
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
 msgstr "Gruppierung..."
@@ -61,15 +72,20 @@ msgid "Trigger invoices from sale order lines"
 msgstr "Erzeugt Rechnungen a. Verkaufsauftrag"
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_project_task
-msgid "Task"
-msgstr "Aufgabe"
+#: selection:report.timesheet.task.user,month:0
+msgid "October"
+msgstr "Oktober"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,month:0
-msgid "Month"
-msgstr "Monat"
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "Jahr"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Stunden"
 
 #. module: project_timesheet
 #: constraint:project.project:0
@@ -79,6 +95,11 @@ msgstr ""
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid " Year "
+msgstr ""
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Product"
 msgstr ""
 
 #. module: project_timesheet
@@ -112,17 +133,32 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Journal"
+msgstr ""
+
+#. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "June"
 msgstr "Juni"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "Jahr"
+#: view:account.analytic.line:0
+msgid "My Entries"
+msgstr ""
 
 #. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "Aufgabe"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
+msgid "Invoice Tasks Work"
+msgstr "Abrechnen Arbeitszeit"
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
@@ -134,14 +170,19 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
-msgid "Invoice Tasks Work"
-msgstr "Abrechnen Arbeitszeit"
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
 msgstr "Juli"
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Extended Filters..."
+msgstr ""
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
@@ -154,19 +195,19 @@ msgid "Invoiceable"
 msgstr "Abrechenbar"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Stunden"
+#: view:project.project:0
+msgid "Customer"
+msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "Februar"
+#: view:account.analytic.line:0
+msgid "Account"
+msgstr ""
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "October"
-msgstr "Oktober"
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
+msgid "Bill Tasks Works"
+msgstr ""
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -231,9 +272,9 @@ msgid "Invoicing Data"
 msgstr "Abrechnungsdaten"
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Erfasse Zeit für Aufgabenerledigung"
+#: view:account.analytic.line:0
+msgid "Fin.Account"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -287,14 +328,20 @@ msgid "report.timesheet.task.user"
 msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,name:0
-msgid "Date"
-msgstr "Datum"
+#: view:report.timesheet.task.user:0
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "Monat"
 
 #. module: project_timesheet
 #: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
 msgid "Project Timesheet"
 msgstr "Projekt Zeiterfassung"
+
+#. module: project_timesheet
+#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
+msgid "Encode how much time u spent on your task"
+msgstr "Erfasse Zeit für Aufgabenerledigung"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -324,6 +371,13 @@ msgstr "Arbeitsstunden nach Monat"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Komplettiere Zeiterfassung"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"This lists show you every task work you can invoice to the customer. Select "
+"the lines in order to generate the invoices automatically."
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
