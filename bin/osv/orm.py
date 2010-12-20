@@ -260,8 +260,11 @@ class browse_record(object):
                             else:
                                 ref_obj, ref_id = result_line[field_name].split(',')
                                 ref_id = long(ref_id)
-                                obj = self._table.pool.get(ref_obj)
-                                new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                if ref_id:
+                                    obj = self._table.pool.get(ref_obj)
+                                    new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                else:
+                                    new_data[field_name] = browse_null()
                         else:
                             new_data[field_name] = browse_null()
                     else:
@@ -2436,6 +2439,29 @@ class orm(orm_template):
                 if (val<>False) or (type(val)<>bool):
                     cr.execute(update_query, (ss[1](val), key))
 
+    def _check_selection_field_value(self, cr, uid, field, value, context=None):
+        """Raise except_orm if value is not among the valid values for the selection field"""
+        if self._columns[field]._type == 'reference':
+            val_model, val_id_str = value.split(',', 1)
+            val_id = False
+            try:
+                val_id = long(val_id_str)
+            except ValueError:
+                pass
+            if not val_id:
+                raise except_orm(_('ValidateError'),
+                                 _('Invalid value for reference field "%s" (last part must be a non-zero integer): "%s"') % (field, value))
+            val = val_model
+        else:
+            val = value
+        if isinstance(self._columns[field].selection, (tuple, list)):
+            if val in dict(self._columns[field].selection):
+                return
+        elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
+            return
+        raise except_orm(_('ValidateError'),
+                         _('The value "%s" for the field "%s" is not in the selection') % (value, field))
+
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
         # of fields which were required but have been removed (or will be added by another module)
@@ -3469,21 +3495,7 @@ class orm(orm_template):
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
-                if self._columns[field]._type == 'reference':
-                    val = vals[field].split(',')[0]
-                else:
-                    val = vals[field]
-                if isinstance(self._columns[field].selection, (tuple, list)):
-                    if val not in dict(self._columns[field].selection):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
-                else:
-                    if val not in dict(self._columns[field].selection(
-                        self, cr, user, context=context)):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
+                self._check_selection_field_value(cr, user, field, vals[field], context=context)
 
         if self._log_access:
             upd0.append('write_uid=%s')
