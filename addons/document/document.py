@@ -46,15 +46,25 @@ class document_file(osv.osv):
         # nctx will /not/ inherit the caller's context. Most of
         # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
+        
         result = {}
         bin_size = context.get('bin_size', False)
         for fbro in fbrl:
-            fnode = nodes.node_file(None, None, nctx, fbro)
-            if not bin_size:
-                    data = fnode.get_data(cr, fbro)
-                    result[fbro.id] = base64.encodestring(data or '')
+            if not fbro.parent_id:
+                cr.execute("select db_datas from ir_attachment where id = %s" ,(fbro.id,))
+                res = cr.fetchone()
+                datas = res[0] or ''
+                size = len(datas)
             else:
-                    result[fbro.id] = fnode.get_data_len(cr, fbro)
+                fnode = nodes.node_file(None, None, nctx, fbro)
+                datas = fnode.get_data(cr, fbro)
+                datas = base64.encodestring(datas or '')
+                size = fnode.get_data_len(cr, fbro)
+                
+            if not bin_size:
+                result[fbro.id] = datas 
+            else:
+                result[fbro.id] = size
 
         return result
 
