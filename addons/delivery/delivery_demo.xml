@@ -52,7 +52,7 @@
 
         <record id="delivery_grid_line3" model="delivery.grid.line">
             <field name="name">Free if price &gt;= 300</field>
-            <field name="grid_id" ref="delivery.delivery_grid"/>
+            <field name="grid_id" ref="delivery_grid"/>
             <field eval="300" name="max_value"/>
             <field name="operator">&gt;=</field>
             <field name="type">price</field>
