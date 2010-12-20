@@ -1130,7 +1130,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
  rule or repeating pattern for recurring events\n\
 e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
-        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'),('daily_working', 'Daily(Working day)'), \
+        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'),], 
                             'Recurrency', states={'done': [('readonly', True)]},
@@ -1144,14 +1144,15 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
-        'freq': fields.selection([('None', 'No Repeat'), \
-                                ('hourly', 'Hours'), \
-                                ('daily', 'Days'), \
-                                ('weekly', 'Weeks'), \
-                                ('monthly', 'Months'), \
+        'freq': fields.selection([('None', 'No Repeat'),
+                                ('hourly', 'Hours'),
+                                ('daily', 'Days'),
+                                ('weekly', 'Weeks'),
+                                ('monthly', 'Months'),
                                 ('yearly', 'Years'), ], 'Frequency'),
+                                
         'interval': fields.integer('Interval', help="Repeat every (Days/Week/Month/Year)"),
-        'count': fields.integer('Count', help="Repeat max that times"),
+        'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
         'we': fields.boolean('Wed'),
@@ -1159,7 +1160,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'fr': fields.boolean('Fri'),
         'sa': fields.boolean('Sat'),
         'su': fields.boolean('Sun'),
-        'select1': fields.selection([('date', 'Date of month'), \
+        'select1': fields.selection([('date', 'Date of month'), 
                                     ('day', 'Day of month')], 'Option'),
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
@@ -1176,7 +1177,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
          true, it will allow you to hide the event alarm information without removing it."),
-        'recurrency': fields.boolean('Recurrency', help="Recurrent Meeting"),                                    
+        'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),                                    
         'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),        
     }
     def default_organizer(self, cr, uid, context=None):
@@ -1359,16 +1360,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             elif datas.get('select1')=='date':
                 monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
-        elif freq == 'yearly':
-            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
-                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
-            if datas.get('select1')=='day':
-                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            elif datas.get('select1')=='date':
-                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
-            yearstring = bymonth + bystring
-
+       
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
         enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
