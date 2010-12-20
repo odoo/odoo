@@ -407,6 +407,7 @@
             context="{'search_default_partner_id': [active_id]}"
             id="act_res_partner_2_purchase_order"
             name="Purchase Orders"
+            groups="purchase.group_purchase_user"
             res_model="purchase.order"
             src_model="res.partner"/>
 
@@ -416,7 +417,7 @@
             name="Purchases"
             res_model="purchase.order.line"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="purchase.group_purchase_user"/>
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">

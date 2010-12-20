@@ -909,7 +909,7 @@
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="mrp.group_mrp_user"/>
 
         <act_window
             domain="[('bom_id','=',False)]"
@@ -917,7 +917,8 @@
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="mrp.group_mrp_user"/>
 
         <!-- Menu for Resource for MRP-->
 

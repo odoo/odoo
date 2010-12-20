@@ -2062,7 +2062,7 @@
 
         <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
