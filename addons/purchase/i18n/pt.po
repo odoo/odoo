@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-11 12:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -292,16 +292,20 @@ msgid "Net Total :"
 msgstr "Total líquido :"
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr "Artigos"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
-msgstr "Quantidades e valores por mês"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progresso da configuração"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -595,14 +599,9 @@ msgid "Error !"
 msgstr "Erro!"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-"Tem de seleccionar um parceiro no formulário de compras!\n"
-"Por favor indique um parceiro antes de escolher um artigo."
+#: view:purchase.order.line:0
+msgid "General Information"
+msgstr "Informações genéricas"
 
 #. module: purchase
 #: view:board.board:0
@@ -781,9 +780,9 @@ msgstr ""
 "de ordens de compra"
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progresso da configuração"
+#: selection:purchase.report,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
@@ -997,9 +996,9 @@ msgstr ""
 "artigos recebidos; Fatura recebida e verificada.\n"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
-msgstr "Agosto"
+#: view:purchase.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
@@ -1228,12 +1227,14 @@ msgid "Default Purchase Pricelist Version"
 msgstr "Versão da lista de preços de compra pré-definida"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
-msgstr "Informações genéricas"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr "Configuração da aplicação Compras"
 
@@ -1482,6 +1483,12 @@ msgid "Reservation"
 msgstr "Reserva"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr "Quantidades e valores por mês"
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
@@ -1685,6 +1692,16 @@ msgstr ""
 #: field:purchase.report,name:0
 msgid "Year"
 msgstr "Ano"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"Tem de seleccionar um parceiro no formulário de compras!\n"
+"Por favor indique um parceiro antes de escolher um artigo."
 
 #. module: purchase
 #: view:purchase.installer:0

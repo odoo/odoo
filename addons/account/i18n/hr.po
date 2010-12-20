@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
 "PO-Revision-Date: 2010-12-11 19:19+0000\n"
 "Last-Translator: Goran Kliska (Aplikacija d.o.o.) <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -349,6 +349,12 @@ msgid ""
 "Allows you to change the sign of the balance amount displayed in the "
 "reports, so that you can see positive figures instead of negative ones in "
 "expenses accounts."
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
 msgstr ""
 
 #. module: account
@@ -1250,11 +1256,6 @@ msgid "Overdue Payments"
 msgstr "Dospijela plaćanja"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2038,6 +2039,14 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -2995,7 +3004,10 @@ msgid "Purchase"
 msgstr "Nabava"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3466,18 +3478,12 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Vrsta konta"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
 
 #. module: account
 #: view:account.state.open:0
@@ -3709,12 +3715,18 @@ msgid "Shortcut"
 msgstr "Prečac"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Vrsta konta"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4022,10 +4034,13 @@ msgid "Analytic Account Statistics"
 msgstr "Statistike analitičkog računa"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
 msgstr ""
+"Ovo će automatski podesiti vaš računski plan, bankovne račune, poreze i "
+"dnevnike u skladu sa odabranim predloškom"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4107,6 +4122,16 @@ msgstr ""
 msgid ""
 "Please verify the price of the invoice !\n"
 "The real total does not match the computed total."
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: account
@@ -5650,6 +5675,11 @@ msgid "Default Credit Account"
 msgstr "Zadani konto potražuje"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr ""
@@ -5837,6 +5867,11 @@ msgid "Centralisation"
 msgstr "Centralizacija (u saldu)"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -5990,6 +6025,12 @@ msgstr ""
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Fax:"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr ""
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6539,11 +6580,6 @@ msgstr "U redu"
 #: code:addons/account/report/account_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -7262,6 +7298,11 @@ msgid "Invoice's state is Open"
 msgstr ""
 
 #. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
@@ -7818,11 +7859,6 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Greška: Neispravan Bvr broj (kontrolna znamenka)."
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr ""
@@ -8002,6 +8038,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Poštovani gdine/gđo/gđice"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9055,13 +9096,8 @@ msgid "End period"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
 msgstr ""
 
 #. module: account
@@ -10209,6 +10245,9 @@ msgstr ""
 #~ msgid "Pay invoice"
 #~ msgstr "Plati račun"
 
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Greška: Neispravan Bvr broj (kontrolna znamenka)."
+
 #~ msgid "Draft Customer Invoices"
 #~ msgstr "Izlazni računi u pripremi"
 
@@ -10427,13 +10466,6 @@ msgstr ""
 
 #~ msgid "Analytic Entries by Journal"
 #~ msgstr "Stavke analitike po dnevniku"
-
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Ovo će automatski podesiti vaš računski plan, bankovne račune, poreze i "
-#~ "dnevnike u skladu sa odabranim predloškom"
 
 #~ msgid "Valid entries from invoice"
 #~ msgstr "Potvrđene stavke iz računa"
