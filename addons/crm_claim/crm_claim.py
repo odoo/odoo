@@ -96,7 +96,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        'stage_id': _get_stage_id, 
+        #'stage_id': _get_stage_id, 
     }
     
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -132,7 +132,38 @@ class crm_claim(crm.crm_case, osv.osv):
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
+        
+    def case_open(self, cr, uid, ids, *args):
+        """
+            Opens Claim
+        """
+        res = super(crm_claim, self).case_open(cr, uid, ids, *args)
+        claims = self.browse(cr, uid, ids)
+        
+        for i in xrange(0, len(ids)):
+            if not claims[i].stage_id :
+                stage_id = self._find_first_stage(cr, uid, 'claim', claims[i].section_id.id or False)
+                self.write(cr, uid, [ids[i]], {'stage_id' : stage_id})
+        
+        return res
 
 crm_claim()
+
+
+class crm_stage_claim(osv.osv):
+    
+    def _get_type_value(self, cr, user, context):
+        list = super(crm_stage_claim, self)._get_type_value(cr, user, context)
+        list.append(('claim','Claim'))
+        return list
+    
+    _inherit = "crm.case.stage"
+    _columns = {
+            'type': fields.selection(_get_type_value, 'Type'),
+    }
+   
+    
+crm_stage_claim()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
