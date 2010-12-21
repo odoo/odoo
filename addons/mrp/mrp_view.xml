@@ -600,8 +600,13 @@
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
-                                        icon="gtk-go-forward" context="{'consume': True}"
+                                        icon="gtk-go-forward" context="{'consume': True,'prodlot_id':prodlot_id}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <button
+                                           name="%(stock.track_line)d"
+                                           string="Split in production lots"
+                                           type="action" icon="gtk-justify-fill"
+                                           states="raft,waiting,confirmed,assigned" />
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -619,11 +624,6 @@
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
-                                       <button
-                                           name="%(stock.track_line)d"
-                                           string="Split in production lots"
-                                           type="action" icon="gtk-justify-fill"
-                                           states="done,cancel" />
                                        <button
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"

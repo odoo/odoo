@@ -2262,12 +2262,10 @@ class stock_move(osv.osv):
             context = {}
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
-
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             quantity_rest = move.product_qty
-
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             if quantity_rest <= 0:
@@ -2284,7 +2282,7 @@ class stock_move(osv.osv):
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
-                if move.product_id.track_production and location_id:
+                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
                     # IF product has checked track for production lot, move lines will be split by 1
                     res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
                 else:
@@ -2298,7 +2296,7 @@ class stock_move(osv.osv):
             else:
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
-                if move.product_id.track_production and location_id:
+                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
                     res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
                 else:
                     res += [move.id]
