@@ -894,10 +894,10 @@ class orm_template(object):
                                         uid, word, [], operator='=', context=context)
                                 res3 = (res2 and res2[0][0]) or False
                                 if not res3:
-                                    warning += [_("Relation not found: %s on '%s'") % (line[i], relation)]
+                                    warning += [_("Relation not found: %s on '%s'") % (word, relation)]
                                     logger.notifyChannel("import",
                                             netsvc.LOG_WARNING,
-                                            _("Relation not found: %s on '%s'") % (line[i], relation))
+                                            _("Relation not found: %s on '%s'") % (word, relation))
                                 else:
                                     res.append(res3)
                             if len(res):
