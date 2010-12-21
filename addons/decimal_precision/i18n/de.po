@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 15:09+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,35 +15,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,digits:0
 msgid "Digits"
 msgstr "Stellen"
-
-#. module: decimal_precision
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#. module: decimal_precision
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehler in xml Ansicht."
-
-#. module: decimal_precision
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben !"
-
-#. module: decimal_precision
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: decimal_precision
 #: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
@@ -57,24 +35,14 @@ msgid "Decimal Accuracy"
 msgstr ""
 
 #. module: decimal_precision
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
-msgstr "decimal.precision"
-
-#. module: decimal_precision
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
-
-#. module: decimal_precision
 #: field:decimal.precision,name:0
 msgid "Usage"
 msgstr "Verwendung"
+
+#. module: decimal_precision
+#: sql_constraint:decimal.precision:0
+msgid "Only one value can be defined for each given usage!"
+msgstr ""
 
 #. module: decimal_precision
 #: view:decimal.precision:0
@@ -82,9 +50,20 @@ msgid "Decimal Precision"
 msgstr "Nachkommastellen"
 
 #. module: decimal_precision
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+msgid "decimal.precision"
+msgstr "decimal.precision"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehler in xml Ansicht."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #~ msgid ""
 #~ "\n"
@@ -102,3 +81,15 @@ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #~ msgid "Decimal Accuracy Definitions"
 #~ msgstr "Dezimal Genauigkeit Definition"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

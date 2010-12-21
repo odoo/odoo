@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:13+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-23 09:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-24 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -28,8 +28,8 @@ msgid "Pulled Paths"
 msgstr ""
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flow"
+#: selection:product.pulled.flow,type_proc:0
+msgid "Move"
 msgstr ""
 
 #. module: stock_location
@@ -64,18 +64,13 @@ msgid "Pulled Flows"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,type_proc:0
-msgid "Type of Procurement"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
-
-#. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
 msgstr ""
 
 #. module: stock_location
@@ -105,19 +100,6 @@ msgid "Invoice Status"
 msgstr ""
 
 #. module: stock_location
-#: selection:product.pulled.flow,invoice_state:0
-#: selection:stock.location.path,invoice_state:0
-msgid "Not from Picking"
-msgstr ""
-
-#. module: stock_location
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: stock_location
 #: help:stock.location.path,auto:0
 msgid ""
 "This is used to define paths the product has to follow within the location "
@@ -139,8 +121,8 @@ msgid "Pack Zone"
 msgstr ""
 
 #. module: stock_location
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
+#: field:product.pulled.flow,name:0
+msgid "Name"
 msgstr ""
 
 #. module: stock_location
@@ -236,8 +218,8 @@ msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
 
 #. module: stock_location
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:product.pulled.flow,type_proc:0
+msgid "Type of Procurement"
 msgstr ""
 
 #. module: stock_location
@@ -246,8 +228,8 @@ msgid "Is used to know to which company belong packings and moves"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,name:0
-msgid "Name"
+#: view:product.product:0
+msgid "Logistics Flow"
 msgstr ""
 
 #. module: stock_location
@@ -292,11 +274,6 @@ msgid "Is the destination location that needs supplying"
 msgstr ""
 
 #. module: stock_location
-#: sql_constraint:stock.warehouse.orderpoint:0
-msgid "Qty Multiple must be greater than zero."
-msgstr ""
-
-#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr ""
@@ -310,6 +287,12 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
+msgstr ""
+
+#. module: stock_location
+#: selection:product.pulled.flow,invoice_state:0
+#: selection:stock.location.path,invoice_state:0
+msgid "Not Applicable"
 msgstr ""
 
 #. module: stock_location
@@ -336,6 +319,11 @@ msgstr ""
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
+msgstr ""
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: stock_location
@@ -366,13 +354,8 @@ msgid "Action Type"
 msgstr ""
 
 #. module: stock_location
-#: selection:product.pulled.flow,type_proc:0
-msgid "Move"
-msgstr ""
-
-#. module: stock_location
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: stock_location
@@ -415,6 +398,11 @@ msgstr ""
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #~ msgid "Stock Location Paths"
 #~ msgstr "Stock Location Paths"

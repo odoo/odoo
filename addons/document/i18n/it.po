@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:11+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-29 07:54+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-30 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -66,11 +66,6 @@ msgid "Group By..."
 msgstr "Raggruppa per..."
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modulo non valido nella definizione dell'azione."
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr "Tipo di Contenuto della Cartella"
@@ -98,6 +93,12 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr "Company"
@@ -212,6 +213,11 @@ msgid "Modified Date"
 msgstr "Data modificata"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Knowledge Application Configuration"
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
 #: field:report.files.partner,partner:0
@@ -249,11 +255,6 @@ msgid "Documents"
 msgstr "Documenti"
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "ID Modello"
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "Errore! Non puoi creare Direcroty ricorsive"
@@ -265,9 +266,9 @@ msgid "Storage"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
-msgstr "Modello risorsa"
+#: view:document.configuration:0
+msgid "Configure Resource Directory"
+msgstr ""
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -290,11 +291,6 @@ msgstr "Tipo Di Contenuto"
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Tipo"
-
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "L'ID certificato del modulo deve essere unico!"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -326,6 +322,11 @@ msgid "Stored Filename"
 msgstr "Nome file Memorizzati"
 
 #. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Modello risorsa"
+
+#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -341,11 +342,6 @@ msgstr "Rapporto"
 #: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Luglio"
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -553,6 +549,11 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr "Configurazione Automatica Cartella"
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Includi il nome della registrazione"
@@ -563,9 +564,9 @@ msgid "Attachment"
 msgstr "Allegato"
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore! Non è possibile creare un menù ricorsivo."
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID Modello"
 
 #. module: document
 #: field:document.storage,online:0
@@ -685,6 +686,11 @@ msgid "Integrated Document Management System"
 msgstr "Sistema di gestione documentale integrato"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Choose the following Resouces to auto directory configuration."
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Allegato a"
@@ -739,11 +745,6 @@ msgid "Prefix"
 msgstr "Prefisso"
 
 #. module: document
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr "La regola deve avere almento un diritto di accesso spuntato!"
-
-#. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
 msgstr "Ora ultimo invio"
@@ -754,9 +755,9 @@ msgid "File Name"
 msgstr "Nome File"
 
 #. module: document
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "La dimensione del campo non può mai essere minore di 1!"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -767,14 +768,6 @@ msgstr "ID Risorsa"
 #: selection:document.storage,type:0
 msgid "External file storage"
 msgstr "Archivio file esterno"
-
-#. module: document
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
 
 #. module: document
 #: view:board.board:0
@@ -993,11 +986,6 @@ msgid "Mime Type"
 msgstr "Tipo MIME"
 
 #. module: document
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
-
-#. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
 msgstr "Sequenza"
@@ -1059,11 +1047,6 @@ msgstr ""
 msgid "Document Type"
 msgstr "Tipo di documento"
 
-#. module: document
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
-
 #~ msgid ""
 #~ "This wizard will automatically configure the document management system "
 #~ "according to modules installed on your system."
@@ -1101,6 +1084,9 @@ msgstr ""
 #~ msgid "Link"
 #~ msgstr "Collegamento"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
 #~ msgid "Search a File"
 #~ msgstr "Cerca un File"
 
@@ -1109,9 +1095,6 @@ msgstr ""
 
 #~ msgid "Document Configuration"
 #~ msgstr "Configurazione Documento"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Configurazione Automatica Cartella"
 
 #~ msgid "Preview"
 #~ msgstr "Anteprima"
@@ -1135,6 +1118,12 @@ msgstr ""
 #~ msgstr "Cancella"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
+#~ msgid ""
 #~ "Check this field if you want that the name of the file start by the record "
 #~ "name."
 #~ msgstr ""
@@ -1149,6 +1138,9 @@ msgstr ""
 
 #~ msgid "document.configuration.wizard"
 #~ msgstr "document.configuration.wizard"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modulo non valido nella definizione dell'azione."
 
 #~ msgid "Files Per Month"
 #~ msgstr "File per mesi"
@@ -1215,3 +1207,18 @@ msgstr ""
 #~ msgstr ""
 #~ "Seleziona un oggetto qui e Open ERP creerà un abbinamento per tutti questi "
 #~ "oggetti, usando il dominio fornito, quando verrà sfogliato attraverso FTP."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "La regola deve avere almento un diritto di accesso spuntato!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"

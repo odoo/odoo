@@ -62,14 +62,14 @@ class make_procurement(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which loads Procurement form view.
         """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context).login
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context).login
         wh_obj = self.pool.get('stock.warehouse')
         procurement_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         data_obj = self.pool.get('ir.model.data')
 
-        for proc in self.browse(cr, uid, ids):
-            wh = wh_obj.browse(cr, uid, proc.warehouse_id.id, context)
+        for proc in self.browse(cr, uid, ids, context=context):
+            wh = wh_obj.browse(cr, uid, proc.warehouse_id.id, context=context)
             procure_id = procurement_obj.create(cr, uid, {
                 'name':'INT: '+str(user),
                 'date_planned': proc.date_planned,
@@ -109,6 +109,8 @@ class make_procurement(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id', False) or False
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)

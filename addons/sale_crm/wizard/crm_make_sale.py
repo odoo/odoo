@@ -28,7 +28,7 @@ class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
 
     _name = "crm.make.sale"
-    _description = "Make sale"
+    _description = "Make sales"
 
     def _selectPartner(self, cr, uid, context=None):
         """
@@ -39,7 +39,7 @@ class crm_make_sale(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: default value of partner_id field.
         """
-        if not context:
+        if context is None:
             context = {}
 
         lead_obj = self.pool.get('crm.lead')
@@ -51,8 +51,6 @@ class crm_make_sale(osv.osv_memory):
         return lead['partner_id']
 
     def view_init(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
 
     def makeOrder(self, cr, uid, ids, context=None):
@@ -61,11 +59,11 @@ class crm_make_sale(osv.osv_memory):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of crm make sale' ids
+        @param ids: List of crm make sales' ids
         @param context: A standard dictionary for contextual values
-        @return: Dictionary value of created sale order.
+        @return: Dictionary value of created sales order.
         """
-        if not context:
+        if context is None:
             context = {}
 
         case_obj = self.pool.get('crm.lead')
@@ -75,7 +73,7 @@ class crm_make_sale(osv.osv_memory):
 
         for make in self.browse(cr, uid, ids, context=context):
             partner = make.partner_id
-            partner_addr = partner_obj.address_get(cr, uid, [partner.id], 
+            partner_addr = partner_obj.address_get(cr, uid, [partner.id],
                     ['default', 'invoice', 'delivery', 'contact'])
             pricelist = partner.property_product_pricelist.id
             fpos = partner.property_account_position and partner.property_account_position.id or False
@@ -84,23 +82,23 @@ class crm_make_sale(osv.osv_memory):
                 if not partner and case.partner_id:
                     partner = case.partner_id
                     fpos = partner.property_account_position and partner.property_account_position.id or False
-                    partner_addr = partner_obj.address_get(cr, uid, [partner.id], 
+                    partner_addr = partner_obj.address_get(cr, uid, [partner.id],
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
                     raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
 
                 vals = {
-                    'origin': _('Opportunity: %s') % str(case.id), 
-                    'section_id': case.section_id and case.section_id.id or False, 
-                    'shop_id': make.shop_id.id, 
-                    'partner_id': partner.id, 
-                    'pricelist_id': pricelist, 
-                    'partner_invoice_id': partner_addr['invoice'], 
-                    'partner_order_id': partner_addr['contact'], 
-                    'partner_shipping_id': partner_addr['delivery'], 
-                    'date_order': time.strftime('%Y-%m-%d'), 
-                    'fiscal_position': fpos, 
+                    'origin': _('Opportunity: %s') % str(case.id),
+                    'section_id': case.section_id and case.section_id.id or False,
+                    'shop_id': make.shop_id.id,
+                    'partner_id': partner.id,
+                    'pricelist_id': pricelist,
+                    'partner_invoice_id': partner_addr['invoice'],
+                    'partner_order_id': partner_addr['contact'],
+                    'partner_shipping_id': partner_addr['delivery'],
+                    'date_order': time.strftime('%Y-%m-%d'),
+                    'fiscal_position': fpos,
                 }
                 if partner.id:
                     vals['user_id'] = partner.user_id and partner.user_id.id or uid
@@ -117,42 +115,40 @@ class crm_make_sale(osv.osv_memory):
                 return {}
             if len(new_ids)<=1:
                 value = {
-                    'domain': str([('id', 'in', new_ids)]), 
-                    'view_type': 'form', 
-                    'view_mode': 'form', 
-                    'res_model': 'sale.order', 
-                    'view_id': False, 
-                    'type': 'ir.actions.act_window', 
+                    'domain': str([('id', 'in', new_ids)]),
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'sale.order',
+                    'view_id': False,
+                    'type': 'ir.actions.act_window',
                     'res_id': new_ids and new_ids[0]
                 }
             else:
                 value = {
-                    'domain': str([('id', 'in', new_ids)]), 
-                    'view_type': 'form', 
-                    'view_mode': 'tree,form', 
-                    'res_model': 'sale.order', 
-                    'view_id': False, 
-                    'type': 'ir.actions.act_window', 
+                    'domain': str([('id', 'in', new_ids)]),
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'res_model': 'sale.order',
+                    'view_id': False,
+                    'type': 'ir.actions.act_window',
                     'res_id': new_ids
                 }
             return value
 
     def _get_shop_id(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
         return shop and shop[0] or False
 
     _columns = {
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True), 
-        'partner_id': fields.many2one('res.partner', 'Customer', required=True), 
-        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'), 
+        'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
+        'partner_id': fields.many2one('res.partner', 'Customer', required=True),
+        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'),
     }
     _defaults = {
-         'shop_id': _get_shop_id, 
-         'close': True, 
-         'partner_id': _selectPartner, 
+         'shop_id': _get_shop_id,
+         'close': True,
+         'partner_id': _selectPartner,
     }
 
 crm_make_sale()

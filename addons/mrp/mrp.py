@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Workcenter Product', help="Fill this product to track easily your production costs in the analytic accounting."),
+        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to track easily your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
@@ -67,7 +67,7 @@ class mrp_workcenter(osv.osv):
 
         if product_id:
             cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            value = {'costs_hour' :cost.standard_price}
+            value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
 mrp_workcenter()
@@ -111,8 +111,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of iterations this workcenter has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this workcenter to achieve the operation of the specified routing."),
+            help="Number of iterations this work Center has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -132,7 +132,7 @@ class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
 
-    def _child_compute(self, cr, uid, ids, name, arg, context={}):
+    def _child_compute(self, cr, uid, ids, name, arg, context=None):
         """ Gets child bom.
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
@@ -144,13 +144,15 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of values
         """
         result = {}
+        if context is None:
+            context = {}
         bom_obj = self.pool.get('mrp.bom')
         bom_id = context and context.get('active_id', False) or False
         cr.execute('select id from mrp_bom')
         if all(bom_id != r[0] for r in cr.fetchall()):
             ids.sort()
             bom_id = ids[0]
-        bom_parent = bom_obj.browse(cr, uid, bom_id)
+        bom_parent = bom_obj.browse(cr, uid, bom_id, context=context)
         for bom in self.browse(cr, uid, ids, context=context):
             if (bom_parent) or (bom.id == bom_id):
                 result[bom.id] = map(lambda x: x.id, bom.bom_lines)
@@ -167,14 +169,14 @@ class mrp_bom(osv.osv):
 
         return result
 
-    def _compute_type(self, cr, uid, ids, field_name, arg, context):
+    def _compute_type(self, cr, uid, ids, field_name, arg, context=None):
         """ Sets particular method for the selected bom type.
         @param field_name: Name of the field
         @param arg: User defined argument
         @return:  Dictionary of values
         """
         res = dict(map(lambda x: (x,''), ids))
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
                 continue
@@ -229,7 +231,7 @@ class mrp_bom(osv.osv):
             'You should install the mrp_subproduct module if you want to manage extra products on BoMs !'),
     ]
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct bom_id from mrp_bom where id IN %s',(tuple(ids),))
@@ -243,14 +245,14 @@ class mrp_bom(osv.osv):
     ]
 
 
-    def onchange_product_id(self, cr, uid, ids, product_id, name, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
         if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
             if not name:
                 v['name'] = prod.name
@@ -378,7 +380,7 @@ class mrp_production(osv.osv):
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
 
-    def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
+    def _production_calc(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Calculates total hours and total no. of cycles for a production order.
         @param prop: Name of field.
         @param unknow_none:
@@ -395,7 +397,7 @@ class mrp_production(osv.osv):
                 result[prod.id]['cycle_total'] += wc.cycle
         return result
 
-    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context={}):
+    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Finds production end date.
         @param prop: Name of field.
         @param unknow_none:
@@ -406,7 +408,7 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned
         return result
 
-    def _production_date(self, cr, uid, ids, prop, unknow_none, context={}):
+    def _production_date(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Finds production planned date.
         @param prop: Name of field.
         @param unknow_none:
@@ -468,8 +470,8 @@ class mrp_production(osv.osv):
     }
     _order = 'priority desc, date_planned asc';
 
-    def _check_qty(self, cr, uid, ids):
-        orders = self.browse(cr, uid, ids)
+    def _check_qty(self, cr, uid, ids, context=None):
+        orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
             if order.product_qty <= 0:
                 return False
@@ -503,7 +505,7 @@ class mrp_production(osv.osv):
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
-    def location_id_change(self, cr, uid, ids, src, dest, context={}):
+    def location_id_change(self, cr, uid, ids, src, dest, context=None):
         """ Changes destination location if source location is changed.
         @param src: Source location id.
         @param dest: Destination location id.
@@ -660,10 +662,9 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
-
         stock_mov_obj = self.pool.get('stock.move')
-        production = self.browse(cr, uid, production_id)
-
+        production = self.browse(cr, uid, production_id, context=context)
+        
         final_product_todo = []
 
         produced_qty = 0

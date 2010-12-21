@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2009-02-04 06:32+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -27,21 +27,8 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: hr_attendance
@@ -120,6 +107,12 @@ msgid "Define attendance reason"
 msgstr ""
 
 #. module: hr_attendance
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
 msgid "Attendances By Month"
 msgstr ""
@@ -178,11 +171,6 @@ msgid "Attendance"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-
-#. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
 msgstr ""
@@ -219,11 +207,6 @@ msgstr ""
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
 msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -294,13 +277,16 @@ msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.out.ask"
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"Time Tracking functionality aims to manage employee's attendances on the "
+"basis of the actions (Sign in/Sign out) performed by them. You can also link "
+"this to an attendance machine using OpenERP's webservices features."
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:hr.sign.in.out.ask:0
+msgid "hr.sign.out.ask"
 msgstr ""
 
 #. module: hr_attendance
@@ -337,6 +323,11 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "November"
+msgstr ""
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_attendance
@@ -383,9 +374,12 @@ msgid "Action"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
-#, python-format
-msgid "No records found for your selection!"
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
 msgstr ""
 
 #. module: hr_attendance
@@ -405,12 +399,6 @@ msgstr ""
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_attendance
@@ -448,6 +436,14 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
@@ -479,6 +475,15 @@ msgstr ""
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid ""
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
 msgstr ""
 
 #. module: hr_attendance
@@ -522,8 +527,9 @@ msgid "Bellow this delay, the error is considered to be voluntary"
 msgstr ""
 
 #. module: hr_attendance
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
 msgstr ""
 
 #. module: hr_attendance
@@ -542,3 +548,6 @@ msgstr ""
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.in.out.ask"
 msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"

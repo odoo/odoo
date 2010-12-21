@@ -31,7 +31,7 @@ class wiki_create_menu(osv.osv_memory):
         'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
     }
 
-    def wiki_menu_create(self, cr, uid, ids, context):
+    def wiki_menu_create(self, cr, uid, ids, context=None):
 
         """ Create Menu On the base of Group id and Action id
         @param cr: the current row, from the database cursor,
@@ -39,6 +39,8 @@ class wiki_create_menu(osv.osv_memory):
         @param ids: List of create menu’s IDs
 
         """
+        if context is None:
+            context = {}
         obj_wiki_group = self.pool.get('wiki.groups')
         obj_view = self.pool.get('ir.ui.view')
         obj_menu = self.pool.get('ir.ui.menu')

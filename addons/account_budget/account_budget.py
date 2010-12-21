@@ -108,10 +108,12 @@ crossovered_budget()
 
 class crossovered_budget_lines(osv.osv):
 
-    def _prac_amt(self, cr, uid, ids, context={}):
+    def _prac_amt(self, cr, uid, ids, context=None):
         res = {}
         result = 0.0
-        for line in self.browse(cr, uid, ids):
+        if context is None: 
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
             if not acc_ids:
                 raise osv.except_osv(_('Error!'),_("The General Budget '%s' has no Accounts!") % str(line.general_budget_id.name))
@@ -131,15 +133,17 @@ class crossovered_budget_lines(osv.osv):
             res[line.id] = result
         return res
 
-    def _prac(self, cr, uid, ids, name, args, context):
+    def _prac(self, cr, uid, ids, name, args, context=None):
         res={}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = self._prac_amt(cr, uid, [line.id], context=context)[line.id]
         return res
 
-    def _theo_amt(self, cr, uid, ids, context={}):
+    def _theo_amt(self, cr, uid, ids, context=None):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        if context is None: 
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
             today = datetime.datetime.today()
             date_to = today.strftime("%Y-%m-%d")
             date_from = line.date_from
@@ -167,17 +171,17 @@ class crossovered_budget_lines(osv.osv):
             res[line.id] = theo_amt
         return res
 
-    def _theo(self, cr, uid, ids, name, args, context):
+    def _theo(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = self._theo_amt(cr, uid, [line.id], context=context)[line.id]
         return res
 
-    def _perc(self, cr, uid, ids, name, args, context):
+    def _perc(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.theoritical_amount <> 0.00:
-                res[line.id] = float(line.practical_amount or 0.0 / line.theoritical_amount) * 100
+                res[line.id] = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
             else:
                 res[line.id] = 0.00
         return res

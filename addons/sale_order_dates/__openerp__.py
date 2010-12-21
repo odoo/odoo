@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Sale Order Dates',
+    'name': 'Sales Order Dates',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 17:21+0000\n"
 "PO-Revision-Date: 2010-10-26 08:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:42+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -62,11 +62,6 @@ msgstr "Grupuj wg..."
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
 msgstr ""
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: hr
 #: view:hr.employee:0
@@ -158,6 +153,11 @@ msgstr "Podstawowy system płacowy."
 #: view:hr.employee:0
 msgid "My Departments Employee"
 msgstr "Pracownicy mojego działu"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+msgid "Married"
+msgstr ""
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -282,14 +282,10 @@ msgid "Other information"
 msgstr "Inne informacje"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Adres do pracy"
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_installer
-msgid "Human Resources Application Configuration"
-msgstr "Konfiguracja kadr"
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Nazwa"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -330,6 +326,13 @@ msgid "Configuration"
 msgstr "Konfiguracja"
 
 #. module: hr
+#: view:hr.installer:0
+msgid ""
+"You can enhance the base HR Application by installing few HR-related "
+"functionalities."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Categories"
 msgstr "Kategorie"
@@ -340,14 +343,14 @@ msgid "Expected Employees"
 msgstr "Spodziewana liczba pracowników"
 
 #. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
-
-#. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
 msgstr "Numer ubezpieczenia (PESEL)"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+msgid "Divorced"
+msgstr "Rozwiedziony"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -382,6 +385,11 @@ msgstr "Moja konsola"
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Mężczyzna"
+
+#. module: hr
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -434,6 +442,21 @@ msgid "Category"
 msgstr "Kategoria"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+
+#. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
 msgstr "Konto bankowe pracownika dla płacy"
@@ -444,14 +467,19 @@ msgid "Note"
 msgstr "Notatka"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Informacje kontaktowe"
 
 #. module: hr
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Adres do pracy"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
@@ -464,8 +492,16 @@ msgid "Status"
 msgstr "Stan"
 
 #. module: hr
-#: field:hr.installer,progress:0
-msgid "Configuration Progress"
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Departments Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitements, etc."
+msgstr ""
+
+#. module: hr
+#: view:hr.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: hr
@@ -527,6 +563,11 @@ msgid "Status Description"
 msgstr ""
 
 #. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
@@ -570,14 +611,6 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Personal Information"
 msgstr "Informacje osobiste"
-
-#. module: hr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: hr
 #: view:res.users:0
@@ -634,6 +667,11 @@ msgid "Payroll"
 msgstr ""
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+msgid "Single"
+msgstr ""
+
+#. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
 msgstr ""
@@ -677,10 +715,10 @@ msgid "Resource"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Nazwa"
+#: view:hr.installer:0
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr "Konfiguracja kadr"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -736,6 +774,11 @@ msgid "Coach"
 msgstr ""
 
 #. module: hr
+#: view:hr.installer:0
+msgid "Configure Your Human Resources Application"
+msgstr ""
+
+#. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
 msgstr ""
@@ -749,8 +792,21 @@ msgid "Manager"
 msgstr "Menedżer"
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+msgid "Widower"
+msgstr ""
+
+#. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"JJob Positions is used to define jobs and their requirements. You can attach "
+"a survey to a job position. This survey will be used in the recruitment "
+"process to evaluate the applicants for this job position."
 msgstr ""
 
 #. module: hr
@@ -764,8 +820,14 @@ msgstr "Podlegli"
 #~ msgid "Friday"
 #~ msgstr "Piątek"
 
-#~ msgid "Divorced"
-#~ msgstr "Rozwiedziony"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Kategorie czasu pracy"
@@ -860,6 +922,9 @@ msgstr "Podlegli"
 #~ msgid "Fill up employee's contact information"
 #~ msgstr "Wypełnij informacje kontaktowe pracownika"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
 #~ msgid "Other"
 #~ msgstr "Inny"
 
@@ -871,3 +936,6 @@ msgstr "Podlegli"
 
 #~ msgid "Other ID"
 #~ msgstr "Inne ID"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."

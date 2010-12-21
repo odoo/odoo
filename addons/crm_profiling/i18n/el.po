@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 04:52+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -23,18 +23,6 @@ msgstr ""
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr ""
-
-#. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -49,19 +37,24 @@ msgid "Open Questionnaire"
 msgstr "Ανοικτό Ερωτηματολόγιο"
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Υπό-Προφίλ"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
 msgstr "Καταμερισμοί Συνεργάτη"
-
-#. module: crm_profiling
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -113,11 +106,6 @@ msgid "Use a questionnaire"
 msgstr "Χρήση Ερωτηματολογίου"
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -152,6 +140,11 @@ msgstr "Διαθέσιμες Απαντήσεις"
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Συμπεριληφθήσες Απαντήσεις"
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Υπό-Προφίλ"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -196,8 +189,16 @@ msgstr "Με χρήση Ερωτηματολογίου"
 msgid "Save Data"
 msgstr "Αποθήκευση Δεδομένων"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
+
 #~ msgid "crm_profiling management"
 #~ msgstr "crm_profiling management"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid ""
 #~ "Check this box if you want to use this tab as part of the segmentation rule. "
@@ -205,3 +206,6 @@ msgstr "Αποθήκευση Δεδομένων"
 #~ msgstr ""
 #~ "Επιλέξτε το αν επιθυμείτε να χρησιμοποιήσετε αυτή την καρτέλλα στον κανόνα "
 #~ "καταμερισμού. Αν δεν επιλεγεί, τα παρακάτω κριτήρια θα αγνοηθούν"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"

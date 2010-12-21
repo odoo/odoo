@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-30 14:20+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,13 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-01 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: event_project
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: event_project
 #: model:ir.model,name:event_project.model_event_project
@@ -50,17 +45,15 @@ msgstr ""
 "    Dieses Modul erlaubt Rückwärtsplanung für das Management von Events.\n"
 
 #. module: event_project
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: event_project
-#: constraint:ir.model:0
+#: help:event.project,project_id:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
 msgstr ""
-"Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
-"beinhalten!"
+"Dieses ist eine Projektvorlage. Das Projektmanagement von Veranstaltungen "
+"ist ein Duplikat der Veranstaltung selbst. Durch Klick auf 'Erzeuge Retro-"
+"Planung' wird ein neues Projekt auf Basis dieser Vorlage erzeugt."
 
 #. module: event_project
 #: view:event.project:0
@@ -69,9 +62,19 @@ msgid "Retro-Planning"
 msgstr "Projekt Retro Planung"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: view:event.event:0
+msgid "Create Retro-Planning"
+msgstr "Erzeuge Retro Planung"
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: event_project
+#: field:event.event,project_id:0
+msgid "Project"
+msgstr "Projekt"
 
 #. module: event_project
 #: field:event.project,project_id:0
@@ -86,15 +89,15 @@ msgstr ""
 "Organisation Ihrer Veranstaltung"
 
 #. module: event_project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#. module: event_project
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event_project.act_event_task
 msgid "Tasks"
 msgstr "Aufgaben"
+
+#. module: event_project
+#: field:event.event,task_ids:0
+msgid "Project tasks"
+msgstr "Projektaufgaben"
 
 #. module: event_project
 #: view:event.project:0
@@ -107,45 +110,28 @@ msgid "Date Start"
 msgstr "Startdatum"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Create Retro-Planning"
-msgstr "Erzeuge Retro Planung"
-
-#. module: event_project
-#: help:event.project,project_id:0
-msgid ""
-"This is Template Project. Project of event is a duplicate of this Template. "
-"After click on  'Create Retro-planning', New Project will be duplicated from "
-"this template project."
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
 msgstr ""
-"Dieses ist eine Projektvorlage. Das Projektmanagement von Veranstaltungen "
-"ist ein Duplikat der Veranstaltung selbst. Durch Klick auf 'Erzeuge Retro-"
-"Planung' wird ein neues Projekt auf Basis dieser Vorlage erzeugt."
 
 #. module: event_project
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+#: model:ir.model,name:event_project.model_event_event
+msgid "Event"
+msgstr "Veranstaltung"
 
 #. module: event_project
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Aufgabenmanagement"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Remaining Tasks"
 #~ msgstr "Verbleibende Aufgaben"
 
-#~ msgid "Project"
-#~ msgstr "Projekt"
-
-#~ msgid "Project tasks"
-#~ msgstr "Projektaufgaben"
-
 #~ msgid "Cancel"
 #~ msgstr "Abbrechen"
-
-#~ msgid "Event"
-#~ msgstr "Veranstaltung"
 
 #~ msgid "Event - Project"
 #~ msgstr "Event - Projekt"
@@ -159,3 +145,21 @@ msgstr "Aufgabenmanagement"
 #~ "Organisation und Management von Events.\n"
 #~ "\n"
 #~ "    Dieses Modul erlaubt Rückwärtsplanung für das Management von Events.\n"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

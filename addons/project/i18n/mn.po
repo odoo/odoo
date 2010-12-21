@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-25 19:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-26 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -35,11 +35,6 @@ msgstr "The task '%s' has been delegated to %s."
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: project
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: project
@@ -154,9 +149,7 @@ msgid "My Tasks"
 msgstr "Миний даалгаврууд"
 
 #. module: project
-#: code:addons/project/project.py:0
 #: constraint:project.task:0
-#, python-format
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй!"
 
@@ -353,6 +346,11 @@ msgid "Mail Header"
 msgstr "Мэйлийн толгой"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Дууссан даалгавар"
@@ -414,16 +412,19 @@ msgid "res.users"
 msgstr "res.users"
 
 #. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the project "
-"without removing it."
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Ажил дууссан"
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Төслийг дахин нээх"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -517,8 +518,8 @@ msgid "Date Stop: %(date)s"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: project
@@ -527,9 +528,9 @@ msgid "Reset as Project"
 msgstr "Төслийн дахин эхлүүлэх"
 
 #. module: project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+#: selection:project.vs.hours,state:0
+msgid "Template"
+msgstr "Загвар"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
@@ -542,9 +543,9 @@ msgid "My projects"
 msgstr "Миний төслүүд"
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -555,11 +556,6 @@ msgstr "Дараагийн"
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
 msgstr "Ноорог төлвөөс нээлттэй төлөвт шилжинэ."
-
-#. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -645,11 +641,6 @@ msgstr "Хойшлуухахгүй"
 #: selection:report.project.task.user,priority:0
 msgid "Medium"
 msgstr "Дундаж"
-
-#. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
-msgstr "Загвар"
 
 #. module: project
 #: view:project.task:0
@@ -765,6 +756,13 @@ msgid "New title of the task delegated to the user"
 msgstr ""
 
 #. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr ""
@@ -823,9 +821,9 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: project
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
+#: view:project.task.reevaluate:0
+msgid "_Evaluate"
+msgstr "_Үнэлэх"
 
 #. module: project
 #: view:board.board:0
@@ -845,9 +843,9 @@ msgid "Project Management"
 msgstr "Төслийн удирдлага"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Тохиргооны явц"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "8 сар"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -970,9 +968,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Харилцагчид анхааруулах"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1026,8 +1032,8 @@ msgid "Project Tasks"
 msgstr "Төслийн даалгаврууд"
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: project
@@ -1046,11 +1052,6 @@ msgstr "Ноорог"
 #: selection:report.project.task.user,priority:0
 msgid "Low"
 msgstr "Бага"
-
-#. module: project
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
 
 #. module: project
 #: view:project.project:0
@@ -1092,9 +1093,9 @@ msgid "Stages"
 msgstr "Үе"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "8 сар"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1110,6 +1111,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Харилцагчид анхааруулах"
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
 msgstr "6 сар"
@@ -1119,11 +1125,6 @@ msgstr "6 сар"
 msgid ""
 "Implements and tracks the concepts and task types defined in the SCRUM "
 "methodology."
-msgstr ""
-
-#. module: project
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: project
@@ -1195,9 +1196,11 @@ msgid "Manager Email"
 msgstr "Менежерийн Эмэйл"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
-msgstr "1 сар"
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1245,9 +1248,9 @@ msgid "User's projects"
 msgstr "Хэрэглэгчийн төслүүд"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Төслийг дахин нээх"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Тохиргооны явц"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1368,11 +1371,6 @@ msgid "Done"
 msgstr "Дууссан"
 
 #. module: project
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
-msgstr ""
-
-#. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.project:0
@@ -1390,11 +1388,6 @@ msgstr "Хаах"
 #: selection:project.vs.hours,state:0
 msgid "Open"
 msgstr "Нээх"
-
-#. module: project
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -1415,14 +1408,6 @@ msgstr "ID: %(task_id)s"
 #: selection:task.by.days,state:0
 msgid "In Progress"
 msgstr "Явж байна"
-
-#. module: project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:0
@@ -1518,11 +1503,6 @@ msgid "Re-evaluate Task"
 msgstr "Даалгаврыг дахин үнэлүүлэх"
 
 #. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
-msgstr "_Үнэлэх"
-
-#. module: project
 #: help:project.installer,project_long_term:0
 msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
@@ -1537,17 +1517,6 @@ msgstr ""
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"resources assigned on it. A project can be put into a hierarchy, as a child "
-"of a Parent Project. This allows you to  design large project structure with "
-"different phases spread over the project duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on."
 msgstr ""
 
 #. module: project
@@ -1604,6 +1573,7 @@ msgstr "Даалгавар: %(нэр)"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Төслийн хэрэглэгдэхүүний тохируулга"
 
@@ -1622,6 +1592,11 @@ msgstr "Зарцуулсан хугацаа"
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Дансны нэхэмжлэх"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
+msgstr "1 сар"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1741,6 +1716,11 @@ msgid "Project Time Unit"
 msgstr "Төслийн цагийн нэгж"
 
 #. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' is pending."
@@ -1773,11 +1753,6 @@ msgstr "Хэрэглэгч"
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
 msgstr "Алгассан даалгаврууд"
-
-#. module: project
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -1814,6 +1789,11 @@ msgstr "Батлагдсан төлөв"
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Даалгавар '%s' цуцлагдсан."
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Ажил дууссан"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -1900,6 +1880,9 @@ msgstr "Төсөв"
 #~ msgid "Close Task"
 #~ msgstr "Даалгаврыг хаах"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
 #~ msgid "Tasks Process"
 #~ msgstr "Даалгаврын явц"
 
@@ -1960,6 +1943,9 @@ msgstr "Төсөв"
 #~ msgid "Task type"
 #~ msgstr "Даалгаврын төрөл"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
 #~ msgid "New Task"
 #~ msgstr "Шинэ даалгавар"
 
@@ -1998,6 +1984,12 @@ msgstr "Төсөв"
 
 #~ msgid "Delay"
 #~ msgstr "Хүлээлт"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
 
 #~ msgid "Parent Task"
 #~ msgstr "Толгой даалгавар"
@@ -2076,3 +2068,9 @@ msgstr "Төсөв"
 
 #~ msgid "Internal description of the project."
 #~ msgstr "Төслийн дотоод тодорхойлолт."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"

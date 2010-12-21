@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-15 18:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-15 20:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-16 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -34,11 +34,6 @@ msgstr ""
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
 msgstr "Račun izdat&Plaćeno"
-
-#. module: purchase
-#: report:purchase.quotation:0
-msgid "Regards,"
-msgstr "Poštovanje,"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -75,11 +70,6 @@ msgstr "Adresa odredišta"
 #: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Potvrđeno od"
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravan naziv modela u definiciji zadatka."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -298,15 +288,19 @@ msgid "Net Total :"
 msgstr "Neto ukupno:"
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: purchase
@@ -492,16 +486,14 @@ msgid "Invoice Control"
 msgstr "Kontrola računa"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Request for Quotations."
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr "Zahtjev za ponudu"
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -576,11 +568,6 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr ""
-
-#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr ""
@@ -604,11 +591,8 @@ msgid "Error !"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
+#: view:purchase.order.line:0
+msgid "General Information"
 msgstr ""
 
 #. module: purchase
@@ -628,11 +612,6 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Nije moguće imati dve verzije cenovnika koje se preklapaju!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -708,9 +687,10 @@ msgid "Validated by"
 msgstr "Overeno od strane"
 
 #. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neodgovarajući XML za arhitekturu prikaza!"
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr "Zahtjev za ponudu"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
@@ -733,11 +713,6 @@ msgstr ""
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
-
-#. module: purchase
-#: sql_constraint:ir.rule:0
-msgid "Rule must have at least one checked access right !"
 msgstr ""
 
 #. module: purchase
@@ -794,8 +769,8 @@ msgstr ""
 "svim nabavnim nalozima."
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
+#: selection:purchase.report,month:0
+msgid "August"
 msgstr ""
 
 #. module: purchase
@@ -847,22 +822,10 @@ msgid "Month"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
 msgstr ""
-"Stanje nabavnog naloga ili zaheva za ponudu. Zahtjev za ponudu je nabavni "
-"nalog u formi 'Priprema'. Zatim nalog mora biti odobren od strane korisnika, "
-"čime se status prebacuje u 'Potvrđeno'. Zatim dobavljač mora potvrditi "
-"nabavni nalog i time možemo promeniti status nabavnog naloga u 'Odobreno'. "
-"Kada je je roba primljena i račun placen status se menja u 'Završeno'. "
-"Ukoliko se u jednoj od faza desi otkazivanje računa ili primke robe, status "
-"se menja u 'Izuzetak'."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -878,11 +841,6 @@ msgstr "Nabavni nalog ceka odobrenje"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
@@ -966,6 +924,11 @@ msgid "Purchase Order Line"
 msgstr "Red nabavnog naloga"
 
 #. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
 msgstr "Kalendarski pregled"
@@ -976,12 +939,11 @@ msgid "Purchase Order Merge"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Poštovanje,"
 
 #. module: purchase
-#: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
@@ -1018,14 +980,19 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
+#: view:purchase.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
+msgstr ""
+
+#. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: purchase
@@ -1041,11 +1008,6 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
-
-#. module: purchase
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
 msgstr ""
 
 #. module: purchase
@@ -1139,8 +1101,8 @@ msgid "Cancel Purchase Order"
 msgstr "Otkaži nabavni nalog"
 
 #. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Supplier Reference"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: purchase
@@ -1157,13 +1119,6 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
 msgstr ""
 
 #. module: purchase
@@ -1205,9 +1160,22 @@ msgid "Reference of the document that generated this purchase order request."
 msgstr "Referenca dokumenta koji generira ovaj zahtev za narudžbenicu."
 
 #. module: purchase
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
 msgstr ""
+"Stanje nabavnog naloga ili zaheva za ponudu. Zahtjev za ponudu je nabavni "
+"nalog u formi 'Priprema'. Zatim nalog mora biti odobren od strane korisnika, "
+"čime se status prebacuje u 'Potvrđeno'. Zatim dobavljač mora potvrditi "
+"nabavni nalog i time možemo promeniti status nabavnog naloga u 'Odobreno'. "
+"Kada je je roba primljena i račun placen status se menja u 'Završeno'. "
+"Ukoliko se u jednoj od faza desi otkazivanje računa ili primke robe, status "
+"se menja u 'Izuzetak'."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1226,20 +1194,10 @@ msgid "Date on which purchase order has been approved"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order.group:0
-msgid ""
-" Please note that: \n"
-" \n"
-"   Orders will only be merged if: \n"
-"   * Purchase Orders are in draft \n"
-"   * Purchase Orders belong to the same supplier \n"
-"   * Purchase Orders are have same stock location, same pricelist \n"
-" \n"
-"    Lines will only be merged if: \n"
-"   * Order lines are exactly the same except for the product,quantity and "
-"unit \n"
-" "
-msgstr ""
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting"
+msgstr "Čekanje"
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
@@ -1247,12 +1205,14 @@ msgid "Default Purchase Pricelist Version"
 msgstr "Standardna verzija nabavnog cenovnika"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr ""
 
@@ -1294,8 +1254,8 @@ msgid "Purchase Order Lines"
 msgstr ""
 
 #. module: purchase
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
 msgstr ""
 
 #. module: purchase
@@ -1315,13 +1275,6 @@ msgstr ""
 #: view:purchase.order.group:0
 msgid "Merge orders"
 msgstr "Ujedini naloge"
-
-#. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta mora počinjati sa x_ i ne sme sadržavati specijalne znakove!"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1376,6 +1329,12 @@ msgid "Warehouse"
 msgstr "Skladište"
 
 #. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
 msgstr "Datum upita"
@@ -1390,12 +1349,6 @@ msgstr "Datum odobrenja"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting Supplier Ack"
 msgstr ""
 
 #. module: purchase
@@ -1498,12 +1451,6 @@ msgid "Qty"
 msgstr "Količina"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
-msgid "Waiting"
-msgstr "Čekanje"
-
-#. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
 msgstr ""
@@ -1512,6 +1459,12 @@ msgstr ""
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
 msgstr "Rezervacija"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
@@ -1588,6 +1541,22 @@ msgid "April"
 msgstr ""
 
 #. module: purchase
+#: view:purchase.order.group:0
+msgid ""
+" Please note that: \n"
+" \n"
+" Orders will only be merged if: \n"
+" * Purchase Orders are in draft \n"
+" * Purchase Orders belong to the same supplier \n"
+" * Purchase Orders are have same stock location, same pricelist \n"
+" \n"
+" Lines will only be merged if: \n"
+" * Order lines are exactly the same except for the product,quantity and unit "
+"\n"
+" "
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Product UoM"
 msgstr ""
@@ -1652,11 +1621,6 @@ msgid "Addresses"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
 msgstr "Da li ste sigurni da želite ujediniti ove narudzbe?"
@@ -1708,6 +1672,14 @@ msgid "Year"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+
+#. module: purchase
 #: view:purchase.installer:0
 msgid "title"
 msgstr ""
@@ -1747,6 +1719,9 @@ msgstr ""
 
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Račun dobavljača pregenirisan prilikom prijema zbog kontrole"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravan naziv modela u definiciji zadatka."
 
 #~ msgid "Purchase Process"
 #~ msgstr "Proces nabavke"
@@ -1792,6 +1767,9 @@ msgstr ""
 
 #~ msgid "Packing"
 #~ msgstr "Pakovanje"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 
 #~ msgid "When controlling invoice from orders"
 #~ msgstr "Kada se kontroliše račun iz naloga"
@@ -1847,6 +1825,9 @@ msgstr ""
 #~ msgid "Packing Invoice"
 #~ msgstr "Račun pakiranja"
 
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Nije moguće imati dve verzije cenovnika koje se preklapaju!"
+
 #~ msgid "Delivery & Invoices"
 #~ msgstr "Isporuke & Fakture"
 
@@ -1873,6 +1854,11 @@ msgstr ""
 
 #~ msgid "New Purchase Order"
 #~ msgstr "Novi nabavni nalog"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta mora počinjati sa x_ i ne sme sadržavati specijalne znakove!"
 
 #~ msgid "Purchases Properties"
 #~ msgstr "Postavke Nabavke"

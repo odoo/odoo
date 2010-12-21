@@ -30,7 +30,7 @@ class change_production_qty(osv.osv_memory):
         'product_qty': fields.float('Product Qty', required=True),
     }
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -39,14 +39,16 @@ class change_production_qty(osv.osv_memory):
         @param context: A standard dictionary 
         @return: A dictionary which of fields with values. 
         """        
+        if context is None:
+            context = {}
         res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
         prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, context.get('active_id'))
+        prod = prod_obj.browse(cr, uid, context.get('active_id'), context=context)
         if 'product_qty' in fields:
             res.update({'product_qty': prod.product_qty})  
         return res
         
-    def change_prod_qty(self, cr, uid, ids, context):
+    def change_prod_qty(self, cr, uid, ids, context=None):
         """ 
         Changes the Quantity of Product.
         @param self: The object pointer.
@@ -60,8 +62,8 @@ class change_production_qty(osv.osv_memory):
         assert record_id, _('Active Id is not found')
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
-        for wiz_qty in self.browse(cr, uid, ids):
-            prod = prod_obj.browse(cr, uid,record_id)
+        for wiz_qty in self.browse(cr, uid, ids, context=context):
+            prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
         

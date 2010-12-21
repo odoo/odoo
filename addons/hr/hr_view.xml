@@ -56,7 +56,7 @@
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
                                 <field name="partner_id" invisible="1" />
-                                <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
+                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]"/>
                                 <field name="work_phone"/>
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
@@ -340,7 +340,7 @@
                             <field name="requirements" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Employee">
-                            <field name="employee_ids" colspan='4' nolabel="1"  mode="tree,form"/>
+                            <field name="employee_ids" colspan='4' nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">

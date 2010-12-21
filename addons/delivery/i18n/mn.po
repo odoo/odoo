@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-09 08:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -37,6 +37,11 @@ msgid "Net weight"
 msgstr "Цэвэр жин"
 
 #. module: delivery
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
@@ -46,11 +51,6 @@ msgstr "Үнэгүй боломж !"
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr "Хүргэлтийн координат"
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -125,13 +125,6 @@ msgid "Delivery Method"
 msgstr "Хүргэх арга"
 
 #. module: delivery
-#: help:delivery.grid,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"grid without removing it."
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
 msgstr "Барааны хөдөлгөөн"
@@ -153,9 +146,10 @@ msgid "Net Weight"
 msgstr "Цэвэр жин"
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
-msgstr "Хүснэгтийн мөрүүд"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr "Анхааруулга"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -178,9 +172,9 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: delivery
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй."
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Хүргэлтийн хүснэгт"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -209,10 +203,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
-msgstr "Анхааруулга"
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
+msgstr "Хүснэгтийн мөрүүд"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -220,19 +213,16 @@ msgid "Grid"
 msgstr "Хүснэгт"
 
 #. module: delivery
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "Зиплэх"
-
-#. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн архитектур алдаатай!"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Зарах нэгж хэмжих нэгжээс ялгаатай ангилалтай байх ёстой."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -264,6 +254,13 @@ msgid "Weight"
 msgstr "Жин"
 
 #. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr "Хүргэх арга"
@@ -278,13 +275,6 @@ msgstr ""
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -303,9 +293,9 @@ msgid "Lot"
 msgstr "Серийн дугаар"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Хүргэлтийн хүснэгт"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -329,9 +319,17 @@ msgid "Condition"
 msgstr "Нөхцөл"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Өртөг үнэ"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -366,14 +364,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
-
-#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr "Тээвэрлэгч"
@@ -382,6 +372,20 @@ msgstr "Тээвэрлэгч"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Борлуулалт & Худалдан авалт"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Өртөг үнэ"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -446,13 +450,6 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: delivery
-#: help:delivery.carrier,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"carrier without removing it."
-msgstr ""
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
@@ -505,14 +502,18 @@ msgid "States"
 msgstr "Төлвүүд"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Алдаа: Буруу зураасан код"
-
-#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Үнийн төрөл"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #~ msgid "Generate Draft Invoices On Receptions"
 #~ msgstr "Хүлээн авалтаас ноорог нэхэмжлэл үүсгэх"
@@ -520,14 +521,31 @@ msgstr "Үнийн төрөл"
 #~ msgid "Carrier and delivery grids"
 #~ msgstr "Тээвэрлэгч ба хүргэлтийн хүснэгт"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Зарах нэгж хэмжих нэгжээс ялгаатай ангилалтай байх ёстой."
+
 #~ msgid "Notes"
 #~ msgstr "Тэмдэглэл"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
 #~ msgid "Add Delivery Costs"
 #~ msgstr "Хүргэх өртөг нэмэх"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Алдаа: Буруу зураасан код"
 
 #~ msgid "Cancel"
 #~ msgstr "Цуцлах"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "НӨАТ буруу байж магадгүй."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй."

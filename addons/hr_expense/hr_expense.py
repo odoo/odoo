@@ -43,15 +43,11 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
         cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ", (tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
     def _get_currency(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
             return user.company_id.currency_id.id
@@ -101,7 +97,7 @@ class hr_expense_expense(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id = False
         if employee_id:
-            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id).department_id.id or False
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id or False
         return {'value':{'department_id':department_id}}
 
     def expense_confirm(self, cr, uid, ids, *args):
@@ -158,23 +154,23 @@ class hr_expense_expense(osv.osv):
                     'invoice_line_tax_id': tax_id and [(6, 0, tax_id)] or False,
                     'account_analytic_id': l.analytic_account.id,
                 }))
-            if not exp.employee_id.address_id:
-                raise osv.except_osv(_('Error !'), _('The employee must have a working address'))
-            acc = exp.employee_id.address_id.partner_id.property_account_payable.id
-            payment_term_id = exp.employee_id.address_id.partner_id.property_payment_term.id
+            if not exp.employee_id.address_home_id:
+                raise osv.except_osv(_('Error !'), _('The employee must have a Home address'))
+            acc = exp.employee_id.address_home_id.partner_id.property_account_payable.id
+            payment_term_id = exp.employee_id.address_home_id.partner_id.property_payment_term.id
             inv = {
                 'name': exp.name,
                 'reference': sequence_obj.get(cr, uid, 'hr.expense.invoice'),
                 'account_id': acc,
                 'type': 'in_invoice',
-                'partner_id': exp.employee_id.address_id.partner_id.id,
-                'address_invoice_id': exp.employee_id.address_id.id,
-                'address_contact_id': exp.employee_id.address_id.id,
+                'partner_id': exp.employee_id.address_home_id.partner_id.id,
+                'address_invoice_id': exp.employee_id.address_home_id.id,
+                'address_contact_id': exp.employee_id.address_home_id.id,
                 'origin': exp.name,
                 'invoice_line': lines,
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
-                'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id
+                'fiscal_position': exp.employee_id.address_home_id.partner_id.property_account_position.id
             }
             if payment_term_id:
                 to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
@@ -217,8 +213,6 @@ class hr_expense_line(osv.osv):
     _description = "Expense Line"
 
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
         if not ids:
             return {}
         cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN %s GROUP BY l.id ",(tuple(ids),))
@@ -247,14 +241,18 @@ class hr_expense_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
         if context is None:
-            context = {}
+            ctx = {}
+        else:
+            # we only want to update it locally
+            ctx = context.copy()
+
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
             # Compute based on pricetype of employee company
-            context['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-            amount_unit = product.price_get('standard_price', context)[product.id]
+            ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
+            amount_unit = product.price_get('standard_price', ctx)[product.id]
             res['unit_amount'] = amount_unit
             if not uom_id:
                 res['uom_id'] = product.uom_id.id

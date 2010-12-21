@@ -39,8 +39,6 @@ class hr_attendance_error(osv.osv_memory):
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         emp_ids = []
         data_error = self.read(cr, uid, ids, context=context)[0]
         date_from = data_error['init_date']

@@ -7,33 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-11-27 06:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-28 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: knowledge
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
-"especial!"
-
-#. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr "Conteúdo Colaborativo (Wiki)"
+#: model:ir.ui.menu,name:knowledge.menu_document
+msgid "Knowledge"
+msgstr "Conhecimento"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki_quality_manual:0
 msgid "Creates an example skeleton for a standard quality manual."
 msgstr "Cria um esqueleto de exemplo para um manual de qualidade padrão"
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Share information within the company with these specific Addons."
+msgstr ""
 
 #. module: knowledge
 #: field:knowledge.installer,document_ftp:0
@@ -46,29 +43,9 @@ msgid "Knowledge Management System"
 msgstr "Sistema de Gestão de Conhecimento"
 
 #. module: knowledge
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "O nome do módulo precisa ser único !"
-
-#. module: knowledge
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Erro ! Você não pode criar Menu recursivo."
-
-#. module: knowledge
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr "Conhecimento"
-
-#. module: knowledge
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "O ID de certificado do módulo precisa ser único !"
+#: field:knowledge.installer,wiki:0
+msgid "Collaborative Content (Wiki)"
+msgstr "Conteúdo Colaborativo (Wiki)"
 
 #. module: knowledge
 #: help:knowledge.installer,document_ftp:0
@@ -92,9 +69,9 @@ msgstr ""
 "arquivos padrão."
 
 #. module: knowledge
-#: field:knowledge.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Configuração em Progresso"
+#: view:knowledge.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: knowledge
 #: view:knowledge.installer:0
@@ -116,11 +93,6 @@ msgid "Configuration"
 msgstr "Configuração."
 
 #. module: knowledge
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
-
-#. module: knowledge
 #: field:knowledge.installer,wiki_quality_manual:0
 msgid "Quality Manual"
 msgstr "Manual de Qualidade"
@@ -129,6 +101,11 @@ msgstr "Manual de Qualidade"
 #: field:knowledge.installer,document_webdav:0
 msgid "Shared Repositories (WebDAV)"
 msgstr "Repositórios Compartilhados (WebDAV)"
+
+#. module: knowledge
+#: field:knowledge.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Configuração em Progresso"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki_faq:0
@@ -151,6 +128,7 @@ msgstr "Imagem"
 
 #. module: knowledge
 #: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+#: view:knowledge.installer:0
 msgid "Knowledge Application Configuration"
 msgstr "Configuração da Aplicação de Conhecimento"
 
@@ -158,6 +136,11 @@ msgstr "Configuração da Aplicação de Conhecimento"
 #: model:ir.model,name:knowledge.model_knowledge_installer
 msgid "knowledge.installer"
 msgstr "knowledge.installer"
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Configure Your Knowledge Application"
+msgstr ""
 
 #. module: knowledge
 #: help:knowledge.installer,wiki:0
@@ -169,11 +152,30 @@ msgstr ""
 "conhecimento de negócio e compartilhar entre os colaboradores."
 
 #. module: knowledge
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "O tamanho do campo nunca pode ser menor que 1 !"
-
-#. module: knowledge
 #: view:knowledge.installer:0
 msgid "Content templates"
 msgstr "Modelos de Conteúdo"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não pode conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar Menu recursivo."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"

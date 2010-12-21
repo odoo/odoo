@@ -30,7 +30,7 @@ class account_move_line_reconcile_select(osv.osv_memory):
                             domain = [('reconcile', '=', 1)], required=True),
     }
 
-    def action_open_window(self, cr, uid, ids, context={}):
+    def action_open_window(self, cr, uid, ids, context=None):
         """
         This function Open  account move line window for reconcile on given account id
         @param cr: the current row, from the database cursor,

@@ -52,12 +52,12 @@ class res_partner(osv.osv):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
 
-    def check_vat(self, cr, uid, ids):
+    def check_vat(self, cr, uid, ids, context=None):
         '''
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        for partner in self.browse(cr, uid, ids):
+        for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
@@ -75,7 +75,7 @@ class res_partner(osv.osv):
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
 
-    def _construct_constraint_msg(self, cr, uid, ids):
+    def _construct_constraint_msg(self, cr, uid, ids, context=None):
         def default_vat_check(cn, vn):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
@@ -1028,7 +1028,7 @@ class res_partner(osv.osv):
         if len(vat) not in(9, 10):
             return False
 
-        if int(vat[0:2]) == 0 and len(vat) == 10:
+        if int(vat[0:2]) in (0, 10, 20) and len(vat) == 10:
             return True
 
         if len(vat) == 10:

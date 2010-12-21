@@ -7,32 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 03:22+0000\n"
 "Last-Translator: Radoslav Sloboda <rado.sloboda@gmail.com>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr ""
-
-#. module: crm_profiling
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Názov objektu musí začínať x_ a nesmie obsahovať žiadne špeciálne znaky!"
-
-#. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neplatný názov modelu v akcii definície."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -47,19 +35,24 @@ msgid "Open Questionnaire"
 msgstr "Otvoriť dotazník"
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Odvodené profily"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
 msgstr "Segmentácie partnera"
-
-#. module: crm_profiling
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -111,11 +104,6 @@ msgid "Use a questionnaire"
 msgstr "Použitie dotazníka"
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neplatný súbor XML pre zobrazenie architektúry!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -150,6 +138,11 @@ msgstr ""
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr ""
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Odvodené profily"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -194,5 +187,16 @@ msgstr "Pomocou dotazníka"
 msgid "Save Data"
 msgstr "Uložiť dáta"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neplatný názov modelu v akcii definície."
+
 #~ msgid "crm_profiling management"
 #~ msgstr "crm_profiling management"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Názov objektu musí začínať x_ a nesmie obsahovať žiadne špeciálne znaky!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neplatný súbor XML pre zobrazenie architektúry!"

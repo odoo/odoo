@@ -29,13 +29,11 @@ class procurement_order(osv.osv):
     _columns = {
         'task_id': fields.many2one('project.task', 'Task')
     }
-    def check_produce_service(self, cr, uid, procurement, context=[]):
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        for procurement in self.browse(cr, uid, ids):
+        for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {

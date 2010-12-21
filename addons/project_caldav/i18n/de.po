@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-11-18 16:12+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-01 07:23+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-02 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_caldav
@@ -74,14 +74,14 @@ msgid "Caldav URL"
 msgstr "Caldav URL"
 
 #. module: project_caldav
-#: sql_constraint:basic.calendar.fields:0
-msgid "Can not map a field more than once"
-msgstr "Kann kein Feld mehr als einmal verbinden"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "March"
 msgstr "März"
+
+#. module: project_caldav
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,week_list:0
@@ -180,11 +180,6 @@ msgid "Sun"
 msgstr "Son"
 
 #. module: project_caldav
-#: sql_constraint:ir.module.module:0
-msgid "The name of the module must be unique !"
-msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#. module: project_caldav
 #: selection:project.task,select1:0
 msgid "Day of month"
 msgstr "Tag im Monat"
@@ -203,11 +198,6 @@ msgstr "Mail an Partner"
 #: selection:project.task,freq:0
 msgid "Weeks"
 msgstr "Wochen"
-
-#. module: project_caldav
-#: sql_constraint:ir.module.module:0
-msgid "The certificate ID of the module must be unique !"
-msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
 
 #. module: project_caldav
 #: field:project.task,select1:0
@@ -243,11 +233,6 @@ msgstr "Juli"
 #: field:project.task,th:0
 msgid "Thu"
 msgstr "Do"
-
-#. module: project_caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -426,22 +411,9 @@ msgid "of"
 msgstr "von"
 
 #. module: project_caldav
-#: sql_constraint:ir.model.fields:0
-msgid "Size of the field can never be less than 1 !"
-msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#. module: project_caldav
 #: selection:project.task,show_as:0
 msgid "Busy"
 msgstr "Beschäftigt"
-
-#. module: project_caldav
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
-"Sonderzeichen haben !"
 
 #. module: project_caldav
 #: view:project.task:0
@@ -577,3 +549,24 @@ msgstr "Samstag"
 #: selection:project.task,byday:0
 msgid "Fifth"
 msgstr "5ter"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
+#~ "Sonderzeichen haben !"
+
+#~ msgid "Can not map a field more than once"
+#~ msgstr "Kann kein Feld mehr als einmal verbinden"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-08-03 02:41+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -127,11 +127,6 @@ msgid "No Related Models!!"
 msgstr ""
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中使用了无效的模快名。"
-
-#. module: base_report_creator
 #: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "菜单信息"
@@ -140,6 +135,11 @@ msgstr "菜单信息"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "合计"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -194,9 +194,9 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "过滤字段"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,group_ids:0
@@ -235,6 +235,11 @@ msgstr "菜单名称"
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "与（AND）"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
@@ -322,13 +327,6 @@ msgid "Condition"
 msgstr "条件"
 
 #. module: base_report_creator
-#: help:base_report_creator.report,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the report "
-"without removing it."
-msgstr ""
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
 msgstr "计数"
@@ -377,10 +375,9 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,menu_id:0
@@ -408,9 +405,11 @@ msgid "Unique Colors"
 msgstr ""
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "过滤字段"
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -530,8 +529,18 @@ msgstr ""
 #~ msgid "Valid"
 #~ msgstr "有效"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
 #~ msgid "Uniq Colors"
 #~ msgstr "颜色"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"
 
 #~ msgid ""
 #~ "This modules allows you to create any statistic\n"

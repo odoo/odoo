@@ -39,6 +39,8 @@ class mrp_price(osv.osv_memory):
         @param context: A standard dictionary
         @return : Report
         """
+        if context is None:
+            context = {}
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number'])
         res = res and res[0] or {}

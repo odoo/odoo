@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-11-12 09:10+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-13 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -23,20 +23,6 @@ msgstr ""
 #: field:crm.make.sale,partner_id:0
 msgid "Customer"
 msgstr "Πελάτης"
-
-#. module: sale_crm
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του Αντικειμένου πρέπει να ξεκινά με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
-
-#. module: sale_crm
-#: view:account.invoice.report:0
-#: view:board.board:0
-msgid "Monthly Turnover"
-msgstr "Μηνιαίος Τζίρος"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
@@ -62,11 +48,6 @@ msgid "Customer has no addresses defined!"
 msgstr "Δεν υπάρχει επιλεγμένη διεύθυνση στον πελάτη"
 
 #. module: sale_crm
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
 msgstr ""
@@ -85,9 +66,10 @@ msgid "Convert to Quote"
 msgstr "Μετατροπή σε Προσφορά"
 
 #. module: sale_crm
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: view:account.invoice.report:0
+#: view:board.board:0
+msgid "Monthly Turnover"
+msgstr "Μηνιαίος Τζίρος"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
@@ -96,9 +78,9 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr "Μετατράπηκε σε Προσφορά Πώλησης(id:%s)."
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
-msgstr "Δημιουργία πώλησης"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
+msgstr "Τοποθέτηση Προσφοράς"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
@@ -134,6 +116,11 @@ msgstr "Κατάστημα"
 
 #. module: sale_crm
 #: view:board.board:0
+msgid "Opportunities by Stage"
+msgstr ""
+
+#. module: sale_crm
+#: view:board.board:0
 msgid "My Quotations"
 msgstr "Οι Προσφορές μου"
 
@@ -149,9 +136,9 @@ msgid "Sales Team"
 msgstr "Ομάδα Πώλησης"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Τοποθέτηση Προσφοράς"
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sale"
+msgstr "Δημιουργία πώλησης"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
@@ -172,6 +159,9 @@ msgstr "Ακύρωση"
 
 #~ msgid "All at once"
 #~ msgstr "Όλα μαζί"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "Opportunity goes into the quotation"
 #~ msgstr "Η ευκαιρία συμπεριλαμβάνεται στην προσφορά"
@@ -250,3 +240,9 @@ msgstr "Ακύρωση"
 
 #~ msgid "Case Section"
 #~ msgstr "Τμήμα Θεμάτων"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου πρέπει να ξεκινά με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"

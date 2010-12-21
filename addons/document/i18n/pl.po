@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-10-30 15:26+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -66,11 +66,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr ""
@@ -98,6 +93,12 @@ msgid "March"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr ""
@@ -209,6 +210,11 @@ msgid "Modified Date"
 msgstr "Data modyfikacji"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Knowledge Application Configuration"
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
 #: field:report.files.partner,partner:0
@@ -246,11 +252,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "ID modelu"
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "Błąd! Nie możesz tworzyć rekurencyjnych katalogów."
@@ -262,8 +263,8 @@ msgid "Storage"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
+#: view:document.configuration:0
+msgid "Configure Resource Directory"
 msgstr ""
 
 #. module: document
@@ -317,6 +318,11 @@ msgid "Stored Filename"
 msgstr "Nazwa zapisanego pliku"
 
 #. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -332,11 +338,6 @@ msgstr "Raport"
 #: selection:report.files.partner,month:0
 msgid "July"
 msgstr ""
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -528,6 +529,11 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr ""
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Włącznie z nazwą rekordu"
@@ -538,9 +544,9 @@ msgid "Attachment"
 msgstr "Załącznik"
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID modelu"
 
 #. module: document
 #: field:document.storage,online:0
@@ -560,9 +566,21 @@ msgid "Security"
 msgstr "Uprawnienia"
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
 msgstr ""
 
 #. module: document
@@ -601,6 +619,15 @@ msgid "Data"
 msgstr "Dane"
 
 #. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Definition"
 msgstr "Definicja"
@@ -637,6 +664,11 @@ msgid "Integrated Document Management System"
 msgstr "Zintegrowany system zarządzania dokumentami"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Choose the following Resouces to auto directory configuration."
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Powiązany z"
@@ -662,17 +694,15 @@ msgid "Expression"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Utworzył"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
 
 #. module: document
 #: view:board.board:0
@@ -703,6 +733,11 @@ msgid "File Name"
 msgstr "Nazwa pliku"
 
 #. module: document
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
+
+#. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
 msgstr "ID zasobu"
@@ -711,14 +746,6 @@ msgstr "ID zasobu"
 #: selection:document.storage,type:0
 msgid "External file storage"
 msgstr ""
-
-#. module: document
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: document
 #: view:board.board:0
@@ -796,6 +823,13 @@ msgstr "Wszystkie pliki użytkowników"
 #: model:ir.model,name:document.model_report_document_wall
 msgid "Users that did not inserted documents since one month"
 msgstr "Użytkownicy, którzy nie zapisali pliku przez ostatni miesiąc"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -880,6 +914,11 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr ""
@@ -942,6 +981,11 @@ msgid "Internal File storage"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+
+#. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
@@ -980,6 +1024,9 @@ msgstr "Typ dokumentu"
 #~ msgid "File Information"
 #~ msgstr "Informacje o pliku"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
 #~ msgid "Preview"
 #~ msgstr "Podgląd"
 
@@ -988,6 +1035,12 @@ msgstr "Typ dokumentu"
 
 #~ msgid "Cancel"
 #~ msgstr "Anuluj"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
 
 #~ msgid "Storing Method"
 #~ msgstr "Metoda zapisu"
@@ -1066,6 +1119,9 @@ msgstr "Typ dokumentu"
 
 #~ msgid "Parent Item"
 #~ msgstr "Element nadrzędny"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #~ msgid "All Months"
 #~ msgstr "Wszystkie miesiące"

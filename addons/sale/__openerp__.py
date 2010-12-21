@@ -27,7 +27,7 @@
     The base module to manage quotations and sales orders.
 
     * Workflow with validation steps:
-        - Quotation -> Sale order -> Invoice
+        - Quotation -> Sales order -> Invoice
     * Invoicing methods:
         - Invoice on order (before or after shipping)
         - Invoice on delivery

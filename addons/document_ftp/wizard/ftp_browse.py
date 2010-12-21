@@ -48,9 +48,9 @@ class document_ftp_browse(osv.osv_memory):
             res['url'] = 'ftp://%s@%s'%(current_user.login, url)
         return res
 
-    def browse_ftp(self, cr, uid, ids, context):
+    def browse_ftp(self, cr, uid, ids, context=None):
         data_id = ids and ids[0] or False
-        data = self.browse(cr, uid, data_id, context)
+        data = self.browse(cr, uid, data_id, context=context)
         final_url = data.url
         return {
         'type': 'ir.actions.act_url',

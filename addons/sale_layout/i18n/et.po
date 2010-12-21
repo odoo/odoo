@@ -7,26 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-08-16 09:47+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Sub Total"
 msgstr "Vahesumma"
-
-#. module: sale_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -144,19 +138,14 @@ msgid "Sale Order Layout"
 msgstr ""
 
 #. module: sale_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
-
-#. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
 msgid "Sale Order"
 msgstr ""
 
 #. module: sale_layout
-#: selection:sale.order.line,layout_type:0
-msgid "Page Break"
-msgstr "Leheküljepiir"
+#: report:sale.order.layout:0
+msgid "Fax :"
+msgstr "Faks :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -219,9 +208,14 @@ msgid "Your Reference"
 msgstr "Sinu viide"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
-msgstr "Müügikorralduste read"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr ""
+
+#. module: sale_layout
+#: report:sale.order.layout:0
+msgid "TVA :"
+msgstr "KM:"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -234,9 +228,9 @@ msgid "States"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "TVA :"
-msgstr "KM:"
+#: view:sale.order:0
+msgid "Sales order lines"
+msgstr "Müügikorralduste read"
 
 #. module: sale_layout
 #: model:ir.actions.report.xml,name:sale_layout.sale_order_1
@@ -254,9 +248,9 @@ msgid "UoM"
 msgstr "Mõõtühik"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Fax :"
-msgstr "Faks :"
+#: selection:sale.order.line,layout_type:0
+msgid "Page Break"
+msgstr "Leheküljepiir"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -277,3 +271,6 @@ msgstr "Maksud :"
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Lao liikumised"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"

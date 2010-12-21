@@ -31,7 +31,7 @@ class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
     _inherit = 'res.config.installer'
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
         data['pdf_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html'
         file = open(addons.get_module_resource('thunderbird','plugin', 'openerp_plugin.xpi'),'rb')

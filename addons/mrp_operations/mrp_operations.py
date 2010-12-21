@@ -39,7 +39,7 @@ class stock_move(osv.osv):
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
     
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default.update({
@@ -50,7 +50,7 @@ class stock_move(osv.osv):
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
-    def _get_date_date(self, cr, uid, ids, field_name, arg, context):
+    def _get_date_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds starting date.
         @return: Dictionary of values.
         """
@@ -62,11 +62,10 @@ class mrp_production_workcenter_line(osv.osv):
                 res[op.id]=False
         return res
 
-    def _get_date_end(self, cr, uid, ids, field_name, arg, context):
+    def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds ending date.
         @return: Dictionary of values.
         """
-
         ops = self.browse(cr, uid, ids, context=context)
         date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
 
@@ -143,7 +142,7 @@ class mrp_production_workcenter_line(osv.osv):
                 wf_service.trg_validate(uid, 'mrp.production', oper_obj.production_id.id, 'button_produce_done', cr)
         return
 
-    def write(self, cr, uid, ids, vals, context={}, update=True):
+    def write(self, cr, uid, ids, vals, context=None, update=True):
         result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
         prod_obj = self.pool.get('mrp.production')
         if vals.get('date_planned', False) and update:
@@ -214,7 +213,7 @@ class mrp_production(osv.osv):
         'allow_reorder': fields.boolean('Free Serialisation', help="Check this to be able to move independently all production orders, without moving dependent ones."),
     }
 
-    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context={}):
+    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Calculates planned end date of production order.
         @return: Dictionary of values
         """
@@ -255,11 +254,13 @@ class mrp_production(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_cancel', cr)
         return super(mrp_production,self).action_cancel(cr,uid,ids)
 
-    def _compute_planned_workcenter(self, cr, uid, ids, context={}, mini=False):
+    def _compute_planned_workcenter(self, cr, uid, ids, context=None, mini=False):
         """ Computes planned and finished dates for work order.
         @return: Calculated date
         """
         dt_end = datetime.now()
+        if context is None:
+            context = {}
         for po in self.browse(cr, uid, ids, context=context):
             dt_end = datetime.strptime(po.date_planned, '%Y-%m-%d %H:%M:%S')
             if not po.date_start:
@@ -295,11 +296,11 @@ class mrp_production(osv.osv):
             })
         return dt_end
 
-    def _move_pass(self, cr, uid, ids, context={}):
+    def _move_pass(self, cr, uid, ids, context=None):
         """ Calculates start date for stock moves finding interval from resource calendar.
         @return: True 
         """
-        for po in self.browse(cr, uid, ids, context):
+        for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
             todo = po.move_lines
@@ -323,11 +324,11 @@ class mrp_production(osv.osv):
                             self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')}, mini=True)
         return True
 
-    def _move_futur(self, cr, uid, ids, context={}):
+    def _move_futur(self, cr, uid, ids, context=None):
         """ Calculates start date for stock moves.
         @return: True 
         """
-        for po in self.browse(cr, uid, ids, context):
+        for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
             for line in po.move_created_ids:
@@ -343,7 +344,7 @@ class mrp_production(osv.osv):
                         break
 
 
-    def write(self, cr, uid, ids, vals, context={}, update=True, mini=True):
+    def write(self, cr, uid, ids, vals, context=None, update=True, mini=True):
         direction = {}
         if vals.get('date_start', False):
             for po in self.browse(cr, uid, ids, context=context):
@@ -392,7 +393,7 @@ class mrp_operations_operation(osv.osv):
         operation_ids = self.pool.get('mrp_operations.operation').search(cr, uid, [('production_id','=',ids[0])], context=context)
         return operation_ids
 
-    def _get_order_date(self, cr, uid, ids, field_name, arg, context):
+    def _get_order_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Calculates planned date for an operation.
         @return: Dictionary of values
         """
@@ -481,7 +482,7 @@ class mrp_operations_operation(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        oper_objs=self.browse(cr,uid,ids)[0]
+        oper_objs = self.browse(cr, uid, ids, context=context)[0]
         vals['production_id']=oper_objs.production_id.id
         vals['workcenter_id']=oper_objs.workcenter_id.id
 
@@ -500,11 +501,11 @@ class mrp_operations_operation(osv.osv):
     def create(self, cr, uid, vals, context=None):
         wf_service = netsvc.LocalService('workflow')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
-        code=self.pool.get('mrp_operations.operation.code').browse(cr,uid,code_ids)[0]
+        code=self.pool.get('mrp_operations.operation.code').browse(cr, uid, code_ids, context=context)[0]
         wc_op_id=self.pool.get('mrp.production.workcenter.line').search(cr,uid,[('workcenter_id','=',vals['workcenter_id']),('production_id','=',vals['production_id'])])
         if code.start_stop in ('start','done','pause','cancel','resume'):
             if not wc_op_id:
-                production_obj=self.pool.get('mrp.production').browse(cr,uid,vals['production_id'])
+                production_obj=self.pool.get('mrp.production').browse(cr, uid, vals['production_id'], context=context)
                 wc_op_id.append(self.pool.get('mrp.production.workcenter.line').create(cr,uid,{'production_id':vals['production_id'],'name':production_obj.product_id.name,'workcenter_id':vals['workcenter_id']}))
             if code.start_stop=='start':
                 self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
