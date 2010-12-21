@@ -30,8 +30,9 @@ class sale_order_line(osv.osv):
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
         if product:
+            rate = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist.currency_id.rate
             purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
-            res['value'].update({'purchase_price': purchase_price})
+            res['value'].update({'purchase_price': purchase_price * rate})
         return res
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
