@@ -808,13 +808,13 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True, context=None):
+def trans_load(db_name, filename, lang, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
         logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
+        r = trans_load_data(db_name, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -822,7 +822,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True, context=None
             logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context=None):
+def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
@@ -924,48 +924,20 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 else:
                     dic['res_id'] = False
 
-            if dic['type'] == 'model' and not strict:
-                (model, field) = dic['name'].split(',')
-
-                # get the ids of the resources of this model which share
-                # the same source
-                obj = pool.get(model)
-                if obj:
-                    if field not in obj.fields_get_keys(cr, uid):
-                        continue
-                    ids = obj.search(cr, uid, [(field, '=', dic['src'])])
-
-                    # if the resource id (res_id) is in that list, use it,
-                    # otherwise use the whole list
-                    if not ids:
-                        ids = []
-                    ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
-                    for id in ids:
-                        dic['res_id'] = id
-                        ids = trans_obj.search(cr, uid, [
-                            ('lang', '=', lang),
-                            ('type', '=', dic['type']),
-                            ('name', '=', dic['name']),
-                            ('src', '=', dic['src']),
-                            ('res_id', '=', dic['res_id'])
-                        ])
-                        if ids:
-                            if context.get('overwrite', False):
-                                trans_obj.write(cr, uid, ids, {'value': dic['value']})
-                        else:
-                            trans_obj.create(cr, uid, dic)
+            args = [
+                ('lang', '=', lang),
+                ('type', '=', dic['type']),
+                ('name', '=', dic['name']),
+                ('src', '=', dic['src']),
+            ]
+            if dic['type'] == 'model':
+                args.append(('res_id', '=', dic['res_id']))
+            ids = trans_obj.search(cr, uid, args)
+            if ids:
+                if context.get('overwrite'):
+                    trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
-                ids = trans_obj.search(cr, uid, [
-                    ('lang', '=', lang),
-                    ('type', '=', dic['type']),
-                    ('name', '=', dic['name']),
-                    ('src', '=', dic['src'])
-                ])
-                if ids:
-                    if context.get('overwrite', False):
-                        trans_obj.write(cr, uid, ids, {'value': dic['value']})
-                else:
-                    trans_obj.create(cr, uid, dic)
+                trans_obj.create(cr, uid, dic)
             cr.commit()
         cr.close()
         if verbose:
