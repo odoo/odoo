@@ -38,7 +38,7 @@ CRM_LEAD_PENDING_STATES = (
 class crm_lead(crm_case, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
-    _description = "Lead"
+    _description = "Lead/Opportunity"
     _order = "date_action, priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
     def _compute_day(self, cr, uid, ids, fields, args, context=None):

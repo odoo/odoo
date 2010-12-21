@@ -67,7 +67,7 @@ class mrp_workcenter(osv.osv):
 
         if product_id:
             cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            value = {'costs_hour' :cost.standard_price}
+            value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
 mrp_workcenter()
@@ -111,8 +111,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing work centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of iterations this work center has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work center to achieve the operation of the specified routing."),
+            help="Number of iterations this work Center has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -664,7 +664,7 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-        
+
         final_product_todo = []
 
         produced_qty = 0

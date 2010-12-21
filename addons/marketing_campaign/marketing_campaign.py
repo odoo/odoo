@@ -87,7 +87,7 @@ class marketing_campaign(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
-                                      help="Choose the model on which you want \
+                                      help="Choose the resource on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",

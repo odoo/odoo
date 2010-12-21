@@ -214,7 +214,6 @@ class procurement_order(osv.osv):
         report = []
         offset = 0
         ids = [1]
-        newdate = datetime.today()
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
         while ids:
@@ -241,7 +240,7 @@ class procurement_order(osv.osv):
                     if op.product_id.type not in ('consu'):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
-                            pro_ids = map(lambda x:x.id, op.procurement_draft_ids or [])
+                            pro_ids = [x.id for x in op.procurement_draft_ids]
                             cr.execute('select id, product_qty from procurement_order where id in %s order by product_qty desc', (tuple(pro_ids), ))
                             procure_datas = cr.dictfetchall()
                             to_generate = qty
