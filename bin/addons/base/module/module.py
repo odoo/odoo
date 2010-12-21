@@ -522,13 +522,13 @@ class module(osv.osv):
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
     def list_web(self, cr, uid, context=None):
-        """ list_web(cr, uid, context) -> [module_name]
+        """ list_web(cr, uid, context) -> [(module_name, module_version)]
         Lists all the currently installed modules with a web component.
 
-        Returns a list of addon names.
+        Returns a list of a tuple of addon names and addon versions.
         """
         return [
-            module['name']
+            (module['name'], module['installed_version'])
             for module in self.browse(cr, uid,
                 self.search(cr, uid,
                     [('web', '=', True),
@@ -561,6 +561,7 @@ class module(osv.osv):
                            'to web client', names)
         return [
             {'name': module.name,
+             'version': module.installed_version,
              'depends': list(self._web_dependencies(
                  cr, uid, module, context=context)),
              'content': addons.zip_directory(

@@ -35,25 +35,6 @@ def one_in(setA, setB):
             return True
     return False
 
-def cond(C, X, Y):
-    if C: return X
-    return Y
-
-class many2many_unique(fields.many2many):
-    def set(self, cr, obj, id, name, values, user=None, context=None):
-        if not values:
-            return
-        val = values[:]
-        for act in values:
-            if act[0]==4:
-                cr.execute('SELECT * FROM '+self._rel+' \
-                        WHERE '+self._id1+'=%s AND '+self._id2+'=%s', (id, act[1]))
-                if cr.fetchall():
-                    val.remove(act)
-        return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
-                context=context)
-
-
 class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
 
@@ -298,7 +279,7 @@ class ir_ui_menu(osv.osv):
         'sequence': fields.integer('Sequence'),
         'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child IDs'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
-        'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
+        'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,

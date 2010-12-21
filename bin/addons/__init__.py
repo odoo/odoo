@@ -225,6 +225,10 @@ def zip_directory(directory, b64enc=True, src=True):
 
     archname = StringIO()
     archive = PyZipFile(archname, "w", ZIP_DEFLATED)
+
+    # for Python 2.5, ZipFile.write() still expects 8-bit strings (2.6 converts to utf-8)
+    directory = tools.ustr(directory).encode('utf-8')
+
     archive.writepy(directory)
     _zippy(archive, directory, src=src)
     archive.close()

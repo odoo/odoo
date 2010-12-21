@@ -427,7 +427,7 @@ form: module.record_id""" % (xml_id,)
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(cr, rec.get('view_id','').encode('utf-8'))
-        domain = rec.get('domain','').encode('utf-8') or '{}'
+        domain = rec.get('domain','').encode('utf-8') or '[]'
         res_model = rec.get('res_model','').encode('utf-8')
         src_model = rec.get('src_model','').encode('utf-8')
         view_type = rec.get('view_type','').encode('utf-8') or 'form'
@@ -705,8 +705,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -737,8 +737,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
