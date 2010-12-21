@@ -649,6 +649,7 @@ class purchase_order_line(osv.osv):
         if not product:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
+        res = {}
         prod= self.pool.get('product.product').browse(cr, uid, product)
 
         product_uom_pool = self.pool.get('product.uom')
@@ -668,32 +669,31 @@ class purchase_order_line(osv.osv):
         seller_delay = 0
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
- 
+        res = {} 
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
-                temp_qty = s.min_qty # supplier _qty assigned to temp
                 if s.product_uom:
-                    qty = product_uom_pool._compute_qty(cr, uid, s.product_uom.id, s.min_qty, to_uom_id=prod_uom_po)
-                    uom = prod_uom_po
+                    temp_qty = product_uom_pool._compute_qty(cr, uid, s.product_uom.id, s.min_qty, to_uom_id=prod.uom_id.id)
+                    uom = s.product_uom.id #prod_uom_po
+                temp_qty = s.min_qty # supplier _qty assigned to temp
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
-        if price_unit:
-            price = price_unit
-        else:
-            price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                    product, 1.0, partner_id, {
-                        'uom': prod_uom_po,
+                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you cannot purchase less.') % qty}})
+        qty_in_product_uom = product_uom_pool._compute_qty(cr, uid, uom, qty, to_uom_id=prod.uom_id.id)
+        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+                    product, qty_in_product_uom or 1.0, partner_id, {
+                        'uom': uom,
                         'date': date_order,
                         })[pricelist]
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
 
 
-        res = {'value': {'price_unit': price, 'name': name or prod_name,
+        res.update({'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
-            'product_uom': uom}}
+            'product_uom': uom}})
         domain = {}
 
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
@@ -714,6 +714,9 @@ class purchase_order_line(osv.osv):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order,fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
+            if uom and uom != res['value']['product_uom']:
+                seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
+                res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % seller_uom_name }})
             del res['value']['product_uom']
         if not uom:
             res['value']['price_unit'] = 0.0
