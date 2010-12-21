@@ -315,26 +315,29 @@
   Print the Profit-Loss Report in Normal Mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = []
-    acc_ids = [ref('account.bal'),ref('account.gpf')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'display_type': False,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal'),'active_ids':acc_ids }}
-    (data, format) = netsvc.LocalService('report.pl.account').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-profit-loss.'+format), 'wb+').write(data)
-
+    ctx={}
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),
+                 'display_account':'bal_all',
+                 'display_type': False}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')    
 -
   Print the Profit-Loss Report in Horizontal Mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = []
-    acc_ids = [ref('account.bal'),ref('account.gpf')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'display_type': True,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':'True ','target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal'),'active_ids':acc_ids }}
-    (data, format) = netsvc.LocalService('report.pl.account.horizontal').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-profit-loss-horizontal.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),
+                 'display_account':'bal_all',
+                 'display_type': True}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')    
