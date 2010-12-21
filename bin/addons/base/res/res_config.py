@@ -24,6 +24,7 @@ from operator import attrgetter
 from osv import osv, fields
 from tools.translate import _
 import netsvc
+from tools import ustr
 import pooler
 
 
@@ -379,9 +380,8 @@ class res_config_installer(osv.osv_memory):
                 continue
             fields[module.name].update(
                 readonly=True,
-                help=fields[module.name].get('help', '') +
+                help= ustr(fields[module.name].get('help', '')) +
                      _('\n\nThis addon is already installed on your system'))
-
         return fields
 
     def execute(self, cr, uid, ids, context=None):

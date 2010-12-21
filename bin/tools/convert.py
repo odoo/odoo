@@ -45,6 +45,8 @@ import netsvc
 import osv
 import pooler
 from config import config
+from osv.orm import except_orm
+from tools.translate import _
 from yaml_import import convert_yaml_import
 
 # Import of XML records requires the unsafe eval as well,
@@ -940,7 +942,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
             logger.error("Cannot import the line: %s", line)
-    pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
+    result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
+    if result < 0:
+        # Report failed import and abort module install
+        raise except_orm(_('Module loading failed'), _('Loading %s/%s failed:\n %s') % (module, fname, warning_msg))
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0

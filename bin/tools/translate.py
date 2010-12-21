@@ -250,8 +250,8 @@ class TinyPoFile(object):
         self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
-    def warn(self, msg):
-        self.logger.warning(msg)
+    def warn(self, msg, *args):
+        self.logger.warning(msg, *args)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -437,7 +437,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             rows_by_module = {}
             for row in rows:
                 module = row[0]
-                rows_by_module.setdefault(module, []).append(row)
+                # first row is the "header", as in csv, it will be popped
+                rows_by_module.setdefault(module, [['module', 'type', 'name', 'res_id', 'src', ''],])
+                rows_by_module[module].append(row)
 
             tmpdir = tempfile.mkdtemp()
             for mod, modrows in rows_by_module.items():
