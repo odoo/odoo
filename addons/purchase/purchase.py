@@ -218,6 +218,9 @@ class purchase_order(osv.osv):
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+    ]
     _name = "purchase.order"
     _description = "Purchase Order"
     _order = "name desc"
