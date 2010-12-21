@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-14 21:21+0000\n"
-"Last-Translator: Christophe (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 16:49+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -77,6 +77,11 @@ msgstr "Jour"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Annuler la commande"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -323,11 +328,6 @@ msgid "All Quotations"
 msgstr "Tous les devis"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Notre Vendeur"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Juin"
@@ -463,9 +463,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "Le devis '%s' a été converti en commande de vente."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Liste de prix d'achats"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -561,6 +561,11 @@ msgstr "Devis / Commande"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "Nb. de lignes"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -872,13 +877,10 @@ msgid "Sale Order Line"
 msgstr "Ligne de commande"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Créer facture"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Prix unitaire"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -940,6 +942,8 @@ msgstr "Prix"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Configuration de l'application des ventes"
 
@@ -982,11 +986,6 @@ msgstr "Pilote l'approvisionnement et la facturation"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Numéro de séquence"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Liste de prix de ventes"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1372,10 +1371,13 @@ msgid "Sales"
 msgstr "Ventes"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Prix unitaire"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Créer facture"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1758,6 +1760,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Document d'origine"
@@ -1805,6 +1812,7 @@ msgid "Uninvoiced"
 msgstr "Non-facturée"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1874,11 +1882,6 @@ msgid "Sales Orders"
 msgstr "Commandes de Ventes"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Conditions de règlement"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1914,6 +1917,11 @@ msgstr ""
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Janvier"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2051,6 +2059,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Condition de règlement"
@@ -2136,6 +2145,9 @@ msgstr "Facture basé sur les livraisons"
 
 #~ msgid "Procure Method"
 #~ msgstr "Méthode d'approvisionnement"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Conditions de règlement"
 
 #~ msgid "Packing Default Policy"
 #~ msgstr "Politique de colisage par défaut"
@@ -2289,8 +2301,14 @@ msgstr "Facture basé sur les livraisons"
 #~ msgid "Packing Policy"
 #~ msgstr "Politique de Colisage"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Notre Vendeur"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Créer une facture anticipée"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Liste de prix de ventes"
 
 #~ msgid "Make Invoice"
 #~ msgstr "Créer facture"
@@ -2340,6 +2358,9 @@ msgstr "Facture basé sur les livraisons"
 #~ msgid ""
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Le nom et l'adresse du contacte ayant demandé le devis."
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Liste de prix d'achats"
 
 #~ msgid "New Quotation"
 #~ msgstr "Nouveau devis"

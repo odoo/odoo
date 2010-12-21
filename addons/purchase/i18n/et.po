@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-08-28 08:37+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-16 05:14+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -39,16 +39,6 @@ msgstr "Ostutukorraldus"
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
 msgstr "Tellimuse viide"
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-"Sa pead valima partneri ostuvormil!\n"
-"Palun määra partner enne toote valimist."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -80,6 +70,16 @@ msgstr "Sinu tellimuse viide"
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
 msgstr "Arveldamishaldus"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"Sa pead valima partneri ostuvormil!\n"
+"Palun määra partner enne toote valimist."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -329,15 +329,19 @@ msgid "Net Total :"
 msgstr "Netosumma:"
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: purchase
@@ -628,6 +632,11 @@ msgid "Error !"
 msgstr "Viga !"
 
 #. module: purchase
+#: view:purchase.order.line:0
+msgid "General Information"
+msgstr ""
+
+#. module: purchase
 #: view:board.board:0
 msgid "My Board"
 msgstr ""
@@ -790,8 +799,8 @@ msgstr ""
 "planeeritud kuupäev."
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
+#: selection:purchase.report,month:0
+msgid "August"
 msgstr ""
 
 #. module: purchase
@@ -1001,8 +1010,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
+#: view:purchase.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: purchase
@@ -1227,12 +1236,14 @@ msgid "Default Purchase Pricelist Version"
 msgstr "Vaikimisi ostuhinnakirja versioon"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr ""
 
@@ -1468,6 +1479,12 @@ msgstr "Kogus"
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
 msgstr ""
 
 #. module: purchase

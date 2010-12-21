@@ -1028,7 +1028,7 @@ class res_partner(osv.osv):
         if len(vat) not in(9, 10):
             return False
 
-        if int(vat[0:2]) == 0 and len(vat) == 10:
+        if int(vat[0:2]) in (0, 10, 20) and len(vat) == 10:
             return True
 
         if len(vat) == 10:
