@@ -530,7 +530,13 @@ class product_product(osv.osv):
                               }
                     result.append(_name_get(mydict))
             else:
-                result.append(_name_get(self.read(cr, user, product.id, ['variants','name','default_code'], context=context)))
+                mydict = {
+                          'id': product.id,
+                          'name': product.name,
+                          'default_code': product.default_code,
+                          'variants': product.variants
+                          }
+                result.append(_name_get(mydict))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
