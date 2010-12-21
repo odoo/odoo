@@ -51,22 +51,29 @@
     (data, format) = netsvc.LocalService('report.pos.receipt.without.remboursment').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt without reimbursement report'+format), 'wb+').write(data)
+
 -
-  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Payment Report
--
-  !python {model: ir.ui.menu}: |
-    import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.payment.report.date').create(cr, uid, [1], {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_id': [ref('base.user_root')] }}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale- pos sales lines report'+format), 'wb+').write(data)
--
-  In order to test the PDF reports defined on a Point Of Sale, we will print a POS Details Report
+ Print the POS Payment Report through the wizard
 -
   !python {model: ir.ui.menu}: |
     import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.details').create(cr, uid, [], {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d') }}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale- pos details report'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'ir.ui.menu','active_ids': []})
+    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_id': [(6,0,[ref('base.user_root')])] }
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_report_pos_payment_repport_date',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
+
+-
+ Print the POS Details Report through the wizard
+-
+  !python {model: ir.ui.menu}: |
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'ir.ui.menu','active_ids': []})
+    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_report_pos_details',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
+
 -
   I create a cash journal.
 -
