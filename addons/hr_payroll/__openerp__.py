@@ -38,7 +38,8 @@
     'depends': [
         'hr',
         'hr_contract',
-        'hr_holidays'
+        'hr_holidays',
+        'decimal_precision',
     ],
     'init_xml': [
     ],

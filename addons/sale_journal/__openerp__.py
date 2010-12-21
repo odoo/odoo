@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-    The sale journal modules allows you to categorise your
+    The sales journal modules allows you to categorise your
     sales and deliveries (picking lists) between different journals.
     This module is very helpful for bigger companies that
     works by departments.
