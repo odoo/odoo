@@ -798,10 +798,11 @@ class stock_picking(osv.osv):
         move_ids = self.pool.get('stock.move').search(cr, uid, [('picking_id', 'in', ids)])
         for move in self.pool.get('stock.move').browse(cr, uid, move_ids):
             if move.state not in ('done', 'cancel'):
+
                 if move.product_qty != 0.0:
                     return False
                 else:
-                    move.write(cr, uid, [move.id], {'state': 'done'})
+                    move.write({'state': 'done'})
         return True
 
     def test_assigned(self, cr, uid, ids):
@@ -869,7 +870,7 @@ class stock_picking(osv.osv):
         @return {'contact': address, 'invoice': address} for invoice
         """
         partner_obj = self.pool.get('res.partner')
-        partner = picking.address_id.partner_id
+        partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or picking.address_id.partner_id
 
         return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
@@ -972,7 +973,7 @@ class stock_picking(osv.osv):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = picking.address_id and picking.address_id.partner_id
+            partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or (picking.address_id and picking.address_id.partner_id)
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -2483,7 +2484,6 @@ class stock_inventory(osv.osv):
         """ Finish the inventory
         @return: True
         """
-
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
@@ -2507,8 +2507,9 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id)
+                product_context.update(uom=line.product_uom.id,date=inv.date)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
+
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
@@ -2518,7 +2519,6 @@ class stock_inventory(osv.osv):
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
-                        'date': inv.date,
                         'date': inv.date,
                     }
                     if change > 0:
@@ -2578,7 +2578,7 @@ class stock_inventory_line(osv.osv):
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
+    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
         """ Changes UoM and name if product_id changes.
         @param location_id: Location id
         @param product: Changed product_id
@@ -2590,7 +2590,7 @@ class stock_inventory_line(osv.osv):
         if not uom:
             prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
             uom = prod.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom})[product]
+        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
