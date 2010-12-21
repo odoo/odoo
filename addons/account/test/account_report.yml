@@ -83,22 +83,36 @@
   Print the Account Balance Sheet in Horizontal mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'reserve_account_id':ref('account.rsa') ,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 1,'journal_ids':[],'fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all'}}
-    (data, format) = netsvc.LocalService('report.account.balancesheet.horizontal').create(cr, uid, [], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance_sheet_horizontal.'+format), 'wb+').write(data)
 
+    ctx={}
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),
+                 'display_account':'bal_all',
+                 'target_move': 'all',
+                 'display_type': True}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')    
 -
   Print the Account Balance Sheet in Normal mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'reserve_account_id':ref('account.rsa') ,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','display_type': 0,'journal_ids':[],'fiscalyear': ref('account.data_fiscalyear') ,'target_move': 'all'}}
-    (data, format) = netsvc.LocalService('report.account.balancesheet').create(cr, uid, [], data_dict, {'periods': []})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-account_balance_sheet.'+format), 'wb+').write(data)
 
+    ctx={}
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),
+                 'display_account':'bal_all',
+                 'target_move': 'all',
+                 'display_type': False}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account') 
 -
   Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
