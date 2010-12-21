@@ -1287,6 +1287,9 @@ class stock_picking(osv.osv):
         @param ids: List of Picking Ids
         @param context: A standard dictionary for contextual values
         """
+        if context is None:
+            context = {}
+        data_obj = self.pool.get('ir.model.data')
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1295,6 +1298,11 @@ class stock_picking(osv.osv):
                 'out':_("Delivery Order"),
                 'in':_('Reception'),
                 'internal': _('Internal picking'),
+            }
+            view_list = {
+                'out': 'view_picking_out_form',
+                'in': 'view_picking_in_form',
+                'internal': 'view_picking_form',
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
@@ -1306,8 +1314,10 @@ class stock_picking(osv.osv):
                 'done': _('is done.'),
                 'draft':_('is in draft state.'),
             }
+            res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
+            context.update({'view_id': res and res[1] or False})
             message += state_list[pick.state]
-            self.log(cr, uid, pick.id, message)
+            self.log(cr, uid, pick.id, message, context=context)
         return True
 
 stock_picking()
