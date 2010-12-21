@@ -166,56 +166,56 @@
                         </field>
                     </page>
                     <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
-	                    <group col="4" colspan="4" name="rrule">
-	                        <group col="2" colspan="2">
-		                        <field name="rrule_type" string="Recurrency"
-	                                    attrs="{'readonly':[('recurrent_uid','!=',False)]}" colspan="2"/>
-	                            <label string="" colspan="2"/>
-	                        </group>
-		                    <separator string="Recurrency Rule" colspan="8"/>
-		                   <group col="6" colspan="4">
-		                        <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
-		                        <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
-		                        <field name="end_date" attrs="{'readonly': [('interval','!=',False)]}"/>
-		                    </group>
-		                    <group col="14" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
-		                        <field name="mo" colspan="1" />
-		                        <field name="tu" colspan="1" />
-		                        <field name="we" colspan="1" />
-		                        <field name="th" colspan="1" />
-		                        <newline/>
-		                        <field name="fr" colspan="1" />
-		                        <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
-		                        <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
-		                        <newline />
-		                    </group>
-		                    <group col="10" colspan="4"
-		                        attrs="{'invisible' : [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
-		                        <group col="2" colspan="1">
-		                            <field name="select1" />
-		                        </group>
-		                        <group col="2" colspan="1"
-		                            attrs="{'invisible' : [('select1','=','day')]}">
-		                            <field name="day"
-		                                attrs="{'required' : [('select1','=','date')]}" />
-		                        </group>
-		                        <group col="3" colspan="1"
-		                            attrs="{'invisible' : [('select1','=','date')]}">
-		                            <field name="byday" string="The"
-		                                attrs="{'required' : [('select1','=','day')]}" />
-		                            <field name="week_list" nolabel="1"
-		                                attrs="{'required' : [('select1','=','day')]}" />
-		                        </group>
-		                        <group col="1" colspan="1"
-		                            attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
-		                            <field name="month_list" string="of"
-		                                colspan="1"
-		                                attrs="{'required' : [('rrule_type','=','yearly')]}" />
-		                        </group>
-		                    </group>
-		                </group>
+                        <group col="4" colspan="4" name="rrule">
+                            <group col="4" colspan="4">
+                                <field name="rrule_type" string="Recurrency period"
+                                   attrs="{'readonly':[('recurrent_uid','!=',False)]}" />                               
+                                <label string="" colspan="2"/>                           
+                                
+                                <separator string="End of recurrency" colspan="4"/>
+                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <label string=" " colspan="2" />
+                                <newline />
+                                <field name="end_date" attrs="{'readonly': [('count','!=',False)]}"/>
+                                <newline />
+                           
+                                <separator string="Repeat interval" colspan="4"/>
+                                <field name="interval" /> <label string="" colspan="2"/>
+                            </group>
+                            <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                <separator string="Choose day where repeat the meeting" colspan="8"/>
+                                <field name="mo" colspan="1" />
+                                <field name="tu" colspan="1" />
+                                <field name="we" colspan="1" />
+                                <field name="th" colspan="1" />
+                                <newline/>
+                                <field name="fr" colspan="1" />
+                                <field name="sa" colspan="1"  />
+                                <field name="su" colspan="1"  />
+                                <newline />
+                            </group>
+                            <group col="10" colspan="4"
+                                attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
+                                <separator string="Choose day in the month where repeat the meeting" colspan="12"/>
+                                <group col="2" colspan="1">
+                                    <field name="select1" />
+                                </group>
+                                <group col="2" colspan="1"
+                                    attrs="{'invisible' : [('select1','=','day')]}">
+                                    <field name="day"
+                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')]}" />
+                                </group>
+                                <group col="3" colspan="1"
+                                    attrs="{'invisible' : [('select1','=','date'), ('rrule_type','=','monthly')]}">
+                                    <field name="byday" string="The"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}" />
+                                    <field name="week_list" nolabel="1"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}" />
+                                </group>
+                            </group>
+                        </group>
 
-	                </page>
+                    </page>
                 </notebook>
             </form>
         </field>
@@ -296,7 +296,7 @@
                        <group col="12" colspan="4">
                            <filter icon="terp-check" name="current" string="Current"
                                 domain="[('state','in',('draft', 'open'))]"
-				groups="base.group_extended"
+                groups="base.group_extended"
                                 help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
@@ -325,8 +325,8 @@
                                 context="{'group_by':'partner_id'}" />
                             <separator orientation="vertical" />
                             <filter string="Type" help="Meeting Type"
-                            	icon="terp-stock_symbol-selection" domain="[]"
-                            	context="{'group_by':'categ_id'}" />
+                                icon="terp-stock_symbol-selection" domain="[]"
+                                context="{'group_by':'categ_id'}" />
                             <filter string="Privacy" icon="terp-locked"
                                 domain="[]" context="{'group_by':'class'}" />
                             <filter string="Show time as" icon="terp-project"

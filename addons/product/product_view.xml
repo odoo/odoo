@@ -92,13 +92,12 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
+                                <field groups="base.group_extended" name="cost_method"/>
                                 <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
                                 <newline/>
                                 <field name="price_margin" groups="product.group_product_variant"/>
                                 <field name="price_extra" groups="product.group_product_variant"/>
-                                <newline/>
-                                <field groups="base.group_extended" name="cost_method"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
