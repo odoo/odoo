@@ -1313,7 +1313,6 @@ class account_invoice_line(osv.osv):
         if context is None:
             context = {}
         company_id = context.get('company_id',False)
-        tax_obj = self.pool.get('account.tax')
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:

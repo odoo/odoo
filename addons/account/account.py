@@ -708,7 +708,9 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, currency):
+    def onchange_type(self, cr, uid, ids, type, currency,context=None):
+        if context is None:
+            context = {}
         obj_data = self.pool.get('ir.model.data')
         user_pool = self.pool.get('res.users')
 
