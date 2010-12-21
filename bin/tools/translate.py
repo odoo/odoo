@@ -159,7 +159,6 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            dbname = getattr(threading.currentThread(), 'dbname')
             return pooler.get_db_only(dbname)
 
     def _get_cr(self, frame):
