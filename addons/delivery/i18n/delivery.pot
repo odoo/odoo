@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:15+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:15+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:02+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -100,11 +100,6 @@ msgid "Delivery Order :"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sale Order"
-msgstr ""
-
-#. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
 msgstr ""
@@ -120,6 +115,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
+#: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr ""
 
@@ -168,6 +164,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
 msgstr ""
 
 #. module: delivery
@@ -251,11 +252,6 @@ msgstr ""
 #. module: delivery
 #: help:delivery.carrier,active:0
 msgid "If the active field is set to False, it will allow you to hide the delivery carrier without removing it."
-msgstr ""
-
-#. module: delivery
-#: field:sale.order,carrier_id:0
-msgid "Delivery method"
 msgstr ""
 
 #. module: delivery
@@ -365,6 +361,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
 msgid "The delivery pricelist allows you to compute the cost and sales price of the delivery based on the weight of the products and other criteria. You can define several pricelists for one delivery method, for each region such as countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid "<="
 msgstr ""
 
 #. module: delivery
