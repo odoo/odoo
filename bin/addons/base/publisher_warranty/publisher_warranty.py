@@ -324,7 +324,7 @@ def get_sys_logs(cr, uid):
     finally:
         uo.close()
 
-    result = safe_eval(submit_result)
+    result = safe_eval(submit_result) if submit_result else {}
 
     return result
 
