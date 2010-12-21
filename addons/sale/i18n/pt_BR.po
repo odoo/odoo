@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:34+0000\n"
 "Last-Translator: Christophe (OpenERP) <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -42,6 +42,11 @@ msgstr "Dia"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Cancelar Pedido"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -307,11 +312,6 @@ msgid "All Quotations"
 msgstr "Todas as Cotações"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Nosso Representante"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Junho"
@@ -458,9 +458,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "A cotação '%s' foi convertida para uma ordem de venda."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Lista de Preço de Compras"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -563,6 +563,11 @@ msgstr "Cotação / Ordem"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# de Linhas"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -878,13 +883,10 @@ msgid "Sale Order Line"
 msgstr "Itens de Pedidos"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Criar Nota Fiscal"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Preço Unitário"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -944,6 +946,8 @@ msgstr "Preço"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Configuração da Aplicação de Vendas"
 
@@ -986,11 +990,6 @@ msgstr "Avançar Compras e Notas Fiscais"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Número sequencial"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Lista de Preço para Vendas"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1382,10 +1381,13 @@ msgid "Sales"
 msgstr "Vendas"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Preço Unitário"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Criar Nota Fiscal"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1790,6 +1792,11 @@ msgstr ""
 "vai esperar que todos os produtos estejam disponíveis.."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Documento Origem"
@@ -1835,6 +1842,7 @@ msgid "Uninvoiced"
 msgstr "Não faturado"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1903,11 +1911,6 @@ msgid "Sales Orders"
 msgstr "Ordens de Venda"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Forma de Pagamento"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1943,6 +1946,11 @@ msgstr "Sua Nota Fiscal foi criada com sucesso!"
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Janeiro"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2083,6 +2091,7 @@ msgid "Search Sales Order"
 msgstr "Buscar Ordens de Venda"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Forma de Pagamento"
@@ -2247,17 +2256,26 @@ msgstr "Notas Fiscais Baseadas nas Entregas"
 #~ msgid "Create Date"
 #~ msgstr "Data de Criação"
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Lista de Preço de Compras"
+
 #~ msgid "Sales orders"
 #~ msgstr "Ordens de Venda"
 
 #~ msgid "Sales By Salesman"
 #~ msgstr "Vendas por Representante"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Nosso Representante"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erro ! Você não pode criar Menu recursivo."
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo inválido na definição da ação."
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Lista de Preço para Vendas"
 
 #~ msgid "Sales order lines"
 #~ msgstr "Linhas da Ordem de Venda"
@@ -2280,6 +2298,9 @@ msgstr "Notas Fiscais Baseadas nas Entregas"
 
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Configurar Politica de Separação para Ordem de Venda"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Forma de Pagamento"
 
 #~ msgid "Make Invoice"
 #~ msgstr "Gerar fatura"

@@ -31,8 +31,9 @@ class account_tax_chart(osv.osv_memory):
        'period_id': fields.many2one('account.period', \
                                     'Period',  \
                                     ),
-       'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
+       'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                        ('all', 'All Entries'),
+                                        ], 'Target Moves', required=True),
     }
 
     def _get_period(self, cr, uid, context=None):
@@ -72,7 +73,7 @@ class account_tax_chart(osv.osv_memory):
 
     _defaults = {
         'period_id': _get_period,
-        'target_move': 'all'
+        'target_move': 'posted'
     }
 
 account_tax_chart()

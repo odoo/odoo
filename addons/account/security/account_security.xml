@@ -79,7 +79,7 @@
          <field name="name">Tax multi-company</field>
         <field model="ir.model" name="model_id" ref="model_account_tax"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','=',user.company_id.id)]</field>
     </record>
 
     <record id="tax_code_comp_rule" model="ir.rule">
