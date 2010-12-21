@@ -197,6 +197,15 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 view_data.update(wiz_data)
             log.debug("View data is: %r", view_data)
 
+            for fk, field in view_res.get('fields',{}).items():
+                # Default fields returns list of int, while at create()
+                # we need to send a [(6,0,[int,..])]
+                if field['type'] in ('one2many', 'many2many') \
+                        and view_data.get(fk, False) \
+                        and isinstance(view_data[fk], list) \
+                        and not isinstance(view_data[fk][0], tuple) :
+                    view_data[fk] = [(6, 0, view_data[fk])]
+
             action_name = action.get('name')
             try:
                 from xml.dom import minidom
