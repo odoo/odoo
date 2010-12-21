@@ -438,7 +438,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             rows_by_module = {}
             for row in rows:
                 module = row[0]
-                rows_by_module.setdefault(module, []).append(row)
+                # first row is the "header", as in csv, it will be popped
+                rows_by_module.setdefault(module, [['module', 'type', 'name', 'res_id', 'src', ''],])
+                rows_by_module[module].append(row)
 
             tmpdir = tempfile.mkdtemp()
             for mod, modrows in rows_by_module.items():
