@@ -1,6 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_sale_shop","sale.shop","model_sale_shop","base.group_user",1,0,0,0
 "access_sale_order","sale.order","model_sale_order","base.group_sale_salesman",1,1,1,0
+"access_sale_order_manufacturing_user","sale.order manufacturing.user","model_sale_order","mrp.group_mrp_user",1,0,0,0
+"access_sale_order_line_manufacturing_user","sale.order.line manufacturing.user","model_sale_order_line","mrp.group_mrp_user",1,1,0,0
 "access_sale_order_line","sale.order.line","model_sale_order_line","base.group_sale_salesman",1,1,1,1
 "access_account_invoice_tax_salesman","account_invoice_tax salesman","account.model_account_invoice_tax","base.group_sale_salesman",1,1,1,0
 "access_account_invoice_salesman","account_invoice salesman","account.model_account_invoice","base.group_sale_salesman",1,1,1,0
