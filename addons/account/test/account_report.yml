@@ -127,52 +127,38 @@
   Print the Central Journal Report - From Account
 -
   !python {model: account.journal.period}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
 
-    obj_move = self.pool.get('account.move.line')
-    ctx = {}
-    ctx['fiscalyear'] = fy_id
-    ctx['journal_ids'] = journal_ids
-    ctx['chart_account_id'] = ref('account.chart0')
-
-    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
-    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
-    (data, format) = netsvc.LocalService('report.account.central.journal').create(cr, uid, journal_period_ids, data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-central_journal.'+format), 'wb+').write(data)
-
-    data_dict.update({'model': 'ir.ui.menu'})
-    data_dict['form'].update({'active_ids':journal_period_ids})
-
-    (data, format) = netsvc.LocalService('report.account.central.journal').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-central_journal-menu.'+format), 'wb+').write(data)
+    ctx={}
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
+    
+    ctx.update({'model': 'account.journal.period',
+                'active_ids':journal_ids[0][2]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),        
+                 'journal_ids':journal_ids,
+                 'target_move': 'all'}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Journal Report - From Journal
 -
   !python {model: account.journal.period}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
 
-    obj_move = self.pool.get('account.move.line')
-    ctx = {}
-    ctx['fiscalyear'] = fy_id
-    ctx['journal_ids'] = journal_ids
-    ctx['chart_account_id'] = ref('account.chart0')
-
-    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
-    data_dict = {'model': 'ir.ui.menu','id':journal_period_ids[0], 'form': {'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids, 'active_ids':journal_period_ids}}
-    (data, format) = netsvc.LocalService('report.account.general.journal').create(cr, uid, journal_period_ids, data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_journal.'+format), 'wb+').write(data)
-
+    ctx={}
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
+    
+    ctx.update({'model': 'account.journal.period',
+                'active_ids':journal_ids[0][2]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),        
+                 'journal_ids':journal_ids,
+                 'target_move': 'all'}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Ledger Report in Normal Mode
 -
@@ -234,32 +220,20 @@
   Print Journal Report - From Model
 -
   !python {model: account.journal.period}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    journal_period_ids = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', journal_ids), ('period_id', 'in', period_list)], context=context)
 
-    obj_move = self.pool.get('account.move.line')
-    ctx = {}
-    ctx['fiscalyear'] = fy_id
-    ctx['journal_ids'] = journal_ids
-    ctx['chart_account_id'] = ref('account.chart0')
-
-    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
-
-    data_dict = {'model': 'account.journal.period', 'id':journal_period_ids[0], 'form': {'sort_selection': 'date','chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','amount_currency': 0,'compare_pattern': 'none','account_choice': 'moves','landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
-    (data, format) = netsvc.LocalService('report.account.journal.period.print').create(cr, uid, journal_period_ids, data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-print_journal.'+format), 'wb+').write(data)
-
-    data_dict.update({'model': 'ir.ui.menu'})
-    data_dict['form'].update({'active_ids':journal_period_ids})
-
-    (data, format) = netsvc.LocalService('report.account.journal.period.print').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-print_journal-menu.'+format), 'wb+').write(data)
-
+    ctx={}
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
+    
+    ctx.update({'model': 'account.journal.period',
+                'active_ids':journal_ids[0][2]})
+    
+    data_dict = {'chart_account_id':ref('account.chart0'),
+                 'fiscalyear_id':ref('account.data_fiscalyear'),        
+                 'journal_ids':journal_ids,
+                 'target_move': 'all'}
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Partner Balance Report
 -
