@@ -723,7 +723,7 @@
                                         <field name="prodlot_id" groups="base.group_extended"
                                             context="{'location_id':location_id, 'product_id':product_id}"
                                             domain="[('product_id','=?',product_id)]"
-                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"  colspan="3"/>
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)"  colspan="3"/>
                                         <button name="%(track_line)d"
                                             groups="base.group_extended"
                                             states="draft,waiting,confirmed,assigned"
@@ -1136,7 +1136,7 @@
                                         <field name="prodlot_id" groups="base.group_extended"
                                             context="{'location_id':location_id, 'product_id':product_id}"
                                             domain="[('product_id','=?',product_id)]"
-                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
+                                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" colspan="3"/>
                                         <button name="%(track_line)d"
                                               groups="base.group_extended"
                                               states="draft,waiting,confirmed,assigned"
@@ -1404,7 +1404,7 @@
                         <field name="prodlot_id" groups="base.group_extended"
                             context="{'location_id':location_id, 'product_id':product_id}"
                             domain="[('product_id','=?',product_id)]"
-                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
+                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" colspan="3"/>
                         <button name="%(track_line)d"
                               groups="base.group_extended"
                               states="draft,waiting,confirmed,assigned"
@@ -1600,7 +1600,7 @@
                         <field name="prodlot_id" groups="base.group_extended"
                             context="{'location_id':location_id, 'product_id':product_id}"
                             domain="[('product_id','=?',product_id)]"
-                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)" colspan="3"/>
+                            on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id, product_uom)" colspan="3"/>
                         <button name="%(track_line)d"
                               groups="base.group_extended"
                               states="draft,waiting,confirmed,assigned,done"

@@ -1617,16 +1617,16 @@ class stock_move(osv.osv):
         ctx.update({'raise-exception': True})
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        product_uom = product_obj.browse(cr, uid, product_id).uom_id
-        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
-        location = self.pool.get('stock.location').browse(cr, uid, loc_id)
-        uom = uom_obj.browse(cr, uid, uom_id, ctx)
-        amount = uom_obj._compute_qty_obj(cr, uid, product_uom, product_qty, uom, ctx)
+        product_uom = product_obj.browse(cr, uid, product_id, context=ctx).uom_id
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, context=ctx)
+        location = self.pool.get('stock.location').browse(cr, uid, loc_id, context=ctx)
+        uom = uom_obj.browse(cr, uid, uom_id, context=ctx)
+        amount_actual = uom_obj._compute_qty_obj(cr, uid, product_uom, prodlot.stock_available, uom, context=ctx)
         warning = {}
-        if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
+        if (location.usage == 'internal') and (product_qty > (amount_actual or 0.0)):
             warning = {
                 'title': _('Insufficient Stock in Lot !'),
-                'message': _('You are moving %.2f %s products but only %.2f %s available in this lot.') % (product_qty, uom.name, prodlot.stock_available or 0.0, uom.name)
+                'message': _('You are moving %.2f %s products but only %.2f %s available in this lot.') % (product_qty, uom.name, amount_actual, uom.name)
             }
         return {'warning': warning}
 
@@ -2272,6 +2272,8 @@ class stock_move(osv.osv):
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
+            if move_qty <= 0:
+                raise osv.except_osv(_('Error!'), _('Can not consume a move with negative or zero quantity !'))
             quantity_rest = move.product_qty
 
             quantity_rest -= quantity

@@ -35,11 +35,8 @@ class mrp_subproduct(osv.osv):
     _defaults={
         'subproduct_type': lambda *args: 'fixed'
     }
-    _sql_constraints = [
-        ('_check_product_qty', 'CHECK (product_qty > 0)', 'Enter valid product quantity !'),
-    ]
 
-    def onchange_product_id(self, cr, uid, ids, product_id,context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Changes UoM if product_id changes.
         @param product_id: Changed product_id
         @return: Dictionary of changed values

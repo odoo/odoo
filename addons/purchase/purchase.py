@@ -88,15 +88,6 @@ class purchase_order(osv.osv):
                 res[purchase.id]=min_date
         return res
 
-    def _get_invoices(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for purchase in self.browse(cr, uid, ids, context=context):
-            invoice_ids = []
-            for line in purchase.order_line:
-                for inv_line in line.invoice_lines:
-                    invoice_ids.append(inv_line.invoice_id.id)
-            res[purchase.id] = invoice_ids
-        return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -148,9 +139,9 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            invoiced = []
-            for invoice in purchase.invoice_ids:
-                invoiced.append(invoice.reconciled)
+            invoiced = False
+            if purchase.invoiced_rate == 100.00:
+                invoiced = True
             res[purchase.id] = invoiced
         return res
 
@@ -188,7 +179,7 @@ class purchase_order(osv.osv):
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
-        'invoice_ids': fields.function(_get_invoices, method=True, type='many2many', relation="account.invoice", string="Invoice", help="Invoices generated for a purchase order"),
+        'invoice_ids': fields.many2many('account.invoice', 'purchase_invoice_rel', 'purchase_id', 'invoice_id', 'Taxes', help="Invoices generated for a purchase order"),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
@@ -386,7 +377,7 @@ class purchase_order(osv.osv):
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
             self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
-            self.write(cr, uid, [o.id], {'invoice_ids': [4, inv_id]})
+            self.write(cr, uid, [o.id], {'invoice_ids': [(4, inv_id)]})
             res = inv_id
         return res
 
@@ -478,8 +469,8 @@ class purchase_order(osv.osv):
             'state':'draft',
             'shipped':False,
             'invoiced':False,
-            'invoice_ids':{},
-            'picking_ids':[],
+            'invoice_ids': [],
+            'picking_ids': [],
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
         return super(purchase_order, self).copy(cr, uid, id, default, context)

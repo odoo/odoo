@@ -336,7 +336,7 @@ class mrp_repair(osv.osv):
         """
         mrp_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
-            mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'})
+            mrp_line_obj.write(cr, uid, [l.id for l in repair.operations], {'state': 'cancel'}, context=context)
         self.write(cr,uid,ids,{'state':'cancel'})
         return True
 
@@ -455,7 +455,7 @@ class mrp_repair(osv.osv):
         """
         for repair in self.browse(cr, uid, ids, context=context):
             self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
-                    l in repair.operations], {'state': 'confirmed'})
+                    l in repair.operations], {'state': 'confirmed'}, context=context)
             self.write(cr, uid, [repair.id], {'state': 'ready'})
         return True
 
@@ -470,25 +470,27 @@ class mrp_repair(osv.osv):
         """ Writes repair order state to 'Under Repair'
         @return: True
         """
+        repair_line = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
-            self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
-                    l in repair.operations], {'state': 'confirmed'})
-            self.write(cr, uid, [repair.id], {'state': 'under_repair'})
+            repair_line.write(cr, uid, [l.id for
+                    l in repair.operations], {'state': 'confirmed'}, context=context)
+            repair.write({'state': 'under_repair'})
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Ready' if invoice method is Before repair.
         @return: True
         """
+        repair_line = self.pool.get('mrp.repair.line')
         for order in self.browse(cr, uid, ids, context=context):
             val = {}
             if (order.invoice_method == 'b4repair'):
                 val['state'] = 'ready'
-                self.pool.get('mrp.repair.line').write(cr, uid, [l.id for
-                        l in order.operations], {'state': 'confirmed'})
+                repair_line.write(cr, uid, [l.id for
+                        l in order.operations], {'state': 'confirmed'}, context=context)
             else:
                 pass
-            self.write(cr, uid, [order.id], val)
+            self.write(cr, uid, [order.id], val, context=context)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
@@ -535,7 +537,7 @@ class mrp_repair(osv.osv):
                     'tracking_id': False,
                     'state': 'done',
                 })
-                repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'})
+                repair_line_obj.write(cr, uid, [move.id], {'move_id': move_id, 'state': 'done'}, context=context)
             if repair.deliver_bool:
                 pick_name = seq_obj.get(cr, uid, 'stock.picking.out')
                 picking = pick_obj.create(cr, uid, {
