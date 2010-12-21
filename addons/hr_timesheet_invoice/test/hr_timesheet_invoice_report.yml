@@ -7,14 +7,14 @@
     (data, format) = netsvc.LocalService('report.account.analytic.profit').create(cr, uid, [], data_dict, {})
     if tools.config['test_report_directory']:
        file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-account_analytic_profit_report.'+format), 'wb+').write(data)
-
 -
-  In order to test the PDF reports defined on HR Cost Ledger, we will print report of HR Cost Ledger
+ Print the HR Cost Ledger report through the wizard
 -
   !python {model: account.analytic.account}: |
     import netsvc, tools, os, time
+    ctx={}
     acc_ids = [ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_sednacom'),ref('account.analytic_thymbra'),ref('account.analytic_partners_camp_to_camp')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'date1': time.strftime('%Y-01-01'), 'date2': time.strftime('%Y-%m-%d')}}
-    (data, format) = netsvc.LocalService('report.hr.timesheet.invoice.account.analytic.account.cost_ledger').create(cr, uid, acc_ids, data_dict, {'active_ids': acc_ids})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-cost_ledger_report.'+format), 'wb+').write(data)
+    ctx.update({'model': 'ir.ui.menu','active_ids': acc_ids})
+    data_dict = {'date1': time.strftime('%Y-01-01'), 'date2': time.strftime('%Y-%m-%d')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_invoice_cost_ledger',wiz_data=data_dict, context=ctx, our_module='hr_timesheet_invoice')

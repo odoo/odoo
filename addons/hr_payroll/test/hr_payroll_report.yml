@@ -1,6 +1,6 @@
 -
   In order to test the PDF reports defined on HR Payroll, we will print Employees' Salary Structure
-- 
+-
   !python {model: hr.employee}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.salary.structure').create(cr, uid, [ref('hr_payroll.hr_employee_bonamy0')], {}, {})
@@ -9,7 +9,7 @@
 
 -
   Print HR Payslip
-- 
+-
   !python {model: hr.payslip}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.payslip.pdf').create(cr, uid, [ref('hr_payroll.hr_payslip_salaryslipofbonamyforjune0')], {}, {})
@@ -17,23 +17,25 @@
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip_report.'+format), 'wb+').write(data)
 
 -
-  Print HR Employee Salary Details
+  Print Employee Salary Statement through wizard
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
-    emp_ids = [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'employee_ids': emp_ids, 'ids':emp_ids }}
-    (data, format) = netsvc.LocalService('report.employees.salary').create(cr, uid, [], data_dict, {'active_ids': emp_ids})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_salary_detail_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
+    data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_payroll_employees_detail',wiz_data=data_dict, context=ctx, our_module='hr_payroll')
+
 -
-  Print HR Employee Salary Details Annual basis
+  Print Salary Register through wizard
 -
   !python {model: hr.payslip}: |
     import netsvc, tools, os, time
-    emp_ids = [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]
-    data_dict = {'model': 'hr.payslip', 'form': {'fiscalyear_id': ref('account.data_fiscalyear'), 'salary_on': 'current_month', 'employee_ids': emp_ids, 'ids':emp_ids}}
-    (data, format) = netsvc.LocalService('report.year.salary').create(cr, uid, [], data_dict,{'active_ids': emp_ids} )
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-employee_yearly_salary_detail_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'hr.payslip','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
+    data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_payroll_year_salary',wiz_data=data_dict, context=ctx, our_module='hr_payroll')
+
 
