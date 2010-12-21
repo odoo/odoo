@@ -251,8 +251,8 @@ class TinyPoFile(object):
         self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
-    def warn(self, msg):
-        self.logger.warning(msg)
+    def warn(self, msg, *args):
+        self.logger.warning(msg, *args)
 
     def __iter__(self):
         self.buffer.seek(0)
