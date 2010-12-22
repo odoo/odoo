@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 17:21+0000\n"
 "PO-Revision-Date: 2010-08-03 04:54+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -156,6 +156,11 @@ msgid "My Departments Employee"
 msgstr ""
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+msgid "Married"
+msgstr ""
+
+#. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
@@ -276,9 +281,10 @@ msgid "Other information"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_hr_installer
-msgid "Human Resources Application Configuration"
-msgstr ""
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "Όνομα"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -319,6 +325,13 @@ msgid "Configuration"
 msgstr "Ρυθμίσεις"
 
 #. module: hr
+#: view:hr.installer:0
+msgid ""
+"You can enhance the base HR Application by installing few HR-related "
+"functionalities."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Categories"
 msgstr ""
@@ -332,6 +345,11 @@ msgstr ""
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
 msgstr ""
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
+msgid "Divorced"
+msgstr "Διαζευγμένος"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -366,6 +384,11 @@ msgstr ""
 #: selection:hr.employee,gender:0
 msgid "Male"
 msgstr "Άνδρας"
+
+#. module: hr
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -476,8 +499,8 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,progress:0
-msgid "Configuration Progress"
+#: view:hr.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: hr
@@ -643,6 +666,11 @@ msgid "Payroll"
 msgstr ""
 
 #. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+msgid "Single"
+msgstr ""
+
+#. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
 msgstr ""
@@ -686,10 +714,10 @@ msgid "Resource"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,complete_name:0
-#: field:hr.employee.category,complete_name:0
-msgid "Name"
-msgstr "Όνομα"
+#: view:hr.installer:0
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -745,6 +773,11 @@ msgid "Coach"
 msgstr ""
 
 #. module: hr
+#: view:hr.installer:0
+msgid "Configure Your Human Resources Application"
+msgstr ""
+
+#. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
 msgstr ""
@@ -756,6 +789,11 @@ msgstr ""
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Manager"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+msgid "Widower"
+msgstr ""
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
@@ -807,9 +845,6 @@ msgstr "Υφιστάμενοι"
 
 #~ msgid "Fill up contact information"
 #~ msgstr "Συμπληρώστε στοιχεία επαφής"
-
-#~ msgid "Divorced"
-#~ msgstr "Διαζευγμένος"
 
 #~ msgid "Maried"
 #~ msgstr "Έγγαμος/η"

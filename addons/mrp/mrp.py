@@ -39,21 +39,21 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
-        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this workcenter can do in parallel. If this workcenter represents a team of 5 workers, the capacity per cycle is 5."),
+        'note': fields.text('Description', help="Description of the work center. Explain here what's a cycle according to this work center."),
+        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this work center can do in parallel. If this work center represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Workcenter per hour."),
+        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work center per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
-        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Workcenter per cycle."),
+        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work center per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
-        'product_id': fields.many2one('product.product','Workcenter Product', help="Fill this product to track easily your production costs in the analytic accounting."),
+        'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to track easily your production costs in the analytic accounting."),
     }
     _defaults = {
         'capacity_per_cycle': 1.0,
@@ -67,7 +67,7 @@ class mrp_workcenter(osv.osv):
 
         if product_id:
             cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            value = {'costs_hour' :cost.standard_price}
+            value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
 mrp_workcenter()
@@ -109,10 +109,10 @@ class mrp_routing_workcenter(osv.osv):
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing work centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of iterations this workcenter has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this workcenter to achieve the operation of the specified routing."),
+            help="Number of iterations this work Center has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -211,7 +211,7 @@ class mrp_bom(osv.osv):
         'product_efficiency': fields.float('Manufacturing Efficiency', required=True, help="A factor of 0.9 means a loss of 10% within the production process."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production planning."),
+        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
@@ -335,7 +335,7 @@ class mrp_bom(osv.osv):
                 result = result + res[0]
                 result2 = result2 + res[1]
         return result, result2
-    
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -442,7 +442,7 @@ class mrp_production(osv.osv):
         'date_finished': fields.datetime('End Date'),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production plannification."),
+        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
 
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
             help="This is the internal picking list that brings the finished product to the production plan"),

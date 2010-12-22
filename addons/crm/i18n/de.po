@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-12-14 23:10+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -23,6 +23,7 @@ msgid "# Leads"
 msgstr "Verkaufskontakte"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
@@ -198,10 +199,11 @@ msgid "Warning!"
 msgstr "Warnung !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_send_email.py:0
-#, python-format
-msgid "Can not send mail!"
-msgstr "Kann keine EMail senden!"
+#: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Statistik Verkaufschancen"
 
 #. module: crm
 #: field:crm.lead,partner_id:0
@@ -383,6 +385,11 @@ msgid "Contact"
 msgstr "Ansprechpartner"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Enhance your core CRM Application with additional functionalities."
+msgstr ""
+
+#. module: crm
 #: field:crm.case.stage,on_change:0
 msgid "Change Probability Automatically"
 msgstr "Ändere Wahrscheinlichkeit automatisch"
@@ -415,6 +422,7 @@ msgid "When a real project/opportunity is detected"
 msgstr "Wenn definitiv Verkaufschance erkannt wird"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: field:crm.installer,crm_fundraising:0
 msgid "Fundraising"
 msgstr "Fördermittel & Spenden"
@@ -542,11 +550,9 @@ msgid "Create Opportunity"
 msgstr "Erstelle Verkaufschance"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
-#: selection:crm.meeting,month_list:0
-#: selection:crm.phonecall.report,month:0
-msgid "August"
-msgstr "August"
+#: view:crm.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -663,6 +669,11 @@ msgstr ""
 "Die Bewertung der Kundenzufriedenheit wird gegebenfalls durch eine "
 "Neuberechnung gemindert, insbesondere wenn es innerhalb eines festzulegenden "
 "Intervalls keinen Kundenkontakt gab."
+
+#. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Claim"
+msgstr ""
 
 #. module: crm
 #: constraint:base.action.rule:0
@@ -829,6 +840,7 @@ msgstr "Pinnwand Statistiken"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:0
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
@@ -1237,6 +1249,7 @@ msgstr "Stufe:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
+#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Erfolgreich"
@@ -1257,6 +1270,7 @@ msgid "HTML formatting?"
 msgstr "HTML Format?"
 
 #. module: crm
+#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
 #: view:crm.meeting:0
@@ -1284,6 +1298,13 @@ msgstr "Sehr gering"
 #: field:crm.send.mail.attachment,binary:0
 msgid "Attachment"
 msgstr "Anhang"
+
+#. module: crm
+#: selection:crm.lead.report,month:0
+#: selection:crm.meeting,month_list:0
+#: selection:crm.phonecall.report,month:0
+msgid "August"
+msgstr "August"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1370,7 +1391,9 @@ msgstr "Filterkriterien"
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Vertriebsstufen"
 
@@ -2538,11 +2561,10 @@ msgid "Weekly"
 msgstr "Wöchentlich"
 
 #. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
-msgstr "Statistik Verkaufschancen"
+#: code:addons/crm/wizard/crm_send_email.py:0
+#, python-format
+msgid "Can not send mail!"
+msgstr "Kann keine EMail senden!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2804,6 +2826,11 @@ msgid "Continue Process"
 msgstr "Prozess fortsetzen"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Configure Your CRM Application"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
 msgstr "Telefonanruf zu Partner"
@@ -2936,7 +2963,6 @@ msgstr "Einladung Termin"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
-#: field:crm.case.stage,object_id:0
 msgid "Object Name"
 msgstr "Objekt Bezeichnung"
 
@@ -3171,6 +3197,7 @@ msgstr "Erfolgsquote (%)"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
+#: model:crm.case.stage,name:crm.stage_opportunity1
 msgid "New"
 msgstr "Neu"
 
@@ -3270,6 +3297,7 @@ msgid "Prospect Opportunity"
 msgstr "Verkaufschance"
 
 #. module: crm
+#: view:crm.installer:0
 #: model:ir.actions.act_window,name:crm.action_crm_installer
 msgid "CRM Application Configuration"
 msgstr "Konfiguration CRM & SRM Anwendungen"
@@ -3317,6 +3345,7 @@ msgstr "Fälle Besprechung"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
+#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr "Qualifikation"
 
@@ -3609,6 +3638,15 @@ msgid "January"
 msgstr "Januar"
 
 #. module: crm
+#: model:ir.actions.act_window,help:crm.crm_opportunity_stage_act
+msgid ""
+"Create specific stages that will help your sales better organise their sales "
+"pipeline by maintaining them to their sales opportunities. It will allow "
+"them to easily track how is positioned a specific opportunity in the sales "
+"cycle."
+msgstr ""
+
+#. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
 msgid "Contract"
 msgstr "Vertrag"
@@ -3819,6 +3857,7 @@ msgstr "Plane ein Meeting"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Verloren"
@@ -3872,6 +3911,7 @@ msgstr "Option"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
+#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr "Verhandlung"
 
@@ -3908,6 +3948,7 @@ msgstr "2ter"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
+#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr "Schätzung Umsatzpotenzial"
 

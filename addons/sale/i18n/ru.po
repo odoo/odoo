@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-14 21:02+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-15 15:51+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -41,6 +41,11 @@ msgstr "День"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Отменить заказа"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -300,11 +305,6 @@ msgid "All Quotations"
 msgstr "Все предложения"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Наш менеджер продаж"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Июнь"
@@ -447,9 +447,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "Предложение '%s' было преобразовано в заказ на продажу."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Каталоги закупок"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -551,6 +551,11 @@ msgstr "Предложение / Заказ"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "Кол-во позиций"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -864,13 +869,10 @@ msgid "Sale Order Line"
 msgstr "Позиция заказа"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Создать счет"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Цена за ед."
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -931,6 +933,8 @@ msgstr "Цена"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Настройка продаж"
 
@@ -973,11 +977,6 @@ msgstr "Управлять снабжением и выставлением сч
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Последовательный номер"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Каталоги продаж"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1366,10 +1365,13 @@ msgid "Sales"
 msgstr "Продажи"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Цена за ед."
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Создать счет"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1770,6 +1772,11 @@ msgstr ""
 "как можно скорее каждый товар или вы ждете все товары ..."
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Исходный документ"
@@ -1817,6 +1824,7 @@ msgid "Uninvoiced"
 msgstr "Счет не выставлен"
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1886,11 +1894,6 @@ msgid "Sales Orders"
 msgstr "Заказы"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Условия оплаты"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1924,6 +1927,11 @@ msgstr "Ваш счет был успешно создан!"
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Январь"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2066,6 +2074,7 @@ msgid "Search Sales Order"
 msgstr "Искать заказ на продажу"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Условия оплаты"
@@ -2144,6 +2153,9 @@ msgstr "Счет основанный на доставках"
 #~ msgid "Status"
 #~ msgstr "Статус"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Наш менеджер продаж"
+
 #~ msgid "Sales order lines"
 #~ msgstr "Позиции заказа"
 
@@ -2178,6 +2190,9 @@ msgstr "Счет основанный на доставках"
 
 #~ msgid "Total amount"
 #~ msgstr "Итоговая сумма"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Условия оплаты"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Счет скорректирован"
@@ -2305,6 +2320,9 @@ msgstr "Счет основанный на доставках"
 #~ msgid "One procurement for each product."
 #~ msgstr "Одна закупка для каждого товара."
 
+#~ msgid "Sale Pricelists"
+#~ msgstr "Каталоги продаж"
+
 #~ msgid ""
 #~ "Number of days between the order confirmation the the shipping of the "
 #~ "products to the customer"
@@ -2325,6 +2343,9 @@ msgstr "Счет основанный на доставках"
 #, python-format
 #~ msgid "EAN: "
 #~ msgstr "EAN: "
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Каталоги закупок"
 
 #~ msgid ""
 #~ "A sale order generates an invoice, as soon as it is confirmed by the "
