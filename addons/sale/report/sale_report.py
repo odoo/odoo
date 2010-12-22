@@ -47,7 +47,6 @@ class sale_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
-        'price_average': fields.float('Average Price', readonly=True,group_operator="sum(price_total)/(sum(product_uom_qty)*sum(price_average))*sum"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -98,7 +97,6 @@ class sale_report(osv.osv):
                         end) as uom_name,
                         sum(l.product_uom_qty/u.factor) as product_uom_qty,
                         sum(l.product_uom_qty*l.price_unit) as price_total,
-                        (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty/u.factor)*count(l.product_id))::decimal(16,2) as price_average,
                         pt.categ_id, l.order_id
                     from
                      sale_order_line l
@@ -111,7 +109,6 @@ class sale_report(osv.osv):
                     el.uom_name,
                     el.product_uom_qty,
                     el.price_total,
-                    el.price_average,
                     el.categ_id,
                     el.order_id,
                     s.date_order,
