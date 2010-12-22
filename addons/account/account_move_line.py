@@ -308,7 +308,7 @@ class account_move_line(osv.osv):
                     FROM account_move_line l1, account_move_line l2
                     WHERE l2.account_id = l1.account_id
                       AND l1.id <= l2.id
-                      AND l2.id IN %%s AND """ + \
+                      AND l2.id IN %s AND """ + \
                 self._query_get(cr, uid, obj='l1', context=c) + \
                 " GROUP BY l2.id"
 
@@ -433,7 +433,7 @@ class account_move_line(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
         'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
                                 store = {
@@ -763,7 +763,7 @@ class account_move_line(osv.osv):
             if 'comment' in context and context['comment']:
                 libelle = context['comment']
             else:
-                libelle = 'Write-Off'
+                libelle = _('Write-Off')
             writeoff_lines = [
                 (0, 0, {
                     'name': libelle,

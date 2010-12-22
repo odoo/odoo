@@ -432,7 +432,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'name': fields.char('Communication', size=64, required=True),
         'date': fields.date('Date', required=True),
-        'amount': fields.float('Amount'),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'type': fields.selection([
             ('supplier','Supplier'),
             ('customer','Customer'),
