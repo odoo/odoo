@@ -542,6 +542,8 @@ class account_voucher(osv.osv):
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=context)
         pids = period_pool.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)])
         if pids:
+            if not 'value' in res:
+                res['value'] = {}
             res['value'].update({'period_id':pids[0]})
         return res
 
