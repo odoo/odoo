@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-05 07:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 11:25+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -150,6 +150,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Ошибка ! Невозможно создать рекурсивную категорию."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Клавиатура"
@@ -201,7 +208,6 @@ msgid "PriceList"
 msgstr "Прайс-лист"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "Ед. изм."
@@ -260,13 +266,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "ТМЦ: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
-"категориям."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -485,6 +484,13 @@ msgid "Codes"
 msgstr "Коды"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Количество-4"
@@ -687,15 +693,24 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "Материнская плата ASUStek A7N8X"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Новая цена ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
-"Дает порядок последовательности при выводе элементов списка каталога."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1154,6 +1169,30 @@ msgid "Unit of Sale"
 msgstr "Единица продажи"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1291,6 +1330,14 @@ msgid "Price List Version"
 msgstr "Версия каталога"
 
 #. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Потребляемый"
@@ -1418,7 +1465,7 @@ msgstr ""
 #. module: product
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Выбранная компания недоступна для этого пользователя"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1597,6 +1644,12 @@ msgid "Make to Order"
 msgstr "Изготовление на заказ"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+"Общее количество ТМЦ, которое вы модете разместить на поддоне или в коробке."
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Варианты"
@@ -1702,10 +1755,9 @@ msgid "Name of this kind of price."
 msgstr "Наименование типа цены"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
-"Общее количество ТМЦ, которое вы модете разместить на поддоне или в коробке."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1798,11 +1850,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Название прайс-листа"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr "Ед. изм. ТМЦ поставщика."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1923,7 +1970,7 @@ msgstr "Вес"
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Processor on demand"
-msgstr ""
+msgstr "Процессор по требованию"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -2021,15 +2068,6 @@ msgid ""
 msgstr ""
 "Название продукции, используемое поставщиком, будет выводиться при печати "
 "запроса цен. Оставьте пустым для использования внутреннего названия."
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
-msgstr ""
-"Минимальное количество продукции закупаемой у этого поставщика, в единицах "
-"измерения по умолчанию."
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2288,6 +2326,50 @@ msgid ""
 "and his childs. Keep empty for all products"
 msgstr ""
 
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "Невозможно использовать 2 перекрывающиеся версии каталогов!"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Макс. маржа цены"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "Цена при мин. марже"
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "Это среднее время между подтверждением клиентом заказа и поставкой готовой "
+#~ "продукции. Это то время, которое вы обещаете вашим клиентам."
+
+#~ msgid "Rentable product"
+#~ msgstr "Арендуемая продукция"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "'Изготовление про запас': Когда требуется, берется со клада либо хранится до "
+#~ "восстановления продукции. 'Изготовление на заказ': Когда требуется, "
+#~ "закупается либо производится по требованию снабжения."
+
+#~ msgid "Childs Categories"
+#~ msgstr "Категории потомков"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Поставщик продукции"
+
+#~ msgid ""
+#~ "The rule only apply if the partner buys/sells more than this quantity."
+#~ msgstr ""
+#~ "Правило применяется только тогда, когда партнёр покупает/продаёт больше, чем "
+#~ "это кодичество."
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Вы можете просматривать список поставщиков этой продукции."
+
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
 #~ "selection from a sale order line."
@@ -2425,6 +2507,11 @@ msgstr ""
 #~ msgid "Create new Product"
 #~ msgstr "Создать ТМЦ"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Ошибка. Единицы продажи и единицы измерения должны принадлежать к разным "
+#~ "категориям."
+
 #, python-format
 #~ msgid ""
 #~ "Could not resolve product category, ' \\n                                    "
@@ -2433,11 +2520,18 @@ msgstr ""
 #~ msgstr ""
 #~ "Не удается определить категорию ТМЦ, '\\n' вы зациклили категории ' \\n 'ТМЦ!"
 
+#~ msgid "Gives the sequence order when displaying a list of pricelist items."
+#~ msgstr ""
+#~ "Дает порядок последовательности при выводе элементов списка каталога."
+
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Для объектов osv_memory правила не поддерживаются !"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Supplier Product UoM."
+#~ msgstr "Ед. изм. ТМЦ поставщика."
 
 #, python-format
 #~ msgid ""
@@ -2460,6 +2554,13 @@ msgstr ""
 #~ msgstr ""
 #~ "если поле \"Активно\" установлено в \"истина\", то это позволит вам скрыть "
 #~ "каталог без его удаления."
+
+#~ msgid ""
+#~ "The minimal quantity to purchase to this supplier, expressed in the default "
+#~ "unit of measure."
+#~ msgstr ""
+#~ "Минимальное количество продукции закупаемой у этого поставщика, в единицах "
+#~ "измерения по умолчанию."
 
 #~ msgid "The name of the group must be unique !"
 #~ msgstr "Название группы должно быть уникальным !"

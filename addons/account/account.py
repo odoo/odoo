@@ -708,7 +708,7 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, currency):
+    def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
         user_pool = self.pool.get('res.users')
 
@@ -1278,6 +1278,8 @@ class account_move(osv.osv):
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None, check=True):
+        if context is None:
+            context = {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):

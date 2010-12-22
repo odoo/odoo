@@ -879,7 +879,7 @@ class account_move_line(osv.osv):
         fld = []
         fields = {}
         flds = []
-        title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
+        title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
@@ -898,8 +898,8 @@ class account_move_line(osv.osv):
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3, 'Period'))
-        fld.append(('journal_id', 10, 'Journal'))
+        fld.append(('period_id', 3, _('Period')))
+        fld.append(('journal_id', 10, _('Journal')))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
@@ -919,10 +919,10 @@ class account_move_line(osv.osv):
 #                state = 'colors="red:state==\'draft\'"'
             attrs = []
             if field == 'debit':
-                attrs.append('sum = "Total debit"')
+                attrs.append('sum = "%s"' % _("Total debit"))
 
             elif field == 'credit':
-                attrs.append('sum = "Total credit"')
+                attrs.append('sum = "%s"' % _("Total credit"))
 
             elif field == 'move_id':
                 attrs.append('required = "False"')

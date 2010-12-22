@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-04 09:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -83,6 +83,7 @@ msgid "Select Opportunities"
 msgstr "Izaberi Priliku"
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -139,11 +140,6 @@ msgstr "Trag '%s' je zatvoren."
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
 msgstr "Nema ponavljanja"
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Kalendar Resursa"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
@@ -742,6 +738,11 @@ msgid ""
 msgstr ""
 "Definise pravilo ponavljajuceg obrasca za vreme koje je iskljuceno iz "
 "pravila ponavljanja."
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -3247,11 +3248,6 @@ msgid "Daily"
 msgstr "Dnevni"
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr "Sastanak Slucaja"
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 #: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
@@ -3451,6 +3447,7 @@ msgstr "Od"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr "Sastanak"
@@ -3887,6 +3884,9 @@ msgstr "Novine"
 #~ msgid "Cases"
 #~ msgstr "Slucajevi"
 
+#~ msgid "Resource's Calendar"
+#~ msgstr "Kalendar Resursa"
+
 #~ msgid "Extended Options..."
 #~ msgstr "Ekstra Opcije"
 
@@ -3914,6 +3914,9 @@ msgstr "Novine"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "Case Meeting"
+#~ msgstr "Sastanak Slucaja"
 
 #, python-format
 #~ msgid "There is no stage for won opportunities defined for this Sale Team."

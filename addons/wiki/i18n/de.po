@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-01 07:31+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -204,10 +204,9 @@ msgid "Warning"
 msgstr "Warnung"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
-"Zwingend Angabe einer Home Page, wenn die Anzeigemethode \"Home Page\" ist"
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Erzeugt am"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -262,15 +261,26 @@ msgid "Meta Information"
 msgstr "Meta Information"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Erzeugt am"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Bemerkungen"
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+"Zwingend Angabe einer Home Page, wenn die Anzeigemethode \"Home Page\" ist"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -502,6 +512,10 @@ msgstr "Suche Seite"
 
 #~ msgid "Wiki Differance"
 #~ msgstr "Wikipedia Änderungen"
+
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "Keine Aktion gefunden"
 
 #~ msgid "Modifications"
 #~ msgstr "Modifizierungen"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-21 22:36+0000\n"
 "Last-Translator: Margarita Manterola <ubuntu@marga.com.ar>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -277,11 +277,6 @@ msgid "Max Discount(%)"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Output Operation"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
 msgid "Cash register management"
 msgstr ""
@@ -452,6 +447,11 @@ msgstr "Descripción línea"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Codes"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
 msgstr ""
 
 #. module: point_of_sale
@@ -789,6 +789,13 @@ msgid "Draft Invoice"
 msgstr "Factura borrador"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr ""
@@ -808,11 +815,6 @@ msgstr "Comentario posición fiscal :"
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -1177,6 +1179,22 @@ msgid "Connected Salesman"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr ""
@@ -1265,11 +1283,6 @@ msgstr "Numero de impresión"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
 msgstr ""
 
 #. module: point_of_sale
@@ -1823,11 +1836,6 @@ msgid "Discount "
 msgstr ""
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Factura de proveedor"
@@ -1959,6 +1967,11 @@ msgstr "Vendedor"
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Facturado"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2467,3 +2480,75 @@ msgstr ""
 
 #~ msgid "Print Date:"
 #~ msgstr "Fecha impresión:"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Piece number"
+#~ msgstr "Número de pieza"
+
+#~ msgid "This is the logged in user (not necessarily the salesman)."
+#~ msgstr "Este es el usuario del sistema (no necesariamente el vendedor)."
+
+#~ msgid "Tel : + 32 (0) 2 231 04 35"
+#~ msgstr "Tel : + 32 (0) 2 231 04 35"
+
+#~ msgid "Select default journals"
+#~ msgstr "Seleccione los diarios por omisión"
+
+#~ msgid "Logged in User"
+#~ msgstr "Usuario conectado"
+
+#~ msgid "VAT(%)"
+#~ msgstr "IVA(%)"
+
+#~ msgid "Default journal"
+#~ msgstr "Diario por omisión"
+
+#~ msgid "Default Receivable"
+#~ msgstr "A cobrar por omisión"
+
+#~ msgid "POS Lines of the day"
+#~ msgstr "Líneas del día del PDV"
+
+#~ msgid "Default journals"
+#~ msgstr "Diarios por omisión"
+
+#~ msgid "POS Lines"
+#~ msgstr "Líneas PDV"
+
+#~ msgid "Define default journals"
+#~ msgstr "Definir diarios por omisión"
+
+#~ msgid "Default rebate journal"
+#~ msgstr "Diario del cambio por omisión"
+
+#~ msgid "Wizard default journals"
+#~ msgstr "Asistente diarios por omisión"
+
+#~ msgid "E-mail :"
+#~ msgstr "Correo electrónico :"
+
+#~ msgid "Period:"
+#~ msgstr "Período:"
+
+#~ msgid "Refund order :"
+#~ msgstr "Orden Devolución :"
+
+#~ msgid "Pos Payment"
+#~ msgstr "Pago PdV"
+
+#~ msgid "Piece Number"
+#~ msgstr "Número de pieza"
+
+#~ msgid "Default gift journal"
+#~ msgstr "Diario de los vales por omisión"
+
+#~ msgid "This is the salesman actually making the order."
+#~ msgstr "Éste es el vendedor efectivo para la realización de la orden."
+
+#~ msgid "OPERATION N° :"
+#~ msgstr "Operación N° :"
+
+#~ msgid "Get From Order"
+#~ msgstr "Importar orden de venta"

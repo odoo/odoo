@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-14 21:01+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -453,6 +453,11 @@ msgid "Codes"
 msgstr "Kurzbez."
 
 #. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
+msgstr "Hauptkasse"
+
+#. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 #: view:pos.details:0
 #: view:pos.payment.report:0
@@ -791,6 +796,13 @@ msgid "Draft Invoice"
 msgstr "Entwurf Rechnung"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr "Produkt für Ausgaben"
@@ -811,11 +823,6 @@ msgstr "Steuerzuordnung Anmerkung"
 #: selection:report.pos.order,month:0
 msgid "September"
 msgstr "September"
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
-msgstr "Journal EC Cash Verfahren"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1179,6 +1186,22 @@ msgid "Connected Salesman"
 msgstr "Unser Verkäufer"
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr "Inkl. / Exkl. UST"
@@ -1268,11 +1291,6 @@ msgstr "Anzahl der Drucke"
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
 msgstr "Point Of Sale Zahlung"
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
-msgstr "Hauptkasse"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1825,11 +1843,6 @@ msgid "Discount "
 msgstr "Rabatt "
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr "Visa Journal"
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Lieferantenrechnung"
@@ -1961,6 +1974,11 @@ msgstr "Verkäufer"
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Berechnet"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2349,6 +2367,9 @@ msgstr "Jahr"
 #~ msgid "Detail of Sales"
 #~ msgstr "Details Verkauf"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Vorgangsnummer"
+
 #~ msgid "Refund Orders"
 #~ msgstr "Gutschriften"
 
@@ -2366,6 +2387,15 @@ msgstr "Jahr"
 
 #~ msgid "Date :"
 #~ msgstr "Datum:"
+
+#~ msgid "Disc :"
+#~ msgstr "Rabatt:"
+
+#~ msgid "User :"
+#~ msgstr "Benutzer:"
+
+#~ msgid "Total :"
+#~ msgstr "Summe :"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "POS Journal Konfiguration"
@@ -2397,6 +2427,9 @@ msgstr "Jahr"
 #~ msgid "Define default journals"
 #~ msgstr "Definiere (Standard-) Journal"
 
+#~ msgid "Tel :"
+#~ msgstr "Tel.:"
+
 #~ msgid "Default rebate journal"
 #~ msgstr "(Standard-) Journal Rabatte"
 
@@ -2411,6 +2444,9 @@ msgstr "Jahr"
 
 #~ msgid "Sales of the day"
 #~ msgstr "Verkäufe des Tages"
+
+#~ msgid "."
+#~ msgstr "."
 
 #~ msgid "Discount"
 #~ msgstr "Rabatt (%)"
@@ -2441,6 +2477,10 @@ msgstr "Jahr"
 
 #~ msgid "Refund order :"
 #~ msgstr "Gutschrift Nummer"
+
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "Kann keine Buchung stornieren die bereits gebucht ist !"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -2475,6 +2515,9 @@ msgstr "Jahr"
 #~ msgid "D_iscount"
 #~ msgstr "Rabatt"
 
+#~ msgid "Ce bon est valide jusqu'au"
+#~ msgstr "Dieser Gutschein ist gültig bis"
+
 #~ msgid "Payment Term"
 #~ msgstr "Zahlungsbedingung"
 
@@ -2487,11 +2530,19 @@ msgstr "Jahr"
 #~ msgid "Company:"
 #~ msgstr "Firma:"
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Kann keine Rechnung ohne Partner erzeugen"
+
 #~ msgid "Payment Name"
 #~ msgstr "Bezeichnung Zahlung"
 
 #~ msgid "Piece Number"
 #~ msgstr "Anzahl Stücke"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Benutzer Fehler"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "ungültiger Modelnamme in der Aktionsdefinition"
@@ -2522,6 +2573,9 @@ msgstr "Jahr"
 #~ "Mitarbeiter der die Kasse benutzt, z.B. Aushilfspersonal, oder "
 #~ "Leihmitarbeiter."
 
+#~ msgid "Sortie de caisse"
+#~ msgstr "Hauptkasse"
+
 #~ msgid "Register management"
 #~ msgstr "Kassenblätter verwalten"
 
@@ -2541,8 +2595,21 @@ msgstr "Jahr"
 #~ msgid "Register"
 #~ msgstr "Barkasse"
 
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                   "
+#~ " \" and quantity.\n"
+#~ "You have to change either the product,\"                    \" the quantity "
+#~ "or the pricelist."
+#~ msgstr ""
+#~ "Konnte keinen gültigen Preis passend zu diesem Produkt\"\\n    \"und der "
+#~ "Verkaufsmenge ermitteln\" \\n Entweder wechseln Sie auf ein anderes "
+#~ "Produkt\"\\n    \"oder passen Ihre Preisliste an."
+
 #~ msgid "Error: Invalid Bvr Number (wrong checksum)."
 #~ msgstr "Fehler: Ungültige Steuernummer (falsche checksum)"
+
+#~ msgid "Bancontact Journal"
+#~ msgstr "Journal EC Cash Verfahren"
 
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "Fehler: VAT Referenz wird benötigt"
@@ -2612,6 +2679,9 @@ msgstr "Jahr"
 
 #~ msgid "Registers"
 #~ msgstr "Kassen"
+
+#~ msgid "Visa Journal"
+#~ msgstr "Visa Journal"
 
 #, python-format
 #~ msgid "Registers are already closed."
