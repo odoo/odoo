@@ -83,41 +83,26 @@
   Print the Account Balance Sheet in Horizontal mode
 -
   !python {model: account.account}: |
-
     ctx={}
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),
-                 'display_account':'bal_all',
-                 'target_move': 'all',
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'display_account':'bal_all','target_move': 'all',
                  'display_type': True}
-    
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')    
 -
   Print the Account Balance Sheet in Normal mode
 -
   !python {model: account.account}: |
-
     ctx={}
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),
-                 'display_account':'bal_all',
-                 'target_move': 'all',
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'display_account':'bal_all','target_move': 'all',
                  'display_type': False}
-    
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account') 
 -
   Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'target_move': 'all','display_account':'bal_all'}
@@ -127,102 +112,56 @@
   Print the Central Journal Report - From Account
 -
   !python {model: account.journal.period}: |
-
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
     ctx={}
-    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
-    
-    ctx.update({'model': 'account.journal.period',
-                'active_ids':journal_ids[0][2]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),        
-                 'journal_ids':journal_ids,
-                 'target_move': 'all'}
-    
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids[0][2]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'journal_ids':journal_ids,'target_move': 'all'}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Journal Report - From Journal
 -
   !python {model: account.journal.period}: |
-
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
     ctx={}
-    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
-    
-    ctx.update({'model': 'account.journal.period',
-                'active_ids':journal_ids[0][2]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),        
-                 'journal_ids':journal_ids,
-                 'target_move': 'all'}
-    
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids[0][2]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'journal_ids':journal_ids,'target_move': 'all'}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Ledger Report in Normal Mode
 -
   !python {model: account.account}: |
-
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                        ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
     ctx={}
-    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
-    
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'initial_balance': True,
-                 'chart_account_id':ref('account.chart0'),
-                 'display_account':'bal_all',
-                 'filter': 'filter_no',
-                 'sortby': 'sort_date',
-                 'amount_currency': False,
-                 'landscape':False,
-                 'fiscalyear_id': ref('account.data_fiscalyear') ,
-                 'target_move': 'all',
-                 'journal_ids':journal_ids }
-    
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'initial_balance': True,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date',
+                 'amount_currency': False,'landscape':False,'fiscalyear_id': ref('account.data_fiscalyear'),'target_move': 'all','journal_ids':journal_ids }
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Ledger Report in Landscape Mode
 -
   !python {model: account.account}: |
-
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
     ctx={}
-    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
-    
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'initial_balance': True,
-                 'chart_account_id':ref('account.chart0'),
-                 'display_account':'bal_all',
-                 'filter': 'filter_no',
-                 'sortby': 'sort_date',
-                 'amount_currency': False,
-                 'landscape':True,
-                 'fiscalyear_id': ref('account.data_fiscalyear') ,
-                 'target_move': 'all',
-                 'journal_ids':journal_ids }
-    
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'initial_balance': True,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date',
+                 'amount_currency': False,'landscape':True,'fiscalyear_id': ref('account.data_fiscalyear'),'target_move': 'all','journal_ids':journal_ids }
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print Journal Report - From Model
 -
   !python {model: account.journal.period}: |
-
-    ctx={}
     journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
-    
-    ctx.update({'model': 'account.journal.period',
-                'active_ids':journal_ids[0][2]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),        
-                 'journal_ids':journal_ids,
-                 'target_move': 'all'}
-    
+    ctx={}
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids[0][2]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'journal_ids':journal_ids,'target_move': 'all'}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
 -
@@ -295,14 +234,8 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),
-                 'display_account':'bal_all',
-                 'display_type': False}
-    
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'display_account':'bal_all','display_type': False}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')    
 -
@@ -310,13 +243,7 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account',
-                'active_ids':[ref('account.chart0')]})
-    
-    data_dict = {'chart_account_id':ref('account.chart0'),
-                 'fiscalyear_id':ref('account.data_fiscalyear'),
-                 'display_account':'bal_all',
-                 'display_type': True}
-    
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'fiscalyear_id':ref('account.data_fiscalyear'),'display_account':'bal_all','display_type': True}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')    
