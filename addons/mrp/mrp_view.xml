@@ -730,12 +730,15 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                       <filter icon="terp-camera_test" string="Ready"
+                   	   <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
+                           domain="[('state','=','confirmed')]"
+                           help="Manufacturing Orders which are waiting for raw materials."/>
+					   <filter icon="terp-check" string="In Production" name="inprogress"
+                           domain="[('state','=','in_production')]"
+                           help="Manufacturing Orders which are currently in production."/>
+                       <filter icon="terp-camera_test" string="Ready" name="ready"
                            domain="[('state','=','ready')]"
-                           help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-check" string="Current" name="current"
-                           domain="[('state','in',('confirmed','ready','exception','in_production'))]"
-                           help="Manufacturing Orders which are waiting for raw materials, confirmed, ready to start or currently in production."/>
+                           help="Manufacturing Orders which are ready to start production."/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
@@ -767,7 +770,7 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
-            <field name="context">{'search_default_current':1}</field>
+            <field name="context">{'search_default_ready':1}</field>
             <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumation of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
