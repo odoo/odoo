@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-07-20 22:46+0000\n"
 "Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: lt\n"
 
@@ -30,7 +30,7 @@ msgstr "Ciklų skaičius"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of operations this workcenter can do."
+msgid "Number of iterations this work center has to do in the specified operation of the routing."
 msgstr ""
 
 #. module: mrp
@@ -45,7 +45,7 @@ msgstr ""
 
 #. module: mrp
 #: view:report.workcenter.load:0
-msgid "Work Centers load"
+msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
@@ -382,6 +382,11 @@ msgid "Advanced Routes"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
+msgid "Working Time"
+msgstr "Darbo laikas"
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
 msgstr ""
@@ -487,7 +492,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Workcenter per hour."
+msgid "Specify Cost of Work center per hour."
 msgstr ""
 
 #. module: mrp
@@ -544,7 +549,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Workcenter per cycle."
+msgid "Specify Cost of Work center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -644,7 +649,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for doing one cycle."
+msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "Vieno ciklo laikas valandomis."
 
 #. module: mrp
@@ -731,6 +736,13 @@ msgstr "Neleistinas veiksmas!"
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid ""
+"Add more functionalities to the core Manufacturing Application with the "
+"following addons."
 msgstr ""
 
 #. module: mrp
@@ -1022,6 +1034,11 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid "MRP Application Configuration"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.installer,mrp_jit:0
 msgid ""
 "Enables Just In Time computation of procurement orders.\n"
@@ -1044,7 +1061,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing workcenters."
+"Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
 
 #. module: mrp
@@ -1213,6 +1230,11 @@ msgstr "Kiekvieną dieną"
 #: view:mrp.bom:0
 msgid "Revisions"
 msgstr "Revizijos"
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid "Configure Your Manufacturing Resource Planning Application"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1636,8 +1658,8 @@ msgstr "Gamybos produktų vartojimas"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the workcenter. Explain here what's a cycle according to this "
-"workcenter."
+"Description of the work center. Explain here what's a cycle according to this "
+"work center."
 msgstr "Darbo centro parašymas. Nurodomas koks yra šio darbo centro ciklas."
 
 #. module: mrp
@@ -1720,9 +1742,9 @@ msgstr "Gamybos užsakymas"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
 
@@ -1755,7 +1777,7 @@ msgstr "KS struktūra"
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this workcenter can do in parallel. If this workcenter "
+"Number of operations this work center can do in parallel. If this work center "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 
@@ -1912,11 +1934,6 @@ msgid "Rounding applied on the product quantity."
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
-msgid "Working Period"
-msgstr ""
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
 msgstr ""
@@ -1925,6 +1942,11 @@ msgstr ""
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
 msgstr "Tėvinė techn. kortelė"
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -2189,9 +2211,9 @@ msgstr "Aprašymas"
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
 
@@ -2435,9 +2457,6 @@ msgstr ""
 
 #~ msgid "Production scheduled products"
 #~ msgstr "Suplanuoti gamybiniai produktai"
-
-#~ msgid "Working Time"
-#~ msgstr "Darbo laikas"
 
 #~ msgid "Details"
 #~ msgstr "Detalės"
@@ -2871,9 +2890,9 @@ msgstr ""
 #~ msgstr "plius"
 
 #~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
+#~ "The list of operations (list of work centers) to produce the finished "
+#~ "product. The routing is mainly used to compute work center costs during "
+#~ "operations and to plan futur loads on work centers based on production "
 #~ "plannification."
 #~ msgstr ""
 #~ "Tai yra darbų sąrašas (sąrašas darbo centrų) pagaminti pabaigtus produktus. "

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-12 00:59+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"PO-Revision-Date: 2010-12-19 10:00+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-20 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -364,6 +364,12 @@ msgstr ""
 "тодорхойлно.\n"
 "  Эерэг - орлогын данс\n"
 "  Сөрөг - зардлын данс"
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1271,11 +1277,6 @@ msgid "Overdue Payments"
 msgstr "Төлбөр шаардах хуудас"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -2075,6 +2076,14 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
+msgstr ""
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
 msgstr ""
 
 #. module: account
@@ -3068,7 +3077,10 @@ msgid "Purchase"
 msgstr "Худалдан авалт"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr ""
 
@@ -3550,18 +3562,14 @@ msgid "#Entries"
 msgstr "Бичилтийн тоо"
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Дансны төрөл"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
+"Нийлүүлэгчийн төлбөрийн нөхцөл дээр төлбөрийн огноог тооцоолж чадахгүй байна "
+"!"
 
 #. module: account
 #: view:account.state.open:0
@@ -3799,14 +3807,18 @@ msgid "Shortcut"
 msgstr "Богино холбоос"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"Нийлүүлэгчийн төлбөрийн нөхцөл дээр төлбөрийн огноог тооцоолж чадахгүй байна "
-"!"
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Дансны төрөл"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4122,10 +4134,13 @@ msgid "Analytic Account Statistics"
 msgstr "Аналитик данс статистик"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
-msgstr "Суурь"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
+msgstr ""
+"Та уг загварыг ашиглан автоматаар дансны мод, банкны дансууд, татварууд "
+"болон журналуудыг тохируулах боломжтой"
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4210,6 +4225,16 @@ msgid ""
 msgstr ""
 "Нэхэмжлэлийн үнийг шалгана уу !\n"
 "Жинхэнэ үнийн дүн нь тооцоолсон дүнгээс зөрж байна."
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Анхааруулга"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5773,6 +5798,11 @@ msgid "Default Credit Account"
 msgstr "Үндсэн кредит данс"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr "  өдрийн тоо: 30"
@@ -5962,6 +5992,11 @@ msgid "Centralisation"
 msgstr "төвлөрөл"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -6115,6 +6150,12 @@ msgstr "\"%s\" гүйлгээ алга !"
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Факс :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr "Суурь"
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6679,11 +6720,6 @@ msgstr "Ok"
 #, python-format
 msgid "Unknown Partner"
 msgstr "Үл мэдэх харилцагч"
-
-#. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr "Нээлтийн үлдэгдэл"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -7280,8 +7316,7 @@ msgstr "Төлөв"
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr ""
-"Та аль санхүүгийн жилийн хаалтын бичилтийг устгах гэж байгаагаа сонго"
+msgstr "Устгах Санхүүгийн Жилийн хаалтын бичилтийг сонгоно уу."
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -7412,6 +7447,11 @@ msgstr "Нийт үлдэгдэл"
 #: model:process.node,note:account.process_node_supplierinvoiceinvoice0
 msgid "Invoice's state is Open"
 msgstr "Нэхэмжлэлийн төлөв нээллтэй"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
+msgstr ""
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -7987,11 +8027,6 @@ msgid "Print Account Partner Balance"
 msgstr "Харилцагчийн баланс тайлан"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
 msgstr "Гэрээнүүд"
@@ -8173,6 +8208,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Эрхэм ноён/хатагтай,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9236,14 +9276,9 @@ msgid "End period"
 msgstr "Дуусах мөчлөг"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Анхааруулга"
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr "Нээлтийн үлдэгдэл"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -10251,13 +10286,6 @@ msgstr "Та гүйлгээтэй дансыг устгах боломжгүй! 
 
 #~ msgid "By Date"
 #~ msgstr "Огноогоор"
-
-#~ msgid ""
-#~ "This will automatically configure your chart of accounts, bank accounts, "
-#~ "taxes and journals according to the selected template"
-#~ msgstr ""
-#~ "Та уг загварыг ашиглан автоматаар дансны мод, банкны дансууд, татварууд "
-#~ "болон журналуудыг тохируулах боломжтой"
 
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Ажил гүйлгээнүүд"

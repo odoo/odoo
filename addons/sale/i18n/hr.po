@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
 "PO-Revision-Date: 2010-12-14 21:43+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
@@ -42,6 +42,11 @@ msgstr ""
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Otkaži Narudžbu"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -292,11 +297,6 @@ msgid "All Quotations"
 msgstr "Sve Ponude"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Naš Prodavač"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr ""
@@ -434,9 +434,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Kupovni cjenici"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -536,6 +536,11 @@ msgstr "Ponuda / Narudžba"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# Linija"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -831,13 +836,10 @@ msgid "Sale Order Line"
 msgstr "Vezana Zaključnica"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Napravi Račun"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Jedinična cijena"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -895,6 +897,8 @@ msgstr "Cijena"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -937,11 +941,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Prodajni Cjenici"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1306,10 +1305,13 @@ msgid "Sales"
 msgstr "Prodaje"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Jedinična cijena"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Napravi Račun"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1697,6 +1699,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr ""
@@ -1742,6 +1749,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1811,11 +1819,6 @@ msgid "Sales Orders"
 msgstr "Prodajne Narudžbe"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Uvjeti plaćanja"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1848,6 +1851,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
+msgstr ""
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
@@ -1986,6 +1994,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Uvjet plaćanja"
@@ -2208,11 +2217,17 @@ msgstr "Račun na temelju dostava"
 #~ msgid "Packing Policy"
 #~ msgstr "Politika Pakiranja"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Naš Prodavač"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Napravi Račun Predujma"
 
 #~ msgid "One procurement for each product."
 #~ msgstr "Jedna Nabava za svaki Proizvod"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Prodajni Cjenici"
 
 #~ msgid ""
 #~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
@@ -2322,6 +2337,9 @@ msgstr "Račun na temelju dostava"
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Ime i adresa kontakta koji je zatražio Prodajnu Narudžnu ili Ponudu."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Kupovni cjenici"
+
 #~ msgid "New Quotation"
 #~ msgstr "Nova Ponuda"
 
@@ -2340,6 +2358,9 @@ msgstr "Račun na temelju dostava"
 
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Konfiguriraj Politiku Odabira robe za Prodajnu Narudžbu"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Uvjeti plaćanja"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Račun Ispravljen"

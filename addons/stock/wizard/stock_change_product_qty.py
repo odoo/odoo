@@ -27,21 +27,9 @@ class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
     _columns = {
-        'new_quantity': fields.float('Quantity', required=True), 
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"), 
+        'new_quantity': fields.float('Quantity', required=True, help='This quantity is expressed in the Default UoM of the product.'), 
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade", domain="[('usage', '=', 'internal')]"), 
     }
-
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
-        """ Finds location id for changed warehouse.
-        @param warehouse_id: Changed id of warehouse.
-        @return: Dictionary of values.
-        """
-        if warehouse_id:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context)
-            val = {'location_id': warehouse.lot_stock_id.id}
-            return {'value': val}
-        return {}
 
     def default_get(self, cr, uid, fields, context):
         """ To get default values for the object.
@@ -53,10 +41,6 @@ class stock_change_product_qty(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         res = super(stock_change_product_qty, self).default_get(cr, uid, fields, context=context)
-
-        wids = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
-        if 'warehouse_id' in fields:
-            res.update({'warehouse_id': wids and wids[0] or False})
 
         if 'new_quantity' in fields:
             res.update({'new_quantity': 1})
@@ -84,19 +68,18 @@ class stock_change_product_qty(osv.osv_memory):
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
-            invntry_id = inventry_obj.create(cr , uid, {'name': 'INV:' + str(res_original.name)}, context=context)
+            inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: ') + str(res_original.name)}, context=context)
             line_data ={
-                'inventory_id' : invntry_id, 
+                'inventory_id' : inventory_id, 
                 'product_qty' : data.new_quantity, 
                 'location_id' : data.location_id.id, 
                 'product_id' : rec_id, 
                 'product_uom' : res_original.uom_id.id, 
-                'company_id' : self.pool.get('res.users').browse(cr, uid, uid).company_id.id or False , 
             }
             line_id = inventry_line_obj.create(cr , uid, line_data, context=context)
     
-            inventry_obj.action_confirm(cr, uid, [invntry_id], context=context)
-            inventry_obj.action_done(cr, uid, [invntry_id], context=context)
+            inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
+            inventry_obj.action_done(cr, uid, [inventory_id], context=context)
             
         return {}
 

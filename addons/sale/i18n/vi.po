@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-15 01:30+0000\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-16 17:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #, python-format
@@ -52,6 +52,11 @@ msgstr "Ngày"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Hủy đơn chào hàng"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -304,11 +309,6 @@ msgid "All Quotations"
 msgstr "Tất cả báo giá"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Nhân viên bán hàng của chúng tôi"
-
-#. module: sale
 #: selection:sale.report,month:0
 msgid "June"
 msgstr "Tháng Sáu"
@@ -451,9 +451,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr ""
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Bảng giá mua hàng"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -552,6 +552,11 @@ msgstr "Báo giá / Đơn chào hàng"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
 msgstr ""
 
 #. module: sale
@@ -758,7 +763,7 @@ msgstr "Ngày tạo"
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Các công ty"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -848,13 +853,10 @@ msgid "Sale Order Line"
 msgstr "Sản phẩm đơn chào hàng"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Tạo hóa đơn"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Đơn giá"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -912,6 +914,8 @@ msgstr "Giá"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr ""
 
@@ -954,11 +958,6 @@ msgstr ""
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr ""
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Bảng giá bán hàng"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1028,7 +1027,7 @@ msgstr "Lịch chờ"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Phương pháp mua hàng"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1049,7 +1048,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Order date"
-msgstr ""
+msgstr "Ngày đặt hàng"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
@@ -1323,10 +1322,13 @@ msgid "Sales"
 msgstr "Bán hàng"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Đơn giá"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Tạo hóa đơn"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1395,7 +1397,7 @@ msgstr "Sản phẩm"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_invoiced
 msgid "Invoicing"
-msgstr ""
+msgstr "Hóa đơn"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1715,6 +1717,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Tài liệu nguồn"
@@ -1762,6 +1769,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1830,11 +1838,6 @@ msgid "Sales Orders"
 msgstr "Đơn chào hàng"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Điều khoản thanh toán"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1868,6 +1871,11 @@ msgstr ""
 #: selection:sale.report,month:0
 msgid "January"
 msgstr "Tháng Một"
+
+#. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -2005,6 +2013,7 @@ msgid "Search Sales Order"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Điều khoản thanh toán"
@@ -2285,6 +2294,9 @@ msgstr "Hóa đơn dựa theo việc giao hàng"
 #~ msgid "EAN: "
 #~ msgstr "EAN: "
 
+#~ msgid "Our Salesman"
+#~ msgstr "Nhân viên bán hàng của chúng tôi"
+
 #~ msgid "Create Advance Invoice"
 #~ msgstr "Tạo hóa đơn ứng trước"
 
@@ -2296,6 +2308,9 @@ msgstr "Hóa đơn dựa theo việc giao hàng"
 
 #~ msgid "Packing Information !"
 #~ msgstr "Thông tin đóng gói!"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Bảng giá bán hàng"
 
 #, python-format
 #~ msgid ""
@@ -2422,6 +2437,9 @@ msgstr "Hóa đơn dựa theo việc giao hàng"
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Tên và địa chỉ liên hệ của người đã yêu cầu đặt hàng hoặc báo giá."
 
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Bảng giá mua hàng"
+
 #~ msgid "New Quotation"
 #~ msgstr "Báo giá mới"
 
@@ -2441,6 +2459,9 @@ msgstr "Hóa đơn dựa theo việc giao hàng"
 
 #~ msgid "Configure Picking Policy for Sale Order"
 #~ msgstr "Thiết lập chính sách chọn hàng cho đơn chào hàng"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Điều khoản thanh toán"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Hóa đơn được điều chỉnh đúng"

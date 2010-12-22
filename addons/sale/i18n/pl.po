@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-14 20:22+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"PO-Revision-Date: 2010-12-18 05:38+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -41,6 +41,11 @@ msgstr "Dzień"
 #: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Anuluj zamówienie"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sales Order Logistics"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -171,7 +176,7 @@ msgstr "Zamówione ilości"
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr ""
+msgstr "Sprzedaż wg sprzedawców"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -304,11 +309,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 msgid "All Quotations"
 msgstr "Wszystkie oferty"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Our Salesman"
-msgstr "Nasz sprzedawca"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -456,9 +456,9 @@ msgid "The quotation '%s' has been converted to a sale order."
 msgstr "Oferta '%s' została skonwertowana do zamówienia sprzedaży."
 
 #. module: sale
-#: field:product.product,pricelist_purchase:0
-msgid "Purchase Pricelists"
-msgstr "Cennik zakupu"
+#: view:sale.installer:0
+msgid "Enhance your core Sales Application with additional functionalities."
+msgstr ""
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -529,7 +529,7 @@ msgstr "Nie można usunąć zamówień sprzedaży, które są potwierdzone !"
 #. module: sale
 #: view:board.board:0
 msgid "Sales by Customer"
-msgstr ""
+msgstr "Sprzedaż wg klientów"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -560,6 +560,11 @@ msgstr "Oferta / Zamówienie"
 #: field:sale.report,nbr:0
 msgid "# of Lines"
 msgstr "# pozycji"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Setup your sales workflow and default values."
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -601,7 +606,7 @@ msgstr "Ilość (JM)"
 #: help:sale.installer,sale_layout:0
 msgid ""
 "Provides some features to improve the layout of the Sales Order reports."
-msgstr "Dostarcza możliwości ulepszenia układu Zamówienia sprzedaży"
+msgstr "Umożliwia modyfikację układu Zamówienia sprzedaży"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -616,7 +621,7 @@ msgstr "Suma :"
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr "Moje sprzedaże"
+msgstr "Moja sprzedaż"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -808,6 +813,14 @@ msgid ""
 "generated so that you just have to confirm it when you want to bill your "
 "customer."
 msgstr ""
+"Zamówienia sprzedaży są elementem porządkującym oferty dla klientów i "
+"zamówienia od klientów. Zalecamy rozpoczynanie sprzedaży od sporządzenia "
+"oferty. Po potwierdzeniu oferty staje się ona zamówieniem sprzedaży. Dzięki "
+"temu, że OpenERP rozpoznaje typy produktów, zamówienie sprzedaży może "
+"wygenerować zadanie, zamówienie dostawy, zamówienie produkcji lub zamówienie "
+"zakupu. W Konfiguracji zamówienia sprzedaży można ustawić, że po "
+"potwierdzeniu zamówienia sprzedaży automatycznie zostanie wygenerowany "
+"projekt faktury dla klienta."
 
 #. module: sale
 #: report:sale.order:0
@@ -867,13 +880,10 @@ msgid "Sale Order Line"
 msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0
-#: view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Utwórz fakturę"
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Cena jednostkowa"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -903,7 +913,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_sales_by_partner
 #: view:sale.report:0
 msgid "Sales by Partner"
-msgstr ""
+msgstr "Sprzedaż wg partnerów"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -924,6 +934,9 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
+"Zależnie od ustawień fakturowania zamówienia sprzedaży faktura może być "
+"generowana na ilości dostarczone lub zamówione. Dzięki tym ustawieniom "
+"potwierdzenie zamówienia sprzedaży może od razu generować fakturę."
 
 #. module: sale
 #: report:sale.order:0
@@ -933,6 +946,8 @@ msgstr "Cena"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
+#: view:sale.config.picking_policy:0
+#: view:sale.installer:0
 msgid "Sales Application Configuration"
 msgstr "Konfiguracja aplikacji sprzedażowej"
 
@@ -975,11 +990,6 @@ msgstr "Steruje zapotrzebowaniami i fakturowaniem"
 #: field:sale.order.line,sequence:0
 msgid "Sequence Number"
 msgstr "Numer kolejny"
-
-#. module: sale
-#: field:product.product,pricelist_sale:0
-msgid "Sale Pricelists"
-msgstr "Cennik sprzedaży"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1197,7 +1207,7 @@ msgid ""
 "The salesman confirms the quotation. The state of the sale order becomes 'In "
 "progress' or 'Manual in progress'."
 msgstr ""
-"Kiedy sprzedawca potwierdza ofertę, to jej zmienia się ona zamówienie "
+"Kiedy sprzedawca potwierdza ofertę, to zmienia się ona w zamówienie "
 "sprzedaży w stanie 'W toku' lub 'Ręcznie w toku'."
 
 #. module: sale
@@ -1320,12 +1330,16 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
+"Sprzedawca tworzy fakturę ręcznie, Jeśli zasady wysyłki są 'Wysyłka i ręczna "
+"faktura'. Faktura jest tworzona automatycznie, jeśli zasady wysyłki są "
+"'Płatność przed dostawą'."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
+"Możesz generować faktury na podstawie zamówień lub na podstawie wydań."
 
 #. module: sale
 #: view:sale.order:0
@@ -1346,10 +1360,13 @@ msgid "Sales"
 msgstr "Sprzedaż"
 
 #. module: sale
-#: report:sale.order:0
-#: field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Cena jednostkowa"
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Utwórz fakturę"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1637,7 +1654,7 @@ msgstr "Ostrzeżenie"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 msgid "Sales by Month"
-msgstr ""
+msgstr "Sprzedaż wg miesięcy"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1740,6 +1757,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: sale
 #: field:sale.order,origin:0
 msgid "Source document"
 msgstr "Źródło dokumentu"
@@ -1787,6 +1809,7 @@ msgid "Uninvoiced"
 msgstr ""
 
 #. module: sale
+#: report:sale.order:0
 #: view:sale.order:0
 #: field:sale.order,user_id:0
 #: view:sale.order.line:0
@@ -1856,11 +1879,6 @@ msgid "Sales Orders"
 msgstr "Zamówienia sprzedaży"
 
 #. module: sale
-#: report:sale.order:0
-msgid "Payment Terms"
-msgstr "Warunki płatności"
-
-#. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid ""
@@ -1898,6 +1916,11 @@ msgid "January"
 msgstr ""
 
 #. module: sale
+#: view:sale.installer:0
+msgid "Configure Your Sales Management Application"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 msgid "Sales Order in Progress"
 msgstr "Zam. sprzedaży w trakcie przetwarzania"
@@ -1905,7 +1928,7 @@ msgstr "Zam. sprzedaży w trakcie przetwarzania"
 #. module: sale
 #: field:sale.installer,sale_layout:0
 msgid "Sales Order Layout Improvement"
-msgstr ""
+msgstr "Modyfikacja układu zamówień sprzedaży"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -2030,9 +2053,10 @@ msgstr "Zamówienie sprzedaży '%s' zostało ustawione w stan Projekt."
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Przeszukaj zamówienia sprzedaży"
 
 #. module: sale
+#: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Warunki płatności"
@@ -2105,6 +2129,12 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Status"
 #~ msgstr "Stan"
 
+#~ msgid "Our Salesman"
+#~ msgstr "Nasz sprzedawca"
+
+#~ msgid "Sale Pricelists"
+#~ msgstr "Cennik sprzedaży"
+
 #~ msgid "Sales order lines"
 #~ msgstr "Pozycje zamówienia sprzedaży"
 
@@ -2119,6 +2149,12 @@ msgstr "Faktura wg dostaw"
 
 #~ msgid "Sales order"
 #~ msgstr "Zamówienie sprzedaży"
+
+#~ msgid "Purchase Pricelists"
+#~ msgstr "Cennik zakupu"
+
+#~ msgid "Payment Terms"
+#~ msgstr "Warunki płatności"
 
 #~ msgid "My Sales Order"
 #~ msgstr "Moje zamówienia sprzedaży"
