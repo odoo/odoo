@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
-"PO-Revision-Date: 2010-12-18 15:13+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 13:18+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-19 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -81,10 +81,14 @@ msgid "Group By..."
 msgstr "Groupé par ..."
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
-msgstr "Message de suivi"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -172,6 +176,12 @@ msgstr "Total débit"
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: entête de la ligne de Mouvement"
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Message de suivi"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -380,7 +390,7 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "Devise"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
@@ -395,7 +405,7 @@ msgstr "Gestion des Relances Comptables"
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Bloqué"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -555,7 +565,7 @@ msgstr "Rapport des Relances"
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Période"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -664,6 +674,8 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"Aucun message envoyé aux partenaires suivants (e-mail non disponible)\n"
+"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -730,6 +742,7 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr ""
+"Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
 
 #~ msgid "All payable entries"
 #~ msgstr "Toutes les entrées payables"

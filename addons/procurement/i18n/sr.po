@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-04 08:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -44,9 +44,9 @@ msgid "Group By..."
 msgstr "Grupisano po..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Planiranje"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -178,6 +178,11 @@ msgid "Stock Move"
 msgstr "Pomeri Lager"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Planiranje"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Spreman"
@@ -221,6 +226,11 @@ msgid ""
 msgstr ""
 "Reference dokumenta koje je kreirala ova nabavka.\n"
 "Ovo je automatski zavrseno od strane OpenERP-a."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
 
 #. module: procurement
 #: constraint:res.company:0
@@ -415,6 +425,19 @@ msgid "Service"
 msgstr "Usluga"
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Min Kolicina"
@@ -601,9 +624,7 @@ msgid "Procurement Reason"
 msgstr "Razlog Nabavke"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Umnozena kolicina mora biti veca od  nula"
 

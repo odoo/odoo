@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-19 15:43+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -41,9 +41,9 @@ msgid "Group By..."
 msgstr "Grouper par..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Planification"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -183,6 +183,11 @@ msgid "Stock Move"
 msgstr "Mouvement de stock"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Planification"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Prêt"
@@ -227,6 +232,11 @@ msgstr ""
 "Référence du document qui est à l'origine de la création de cet "
 "approvisionnement.\n"
 "Ce champ est alimenté automatiquement par OpenERP."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
 
 #. module: procurement
 #: constraint:res.company:0
@@ -426,6 +436,19 @@ msgstr "En retard"
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Service"
+
+#. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -628,9 +651,7 @@ msgid "Procurement Reason"
 msgstr "Motif de l'approvisionnement"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Le multiple de la quantité doit être plus grand que zéro."
 

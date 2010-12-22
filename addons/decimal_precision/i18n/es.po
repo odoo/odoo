@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-05 07:28+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 21:58+0000\n"
+"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: decimal_precision
@@ -23,15 +23,31 @@ msgid "Digits"
 msgstr "Dígitos"
 
 #. module: decimal_precision
-#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
-msgid "Decimal Precision Configuration"
-msgstr "Configuración precisión decimal"
+#: view:decimal.precision:0
+msgid "Decimal Precision"
+msgstr "Precisión decimal"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
-msgid "Decimal Accuracy"
+msgid "Decimal Accuracy Definitions"
 msgstr "Precisión decimal"
+
+#. module: decimal_precision
+#: model:ir.module.module,description:decimal_precision.module_meta_information
+msgid ""
+"\n"
+"This module allows to configure the price accuracy you need for different "
+"kind\n"
+"of usage: accounting, sales, purchases, ...\n"
+"\n"
+"The decimal precision is configured per company.\n"
+msgstr ""
+"\n"
+"Este modulo permite configurar la precisión de decimales que requiere en "
+"cada tipo de modelo: contabilidad, ventas, compras,...\n"
+"\n"
+"La precisión de decimales se configura por compañía.\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,name:0
@@ -44,9 +60,9 @@ msgid "Only one value can be defined for each given usage!"
 msgstr "¡Solo un valor puede ser definido para cada uso en concreto!"
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
-msgstr "Precisión decimal"
+#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
+msgid "Decimal Precision Configuration"
+msgstr "Configuración precisión decimal"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
@@ -67,6 +83,9 @@ msgstr "decimal.precision"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Decimal Accuracy"
+#~ msgstr "Precisión decimal"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "¡El ID del certificado del módulo debe ser único!"

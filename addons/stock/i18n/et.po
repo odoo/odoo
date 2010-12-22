@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-10-30 15:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -107,6 +107,7 @@ msgstr ""
 #: report:lot.stock.overview_all:0
 #: field:report.stock.inventory,product_qty:0
 #: field:report.stock.move,product_qty:0
+#: field:stock.change.product.qty,new_quantity:0
 #: field:stock.inventory.line,product_qty:0
 #: field:stock.inventory.line.split,qty:0
 #: report:stock.inventory.move:0
@@ -212,9 +213,9 @@ msgid "Origin"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_configuration
-msgid "Configuration"
-msgstr "Seadistus"
+#: view:report.stock.lines.date:0
+msgid "Non Inv"
+msgstr ""
 
 #. module: stock
 #: view:stock.tracking:0
@@ -459,11 +460,6 @@ msgstr ""
 #: field:stock.location,usage:0
 msgid "Location Type"
 msgstr "Asukoha tüüp"
-
-#. module: stock
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -764,9 +760,16 @@ msgid "Transit Location for Inter-Companies Transfers"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,stock_virtual_value:0
-msgid "Virtual Stock Value"
-msgstr "Virtuaalse lao väärtus"
+#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
+#: model:ir.model,name:stock.model_stock_change_product_qty
+#: view:stock.change.product.qty:0
+msgid "Change Product Quantity"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -832,6 +835,7 @@ msgstr "Kiireloomuline"
 
 #. module: stock
 #: view:stock.picking:0
+#: report:stock.picking.list:0
 msgid "Journal"
 msgstr ""
 
@@ -932,6 +936,7 @@ msgid "Address of partner"
 msgstr ""
 
 #. module: stock
+#: model:res.company,overdue_msg:stock.res_company_shop0
 #: model:res.company,overdue_msg:stock.res_company_tinyshop0
 msgid ""
 "\n"
@@ -1106,9 +1111,13 @@ msgid "Downstream Traceability"
 msgstr ""
 
 #. module: stock
-#: report:stock.picking.list:0
-msgid "Packing List:"
-msgstr "Pakkeleht:"
+#: model:ir.actions.act_window,help:stock.action_stock_journal_form
+msgid ""
+"The stock journals system allows you assign each stock operation into a "
+"specific journal according to the type of operation to perform or the "
+"worker/team that should perform the operation. Examples of stock journals "
+"may be: quality control, pick lists, packing, etc."
+msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1119,10 +1128,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: help:stock.move,price_unit:0
+#: code:addons/stock/stock.py:0
+#, python-format
 msgid ""
-"Technical field used to record the product cost set by the user during a "
-"picking confirmation (when average price costing method is used)"
+"Can not create Journal Entry, Output Account defined on this product and "
+"Variant account on category of this product are same."
 msgstr ""
 
 #. module: stock
@@ -1153,6 +1163,7 @@ msgid "Shop 1"
 msgstr ""
 
 #. module: stock
+#: view:stock.change.product.qty:0
 #: view:stock.change.standard.price:0
 #: view:stock.fill.inventory:0
 #: view:stock.inventory.merge:0
@@ -1249,6 +1260,11 @@ msgstr "Tüüp"
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Suppliers"
 msgstr "Üldised IT varustajad"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Picking List:"
+msgstr ""
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1635,9 +1651,23 @@ msgid "Split in production lots"
 msgstr "Jaotamine tootmispartiides"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_merge
-msgid "Merge Inventory"
-msgstr ""
+#: model:ir.model,name:stock.model_stock_location
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,location_id:0
+#: field:stock.change.product.qty,location_id:0
+#: field:stock.fill.inventory,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
+#: field:stock.picking,location_id:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,location_id:0
+#: field:stock.report.tracklots,location_id:0
+msgid "Location"
+msgstr "Asukoht"
 
 #. module: stock
 #: view:product.template:0
@@ -1654,6 +1684,14 @@ msgstr ""
 #, python-format
 msgid "Provide the quantities of the returned products."
 msgstr "Määra tagastatud toodete kogused."
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Can not create Journal Entry, Input Account defined on this product and "
+"Variant account on category of this product are same."
+msgstr ""
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -1690,6 +1728,13 @@ msgstr ""
 #: field:stock.warehouse,partner_address_id:0
 msgid "Owner Address"
 msgstr "Omaniku aadress"
+
+#. module: stock
+#: help:stock.move,price_unit:0
+msgid ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when average price costing method is used)"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_move_report
@@ -1819,6 +1864,7 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr ""
 
 #. module: stock
+#: view:stock.change.product.qty:0
 #: view:stock.change.standard.price:0
 msgid "_Apply"
 msgstr ""
@@ -2291,7 +2337,6 @@ msgid "Stock Level Forecast"
 msgstr ""
 
 #. module: stock
-#: model:account.journal,name:stock.stock_journal
 #: model:ir.model,name:stock.model_stock_journal
 #: field:report.stock.move,stock_journal:0
 #: view:stock.journal:0
@@ -2312,6 +2357,7 @@ msgid "Maxtor Suppliers"
 msgstr "Maxtor-i tarnijad"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
 #: code:addons/stock/wizard/stock_change_standard_price.py:0
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2416,6 +2462,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Can not consume a move with negative or zero quantity !"
+msgstr ""
+
+#. module: stock
 #: field:stock.location,stock_real:0
 msgid "Real Stock"
 msgstr "Reaalne ladu"
@@ -2464,6 +2516,13 @@ msgstr ""
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
 msgstr "Kogus (TÜ)"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"You are moving %.2f %s products but only %.2f %s available in this lot."
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -2713,12 +2772,6 @@ msgid "Please provide Proper Quantity !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "You are moving %.2f products but only %.2f available in this lot."
-msgstr ""
-
-#. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
 msgstr "Toote MüÜ"
@@ -2842,6 +2895,11 @@ msgid "Enable Related Account"
 msgstr ""
 
 #. module: stock
+#: field:stock.location,stock_virtual_value:0
+msgid "Virtual Stock Value"
+msgstr "Virtuaalse lao väärtus"
+
+#. module: stock
 #: view:product.product:0
 #: view:stock.inventory.line.split:0
 #: view:stock.move.split:0
@@ -2933,12 +2991,8 @@ msgid "Reason"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,help:stock.action_stock_journal_form
-msgid ""
-"The stock journals system allows you assign each stock operation into a "
-"specific journal according to the type of operation to perform or the "
-"worker/team that should perform the operation. Examples of stock journals "
-"may be: quality control, pick lists, packing, etc."
+#: report:stock.picking.list:0
+msgid "Delivery Order:"
 msgstr ""
 
 #. module: stock
@@ -3086,10 +3140,14 @@ msgid "Merge inventories"
 msgstr "Liida inventuurid"
 
 #. module: stock
-#: field:product.product,location_id:0
-#: view:stock.location:0
-msgid "Stock Location"
-msgstr "Lao asukoht"
+#: help:stock.change.product.qty,new_quantity:0
+msgid "This quantity is expressed in the Default UoM of the product."
+msgstr ""
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Reception:"
+msgstr ""
 
 #. module: stock
 #: help:stock.location,scrap_location:0
@@ -3129,6 +3187,12 @@ msgid "Product Category"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
+#, python-format
+msgid "INV: "
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
 msgstr "Aruandlus"
@@ -3159,15 +3223,21 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:report.stock.lines.date:0
-msgid "Non Inv"
-msgstr ""
+#: model:ir.ui.menu,name:stock.menu_stock_configuration
+msgid "Configuration"
+msgstr "Seadistus"
 
 #. module: stock
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
 msgstr ""
+
+#. module: stock
+#: field:product.product,location_id:0
+#: view:stock.location:0
+msgid "Stock Location"
+msgstr "Lao asukoht"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -3240,24 +3310,6 @@ msgid "Pack"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_location
-#: view:report.stock.inventory:0
-#: field:report.stock.inventory,location_id:0
-#: field:stock.fill.inventory,location_id:0
-#: field:stock.inventory.line,location_id:0
-#: report:stock.inventory.move:0
-#: view:stock.location:0
-#: view:stock.move:0
-#: field:stock.move.consume,location_id:0
-#: field:stock.move.scrap,location_id:0
-#: field:stock.picking,location_id:0
-#: report:stock.picking.list:0
-#: field:stock.report.prodlots,location_id:0
-#: field:stock.report.tracklots,location_id:0
-msgid "Location"
-msgstr "Asukoht"
-
-#. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
@@ -3276,6 +3328,11 @@ msgstr ""
 #: field:stock.move,auto_validate:0
 msgid "Auto Validate"
 msgstr "Kinnita automaatselt"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Weight"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -3401,11 +3458,6 @@ msgid "Please specify at least one non-zero quantity!"
 msgstr ""
 
 #. module: stock
-#: report:stock.picking.list:0
-msgid "weight"
-msgstr "kaalukus"
-
-#. module: stock
 #: help:product.template,property_stock_procurement:0
 msgid ""
 "For the current product, this stock location will be used, instead of the "
@@ -3506,6 +3558,11 @@ msgstr "Viga"
 #. module: stock
 #: field:stock.ups.final,xmlfile:0
 msgid "XML File"
+msgstr ""
+
+#. module: stock
+#: view:stock.change.product.qty:0
+msgid "Select Quantity"
 msgstr ""
 
 #. module: stock
@@ -3799,6 +3856,10 @@ msgstr ""
 #~ msgid "terp-account"
 #~ msgstr "terp-konto"
 
+#, python-format
+#~ msgid "Futur Stock"
+#~ msgstr "Tuleviku laoseis"
+
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
 
@@ -3949,6 +4010,10 @@ msgstr ""
 #~ msgid "STOCK_DIALOG_INFO"
 #~ msgstr "STOCK_DIALOG_INFO"
 
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Arve olek"
+
 #~ msgid "STOCK_GO_BACK"
 #~ msgstr "STOCK_GO_BACK"
 
@@ -3957,6 +4022,10 @@ msgstr ""
 
 #~ msgid "STOCK_JUSTIFY_FILL"
 #~ msgstr "STOCK_JUSTIFY_FILL"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Palun vali vähemalt kaks inventuuri."
 
 #~ msgid "All Stock Moves"
 #~ msgstr "Kõik lao liikumised"
@@ -3972,6 +4041,9 @@ msgstr ""
 
 #~ msgid "Dest. Address"
 #~ msgstr "Sihtaadress"
+
+#~ msgid "Qty"
+#~ msgstr "Kogus"
 
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
@@ -4080,6 +4152,10 @@ msgstr ""
 
 #~ msgid "Lots by location"
 #~ msgstr "Partiid asukoha järgi"
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "Tootmisjada pole määratletud"
 
 #~ msgid "STOCK_CLEAR"
 #~ msgstr "STOCK_CLEAR"
@@ -4269,6 +4345,10 @@ msgstr ""
 
 #~ msgid "terp-product"
 #~ msgstr "terp-product"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "arveldamiseks"
 
 #~ msgid "Print Item Labels"
 #~ msgstr "Prindi eseme etiketid"
@@ -4498,6 +4578,10 @@ msgstr ""
 #~ msgid "Products Received"
 #~ msgstr "Tooted saabunud"
 
+#, python-format
+#~ msgid "Futur Productions"
+#~ msgstr "Tooted tulevikus"
+
 #~ msgid "Incoming Products"
 #~ msgstr "Saabuvad tooted"
 
@@ -4545,8 +4629,15 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
+#~ msgid "Packing List:"
+#~ msgstr "Pakkeleht:"
+
 #~ msgid "Outgoing Products"
 #~ msgstr "Väljuvad tooted"
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "Palun vali ainult üks inventuur!"
 
 #~ msgid "Future Delivery Orders"
 #~ msgstr "Tulevased kättetoimetamise korraldused"
@@ -4569,5 +4660,24 @@ msgstr ""
 #~ msgid "Units"
 #~ msgstr "Ühikud"
 
+#~ msgid "weight"
+#~ msgstr "kaalukus"
+
 #~ msgid "Total :"
 #~ msgstr "Kokku :"
+
+#, python-format
+#~ msgid "Futur Deliveries"
+#~ msgstr "Tulevased tarned"
+
+#, python-format
+#~ msgid "Futur Receptions"
+#~ msgstr "Tulevased vastuvõtud"
+
+#, python-format
+#~ msgid "Futur Qty"
+#~ msgstr "Tulevane kogus"
+
+#, python-format
+#~ msgid "Futur P&L"
+#~ msgstr "Tulevased kasumid ja kahjumid"
