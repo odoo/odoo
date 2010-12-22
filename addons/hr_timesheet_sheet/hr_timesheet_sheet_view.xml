@@ -177,13 +177,6 @@
             <field name="help">This view allows you to check timesheet sheets following a specific period. You can also encode time spent on a project that is an analytic account and the time spent on a project generate costs on the analytic account.</field>
         </record>
 
-        <!--Time Tracking menu in project Management-->
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem
-             id="base.menu_project_management_time_tracking"
-             name="Time Tracking"
-             parent="base.menu_main_pm" sequence="5"/>
-
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
              sequence="2"/>
 

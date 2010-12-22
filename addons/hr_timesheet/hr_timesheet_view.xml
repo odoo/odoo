@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
-                  parent="base.menu_main_pm" sequence="3"/>
 
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
@@ -97,8 +94,7 @@
             <field name="help">Working Hours allows you to log your working hours by project every day.</field>
         </record>
 
-    <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
-    <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+        <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
