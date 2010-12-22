@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-16 05:05+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -85,6 +85,12 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
 msgid "Supplier Invoices"
@@ -130,12 +136,6 @@ msgstr ""
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -251,6 +251,11 @@ msgstr "Jegyzetek"
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
 msgstr ""
 
 #. module: purchase
@@ -412,6 +417,7 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_order_group.py:0
 #, python-format
 msgid "Warning"
@@ -565,6 +571,11 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr ""
@@ -578,6 +589,11 @@ msgid ""
 "receptions.\n"
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
@@ -657,6 +673,7 @@ msgid "July"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
 msgstr ""
@@ -718,8 +735,9 @@ msgid "Manual"
 msgstr "Manuális"
 
 #. module: purchase
-#: help:purchase.order,invoice_id:0
-msgid "An invoice generated for a purchase order"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -791,8 +809,9 @@ msgid "Procurement"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
 msgstr ""
 
 #. module: purchase
@@ -1083,6 +1102,29 @@ msgid "Compute"
 msgstr "Számítás"
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
 msgstr ""
@@ -1219,7 +1261,6 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-#: field:purchase.order,invoice_id:0
 msgid "Invoice"
 msgstr "Számla"
 
@@ -1606,6 +1647,11 @@ msgid "Total"
 msgstr "Összesen"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr ""
@@ -1709,11 +1755,184 @@ msgstr ""
 msgid "Purchase Dashboard"
 msgstr ""
 
+#~ msgid "Packing"
+#~ msgstr "Csomagolás"
+
+#~ msgid "Purchase Process"
+#~ msgstr "Beszerzési folyamat"
+
+#~ msgid "Planned Date"
+#~ msgstr "Tervezett dátum"
+
+#~ msgid "Purchase orders"
+#~ msgstr "Beszerzési rendelések"
+
+#~ msgid "Partner Ref."
+#~ msgstr "Partner hiv."
+
+#~ msgid "Purchase order"
+#~ msgstr "Beszerzési rendelés"
+
+#~ msgid "Scheduled date"
+#~ msgstr "Ütemezett dátum"
+
+#~ msgid "Approved Purchase"
+#~ msgstr "Jóváhagyott beszerzés"
+
 #~ msgid "Confirm Purchase Order"
 #~ msgstr "Megrendelés elindítása"
 
 #~ msgid "Order Ref"
 #~ msgstr "Rendelési hiv."
 
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "Számla a szállítások alapján"
+
+#~ msgid "New Purchase Order"
+#~ msgstr "Új beszerzési rendelés"
+
 #~ msgid "Purchases Properties"
 #~ msgstr "Beszerzés beállítsai"
+
+#~ msgid "Supplier Invoice pre-generated on receptions for control"
+#~ msgstr ""
+#~ "Előre kiállított beszállítói számla, hogy ellenőrizze a rendelés alapján"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Érvénytelen modell név a művelet meghatározásában."
+
+#~ msgid "Confirmed Purchase"
+#~ msgstr "Vásárlás megerősítve"
+
+#~ msgid "Create invoice from product recept"
+#~ msgstr "Számla létrehozása a termék nyugtából"
+
+#~ msgid "Invoice from Packing list"
+#~ msgstr "Számla a csomagolási listából"
+
+#~ msgid "Purchase Orders in Progress"
+#~ msgstr "Beszerzési rendelések folyamatban"
+
+#~ msgid "Purchase order is confirmed by the user."
+#~ msgstr "Beszerzési rendelés megerősítve a felhasználó által."
+
+#~ msgid "Purchase Order lines"
+#~ msgstr "Beszerzési rendelés tételei"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Önnek ki kell választania egy árlistát a beszerzési űrlapon !\n"
+#~ "Kérem állítson be egyet, mielőtt terméket választ."
+
+#~ msgid "Product Receipt"
+#~ msgstr "Termék nyugta"
+
+#~ msgid "Confirm Purchase order from Request for quotation without origin"
+#~ msgstr "Beszerzési rendelés megerősítése az árajánlatból eredet nélkül"
+
+#~ msgid "Merge purchases"
+#~ msgstr "Beszerzések egyesítése"
+
+#~ msgid "Request for quotation is proposed by the system."
+#~ msgstr "A rendszer által ajánlott ajánlatkérés."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Érvénytelen XML a nézet architektúrában!"
+
+#~ msgid "Pre-generated supplier invoice to control based on order"
+#~ msgstr ""
+#~ "Előre kiállított beszállítói számla, hogy ellenőrizze a rendelés alapján"
+
+#~ msgid "Invoice from Purchase"
+#~ msgstr "Számla a beszerzésből"
+
+#~ msgid "Confirming Purchase"
+#~ msgstr "Beszerzés megerősítése"
+
+#~ msgid "Approve Purchase order after Confirming"
+#~ msgstr "Beszerzési rendelés jóváhagyása a megerősítés után"
+
+#~ msgid "Encoded manually by the user."
+#~ msgstr "Manuálisan kódolva a felhasználó által."
+
+#~ msgid "Confirm Purchase order from Request for quotation"
+#~ msgstr "Beszerzési rendelés megerősítése az árajánlatkérésből"
+
+#~ msgid "Purchase order is approved by supplier."
+#~ msgstr "Beszerzési rendelés jóváhagyva a beszállító által."
+
+#~ msgid "Packing Invoice"
+#~ msgstr "Csomagolási számla"
+
+#~ msgid "Creates invoice from packin list"
+#~ msgstr "Létrehozza a számlát a csomagolási listából"
+
+#~ msgid "Delivery & Invoices"
+#~ msgstr "Szállítás és Számlák"
+
+#~ msgid "Date"
+#~ msgstr "Dátum"
+
+#~ msgid "After Purchase order , Create invoice."
+#~ msgstr "Beszerzési rendelés után , számla készítés."
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Nem lehet 2 egybevágó árlista verziója!"
+
+#~ msgid "Create Packing list"
+#~ msgstr "Csomagolási lista létrehozása"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Hiba ! Nem jelölheti ki a fő árlistát egyéb árlistaként az árlista tételben."
+
+#~ msgid "Order Status"
+#~ msgstr "Rendelés állapota"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
+#~ "karaktereket"
+
+#~ msgid "Out Packing"
+#~ msgstr "Csomagolás Politika"
+
+#~ msgid "Control invoices on receptions"
+#~ msgstr "Piszkozat számlák létrehozása a foglalásokhoz"
+
+#~ msgid ""
+#~ "Module for purchase management\n"
+#~ "    Request for quotation, Create Supplier Invoice, Print Order..."
+#~ msgstr ""
+#~ "A beszerzés menedzsment modul\n"
+#~ "    Árajánlatkérés, Beszállítói számla készítés, Rendelés nyomtatása..."
+
+#~ msgid "Product recept invoice"
+#~ msgstr "Számla létrehozása a termék nyugtából"
+
+#~ msgid "Confirming Purchase Order"
+#~ msgstr "Beszerzési rendelés megerősítése"
+
+#~ msgid "Purchase Invoice"
+#~ msgstr "Beszerzési számla"
+
+#, python-format
+#~ msgid "You must first cancel all packing attached to this purchase order."
+#~ msgstr ""
+#~ "Önnek először érvénytelenítenie kell az összes ehhez a beszerzési "
+#~ "rendeléshez csatolt számlát."
+
+#~ msgid "Request For Quotations"
+#~ msgstr "Árajánlatkérés"
+
+#~ msgid "From Packing list, Create invoice."
+#~ msgstr "Csomagolási listából, Számla készítés."
+
+#~ msgid "Approving Purchase Order"
+#~ msgstr "Beszerzési rendelés jóváhagyása"

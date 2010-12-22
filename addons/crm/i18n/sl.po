@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-30 14:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -82,6 +82,7 @@ msgid "Select Opportunities"
 msgstr ""
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -137,11 +138,6 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
 msgstr ""
 
 #. module: crm
@@ -718,6 +714,11 @@ msgstr ""
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
 msgstr ""
 
 #. module: crm
@@ -3144,11 +3145,6 @@ msgid "Daily"
 msgstr ""
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr ""
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 #: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
@@ -3339,6 +3335,7 @@ msgstr ""
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr ""
@@ -3792,6 +3789,12 @@ msgstr ""
 #~ msgid "Created"
 #~ msgstr "Ustvarjeno"
 
+#~ msgid "Add Last Mail for Replying"
+#~ msgstr "Dodaj zadnje sporočilo v odgovor"
+
+#~ msgid "My Draft "
+#~ msgstr "Moj osnutek "
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Napačno ime modela v definiciji dejanja."
 
@@ -3804,6 +3807,9 @@ msgstr ""
 #~ msgid "Button Pressed"
 #~ msgstr "Pritisnjeni gumb"
 
+#~ msgid "All Open "
+#~ msgstr "Vse odprto "
+
 #~ msgid "Template of Email to Send"
 #~ msgstr "Predloga za pošiljanje poštnega sporočila"
 
@@ -3813,14 +3819,23 @@ msgstr ""
 #~ msgid "Cases"
 #~ msgstr "Primeri"
 
+#~ msgid "My "
+#~ msgstr "Moj "
+
 #~ msgid "Planned Costs"
 #~ msgstr "Načrtovani stroški"
 
 #~ msgid "Set state to"
 #~ msgstr "Nastavi stanje na"
 
+#~ msgid "All Unclosed and Unassigned "
+#~ msgstr "Vsi nezaprti in nerazporejeni "
+
 #~ msgid "Partner Events"
 #~ msgstr "Partnerjevi dogodki"
+
+#~ msgid "My Open "
+#~ msgstr "Moji odprti "
 
 #~ msgid "Your action"
 #~ msgstr "Vaše dejanje"
@@ -3834,6 +3849,18 @@ msgstr ""
 #~ msgid "Last Action Date"
 #~ msgstr "Datum zadnjega dejanja"
 
+#~ msgid "All Late "
+#~ msgstr "Vse pozne "
+
+#~ msgid "My Open Cases"
+#~ msgstr "Moje odprte zadeve"
+
+#~ msgid "My Unclosed "
+#~ msgstr "Moji nezaprti "
+
+#~ msgid "My Late "
+#~ msgstr "Moje pozne "
+
 #~ msgid "Rules"
 #~ msgstr "Pravila"
 
@@ -3843,14 +3870,26 @@ msgstr ""
 #~ msgid "Calendar"
 #~ msgstr "Koledar"
 
+#~ msgid "Calendar View"
+#~ msgstr "Pogled koledarja"
+
 #~ msgid "Status"
 #~ msgstr "Stanje"
 
 #~ msgid "Conditions"
 #~ msgstr "Pogoji"
 
+#~ msgid "Parent Menu"
+#~ msgstr "Nadmenu"
+
+#~ msgid "Don't Create"
+#~ msgstr "Ne izdelaj"
+
 #~ msgid "General"
 #~ msgstr "Splošno"
+
+#~ msgid "Tree View"
+#~ msgstr "Drevesni prikaz"
 
 #~ msgid "General Description"
 #~ msgstr "Splošni opis"
@@ -3862,6 +3901,15 @@ msgstr ""
 #~ msgid "Case"
 #~ msgstr "Primer"
 
+#~ msgid "List"
+#~ msgstr "Seznam"
+
+#~ msgid "All "
+#~ msgstr "Vse "
+
+#~ msgid "Form View"
+#~ msgstr "Prikaz obrazca"
+
 #~ msgid "Actions"
 #~ msgstr "Dejanja"
 
@@ -3871,8 +3919,14 @@ msgstr ""
 #~ msgid "Trigger Date"
 #~ msgstr "Sproženo dne"
 
+#~ msgid "this wizard will create all sub-menus, within the selected menu."
+#~ msgstr "Ta čarovnik bo izdelal vse podmenuje v izbranem menuju."
+
 #~ msgid "Delay After Trigger Date:"
 #~ msgstr "Zakasnitev po datumu proženja:"
 
 #~ msgid "Estimates"
 #~ msgstr "Ocene"
+
+#~ msgid "Select Views (empty for default)"
+#~ msgstr "Izberi poglede (prazno za privzete)"

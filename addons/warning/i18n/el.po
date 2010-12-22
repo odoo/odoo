@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-17 21:14+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -44,7 +44,6 @@ msgid "Picking List"
 msgstr "Λίστα Συλλογής"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Γραμμή Παραγγελίας Πώλησης"
@@ -117,15 +116,14 @@ msgid "Warning when Selling this Product"
 msgstr ""
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Παραγγελία Πώλησης"
 
 #. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Μύνημα για Τιμολόγιο"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr ""
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
@@ -159,9 +157,15 @@ msgid ""
 msgstr ""
 
 #. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
 msgstr ""
+
+#. module: warning
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Μύνημα για Τιμολόγιο"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
@@ -203,3 +207,13 @@ msgstr ""
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
 msgstr "Συνεργάτης"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""

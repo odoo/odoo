@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-19 00:12+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:29+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_mrp
@@ -27,12 +27,9 @@ msgid "Procurement Task"
 msgstr ""
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "Tarea"
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Procurement and Project Management integration"
+msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -71,9 +68,12 @@ msgid "Procurement"
 msgstr "Abastecimiento"
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procurement method is Make to order and supply method is produce"
-msgstr ""
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Tarea"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -96,11 +96,48 @@ msgid "Create Task"
 msgstr "Crear tarea"
 
 #. module: project_mrp
-#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
-msgid "Procurement and Project Management integration"
+#: model:ir.module.module,description:project_mrp.module_meta_information
+msgid ""
+"\n"
+"This module creates a link between procurement orders\n"
+"containing \"service\" lines and project management tasks.\n"
+"\n"
+"When installed, this module will automatically create a new task\n"
+"for each procurement order line, when the corresponding product\n"
+"meets the following characteristics:\n"
+"  * Type = Service\n"
+"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+"  * Supply/Procurement method = Produce\n"
+"\n"
+"The new task is created outside of any existing project, but\n"
+"can be added to a project manually.\n"
+"\n"
+"When the project task is completed or cancelled, the workflow of the "
+"corresponding\n"
+"procurement line is updated accordingly.\n"
+"\n"
+"This module is useful to be able to invoice services based on tasks\n"
+"automatically created via sale orders.\n"
+"\n"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
 msgstr "En caso que venda servicios sobre pedido de venta"
+
+#~ msgid "If procure method is Make to order and supply method is produce"
+#~ msgstr ""
+#~ "si método de abastecimiento es Fabricar bajo pedido y método de suministro "
+#~ "es Producir"
+
+#~ msgid "Project Management - MRP and Sale Integration"
+#~ msgstr "Gestión de proyectos - Integración con MRP y ventas"
+
+#~ msgid "Procure Task"
+#~ msgstr "Tarea abastecimiento"
