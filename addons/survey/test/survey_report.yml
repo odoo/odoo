@@ -1,24 +1,32 @@
 -
-  In order to test the PDF reports defined on a Survey, we will print Survey Analysis Report
-- 
-  !python {model: survey}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.survey.analysis').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_analysis_report.'+format), 'wb+').write(data)
+ Print the Survey Browse Response Report through the wizard
 -
-  In order to test the PDF reports defined on a Survey, we will print Survey Browse Response Report
-- 
   !python {model: survey}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.survey.browse.response').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_browse_response_report.'+format), 'wb+').write(data)
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
+    data_dict = {'response_ids' : [(6,0,[ref('survey.survey_partner_feedback')])], 'page_number' : True, 'without_pagebreak': True}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_view_survey_print_answer',wiz_data=data_dict, context=ctx, our_module='survey')
+
 -
-  In order to test the PDF reports defined on a Survey, we will print Survey Form Report
-- 
+ Print the Survey Analysis Report through the wizard
+-
   !python {model: survey}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.survey.form').create(cr, uid, [ref('survey.survey_partner_feedback')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'survey-survey_form_report.'+format), 'wb+').write(data)
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
+    data_dict = {'survey_ids' : [(6,0,[ref('survey.survey_partner_feedback')])]}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_view_survey_print_statistics',wiz_data=data_dict, context=ctx, our_module='survey')
+
+-
+ Print the Survey Form Report through the wizard
+-
+  !python {model: survey}: |
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
+    data_dict = {'survey_ids' : [(6,0,[ref('survey.survey_partner_feedback')])], 'page_number' : True, 'without_pagebreak': True}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_view_survey_print',wiz_data=data_dict, context=ctx, our_module='survey')
