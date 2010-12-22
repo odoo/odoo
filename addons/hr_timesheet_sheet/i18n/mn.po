@@ -20,14 +20,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-11-25 19:32+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 11:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -184,6 +184,8 @@ msgstr "Татгалзах"
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
 msgstr ""
+"Та оролцогчийн огноог одоогийн цаг бүртгэлийн огноогоос гадуур оруулж "
+"болохгүй."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -294,14 +296,34 @@ msgid "Confirm"
 msgstr "Батлах"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
-msgid "Timesheet lines"
-msgstr "Цаг бүртгэлийн мөрүүд"
+#: model:ir.module.module,description:hr_timesheet_sheet.module_meta_information
+msgid ""
+"\n"
+"This module helps you to easily encode and validate timesheet and "
+"attendances\n"
+"within the same view. The upper part of the view is for attendances and\n"
+"track (sign in/sign out) events. The lower part is for timesheet.\n"
+"\n"
+"Other tabs contains statistics views to help you analyse your\n"
+"time or the time of your team:\n"
+"* Time spent by day (with attendances)\n"
+"* Time spent by project\n"
+"\n"
+"This module also implements a complete timesheet validation process:\n"
+"* Draft sheet\n"
+"* Confirmation at the end of the period by the employee\n"
+"* Validation by the project manager\n"
+"\n"
+"The validation can be configured in the company:\n"
+"* Period size (day, week, month, year)\n"
+"* Maximal difference between timesheet and attendances\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Алдаа! Рекурсив компани үүсгэж болохгүй."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -325,6 +347,12 @@ msgstr "Ажилтан"
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "Шинэ"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot duplicate a timesheet !"
+msgstr "Цаг бүртгэлийг хувилж болохгүй !"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -363,6 +391,8 @@ msgstr "#Үнэ"
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
+"Алдаа: Нэвтэрсэн (эсвэл Гарсан) бүртгэлийн араас Гарсан (эсвэл Нэвтэрсэн) "
+"бүртгэл хийгдэх ёстой."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -463,7 +493,7 @@ msgstr "12 сар"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Таны одоогийн цаг бүртгэлийг нээнэ."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -507,7 +537,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date which is in the timesheet dates !"
-msgstr ""
+msgstr "Та цаг бүртгэлийн огноонд байгаа Одоогийн огноог сонгох ёстой."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -517,6 +547,10 @@ msgid ""
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
 msgstr ""
+"Энэ тайлан нь системдэх хүний нөөцийн үүсгэсэн цаг бүртгэл дээр шинжилгээ "
+"хийнэ. Энэ нь таны ажилтнуудын оруулсан өгөгдлүүдийг ерөнхий байдлаар харах "
+"боломж олгоно. Хайлтын хэрэгслийн тусламжтайгаар тэдгээрийг тодорхой "
+"хэмжүүрээр ангилж болно."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -624,10 +658,9 @@ msgid "Timesheet range"
 msgstr "Цаг бүртгэлийн хүрээ"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr "Батлагдсан цаг бүртгэлийг мөрийг өөрчилж болохгүй !"
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Цаг бүртгэлийн мөрүүд"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
@@ -687,8 +720,8 @@ msgstr "Мөчлөг"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "You cannot duplicate a timesheet !"
-msgstr "Цаг бүртгэлийг хувилж болохгүй !"
+msgid "You can not modify an entry in a confirmed timesheet !"
+msgstr "Батлагдсан цаг бүртгэлийг мөрийг өөрчилж болохгүй !"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -730,6 +763,12 @@ msgstr "Нээлттэй"
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Цаг бүртгэлийг дансаар харах"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#, python-format
+msgid "Open Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -925,6 +964,9 @@ msgid ""
 "You can also encode time spent on a project that is an analytic account and "
 "the time spent on a project generate costs on the analytic account."
 msgstr ""
+"Энэ харагдац нь цаг бүртгэлийг тодорхой үе шаттайгаар харуулна. Мөн төсөл "
+"дэх шинжилгээний бүртгэлд зарцуулагдсан цаг болон шинжилгээний бүртгэл дээрх "
+"үнийн гаргалгаанд зарцуулагдсан цагийг кодоор шифрлэх боломжтой."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
@@ -1132,14 +1174,97 @@ msgstr "Журнал"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн архитектур алдаатай!"
 
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
 #~ "болохгүй!"
 
+#~ msgid "hr_timesheet_sheet.sheet"
+#~ msgstr "hr_timesheet_sheet.sheet"
+
+#~ msgid ""
+#~ "You can not have 2 timesheets that overlaps !\n"
+#~ "Please use the menu /'My Current Timesheet/' to avoid this problem."
+#~ msgstr ""
+#~ "2 цаг бүртгэлийг цаг хугацаагаар давхцуулж болохгүй! \n"
+#~ "Энэ асуудлаас зайлхийхийн тулд 'Одоогийн өөрийн цаг бүртгэл' цэсийг "
+#~ "хэрэглэнэ үү."
+
+#~ msgid ""
+#~ "You cannot enter an attendance ' \\n                            'date "
+#~ "outside the current timesheet dates!"
+#~ msgstr ""
+#~ "Одоогийн цаг бүртгэлийн огноонд үл хамаарах' \\n                            "
+#~ "'огноо бүхий ирцийг бүртгэж болохгүй!"
+
+#~ msgid ""
+#~ "You cannot enter an attendance ' \\n                        'date outside "
+#~ "the current timesheet dates!"
+#~ msgstr ""
+#~ "Одоогийн цаг бүртгэлийн огноонд үл хамаарах' \\n                            "
+#~ "'огноо бүхий ирцийг бүртгэж болохгүй!"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module helps you to easily encode and validate timesheet and "
+#~ "attendances\n"
+#~ "within the same view. The upper part of the view is for attendances and\n"
+#~ "track (sign in/sign out) events. The lower part is for timesheet.\n"
+#~ "\n"
+#~ "Other tabs contains statistics views to help you analyse your\n"
+#~ "time or the time of your team:\n"
+#~ "* Time spent by day (with attendances)\n"
+#~ "* Time spent by project\n"
+#~ "\n"
+#~ "This module also implements a complete timesheet validation process:\n"
+#~ "* Draft sheet\n"
+#~ "* Confirmation at the end of the period by the employee\n"
+#~ "* Validation by the project manager\n"
+#~ "\n"
+#~ "The validation can be configured in the company:\n"
+#~ "* Period size (day, week, month, year)\n"
+#~ "* Maximal difference between timesheet and attendances\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Энэ модуль нь 1 дэлгэцнээ ирц, цаг бүртгэлийг хялбархан бүртгэх,батламжлах\n"
+#~ "боломжийг олгоно. Дэлгэцийн дээд хэсэг нь ирц бөгөөд нэвтэрсэн гарсан\n"
+#~ "үйлдлийг нягтална. Доод хэсэг нь цаг бүртгэл.\n"
+#~ "\n"
+#~ "Бусад хэсэг нь таны ба таны багийн цагийг шинжилсэн\n"
+#~ "* Цаг зарцуулалтыг өдрөөр харах\n"
+#~ "* Цаг зарцуулалтыг төслөөр харах\n"
+#~ "статистикийн дэлгэц юм.\n"
+#~ "\n"
+#~ "Энэ модуль нь цаг бүртгэлийг батламжилж дуусах дараах алхмуудтай:\n"
+#~ "* Ноорог бүртгэл\n"
+#~ "* Мөчлөгийн төгсгөлд ажилтан бүртгэх\n"
+#~ "* Төслийн менежер батламжлах\n"
+#~ "\n"
+#~ "Батламжлах нь компаниас  тогтоосон дараах хэлбэртэй байж болно:\n"
+#~ "* Мөчлөгийн урт(Жил, сар, долоо хоног, өдөр)\n"
+#~ "* Цаг бүртгэл ба ирцийн хамгийн их зөрүү\n"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Алдаа ! Та рекурсив цэс үүсгэж болохгүй."
+
+#~ msgid ""
+#~ "Employees can encode their time spent on the different projects. A project "
+#~ "is an analytic account and the time spent on a project generate costs on the "
+#~ "analytic account."
+#~ msgstr ""
+#~ "Янз бүрийн төслүүдэд зарцуулсан хугацаагаа ажилчид бүртгэнэ. Төсөл нь "
+#~ "аналитик данс юм. Төсөл дээр ажилласан цагийг үндэслэсэн үнийг энэ аналитик "
+#~ "данснаа үүсгэнэ."
+
+#~ msgid "It will open the your current timesheet"
+#~ msgstr "Энэ нь таны одоогийн цаг бүртгэлийг нээнэ"
+
+#~ msgid "Close"
+#~ msgstr "Хаах"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "osv_memory обьект дүрмийг дэмждэггүй"

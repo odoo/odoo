@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-11 12:17+0000\n"
 "Last-Translator: Lorenzo Battistini - agilebg.com "
 "<lorenzo.battistini@agilebg.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -355,6 +355,11 @@ msgid "Mail Header"
 msgstr "Titolo Email"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Attività Completata"
@@ -429,9 +434,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr "Tempo stimato in cui l'utente delegato chiuderà questa attività"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Lavoro Completato"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Riattiva Progetto"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -783,6 +788,18 @@ msgid "New title of the task delegated to the user"
 msgstr "Nuovo titolo dell'attività delegata all'utente"
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr "Il Progetto rispetto alle ore totali e pianificate"
@@ -863,9 +880,9 @@ msgid "Project Management"
 msgstr "Gestione Progetti"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Avanzamento configurazione"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -988,9 +1005,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr "Stabilisce l'ordine in cui visualizzare una lista di attività"
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Avvisa Partner"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1105,9 +1130,9 @@ msgid "Stages"
 msgstr "Fasi"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "Agosto"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1123,6 +1148,11 @@ msgid ""
 msgstr ""
 "Nuovo stato della propria attività. L'attività in sospeso verrà aperta "
 "automaticamente quando l'attività delegata verrà chiusa"
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Avvisa Partner"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1265,9 +1295,9 @@ msgid "User's projects"
 msgstr "Utenti dei progetti"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Riattiva Progetto"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Avanzamento configurazione"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1564,19 +1594,6 @@ msgid "Bill Time on Tasks"
 msgstr "Fatturazione delle ore sulle attività"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel.  A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr "Le mie ore residue rispetto al progetto"
@@ -1630,6 +1647,7 @@ msgstr "Attività: %(name)s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Configurazione modulo Project"
 
@@ -1851,6 +1869,11 @@ msgid "Task '%s' cancelled"
 msgstr "Attività '%s' annullata"
 
 #. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Lavoro Completato"
+
+#. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
@@ -1992,6 +2015,10 @@ msgstr "Budget"
 #~ "tempo stimato dal project manager e il tempo realmente necessario per "
 #~ "terminare l'attività."
 
+#, python-format
+#~ msgid "Operation Done"
+#~ msgstr "Operazione Completata"
+
 #~ msgid "Sum of planned hours of all tasks related to this project."
 #~ msgstr ""
 #~ "Somma delle ore pianificate per tutte le attività correlate a questo "
@@ -2020,6 +2047,14 @@ msgstr "Budget"
 
 #~ msgid "Change Remaining Hours"
 #~ msgstr "Modifica Ore Rimanenti"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't send mail because the contact for this task (%s) has no email "
+#~ "address!"
+#~ msgstr ""
+#~ "Non è possibile spedire l'email perchè il contatto per questa attività (%s) "
+#~ "non ha un indirizzo email!"
 
 #~ msgid "User you want to delegate this task to."
 #~ msgstr "Utente a cui si vuole delegare questa attività"
@@ -2258,6 +2293,14 @@ msgstr "Budget"
 #~ msgstr ""
 #~ "Se hai [?] nel nome progetto, significa che non ci sono conti analitici "
 #~ "collegati al progetto."
+
+#, python-format
+#~ msgid ""
+#~ "A new project has been created !\n"
+#~ "We suggest you to close this one and work on this new project."
+#~ msgstr ""
+#~ "Un nuovo progetto è stato creato !\n"
+#~ "Vi suggeriamo di chiudere questo e lavorare sul nuovo progetto."
 
 #~ msgid ""
 #~ "If you have [?] in the name, it means there are no analytic account linked "

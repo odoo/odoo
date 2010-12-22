@@ -76,7 +76,7 @@
             <field name="name">Fiscal Years</field>
             <field name="res_model">account.fiscalyear</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="help">Define your company's fiscal year depending on the period you have chosen to follow. A fiscal year is a 1 year period over which a company budgets its spending. It may run over any period of 12 months. The fiscal year is referred to by the date in which it ends. For example, if a company's fiscal year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. Not using the actual calendar year gives many companies an advantage, allowing them to close their books at a time which is most convenient for them.</field>
         </record>
         <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting" sequence="8" />
@@ -143,7 +143,7 @@
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_draft': 1}</field>
             <field name="help">Here, you can define a period, an interval of time between successive closings of the books of your company. An accounting period typically is a month or a quarter, corresponding to the tax year used by the business. Create and manage them from here and decide whether a period should be left open or closed depending on your company's activities over a specific period.</field>
         </record>
@@ -411,7 +411,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="type" on_change="onchange_type(type, currency)"/>
+                        <field name="type" on_change="onchange_type(type, currency, context)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -698,7 +698,7 @@
             <field name="name">Draft statements</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
         </record>
@@ -946,7 +946,14 @@
                                   <field groups="base.group_extended" name="child_depend"/>
                                   <field groups="base.group_extended" name="sequence"/>
                                   <field groups="base.group_extended" name="include_base_amount"/>
-                                  <field groups="base.group_extended" colspan="4" name="child_ids"/>
+                                  <field groups="base.group_extended" colspan="4" name="child_ids">
+                                      <tree string="Account Tax">
+                                          <field name="sequence"/>
+					                      <field name="name"/>
+					                      <field name="price_include" groups="base.group_extended"/>
+					                      <field name="description"/>
+					                 </tree>
+					             </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
@@ -1163,7 +1170,7 @@
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
+                        <filter name="posted" icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter
                             icon="terp-dolar_ok!"
@@ -1209,6 +1216,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_posted': 1}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account, OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account Payable".</field>
         </record>
@@ -1729,7 +1737,7 @@
             <field name="name">Recurring Models</field>
             <field name="res_model">account.model</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_model_search"/>
         </record>
         <menuitem
@@ -2153,7 +2161,8 @@
                         <filter icon="terp-sale" string="Receivale Accounts" domain="[('type','=','receivable')]"/>
                          <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                          <separator orientation="vertical"/>
-                         <field name="code"/>
+                        <field name="code"/>
+                        <field name="name"/>
                         <field name="parent_id"/>
                         <field name="type"/>
                         <field name="user_type"/>
@@ -2171,7 +2180,7 @@
             <field name="name">Account Templates</field>
             <field name="res_model">account.account.template</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_template_search"/>
         </record>
 
@@ -2194,13 +2203,13 @@
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group>
-                    <field name="property_account_receivable"/>
-                    <field name="property_account_payable"/>
-                    <field name="property_account_expense_categ" />
-                    <field name="property_account_income_categ"/>
-                    <field name="property_account_expense"/>
-                    <field name="property_account_income"/>
-                    <field name="property_reserve_and_surplus_account"/>
+                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
+                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
@@ -2251,7 +2260,7 @@
             <field name="name">Chart of Accounts Templates</field>
             <field name="res_model">account.chart.template</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts" sequence="1"/>
@@ -2406,7 +2415,7 @@
             <field name="name">Tax Code Templates</field>
             <field name="res_model">account.tax.code.template</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_tax_code_template_search"/>
         </record>
         <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="account_template_taxes" sequence="14"/>
@@ -2437,7 +2446,7 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name ="code_digits" groups="base.group_extended"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
@@ -2744,6 +2753,20 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
             groups="group_account_user,group_account_manager"/>
+
+        <record id="action_partner_all" model="ir.actions.act_window">
+            <field name="name">Partners</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="filter" eval="True"/>
+        </record>
+
+        <menuitem id="menu_partners_partners"
+                name="Partners"
+                parent="menu_partners"
+                action="action_partner_all"
+                sequence="1"/>
 
     </data>
 </openerp>

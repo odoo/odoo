@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-09 11:45+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -42,6 +42,16 @@ msgstr "Seleccione el modo de pago a aplicar."
 #: view:payment.order:0
 msgid "Group By..."
 msgstr "Agrupar por..."
+
+#. module: account_payment
+#: model:ir.module.module,description:account_payment.module_meta_information
+msgid ""
+"\n"
+"This module provides :\n"
+"* a more efficient way to manage invoice payment.\n"
+"* a basic mechanism to easily plug various automated payment.\n"
+"    "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -160,9 +170,9 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr "¡El nombre de la línea de pago debe ser única!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -174,11 +184,6 @@ msgstr "Órdenes de pago"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Directamente"
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
-msgstr "¡El nombre de la línea de pago debe ser única!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -405,11 +410,6 @@ msgstr "Importe pagado en la moneda de la empresa"
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Borrador"
-
-#. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -779,6 +779,11 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 
 #~ msgid "_Search"
 #~ msgstr "_Buscar"
+
+#, python-format
+#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+#~ msgstr ""
+#~ "Empresa '+ line.partner_id.name+ ' no tiene una cuenta bancaria definida"
 
 #~ msgid "Payment Orders to Validate"
 #~ msgstr "Órdenes de pago a validar"

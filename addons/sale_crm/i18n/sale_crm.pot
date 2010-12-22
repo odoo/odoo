@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06:20+0000\n"
-"PO-Revision-Date: 2010-12-15 15:06:20+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:09+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,25 @@ msgid "Customer has no addresses defined!"
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.module.module,description:sale_crm.module_meta_information
+msgid "\n"
+"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
+"This shortcut allows you to generate a sales order based on the selected case.\n"
+"If different cases are open (a list), it generates one sale order by\n"
+"case.\n"
+"The case is then closed and linked to the generated sales order.\n"
+"\n"
+"We suggest you to install this module if you installed both the sale and the\n"
+"crm modules.\n"
+"    "
+msgstr ""
+
+#. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
 msgstr ""
@@ -71,11 +90,6 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr ""
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
 #, python-format
 msgid "Opportunity "
@@ -85,11 +99,6 @@ msgstr ""
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
 #, python-format
 msgid "Opportunity: %s"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sale Order"
 msgstr ""
 
 #. module: sale_crm
@@ -129,12 +138,17 @@ msgid "Sales Team"
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
 msgstr ""
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
 msgstr ""
 

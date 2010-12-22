@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 09:02+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_subproduct
@@ -46,8 +46,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "产品数量"
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
 msgstr "子产品"
 
 #. module: mrp_subproduct
@@ -61,9 +66,26 @@ msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "产品数量"
+#: model:ir.module.module,description:mrp_subproduct.module_meta_information
+msgid ""
+"\n"
+"This module allows you to produce several products from one production "
+"order.\n"
+"You can configure sub-products in the bill of material.\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"With this module:\n"
+"    A + B + C -> D + E\n"
+"    "
+msgstr ""
+"\n"
+"这模块允许你在一个生产单有几个要生产的产品\n"
+"    你能在物料清单中确认子产品.\n"
+"    没有这模块:\n"
+"\tA + B + C -> D\n"
+"     有这模块:\n"
+"\tA + B + C -> D + E\n"
+"    "
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -81,8 +103,8 @@ msgid "Error ! You can not create recursive BoM."
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: view:mrp.bom:0
+msgid "Sub Products"
 msgstr "子产品"
 
 #. module: mrp_subproduct
@@ -111,26 +133,6 @@ msgstr "固定的"
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to produce several products from one production "
-#~ "order.\n"
-#~ "You can configure sub-products in the bill of material.\n"
-#~ "Without this module:\n"
-#~ "    A + B + C -> D\n"
-#~ "With this module:\n"
-#~ "    A + B + C -> D + E\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "这模块允许你在一个生产单有几个要生产的产品\n"
-#~ "    你能在物料清单中确认子产品.\n"
-#~ "    没有这模块:\n"
-#~ "\tA + B + C -> D\n"
-#~ "     有这模块:\n"
-#~ "\tA + B + C -> D + E\n"
-#~ "    "
 
 #~ msgid "Mrp Sub Product"
 #~ msgstr "物料需求计划子产品"

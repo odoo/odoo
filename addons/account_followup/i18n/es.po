@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
-"PO-Revision-Date: 2010-12-09 11:46+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-20 13:02+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -52,6 +51,29 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    Módulos para automatizar cartas para facturas impagadas, con "
+"recordatorios multi-nivel.\n"
+"\n"
+"    Puede definir sus múltiples niveles de recordatorios a través del menú:\n"
+"        Contabilidad/Configuración/Misceláneos/Recordatorios\n"
+"\n"
+"    Una vez definido, puede automatizar la impresión de recordatorios cada "
+"día\n"
+"    simplemente haciendo clic en el menú:\n"
+"        Contabilidad/Procesos periódicos/Facturación/Enviar recordatorios\n"
+"\n"
+"    Se generará un PDF con todas las cartas en función de \n"
+"    los diferentes niveles de recordatorios definidos. Puede definir "
+"diferentes reglas\n"
+"    para diferentes empresas. Puede también enviar un correo electrónico al "
+"cliente.\n"
+"\n"
+"    Tenga en cuenta que si quiere modificar los niveles de recordatorios "
+"para una empresa/apunte contable, lo puede hacer desde el menú:\n"
+"        Contabilidad/Informes/Informes genéricos/Cuentas "
+"empresas/Recordatorios enviados\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -59,10 +81,18 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
-msgstr "Mensaje de seguimiento"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Correo enviado a las siguientes empresas correctamente.\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -154,6 +184,12 @@ msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Cabecera línea movimiento"
 
 #. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Mensaje de seguimiento"
+
+#. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
 msgstr "Seguimiento"
@@ -218,6 +254,10 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Esta funcionalidad le permite enviar recordatorios a las empresas con "
+"facturas pendientes. Puede enviarles el mensaje por defecto para facturas "
+"impagadas o introducir manualmente un mensaje si necesita recordarles alguna "
+"información específica."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -804,8 +844,38 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 #~ msgid "Follow-up and Date Selection"
 #~ msgstr "Selección seguimiento y fecha"
 
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Mail sent to following Partners successfully, !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "¡Correo electrónico enviado correctamente a las siguientes empresas!\n"
+#~ "\n"
+
 #~ msgid "Amount In Currency"
 #~ msgstr "Importe en divisa"
+
+#, python-format
+#~ msgid ""
+#~ "Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "¡No se ha enviado correo electrónico a las siguientes empresas, su email no "
+#~ "está disponible!\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "All emails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Todos los correos electrónicos han sido enviados correctamente a las "
+#~ "empresas:\n"
+#~ "\n"
 
 #~ msgid "Print Follow Ups & Send Mails"
 #~ msgstr "Imprimir seguimientos & Enviar correos"
@@ -921,17 +991,12 @@ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
 
-#, python-format
 #~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "E-Mail sent to following Partners successfully. !\n"
-#~ "\n"
+#~ "Do not change message text, if you want to send email in partner language, "
+#~ "or configre from company"
 #~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Correo enviado a las siguientes empresas correctamente.\n"
-#~ "\n"
+#~ "No cambie el texto del mensaje si quiere enviar el correo en el idioma de la "
+#~ "empresa o configurarlo desde la compañía."
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "¡El ID del certificado del módulo debe ser único!"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-04 08:18+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 02:32+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,14 +22,19 @@ msgid "City"
 msgstr "Ville"
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Installer"
+
+#. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
 msgstr "Facturation"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Nom de la société"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Ressources humaines"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -57,16 +62,18 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Vous aide à gérer vos processus de fabrication et à générer des rapports sur "
+"ces processus."
 
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
+msgstr "Vous aide à gérer vos campagnes marketing pas à pas"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr ""
+msgstr "Votre base de données est maintenant créée."
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
@@ -84,6 +91,8 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing "
 msgstr ""
+"Vous aide à gérer vos besoins comptables. Si vous n'êtes pas comptable, nous "
+"vous suggérons d'installer uniquement la facturation. "
 
 #. module: base_setup
 #: code:addons/base_setup/__init__.py:0
@@ -134,6 +143,9 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+"Vous aide à installer de nombreux outils intéressants, mais non "
+"indispensables, comme par exemple les sondages, les déjeuners ou les boîtes "
+"à idées."
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -147,7 +159,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Reporting avancé"
 
 #. module: base_setup
 #: field:base.setup.company,phone:0
@@ -160,6 +172,15 @@ msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+"La description de votre société personnalisera les documents générés par "
+"OpenERP (factures, bons de commande; etc.)"
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "titre"
@@ -170,11 +191,32 @@ msgid "Knowledge Management"
 msgstr "Gestion des connaissances"
 
 #. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
+msgstr ""
+
+#. module: base_setup
 #: help:base.setup.installer,product_expiry:0
 msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
 msgstr ""
+"Installe un ensemble d'applications d'OpenERP pré-sélectionnées qui vont "
+"vous aider à gérer votre industrie."
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
@@ -182,19 +224,18 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Vous aide à gérer vos projets et tâches, en assurant leur suivi, en générant "
+"des plannings, etc..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Nom de la société"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Skip Configuration Wizards"
-msgstr ""
+msgstr "Passer l'étape des assistants de configuration"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -202,6 +243,9 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
+"Vous aide à gérer vos ressources humaines en saisissant la structure de "
+"votre organisation, en générant des fiches de travail, en suivant les "
+"présences, et bien d'autres choses."
 
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
@@ -209,11 +253,14 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
+"Vous permet de créer les factures et de suivre les règlements. C'est une "
+"version simplifiée du module comptable à destination des responsables qui ne "
+"sont pas des comptables."
 
 #. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Ressources humaines"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -221,6 +268,8 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier invoices, etc..."
 msgstr ""
+"Vous aide à gérer vos processus d'achats, tels que les appels d'offres, les "
+"factures fournisseurs, etc..."
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer2:0
@@ -229,9 +278,9 @@ msgid ""
 "We suggest you to put bank information here:\n"
 "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
 msgstr ""
-"La réponse apparaîtra en pied du rapport.\n"
-"Nous vous suggerons de mettre vos information bancaire ici: \n"
-"IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
+"Cette phrase apparaîtra en pied du rapport.\n"
+"Nous vous suggérons de mettre vos informations bancaires ici : \n"
+"IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - TVA: BE0477.472.701"
 
 #. module: base_setup
 #: field:base.setup.company,street2:0
@@ -261,7 +310,7 @@ msgstr "Comptabilité & finance"
 #. module: base_setup
 #: field:base.setup.installer,auction:0
 msgid "Auction Houses"
-msgstr ""
+msgstr "Maisons de ventes aux enchères"
 
 #. module: base_setup
 #: field:base.setup.company,zip:0
@@ -279,8 +328,21 @@ msgid ""
 "Lets you install addons geared towards sharing knowledge with and between "
 "your employees."
 msgstr ""
+"Vous permet d'installer des extensions visant le partage des connaissances "
+"entre les employés."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+"Choisir les applications que vous voulez mettre en oeuvre dans le système. "
+"Si vous n'êtes pas sûr de vos besoins précis à ce stade, vous pourrez "
+"facilement les installer plus tard."
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr "Configuration de la société"
@@ -291,6 +353,17 @@ msgid "Logo"
 msgstr "Logo"
 
 #. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Vous aide à tirer le maximum de vos points de ventes grâce à une saisie "
+"rapide des ventes, un mode de paiement simplifié, une génération automatique "
+"des bons de préparation, et bien d'autres choses."
+
+#. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
 msgstr "Gestion des achats"
@@ -298,12 +371,12 @@ msgstr "Gestion des achats"
 #. module: base_setup
 #: help:base.setup.installer,sale:0
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "Vous aide à gérer vos devis, commandes et factures"
 
 #. module: base_setup
 #: field:base.setup.installer,stock:0
 msgid "Warehouse Management"
-msgstr ""
+msgstr "Gestion d'entrepôt"
 
 #. module: base_setup
 #: field:base.setup.installer,project:0
@@ -323,7 +396,7 @@ msgstr "Nouvelle base de données"
 #. module: base_setup
 #: field:base.setup.installer,crm:0
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Gestion de la relation client (CRM)"
 
 #. module: base_setup
 #: help:base.setup.installer,auction:0
@@ -342,7 +415,7 @@ msgid ""
 "\"Open Source Business Solutions\"."
 msgstr ""
 "Cette phrase apparaîtra en haut à droite de vos rapports.\n"
-"Nous vous suggerons d'y apposer votre slogan:\n"
+"Nous vous suggérons d'y apposer votre slogan :\n"
 "\"Open Source Business Solutions\"."
 
 #. module: base_setup
@@ -351,6 +424,8 @@ msgid ""
 "Lets you install various tools to simplify and enhance OpenERP's report "
 "creation."
 msgstr ""
+"Vous permet d'installer différents outils destinés à simplifier et à "
+"améliorer la création de rapports dans OpenERP."
 
 #. module: base_setup
 #: field:base.setup.company,rml_header1:0
@@ -360,7 +435,7 @@ msgstr "En-tête de rapport"
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Information about your new database"
-msgstr ""
+msgstr "Informations sur la nouvelle base de données"
 
 #. module: base_setup
 #: field:base.setup.company,config_logo:0
@@ -372,7 +447,7 @@ msgstr "Image"
 #. module: base_setup
 #: field:base.setup.installer,product_expiry:0
 msgid "Food Industry"
-msgstr ""
+msgstr "Industrie agroalimentaire"
 
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
@@ -398,12 +473,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,website:0
 msgid "Company Website"
-msgstr ""
+msgstr "Site web de la société"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install Specific Industry Applications"
-msgstr ""
+msgstr "Installe des applications spécifique à l'industrie"
 
 #. module: base_setup
 #: field:base.setup.company,street:0
@@ -411,16 +486,17 @@ msgid "Street"
 msgstr "Rue"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
-msgstr "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
+msgstr "Configurer les informations de la société"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
 msgid "Example: http://openerp.com"
-msgstr ""
+msgstr "Exemple : http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr "Installer les applications"
@@ -432,6 +508,10 @@ msgid ""
 "or issues. Can automatically send reminders, escalate requests or trigger "
 "business-specific actions based on standard events."
 msgstr ""
+"Vous aide à gérer et à suivre vos relations avec vos clients, comme les "
+"pistes, les demandes ou les incidents. Permet d'envoyer automatiquement des "
+"rappels, d'escalader des demandes ou de déclencher des actions spécifiques "
+"en fonction d'évènements standard."
 
 #. module: base_setup
 #: help:base.setup.installer,stock:0
@@ -439,6 +519,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Vous aide à gérer votre inventaire et les principales opérations de stocks : "
+"livraison de commandes, réceptions, etc..."
 
 #. module: base_setup
 #: model:ir.module.module,shortdesc:base_setup.module_meta_information
@@ -457,7 +539,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
+msgstr "base.setup.config"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -518,9 +600,6 @@ msgstr ""
 #~ msgid "Summary"
 #~ msgstr "Résumé"
 
-#~ msgid "Install"
-#~ msgstr "Installer"
-
 #~ msgid "Installation Done"
 #~ msgstr "Installation terminée"
 
@@ -532,3 +611,15 @@ msgstr ""
 
 #~ msgid "Previous"
 #~ msgstr "Précédent"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
+#~ "spécial !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle incorrect dans la définition de l'action"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML incorrect dans l'architecture de la vue !"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-25 19:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -346,6 +346,11 @@ msgid "Mail Header"
 msgstr "Мэйлийн толгой"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Дууссан даалгавар"
@@ -417,9 +422,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Ажил дууссан"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Төслийг дахин нээх"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -751,6 +756,18 @@ msgid "New title of the task delegated to the user"
 msgstr ""
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr "    Сар-1    "
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr ""
@@ -831,9 +848,9 @@ msgid "Project Management"
 msgstr "Төслийн удирдлага"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Тохиргооны явц"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "8 сар"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -956,9 +973,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Харилцагчид анхааруулах"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1073,9 +1098,9 @@ msgid "Stages"
 msgstr "Үе"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "8 сар"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1089,6 +1114,11 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Харилцагчид анхааруулах"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1223,9 +1253,9 @@ msgid "User's projects"
 msgstr "Хэрэглэгчийн төслүүд"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Төслийг дахин нээх"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Тохиргооны явц"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1495,19 +1525,6 @@ msgid "Bill Time on Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel.  A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr "Төсөлд үлдсэн хугацаа"
@@ -1561,6 +1578,7 @@ msgstr "Даалгавар: %(нэр)"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Төслийн хэрэглэгдэхүүний тохируулга"
 
@@ -1776,6 +1794,11 @@ msgstr "Батлагдсан төлөв"
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Даалгавар '%s' цуцлагдсан."
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Ажил дууссан"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -2051,8 +2074,80 @@ msgstr "Төсөв"
 #~ msgid "Internal description of the project."
 #~ msgstr "Төслийн дотоод тодорхойлолт."
 
+#~ msgid "New title of the task delegated to the user."
+#~ msgstr "Хэрэглэгчрүү шилжүүлсэн даалгаврыг нэрлэх"
+
+#~ msgid "User you want to delegate this task to."
+#~ msgstr "Шилжүүлэхийг хүсч буй хэрэглэгч"
+
+#~ msgid "Reinclude the description of the task in the task of the user."
+#~ msgstr "Хэрэглэгчийн даалгавар дэхь даалгаврын тодорхойлтыг өөрчлөх"
+
+#~ msgid "Weeks"
+#~ msgstr "7 хоногууд"
+
+#~ msgid "My Current Tasks"
+#~ msgstr "Миний идэвхтэй даалгаврууд"
+
+#~ msgid "Project task type"
+#~ msgstr "Төслийн даалгаврын төрөл"
+
+#~ msgid "My Pending Tasks"
+#~ msgstr "Миний хүлээгдэж байгаа даалгаврууд"
+
+#~ msgid "Estimated time to close this task by the delegated user."
+#~ msgstr "Шилжүүлсэн хэрэглэгч энэ даалгаврыг хааснаас хойшхи хугацаа"
+
+#~ msgid "E-Mails"
+#~ msgstr "Э-мэйлүүд"
+
+#~ msgid "Quotation"
+#~ msgstr "Үнийн санал"
+
+#~ msgid "Delegate this task to a user"
+#~ msgstr "Энэ даалгаврыг хэрэглэгч рүү шилжүүлэх"
+
+#~ msgid "Send mail to customer"
+#~ msgstr "Хэрэглэгчид э-мэйл илгээх"
+
+#~ msgid "Quiet close"
+#~ msgstr "Чимээгүй хаах"
+
+#~ msgid "Task invoice"
+#~ msgstr "Даалгаврын тооцоо"
+
+#~ msgid "My project's planning"
+#~ msgstr "Миний төслийн төлөвлөгөө"
+
+#~ msgid "Board for project users"
+#~ msgstr "Төслийн гишүүдийн самбар"
+
+#~ msgid "My tasks board"
+#~ msgstr "Миний даалгавруудын самбар"
+
+#~ msgid "My Timesheet"
+#~ msgstr "Миний хуваарь"
+
+#~ msgid "Tasks Closed by Project"
+#~ msgstr "Төслөөс хаасан ажлууд"
+
+#~ msgid "Tasks by User"
+#~ msgstr "Даалгаврууд, хэрэглэгчээр"
+
+#~ msgid "Timesheet / Task Hours Per Month"
+#~ msgstr "Сар бүрийн хуваарь ба даалгаварын хугацаа"
+
+#~ msgid "Timesheet Hours"
+#~ msgstr "Хуваарийн хугацаа"
+
+#~ msgid "Task "
+#~ msgstr "Даалгавар "
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
+
+#~ msgid "is Done."
+#~ msgstr "Дууссан."
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"

@@ -92,13 +92,12 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Base Prices" colspan="2"/>
+                                <field groups="base.group_extended" name="cost_method"/>
                                 <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="list_price"/>
                                 <newline/>
                                 <field name="price_margin" groups="product.group_product_variant"/>
                                 <field name="price_extra" groups="product.group_product_variant"/>
-                                <newline/>
-                                <field groups="base.group_extended" name="cost_method"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -117,8 +116,8 @@
 
                             <group colspan="2" col="2" name="uom">
                                 <separator string="Unit of Measure" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" widget="selection"/>
-                                <field name="uom_po_id" widget="selection" groups="base.group_extended"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -459,7 +458,7 @@
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="min_qty"/>
-                    <field name="product_uom" widget="selection"/>
+                    <field name="product_uom"/>
                     <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">

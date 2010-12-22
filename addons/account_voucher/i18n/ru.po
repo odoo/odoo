@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-11 23:26+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
 msgstr "Неподтвержденные транзакции"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Write-Off"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -32,7 +38,6 @@ msgid "Open Customer Journal Entries"
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Particulars"
 msgstr ""
@@ -47,11 +52,6 @@ msgstr "Объединять по..."
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "Ref. :"
-msgstr "Ссылка:"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -123,6 +123,11 @@ msgstr "Компания"
 #: view:account.voucher:0
 msgid "Set to Draft"
 msgstr "Установить в 'Черновик'"
+
+#. module: account_voucher
+#: field:account.voucher,comment:0
+msgid "Write-Off Comment"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
@@ -238,12 +243,6 @@ msgid "Date payment"
 msgstr "Дата оплаты"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Receiver's Signature"
-msgstr ""
-
-#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Позиция банковской выписки"
@@ -261,36 +260,19 @@ msgid "Unreconcile"
 msgstr "Не сверено"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Налог"
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_journal_id:0
-msgid "Write-Off journal"
-msgstr "Журнал списаний"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Amount (in words) :"
 msgstr "Величина (прописью)"
 
 #. module: account_voucher
-#: field:account.voucher,analytic_id:0
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
 msgstr "Счет аналитического учета"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "Journal:"
-msgstr "Журнал:"
 
 #. module: account_voucher
 #: constraint:account.move.line:0
@@ -299,9 +281,17 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Информация о платеже"
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -328,9 +318,9 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.print:0
-msgid "Account :"
-msgstr "Счет:"
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later or Group Funds"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -338,9 +328,13 @@ msgid "Receipt"
 msgstr "Приход"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "On Account of :"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_amount:0
+msgid "Write-Off Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -349,15 +343,9 @@ msgid "Sales Lines"
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Date:"
 msgstr "Дата:"
-
-#. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Directly"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -394,14 +382,13 @@ msgid "Supplier Voucher"
 msgstr "Ваучер поставщика"
 
 #. module: account_voucher
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Authorised Signatory"
+#: field:account.voucher,name:0
+msgid "Memo"
 msgstr ""
 
 #. module: account_voucher
@@ -428,10 +415,9 @@ msgid "Unreconciliation"
 msgstr "Отмена сверки"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
-msgid "Vendor Payment"
-msgstr ""
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Сумма налога"
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -447,9 +433,9 @@ msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Сумма налога"
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Информация о платеже"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -462,9 +448,21 @@ msgid "Paid Amount"
 msgstr "Оплаченная сумма"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Expense Lines"
-msgstr "Позиции расходов"
+#: field:account.voucher,payment_option:0
+msgid "Payment Difference"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,line_ids:0
@@ -494,22 +492,21 @@ msgid "Payable and Receivables"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Later or Group Funds"
-msgstr ""
+#: report:voucher.print:0
+msgid "Account :"
+msgstr "Счет:"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Draft"
 msgstr "Черновик"
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_acc_id:0
-msgid "Write-Off account"
-msgstr "Счет списания"
+#: field:account.voucher,type:0
+msgid "Default Type"
+msgstr ""
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -517,7 +514,6 @@ msgid "Currency:"
 msgstr "Валюта:"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "PRO-FORMA"
 msgstr "Проформа"
@@ -548,11 +544,6 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Vendor"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
 msgid "Payment Terms"
 msgstr "Условия оплаты"
 
@@ -578,7 +569,6 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Number:"
 msgstr "Номер:"
@@ -589,9 +579,14 @@ msgid "Amount reconciled"
 msgstr "Сверенная сумма"
 
 #. module: account_voucher
-#: field:account.voucher,comment:0
-msgid "Comment"
-msgstr "Комментарий"
+#: field:account.voucher,analytic_id:0
+msgid "Write-Off Analytic Account"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Expense Lines"
+msgstr "Позиции расходов"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -611,7 +606,6 @@ msgstr "Вычислить налог"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
-#: report:voucher.cash_receipt.drcr:0
 msgid "Credit"
 msgstr "Кредит"
 
@@ -622,15 +616,15 @@ msgid "Please define a sequence on the journal !"
 msgstr ""
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Through :"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,payment_option:0
-msgid "Without Write-off"
-msgstr "Без списания"
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payment"
+msgstr ""
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -679,13 +673,7 @@ msgid "Sales Information"
 msgstr "Информация о продажах"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Open Vendor Journal Entries"
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
 msgstr "Товарный чек"
@@ -746,13 +734,17 @@ msgstr "Оплата"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
-#: report:voucher.cash_receipt.drcr:0
 msgid "Debit"
 msgstr "Дебет"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to confirm this record ?"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Reconcile with Write-Off"
 msgstr ""
 
 #. module: account_voucher
@@ -766,15 +758,9 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Canceled"
 msgstr "Отменено"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Vendor Invoices and Outstanding transactions"
-msgstr ""
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,journal_ids:0
@@ -782,16 +768,6 @@ msgstr ""
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Журнал"
-
-#. module: account_voucher
-#: field:account.voucher,payment_option:0
-msgid "Payment Option"
-msgstr ""
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "-"
-msgstr "-"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -805,12 +781,6 @@ msgid "Credits"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_amount:0
-msgid "Writeoff Amount"
-msgstr "Сумма списания"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "State:"
 msgstr "Состояние:"
@@ -827,7 +797,6 @@ msgstr "Платеж"
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Posted"
 msgstr "Проведено"
@@ -838,13 +807,18 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: account_voucher
-#: selection:account.voucher,payment_option:0
-msgid "With Write-off"
-msgstr "Со списанием"
+#: field:account.voucher,writeoff_acc_id:0
+msgid "Write-Off account"
+msgstr "Счет списания"
 
 #. module: account_voucher
-#: field:account.voucher,type:0
-msgid "Default Type"
+#: view:account.voucher:0
+msgid "Supplier Invoices and Outstanding transactions"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Open Supplier Journal Entries"
 msgstr ""
 
 #. module: account_voucher
@@ -864,6 +838,11 @@ msgid "Effective date for accounting entries"
 msgstr ""
 
 #. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Keep Open"
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
@@ -873,11 +852,6 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
-msgid "Vouchers Entries"
 msgstr ""
 
 #. module: account_voucher
@@ -891,11 +865,6 @@ msgstr ""
 #: field:account.voucher,amount:0
 msgid "Total"
 msgstr "Всего"
-
-#. module: account_voucher
-#: field:account.voucher,name:0
-msgid "Memo"
-msgstr ""
 
 #. module: account_voucher
 #: constraint:account.move.line:0
@@ -968,6 +937,9 @@ msgstr ""
 #~ msgid "Bank Receipt"
 #~ msgstr "Квитанция банка"
 
+#~ msgid "-"
+#~ msgstr "-"
+
 #~ msgid "Ref."
 #~ msgstr "Ссылка"
 
@@ -980,8 +952,29 @@ msgstr ""
 #~ msgid "Extended options..."
 #~ msgstr "Расширенные опции..."
 
+#~ msgid "Ref. :"
+#~ msgstr "Ссылка:"
+
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Journal:"
+#~ msgstr "Журнал:"
+
+#~ msgid "Write-Off journal"
+#~ msgstr "Журнал списаний"
+
+#~ msgid "Comment"
+#~ msgstr "Комментарий"
+
+#~ msgid "Without Write-off"
+#~ msgstr "Без списания"
+
+#~ msgid "Writeoff Amount"
+#~ msgstr "Сумма списания"
+
+#~ msgid "With Write-off"
+#~ msgstr "Со списанием"

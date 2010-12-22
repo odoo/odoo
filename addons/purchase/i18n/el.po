@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-04 09:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -90,6 +90,12 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
 msgid "Supplier Invoices"
@@ -135,12 +141,6 @@ msgstr "Εταιρία"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -263,6 +263,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
+msgstr ""
+
+#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0
@@ -294,15 +299,19 @@ msgid "Net Total :"
 msgstr "Καθαρό Σύνολο"
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: purchase
@@ -418,6 +427,7 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_order_group.py:0
 #, python-format
 msgid "Warning"
@@ -571,6 +581,11 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr ""
@@ -587,6 +602,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
@@ -594,14 +614,9 @@ msgid "Error !"
 msgstr "Σφάλμα:"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
+#: view:purchase.order.line:0
+msgid "General Information"
 msgstr ""
-"Πρέπει να επιλέξετε συνεργάτη!\n"
-"Παρακαλώ επιλέξτε συνεργάτη πριν επιλέξετε προϊόν."
 
 #. module: purchase
 #: view:board.board:0
@@ -668,6 +683,7 @@ msgid "July"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
 msgstr ""
@@ -729,8 +745,9 @@ msgid "Manual"
 msgstr "Μη Αυτόματη"
 
 #. module: purchase
-#: help:purchase.order,invoice_id:0
-msgid "An invoice generated for a purchase order"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -777,8 +794,8 @@ msgstr ""
 "γραμμές παραγγελίας."
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
+#: selection:purchase.report,month:0
+msgid "August"
 msgstr ""
 
 #. module: purchase
@@ -804,8 +821,9 @@ msgid "Procurement"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
 msgstr ""
 
 #. module: purchase
@@ -989,8 +1007,8 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
+#: view:purchase.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: purchase
@@ -1095,6 +1113,29 @@ msgstr ""
 #: view:purchase.order:0
 msgid "Compute"
 msgstr "Υπολογισμός"
+
+#. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1215,12 +1256,14 @@ msgid "Default Purchase Pricelist Version"
 msgstr "Έκδοση (Version) Προεπιλεμένου Τιμοκαταλόγου Αγορών"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
 msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr ""
 
@@ -1237,7 +1280,6 @@ msgstr "Αίτηση Προσφοράς Νο:"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-#: field:purchase.order,invoice_id:0
 msgid "Invoice"
 msgstr "Τιμολόγιο"
 
@@ -1469,6 +1511,12 @@ msgid "Reservation"
 msgstr "Κράτηση"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
@@ -1618,6 +1666,11 @@ msgid "Total"
 msgstr "Σύνολο"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr ""
@@ -1672,6 +1725,16 @@ msgstr ""
 #: field:purchase.report,name:0
 msgid "Year"
 msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"Πρέπει να επιλέξετε συνεργάτη!\n"
+"Παρακαλώ επιλέξτε συνεργάτη πριν επιλέξετε προϊόν."
 
 #. module: purchase
 #: view:purchase.installer:0

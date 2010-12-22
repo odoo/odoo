@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-30 15:26+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -40,6 +40,16 @@ msgstr "Seleccioneu la forma de pagament a aplicar."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
+msgstr ""
+
+#. module: account_payment
+#: model:ir.module.module,description:account_payment.module_meta_information
+msgid ""
+"\n"
+"This module provides :\n"
+"* a more efficient way to manage invoice payment.\n"
+"* a basic mechanism to easily plug various automated payment.\n"
+"    "
 msgstr ""
 
 #. module: account_payment
@@ -156,8 +166,8 @@ msgid "Reference"
 msgstr "Referència"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
 msgstr ""
 
 #. module: account_payment
@@ -170,11 +180,6 @@ msgstr "Ordres de pagament/cobrament"
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
 msgstr "Directament"
-
-#. module: account_payment
-#: sql_constraint:payment.line:0
-msgid "The payment line name must be unique!"
-msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -399,11 +404,6 @@ msgstr "Quantitat pagada en la moneda de l'empresa"
 #: selection:payment.order,state:0
 msgid "Draft"
 msgstr "Esborrany"
-
-#. module: account_payment
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -785,6 +785,10 @@ msgstr ""
 
 #~ msgid "Populate Statement with Payment lines"
 #~ msgstr "Omple un extracte amb línies de pagament"
+
+#, python-format
+#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+#~ msgstr "Empresa '+ line.partner_id.name+ ' no té cap compte bancari definit"
 
 #~ msgid "Draft Payment Order"
 #~ msgstr "Ordres de pagament/cobrament esborranys"

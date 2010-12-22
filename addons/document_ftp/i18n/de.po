@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-30 16:50+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ftp
@@ -24,11 +24,14 @@ msgid "Auto Directory Configuration"
 msgstr "Auto Konfigurator Verzeichnisse"
 
 #. module: document_ftp
-#: help:document.ftp.configuration,host:0
+#: view:document.ftp.configuration:0
 msgid ""
-"Server address or IP and port to which users should connect to for DMS access"
+"Indicate the network address on which your OpenERP server should be "
+"reachable for end-users. This depends on your network topology and "
+"configuration, and will only affect the links displayed to the users. The "
+"format is HOST:PORT and the default host (localhost) is only suitable for "
+"access from the server machine itself.."
 msgstr ""
-"Servername oder IP und Port über den Benutzer per FTP auf Dokumente zugreifen"
 
 #. module: document_ftp
 #: field:document.ftp.configuration,progress:0
@@ -46,9 +49,9 @@ msgid "Image"
 msgstr "Bild"
 
 #. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
-msgstr "Bezeichnung"
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr ""
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -82,9 +85,11 @@ msgid "_Browse"
 msgstr "Suchen"
 
 #. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "res_config_contents"
+#: help:document.ftp.configuration,host:0
+msgid ""
+"Server address or IP and port to which users should connect to for DMS access"
 msgstr ""
+"Servername oder IP und Port über den Benutzer per FTP auf Dokumente zugreifen"
 
 #. module: document_ftp
 #: model:ir.ui.menu,name:document_ftp.menu_document_browse
@@ -97,14 +102,29 @@ msgid "_Cancel"
 msgstr "Abbrechen"
 
 #. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr ""
+
+#. module: document_ftp
 #: model:ir.module.module,shortdesc:document_ftp.module_meta_information
 msgid "Integrated FTP Server with Document Management System"
 msgstr "Integration FTP Server in Dokumentenmanagement"
 
 #. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "title"
+msgstr "Bezeichnung"
+
+#. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
 msgid "Document FTP Browse"
 msgstr "Suche per FTP Dokument"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Knowledge Application Configuration"
+msgstr ""
 
 #. module: document_ftp
 #: model:ir.actions.act_window,name:document_ftp.action_ftp_browse
@@ -115,6 +135,11 @@ msgstr "Suche Dokument"
 #: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr "Suche Dokument"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "res_config_contents"
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

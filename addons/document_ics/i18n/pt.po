@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-09 11:37+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 03:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -45,6 +45,11 @@ msgstr ""
 #: field:document.ics.crm.wizard,jobs:0
 msgid "Jobs Hiring Process"
 msgstr "Processo de Contratação"
+
+#. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Configuração do Calendário para Secções CRM"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
@@ -79,9 +84,10 @@ msgid "Calendar of Meetings"
 msgstr "Calendário de Reuniões"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Partilhar Calendários de Reuniões"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -92,6 +98,11 @@ msgstr "Gere um serviço de Helpdesk"
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "Data Final"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "resumo"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -172,6 +183,13 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr ""
@@ -215,6 +233,11 @@ msgstr ""
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr "Gerência do calendário de reuniões dos utilizadores."
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Domínio"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -262,14 +285,19 @@ msgid "categories"
 msgstr "categorias"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Domínio"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Criar Calendários Pré-Configurados"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -309,9 +337,9 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "resumo"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -324,9 +352,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Partilhar Calendários de Reuniões"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -348,6 +376,9 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Oportunidades de Negócio"
 
+#~ msgid "dt-stamp"
+#~ msgstr "carimbo-dt"
+
 #~ msgid "Open ERP Field"
 #~ msgstr "Abrir campos Open ERP"
 
@@ -359,3 +390,67 @@ msgstr "Oportunidades de Negócio"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum carácter "
+#~ "especial !"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Erro! Não é possível criar Pastas recursivas."
+
+#~ msgid "Used by companies to track bugs and support requests on softwares"
+#~ msgstr ""
+#~ "Utilizado por Empresas para procura de erros e pedidos de suporte em "
+#~ "softwares"
+
+#~ msgid ""
+#~ "This Configuration step use to create Calendars in document for all Case "
+#~ "Sections"
+#~ msgstr ""
+#~ "Esta etapa da Configuração é utilizada para criar Calendarios em documentos "
+#~ "para todos os Casos de Secção"
+
+#~ msgid ""
+#~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
+#~ "integration..."
+#~ msgstr ""
+#~ "Ajuda-o a organizar o processo de contratação: Avaliação, reuniões, "
+#~ "integração de e-mail...."
+
+#~ msgid "Error ! You cannot create recursive sections."
+#~ msgstr "Erro! Não pode criar secções recursivas."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a Arquitectura de Vista !"
+
+#~ msgid ""
+#~ "Allows you to track and manage prospects which are pre-sales requests or "
+#~ "contacts, the very first contact with a customer request."
+#~ msgstr ""
+#~ "pPermite-lhe localizar e gerir prespectivas que são pedidos de pré-vendas ou "
+#~ "contactos, o primeiro contacto com um pedido de cliente."
+
+#~ msgid ""
+#~ "Manages the supplier and customers claims, including your corrective or "
+#~ "preventive actions."
+#~ msgstr ""
+#~ "Gerência das reclamações de fornecedores e clientes, incluindo a sua a "
+#~ "correctiva ou acções preventivas."
+
+#~ msgid "Duration(In Hour)"
+#~ msgstr "Duração (Em Horas)"
+
+#~ msgid ""
+#~ "Help you to encode the result of a phone call or to planify a list of phone "
+#~ "calls to process."
+#~ msgstr ""
+#~ "Ajuda-lhe a codificar o resultado de uma chamada telefónica ou a planear uma "
+#~ "lista de processos de chamadas telefónicas."
+
+#~ msgid "Prospect"
+#~ msgstr "Prespectiva"
+
+#~ msgid "document.directory.ics.fields"
+#~ msgstr "document.directory.ics.fields"

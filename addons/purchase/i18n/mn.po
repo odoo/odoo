@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-11 15:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -87,6 +87,12 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr "Та нийлүүлэгчийн нэхэмжлэл үүсгэхийг хүсч байна уу ?"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
 msgid "Supplier Invoices"
@@ -134,12 +140,6 @@ msgstr "Компани"
 msgid "This is the leads/security time for each purchase order."
 msgstr ""
 "Энэ нт худалдан авалтын захиалга тус бүрийн судалгаа/аюулгүй байдлын  цаг."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
-msgstr ""
 
 #. module: purchase
 #: view:board.board:0
@@ -259,6 +259,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
+msgstr "9 сар"
+
+#. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0
@@ -290,16 +295,20 @@ msgid "Net Total :"
 msgstr "Цэвэр дүн :"
 
 #. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
 msgstr "Бүтээгдэхүүн"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
-#: view:purchase.report:0
-msgid "Total Qty and Amount by month"
-msgstr "Нийт тоо ширхэг болон хэмжээ (сараар)"
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Тохиргоо хийгдэж байна"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -413,6 +422,7 @@ msgid "# of Lines"
 msgstr "# Мөрийн"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_order_group.py:0
 #, python-format
 msgid "Warning"
@@ -566,6 +576,11 @@ msgid "To be Invoiced"
 msgstr "Нэхэмжлэнэ"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Харилцах нэр хаяг"
@@ -588,6 +603,11 @@ msgstr ""
 "гараар үүсгэх боломжтой."
 
 #. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
@@ -595,14 +615,9 @@ msgid "Error !"
 msgstr "Алдаа !"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
+#: view:purchase.order.line:0
+msgid "General Information"
+msgstr "Ерөнхий мэдээлэл"
 
 #. module: purchase
 #: view:board.board:0
@@ -669,6 +684,7 @@ msgid "July"
 msgstr "7 сар"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
 msgstr "Тохиргоо"
@@ -730,8 +746,9 @@ msgid "Manual"
 msgstr "Гараар"
 
 #. module: purchase
-#: help:purchase.order,invoice_id:0
-msgid "An invoice generated for a purchase order"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -777,9 +794,9 @@ msgstr ""
 "Захиалгын мөрүүдээс хамгийн ойрын огноог сонгож энэ огноог тооцоолно."
 
 #. module: purchase
-#: field:purchase.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Тохиргоо хийгдэж байна"
+#: selection:purchase.report,month:0
+msgid "August"
+msgstr "8 сар"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
@@ -804,9 +821,10 @@ msgid "Procurement"
 msgstr "Татан авалт"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
-msgstr "9 сар"
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -988,9 +1006,9 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "August"
-msgstr "8 сар"
+#: view:purchase.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
@@ -1092,6 +1110,29 @@ msgstr "10 сар"
 #: view:purchase.order:0
 msgid "Compute"
 msgstr "Тооцоолох"
+
+#. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1212,12 +1253,14 @@ msgid "Default Purchase Pricelist Version"
 msgstr "Үндсэн Үнийн хүснэгтийн хувилбар"
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "General Information"
-msgstr "Ерөнхий мэдээлэл"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
 msgid "Purchases Application Configuration"
 msgstr ""
 
@@ -1234,7 +1277,6 @@ msgstr "Үнийн санал N°"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-#: field:purchase.order,invoice_id:0
 msgid "Invoice"
 msgstr "Нэхэмжлэл"
 
@@ -1466,6 +1508,12 @@ msgid "Reservation"
 msgstr "Урьдчилсан захиалга"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr "Нийт тоо ширхэг болон хэмжээ (сараар)"
+
+#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
@@ -1623,6 +1671,11 @@ msgid "Total"
 msgstr "Нийт"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr "Хаяг"
@@ -1677,6 +1730,16 @@ msgstr ""
 #: field:purchase.report,name:0
 msgid "Year"
 msgstr "Жил"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1902,6 +1965,34 @@ msgstr "Худалдан авалт"
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Хүлээн авалт дээр нийлүүлэгчийн нэхэмжлэл үүснэ"
 
+#~ msgid "Extended filters..."
+#~ msgstr "Өргөтгөсөн шүүлтүүр..."
+
+#~ msgid ""
+#~ "From Order: a draft invoice will be pre-generated based on the purchase "
+#~ "order. The accountant will just have to validate this invoice for control.\n"
+#~ "From Picking: a draft invoice will be pre-generated based on validated "
+#~ "receptions.\n"
+#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
+#~ "manually."
+#~ msgstr ""
+#~ "Захиалгаас: a draft invoice will be pre-generated based on the purchase "
+#~ "order. The accountant will just have to validate this invoice for control.\n"
+#~ "Түүврээс: a draft invoice will be pre-generated based on validated "
+#~ "receptions.\n"
+#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
+#~ "manually."
+
+#~ msgid ""
+#~ "There is no expense account defined ' \\n                                    "
+#~ "        'for this product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Зардлын данс тодорхойлогдоогүй байна ' \\n                                   "
+#~ "         'энэ барааны \"%s\" (id:%d)"
+
+#~ msgid "Нийлүүлэгчийн нэхэмжлэл хүлээж авах"
+#~ msgstr "Нийлүүлэгчийн нэхэмжлэл хүлээж авах"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн архитектур алдаатай!"
 
@@ -1910,3 +2001,12 @@ msgstr "Худалдан авалт"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
+
+#~ msgid "When controlling invoice from orders"
+#~ msgstr "Захиалгаас нэхэмжлэл үүсгэх үед"
+
+#~ msgid "Purchase order is approved by supplier."
+#~ msgstr "Нийлүүлэгч захиалгыг зөвшөөрсөн."
+
+#~ msgid "Quotation"
+#~ msgstr "Үнийн санал"

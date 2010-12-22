@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-11-23 09:24+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -15,11 +15,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:37+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_designer
 #: model:ir.actions.act_window,name:report_designer.action_report_designer_installer
+#: view:report_designer.installer:0
 msgid "Reporting Tools Configuration"
 msgstr "Configuración herramientas de informes"
 
@@ -29,9 +30,9 @@ msgid "Query Builder"
 msgstr "Constructor de consultas"
 
 #. module: report_designer
-#: field:report_designer.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso configuración"
+#: view:report_designer.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: report_designer
 #: view:report_designer.installer:0
@@ -59,13 +60,16 @@ msgid "Reporting Tools"
 msgstr "Herramientas de informes"
 
 #. module: report_designer
-#: model:ir.module.module,description:report_designer.module_meta_information
+#: view:report_designer.installer:0
 msgid ""
-"Installer for reporting tools selection\n"
-"    "
+"OpenERP's built-in reporting abilities can be improved even further with "
+"some of the following applications"
 msgstr ""
-"Instalador de varias herramientas de informes\n"
-"    "
+
+#. module: report_designer
+#: view:report_designer.installer:0
+msgid "Configure Reporting Tools"
+msgstr ""
 
 #. module: report_designer
 #: help:report_designer.installer,base_report_creator:0
@@ -75,6 +79,28 @@ msgid ""
 msgstr ""
 "Permite crear cualquier informe estadístico sobre varios objetos. Es un "
 "generador de consultas SQL y un visualizador para los usuarios finales."
+
+#. module: report_designer
+#: help:report_designer.installer,base_report_designer:0
+msgid ""
+"Adds wizards to Import/Export .SXW report which you can modify in "
+"OpenOffice.Once you have modified it you can upload the report using the "
+"same wizard."
+msgstr ""
+
+#. module: report_designer
+#: model:ir.module.module,description:report_designer.module_meta_information
+msgid ""
+"Installer for reporting tools selection\n"
+"    "
+msgstr ""
+"Instalador de varias herramientas de informes\n"
+"    "
+
+#. module: report_designer
+#: field:report_designer.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progreso configuración"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."

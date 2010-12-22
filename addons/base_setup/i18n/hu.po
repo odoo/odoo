@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-02 07:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,14 +22,19 @@ msgid "City"
 msgstr "Város"
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
 msgstr "Számlázás"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Cég neve"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Humán erőforrás"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -167,6 +172,13 @@ msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "cím"
@@ -175,6 +187,25 @@ msgstr "cím"
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr "Tudásbázis menedzsment"
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -195,15 +226,9 @@ msgstr ""
 "nyomonkövetésével, tervezések készítésével, stb..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
-"Segít Önnek, hogy a legtöbbet hozza ki az értékesítési helyeiből gyors "
-"értékesítési kódolással, egyszerűsített fizetési mód kódolással, automatikus "
-"csomaglisták generálásával, stb."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Cég neve"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -231,9 +256,9 @@ msgstr ""
 "nem könyvelők."
 
 #. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Humán erőforrás"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -305,6 +330,14 @@ msgstr ""
 "érdekében a munkavállalókkal és a munkavállalók között."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr "Cég konfiguráció"
@@ -313,6 +346,17 @@ msgstr "Cég konfiguráció"
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logó"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Segít Önnek, hogy a legtöbbet hozza ki az értékesítési helyeiből gyors "
+"értékesítési kódolással, egyszerűsített fizetési mód kódolással, automatikus "
+"csomaglisták generálásával, stb."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -438,9 +482,9 @@ msgid "Street"
 msgstr "Utca"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
-msgstr "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.company,website:0
@@ -448,6 +492,7 @@ msgid "Example: http://openerp.com"
 msgstr "Például: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr "Alkalmazások telepítése"

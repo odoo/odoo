@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-09 11:04+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:18+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -152,6 +152,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Fehler! Sie können keine rekursiven Kategorien definieren."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Tastatur"
@@ -203,7 +210,6 @@ msgid "PriceList"
 msgstr "Preisliste"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "ME"
@@ -265,13 +271,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Produkte: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
-"Mengeneinheit"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -492,6 +491,13 @@ msgid "Codes"
 msgstr "Identifikation"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Menge-4"
@@ -699,14 +705,24 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "Mainboard ASUStek A7N8X"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Neuer Preis ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
-msgstr "Reihenfolge bei Anzeige der Liste"
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1190,6 +1206,30 @@ msgid "Unit of Sale"
 msgstr "Verkaufseinheit"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1331,6 +1371,14 @@ msgstr "Disponiere vom Lager (MtS)"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Preisliste Version"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1653,6 +1701,12 @@ msgid "Make to Order"
 msgstr "Disponiere von Auftrag (MtO)"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+"Anzahl an Produkten, die auf eine Palette, Box o.ä. gepackt werden kann."
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Varianten"
@@ -1757,10 +1811,9 @@ msgid "Name of this kind of price."
 msgstr "Bezeichnung für diese Preisart."
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
-"Anzahl an Produkten, die auf eine Palette, Box o.ä. gepackt werden kann."
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1854,11 +1907,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Preisliste Bezeichnung"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr "Mengeneinheit beim Lieferanten."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -2088,15 +2136,6 @@ msgstr ""
 "Die Produktbezeichnung des Lieferanten wird z.B. bei einer Bestellanfrage "
 "verwendet. Sollten Sie dieses Feld nicht ausfüllen, wird generell die eigene "
 "interne Bezeichnung verwendet."
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
-msgstr ""
-"Die minimale Bestellmenge bei einem Lieferanten, angezeigt in der Standard "
-"Mengeneinheit für dieses Produkt."
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2367,6 +2406,132 @@ msgstr ""
 "einer Kategorie und seinen zugeordneten Produkten angewendet werden soll. "
 "Lasse den Eintrag leer für alle Produkte."
 
+#~ msgid "Price Min. Margin"
+#~ msgstr "Min. Preisspanne"
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "Dieses ist der mittlere Zeitbedarf zwischen Auftragsannahme durch den Kunden "
+#~ "und die Auslieferung der Fertigware. Dieses ist die Lieferzeit, die Sie "
+#~ "ihren Kunden versprechen."
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "Der Modus der Preisberechnung für diese Regel."
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "Gültig ab Datum der Preislisten Version"
+
+#~ msgid "Childs Categories"
+#~ msgstr "(Unter-) Kategorie"
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr ""
+#~ "Sie können keine sich zeitlich überlappende Versionen von Preislisten haben."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed, consumable are stockable "
+#~ "products with infinite stock, or without a stock management in the system."
+#~ msgstr ""
+#~ "Wird den Beschaffungsvorgang bestimmen. Verbrauchswaren sind Lagerprodukte "
+#~ "mit unendlichem Lagerbestand, oder komplett ohne Anbindung an die "
+#~ "Lagerwirtschaft."
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Palette Dimension"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "Produziere vom Lager (Make to Stock). Wenn das Produkt erforderlich ist,  "
+#~ "wird die Ware direkt vom Lager genommen oder es wird auf einen Warenzugang "
+#~ "des Produktes gewartet. Falls erforderlich wird die Ware eingekauft oder "
+#~ "produziert für eine Anfrage die durch einen automatische "
+#~ "Beschaffungsvorschlag ausgelöst wurde."
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "Gültig bis Datum für die Preisliste."
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Lieferant Produkt"
+
+#~ msgid "Palet"
+#~ msgstr "Palette"
+
+#~ msgid ""
+#~ "The rule only apply if the partner buys/sells more than this quantity."
+#~ msgstr ""
+#~ "Die Regel wird nur angewendet wenn der Partner mehr als diese Menge einkauft "
+#~ "/ verkauft."
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Sie können die Liste der Lieferanten für das Produkt einsehen."
+
+#~ msgid "Rentable product"
+#~ msgstr "Produkt wird vermietet"
+
+#~ msgid ""
+#~ "Sets the price so that it is a multiple of this value.\n"
+#~ "Rounding is applied after the discount and before the surcharge.\n"
+#~ "To have prices that ends by 9.99, set rounding 10, surcharge -0.01"
+#~ msgstr ""
+#~ "Setze Preis als mehrfaches dieses Wertes.\n"
+#~ "Rundung wird nach Rabatt und Zuschlag angewendet.\n"
+#~ "Um Preise endend auf .99 zu haben setze Rundung auf 10, Zuschlag -0.01"
+
+#, python-format
+#~ msgid "%d unit"
+#~ msgstr "%d unit"
+
+#~ msgid ""
+#~ "The cost of the product for accounting stock valorisation. It can serves as "
+#~ "a base price for supplier price."
+#~ msgstr ""
+#~ "Die Kosten des Produktes für die Bestandsbewertung. Der Eintrag dient als "
+#~ "Grundpreis für den Lieferantenpreis."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+#~ msgstr ""
+#~ "Der Koeffizient für diese Formel:\n"
+#~ "Koeff (Grundeinheit) = 1 (diese Einheit)"
+
+#~ msgid "Packagings"
+#~ msgstr "Packeinheiten"
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr "UoM derselben Kategorie können untereinander konvertiert werden."
+
+#, python-format
+#~ msgid "%d units"
+#~ msgstr "%d Einheiten"
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coef (this unit)"
+#~ msgstr ""
+#~ "Der Koeffizient für diese Formel:\n"
+#~ "1 (Grundeinheit) = Koeff (diese Einheit)"
+
+#~ msgid ""
+#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
+#~ "that can not be splitted."
+#~ msgstr ""
+#~ "Die berechnete Menge wird ein Vielfaches dieses Wertes sein. Benutze 1.0 für "
+#~ "Produkte, die nicht gesplittet werden können."
+
+#~ msgid "Paletization"
+#~ msgstr "Palettierung"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Preis Max. Gewinn"
+
 #~ msgid ""
 #~ "Futur stock for this product according to the selected location or all "
 #~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
@@ -2606,6 +2771,11 @@ msgstr ""
 #~ msgid "Default UoM"
 #~ msgstr "Standard Menge (ME)"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
+#~ "Mengeneinheit"
+
 #~ msgid ""
 #~ "Default Unit of Measure used for purchase orders. It must in the same "
 #~ "category than the default unit of measure."
@@ -2642,6 +2812,9 @@ msgstr ""
 #~ "Wenn das Aktiv Feld ausgewählt wurde, ermöglicht dieses die Preisliste zu "
 #~ "verbergen, ohne diese gleich zu entfernen."
 
+#~ msgid "Gives the sequence order when displaying a list of pricelist items."
+#~ msgstr "Reihenfolge bei Anzeige der Liste"
+
 #, python-format
 #~ msgid ""
 #~ "No active version for the selected pricelist !\n"
@@ -2660,12 +2833,22 @@ msgstr ""
 #~ msgid "List Price"
 #~ msgstr "Verkaufspreis"
 
+#~ msgid "Supplier Product UoM."
+#~ msgstr "Mengeneinheit beim Lieferanten."
+
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the product "
 #~ "without removing it."
 #~ msgstr ""
 #~ "Wenn dieses Feld aktiviert ist , kann ein Produkt ausgeblendet werden, ohne "
 #~ "es vollständig zu entfernen."
+
+#~ msgid ""
+#~ "The minimal quantity to purchase to this supplier, expressed in the default "
+#~ "unit of measure."
+#~ msgstr ""
+#~ "Die minimale Bestellmenge bei einem Lieferanten, angezeigt in der Standard "
+#~ "Mengeneinheit für dieses Produkt."
 
 #~ msgid "Shortcut for this menu already exists!"
 #~ msgstr "Die Verknüpfung existiert bereits für dieses Menü!"

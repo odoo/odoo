@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
-"PO-Revision-Date: 2010-12-15 21:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-16 17:23+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -45,12 +45,6 @@ msgid "Picking List"
 msgstr "Liste de colisage"
 
 #. module: warning
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
-
-#. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Ligne de Commande Client"
@@ -125,7 +119,6 @@ msgid "Warning when Selling this Product"
 msgstr "Avertissement lors de la Vente de ce Produit"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Commande Client"
@@ -171,6 +164,12 @@ msgstr ""
 "suivant."
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Message pour Facture"
@@ -181,11 +180,6 @@ msgid "Module for Warnings form onchange Event."
 msgstr ""
 "Module pour gérer des Avertissements lors d'événements de changement sur les "
 "formulaires"
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Erreur: la référence BVR est requise."
 
 #. module: warning
 #: view:res.partner:0
@@ -223,8 +217,24 @@ msgstr "Message pour Colisage"
 msgid "Partner"
 msgstr "Partenaire"
 
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Le nom du module doit être unique !"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Erreur: la référence BVR est requise."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Erreur : Nombre BVR non valide (somme de contrôle fausse)."
