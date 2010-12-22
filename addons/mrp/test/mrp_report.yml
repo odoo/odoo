@@ -17,19 +17,24 @@
         file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a MRP, we will print Product Price Report
+  Print Product Price Report through the wizard
 -
   !python {model: product.product}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.product.price').create(cr, uid, [1,2,3,5], {'model':'product.product', 'form':{'number': 1}}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp-product_price_report.'+format), 'wb+').write(data)
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'product.product','active_ids': [1,2,3,5]})
+    data_dict = {'number': 1}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_view_mrp_product_price_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')
 
 -
-  In order to test the PDF reports defined on a MRP, we will print Workcenter Load Report
+  Print Workcenter Load Report through the wizard
 -
   !python {model: mrp.workcenter}: |
     import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.mrp.workcenter.load').create(cr, uid, [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')], {'model':'mrp.workcenter', 'form':{'time_unit': 'day', 'measure_unit': 'hours'}}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp-workcenter_load_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
+    data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_mrp_workcenter_load_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')
+
