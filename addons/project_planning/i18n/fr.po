@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-03 09:56+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2010-12-17 22:23+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-18 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_planning
@@ -24,6 +25,8 @@ msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
 msgstr ""
+"Cette valeur indique le nombre de jours restant pour la tâche dans ce "
+"planning."
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -133,12 +136,12 @@ msgstr "Planning par compte"
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "Time without"
-msgstr ""
+msgstr "Marge libre"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Current Plannings"
-msgstr ""
+msgstr "Plannings actuels"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_account_analytic_account
@@ -167,6 +170,8 @@ msgid ""
 "This value is given by the sum of all work encoded in the timesheet(s) "
 "between the 'Date From' and 'Date To' of the planning."
 msgstr ""
+"Cette valeur est la somme de tous les travaux saisis dans les feuilles de "
+"temps du planning entre les dates données."
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -201,6 +206,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to FALSE, expressed in days."
 msgstr ""
+"Cette valeur, exprimée en jours, est la somme des temps alloués dont la case "
+"\"Affecté à des tâches\" est décochée."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -259,6 +266,8 @@ msgid ""
 "This value is given by the sum of time allocation without task(s) linked, "
 "expressed in days."
 msgstr ""
+"Cette valeur, exprimée en jours, est la somme des temps alloués et non liés "
+"à une tâche."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -268,7 +277,7 @@ msgstr "Déléguer"
 #. module: project_planning
 #: field:report_account_analytic.planning,stat_ids:0
 msgid "Planning analysis"
-msgstr ""
+msgstr "Analyse des plannings"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -276,6 +285,7 @@ msgid ""
 "Set here the number of working days within this planning for one person full "
 "time"
 msgstr ""
+"Planifiez ici le nombre de jours de travail d'une personne à plein temps"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_user_ids:0
@@ -307,7 +317,7 @@ msgstr "Total des tâches planifiées"
 #. module: project_planning
 #: field:report_account_analytic.planning,total_free:0
 msgid "Total Free"
-msgstr ""
+msgstr "Total libre"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,plan_tasks:0
@@ -315,6 +325,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to TRUE expressed in days."
 msgstr ""
+"Cette valeur, exprimée en jours, est la somme des temps alloués dont la "
+"coche 'Affecté à une tâche' est à VRAI."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -327,6 +339,8 @@ msgid ""
 "Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
 "without Tasks + Holiday Leaves)"
 msgstr ""
+"Calculé en tant que : [jours ouvrés - (temps alloués à des tâches + temps "
+"alloués sans tâches + congés déposés)]"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -371,6 +385,8 @@ msgid ""
 "This value is given by the total of validated leaves into the 'Date From' "
 "and 'Date To' of the planning."
 msgstr ""
+"Cette valeur est le total des jours de congés validés pour ce planning entre "
+"les dates 'du' à 'au'."
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,user_id:0
@@ -393,7 +409,7 @@ msgstr "Sociétés"
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_in_base_uom:0
 msgid "Quantity in base uom"
-msgstr ""
+msgstr "Quantité en udm de base"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,plan_tasks:0
@@ -414,7 +430,7 @@ msgstr "Code"
 #: view:account.analytic.account:0
 #: field:report_account_analytic.planning,line_ids:0
 msgid "Planning lines"
-msgstr ""
+msgstr "Lignes de planning"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -549,3 +565,5 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr ""
+"Cette valeur, exprimée en jour, est le résultat de la somme des temps "
+"alloués qui sont liés à des tâches."
