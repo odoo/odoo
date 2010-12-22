@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:56+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:56+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:44+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,13 @@ msgid "MRP Sub Product - To produce several products from one production order"
 msgstr ""
 
 #. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr ""
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -57,8 +62,15 @@ msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
+#: model:ir.module.module,description:mrp_subproduct.module_meta_information
+msgid "\n"
+"This module allows you to produce several products from one production order.\n"
+"You can configure sub-products in the bill of material.\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"With this module:\n"
+"    A + B + C -> D + E\n"
+"    "
 msgstr ""
 
 #. module: mrp_subproduct
@@ -77,8 +89,8 @@ msgid "Error ! You can not create recursive BoM."
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: view:mrp.bom:0
+msgid "Sub Products"
 msgstr ""
 
 #. module: mrp_subproduct

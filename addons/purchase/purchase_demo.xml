@@ -56,6 +56,10 @@
 
         <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
 
+        <record id="stock.res_company_tinyshop0" model="res.company">
+            <field eval="1.0" name="po_lead"/>
+            <field eval="80.0" name="schedule_range"/>
+        </record>
     </data>
 </openerp>
 

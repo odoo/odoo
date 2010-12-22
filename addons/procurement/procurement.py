@@ -119,11 +119,11 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'priority': lambda *a: '1',
+        'state': 'draft',
+        'priority': '1',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'close_move': lambda *a: 0,
-        'procure_method': lambda *a: 'make_to_order',
+        'close_move': 0,
+        'procure_method': 'make_to_order',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
@@ -488,6 +488,16 @@ class stock_warehouse_orderpoint(osv.osv):
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
 
+    def _get_draft_procurements(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        procurement_obj = self.pool.get('procurement.order')
+        for orderpoint in self.browse(cr, uid, ids, context=context):
+            procurement_ids = procurement_obj.search(cr, uid , [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
+            result[orderpoint.id] = procurement_ids
+        return result
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
@@ -506,6 +516,8 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'procurement_draft_ids': fields.function(_get_draft_procurements, method=True, type='many2many', relation="procurement.order", \
+                                string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {
         'active': lambda *a: 1,

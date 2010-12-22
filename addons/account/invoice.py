@@ -1397,30 +1397,20 @@ class account_invoice_line(osv.osv):
             a = res.product_tmpl_id.property_account_expense.id
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
-
         a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
 
-        tax_ids = tax_obj.search(cr, uid, [('company_id', '=', company_id)])
         if type in ('out_invoice', 'out_refund'):
-            sale_taxes_def = map(lambda x: x.id, res.taxes_id)
-            sale_tax_ids = [tax for tax in tax_ids if tax in sale_taxes_def]
-            sale_taxes = tax_obj.browse(cr, uid, sale_tax_ids)
-            sale_taxes_all = sale_taxes and sale_taxes or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
-            tax_id = fpos_obj.map_tax(cr, uid, fpos, sale_taxes_all)
+            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
         else:
-            pur_taxes_def = map(lambda x: x.id, res.supplier_taxes_id)
-            pur_tax_ids = [tax for tax in tax_ids if tax in pur_taxes_def]
-            pur_taxes = tax_obj.browse(cr, uid, pur_tax_ids)
-            pur_taxes_all = pur_taxes and pur_taxes or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
-            tax_id = fpos_obj.map_tax(cr, uid, fpos, pur_taxes_all)
+            taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
+        tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
-#        if not name:
         result['name'] = res.partner_ref
 
         domain = {}

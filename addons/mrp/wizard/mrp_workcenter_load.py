@@ -23,7 +23,7 @@ from osv import fields, osv
 
 class mrp_workcenter_load(osv.osv_memory):
     _name = 'mrp.workcenter.load'
-    _description = 'Workcenter Load'
+    _description = 'Work Center Load'
 
     _columns = {
         'time_unit': fields.selection([('day', 'Day by day'),('week', 'Per week'),('month', 'Per month')],'Type of period', required=True),
