@@ -870,7 +870,7 @@ class stock_picking(osv.osv):
         @return {'contact': address, 'invoice': address} for invoice
         """
         partner_obj = self.pool.get('res.partner')
-        partner = picking.purchase_id and picking.purchase_id.partner_id or picking.sale_id and picking.sale_id.partner_id
+        partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or picking.address_id.partner_id
 
         return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
@@ -973,7 +973,7 @@ class stock_picking(osv.osv):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = picking.purchase_id and picking.purchase_id.partner_id or picking.sale_id and picking.sale_id.partner_id
+            partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or (picking.address_id and picking.address_id.partner_id)
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -1288,6 +1288,9 @@ class stock_picking(osv.osv):
         @param ids: List of Picking Ids
         @param context: A standard dictionary for contextual values
         """
+        if context is None:
+            context = {}
+        data_obj = self.pool.get('ir.model.data')
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
             if pick.auto_picking:
@@ -1296,6 +1299,11 @@ class stock_picking(osv.osv):
                 'out':_("Delivery Order"),
                 'in':_('Reception'),
                 'internal': _('Internal picking'),
+            }
+            view_list = {
+                'out': 'view_picking_out_form',
+                'in': 'view_picking_in_form',
+                'internal': 'view_picking_form',
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
@@ -1307,8 +1315,10 @@ class stock_picking(osv.osv):
                 'done': _('is done.'),
                 'draft':_('is in draft state.'),
             }
+            res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
+            context.update({'view_id': res and res[1] or False})
             message += state_list[pick.state]
-            self.log(cr, uid, pick.id, message)
+            self.log(cr, uid, pick.id, message, context=context)
         return True
 
 stock_picking()
@@ -1603,7 +1613,7 @@ class stock_move(osv.osv):
         return res
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
-                        loc_id=False, product_id=False, context=None):
+                        loc_id=False, product_id=False, uom_id=False, context=None):
         """ On change of production lot gives a warning message.
         @param prodlot_id: Changed production lot id
         @param product_qty: Quantity of product
@@ -1615,13 +1625,19 @@ class stock_move(osv.osv):
             return {}
         ctx = context and context.copy() or {}
         ctx['location_id'] = loc_id
-        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
-        location = self.pool.get('stock.location').browse(cr, uid, loc_id)
+        ctx.update({'raise-exception': True})
+        uom_obj = self.pool.get('product.uom')
+        product_obj = self.pool.get('product.product')
+        product_uom = product_obj.browse(cr, uid, product_id, context=ctx).uom_id
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, context=ctx)
+        location = self.pool.get('stock.location').browse(cr, uid, loc_id, context=ctx)
+        uom = uom_obj.browse(cr, uid, uom_id, context=ctx)
+        amount_actual = uom_obj._compute_qty_obj(cr, uid, product_uom, prodlot.stock_available, uom, context=ctx)
         warning = {}
-        if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
+        if (location.usage == 'internal') and (product_qty > (amount_actual or 0.0)):
             warning = {
                 'title': _('Insufficient Stock in Lot !'),
-                'message': _('You are moving %.2f products but only %.2f available in this lot.') % (product_qty, prodlot.stock_available or 0.0)
+                'message': _('You are moving %.2f %s products but only %.2f %s available in this lot.') % (product_qty, uom.name, amount_actual, uom.name)
             }
         return {'warning': warning}
 
@@ -2267,6 +2283,8 @@ class stock_move(osv.osv):
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
+            if move_qty <= 0:
+                raise osv.except_osv(_('Error!'), _('Can not consume a move with negative or zero quantity !'))
             quantity_rest = move.product_qty
 
             quantity_rest -= quantity
