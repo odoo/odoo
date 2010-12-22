@@ -49,6 +49,10 @@ if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
+try:
+    from html2text import html2text
+except ImportError:
+    html2text = None
 
 import netsvc
 from config import config
@@ -499,8 +503,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     email_body = ustr(body).encode('utf-8')
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
-    if attach: msg = MIMEMultipart()
-    else: msg = email_text
+    msg = MIMEMultipart()
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -522,8 +525,16 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     for key, value in x_headers.iteritems():
         msg['%s' % key] = str(value)
 
-    if attach:
+    if html2text and subtype == 'html':
+        text = html2text(email_body.decode('utf-8')).encode('utf-8')
+        alternative_part = MIMEMultipart(_subtype="alternative")
+        alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
+        alternative_part.attach(email_text)
+        msg.attach(alternative_part)
+    else:
         msg.attach(email_text)
+
+    if attach:
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )

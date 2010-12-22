@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-16 15:02+0000\n"
-"PO-Revision-Date: 2010-12-09 07:29+0000\n"
+"PO-Revision-Date: 2010-12-21 18:46+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -181,7 +181,7 @@ msgstr "Искать партнера"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
-msgstr ""
+msgstr "Настройте \"smtp_server\" для отправки эл. почты пользователям"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:0
@@ -457,7 +457,7 @@ msgstr "Выберите Действие, Отчёт или Мастер для
 #. module: base
 #: view:res.config.users:0
 msgid "New User"
-msgstr ""
+msgstr "Новый пользователь"
 
 #. module: base
 #: view:base.language.export:0
@@ -580,7 +580,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Сделки"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -734,7 +734,7 @@ msgstr "Подчиненные категории"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "ir.config_parameter"
-msgstr ""
+msgstr "ir.config_parameter"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -802,7 +802,7 @@ msgstr "Символ"
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Договоры"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -974,7 +974,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%Y - Year with century."
-msgstr ""
+msgstr "%Y - год полностью"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -1114,6 +1114,18 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"Дата : %(date)s\n"
+"\n"
+"Уважаемый(ая) %(partner_name)s,\n"
+"\n"
+"Пожалуйста, просмотрите напоминание о неоплаченных счетах в приложении к "
+"письму.\n"
+"Всего на сумму: %(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Спасибо,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1743,7 +1755,7 @@ msgstr "Литва"
 #: model:ir.model,name:base.model_partner_clear_ids
 #: view:partner.clear.ids:0
 msgid "Clear IDs"
-msgstr ""
+msgstr "Очистить ID"
 
 #. module: base
 #: help:ir.cron,model:0
@@ -1757,7 +1769,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
-msgstr ""
+msgstr "%y - год кратко [00,99]."
 
 #. module: base
 #: model:res.country,name:base.si
@@ -1940,7 +1952,7 @@ msgstr "Настройка повторяющегося действия"
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Отменен"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -2085,7 +2097,7 @@ msgstr ""
 #. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply For Write"
-msgstr ""
+msgstr "Применить для записи"
 
 #. module: base
 #: field:ir.sequence,prefix:0
@@ -2308,7 +2320,7 @@ msgstr "Страны"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "RML  (deprecated - use Report)"
-msgstr ""
+msgstr "RML (устаревший - используйте Отчет)"
 
 #. module: base
 #: view:ir.rule:0
@@ -2359,7 +2371,7 @@ msgstr "%x - Подходящий формат даты."
 #. module: base
 #: view:res.lang:0
 msgid "%d - Day of the month [01,31]."
-msgstr ""
+msgstr "%d - день месяца [01,31]."
 
 #. module: base
 #: model:res.country,name:base.tj
@@ -2567,7 +2579,7 @@ msgstr "Базовое поле"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Validate"
-msgstr ""
+msgstr "Утвердить"
 
 #. module: base
 #: field:ir.actions.todo,restart:0
@@ -2753,7 +2765,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.config_parameter:0
 msgid "Key must be unique."
-msgstr ""
+msgstr "Ключ должен быть уникальным."
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -2807,6 +2819,9 @@ msgid ""
 "\n"
 "Click 'Continue' and enjoy your OpenERP experience..."
 msgstr ""
+"Ваша база полностью настроена.\n"
+"\n"
+"Нажмите 'Продолжить' и начните использовать OpenERP..."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2982,7 +2997,7 @@ msgstr "Бенин"
 #: code:addons/base/publisher_warranty/publisher_warranty.py:0
 #, python-format
 msgid "That contract is already registered in the system."
-msgstr ""
+msgstr "Договор уже зарегистрирован в системе."
 
 #. module: base
 #: help:ir.sequence,suffix:0
@@ -3075,12 +3090,12 @@ msgstr "Бразилия"
 #. module: base
 #: view:res.lang:0
 msgid "%M - Minute [00,59]."
-msgstr ""
+msgstr "%M - минуты [00,59]."
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
@@ -3311,7 +3326,7 @@ msgstr "Казахстан"
 #. module: base
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
-msgstr ""
+msgstr "%w - номер дня недели [0(воскресенье),6]."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -3416,7 +3431,7 @@ msgstr "Английский (Канада)"
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr ""
+msgstr "publisher_warranty.contract"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -3665,7 +3680,7 @@ msgstr "Адреса партнеров"
 #. module: base
 #: view:res.lang:0
 msgid "%S - Seconds [00,61]."
-msgstr ""
+msgstr "%S - секунды [00,61]."
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -4027,12 +4042,12 @@ msgstr "Отменен"
 #. module: base
 #: view:res.config.users:0
 msgid "Create User"
-msgstr ""
+msgstr "Создать пользователя"
 
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
-msgstr ""
+msgstr "Хотите стереть Id`ы ? "
 
 #. module: base
 #: field:publisher_warranty.contract,name:0
@@ -4092,7 +4107,7 @@ msgstr ""
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Clear Ids"
-msgstr ""
+msgstr "Очистить Id`ы"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -4114,7 +4129,7 @@ msgstr "Соответствие полей"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Refresh Validation Dates"
-msgstr ""
+msgstr "Обновить даты проверок"
 
 #. module: base
 #: view:ir.model:0
@@ -4246,7 +4261,7 @@ msgstr "Чешская республика"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
-msgstr ""
+msgstr "Помощник для виджетов"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -5137,7 +5152,7 @@ msgstr "Ожидание"
 #: code:addons/__init__.py:0
 #, python-format
 msgid "Could not load base module"
-msgstr ""
+msgstr "Не удалось загрузить базовый модуль"
 
 #. module: base
 #: view:res.lang:0
@@ -5147,7 +5162,7 @@ msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 #. module: base
 #: field:res.log,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Дата создания"
 
 #. module: base
 #: view:ir.translation:0
@@ -5327,7 +5342,7 @@ msgstr "Компании"
 #. module: base
 #: view:res.lang:0
 msgid "%H - Hour (24-hour clock) [00,23]."
-msgstr ""
+msgstr "%H - часы [00,23]."
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget
@@ -5433,7 +5448,7 @@ msgstr "Действия окна"
 #. module: base
 #: view:res.lang:0
 msgid "%I - Hour (12-hour clock) [01,12]."
-msgstr ""
+msgstr "%I - часы [01,12]."
 
 #. module: base
 #: selection:publisher_warranty.contract.wizard,state:0
@@ -5476,7 +5491,7 @@ msgstr ""
 #: code:addons/base/res/res_config.py:0
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
-msgstr ""
+msgstr "Нажмите 'Продолжить' для настройки следующего модуля..."
 
 #. module: base
 #: field:ir.actions.server,record_id:0
@@ -5503,7 +5518,7 @@ msgstr "Египет"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply For Read"
-msgstr ""
+msgstr "Применить для чтения"
 
 #. module: base
 #: help:ir.actions.server,model_id:0
@@ -5937,7 +5952,7 @@ msgstr "Доступ на запись"
 #. module: base
 #: view:res.lang:0
 msgid "%m - Month number [01,12]."
-msgstr ""
+msgstr "%m - номер месяца [01,12]."
 
 #. module: base
 #: field:res.bank,city:0
@@ -5961,7 +5976,7 @@ msgstr "Италия"
 #: view:ir.actions.todo:0
 #: selection:ir.actions.todo,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Сделать"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6502,7 +6517,7 @@ msgstr "Г-жа"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "Ltd."
-msgstr ""
+msgstr "ООО"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -6554,7 +6569,7 @@ msgstr "Сомали"
 #. module: base
 #: selection:publisher_warranty.contract,state:0
 msgid "Terminated"
-msgstr ""
+msgstr "Прекращен"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -7528,7 +7543,7 @@ msgstr "Администрирование"
 #. module: base
 #: view:base.module.update:0
 msgid "Click on Update below to start the process..."
-msgstr ""
+msgstr "Нажмите 'Обновить' для запуска процесса..."
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -7732,7 +7747,7 @@ msgstr "Диаграмма"
 #. module: base
 #: help:multi_company.default,name:0
 msgid "Name it to easily find a record"
-msgstr ""
+msgstr "Задайте название для облегчения поиска записи"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
@@ -8102,7 +8117,7 @@ msgstr ""
 #. module: base
 #: view:res.log:0
 msgid "System Logs"
-msgstr ""
+msgstr "Системные журналы"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -8258,7 +8273,7 @@ msgstr "Словацкая Республика"
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
 msgid "Publisher Warranty"
-msgstr ""
+msgstr "Гарантия"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -8310,7 +8325,7 @@ msgstr "Эл. почта & подпись"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Договор гарантии"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8599,7 +8614,7 @@ msgstr "Название вида"
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Группы доступа"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8621,7 +8636,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%j - Day of the year [001,366]."
-msgstr ""
+msgstr "%j - день года [001,366]."
 
 #. module: base
 #: field:ir.actions.server,mobile:0
@@ -8704,7 +8719,7 @@ msgstr "Управление виджетами домашней страниц�
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
-msgstr ""
+msgstr "Объект ресурса"
 
 #. module: base
 #: help:ir.sequence,number_increment:0
@@ -8778,7 +8793,7 @@ msgstr "Код БИК / SWIFT"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr ""
+msgstr "Перспективный"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8826,6 +8841,9 @@ msgstr "Русский / русский язык"
 
 #~ msgid "STOCK_DELETE"
 #~ msgstr "STOCK_DELETE"
+
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Удовлетворяет правилу, если результат хотя бы одной из проверок True"
 
 #~ msgid "Get Max"
 #~ msgstr "Выбрать Max"
@@ -8886,6 +8904,9 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Planned Cost"
 #~ msgstr "Планируемые затраты"
+
+#~ msgid "Tests"
+#~ msgstr "Тесты"
 
 #~ msgid "Repository"
 #~ msgstr "Хранилище"
@@ -9106,11 +9127,17 @@ msgstr "Русский / русский язык"
 #~ "Редко используемые опции и поля будут автоматически скрыты. Позже вы сможете "
 #~ "это изменить через меню Администрирование."
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Удовлетворяет правилу, если все условия 'True' (Логическое И)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Поиск новых модулей"
+
+#~ msgid "Module Repository"
+#~ msgstr "Хранилище модулей"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "возможная продажа"
@@ -9207,6 +9234,11 @@ msgstr "Русский / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "A4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Монжественные правила для того же объекта объединены с использованием "
+#~ "оператора ИЛИ"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9759,6 +9791,9 @@ msgstr "Русский / русский язык"
 #~ msgid "Could you check your contract information ?"
 #~ msgstr "Вы не могли бы проверить информацию о вашем договоре?"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Задайте правило глобально или для определенной группы"
+
 #~ msgid ""
 #~ "This wizard will detect new terms in the application so that you can update "
 #~ "them manually."
@@ -9892,6 +9927,15 @@ msgstr "Русский / русский язык"
 #~ msgstr "%H - Час (в формате 24 часа) в виде десятичного числа [00,23]."
 
 #, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" содержит слишком много точек. XML идентификаторы не должны содержать "
+#~ "точки! Они используются для ссылки на данные в других модулях, например, "
+#~ "module.reference_id"
+
+#, python-format
 #~ msgid "Tree can only be used in tabular reports"
 #~ msgstr "Вид дерева может быть использован только в табличных отчетах"
 
@@ -9924,6 +9968,9 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Calculate Count"
 #~ msgstr "Рассчитать количество"
+
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
 
 #~ msgid "Manually Created"
 #~ msgstr "Создан вручную"

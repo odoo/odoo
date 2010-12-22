@@ -91,7 +91,7 @@ class configmanager(object):
             'static_http_url_prefix': None,
             'secure_cert_file': 'server.cert',
             'secure_pkey_file': 'server.pkey',
-            'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty',
+            'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
         }
         
         self.blacklist_for_save = set(["publisher_warranty_url"])

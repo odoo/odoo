@@ -45,7 +45,7 @@ import netsvc
 import osv
 import pooler
 from config import config
-from osv.orm import except_orm
+from osv.orm import except_orm, SKIPPED_ELEMENT_TYPES
 from tools.translate import _
 from yaml_import import convert_yaml_import
 
@@ -93,8 +93,8 @@ def _fix_multiple_roots(node):
     As a convention we'll surround multiple root with a container "data" element, to be
     ignored later when parsing.
     """
-
-    if len(node) > 1:
+    real_nodes = [x for x in node if not isinstance(x, SKIPPED_ELEMENT_TYPES)]
+    if len(real_nodes) > 1:
         data_node = etree.Element("data")
         for child in node:
             data_node.append(child)

@@ -4015,14 +4015,18 @@ class orm(orm_template):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
         else:
-            # extract the first field name, to be able to qualify it and add desc/asc
-            m2o_order = m2o_order.split(",",1)[0].strip().split(" ",1)[0]
+            # extract the field names, to be able to qualify them and add desc/asc
+            m2o_order_list = []
+            for order_part in m2o_order.split(",",1):
+                m2o_order_list.append(order_part.strip().split(" ",1)[0].strip())
+            m2o_order = m2o_order_list
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"','').split('.', 1)
         query.join((src_table, dest_model._table, src_field, 'id'), outer=True)
-        return '"%s"."%s"' % (dest_model._table, m2o_order)
+        qualify = lambda field: '"%s"."%s"' % (dest_model._table, field)
+        return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
 
     def _generate_order_by(self, order_spec, query):
@@ -4048,7 +4052,7 @@ class orm(orm_template):
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joignable" fields
+                        continue # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
                     parent_obj = self.pool.get(self._inherit_fields[order_field][0])
                     order_column = parent_obj._columns[order_field]
@@ -4057,9 +4061,13 @@ class orm(orm_template):
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joignable" fields
+                        continue # ignore non-readable or "non-joinable" fields
                 if inner_clause:
-                    order_by_elements.append("%s %s" % (inner_clause, order_direction))
+                    if isinstance(inner_clause, list):
+                        for clause in inner_clause:
+                            order_by_elements.append("%s %s" % (clause, order_direction))
+                    else:
+                        order_by_elements.append("%s %s" % (inner_clause, order_direction))
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
 
