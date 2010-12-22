@@ -163,59 +163,50 @@
   Print the General Ledger Report in Normal Mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    acc_ids = [ref('account.bal'),ref('account.gpf')]
 
-    obj_move = self.pool.get('account.move.line')
-    ctx = {}
-    ctx['fiscalyear'] = fy_id
-    ctx['journal_ids'] = journal_ids
-    ctx['chart_account_id'] = ref('account.chart0')
-
-    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
-
-    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query': query_line,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':0,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
-    (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, acc_ids, data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger.'+format), 'wb+').write(data)
-
-    data_dict.update({'model': 'ir.ui.menu'})
-    data_dict['form'].update({'active_ids': acc_ids})
-    (data, format) = netsvc.LocalService('report.account.general.ledger').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-menu.'+format), 'wb+').write(data)
+    ctx={}
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
+    
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'initial_balance': True,
+                 'chart_account_id':ref('account.chart0'),
+                 'display_account':'bal_all',
+                 'filter': 'filter_no',
+                 'sortby': 'sort_date',
+                 'amount_currency': False,
+                 'landscape':False,
+                 'fiscalyear_id': ref('account.data_fiscalyear') ,
+                 'target_move': 'all',
+                 'journal_ids':journal_ids }
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Ledger Report in Landscape Mode
 -
   !python {model: account.account}: |
-    import netsvc, tools, os, time
-    fy_id = ref('account.data_fiscalyear')
-    period_list = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', [fy_id])], context=context)
-    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
-    acc_ids = [ref('account.bal'),ref('account.gpf')]
 
-    obj_move = self.pool.get('account.move.line')
-    ctx = {}
-    ctx['fiscalyear'] = fy_id
-    ctx['journal_ids'] = journal_ids
-    ctx['chart_account_id'] = ref('account.chart0')
-
-    query_line = obj_move._query_get(cr, uid, obj='l', context=ctx)
-
-    data_dict = {'model': 'account.account', 'form': {'initial_balance': 1,'initial_bal_query':query_line,'chart_account_id':ref('account.chart0'),'display_account':'bal_all','filter': 'filter_no','sortby': 'sort_date','amount_currency': 0,'landscape':1,'period_manner': 'actual','fiscalyear_id': fy_id ,'query_line':query_line,'target_move': 'all','periods': period_list,'journal_ids':journal_ids,'id':ref('account.bal') }}
-    (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, acc_ids, data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape.'+format), 'wb+').write(data)
-
-    data_dict.update({'model': 'ir.ui.menu'})
-    data_dict['form'].update({'active_ids': acc_ids})
-    (data, format) = netsvc.LocalService('report.account.general.ledger_landscape').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account-general_ledger-landscape-menu.'+format), 'wb+').write(data)
-
+    ctx={}
+    journal_ids = [(6,0,[ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')])]
+    
+    ctx.update({'model': 'account.account',
+                'active_ids':[ref('account.chart0')]})
+    
+    data_dict = {'initial_balance': True,
+                 'chart_account_id':ref('account.chart0'),
+                 'display_account':'bal_all',
+                 'filter': 'filter_no',
+                 'sortby': 'sort_date',
+                 'amount_currency': False,
+                 'landscape':True,
+                 'fiscalyear_id': ref('account.data_fiscalyear') ,
+                 'target_move': 'all',
+                 'journal_ids':journal_ids }
+    
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print Journal Report - From Model
 -
