@@ -289,7 +289,12 @@ class account_move_line(osv.osv):
             acc = account
             if s>0:
                 acc = acc1
-            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, account=acc, account_invert=True)
+            compute_ctx = context.copy()
+            compute_ctx.update({
+                    'res.currency.compute.account': acc,
+                    'res.currency.compute.account_invert': True,
+                })
+            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, context=compute_ctx)
             data['amount_currency'] = v
         return data
 
@@ -556,8 +561,11 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        context.update({'date': date})
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
+        context.update({
+                'date': date,
+                'res.currency.compute.account': acc,
+            })
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0
