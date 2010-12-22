@@ -47,7 +47,7 @@ class sale_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
-        'price_average': fields.float('Average Price', readonly=True,group_operator="avg"),
+        'price_average': fields.float('Average Price', readonly=True,group_operator="sum(price_total)/(sum(product_uom_qty)*sum(price_average))*sum"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
