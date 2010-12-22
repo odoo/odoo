@@ -82,6 +82,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         account_pool = db_pool.get('account.account')
+        currency_pool = db_pool.get('res.currency')
 
         types = [
             'expense',
@@ -106,16 +107,16 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
             accounts_temp = []
             for account in accounts:
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
-                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
+                    currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
                     if data['form']['display_account'] == 'bal_movement':
-                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if round(account.balance, acc_digit) != 0:
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)

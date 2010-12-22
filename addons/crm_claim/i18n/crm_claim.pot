@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:11+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:11+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:59+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -119,6 +119,11 @@ msgstr ""
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
 msgid "Preventive"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Fixed"
 msgstr ""
 
 #. module: crm_claim
@@ -285,7 +290,6 @@ msgid "Stages"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr ""
@@ -429,6 +433,11 @@ msgid "User"
 msgstr ""
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Awaiting Response"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr ""
@@ -459,6 +468,15 @@ msgid "October"
 msgstr ""
 
 #. module: crm_claim
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid "\n"
+"This modules allows you to track your customers/suppliers claims and flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr ""
@@ -477,6 +495,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -623,16 +642,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 msgid "Report a Claim"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
 msgstr ""
 
 #. module: crm_claim

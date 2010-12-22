@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:23+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:23+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:11+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -112,6 +112,24 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,invoice_id:0
 msgid "Employee's Invoice"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.module.module,description:hr_expense.module_meta_information
+msgid "\n"
+"    This module aims to manage employee's expenses.\n"
+"\n"
+"    The whole workflow is implemented:\n"
+"    * Draft expense\n"
+"    * Confirmation of the sheet by the employee\n"
+"    * Validation by his manager\n"
+"    * Validation by the accountant and invoice creation\n"
+"    * Payment of the invoice to the employee\n"
+"\n"
+"    This module also uses the analytic accounting and is compatible with\n"
+"    the invoice on timesheet module so that you will be able to automatically\n"
+"    re-invoice your customer's expenses if your work by project.\n"
+"    "
 msgstr ""
 
 #. module: hr_expense
@@ -314,6 +332,12 @@ msgid "Reimbursement"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a Home address"
+msgstr ""
+
+#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr ""
@@ -372,12 +396,6 @@ msgstr ""
 #: field:hr.expense.expense,currency_id:0
 #: field:hr.expense.report,currency_id:0
 msgid "Currency"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a working address"
 msgstr ""
 
 #. module: hr_expense

@@ -727,7 +727,6 @@ class sale_order(osv.osv):
                     })
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-
                     if order.state == 'shipping_except':
                         for pick in order.picking_ids:
                             for move in pick.move_lines:

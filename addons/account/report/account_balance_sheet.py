@@ -89,6 +89,7 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         self.res_bl = self.obj_pl.final_result()
 
         account_pool = db_pool.get('account.account')
+        currency_pool = db_pool.get('res.currency')
 
         types = [
             'liability',
@@ -136,16 +137,16 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'level': account.level,
                         'balance':account.balance,
                     }
-                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
+                    currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if round(account.balance, acc_digit) != 0:
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)
