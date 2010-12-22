@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:53+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:53+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:39+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -298,11 +298,6 @@ msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-
-#. module: membership
 #: view:product.product:0
 msgid "Membership products"
 msgstr ""
@@ -348,8 +343,19 @@ msgid "September"
 msgstr ""
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid "\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 msgstr ""
 
 #. module: membership
@@ -643,6 +649,11 @@ msgstr ""
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "December"
 msgstr ""
 
 #. module: membership
