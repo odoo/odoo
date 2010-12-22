@@ -8,14 +8,20 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="target_move" position="after">
-                    <field name="result_selection"/>
-                    <field name="initial_balance"/>
-                    <field name="reconcil"/>
-                    <field name="amount_currency"/>
-                    <field name="page_split"/>
-                    <newline/>
-               </field>
+            <data>
+            <xpath expr="/form/label[@string='']" position="replace">
+                <separator string="Partner Ledger" colspan="4"/>
+                <label nolabel="1" colspan="4" string="This report is an analysis done by a partner. It is a PDF report containing one line per partner representing the cumulative credit balance"/>
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="result_selection"/>
+                <field name="initial_balance"/>
+                <field name="reconcil"/>
+                <field name="amount_currency"/>
+                <field name="page_split"/>
+                <newline/>
+            </xpath>
+            </data>
             </field>
         </record>
 
@@ -28,7 +34,6 @@
              <field name="view_id" ref="account_partner_ledger_view"/>
              <field name="context">{'record_id':active_id}</field>
              <field name="target">new</field>
-             <field name="help">To get detailed information about a partner you can ask for the Partner Ledgers.</field>
        </record>
 
         <menuitem icon="STOCK_PRINT"

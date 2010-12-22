@@ -159,14 +159,14 @@ class questionnaire(osv.osv):
     _name="crm_profiling.questionnaire"
     _description= "Questionnaire"
 
-    def build_form(self, cr, uid, data, context):
+    def build_form(self, cr, uid, data, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param data: Get Data
             @param context: A standard dictionary for contextual values """
-
+        
         query = """
         select name, id
         from crm_profiling_question
@@ -210,7 +210,7 @@ class partner(osv.osv):
                                 "partner","answer","Answers"),
         }
 
-    def _questionnaire_compute(self, cr, uid, data, context):
+    def _questionnaire_compute(self, cr, uid, data, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -228,7 +228,7 @@ class partner(osv.osv):
         for x in cr.fetchall():
             temp.append(x[0])
 
-        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context)
+        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context=context)
         return {}
 
 
@@ -240,8 +240,6 @@ class partner(osv.osv):
             @param ids: List of crm profiling’s IDs
             @param context: A standard dictionary for contextual values """
 
-        if not context:
-            context={}
         if 'answers_ids' in vals:
             vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
         return super(partner, self).write(cr, uid, ids, vals, context=context)
@@ -266,7 +264,7 @@ class crm_segmentation(osv.osv):
         }
 
     _constraints = [
-        (orm.orm.check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
+        (orm.orm._check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
     ]
 
     def process_continue(self, cr, uid, ids, start=False):

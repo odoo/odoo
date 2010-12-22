@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-30 13:42+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-11-29 07:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -31,19 +31,6 @@ msgstr "Wiki страницы"
 #: field:wiki.groups,method:0
 msgid "Display Method"
 msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -71,11 +58,6 @@ msgstr "Секция"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Создать Раздел ?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -116,8 +98,8 @@ msgid "Parent Menu"
 msgstr "Родительское меню"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -145,13 +127,13 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Page Content"
-msgstr ""
+msgstr "Текст страницы"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Внимание!"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
@@ -200,7 +182,7 @@ msgstr ""
 #. module: wiki
 #: selection:wiki.groups,method:0
 msgid "Tree"
-msgstr ""
+msgstr "Дерево"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -210,18 +192,18 @@ msgstr "Шаблон страницы"
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Keywords"
-msgstr ""
+msgstr "Ключевые слова"
 
 #. module: wiki
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Внимание"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Создан"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -238,7 +220,7 @@ msgstr "Хотите создать Индекс на Выбранных Стр�
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
 #: view:wizard.wiki.history.show_diff:0
 msgid "Difference"
-msgstr ""
+msgstr "Различие"
 
 #. module: wiki
 #: field:wiki.groups,page_ids:0
@@ -248,7 +230,7 @@ msgstr "Страницы"
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Group Description"
-msgstr ""
+msgstr "Описание группы"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -261,9 +243,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Создать Раздел ?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -273,12 +255,17 @@ msgstr "Текстовое поле"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Meta Information"
-msgstr ""
+msgstr "Метаданные"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Создан"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -287,9 +274,14 @@ msgid "Notes"
 msgstr "Заметки"
 
 #. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+
+#. module: wiki
 #: selection:wiki.groups,method:0
 msgid "List"
-msgstr ""
+msgstr "Список"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -320,7 +312,7 @@ msgstr ""
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -336,7 +328,7 @@ msgstr "Wiki Id"
 #: field:wiki.groups,home:0
 #: selection:wiki.groups,method:0
 msgid "Home Page"
-msgstr ""
+msgstr "Главная страница"
 
 #. module: wiki
 #: help:wiki.wiki,parent_id:0
@@ -346,11 +338,6 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
-msgstr ""
-
-#. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -386,6 +373,15 @@ msgstr "Вам нужно выбрать минимум 1 или максиму�
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr "Группировать по .."
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -413,7 +409,7 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Topic"
-msgstr ""
+msgstr "Тема"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -463,7 +459,16 @@ msgstr ""
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 msgid "Search Page"
-msgstr ""
+msgstr "Страница поиска"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
 
 #~ msgid "Wiki Configuration"
 #~ msgstr "Настройка Wiki"
@@ -488,3 +493,24 @@ msgstr ""
 
 #~ msgid "Tags"
 #~ msgstr "Ярлыки"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "History Differance"
+#~ msgstr "История Различий"
+
+#~ msgid "Group Home Page"
+#~ msgstr "Домашняя Страница Группы"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля не может быть меньше 1 !"

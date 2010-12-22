@@ -36,14 +36,13 @@ class membership_invoice(osv.osv_memory):
         """
         if not product_id:
             return {'value': {'unit_price': False}}
-        else:
-           unit_price=self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]
-           return {'value': {'member_price': unit_price}}
+        return {'value': {'member_price': self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]}}
 
     def membership_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         partner_obj = self.pool.get('res.partner')
         datas = {}
-        if not context:
+        if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)
         if data:
@@ -53,14 +52,17 @@ class membership_invoice(osv.osv_memory):
                 'amount': data.member_price
             }
         invoice_list = partner_obj.create_membership_invoice(cr, uid, context.get('active_ids', []), datas=datas, context=context)
-
+        
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
+        
         return  {
             'domain': [('id', 'in', invoice_list)],
-            'name': 'Membership Invoice',
+            'name': 'Membership Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
+            'search_view_id': res and res[1] or False
         }
 
 membership_invoice()

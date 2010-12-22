@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-17 17:34+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-08 04:03+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
@@ -22,25 +22,16 @@ msgid "Account Analytic Default"
 msgstr "Cuenta analítica por defecto"
 
 #. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: account_analytic_default
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
 msgid ""
 "select a partner which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleccione una empresa que utilizará esta cuenta analítica como la cuenta "
+"analítica por defecto (por ejemplo, al crear nuevas facturas de cliente o "
+"pedidos de venta, si se selecciona esta empresa, automáticamente se "
+"utilizará esta cuenta analítica)."
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -52,32 +43,27 @@ msgstr "Reglas analíticas"
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Cuenta analítica"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupado por..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
-
-#. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+msgstr "Fecha final por defecto para esta cuenta analítica."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Paquete de productos"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -91,16 +77,15 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
-msgstr ""
+"Seleccione una compañía que utilizará esta cuenta analítica como la cuenta "
+"analítica por defecto (por ejemplo, al crear nuevas facturas de cliente o "
+"pedidos de venta, si se selecciona esta compañía, automáticamente se "
+"utilizará esta cuenta analítica)."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Fecha inicial por defecto para esta cuenta analítica."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -111,7 +96,7 @@ msgstr "Producto"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribución analítica"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -136,15 +121,12 @@ msgid "End Date"
 msgstr "Fecha final"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"Seleccione un usuario que utilizará esta cuenta analítica como la cuenta "
+"analítica por defecto."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -154,12 +136,29 @@ msgid "Analytic Defaults"
 msgstr "Análisis: Valores por defecto"
 
 #. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
 msgid ""
 "select a product which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleccione un producto que utilizará esta cuenta analítica como la cuenta "
+"analítica por defecto (por ejemplo, al crear nuevas facturas de cliente o "
+"pedidos de venta, si se selecciona este producto, automáticamente se "
+"utilizará esta cuenta analítica)."
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -169,7 +168,7 @@ msgstr "Secuencia"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Detalle de Factura"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -180,7 +179,7 @@ msgstr "Cuenta analítica"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Accounts"
-msgstr ""
+msgstr "Cuentas"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -198,3 +197,31 @@ msgstr "Fecha inicial"
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Indica el orden de la secuencia cuando se muestra una lista de distribución "
+"analítica."
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Seq"
+#~ msgstr "Secuencia"
+
+#~ msgid "Analytic Distributions"
+#~ msgstr "Distribuciones analíticas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Línea de pedido"

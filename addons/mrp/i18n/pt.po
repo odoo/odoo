@@ -6,45 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:25+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 06:10+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr ""
-
-#. module: mrp
-#: report:mrp.production.order:0
-msgid "No. Of Cycles"
-msgstr "Nº de Ciclos"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of operations this workcenter can do."
-msgstr ""
-
-#. module: mrp
-#: help:mrp.production,location_src_id:0
-msgid "Location where the system will look for components."
-msgstr ""
-
-#. module: mrp
-#: field:mrp.production,workcenter_lines:0
-msgid "Work Centers Utilisation"
-msgstr ""
-
-#. module: mrp
-#: view:report.workcenter.load:0
-msgid "Work Centers load"
-msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -53,19 +23,39 @@ msgid "Moves Created"
 msgstr "Movimentos criados"
 
 #. module: mrp
-#: model:ir.module.module,shortdesc:mrp.module_meta_information
-msgid "Manufacturing Resource Planning"
-msgstr "Planeamento de recursos no fabrico"
+#: report:mrp.production.order:0
+msgid "No. Of Cycles"
+msgstr "Núm. de ciclos"
 
 #. module: mrp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
+#: help:mrp.production,location_src_id:0
+msgid "Location where the system will look for components."
+msgstr "Local onde o sistema irá procurar componentes."
+
+#. module: mrp
+#: field:mrp.production,workcenter_lines:0
+msgid "Work Centers Utilisation"
+msgstr "Utilização dos centros de produção"
+
+#. module: mrp
+#: view:report.workcenter.load:0
+msgid "Work Centers load"
+msgstr "Carga dos centros de produção"
+
+#. module: mrp
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr ""
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:mrp.module_meta_information
+msgid "Manufacturing Resource Planning"
+msgstr "Planeamento de recursos de produção"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "Número de ciclos"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -75,40 +65,33 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the bills of "
-"material without removing it."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr ""
+msgstr "Lista de recolha"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Custo por hora"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Cost Price per Uom"
-msgstr ""
+msgstr "Preço de custo or UdM"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Refugos"
 
 #. module: mrp
 #: view:mrp.production.order:0
 #: field:mrp.production.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dia"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -117,18 +100,30 @@ msgid "Routings"
 msgstr "Roteamentos"
 
 #. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "Buscar lista de materiais"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
-msgstr ""
+msgstr "Para produtos armazenáveis e consumíveis"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
+msgstr "Para produzir"
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
 msgstr ""
 
 #. module: mrp
@@ -142,23 +137,23 @@ msgstr "Referência"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr "Produtos Acabados"
+msgstr "Produtos acabados"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "May"
-msgstr ""
+msgstr "Maio"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
-msgstr ""
+msgstr "Para comprar"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Raw Material Location"
-msgstr ""
+msgstr "Local das matérias primas"
 
 #. module: mrp
 #: help:mrp.installer,mrp_operations:0
@@ -166,31 +161,39 @@ msgid ""
 "Enhances production orders with readiness states as well as the start date "
 "and end date of execution of the order."
 msgstr ""
+"Adiciona às ordens de produção o estado de prontidão, e as datas de início e "
+"de fim da execução."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr ""
+"Os sistema despoleta automaticamente um pedido de cotação ao fornecedor "
+"preferido."
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"Routings allows you to create and manage the manufacturing operations that "
+"should be followed within your work centers in order to produce a product. "
+"They are attached to bills of materials that will define the required raw "
+"materials."
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
-msgstr ""
+msgstr "Produtos inacabados"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
-msgstr ""
-
-#. module: mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+msgstr "Conjunto / Pacote"
 
 #. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
-msgstr ""
+msgstr "Subprodutos"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -198,7 +201,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: field:mrp.production.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -211,6 +214,8 @@ msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
 msgstr ""
+"No caso de o método de abastecimento do produto ser 'produzir', o sistema "
+"cria uma ordem de produção."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -218,19 +223,23 @@ msgid "UOM"
 msgstr "UdM"
 
 #. module: mrp
-#: field:change.production.qty,product_qty:0
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
-msgid "Product Qty"
-msgstr "Quantidade do produto"
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"Define specific property groups that can be assigned to the properties of "
+"your bills of materials."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to track easily your production costs in the analytic "
+"accounting."
+msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
-msgstr ""
+msgstr "Para materiais comprados"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -245,28 +254,28 @@ msgstr "Relatório"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr "Ciclo de contas"
+msgstr "Conta do ciclo"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Custo de produção"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
-msgstr ""
+msgstr "Aprovisionamento de serviços"
 
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Capacity Information"
-msgstr "Informação de capacidade"
+msgstr "Informação da capacidade"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -276,12 +285,12 @@ msgstr "Local de destino"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "title"
-msgstr ""
+msgstr "título"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
-msgstr ""
+msgstr "Dados mestre"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -291,7 +300,7 @@ msgstr "Ref. do Parceiro"
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr ""
+msgstr "Montante em horas"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -299,74 +308,58 @@ msgid "Scheduled goods"
 msgstr "Bens agendados"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid ""
-"Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
-"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-"\n"
-"    def copy(self, cr, uid, id, default=None, context=None):\n"
-"        if default is None:\n"
-"            default = {}\n"
-"        default.update({\n"
-"            'name': self.pool.get('ir.sequence"
-msgstr ""
-
-#. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr "Sets / fantasma"
-
-#. module: mrp
-#: selection:mrp.production,priority:0
-#: selection:mrp.production.order,priority:0
-msgid "Not urgent"
-msgstr "Não urgente"
+msgstr "Conjuntos / fantasma"
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr ""
+msgstr "Referência a posição num plano externo."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "August"
+msgstr "Agosto"
+
+#. module: mrp
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
 msgid "Production Order Report"
-msgstr ""
+msgstr "Relatório da ordem de produção"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "June"
-msgstr ""
+msgstr "Junho"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Produzir produto"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "October"
-msgstr ""
+msgstr "Outubro"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
-msgstr ""
+msgstr "Abastecimento de produto almazenável"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Default UOM"
-msgstr ""
+msgstr "UdM padrão"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: report:bom.structure:0
-#: field:mrp.product.produce,product_qty:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
 #, python-format
@@ -376,7 +369,7 @@ msgstr "Quantidade"
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hours"
-msgstr ""
+msgstr "Número de horas"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -389,6 +382,8 @@ msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
 msgstr ""
+"O sistema cria una ordem (de produção ou de compra) em função da quantidade "
+"vendida e dos parâmetros dos produtos."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -396,21 +391,28 @@ msgid ""
 "This is used in case of a service without any impact in the system, a "
 "training session for instance."
 msgstr ""
+"Isto se utiliza em caso de um serviço sem nenhum impacto no sistema, uma "
+"sessão de formação, por exemplo."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
 msgid "Repairs"
-msgstr ""
+msgstr "Reparações"
 
 #. module: mrp
 #: field:mrp.installer,stock_location:0
 msgid "Advanced Routes"
-msgstr ""
+msgstr "Rotas avançadas"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
+msgid "Working Time"
+msgstr "Horário de Trabalho"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
-msgstr "Variação semanal do valor de stock"
+msgstr "Variação semanal do valor do stock"
 
 #. module: mrp
 #: help:mrp.installer,mrp_repair:0
@@ -418,18 +420,20 @@ msgid ""
 "Enables warranty and repair management (and their impact on stocks and "
 "invoicing)."
 msgstr ""
+"Activa a gestão de manutenção e das garantias (e o impacto nos stocks e na "
+"facturação)"
 
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Data programada"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
-msgstr ""
+msgstr "Lista de Materiais"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -438,42 +442,39 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Deixe vazio se produz no local onde os produtos acabados são necessários. "
+"Defina um local, se produz num local fixo. Isto pode ser um local dum "
+"parceiro, se sub-contratar as operações de produção"
 
 #. module: mrp
 #: view:board.board:0
 msgid "Stock Value Variation"
-msgstr ""
+msgstr "Variação do valor do stock"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "Estrutura da lista de materiais"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "of "
-msgstr ""
+msgstr "O tipo de produto é \"serviço\""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr ""
+msgstr "Decomposição da produção"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "For Services."
-msgstr ""
+msgstr "Para serviços"
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
 msgid "Modification Date"
-msgstr "Data de Modificação"
+msgstr "Data de modificação"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
@@ -482,23 +483,25 @@ msgid ""
 "Complete this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
+"Preencha apenas se quiser lançamentos analíticos automáticos nas ordens de "
+"produção."
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycles"
-msgstr ""
+msgstr "Nº de ciclos"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
 #: model:process.node,note:mrp.process_node_rfq0
 msgid "Request for Quotation."
-msgstr ""
+msgstr "Pedido de cotação"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Component suppliers"
-msgstr ""
+msgstr "Fornecedores de componentes"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -506,22 +509,29 @@ msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
 msgstr ""
+"A lista de materiais esta ligada a uma rota - a sucessão de centros de "
+"trabalho."
+
+#. module: mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erro: Código EAN inválido"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Workcenter per hour."
-msgstr ""
+msgstr "Indica o custo do centro de trabalho por hora."
 
 #. module: mrp
 #: view:mrp.routing:0
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr "Localização da produção"
+msgstr "Local da produção"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Change Qty"
-msgstr ""
+msgstr "Alterar quantidade"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -536,81 +546,69 @@ msgstr "Autor"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr "Valor de stock"
+msgstr "Valor do stock"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr ""
+msgstr "Estrutura da LdM do Produto"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Search Production"
-msgstr ""
+msgstr "Pesquisar produção"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Supplier Price per Uom"
-msgstr ""
+msgstr "Preço do fornecedor por UdM"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "March"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
-msgid "Workcenter Load"
-msgstr "Carregar centro de trabalho"
+msgstr "Março"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Workcenter per cycle."
-msgstr ""
+msgstr "Especifique o custe do centro de trabalho por ciclo"
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
 msgid "BoM Hierarchy"
-msgstr ""
+msgstr "Hierarquia da LdM"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.production,picking_id:0
-msgid ""
-"This is the internal picking list that brings the finished product to the "
-"production plan"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this qunatity."
-msgstr ""
+msgstr "Produzir"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Excepção na recolha"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr "Linhas BoM"
+msgstr "Linhas da lista de materiais"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
 msgstr "Tempo antes da produção"
+
+#. module: mrp
+#: help:mrp.routing,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the routing "
+"without removing it."
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -632,6 +630,7 @@ msgstr "Erro ! Você não pode criar um BoM."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr ""
@@ -640,7 +639,7 @@ msgstr ""
 #: code:addons/mrp/procurement.py:0
 #, python-format
 msgid "No BoM defined for this product !"
-msgstr ""
+msgstr "Nenhem BoM definido para este producto !"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -651,23 +650,22 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Número de linhas"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
 msgid "Planning"
-msgstr ""
+msgstr "Planeamento"
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr ""
+#: view:mrp.production:0
+msgid "Ready"
+msgstr "Pronto"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr ""
+msgstr "Tempo em horas por fazer um ciclo."
 
 #. module: mrp
 #: report:bom.structure:0
@@ -706,6 +704,12 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Total Cost of "
+msgstr "Custo total de "
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Linked to the 'Minimum stock rule' supplying method."
 msgstr ""
@@ -713,13 +717,24 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per month"
-msgstr ""
+msgstr "Por mês"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
 #: code:addons/mrp/wizard/change_production_qty.py:0
 #, python-format
 msgid "Couldn't find bill of material for product"
+msgstr "Não foi possivel encontrar as contas do material para produção"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"The Properties in OpenERP are used to select the right bill of material in "
+"order to manufacture a product, when you have different ways of building the "
+"same product. You can assign several properties to each Bill of Materials. "
+"When a sales person creates a sales order, he can relate it to several "
+"properties and OpenERP will select automatically the BoM to use according "
+"the the needs."
 msgstr ""
 
 #. module: mrp
@@ -731,7 +746,7 @@ msgstr "Nome de produção"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Acção inválida !"
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
@@ -739,15 +754,22 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid ""
+"Add more functionalities to the core Manufacturing Application with the "
+"following addons."
+msgstr ""
+
+#. module: mrp
 #: report:mrp.production.order:0
 msgid "Printing date"
-msgstr ""
+msgstr "Imprimir data"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_orderrfq0
 #: model:process.node,name:mrp.process_node_rfq0
 msgid "RFQ"
-msgstr ""
+msgstr "RFQ"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
@@ -757,17 +779,17 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr ""
+msgstr "Parcial"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "WorkCenter"
-msgstr ""
+msgstr "Centro de Trabalho"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procureserviceproduct0
@@ -791,6 +813,14 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 msgid "Manufacturing Order"
+msgstr "Ordem de produção"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
+msgid ""
+"Bills of materials Components are components and sub-products used to create "
+"master bills of materials. Use this menu to search in which BoM is used a "
+"specific component."
 msgstr ""
 
 #. module: mrp
@@ -799,10 +829,17 @@ msgid "Procurement of raw material"
 msgstr ""
 
 #. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
+msgid ""
+"Time in hours for this work center to achieve the operation of the specified "
+"routing."
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Total de Ciclos"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -821,7 +858,7 @@ msgstr "Nome de modificação"
 #: view:mrp.production:0
 #: field:mrp.production.order,date:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -844,7 +881,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: view:mrp.property:0
 msgid "Search"
-msgstr ""
+msgstr "Procurar"
 
 #. module: mrp
 #: field:report.workcenter.load,cycle:0
@@ -854,7 +891,7 @@ msgstr "Numero de ciclos"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Empresas"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -868,11 +905,16 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: mrp
+#: view:board.board:0
+msgid "Work Center Future Load"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_stockproduct0
 #: model:process.node,name:mrp.process_node_stockproduct1
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
 msgid "Stockable Product"
-msgstr ""
+msgstr "Produto Armazenável"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -888,7 +930,7 @@ msgstr "Código"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Hours"
-msgstr ""
+msgstr "Número de Horas"
 
 #. module: mrp
 #: field:mrp.installer,mrp_jit:0
@@ -904,7 +946,7 @@ msgstr "Propriedade do grupo"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Qty"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -958,12 +1000,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr ""
-
-#. module: mrp
-#: view:board.board:0
-msgid "Work Center Future load"
-msgstr ""
+msgstr "Fazer para stock"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -985,7 +1022,7 @@ msgstr ""
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Component"
-msgstr ""
+msgstr "Componente"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1019,6 +1056,11 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid "MRP Application Configuration"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.installer,mrp_jit:0
 msgid ""
 "Enables Just In Time computation of procurement orders.\n"
@@ -1031,12 +1073,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
@@ -1045,18 +1087,63 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr "A quantidade numa encomenda não pode ser igual ou inferior a zero!"
+
+#. module: mrp
+#: model:ir.module.module,description:mrp.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the manufacturing process in OpenERP.\n"
+"\n"
+"    Features:\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure\n"
+"        that include child and phantom BoMs\n"
+"    It supports complete integration and planification of stockable goods,\n"
+"    consumable of services. Services are completely integrated with the "
+"rest\n"
+"    of the software. For instance, you can set up a sub-contracting service\n"
+"    in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"    Reports provided by this module:\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on workcenters\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"    Dashboard provided by this module::\n"
+"    * List of next production orders\n"
+"    * List of deliveries (out picking)\n"
+"    * Graph of work center load\n"
+"    * List of procurement in exception\n"
+"    "
 msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"Manufacturing Orders describe the operations that need to be carried out and "
+"the raw materials usage for each stage of production. You use specifications "
+"(bills of materials or BoM) to work out the raw material requirements and "
+"the manufacturing orders needed for the finished products. Once the bills of "
+"materials have been defined, OpenERP becomes capable of automatically "
+"deciding on the manufacturing route depending on the needs of the company."
 msgstr ""
 
 #. module: mrp
@@ -1072,31 +1159,30 @@ msgstr ""
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Cycles Cost"
-msgstr ""
+msgstr "Custo de Ciclos"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr ""
+msgstr "Montante em ciclos"
 
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 #: view:mrp.production.order:0
 #: field:mrp.production.order,location_dest_id:0
 msgid "Finished Products Location"
-msgstr ""
+msgstr "Local de Produtos Acabados"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 msgid "Resources"
-msgstr ""
+msgstr "Recursos"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1105,7 +1191,7 @@ msgstr "Diário analítico"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr ""
@@ -1113,7 +1199,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "Por semana"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockmts0
@@ -1121,6 +1207,16 @@ msgid ""
 "The system waits for the products to be available in the stock. These "
 "products are typically procured manually or through a minimum stock rule."
 msgstr ""
+
+#. module: mrp
+#: field:change.production.qty,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
+#: view:mrp.production.order:0
+#: field:mrp.production.order,product_qty:0
+#: field:mrp.production.product.line,product_qty:0
+msgid "Product Qty"
+msgstr "Quantidade do produto"
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1135,7 +1231,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1159,13 +1255,13 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Locais onde o sistema vai armazenar os produtos acabados."
 
 #. module: mrp
-#: help:mrp.routing,active:0
+#: help:mrp.production,picking_id:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the routing "
-"without removing it."
+"This is the internal picking list that brings the finished product to the "
+"production plan"
 msgstr ""
 
 #. module: mrp
@@ -1189,12 +1285,27 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr ""
+msgstr "Dia a dia"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
 msgstr "Revisões"
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid "Configure Your Manufacturing Resource Planning Application"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid ""
+"Manufacturing Orders are usually proposed automatically by OpenERP based on "
+"the bill of materials and the procurement rules, but you can also create "
+"manufacturing orders manually. OpenERP will handle the consumation of the "
+"raw materials (stock decrease) and the production of the finished products "
+"(stock increase) when the order is processed."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1221,7 +1332,7 @@ msgstr ""
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr ""
+msgstr "Nº de Ordem de Produção :"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
@@ -1237,19 +1348,19 @@ msgstr ""
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Dias de segurança para cada operação de fabricação"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Fazer para Stock"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -1272,7 +1383,7 @@ msgstr "Estrutura de custo do produto"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_installer
 msgid "mrp.installer"
-msgstr ""
+msgstr "mrp.installer"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1283,6 +1394,14 @@ msgstr ""
 #: view:mrp.production.order:0
 #: field:mrp.production.order,month:0
 msgid "Month"
+msgstr "Mês"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"Work Centers allows you to create and manage manufacturing units consisting "
+"of one or several people and/or machines that can be considered as a unit "
+"for capacity and planning forecasting."
 msgstr ""
 
 #. module: mrp
@@ -1308,20 +1427,9 @@ msgid "Start Date"
 msgstr "Data de Início"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Cost "
-msgstr ""
-
-#. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
 msgstr "Conta horária"
-
-#. module: mrp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1334,12 +1442,6 @@ msgid "Product Consumed"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Work Cost "
-msgstr ""
-
-#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1348,7 +1450,7 @@ msgstr "Activo"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Adquerir Produtos"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
@@ -1372,8 +1474,11 @@ msgid "Scheduled date"
 msgstr "Data marcada"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
-msgid "'Minimum stock rule' material"
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
 
 #. module: mrp
@@ -1384,7 +1489,7 @@ msgstr "Informação extra"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Mudar a quantidade de produtos"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
@@ -1395,7 +1500,7 @@ msgstr ""
 #: view:mrp.production:0
 #: view:mrp.production.order:0
 msgid "Current"
-msgstr ""
+msgstr "Atual"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -1405,6 +1510,12 @@ msgstr "Contas gerais"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
+msgstr "Número SO"
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Component Cost of "
 msgstr ""
 
 #. module: mrp
@@ -1427,11 +1538,10 @@ msgid "Source Document"
 msgstr ""
 
 #. module: mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+#: selection:mrp.production,priority:0
+#: selection:mrp.production.order,priority:0
+msgid "Not urgent"
+msgstr "Não urgente"
 
 #. module: mrp
 #: help:stock.change.standard.price,change_parent_price:0
@@ -1443,6 +1553,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
 
 #. module: mrp
@@ -1476,13 +1592,13 @@ msgstr "Produto"
 #: view:mrp.production:0
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Total de Horas"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 #: field:mrp.production.order,location_src_id:0
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "Local de Materias - Primas"
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -1502,7 +1618,7 @@ msgstr "UdM do Produto"
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Ordens de produção"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1522,11 +1638,18 @@ msgstr "UdM do Produto"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
+msgstr "Produzir por encomenda"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
+#: model:ir.ui.menu,name:mrp.menu_report_mrp_production_orders_tree
+msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_report_mrp_production_orders_tree
-msgid "Production Analysis"
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Copy"
 msgstr ""
 
 #. module: mrp
@@ -1543,13 +1666,13 @@ msgstr "Data de finalização"
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Recurso"
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Validade deste BoM ou componente. Mantenha vazio se é sempre valido."
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -1570,7 +1693,7 @@ msgstr "Muito urgente"
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprovar"
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1585,7 +1708,7 @@ msgstr ""
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Source Location"
-msgstr ""
+msgstr "Local de Origem"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1599,17 +1722,13 @@ msgid "Production Products Consommation"
 msgstr "Consumo de produtos de produção"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Total Cost "
-msgstr ""
-
-#. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
 "Description of the workcenter. Explain here what's a cycle according to this "
 "workcenter."
 msgstr ""
+"Descrição do centro de trabalho. Explicar aqui o que é um ciclo de acordo "
+"para este centro de trabalho."
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1625,7 +1744,7 @@ msgstr ""
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr ""
+msgstr "Ordens de Trabalho"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1672,7 +1791,7 @@ msgstr ""
 #: field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1680,7 +1799,6 @@ msgid "Time for 1 cycle (hour)"
 msgstr "Tempo de um ciclo"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
 #: field:mrp.production.workcenter.line,production_id:0
@@ -1711,12 +1829,12 @@ msgstr "Processar dados"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Quantidade de Produto UoS"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Components"
-msgstr ""
+msgstr "Componentes"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1734,7 +1852,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Valido A Partir De"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1755,6 +1873,14 @@ msgstr "Quantidade UOS do produto"
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
+msgstr "Valido Até"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
+msgid ""
+"Weekly Stock Value Variation enables you to track the stock value evolution "
+"linked to manufacturing activities, receptions of products and delivery "
+"orders."
 msgstr ""
 
 #. module: mrp
@@ -1765,6 +1891,18 @@ msgstr "Confirmar"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
+msgstr "Eficiência de produção"
+
+#. module: mrp
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erro! Não pode criar empresas recursivamente."
+
+#. module: mrp
+#: help:mrp.bom,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the bills of "
+"material without removing it."
 msgstr ""
 
 #. module: mrp
@@ -1776,6 +1914,13 @@ msgstr "Arredondamento do produto"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_report_mrp_production_order
+msgid ""
+"This reporting allows you to analyse your manufacturing activities and "
+"performance."
 msgstr ""
 
 #. module: mrp
@@ -1801,7 +1946,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,method:0
 msgid "Method"
-msgstr ""
+msgstr "Método"
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -1818,7 +1963,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
-msgstr ""
+msgstr "Em Ordem"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1839,11 +1984,16 @@ msgstr "Tipo de período"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Total Qty"
-msgstr ""
+msgstr "Total de Quantidade"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
+msgstr "Número de Horas"
+
+#. module: mrp
+#: view:mrp.workcenter:0
+msgid "Costing Information"
 msgstr ""
 
 #. module: mrp
@@ -1857,11 +2007,6 @@ msgid "Rounding applied on the product quantity."
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
-msgid "Working Period"
-msgstr ""
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
 msgstr ""
@@ -1872,19 +2017,24 @@ msgid "Parent Routing"
 msgstr "Roteamento ascendente"
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid "Configure"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr ""
+msgstr "Tempo em horas para a configuração."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #. module: mrp
 #: field:mrp.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Imagem"
 
 #. module: mrp
 #: field:mrp.bom.revision,bom_id:0
@@ -1923,7 +2073,6 @@ msgid "BoM Revisions"
 msgstr "Revisões de BoM"
 
 #. module: mrp
-#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -1938,7 +2087,7 @@ msgstr "Semana"
 #. module: mrp
 #: field:mrp.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progresso da configuração"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1949,10 +2098,11 @@ msgstr "Normal"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
 msgid "Manufacturing Steps."
-msgstr ""
+msgstr "Etapas de produção"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
+#: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
 msgstr ""
@@ -1960,12 +2110,12 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Consumir & Produzir"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
@@ -1980,7 +2130,7 @@ msgstr "Unidade de medida do montante"
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -1992,7 +2142,12 @@ msgstr ""
 #: code:addons/mrp/wizard/change_production_qty.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erro"
+
+#. module: mrp
+#: field:mrp.product.produce,product_qty:0
+msgid "Select Quantity"
+msgstr "Selecionar quantidade"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -2024,6 +2179,22 @@ msgstr "Informação geral"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Productions"
+msgstr "Produções"
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Work Cost of "
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Master Bill of Materials allows you to create and manage the list of "
+"necessary raw materials used to make a finished product. OpenERP will use "
+"these BoM in order to propose automatically manufacturing orders according "
+"to products' needs. You can either create a bill of materials to define "
+"specific production steps or define a single multi-level bill of materials."
 msgstr ""
 
 #. module: mrp
@@ -2041,12 +2212,17 @@ msgstr "Roteamento"
 #. module: mrp
 #: field:mrp.installer,mrp_operations:0
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Operações de produção"
 
 #. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
+msgstr ""
+
+#. module: mrp
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: mrp
@@ -2061,9 +2237,14 @@ msgid "Procurements in Exception"
 msgstr ""
 
 #. module: mrp
+#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
+msgid "'Minimum stock rule' material"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr ""
+msgstr "Preço do produto"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_installer
@@ -2078,13 +2259,13 @@ msgstr ""
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Change Quantity"
-msgstr ""
+msgstr "Mudar a quantidade"
 
 #. module: mrp
 #: view:change.production.qty:0
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
-msgstr ""
+msgstr "Alterar Quantidade de Produto"
 
 #. module: mrp
 #: view:mrp.bom.revision:0
@@ -2119,6 +2300,14 @@ msgid "Scheduled End Date"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.action_report_workcenter_load_tree
+msgid ""
+"Work Center Loads gives you a projection of work center loads over a "
+"specified period. It is expressed in number of hours and machine related "
+"cycles."
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
 msgstr ""
@@ -2126,7 +2315,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
 msgid "Manufacturing"
-msgstr ""
+msgstr "Fabricação"
 
 #. module: mrp
 #: view:board.board:0
@@ -2136,7 +2325,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2147,7 +2336,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
@@ -2159,7 +2348,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
-msgstr ""
+msgstr "Tempo em horas para a limpeza."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2182,9 +2371,16 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this quantity."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
-msgstr ""
+msgstr "Em Stock"
 
 #. module: mrp
 #: field:mrp.bom,sequence:0
@@ -2216,7 +2412,10 @@ msgstr ""
 #: view:mrp.production.order:0
 #: field:mrp.production.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Ano"
+
+#~ msgid "-"
+#~ msgstr "-"
 
 #~ msgid "UoS Quantity"
 #~ msgstr "Quantidade UoS"
@@ -2232,6 +2431,9 @@ msgstr ""
 
 #~ msgid "Automatic orderpoint"
 #~ msgstr "Ponto de pedido automatico"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitectura de vista"
 
 #~ msgid "Best price (not yet active!)"
 #~ msgstr "Melhor preço (ainda não activado!)"
@@ -2383,6 +2585,11 @@ msgstr ""
 #~ msgid "Reordering Mode"
 #~ msgstr "Modo de reordenamento"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+
 #~ msgid "Production Orders in Progress"
 #~ msgstr "Ordens de produção"
 
@@ -2418,6 +2625,9 @@ msgstr ""
 
 #~ msgid "Parameters"
 #~ msgstr "Parâmetros"
+
+#~ msgid "Production workcenters used"
+#~ msgstr "Cento de trabalhos de produção usados"
 
 #~ msgid "Workcenters Utilisation"
 #~ msgstr "Utilização do centro de trabalho"
@@ -2479,8 +2689,33 @@ msgstr ""
 #~ msgid "Do nothing"
 #~ msgstr "Não fazer nada"
 
+#~ msgid "Service on Order"
+#~ msgstr "Serviço em Ordem"
+
+#~ msgid "Validate"
+#~ msgstr "Validar"
+
+#~ msgid "Note"
+#~ msgstr "Nota"
+
+#~ msgid "Sale Name"
+#~ msgstr "Nome da Venda"
+
+#~ msgid "Close"
+#~ msgstr "Fechar"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "TOTAL"
+
+#~ msgid "Service Product"
+#~ msgstr "Produto Serviço"
+
 #~ msgid "Compute Stock Minimum Rules Only"
 #~ msgstr "Calcular apenas regras de stock mínimo."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção"
 
 #~ msgid "Not used in computations, for information purpose only."
 #~ msgstr "Não utilizado em cálculos, apenas para informação."
@@ -2515,3 +2750,428 @@ msgstr ""
 
 #~ msgid "Workcenter Loads"
 #~ msgstr "Carregamento do centro de trabalho"
+
+#~ msgid ""
+#~ "Triggers an automatic procurement for all products that have a virtual stock "
+#~ "under 0. You should probably not use this option, we suggest using a MTO "
+#~ "configuration on products."
+#~ msgstr ""
+#~ "Acione uma aquisição automática para todos os produtos que tenham um stock "
+#~ "virtual abaixo de 0. Pode provávelmente não utilizar esta opção, sugerimos a "
+#~ "utilização de uma configuração MTO nos produtos."
+
+#~ msgid "Stockable Stock"
+#~ msgstr "Stock Armazenável"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Aviso !"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Nenhum fornecedor definido para este produto !"
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Nome do produto"
+
+#~ msgid ""
+#~ "Number of operation this workcenter can do in parallel. If this workcenter "
+#~ "represent a team of 5 workers, the capacity per cycle is 5."
+#~ msgstr ""
+#~ "Número de operações que este centro de trabalho pode fazer em paralelo. Se "
+#~ "esta estação de trabalho representar uma equipa de 5 trabalhadores, a "
+#~ "capacidade por ciclo é 5."
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "produtos"
+
+#~ msgid "you can see the minimum stock rules from product"
+#~ msgstr "Pode ver o minimo de regras de stock a partir do produto"
+
+#~ msgid "This wizard will schedule procurements."
+#~ msgstr "O assistente vai programar as aquisições."
+
+#~ msgid "Stockable Production Order"
+#~ msgstr "Ordem de Produção Armazenável"
+
+#~ msgid "Stockable Request"
+#~ msgstr "Pedido de Armazenamento"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Nome do Centro de Trabalho"
+
+#~ msgid ""
+#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
+#~ "procurement to bring the virtual stock to the Max Quantity."
+#~ msgstr ""
+#~ "Quand o stock virtual vai pertencer a Quantidade Minima, o OpenERP vai gerar "
+#~ "uma aquisição para trazer o stock virtual para a Quantidade Max."
+
+#~ msgid "Stockable Make to Stock"
+#~ msgstr "Produzir Armazenamento para Stock"
+
+#~ msgid "Procure Service Product"
+#~ msgstr "Adquerir Serviço do Produto"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Quantidade de Produto"
+
+#~ msgid "Procurement Process"
+#~ msgstr "Processo de Aquisição"
+
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "Preço Padrão de Produto"
+
+#~ msgid ""
+#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
+#~ msgstr ""
+#~ "Arredondamento aplicado na quantidade de produto. Para inteiro somente "
+#~ "valores, coloque 1.0"
+
+#~ msgid "product"
+#~ msgstr "produto"
+
+#~ msgid "Product to stock rules"
+#~ msgstr "Produto para regras de stock"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "de stock: produtos atribuidos."
+
+#~ msgid "Make Procurement"
+#~ msgstr "Fazer Aquisição"
+
+#~ msgid "If Procure method is Make to order and supply method is produce"
+#~ msgstr ""
+#~ "Se método Adquerir é feita para ordem e o método fornecedor é produzido"
+
+#~ msgid "Purchase Lead Time"
+#~ msgstr "Compra Prazo de Execução"
+
+#~ msgid "Stockable Product Stock"
+#~ msgstr "Produto Stock Armazenável"
+
+#~ msgid "Production Procure Products"
+#~ msgstr "Produção de Produtos de Obtençãp"
+
+#~ msgid "Service Product Process"
+#~ msgstr "Serviço de Processo de Produto"
+
+#~ msgid "Procurement convert into the draft purchase order."
+#~ msgstr "Aquisição converter em rascunho de ordem de compra."
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "do stock e nenhuma regra orderpoint mínima definida"
+
+#~ msgid "If Product type is Stockable and procure method is make to stock"
+#~ msgstr ""
+#~ "Se o tipo de Produto é Armazenável e o método obter é feito para stock"
+
+#~ msgid "Manufacturity Lead Time"
+#~ msgstr "Prazo de Entrega de Fabricação"
+
+#~ msgid "Exceptions Procurements to Fix"
+#~ msgstr "Excepções de Aquisição para arranjar"
+
+#~ msgid "Production Orders Planning"
+#~ msgstr "Produção de Ordens de Planeamento"
+
+#~ msgid "Factor that multiplies all times expressed in the workcenter."
+#~ msgstr ""
+#~ "Factor que multiplica todas as horas expressas no centro de trabalho."
+
+#~ msgid ""
+#~ "This is the internal picking list take bring the raw materials to the "
+#~ "production plan."
+#~ msgstr ""
+#~ "Esta é a lista interna de recolha para trazer as matérias primas para o "
+#~ "plano de produção."
+
+#~ msgid "For stockable and consumable"
+#~ msgstr "Para armazenáveis e consumíveis"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Custo de Horas"
+
+#~ msgid "Production orders are created for the product manufacturing."
+#~ msgstr "Ordens de produção são criadas para a fabricação de produtos"
+
+#~ msgid "BoM Hyerarchy"
+#~ msgstr "Hierarquia BoM"
+
+#~ msgid "If Product type is service and procure method is Make to stock"
+#~ msgstr ""
+#~ "Se o tipo de Produto é o serviço e o método obter é é feito para stock"
+
+#~ msgid "If Product type is service"
+#~ msgstr "Se o tipo de Produto é serviço"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "SUBTOTAL"
+
+#~ msgid ""
+#~ "This wizard will planify the procurement for this product. This procurement "
+#~ "may generate task, production orders or purchase orders."
+#~ msgstr ""
+#~ "O assistente vai planificar o contrato para este produto. Esta aquisição "
+#~ "pode gerar tarefas, ordens de produção ou ordens de compra."
+
+#~ msgid "The system waits for requested products in stock."
+#~ msgstr "O sistema espera por pedidos de produtos em stock."
+
+#~ msgid "Serivce Stockable Order"
+#~ msgstr "Ordem de Serviço de Armazenamento"
+
+#~ msgid "From minimum stock rules, it goes for procure product."
+#~ msgstr "A partir de regras minimas de stock, vai para obtenção de produto."
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "Preço Unitário do Produto"
+
+#~ msgid "Workcenter Name"
+#~ msgstr "Nome do Centro de Trabalho"
+
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr ""
+#~ "A produção esta no estado \"%s\". Não pode alterar mais a quantidade de "
+#~ "produção"
+
+#~ msgid "Compute All Schedulers"
+#~ msgstr "Processar Todos os Programadores"
+
+#~ msgid "Create Procurement"
+#~ msgstr "Criar Aquisição"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "Produto uom"
+
+#~ msgid "Number of Cycle"
+#~ msgstr "Número de Ciclo"
+
+#~ msgid ""
+#~ "This is the time frame analysed by the scheduler when computing "
+#~ "procurements. All procurement that are not between today and today+range are "
+#~ "skipped for futur computation."
+#~ msgstr ""
+#~ "Este é o quadro de tempo analisado pelo programador quando aquisições "
+#~ "processadas. Todas as aquisições que não esteam entre hoje e hoje+limite são "
+#~ "enviadas para futuros processamentos."
+
+#~ msgid "A cycle is defined in the workcenter definition."
+#~ msgstr "Um ciclo é deinido na definição do centro de trabalho."
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Unidade de Medida"
+
+#~ msgid "Wait for available products for reservation"
+#~ msgstr "Esperar por produtos disponíveis para reserva"
+
+#~ msgid "Procurement Purchase"
+#~ msgstr "Compra de Aquisição"
+
+#~ msgid "Material routing"
+#~ msgstr "Material de roteamento"
+
+#~ msgid "Minimum stock rule"
+#~ msgstr "Regra minima de stock"
+
+#~ msgid "Service Make to Stock"
+#~ msgstr "Serviço Fazer para Stock"
+
+#~ msgid "Sale Ref"
+#~ msgstr "Referência de Venda"
+
+#~ msgid ""
+#~ "Location where the system will look for products used in raw materials."
+#~ msgstr ""
+#~ "Local onde o sistema vai procurar por produtos usados em matérias-primas."
+
+#~ msgid "Planned Date"
+#~ msgstr "Data de Planeamento"
+
+#~ msgid "Procurement orders"
+#~ msgstr "Ordens de Aquisição"
+
+#~ msgid "If product type is service and procure method is Make to order"
+#~ msgstr ""
+#~ "Se o tipo de produto é serviço e o método de obter é feito para ordem"
+
+#~ msgid "Scheduler Range"
+#~ msgstr "Programador Limite"
+
+#~ msgid "Minimum Stock Procure"
+#~ msgstr "Obter Minimo de Stock"
+
+#~ msgid "This is the leads/security time for each purchase order."
+#~ msgstr "Esta é a conduz / tempo de segurança para cada ordem de compra."
+
+#~ msgid "Procurement for raw materials."
+#~ msgstr "Aquisição para materias-prima."
+
+#~ msgid "Procure Stockable Product"
+#~ msgstr "Adquerir Produto Armazenável"
+
+#~ msgid "Define a routing to describe the manufacturing steps."
+#~ msgstr "Defina o reoteamento para descrever as etapas de fabricação."
+
+#~ msgid "Define the product structure, with sub-products and/or components."
+#~ msgstr "Defina a estrutura do produto, com sub-produtos e /ou componentes."
+
+#~ msgid ""
+#~ "Procurement is created if the product quantity is lower than the minimum "
+#~ "limit."
+#~ msgstr ""
+#~ "Aquisição é criada se a quantidade de produto é menor que o mínimo limite."
+
+#~ msgid "Change Product Qty."
+#~ msgstr "Alterar Quantidade de Produto"
+
+#~ msgid "The procurement quantity will by rounded up to this multiple."
+#~ msgstr "A quantidade de contratos vai ser arredondada para este multiplo"
+
+#~ msgid "Central document to procure products"
+#~ msgstr "Central"
+
+#~ msgid ""
+#~ "Reference of the document that created this procurement.\n"
+#~ "This is automatically completed by Open ERP."
+#~ msgstr ""
+#~ "Referência do documento que criou este contrato.\n"
+#~ "Isto é completado automáticamente pelo Open ERP."
+
+#~ msgid "Product type is Stockable and procure method is make to stock"
+#~ msgstr "O tipo de Produto é armazenável e o método obter é feito para stock"
+
+#~ msgid "Production Workcenters"
+#~ msgstr "Centros de Trabalho de Produção"
+
+#~ msgid ""
+#~ "If you encode manually a procurement, you probably want to use a make to "
+#~ "order method."
+#~ msgstr ""
+#~ "Se codificou manualmente o contrato provavelmente quer usar um método fazer "
+#~ "para a ordem."
+
+#~ msgid "Stockable Order Request"
+#~ msgstr "Pedido de Ordem de Armazenamento"
+
+#~ msgid "If Procure method is Make to order and supply method is buy"
+#~ msgstr ""
+#~ "Se o método Procure é Feito para ordem e o métudo fornecimento esta ocupado"
+
+#~ msgid "if Product type is Stockable in procurement order"
+#~ msgstr "se o tipo de Produto é Armazenavel na ordem de contrato"
+
+#~ msgid ""
+#~ "Use a phantom bill of material in raw materials lines that have to be "
+#~ "automatically computed in on eproduction order and not one per level.If you "
+#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
+#~ "as a set or pack: the products are replaced by the components between the "
+#~ "sale order to the picking without going through the production order.The "
+#~ "normal BoM will generate one production order per BoM level."
+#~ msgstr ""
+#~ "Use uma conta fantasma de material nas linhas de matérias primas que tem de "
+#~ "ser processada automaticamente em uma ordem de produção e não um por nível. "
+#~ "Se colocar \"Fantasma/Definir\" em nível root de uma conta de material ele é "
+#~ "considerado como um conjunto ou pacote: os produtos são substituídos por "
+#~ "componentes entre a ordem de venda para a recolha sem passar pela ordem de "
+#~ "produção. O BoM normal vai gerar uma ordem de produção por nível BoM."
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Nenhum endereço definido para este fornecedor"
+
+#~ msgid "Your procurement request has been sent !"
+#~ msgstr "O seu pedido de aquisição foi feita !"
+
+#~ msgid "Internal Procurement Request"
+#~ msgstr "Pedido Interno de Aquisição"
+
+#~ msgid "Compute Procurements Only"
+#~ msgstr "Somente Processar Aquisições"
+
+#~ msgid ""
+#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
+#~ "production."
+#~ msgstr ""
+#~ "Eficiência sobre a produção. Um factor de 0.9 significa uma perda de 10% na "
+#~ "produção."
+
+#~ msgid "If procurement is make to order"
+#~ msgstr "Se aquisição é feita para ordem"
+
+#~ msgid "Minimum Stock Rule"
+#~ msgstr "Acções regras mínimas"
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Quantidade de produto"
+
+#~ msgid ""
+#~ "The list of operations (list of workcenters) to produce the finished "
+#~ "product. The routing is mainly used to compute workcenter costs during "
+#~ "operations and to plan futur loads on workcenters based on production "
+#~ "plannification."
+#~ msgstr ""
+#~ "A lista de operações (lista de centros de trabalho) para produzir o produto "
+#~ "acabado. O encaminhamento é principalmente utilizado para processar o custo "
+#~ "do centro de trabalho durante as operações e para planear futuros "
+#~ "carregamentos nos centros de trabalho baseado nas planificações de produção"
+
+#~ msgid "Stockable Product Process"
+#~ msgstr "Processo de Produto Armazenável"
+
+#~ msgid "A Request for Quotation is created and sent to the supplier."
+#~ msgstr "O Pedido para Cotação é criada e enviada para o fornecedor."
+
+#~ msgid "When any procuere products, it comes into the prpcurement orders"
+#~ msgstr "Quando nenhuma aquisição de produtos, entrar em ordens de contratos"
+
+#~ msgid "An entry is being made from billing material to routing."
+#~ msgstr "Um movimento esta a ser feito a partir de uma compra"
+
+#~ msgid "The normal working time of the workcenter."
+#~ msgstr "O tempo de trabalho normal do centro de trabalho."
+
+#~ msgid "In procurement order, if product type is service"
+#~ msgstr "Em aquisição de ordem , se o tipo de produto é serviço"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "Fornecedor do produto"
+
+#~ msgid "Create minimum stock rules"
+#~ msgstr "Criar regras minimas de stock"
+
+#~ msgid "You can see its bill of material which are used to make product"
+#~ msgstr ""
+#~ "Pode ver as compras do material que são utilizadas para fazer o produto"
+
+#~ msgid "MRP & Logistics Scheduler"
+#~ msgstr "Planificador Logístico e de Produção"
+
+#~ msgid "Number of operations this workcenter can do."
+#~ msgstr "Número de operacões que este centro de produção pode realizar."
+
+#~ msgid ""
+#~ "Specify quantity of products to produce or buy. Report of Cost structure "
+#~ "will be displayed base on this qunatity."
+#~ msgstr ""
+#~ "Indique a quantidade de artigos a produzir ou a comprar. O relatório da "
+#~ "estrutura de custos, terá em conta esta quantidade."
+
+#~ msgid "Workcenter Load"
+#~ msgstr "Carga do centro de trabalho"

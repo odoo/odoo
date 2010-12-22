@@ -50,7 +50,7 @@ class account_invoice_refund(osv.osv_memory):
         return journal and journal[0] or False
 
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'modify',
     }
@@ -93,7 +93,7 @@ class account_invoice_refund(osv.osv_memory):
             date = False
             period = False
             description = False
-            company = res_users_obj.browse(cr, uid, uid).company_id
+            company = res_users_obj.browse(cr, uid, uid, context=context).company_id
             journal_id = form.get('journal_id', False)
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
@@ -202,8 +202,8 @@ class account_invoice_refund(osv.osv_memory):
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'
-            result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)['res_id']
+            result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
+            id = result and result[1] or False
             result = act_obj.read(cr, uid, id, context=context)
             invoice_domain = eval(result['domain'])
             invoice_domain.append(('id', 'in', created_inv))

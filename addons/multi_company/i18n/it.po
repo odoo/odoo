@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-29 08:36+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -42,44 +42,14 @@ msgid ""
 msgstr ""
 
 #. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome modello non valido nella definizione dell'azione."
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Errore: L'Unità di misura per la Vendita deve essere in una categoria "
-"diversa da quella dell'Unità di misura"
-
-#. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
 msgid "Odoo Offers"
 msgstr "Offerte ODOO"
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+#: view:multi_company.default:0
+msgid "Returning"
 msgstr ""
-"Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono "
-"trovarsi nella stessa categoria"
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Errore: non puoi creare Categorie ricorsive"
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Attenzione: non puoi creare aziende ricorsive"
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per la struttura della vista!"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
@@ -93,35 +63,15 @@ msgid "Multi Company"
 msgstr "Multi Azienda"
 
 #. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Errore: codice EAN non valido"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
-msgstr ""
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Azienda Predefinita per Oggetto"
+
+#. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
+msgstr "Offerta ODOO"
 
 #. module: multi_company
 #: view:multi_company.default:0
@@ -134,9 +84,13 @@ msgid "Condition"
 msgstr "Condizione"
 
 #. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
-msgstr "Offerta ODOO"
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
 
 #~ msgid "Default Company"
 #~ msgstr "Azienda predefinita"
@@ -156,8 +110,17 @@ msgstr "Offerta ODOO"
 #~ msgid "Object"
 #~ msgstr "Oggetto"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Errore: l'unità di misura predefinita e l'unità di misura d'acquisto devono "
+#~ "trovarsi nella stessa categoria"
+
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "La Partita IVA non sembra essere corretta."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome modello non valido nella definizione dell'azione."
 
 #~ msgid ""
 #~ "Would your payment have been carried out after this mail was sent, please "
@@ -198,14 +161,31 @@ msgstr "Offerta ODOO"
 #~ msgid "Expression"
 #~ msgstr "Espressione"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per la struttura della vista!"
+
 #~ msgid "Company to store the current record"
 #~ msgstr "Azienda dove salvare il record corrente"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Errore: L'Unità di misura per la Vendita deve essere in una categoria "
+#~ "diversa da quella dell'Unità di misura"
 
 #~ msgid "Name"
 #~ msgstr "Nome"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Attenzione: non puoi creare aziende ricorsive"
+
 #~ msgid "Sequence"
 #~ msgstr "Sequenza"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Errore: non puoi creare Categorie ricorsive"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Errore: codice EAN non valido"
 
 #, python-format
 #~ msgid " (copy)"

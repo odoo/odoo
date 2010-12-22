@@ -26,7 +26,7 @@ class lunch_cashbox_clean(osv.osv_memory):
      _name = "lunch.cashbox.clean"
      _description = "clean cashbox"
 
-     def set_to_zero(self, cr, uid, ids, context):
+     def set_to_zero(self, cr, uid, ids, context=None):
 
          """
          clean Cashbox. set active fields False.
@@ -36,6 +36,8 @@ class lunch_cashbox_clean(osv.osv_memory):
          @return:Dictionary {}.
          """
          #TOFIX: use orm methods
+         if context is None:
+            context = {}
          data = context and context.get('active_ids', []) or []
          cashmove_ref = self.pool.get('lunch.cashmove')
          cr.execute("select user_cashmove, box,sum(amount) from lunch_cashmove \

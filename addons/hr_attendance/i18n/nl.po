@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 08:18+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-02 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -27,24 +27,9 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
 msgstr "Vandaag"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"U probeerde te %s met een datum voorafgaand aan een andere gebeurtenis !\n"
-"Neem contact op met de beheerder om de aanwezigheid te corrigeren."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -124,6 +109,12 @@ msgid "Define attendance reason"
 msgstr "Aanwezigheidsreden definieren"
 
 #. module: hr_attendance
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
 msgid "Attendances By Month"
 msgstr "Aanwezigheid per maand"
@@ -182,11 +173,6 @@ msgid "Attendance"
 msgstr "Aanwezigheid"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr "U bent nu klaar om in- of uit te klokken"
-
-#. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
 msgstr "Maximale vertraging (min)"
@@ -201,6 +187,16 @@ msgstr "Afdrukken"
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
 msgstr "Pers. aanwezigheid zoeken"
+
+#. module: hr_attendance
+#: model:ir.module.module,description:hr_attendance.module_meta_information
+msgid ""
+"\n"
+"    This module aims to manage employee's attendances.\n"
+"    Keeps account of the attendances of the employees on the basis of the\n"
+"    actions(Sign in/Sign out) performed by them.\n"
+"       "
+msgstr ""
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -224,11 +220,6 @@ msgstr "Overzicht aanwezigheidsfoutmeldingen"
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
 msgstr "Startdatum"
-
-#. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -301,14 +292,21 @@ msgid "Sign in / Sign out"
 msgstr "Inklokken/Uitklokken"
 
 #. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"Time Tracking functionality aims to manage employee's attendances on the "
+"basis of the actions (Sign in/Sign out) performed by them. You can also link "
+"this to an attendance machine using OpenERP's webservices features."
+msgstr ""
+"Tijdregistratie functionaliteit is erop gericht om medewerker aanwezigheid "
+"te beheren op basis van door hen uitgevoerde acties (In-/Uitklokken). U kunt "
+"dit ook koppelen aan een klokautomaat door OpenERP's webservice "
+"mogelijkheden te gebruiken."
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.out.ask"
 msgstr "hr.sign.out.ask"
-
-#. module: hr_attendance
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -345,6 +343,11 @@ msgstr "Datum"
 #: selection:hr.attendance.month,month:0
 msgid "November"
 msgstr "November"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -390,10 +393,17 @@ msgid "Action"
 msgstr "Actie"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
-#, python-format
-msgid "No records found for your selection!"
-msgstr "Geen gegevens gevonden voor uw selectie !"
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
+msgstr ""
+"Als uw personeel moet aanmelden als ze aankomen op het werk en afmelden aan "
+"het einde van de werkdag, laat OpenERP u dit beheren met deze tool. Als elke "
+"medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
+"invoeren met deze actieknop."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
@@ -413,13 +423,6 @@ msgstr "Medewerker ID"
 #: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Annuleren"
-
-#. module: hr_attendance
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -458,6 +461,16 @@ msgid "Employee"
 msgstr "Medewerker"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+"U probeerde te %s met een datum voorafgaand aan een andere gebeurtenis !\n"
+"Neem contact op met de beheerder om de aanwezigheid te corrigeren."
+
+#. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 #: field:hr.sign.in.out.ask,last_time:0
 msgid "Your last sign out"
@@ -472,6 +485,7 @@ msgstr "Registratiedatum"
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Aanwezigheid"
 
@@ -490,6 +504,19 @@ msgstr "Uw laatste inkloktijdstip"
 #: view:hr.employee:0
 msgid "Sign Out"
 msgstr "Uitklokken"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+msgid ""
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
+msgstr ""
+"In-/Uitklokken. In sommige bedrijven moet personeel zich aanmelden als ze "
+"aankomen op het werk en afmelden aan het einde van de werkdag. Als elke "
+"medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
+"invoeren met deze actieknop."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -533,9 +560,10 @@ msgstr ""
 "Onder deze vertraging wordt de fout verondersteld vrijwillig te zijn."
 
 #. module: hr_attendance
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
+msgstr "Geen gegevens gevonden voor uw selectie !"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -556,6 +584,11 @@ msgstr "Jaar"
 msgid "hr.sign.in.out.ask"
 msgstr "hr.sign.in.out.ask"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
 #~ msgid "Action reason"
 #~ msgstr "Actiereden"
 
@@ -565,8 +598,17 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Print Timesheet"
 #~ msgstr "Urenstaat afdrukken"
 
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr "U bent nu klaar om in- of uit te klokken"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid "Select a time span"
 #~ msgstr "Kies een tijdspanne"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #~ msgid "Print Timesheet by week"
 #~ msgstr "Druk urenstaat per week af"
@@ -602,3 +644,21 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Select a month"
 #~ msgstr "Kies een maand"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund voor osv_memory objecten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

@@ -6,31 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 06:33+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-02 07:48+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:29+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n'Open' state before vote for that idea."
-msgstr ""
+msgstr "Indien aangezet is het idee zichtbaar voor anderen"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
 msgid "Idea select"
-msgstr ""
+msgstr "Idee selecteren"
 
 #. module: idea
 #: view:idea.idea:0
@@ -48,13 +42,13 @@ msgstr "Reacties"
 #. module: idea
 #: view:idea.idea:0
 msgid "Submit Vote"
-msgstr ""
+msgstr "Stem indienen"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_report_vote_all
 #: model:ir.ui.menu,name:idea.menu_report_vote_all
 msgid "Ideas Analysis"
-msgstr ""
+msgstr "Ideeën analyse"
 
 #. module: idea
 #: view:idea.category:0
@@ -62,43 +56,58 @@ msgstr ""
 #: view:idea.vote:0
 #: view:report.vote:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.module.module,description:idea.module_meta_information
+msgid ""
+"\n"
+"    This module allows your user to easily and efficiently participate in "
+"the innovation of the enterprise.\n"
+"    It allows everybody to express ideas about different subjects.\n"
+"    Then, other users can comment on these ideas and vote for particular "
+"ideas.\n"
+"    Each idea has a score based on the different votes.\n"
+"    The managers can obtain an easy view on best ideas from all the users.\n"
+"    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
 msgid "Idea Manager"
-msgstr ""
+msgstr "Idee beheerder"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
-msgstr ""
+msgstr "Maart"
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
+msgstr "Idee moet in 'Open' status zijn om erop te kunnen stemmen."
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Refuse"
-msgstr ""
+msgstr "Weigeren"
 
 #. module: idea
 #: field:idea.idea,count_votes:0
 msgid "Count of votes"
-msgstr "Stemmentelling"
+msgstr "Aantal stemmen"
 
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
 msgid "Idea Vote Statistics"
-msgstr ""
+msgstr "Idee stemmen statistieken"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -111,39 +120,39 @@ msgstr "Slecht"
 #. module: idea
 #: selection:report.vote,idea_state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Geannuleerd"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Category of ideas"
-msgstr "Ideeën Categorie"
+msgstr "Ideeën categorie"
 
 #. module: idea
 #: code:addons/idea/idea.py:0
 #: code:addons/idea/wizard/idea_post_vote.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Waarschuwing !"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Your comment"
-msgstr "Uw Toelichting"
+msgstr "Uw reactie"
 
 #. module: idea
 #: view:report.vote:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Maand   "
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
 msgid "Idea Vote"
-msgstr ""
+msgstr "Idee stemmen"
 
 #. module: idea
 #: field:idea.category,parent_id:0
 msgid "Parent Categories"
-msgstr "Bovenliggende Categorieën"
+msgstr "Bovenliggende categorieën"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -151,39 +160,39 @@ msgstr "Bovenliggende Categorieën"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Very Bad"
-msgstr "Zeer Slecht"
+msgstr "Zeer slecht"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Ideeën stem"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# Regels"
 
 #. module: idea
 #: code:addons/idea/wizard/idea_post_vote.py:0
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "U kunt uw stem op dit idee niet meer dan %s keer geven"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Ideeën categorieën"
 
 #. module: idea
 #: help:idea.idea,description:0
 msgid "Content of the idea"
-msgstr "Inhoud van het Idee"
+msgstr "Inhoud van het idee"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr ""
+msgstr "Idee categorie"
 
 #. module: idea
 #: view:idea.idea:0
@@ -200,9 +209,14 @@ msgid "Not Voted"
 msgstr "Niet gestemd"
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr "De categorienaam moet uniek zijn"
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
-msgstr ""
+msgstr "selecteer idee"
 
 #. module: idea
 #: view:idea.stat:0
@@ -212,12 +226,12 @@ msgstr "stat"
 #. module: idea
 #: field:idea.category,child_ids:0
 msgid "Child Categories"
-msgstr "Onderliggende Categorieën"
+msgstr "Onderliggende categorieën"
 
 #. module: idea
 #: view:idea.select:0
 msgid "Next"
-msgstr ""
+msgstr "Volgende"
 
 #. module: idea
 #: view:idea.idea:0
@@ -225,7 +239,7 @@ msgstr ""
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -238,12 +252,12 @@ msgstr "Goed"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "Datum idee geopend"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Idea Detail"
-msgstr ""
+msgstr "Idee detail"
 
 #. module: idea
 #: help:idea.idea,state:0
@@ -252,17 +266,21 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"Nadat het idee is gemaakt is de status Çoncept'.\n"
+" Als het is geopend door de gebruiker, wordt de status 'Geopend'.\n"
+" Als het idee is geaccepteerd, wordt de status 'Geaccepteerd'.\n"
+" Als het idee is afgekeurd, wordt de status 'Geweigerd'."
 
 #. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
-msgstr ""
+msgstr "Idee openen?"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: idea
 #: view:idea.idea:0
@@ -270,7 +288,7 @@ msgstr ""
 #: view:report.vote:0
 #: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Geaccepteerd"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -279,19 +297,14 @@ msgid "Categories"
 msgstr "Categorieën"
 
 #. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
-
-#. module: idea
 #: view:report.vote:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Maand-1    "
 
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "Datum geopend"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
@@ -303,17 +316,17 @@ msgstr "Stem"
 #: model:ir.actions.act_window,name:idea.action_idea_vote_stat
 #: model:ir.ui.menu,name:idea.menu_idea_vote_stat
 msgid "Vote Statistics"
-msgstr "Statistieken Stemmingen"
+msgstr "Stemming statistieken"
 
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "Maximum stemmen per gebruiker"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Bovenliggende categorie"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -322,29 +335,29 @@ msgstr ""
 #: field:idea.vote,comment:0
 #: model:ir.model,name:idea.model_idea_comment
 msgid "Comment"
-msgstr "Opmerking"
+msgstr "Reactie"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,month:0
 msgid "Month"
-msgstr ""
+msgstr "Maand"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
-msgstr "Openstaande Ideeën"
+msgstr "Openstaande ideeën"
 
 #. module: idea
 #: view:idea.category:0
@@ -362,12 +375,12 @@ msgstr "Categorie"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Very Good"
-msgstr "Zeer Goed"
+msgstr "Zeer goed"
 
 #. module: idea
 #: view:report.vote:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Jaar  "
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -378,12 +391,12 @@ msgstr "Geopend"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "Ideeën stemmen"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "New Idea"
-msgstr "Nieuw Idee"
+msgstr "Nieuw idee"
 
 #. module: idea
 #: view:idea.vote.stat:0
@@ -394,7 +407,7 @@ msgstr "vote_stat van ideeën"
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
-msgstr "Ideeën door Categorie"
+msgstr "Ideeën per categorie"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -403,14 +416,9 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: idea
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: idea
 #: selection:report.vote,month:0
 msgid "August"
-msgstr ""
+msgstr "Augustus"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -423,18 +431,18 @@ msgstr "Normaal"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: idea
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr ""
+msgstr "Gebruikersnaam"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr "Statistieken Ideeën Stemmen"
+msgstr "Statistieken ideeënstemmen"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -447,33 +455,33 @@ msgstr "Gebruiker"
 #. module: idea
 #: field:idea.vote,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Post"
-msgstr ""
+msgstr "Indienen"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
 msgid "My Vote"
-msgstr "Mijn Stem"
+msgstr "Mijn stem"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: idea
 #: field:idea.comment,create_date:0
 #: field:idea.idea,created_date:0
 msgid "Creation date"
-msgstr "Aanmaakdatum"
+msgstr "Datum gemaakt"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
@@ -488,27 +496,27 @@ msgstr "Samenvatting"
 #. module: idea
 #: field:idea.idea,name:0
 msgid "Idea Summary"
-msgstr "Samenvatting Idee"
+msgstr "Samenvatting idee"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Vots Statistics"
-msgstr ""
+msgstr "Stemmen statistieken"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Stemdatum"
 
 #. module: idea
 #: view:idea.idea:0
@@ -521,12 +529,12 @@ msgstr "Aangemaakt door"
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Stem uitbrengen"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Op één zetten als u maar één stem per gebruiker wilt"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -545,16 +553,9 @@ msgid "Open"
 msgstr "Openen"
 
 #. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "Idee stem analyse"
 
 #. module: idea
 #: view:idea.idea:0
@@ -568,12 +569,12 @@ msgstr "Ideeën"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Stem uitbrengen"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Current"
-msgstr ""
+msgstr "Actueel"
 
 #. module: idea
 #: field:idea.vote.stat,score:0
@@ -584,7 +585,7 @@ msgstr "Punten"
 #. module: idea
 #: view:idea.vote:0
 msgid "Comments:"
-msgstr ""
+msgstr "Reacties:"
 
 #. module: idea
 #: view:idea.category:0
@@ -596,54 +597,55 @@ msgstr "Omschrijving"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "May"
-msgstr ""
+msgstr "Mei"
 
 #. module: idea
 #: selection:idea.idea,state:0
 #: view:report.vote:0
 msgid "Refused"
-msgstr ""
+msgstr "Geweigerd"
 
 #. module: idea
 #: code:addons/idea/idea.py:0
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
 msgstr ""
+"Op ideeën met status Concept/Geaccepteerd/Geannuleerd kan niet worden gestemd"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Stemdatum"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "February"
-msgstr ""
+msgstr "Februari"
 
 #. module: idea
 #: view:report.vote:0
 msgid "    Today    "
-msgstr ""
+msgstr "    Vandaag    "
 
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
-msgstr "Aantal Stemmen"
+msgstr "Aantal stemmen"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: idea
 #: field:idea.idea,count_comments:0
 msgid "Count of comments"
-msgstr "Aantal Opmerkingen"
+msgstr "Aantal reacties"
 
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Stem status"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -665,23 +667,23 @@ msgstr "Idee"
 #. module: idea
 #: view:idea.idea:0
 msgid "Accept"
-msgstr ""
+msgstr "Accepteren"
 
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Stem uitbrengen"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Idee voor stem selecteren"
 
 #~ msgid "My Ideas"
 #~ msgstr "Mijn Ideeën"
@@ -724,3 +726,30 @@ msgstr ""
 
 #~ msgid "All Votes"
 #~ msgstr "Alle Stemmen"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#, python-format
+#~ msgid "Idea must be in \\n'Open' state before vote for that idea."
+#~ msgstr "Idee moet op status \\n'Open' staan voordat gestemd kan worden."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

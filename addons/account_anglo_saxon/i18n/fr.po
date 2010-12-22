@@ -7,67 +7,75 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-03 12:05+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-16 17:53+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_anglo_saxon
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:product.category:0
+msgid " Accounting Property"
 msgstr ""
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Catégorie de produit"
 
 #. module: account_anglo_saxon
-#: constraint:ir.model:0
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr "Erreur ! Vous ne pouvez pas créer de catégorie récursive."
+
+#. module: account_anglo_saxon
+#: constraint:product.template:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
+"catégorie."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Ligne de facture"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_purchase_order
 msgid "Purchase Order"
-msgstr ""
+msgstr "Bon de commande"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle de produit"
 
 #. module: account_anglo_saxon
 #: model:ir.module.module,shortdesc:account_anglo_saxon.module_meta_information
 msgid "Stock Accounting for Anglo Saxon countries"
-msgstr ""
+msgstr "Comptabilité de stock pour les pays anglo-saxons"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
 #: field:product.template,property_account_creditor_price_difference:0
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Compte d'écart de prix"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Opération de manutention"
 
 #. module: account_anglo_saxon
 #: model:ir.module.module,description:account_anglo_saxon.module_meta_information
@@ -87,6 +95,21 @@ msgid ""
 "    Secondly, price differences between actual purchase price and fixed "
 "product standard price are booked on a separate account"
 msgstr ""
+"Ce module fournit la méthode de gestion comptable Anglo-saxonne\n"
+"    en changeant la logique des transactions de stock. La différence entre "
+"la méthode comptable Anglo-saxonne et la méthode\n"
+"    Continentale est le moment de prise en compte du Revenu des ventes par "
+"rapport au coût des ventes.\n"
+"    La méthode Anglo-saxonne prend en compte le coût au moment de la "
+"création de la facture. La comptabilité Continentale \n"
+"    prend en compte les coûts au moment de l'expédition des biens.\n"
+"    Ce module ajoute la fonctionnalité Anglo-saxonne en utilisant un compte "
+"intermédiaire pour stocker la valeur des biens \n"
+"    expédiés et, au moment de la création de la facture, va extourner "
+"l'écriture sur ce compte intermédiaire pour le transférer\n"
+"    sur le compte du créditeur ou du débiteur.\n"
+"    De plus, l'écart de prix entre le prix d'achat réel et le coût standard "
+"de l'article sont comptabilisés sur des comptes différents."
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -95,3 +118,17 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"Ce compte sera utilisé pour valoriser l'écart de prix entre le prix d'achat "
+"et le prix standard de l'article."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalide pour l'architecture de la vue !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
+#~ "spécial !"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"

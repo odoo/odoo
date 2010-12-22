@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 12:14+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,15 +22,9 @@ msgid "City"
 msgstr "城市"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "安裝"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -38,9 +32,9 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "公司名稱"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -97,10 +91,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
 msgstr ""
 
 #. module: base_setup
@@ -148,6 +141,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr ""
@@ -163,19 +163,51 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "直接使用"
-
-#. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr ""
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
+msgstr ""
+"\n"
+"    此模組在系統管理內幫助使用者在新增資料庫後作設定\n"
+"\n"
+"\t它的功能設定如下:\n"
+"\t* 最小規模\n"
+"\t* 會計單位\n"
+"\t* 服務體系\n"
+"\t* 製造業\n"
+"\n"
+"\t它能在畫面上更容易設定您的公司,頁首和頁尾,會計科目表安裝和語言設置\n"
+"    "
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -192,11 +224,13 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "公司名稱"
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
 msgstr ""
 
 #. module: base_setup
@@ -214,13 +248,8 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
 
 #. module: base_setup
@@ -286,6 +315,14 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr ""
@@ -294,6 +331,14 @@ msgstr ""
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "公司Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -408,8 +453,8 @@ msgid "Street"
 msgstr "街區"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -418,6 +463,7 @@ msgid "Example: http://openerp.com"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr ""
@@ -454,12 +500,6 @@ msgstr ""
 msgid "base.setup.config"
 msgstr ""
 
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr ""
-
 #~ msgid "Next"
 #~ msgstr "下一個"
 
@@ -468,9 +508,6 @@ msgstr ""
 
 #~ msgid "Installation Done"
 #~ msgstr "安裝完成"
-
-#~ msgid "Install"
-#~ msgstr "安裝"
 
 #~ msgid "Cancel"
 #~ msgstr "取消"
@@ -517,36 +554,11 @@ msgstr ""
 #~ msgid "Define Main Company"
 #~ msgstr "定義主公司"
 
-#~ msgid ""
-#~ "\n"
-#~ "    This module implements a configuration system that helps user\n"
-#~ "    to configure the system at the installation of a new database.\n"
-#~ "\n"
-#~ "    It allows you to select between a list of profiles to install:\n"
-#~ "    * Minimal profile\n"
-#~ "    * Accounting only\n"
-#~ "    * Services companies\n"
-#~ "    * Manufacturing companies\n"
-#~ "\n"
-#~ "    It also asks screens to help easily configure your company, the header "
-#~ "and\n"
-#~ "    footer, the account chart to install and the language.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    此模組在系統管理內幫助使用者在新增資料庫後作設定\n"
-#~ "\n"
-#~ "\t它的功能設定如下:\n"
-#~ "\t* 最小規模\n"
-#~ "\t* 會計單位\n"
-#~ "\t* 服務體系\n"
-#~ "\t* 製造業\n"
-#~ "\n"
-#~ "\t它能在畫面上更容易設定您的公司,頁首和頁尾,會計科目表安裝和語言設置\n"
-#~ "    "
-
 #~ msgid "Summary"
 #~ msgstr "概要"
+
+#~ msgid "Use Directly"
+#~ msgstr "直接使用"
 
 #~ msgid "Previous"
 #~ msgstr "上一個"

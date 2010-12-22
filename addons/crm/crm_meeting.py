@@ -72,55 +72,13 @@ class crm_meeting(crm_case, osv.osv):
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Done')], 'State', \
-                                    size=16, readonly=True)
+                                    size=16, readonly=True),
     }
-
     _defaults = {
         'state': lambda *a: 'draft', 
         'active': lambda *a: 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
-
-    def open_meeting(self, cr, uid, ids, context=None):
-        """
-        Open Crm Meeting Form for Crm Meeting.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of crm meeting’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value which open Crm Meeting form.
-        """
-
-        if not context:
-            context = {}
-
-        data_obj = self.pool.get('ir.model.data')
-
-        value = {}
-
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-        id4 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        if id4:
-            id4 = data_obj.browse(cr, uid, id4, context=context).res_id
-        for id in ids:
-            value = {
-                    'name': _('Meeting'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'crm.meeting',
-                    'view_id': False,
-                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window',
-                    'res_id': base_calendar.base_calendar_id2real_id(id),
-                    'nodestroy': True
-                    }
-
-        return value
 
     def case_open(self, cr, uid, ids, *args):
         """Confirms meeting
@@ -145,7 +103,7 @@ class calendar_attendee(osv.osv):
     _inherit = 'calendar.attendee'
     _description = 'Calendar Attendee'
 
-    def _compute_data(self, cr, uid, ids, name, arg, context):
+    def _compute_data(self, cr, uid, ids, name, arg, context=None):
        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -154,7 +112,7 @@ class calendar_attendee(osv.osv):
         @param context: A standard dictionary for contextual values
         """
        name = name[0]
-       result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context)
+       result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context=context)
 
        for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
@@ -179,16 +137,14 @@ class res_users(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        user_id = super(res_users, self).create(cr, uid, data, context)
+        user_id = super(res_users, self).create(cr, uid, data, context=context)
         data_obj = self.pool.get('ir.model.data')
         try:
             data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
             view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
             self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
                                         'user_id': user_id}, context=context)
-        except ValueError:
+        except:
             # Tolerate a missing shortcut. See product/product.py for similar code.
             logging.getLogger('orm').warning('Skipped Products shortcut for user "%s"', data.get('name','<new'))
             

@@ -24,7 +24,6 @@
 
 import time
 from datetime import datetime
-
 from report import report_sxw
 from tools import amount_to_text_en
 
@@ -36,16 +35,16 @@ class payroll_advice_report(report_sxw.rml_parse):
         self.total_bysal = 0.00
         self.localcontext.update({
             'time': time,
-            'get_month'   : self.get_month,
-            'convert'     : self.convert,
-            'get_detail'  : self.get_detail,
-            'get_total'   : self.get_total,
-            'get_bysal_total'   : self.get_bysal_total,
+            'get_month': self.get_month,
+            'convert': self.convert,
+            'get_detail': self.get_detail,
+            'get_total': self.get_total,
+            'get_bysal_total': self.get_bysal_total,
         })
 
     def get_month(self,input_date):
         res = {
-               'mname':''
+               'mname': ''
                }
         date = datetime.strptime(input_date, '%Y-%m-%d')
         res['mname']= date.strftime('%B')+'-'+date.strftime('%Y')

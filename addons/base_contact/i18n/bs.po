@@ -6,24 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-02-03 17:43+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:19+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
 msgid "Title"
-msgstr ""
-
-#. module: base_contact
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: base_contact
@@ -44,6 +39,11 @@ msgstr ""
 #. module: base_contact
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
+msgstr ""
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
 msgstr ""
 
 #. module: base_contact
@@ -117,13 +117,39 @@ msgid "Partners"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
+#: field:res.partner.job,state:0
+msgid "State"
 msgstr ""
 
 #. module: base_contact
-#: field:res.partner.job,state:0
-msgid "State"
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+
+#. module: base_contact
+#: model:ir.module.module,description:base_contact.module_meta_information
+msgid ""
+"\n"
+"        This module allows you to manage your contacts entirely.\n"
+"\n"
+"    It lets you define\n"
+"        *contacts unrelated to a partner,\n"
+"        *contacts working at several addresses (possibly for different "
+"partners),\n"
+"        *contacts with possibly different functions for each of its job's "
+"addresses\n"
+"\n"
+"    It also adds new menu items located in\n"
+"        Partners \\ Contacts\n"
+"        Partners \\ Functions\n"
+"\n"
+"    Pay attention that this module converts the existing addresses into "
+"\"addresses + contacts\". It means that some fields of the addresses will be "
+"missing (like the contact name), since these are supposed to be defined in "
+"an other object.\n"
+"    "
 msgstr ""
 
 #. module: base_contact
@@ -153,11 +179,6 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
-
-#. module: base_contact
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -202,6 +223,11 @@ msgid "Function to address"
 msgstr ""
 
 #. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.contact,name:0
 msgid "Last Name"
 msgstr ""
@@ -226,6 +252,11 @@ msgstr ""
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
+msgstr ""
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
 msgstr ""
 
 #. module: base_contact
@@ -266,14 +297,8 @@ msgid "Address which is linked to the Partner"
 msgstr ""
 
 #. module: base_contact
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_contact
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: field:res.partner.job,function:0
+msgid "Partner Function"
 msgstr ""
 
 #. module: base_contact
@@ -292,8 +317,8 @@ msgid "Otherwise these details will not be visible from address/contact."
 msgstr ""
 
 #. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
+#: view:base.contact.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: base_contact
@@ -305,13 +330,6 @@ msgstr ""
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to true,                 it will allow you to "
-"hide the partner contact without removing it."
 msgstr ""
 
 #. module: base_contact
@@ -452,6 +470,11 @@ msgid "Name"
 msgstr ""
 
 #. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+
+#. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
 msgstr ""
@@ -488,3 +511,6 @@ msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
 msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neodgovarajući XML za arhitekturu prikaza!"

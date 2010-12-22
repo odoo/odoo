@@ -6,25 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:57+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-16 17:31+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
 #: model:ir.model,name:event_project.model_event_project
 msgid "Event Project"
-msgstr ""
+msgstr "Projet d'événement"
 
 #. module: event_project
 #: field:event.project,date:0
 msgid "Date End"
-msgstr ""
+msgstr "Date de fin"
 
 #. module: event_project
 #: view:event.project:0
@@ -39,6 +40,10 @@ msgid ""
 "    This module allows you to create retro planning for managing your "
 "events.\n"
 msgstr ""
+"Gestion et organisation d'événements.\n"
+"\n"
+"    Ce module vous permet de créer des rétro-plannings pour gérer vos "
+"événements.\n"
 
 #. module: event_project
 #: help:event.project,project_id:0
@@ -47,23 +52,20 @@ msgid ""
 "After click on  'Create Retro-planning', New Project will be duplicated from "
 "this template project."
 msgstr ""
-
-#. module: event_project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+"Ceci est le modèle de projet. Le projet d'un événement est une copie de ce "
+"modèle. Après avoir cliqué sur 'Créer rétro-planning', le nouveau projet "
+"sera copié à partir de ce modèle."
 
 #. module: event_project
 #: view:event.project:0
 #: model:ir.actions.act_window,name:event_project.action_event_project
 msgid "Retro-Planning"
-msgstr ""
+msgstr "Rétro-Planning"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr "Erreur ! La date de fermeture ne peut pas précéder la date de début."
 
 #. module: event_project
 #: field:event.event,project_id:0
@@ -71,25 +73,32 @@ msgid "Project"
 msgstr "Projet"
 
 #. module: event_project
-#: field:event.project,project_id:0
-msgid "Template of Project"
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: event_project
+#: view:event.event:0
+msgid "All tasks"
 msgstr ""
 
 #. module: event_project
 #: model:ir.module.module,shortdesc:event_project.module_meta_information
 msgid "Event Project - Create Retro-Planning to manage your Events"
 msgstr ""
+"Projet d'un événement - Ce module permet de créer des rétro-plannings pour "
+"gérer vos événements"
 
 #. module: event_project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr "Modèle du projet"
 
 #. module: event_project
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event_project.act_event_task
-msgid "Tasks"
-msgstr "Tâches"
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr "Erreur, vous ne pouvez pas créer d'événement récursif !"
 
 #. module: event_project
 #: field:event.event,task_ids:0
@@ -99,12 +108,12 @@ msgstr "Tâches du projet"
 #. module: event_project
 #: view:event.project:0
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #. module: event_project
 #: field:event.project,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Date de début"
 
 #. module: event_project
 #: view:event.event:0
@@ -120,6 +129,9 @@ msgstr "Évènement"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Gestion des Tâches"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
 
 #~ msgid "Remaining Tasks"
 #~ msgstr "Tâches Restantes"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-11-17 10:59+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -33,8 +33,9 @@ msgid "From"
 msgstr "Od"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: product_margin
@@ -58,26 +59,9 @@ msgid "From Date"
 msgstr "Od datuma"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr ""
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: product_margin
@@ -113,8 +97,12 @@ msgid "Expected Sale - Turn Over"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
 msgstr ""
 
 #. module: product_margin
@@ -123,8 +111,8 @@ msgid "Standard Price"
 msgstr "Običajna cena"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
 msgstr ""
 
 #. module: product_margin
@@ -138,9 +126,8 @@ msgid "Expected Sale - Normal Cost"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
+#: view:product.product:0
+msgid "Analysis Criteria"
 msgstr ""
 
 #. module: product_margin
@@ -148,11 +135,6 @@ msgstr ""
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Skupni storšek"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -224,6 +206,11 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr ""
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr ""
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr ""
@@ -234,8 +221,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr ""
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
 msgstr ""
 
 #. module: product_margin
@@ -261,6 +249,11 @@ msgstr ""
 #. module: product_margin
 #: view:product.margin:0
 msgid "General Information"
+msgstr ""
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: product_margin
@@ -300,3 +293,6 @@ msgstr ""
 
 #~ msgid "Reporting"
 #~ msgstr "Poročanje"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."

@@ -31,8 +31,9 @@ class account_tax_chart(osv.osv_memory):
        'period_id': fields.many2one('account.period', \
                                     'Period',  \
                                     ),
-       'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
+       'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                        ('all', 'All Entries'),
+                                        ], 'Target Moves', required=True),
     }
 
     def _get_period(self, cr, uid, context=None):
@@ -54,8 +55,8 @@ class account_tax_chart(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        result = mod_obj._get_id(cr, uid, 'account', 'action_tax_code_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_tax_code_tree')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         if data['period_id']:
             fiscalyear_id = period_obj.read(cr, uid, [data['period_id']], context=context)[0]['fiscalyear_id'][0]
@@ -72,7 +73,7 @@ class account_tax_chart(osv.osv_memory):
 
     _defaults = {
         'period_id': _get_period,
-        'target_move': 'all'
+        'target_move': 'posted'
     }
 
 account_tax_chart()

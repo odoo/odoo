@@ -16,13 +16,13 @@
 
     <record model="document.directory" id="dir_root">
         <field name="name">Documents</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
     </record>
 
     <record model="document.directory" id="dir_my_folder">
-        <field name="name">My Folder</field>
+        <field name="name">Admin Folder</field>
         <field name="parent_id" ref="dir_root"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="ressource_id">0</field>
@@ -37,7 +37,7 @@
         <field name="ressource_id">0</field>
 
         <field name="ressource_type_id" search="[('model','=','res.partner.category')]" />
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
     </record>
 
     <record model="document.directory" id="dir_partner">
@@ -46,7 +46,7 @@
         <field name="domain">[('category_id','in',[active_id])]</field>
         <field name="ressource_type_id" search="[('model','=','res.partner')]" />
         <field name="ressource_parent_type_id" search="[('model','=','res.partner.category')]" />
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="ressource_id">0</field>
 
     </record>
@@ -55,14 +55,14 @@
         <field name="name">Personal Folders</field>
         <field name="parent_id" ref="dir_root"/>
         <field name="type">ressource</field>
+        <field name="user_id" eval="False"/>
         <field name="ressource_type_id" ref="base.model_res_users" />
         <field name="ressource_id">0</field>
-
     </record>
 
     <record model="document.directory" id="dir_product">
         <field name="name">Products</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="parent_id" ref="dir_root"/>
         <field name="ressource_id">0</field>
 
@@ -70,7 +70,7 @@
 
     <record model="document.directory" id="dir_sale_order">
         <field name="name">Sales Order</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="parent_id" ref="dir_root"/>
         <field name="ressource_id">0</field>
 
@@ -78,7 +78,7 @@
 
     <record model="document.directory" id="dir_sale_order_all">
         <field name="name">All Sales Order</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="parent_id" ref="dir_sale_order"/>
         <field name="ressource_id">0</field>
 
@@ -86,7 +86,7 @@
 
     <record model="document.directory" id="dir_sale_order_quote">
         <field name="name">Quotations</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="parent_id" ref="dir_sale_order"/>
         <field name="ressource_id">0</field>
 
@@ -94,7 +94,7 @@
 
     <record model="document.directory" id="dir_project">
         <field name="name">Projects</field>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" eval="False"/>
         <field name="parent_id" ref="dir_root"/>
         <field name="ressource_id">0</field>
 

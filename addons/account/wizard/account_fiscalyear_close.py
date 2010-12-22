@@ -33,14 +33,12 @@ class account_fiscalyear_close(osv.osv_memory):
                                  'Fiscal Year to close', required=True, help="Select a Fiscal year to close"),
        'fy2_id': fields.many2one('account.fiscalyear', \
                                  'New Fiscal Year', required=True),
-       'journal_id': fields.many2one('account.journal', \
-                                 'Opening Entries Journal', required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts and with a centralized counterpart.'),
-       'period_id': fields.many2one('account.period', \
-                                 'Opening Entries Period', required=True),
+       'journal_id': fields.many2one('account.journal', 'Opening Entries Journal', domain="[('type','=','situation')]", required=True, help='The best practice here is to use a journal dedicated to contain the opening entries of all fiscal years. Note that you should define it with default debit/credit accounts, of type \'situation\' and with a centralized counterpart.'),
+       'period_id': fields.many2one('account.period', 'Opening Entries Period', required=True),
        'report_name': fields.char('Name of new entries',size=64, required=True, help="Give name of the new entries"),
     }
     _defaults = {
-        'report_name':'End of Fiscal Year Entry',
+        'report_name': _('End of Fiscal Year Entry'),
     }
 
     def data_save(self, cr, uid, ids, context=None):

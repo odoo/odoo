@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-03 07:57+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -30,13 +30,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objekat"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -57,6 +50,11 @@ msgid "Jobs Hiring Process"
 msgstr "Proces zapošljavanja"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Konfigurisi kalendare za CRM Sekcije"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Helpdesk"
@@ -68,13 +66,17 @@ msgstr "Interval u Casovima"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "prisutan"
+msgid "dtstamp"
+msgstr "dtstamp"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "Greska ! Ne mozes kreirati rekursivni Prodajni tim."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
+msgstr ""
+"Polje objekta koriscenom u Imenu Fajla. Ovo mora biti jedinstveni "
+"identifikator."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -87,9 +89,10 @@ msgid "Calendar of Meetings"
 msgstr "Kalendar Sastanaka"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Sastanci zajedničkog kalendara"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -97,14 +100,14 @@ msgid "Manages an Helpdesk service."
 msgstr "Upravlja uslugom Helpdesk-a."
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "dtend"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "Sumarno"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -189,6 +192,13 @@ msgstr ""
 "listu tel poziva koje treba obaviti."
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr "OpenERP Polje"
@@ -214,9 +224,9 @@ msgid "location"
 msgstr "polozaj"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "prisutan"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -232,6 +242,11 @@ msgstr "Alternativni metod za kalkulaciju vrednosti"
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr "Upravlja kalendarom sastanaka korisnika"
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Domen"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -281,14 +296,19 @@ msgid "categories"
 msgstr "kategorije"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr "Koristi ovo polje"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Domen"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Kreiraj predkonfigurisani Kalendar"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -329,9 +349,9 @@ msgstr ""
 "Ako je postavljeno, posebna instanca ce biti kreirana za svaki zapis Objekta"
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "Sumarno"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -344,9 +364,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Sastanci zajedničkog kalendara"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -368,28 +388,16 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Poslovne Prilike"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "dtstamp"
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-"Polje objekta koriscenom u Imenu Fajla. Ovo mora biti jedinstveni "
-"identifikator."
-
 #~ msgid "Next"
 #~ msgstr "Sledeće"
 
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "Konfigurisi kalendare za CRM Sekcije"
-
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Greška! Ne možete kreirati rekurzivne direktorijume."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "Open ERP Field"
 #~ msgstr "Otvori ERP Polje"
@@ -404,6 +412,9 @@ msgstr ""
 #~ msgid "Used by companies to track bugs and support requests on softwares"
 #~ msgstr ""
 #~ "Korišten od firmi za praćenje grešaka i zahteva za podrškom na programima"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
 
 #~ msgid ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
@@ -429,6 +440,9 @@ msgstr ""
 #~ "Upravlja pritužbama dobavljača i kupaca, uključujući korektivne ili "
 #~ "preventivne akcije."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "Duration(In Hour)"
 #~ msgstr "Trajanje (u satima)"
 
@@ -439,9 +453,6 @@ msgstr ""
 #~ "Pomaže vam pri unosu rezultata telefonskih poziva ili pri planiranju popisa "
 #~ "poziva za obradu."
 
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "Kreiraj predkonfigurisani Kalendar"
-
 #~ msgid "Prospect"
 #~ msgstr "Prilika"
 
@@ -450,3 +461,6 @@ msgstr ""
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "document.directory.ics.fields"
+
+#~ msgid "Error ! You cannot create recursive Sales team."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni Prodajni tim."

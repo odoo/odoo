@@ -6,35 +6,34 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 00:49+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-09 09:18+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
 msgid "Audit Trail"
-msgstr "Auditar Rastreio"
+msgstr "Tilha de Auditória"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
-"especial !"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Registo"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Subscrito"
@@ -47,15 +46,29 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
-msgstr "Registos de Auditoria"
+msgstr "Registos de Auditória"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Estado"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Rascunho"
@@ -63,12 +76,7 @@ msgstr "Rascunho"
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
-msgstr "Valor antigo"
-
-#. module: audittrail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+msgstr "Valor Antigo"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -90,17 +98,17 @@ msgstr "Método"
 #. module: audittrail
 #: field:audittrail.view.log,from:0
 msgid "Log From"
-msgstr "Registar desde"
+msgstr "Registo Desde"
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "Registo"
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "ID do Registo"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
 msgid "Resource Id"
-msgstr "Id do recurso"
+msgstr "ID do Recurso"
 
 #. module: audittrail
 #: help:audittrail.rule,user_id:0
@@ -122,12 +130,7 @@ msgstr "Utilizadores"
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Log Lines"
-msgstr "Linhas de registos"
-
-#. module: audittrail
-#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Regras subscritas"
+msgstr "Linhas de Registos"
 
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
@@ -135,6 +138,7 @@ msgid "Rules"
 msgstr "Regras"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -143,17 +147,22 @@ msgstr "Objecto"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rule"
-msgstr ""
+msgstr "Regras da Trilha de Auditória"
 
 #. module: audittrail
 #: field:audittrail.view.log,to:0
 msgid "Log To"
-msgstr ""
+msgstr "Registrar Para"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr "Novo valor do texto : "
+msgstr "Novo Valor de Texto: "
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
+msgstr ""
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
@@ -163,14 +172,15 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value : "
-msgstr "Valor antigo : "
+msgstr "Valor Antigo : "
 
 #. module: audittrail
 #: field:audittrail.log,name:0
 msgid "Resource Name"
-msgstr ""
+msgstr "Nome do recurso"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Data"
@@ -181,11 +191,6 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
-msgstr "Id registo"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
@@ -200,7 +205,7 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value Text : "
-msgstr "Texto com valores antigos : "
+msgstr "Texto com Valor Antigo : "
 
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
@@ -208,9 +213,17 @@ msgid "Log Workflow"
 msgstr ""
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"\n"
+"    This module gives the administrator the rights\n"
+"    to track every user operation on all the objects\n"
+"    of the system.\n"
+"\n"
+"    Administrator can subscribe rules for read,write and\n"
+"    delete on objects and can check logs.\n"
+"    "
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
@@ -222,21 +235,12 @@ msgstr ""
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
+"A mudança depende da Trilha de Auditória -- Definir regras como RASCUNHO"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
-msgstr ""
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' Model does not exist...\" %(model))\n"
-"        model = model_pool.browse(cr, uid, model_id)\n"
-"\n"
-"        if method in ('create"
-msgstr ""
+msgstr "Linhas de Registo"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -246,7 +250,7 @@ msgstr "Campos"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
-msgstr ""
+msgstr "Regras da Trilha de Auditória"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -256,6 +260,7 @@ msgid ""
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr "Utilizador"
@@ -263,7 +268,7 @@ msgstr "Utilizador"
 #. module: audittrail
 #: field:audittrail.rule,action_id:0
 msgid "Action ID"
-msgstr ""
+msgstr "ID da Ação"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -273,13 +278,7 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
-msgstr "Não registar"
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
+msgstr "Não Registar"
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
@@ -289,32 +288,11 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr "Descrição do campo"
+msgstr "Descrição do Campo"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
-"\n"
-"        field = field_pool.read(cr, uid, field_id)\n"
-"        relation_model = field['relation']\n"
-"        relation_model_pool = relation_model and pool.get(relation_model) or "
-"False\n"
-"\n"
-"        if field['ttype'] == 'many2one':\n"
-"            res = False\n"
-"            relation_id = False\n"
-"            if values and type(values) == tuple:\n"
-"                relation_id = values[0]\n"
-"                if relation_id and relation_model_pool:\n"
-"                    relation_model_object = relation_model_pool.read(cr, "
-"uid, relation_id, [relation_model_pool._rec_name])\n"
-"                    res = "
-"relation_model_object[relation_model_pool._rec_name]\n"
-"            return res\n"
-"\n"
-"        elif field['ttype'] in ('many2many','one2many"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
 msgstr ""
 
 #. module: audittrail
@@ -325,22 +303,17 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Open Logs"
-msgstr "Abrir registos"
+msgstr "Abrir Registos"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr "Novo valor de texto"
+msgstr "Novo valor de Texto"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr "Nome da regra"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Registos"
+msgstr "Nome da Regra"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
@@ -348,19 +321,9 @@ msgid "New Value"
 msgstr "Novo Valor"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "Log Line"
-msgstr ""
-
-#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Registar"
+msgstr "Registros da Trilha de Auditória"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
@@ -376,12 +339,19 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr "Novo valor : "
+msgstr "Novo Valor : "
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr "Texto com valores antigos"
+msgstr "Texto com valor Antigo"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
@@ -394,57 +364,8 @@ msgid "View Log"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
-"\n"
-"            field = field_pool.read(cr, uid, field_id)\n"
-"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
-"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
-"            old_value_text = 'old_value_text' in line and  "
-"line['old_value_text'] or ''\n"
-"            new_value_text = 'new_value_text' in line and  "
-"line['new_value_text'] or ''\n"
-"\n"
-"            if old_value_text == new_value_text:\n"
-"                continue\n"
-"            if field['ttype'] == 'many2one':\n"
-"                if type(old_value) == tuple:\n"
-"                    old_value = old_value[0]\n"
-"                if type(new_value) == tuple:\n"
-"                    new_value = new_value[0]\n"
-"            vals = {\n"
-"                    \"log_id\": log_id,\n"
-"                    \"field_id\": field_id,\n"
-"                    \"old_value\": old_value,\n"
-"                    \"new_value\": new_value,\n"
-"                    \"old_value_text\": old_value_text,\n"
-"                    \"new_value_text\": new_value_text,\n"
-"                    \"field_description\": field['field_description']\n"
-"                    }\n"
-"            line_id = log_line_pool.create(cr, uid, vals)\n"
-"        #End Loop\n"
-"        return True\n"
-"\n"
-"\n"
-"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
-"        \"\"\"\n"
-"        Logging function: This function is performs logging oprations "
-"according to method\n"
-"        @param db: the current database\n"
-"        @param uid: the current user’s ID for security checks,\n"
-"        @param object: Object who's values are being changed\n"
-"        @param method: method to log: create, read, write, unlink\n"
-"        @param fct_src: execute method of Object proxy\n"
-"\n"
-"        @return: Returns result as per method of Object proxy\n"
-"        \"\"\"\n"
-"        res2 = args\n"
-"        pool = pooler.get_pool(db)\n"
-"        cr = pooler.get_db(db).cursor()\n"
-"        resource_pool = pool.get(model)\n"
-"        log_pool = pool.get('audittrail.log"
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
 msgstr ""
 
 #. module: audittrail
@@ -471,17 +392,80 @@ msgstr ""
 #~ msgid "Delete"
 #~ msgstr "Eliminar"
 
-#~ msgid "Log reads"
-#~ msgstr "Leituras os registos"
-
-#~ msgid "View Logs"
-#~ msgstr "Ver registos"
-
-#~ msgid "Log creates"
-#~ msgstr "Criação de registos"
-
-#~ msgid "Log deletes"
-#~ msgstr "Apagar registos"
+#~ msgid "Logs"
+#~ msgstr "Registos"
 
 #~ msgid "Name"
 #~ msgstr "Nome"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
+#~ "especial !"
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "audittrail.rule"
+
+#~ msgid "audittrail.log"
+#~ msgstr "audittrail.log"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção"
+
+#~ msgid "Audittrails"
+#~ msgstr "Trilha de Auditória"
+
+#~ msgid "Subscribe"
+#~ msgstr "Subscrever"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Permite ao administrador para acompanhar todas as operações do utilizados em "
+#~ "todos os objectos do sistema.\n"
+#~ "   Subscrever as Regras para leitura, escrita e eliminar em objectos e "
+#~ "verificar os registros"
+
+#, python-format
+#~ msgid "WARNING:audittrail is not part of the pool"
+#~ msgstr "AVISO: A Trilha de Auditória não faz parte"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Regras Subscritas"
+
+#~ msgid "Log writes"
+#~ msgstr "Escrever Registo"
+
+#~ msgid "Log reads"
+#~ msgstr "Leritura de Registos"
+
+#~ msgid "View Logs"
+#~ msgstr "Ver Registos"
+
+#~ msgid "Log creates"
+#~ msgstr "Criação de Registos"
+
+#~ msgid "Log deletes"
+#~ msgstr "Apagar Registos"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"

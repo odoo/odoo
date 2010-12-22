@@ -28,23 +28,22 @@ import datetime
 from report import report_sxw
 import time
 import pooler
-import rml_parse
 
-class employees_salary_report(rml_parse.rml_parse):
+class employees_salary_report(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(employees_salary_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
-            'get_employee' : self.get_employee,
-            'get_employee_detail' : self.get_employee_detail,
-            'cal_monthly_amt':self.cal_monthly_amt,
-            'get_periods'  : self.get_periods,
-            'get_total' : self.get_total,
-            'get_allow':self.get_allow,
-            'get_deduct':self.get_deduct,
-            'get_other':self.get_other,
-            'get_monthly_total':self.get_monthly_total,
+            'get_employee': self.get_employee,
+            'get_employee_detail': self.get_employee_detail,
+            'cal_monthly_amt': self.cal_monthly_amt,
+            'get_periods': self.get_periods,
+            'get_total': self.get_total,
+            'get_allow': self.get_allow,
+            'get_deduct': self.get_deduct,
+            'get_other': self.get_other,
+            'get_monthly_total': self.get_monthly_total,
         })
 
         self.mnths =[]

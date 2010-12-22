@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_expense
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:31+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 10:39+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -42,17 +41,12 @@ msgstr "Баталсан огноо"
 #: view:hr.expense.expense:0
 #: view:hr.expense.report:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_air_product_template
 msgid "Air Ticket"
 msgstr "Онгоцны тийз"
-
-#. module: hr_expense
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -61,11 +55,6 @@ msgstr "Үйлдлийн тодорхойлолтод буруу моделий�
 #: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Хэлтэс"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Extended filters..."
-msgstr "Нэмэлт шүүлтүүр"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -109,7 +98,7 @@ msgstr "Зөвшөөрсөн"
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr "Хэмжих нэгж"
+msgstr "Х.н"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_valid:0
@@ -129,6 +118,41 @@ msgstr "Тэмдэглэл"
 #: field:hr.expense.expense,invoice_id:0
 msgid "Employee's Invoice"
 msgstr "Ажилтны нэхэмжлэх"
+
+#. module: hr_expense
+#: model:ir.module.module,description:hr_expense.module_meta_information
+msgid ""
+"\n"
+"    This module aims to manage employee's expenses.\n"
+"\n"
+"    The whole workflow is implemented:\n"
+"    * Draft expense\n"
+"    * Confirmation of the sheet by the employee\n"
+"    * Validation by his manager\n"
+"    * Validation by the accountant and invoice creation\n"
+"    * Payment of the invoice to the employee\n"
+"\n"
+"    This module also uses the analytic accounting and is compatible with\n"
+"    the invoice on timesheet module so that you will be able to "
+"automatically\n"
+"    re-invoice your customer's expenses if your work by project.\n"
+"    "
+msgstr ""
+"\n"
+"    Энэ модуль нь ажилтны зардлыг удирдаж хянах зорилготой\n"
+"\n"
+"    Бүтэн ажлын урсгалаар дараах алхмыг хэрэгжүүлнэ.\n"
+"    * Ноорог зардал\n"
+"    * Хуудсыг ажилтан баталгаажуулах\n"
+"    * Менежер нь батламжлах\n"
+"    * Нягтлан батламжилж нэхэмжлэл үүсгэх\n"
+"    * Ажилтанд нэхэмжлэлийн төлбөрийг хийх\n"
+"\n"
+"    Энэ модуль нь аналитик дансыг бас ашигладаг \n"
+"    Цаг бүртгэл дэх нэхэмжлэл модультай зохицон ажиллаж ажил тань төсөл "
+"хэлбэртэй бол \n"
+"    үйлчүүлэгчийн зардлыг автоматаар дахин нэхэмжлэх боломжтой.\n"
+"    "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -160,7 +184,7 @@ msgstr "   Сар   "
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr "Лавлах"
+msgstr "Дугаар"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -338,14 +362,10 @@ msgid "Reimbursement"
 msgstr "Нөхөн төлөлт"
 
 #. module: hr_expense
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
-
-#. module: hr_expense
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Борлуулалтын нэгж нь хэмжилтийн нэгжээс өөр нэр томъёл"
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a Home address"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -409,12 +429,6 @@ msgid "Currency"
 msgstr "Валют"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a working address"
-msgstr "Ажилтан ажлын хаягтай байх ёстой"
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Approval"
 msgstr "Зөвшөөрөл хүлээж байгаа"
@@ -442,14 +456,6 @@ msgid "  Year  "
 msgstr "  Он  "
 
 #. module: hr_expense
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Алдаа: Өгөгдмөл хэмжих нэгж ба худалдан авалтын хэмжилт нь 1 ангилалд байх "
-"ёстой"
-
-#. module: hr_expense
 #: selection:hr.expense.expense,state:0
 #: selection:hr.expense.report,state:0
 msgid "Reimbursed"
@@ -471,11 +477,6 @@ msgstr "Хэрэглэгчийн нэхэмжлэл үүсгэх"
 #: selection:hr.expense.report,state:0
 msgid "Draft"
 msgstr "Ноорог"
-
-#. module: hr_expense
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа ! Рекурс цэсийг үүсгэж болохгүй"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -534,6 +535,11 @@ msgstr "Огноо"
 #: selection:hr.expense.report,month:0
 msgid "November"
 msgstr "11 сар"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Extended Filters..."
+msgstr "Өргөтгөсөн Шүүлтүүр..."
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -616,14 +622,6 @@ msgstr "Дахин нэхэмжлэх"
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
 msgstr "Бүх ажилнты зардал"
-
-#. module: hr_expense
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -726,6 +724,22 @@ msgid "Employee's Name"
 msgstr "Ажилтны нэр"
 
 #. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"The OpenERP expenses management module allows you to track the full flow. "
+"Every month, the employees record their expenses. At the end of the month, "
+"their managers validates the expenses sheets which creates costs on "
+"projects/analytic accounts. The accountant validates the proposed entries "
+"and the employee can be reimbursed. You can also reinvoice the customer at "
+"the end of the flow."
+msgstr ""
+"Зардлыг зохицуулах модуль нь зардлын бүрэн урсгалыг хянах боломж олгоно. Сар "
+"бүр ажилтан өөрийн зардлаа бүртгэнэ. Сарын эцэст анилитик данс/ төсөл дэх "
+"өртгийг үүсгэх зардлын хүснэгтийг менежер батламжилна. Нягтлан санал "
+"болгосон бичлэгийг батламжлах ба ажилтан нөхөн төллүүлж болно. Урсгалын "
+"төгсгөлд үйлчлүүлэгчээс дахин нэхэмжилж болно."
+
+#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "This Month"
 msgstr "Энэ сар"
@@ -787,7 +801,6 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
-"When the expense request is created the state is 'Draft'.\n"
 "Зардлын хүсэлт 'Ноорог' төлөвт үүссэний дара:\n"
 "Хэрэглэгч баталбал хүсэлт администраторт 'Зөвшөөрөл хүлээж байгаа' "
 "төлөвтэйгөөр шилжинэ. \n"
@@ -805,11 +818,6 @@ msgstr "Зөвшөөрсөн"
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Нийт"
-
-#. module: hr_expense
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -832,13 +840,13 @@ msgstr "Зардлууд"
 #. module: hr_expense
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Алдаа: EAN код буруу"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,year:0
 msgid "Year"
-msgstr "Он"
+msgstr "Жил"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -907,5 +915,46 @@ msgstr "Дахин нэхэмжлэх"
 #~ msgid "Short Description"
 #~ msgstr "Богино тайлбар"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
 #~ msgid "Expense Process"
 #~ msgstr "Урсгал зардал"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Борлуулалтын нэгж нь хэмжилтийн нэгжээс өөр нэр томъёл"
+
+#, python-format
+#~ msgid "The employee must have a working address"
+#~ msgstr "Ажилтан ажлын хаягтай байх ёстой"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа ! Рекурс цэсийг үүсгэж болохгүй"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Өгөгдмөл хэмжих нэгж ба худалдан авалтын хэмжилт нь 1 ангилалд байх "
+#~ "ёстой"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "osv_memory обьект нь дүрмийг дэмжихгүй"
+
+#~ msgid ""
+#~ "Determine if the product can be visible in the list of product within a "
+#~ "selection from an HR expense sheet line."
+#~ msgstr ""
+#~ "Зардлын хүснэгтийн мөр дөх барааны жагсаалтаас сонгоход тухайн бараа "
+#~ "харагдах эсэхийг тодорхойлно."
+
+#~ msgid "Extended filters..."
+#~ msgstr "Өргөтгөсөн хайлт..."

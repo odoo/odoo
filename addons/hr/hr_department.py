@@ -26,7 +26,7 @@ class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        if not len(ids):
+        if not ids:
             return []
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
@@ -38,8 +38,6 @@ class hr_department(osv.osv):
         return res
 
     def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        if context is None:
-            context = {}
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
@@ -58,8 +56,6 @@ class hr_department(osv.osv):
                 }
 
     def _get_members(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         mids = self.search(cr, uid, [('manager_id', '=', uid)], context=context)
         result = {uid: 1}
         for m in self.browse(cr, uid, mids, context=context):

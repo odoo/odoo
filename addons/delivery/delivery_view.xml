@@ -4,6 +4,9 @@
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" sequence="4"/>
 
+
+
+
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
@@ -128,9 +131,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <group name="logistic" position="inside">
+                <group name="logistics" position="inside">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':active_id}"/>
+                    <field name="carrier_id" context="{'order_id':active_id or False}"/>
                 </group>
             </field>
         </record>
@@ -266,10 +269,23 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                     <xpath expr="/form/notebook/page[@string='Sales Order']/group[1]/button[@name='button_dummy']" position="after">
-                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>                    
+                         <button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-add" context="{'order_id':active_id}"/>
                     </xpath>
             </field>
         </record>
+
+        <record id="view_delivery_order_inherit_stock" model="ir.ui.view">
+            <field name="name">stock.picking.out.form</field>
+            <field name="type">form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='Products']/group/button[@string='Create Invoice']" position="after">
+                    <button name="%(report_shipping)d" string="Delivery Order" states="done,assigned" type="action" icon="gtk-print"/>
+                </xpath>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

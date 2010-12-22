@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:22+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 06:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -44,10 +44,9 @@ msgstr ""
 "kalender-item"
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Tijdzone"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
 
 #. module: base_calendar
 #: field:calendar.event.edit.all,name:0
@@ -186,9 +185,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr "Geeft aan of een antwoordverzoek gevraagd wordt"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Basis alarm"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -221,17 +220,16 @@ msgid "Tue"
 msgstr "din"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Jaarlijks"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "De gebeurtenis eindigt"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -259,11 +257,10 @@ msgid "Days"
 msgstr "dagen"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
-msgstr "Niet terugkerend"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
+msgstr "Detail uitnodiging"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:0
@@ -323,11 +320,10 @@ msgid "Secondly"
 msgstr "Per seconde"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Datum gebeurtenis"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "De gebeurtenis eindigt"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -435,11 +431,6 @@ msgstr "Wijzig alle gebeurtenissen"
 #: field:calendar.todo,attendee_ids:0
 msgid "Attendees"
 msgstr "Deelnemers"
-
-#. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definiëring."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -582,19 +573,9 @@ msgid "Delegrated To"
 msgstr "Toegewezen aan"
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Ongeldige argumenten"
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Antwoord vereist"
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -606,11 +587,6 @@ msgstr "Deelname vereist"
 #: field:calendar.todo,create_date:0
 msgid "Created"
 msgstr "Aangemaakt"
-
-#. module: base_calendar
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
-msgid "Set Exclude range"
-msgstr "Stel uitsluit bereik in"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -684,6 +660,12 @@ msgstr "Eerste"
 #: view:calendar.event:0
 msgid "Privacy"
 msgstr "Privacy"
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Tijdzone"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -801,10 +783,10 @@ msgid "Fri"
 msgstr "Vrij"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
-msgstr "Detail uitnodiging"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
+msgstr "Aantal kan niet negatief zijn"
 
 #. module: base_calendar
 #: field:calendar.attendee,member:0
@@ -834,21 +816,9 @@ msgid "Attachment"
 msgstr "Bijlage"
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief Menu maken."
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr "Uitnodiging van"
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -858,6 +828,7 @@ msgstr "Herinnering"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr "Stel uitzondering regel in"
@@ -924,9 +895,11 @@ msgid "June"
 msgstr "Juni"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Basis alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Datum gebeurtenis"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -946,12 +919,10 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
-msgstr "Actief"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -983,6 +954,13 @@ msgstr "Maa"
 #: field:calendar.todo,count:0
 msgid "Count"
 msgstr "Aantal"
+
+#. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr "Niet terugkerend"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -1038,16 +1016,24 @@ msgid "Wednesday"
 msgstr "Woensdag"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr "Interval kan niet negatief zijn"
+
+#. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
 msgid "Summary"
 msgstr "Samenvatting"
 
 #. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
+msgstr "Actief"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1123,6 +1109,11 @@ msgstr ""
 #: field:calendar.todo,recurrent_id:0
 msgid "Recurrent ID date"
 msgstr "Herhaling ID datum"
+
+#. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 
 #. module: base_calendar
 #: field:calendar.alarm,state:0
@@ -1298,10 +1289,9 @@ msgid "Month"
 msgstr "Maand"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Personen uitnodigen"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr "Externe e-mail"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1363,6 +1353,12 @@ msgstr "Stoppen"
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
 msgstr "ir.values"
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Personen uitnodigen"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
@@ -1561,6 +1557,13 @@ msgid "Accept"
 msgstr "Accepteren"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr "Zaterdag"
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
 msgstr "Uitnodiging naar"
@@ -1590,9 +1593,13 @@ msgid "Duration"
 msgstr "Duur"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
-msgstr "Externe e-mail"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that can be assigned to calendar events or "
+"meetings."
+msgstr ""
+"Maakt specifieke agenda alarmen die kunnen worden toegewezen aan agenda "
+"gebeurtenissen of afspraken."
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
@@ -1600,11 +1607,21 @@ msgid "Trigger Date"
 msgstr "Activeerdatum"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
-msgstr "Zaterdag"
+#: help:calendar.alarm,attach:0
+msgid ""
+"* Points to a sound resource,                     which is rendered when the "
+"alarm is triggered for audio,\n"
+"                    * File which is intended to be sent as message "
+"attachments for email,\n"
+"                    * Points to a procedure resource, which is invoked when  "
+"                    the alarm is triggered for procedure."
+msgstr ""
+"* Verwijst naar een geluidsfragment, dat wordt afgespeeld nadat het alarm "
+"voor audio is afgegaan,\n"
+"                    * Bestand dat bedoeld is om mee te worden gestuurd als "
+"bijlage bij een e-mail bericht,\n"
+"                    * Verwijst naar een procedure bron, die wordt "
+"aangeroepen nadat het alarm is afgegaan voor procedure."
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -1619,23 +1636,37 @@ msgstr "Vijfde"
 #~ "definieert een regel of herhalingspatroon voor een uitzondering op een "
 #~ "herhaling"
 
+#~ msgid "Invalid arguments"
+#~ msgstr "Ongeldige argumenten"
+
 #~ msgid "Select data for ExRule"
 #~ msgstr "Selecteer gegevens voor uitzondering regel"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief Menu maken."
 
 #~ msgid "ExRule"
 #~ msgstr "UitzRegel"
 
-#~ msgid ""
-#~ "* Points to a sound resource,                     which is rendered when the "
-#~ "alarm is triggered for audio,\n"
-#~ "                    * File which is intended to be sent as message "
-#~ "attachments for email,\n"
-#~ "                    * Points to a procedure resource, which is invoked when  "
-#~ "                    the alarm is triggered for procedure."
-#~ msgstr ""
-#~ "* Verwijst naar een geluidsfragment, dat wordt afgespeeld nadat het alarm "
-#~ "voor audio is afgegaan,\n"
-#~ "                    * Bestand dat bedoeld is om mee te worden gestuurd als "
-#~ "bijlage bij een e-mail bericht,\n"
-#~ "                    * Verwijst naar een procedure bron, die wordt "
-#~ "aangeroepen nadat het alarm is afgegaan voor procedure."
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definiëring."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid "Set Exclude range"
+#~ msgstr "Stel uitsluit bereik in"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

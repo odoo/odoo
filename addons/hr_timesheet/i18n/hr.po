@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 10:48+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
@@ -46,9 +46,13 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nepravilno ime modela u definiciji radnje."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -101,10 +105,13 @@ msgid "Sign in"
 msgstr "Prijava"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "Travanj"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -117,14 +124,15 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Prijava / Odjava"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Posao obavljen u zadnjem razdoblju"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -205,15 +213,16 @@ msgid "Sun"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Tiskaj"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -250,22 +259,26 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za Arhitekturu Prikaza!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Greška: Jedinica skladištenja  (JS) mora biti u različitoj kategoriji od "
-"Jedinice Mjere (JM)"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
 msgstr "Studeni"
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -293,11 +306,9 @@ msgid "September"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr ""
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Niz Kontrolne kartice"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -346,12 +357,17 @@ msgid "Fri"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Prijava / Odjava"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
-"Greška: Zadana Jedinica Mjere (JM) i kupovna Jedinica Mjere (JM) moraju biti "
-"u istoj kategoriji."
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -362,11 +378,6 @@ msgstr "(Treba ostati prazno za tekuće vijeme)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Kontrolne Kartice"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -417,6 +428,11 @@ msgid "November"
 msgstr ""
 
 #. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
 msgstr "Datum zaključenja"
@@ -426,14 +442,6 @@ msgstr "Datum zaključenja"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "October"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -487,6 +495,13 @@ msgid "Analysis summary"
 msgstr "Zbirna Analiza"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -514,17 +529,16 @@ msgid "Information"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
-
-#. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
 msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "Travanj"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -536,11 +550,6 @@ msgstr "Tekući Datumž"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Niz Kontrolne kartice"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -606,21 +615,13 @@ msgid "Analytic line"
 msgstr "Analitička linija"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -634,6 +635,14 @@ msgstr "Listopad"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "April"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
@@ -652,11 +661,6 @@ msgstr "Korisnici"
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Započnite s radom"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Greška: Nepravila EAN kod"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -699,8 +703,22 @@ msgstr "Rujan"
 #~ msgid "Choose your month"
 #~ msgstr "Izaberite svoj mjesec"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Greška: Zadana Jedinica Mjere (JM) i kupovna Jedinica Mjere (JM) moraju biti "
+#~ "u istoj kategoriji."
+
 #~ msgid "Sign in status"
 #~ msgstr "Status Prijave"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nepravilno ime modela u definiciji radnje."
 
 #~ msgid "Current Server Date"
 #~ msgstr "Tekući datum Servera"
@@ -716,6 +734,14 @@ msgstr "Rujan"
 
 #~ msgid "Day"
 #~ msgstr "Dan"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za Arhitekturu Prikaza!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Greška: Jedinica skladištenja  (JS) mora biti u različitoj kategoriji od "
+#~ "Jedinice Mjere (JM)"
 
 #~ msgid "Choose Users"
 #~ msgstr "Odaberite Korisnike"
@@ -744,5 +770,294 @@ msgstr "Rujan"
 #~ msgid "Timesheet Process"
 #~ msgstr "Proces Kontrolne kartice"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Greška: Nepravila EAN kod"
+
 #~ msgid "Working Time"
 #~ msgstr "Radno vrijeme"
+
+#~ msgid "Review end of day check day is complete"
+#~ msgstr "Pregled na kraju dana je završen"
+
+#~ msgid ""
+#~ "You can not have 2 timesheets that overlaps !\n"
+#~ "Please use the menu 'My Current Timesheet' to avoid this problem."
+#~ msgstr ""
+#~ "Ne možete imati dvije Kontrolne Kartice koje se preklapaju.\n"
+#~ "Koristite Izbornik \"Moja tekuća Kontrolna Kartica\" kako biste izbjegli taj "
+#~ "problem."
+
+#~ msgid "Sheet"
+#~ msgstr "Lista"
+
+#~ msgid "Total Attendance"
+#~ msgstr "Ukupna Nazočnost"
+
+#~ msgid "My timesheets to confirm"
+#~ msgstr "Moje Kontrolne Karicte za potvrdu"
+
+#~ msgid "Timeshet range"
+#~ msgstr "Raspon vremena Kontrolne Kartice"
+
+#~ msgid "Confirm timesheet sheet"
+#~ msgstr "Potvrdi Listu Kontrolne Kartice"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Vrati na predložak"
+
+#~ msgid "Defines employee's timesheet entry"
+#~ msgstr "Definraj ulazni podatak Kontrolne Kartice djelatnika"
+
+#~ msgid "Draft Timesheet sheet"
+#~ msgstr "Predložak liste Kontrolne Kartice"
+
+#~ msgid "My Current Timesheet"
+#~ msgstr "Moja tekuća Kontrolna Kartica"
+
+#~ msgid "Validate"
+#~ msgstr "Vrednuj"
+
+#~ msgid "Present"
+#~ msgstr "Prisutan"
+
+#~ msgid "Validated Timesheet"
+#~ msgstr "Vrednovana Kontrolna Kartica"
+
+#~ msgid "You must select a Current date wich is in the timesheet dates !"
+#~ msgstr ""
+#~ "Morate odabrati Tekući datum koji je u okviru datuma Kontrolne Kartice"
+
+#~ msgid "Total Difference"
+#~ msgstr "Ukupna razlika"
+
+#~ msgid "Phone call encoding"
+#~ msgstr "Šifriranje telefonskog poziva"
+
+#~ msgid "Timesheet by Day"
+#~ msgstr "Kontrolna Kartica po danu"
+
+#~ msgid "Defines the task work entry into timesheet line"
+#~ msgstr "Definira ulazni podatak zadanog posla u liniji Kontrolne Kartice"
+
+#~ msgid ""
+#~ "Allowed difference between the sign in/out and the timesheet computation for "
+#~ "one sheet. Set this to 0 if you do not want any control."
+#~ msgstr ""
+#~ "Dopuštena razlika između prijave/odjave i obračuna Kontrolne Kartice za "
+#~ "jednu listu. Postavite na 0 ako ne želite kontrolu nad time."
+
+#~ msgid "Timesheet by Days"
+#~ msgstr "Kontrolne Kartice po danima"
+
+#~ msgid "timesheet is confirmed at the end of the week / month"
+#~ msgstr "Kontolna Kartica potvrđena je na kraju Tjedna / Mjeseca"
+
+#~ msgid "Project Timesheet"
+#~ msgstr "Kontrolna Kartica Projekta"
+
+#~ msgid "Date from"
+#~ msgstr "Datum od"
+
+#~ msgid "Hr Timesheet Process"
+#~ msgstr "Proces Kontrolne kartice Ljudskih Resursa"
+
+#~ msgid "Analytic cost"
+#~ msgstr "Analitički trošak"
+
+#~ msgid "Confirmed"
+#~ msgstr "Potvrđen"
+
+#~ msgid "Attendance"
+#~ msgstr "Nazočnost"
+
+#~ msgid "Confirm"
+#~ msgstr "Potvrdi"
+
+#~ msgid "Timesheet lines"
+#~ msgstr "Linije Kontrolne kartice"
+
+#~ msgid "Encode your timesheet line"
+#~ msgstr "Šifriraj liniju Kontrolne Kartice"
+
+#~ msgid "Confirm Timesheet"
+#~ msgstr "Potvrdi Kontrolnu Karticu"
+
+#~ msgid "Control by the project manager"
+#~ msgstr "Kontrolira Voditelj Projekta"
+
+#~ msgid "New"
+#~ msgstr "Novi"
+
+#~ msgid "Timesheet sheet confirm at the end of the period"
+#~ msgstr "Potvrdi Listu Kontrolne Kartice na kraju razdoblja"
+
+#~ msgid "Total Time"
+#~ msgstr "Ukupno vrijeme"
+
+#~ msgid "Confirm timesheet at the end of the period"
+#~ msgstr "Potvrdi Kontrolnu Karticu na kraju razdoblja"
+
+#~ msgid "No employee defined"
+#~ msgstr "Nema definiranog Djelatnika"
+
+#~ msgid "Confirmed Timesheet"
+#~ msgstr "Potvrdi Kontrolnu Karticu"
+
+#~ msgid "Configuration"
+#~ msgstr "Konfiguracija"
+
+#~ msgid "Week"
+#~ msgstr "Tjedan"
+
+#~ msgid "Daily View"
+#~ msgstr "Dnevni Prikaz"
+
+#~ msgid "Timesheets by period"
+#~ msgstr "Kontrolne Kartice po razdoblju"
+
+#~ msgid "Sign In"
+#~ msgstr "Prijava"
+
+#~ msgid "My Department's Timesheet"
+#~ msgstr "Kontrolna Kartica mog Odjela"
+
+#~ msgid "Go to:"
+#~ msgstr "idi na:"
+
+#~ msgid "Phone call"
+#~ msgstr "Tel. poziv"
+
+#~ msgid "Total Timesheet"
+#~ msgstr "Zbirna Kontrolna Kartica"
+
+#~ msgid "Review of work"
+#~ msgstr "Pregled Rada"
+
+#~ msgid "Invoice on Work"
+#~ msgstr "Obračun obavljenog posla"
+
+#~ msgid "Encode Your hours and Sign in / out"
+#~ msgstr "Šifrirajte svoje radne sate i Prijavu / Odjavu"
+
+#~ msgid "Review"
+#~ msgstr "Pregled"
+
+#~ msgid "Draft"
+#~ msgstr "Predložak"
+
+#~ msgid "Timesheets To Confirm"
+#~ msgstr "Kontrolne Kartice za Potvrdu"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Date to"
+#~ msgstr "Datum do"
+
+#~ msgid "Current Status"
+#~ msgstr "Tekući Status"
+
+#~ msgid "Invoice on timesheet"
+#~ msgstr "Račun prema Kontrolnoj Kartici"
+
+#~ msgid "Invoice based on timesheet"
+#~ msgstr "Račun na osnovi Kontrolne Kartice"
+
+#~ msgid "Timesheet by Account"
+#~ msgstr "Kontrolna Kartica prema Stranki-Kontu"
+
+#~ msgid "Creates invoice based on timesheet"
+#~ msgstr "Kreira račun na osnovi Kontrolne Kartice"
+
+#~ msgid "Timesheets To Validate"
+#~ msgstr "Kontrolne kartice za vrednovanje"
+
+#~ msgid "Timesheet allowed difference"
+#~ msgstr "Dopuštena razlika na Kontrolnoj Kartici"
+
+#~ msgid "Period"
+#~ msgstr "Razdoblje"
+
+#~ msgid "Done"
+#~ msgstr "Gotovo"
+
+#~ msgid "Attendance entry moves into the timesheet"
+#~ msgstr "Ulazni podatak Nazočnosti prebacuje se u Kontrolnu Karticu"
+
+#~ msgid "Creates your analytic cost accoording to quantity"
+#~ msgstr "Kreira Vaš Analitički trošak na osnovi količine"
+
+#~ msgid "Timesheet by Accounts"
+#~ msgstr "Kontrolne Kartie prema Strankama-Kontima"
+
+#~ msgid "Timesheet is validate by project manager."
+#~ msgstr "Kontrolnu Karticu vrednuje Voditelj Projekta"
+
+#~ msgid "Whatever time u spent for phone call"
+#~ msgstr "Koliko god ste vremena proveli telefonirajući"
+
+#~ msgid "Validate Timesheet"
+#~ msgstr "Vrednij Kontrolnu Karticu"
+
+#~ msgid "My Department's Timesheet to Confirm"
+#~ msgstr "Kontrolne Kartice mog odjela za Potvrdu"
+
+#~ msgid "Attendances"
+#~ msgstr "Nazočnosti"
+
+#~ msgid "Create Analytic cost"
+#~ msgstr "Kreiraj Anlitički trošak"
+
+#~ msgid "Description"
+#~ msgstr "Opis"
+
+#~ msgid "Sign Out"
+#~ msgstr "Odjava"
+
+#~ msgid "By Day"
+#~ msgstr "Po danu"
+
+#~ msgid "Difference"
+#~ msgstr "Razlika"
+
+#~ msgid "hr_timesheet_sheet.sheet"
+#~ msgstr "hr_timesheet_sheet.sheet"
+
+#~ msgid "Absent"
+#~ msgstr "Odsutan"
+
+#~ msgid "At the end of the period (week/month)"
+#~ msgstr "Na kraju razdoblja (tjedan/mjesec)"
+
+#~ msgid "timesheet entry is into draft state."
+#~ msgstr "Ulazni podatak Kontrolne Kartice je u stanju Predloška"
+
+#~ msgid "Analytic cost is created"
+#~ msgstr "Kreiran je Analitički trošak"
+
+#~ msgid "Invoice rate"
+#~ msgstr "Stavka računa"
+
+#~ msgid "Encode how much time u spent on phone call"
+#~ msgstr "Šifrirajte koliko ste vremena proveli na telefonu"
+
+#~ msgid "Review of your work at the end of the day"
+#~ msgstr "Revidirajte rad na kraju dana"
+
+#~ msgid "Analytic accounts"
+#~ msgstr "Analitička Konta"
+
+#~ msgid "My timesheets"
+#~ msgstr "Moje Kontrolne Kartice"
+
+#~ msgid "Accept"
+#~ msgstr "Prihvati"
+
+#~ msgid "Current date"
+#~ msgstr "Tekući Datum"
+
+#~ msgid "Unvalidated Timesheets"
+#~ msgstr "Nevrednovana Kontrolna Kartica"
+
+#~ msgid "My Department's Timesheet to Validate"
+#~ msgstr "Kontrolne Kartice mog odjela za Potvrdu"

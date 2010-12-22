@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-08 07:35+0000\n"
-"Last-Translator: Anders Eriksson (Mobila System) <ae@mobilasystem.se>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-11-22 20:29+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -33,18 +33,6 @@ msgid "Display Method"
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
-
-#. module: wiki
 #: view:wiki.wiki:0
 #: field:wiki.wiki,create_uid:0
 msgid "Author"
@@ -54,7 +42,7 @@ msgstr "Författare"
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_wiki_page_open
 #: view:wiki.wiki.page.open:0
 msgid "Open Page"
-msgstr "Öppna sida"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups,menu_id:0
@@ -70,11 +58,6 @@ msgstr "Område"
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Skapa område?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -115,8 +98,8 @@ msgid "Parent Menu"
 msgstr "Huvudmeny"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
 msgstr ""
 
 #. module: wiki
@@ -150,7 +133,7 @@ msgstr ""
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Varning !"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
@@ -215,12 +198,12 @@ msgstr ""
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Skapad den"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -260,9 +243,9 @@ msgid "Want to open a wiki page? "
 msgstr ""
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Felaktig XML för Vyarkitektur!"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Skapa område?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -275,15 +258,25 @@ msgid "Meta Information"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Skapad den"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Anteckningar"
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -304,12 +297,12 @@ msgstr "Skapad datum"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
 msgid "All Page Histories"
-msgstr "Alla sidors historik"
+msgstr "All sidohistorik"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: help:wiki.groups,method:0
@@ -324,7 +317,7 @@ msgstr ""
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
 msgid "wizard.wiki.history.show_diff"
-msgstr ""
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -348,11 +341,6 @@ msgid "Modification Information"
 msgstr ""
 
 #. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
-
-#. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
@@ -366,7 +354,7 @@ msgstr "Ändringsdatum"
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Configuration"
-msgstr "Inställningar"
+msgstr "Konfiguration"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
@@ -380,11 +368,20 @@ msgstr "Skapa index"
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
+msgstr "You need to select minimum 1 or maximum 2 history revision!"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -476,9 +473,6 @@ msgstr ""
 #~ msgid "Create a Menu"
 #~ msgstr "Skapa en meny"
 
-#~ msgid "Document Management"
-#~ msgstr "Dokumenthantering"
-
 #~ msgid "Differences"
 #~ msgstr "Skillnader"
 
@@ -497,11 +491,32 @@ msgstr ""
 #~ msgid "History"
 #~ msgstr "Historik"
 
-#~ msgid "Group Home Page"
-#~ msgstr "Gruppens hemsida"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #~ msgid "Wiki Differance"
 #~ msgstr "Wiki skillnad"
 
 #~ msgid "Tags"
 #~ msgstr "Etiketter"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
+#~ msgid "There are no chnages in revisions"
+#~ msgstr "There are no chnages in revisions"
+
+#~ msgid "Group Home Page"
+#~ msgstr "Group Home Page"
+
+#~ msgid "Document Management"
+#~ msgstr "Document Management"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "No action found"

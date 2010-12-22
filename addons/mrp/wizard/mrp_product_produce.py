@@ -26,7 +26,7 @@ class mrp_product_produce(osv.osv_memory):
     _description = "Product Produce"
 
     _columns = {
-        'product_qty': fields.float('Quantity', required=True),
+        'product_qty': fields.float('Select Quantity', required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
                                   ('consume', 'Consume Only')], 'Mode', required=True,
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
@@ -34,7 +34,7 @@ class mrp_product_produce(osv.osv_memory):
                                         "and it will finish the production order when total ordered quantities are produced."),
     }
 
-    def _get_product_qty(self, cr, uid, context):
+    def _get_product_qty(self, cr, uid, context=None):
         """ To obtain product quantity
         @param self: The object pointer.
         @param cr: A database cursor
@@ -42,6 +42,8 @@ class mrp_product_produce(osv.osv_memory):
         @param context: A standard dictionary
         @return: Quantity
         """
+        if context is None:
+            context = {}
         prod = self.pool.get('mrp.production').browse(cr, uid,
                                 context['active_id'], context=context)
         done = 0.0
@@ -55,7 +57,7 @@ class mrp_product_produce(osv.osv_memory):
          'mode': lambda *x: 'consume_produce'
     }
 
-    def do_produce(self, cr, uid, ids, context={}):
+    def do_produce(self, cr, uid, ids, context=None):
         """ To check the product type
         @param self: The object pointer.
         @param cr: A database cursor
@@ -64,9 +66,11 @@ class mrp_product_produce(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         prod_obj = self.pool.get('mrp.production')
-        move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        move_ids = context.get('active_ids', [])
+        for data in self.read(cr, uid, ids, context=context):
             for move_id in move_ids:
                 prod_obj.action_produce(cr, uid, move_id,
                                     data['product_qty'], data['mode'], context=context)

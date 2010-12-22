@@ -6,24 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 08:08+0000\n"
 "Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_subproduct
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Producte"
 
 #. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Sub Product"
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
 
 #. module: mrp_subproduct
@@ -43,9 +46,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Producte"
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "Quantitat producte"
 
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
@@ -63,9 +66,18 @@ msgid "Bill of Material"
 msgstr ""
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "Quantitat producte"
+#: model:ir.module.module,description:mrp_subproduct.module_meta_information
+msgid ""
+"\n"
+"This module allows you to produce several products from one production "
+"order.\n"
+"You can configure sub-products in the bill of material.\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"With this module:\n"
+"    A + B + C -> D + E\n"
+"    "
+msgstr ""
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -78,6 +90,11 @@ msgid "BoM"
 msgstr "Llista de materials (LdM)"
 
 #. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "Error ! You can not create recursive BoM."
+msgstr ""
+
+#. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "Sub Products"
 msgstr "Sub productes"
@@ -88,12 +105,14 @@ msgid "Variable"
 msgstr "Variable"
 
 #. module: mrp_subproduct
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
 msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
+msgstr ""
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -102,6 +121,15 @@ msgstr "Fixe"
 
 #~ msgid "MRP Sub Product"
 #~ msgstr "MRP subproducte"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
 
 #~ msgid "Mrp Sub Product"
 #~ msgstr "Sub producte MRP"

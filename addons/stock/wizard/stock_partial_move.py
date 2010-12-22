@@ -78,9 +78,9 @@ class stock_partial_move(osv.osv_memory):
         res = super(stock_partial_move, self).view_init(cr, uid, fields_list, context=context)
         move_obj = self.pool.get('stock.move')
     
-        if not context:
+        if context is None:
             context = {}
-        for move in move_obj.browse(cr, uid, context.get('active_ids', [])):
+        for move in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if move.state in ('done', 'cancel'):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot deliver products which are already delivered !'))
             
@@ -105,11 +105,11 @@ class stock_partial_move(osv.osv_memory):
 
     def __get_active_stock_moves(self, cr, uid, context=None):
         move_obj = self.pool.get('stock.move')
-        if not context:
+        if context is None:
             context = {}
                
         res = []
-        for move in move_obj.browse(cr, uid, context.get('active_ids', [])):
+        for move in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if move.state in ('done', 'cancel'):
                 continue           
             res.append(self.__create_partial_move_memory(move))
@@ -167,8 +167,8 @@ class stock_partial_move(osv.osv_memory):
         result['arch'] = _moves_arch_lst
         result['fields'] = _moves_fields
         return result
-
-    def do_partial(self, cr, uid, ids, context):
+   
+    def do_partial(self, cr, uid, ids, context=None):
         """ Makes partial moves and pickings done.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -178,11 +178,12 @@ class stock_partial_move(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
     
-
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
         
         move_ids = context.get('active_ids', False)
-        partial = self.browse(cr, uid, ids[0], context)
+        partial = self.browse(cr, uid, ids[0], context=context)
         partial_datas = {
             'delivery_date' : partial.date
         }
@@ -198,7 +199,7 @@ class stock_partial_move(osv.osv_memory):
             p_moves[product_move.move_id.id] = product_move
             
         moves_ids_final = []
-        for move in move_obj.browse(cr, uid, move_ids):
+        for move in move_obj.browse(cr, uid, move_ids, context=context):
             if move.state in ('done', 'cancel'):
                 continue
             if not p_moves.get(move.id):

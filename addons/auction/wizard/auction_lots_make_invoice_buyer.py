@@ -45,11 +45,11 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """        
-        if not context:
+        if context is None:
             context={}
         res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
         lots_obj=self.pool.get('auction.lots')
-        for lot in lots_obj.browse(cr, uid, context.get('active_ids', [])):
+        for lot in lots_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if 'amount' in fields:
                 res.update({'amount': lot.buyer_price})                
             if 'buyer_id' in fields:
@@ -58,7 +58,7 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
                 res.update({'objects': len(context.get('active_ids', []))})   
         return res
 
-    def makeInvoices(self, cr, uid, ids, context):
+    def makeInvoices(self, cr, uid, ids, context=None):
         """
         Create an invoice for selected lots (IDS) to BUYER_ID .
         @param cr: the current row, from the database cursor.
@@ -70,8 +70,8 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data') 
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        lots = order_obj.browse(cr, uid, context.get('active_ids', []))
-        for current in self.browse(cr, uid, ids, context):            
+        lots = order_obj.browse(cr, uid, context.get('active_ids', []), context=context)
+        for current in self.browse(cr, uid, ids, context=context):
             invoice_number = current.number
             for lot in lots:
                 up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid': current.buyer_id.id})

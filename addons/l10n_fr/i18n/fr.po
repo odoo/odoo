@@ -6,28 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:32+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-15 09:39+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_receivable
 msgid "Receivable"
 msgstr "Recevable"
-
-#. module: l10n_fr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_income
@@ -41,6 +33,8 @@ msgid ""
 "\n"
 "Credits: Sistheo Zeekom CrysaLEAD\n"
 msgstr ""
+"Ce module prend en charge le Plan Comptable Général français dans OpenERP.\n"
+"Crédits : Sistheo Zeekom CrysaLEAD\n"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_immobilisations
@@ -59,11 +53,6 @@ msgid "Asset"
 msgstr "Actifs"
 
 #. module: l10n_fr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle incorrect pour la définition de l'action"
-
-#. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_equity
 msgid "Equity"
 msgstr "Capitaux propres"
@@ -73,6 +62,11 @@ msgstr "Capitaux propres"
 #: view:account.cdr.report:0
 msgid "Print"
 msgstr "Imprimer"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_account_bilan_report
+msgid "Account Bilan Report"
+msgstr ""
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_l10n_fr_report
@@ -92,12 +86,12 @@ msgstr "Charges"
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_cdr_report
 msgid "Account CDR Report"
-msgstr ""
+msgstr "Rapport Compte CDR"
 
 #. module: l10n_fr
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "Erreur ! Vous ne pouvez pas créer de modèles de compte récursifs"
+#: model:account.account.type,name:l10n_fr.account_type_provision
+msgid "Provisions"
+msgstr "Provisions"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_payable
@@ -107,7 +101,7 @@ msgstr "À payer"
 #. module: l10n_fr
 #: view:account.cdr.report:0
 msgid "Compte de resultant"
-msgstr ""
+msgstr "Compte de résultat"
 
 #. module: l10n_fr
 #: field:l10n.fr.line,report_id:0
@@ -115,9 +109,9 @@ msgid "Report"
 msgstr "Rapport"
 
 #. module: l10n_fr
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
+#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
+msgid "Hors Euro"
+msgstr "Hors Euro"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_commitment
@@ -138,11 +132,6 @@ msgstr "TVA sur les encaissements"
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
 msgstr "Définition"
-
-#. module: l10n_fr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML incorrect pour l'architecture de la vue !"
 
 #. module: l10n_fr
 #: field:l10n.fr.line,name:0
@@ -176,6 +165,11 @@ msgid "Comptes spéciaux"
 msgstr "Comptes spéciaux"
 
 #. module: l10n_fr
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
+msgstr "Un code de rapport doit être unique !"
+
+#. module: l10n_fr
 #: field:account.bilan.report,fiscalyear_id:0
 #: field:account.cdr.report,fiscalyear_id:0
 msgid "Fiscal Year"
@@ -192,9 +186,14 @@ msgid "Dettes long terme"
 msgstr "Dettes long terme"
 
 #. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
-msgid "Hors Euro"
-msgstr "Hors Euro"
+#: model:account.account.type,name:l10n_fr.account_type_view
+msgid "View"
+msgstr "Vue"
+
+#. module: l10n_fr
+#: sql_constraint:l10n.fr.line:0
+msgid "The variable name must be unique !"
+msgstr "Un nom de variable doit être unique !"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_stocks
@@ -202,20 +201,15 @@ msgid "Actif circulant"
 msgstr "Actif circulant"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
-msgstr "Provisions"
-
-#. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_6
 msgid "TVA sur le débits"
-msgstr "TVA sur le débits"
+msgstr "TVA sur les débits"
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
 #: model:ir.actions.act_window,name:l10n_fr.action_account_bilan_report
 msgid "Bilan Report"
-msgstr "Rapport Bilan"
+msgstr "Rapport de bilan"
 
 #. module: l10n_fr
 #: model:ir.module.module,shortdesc:l10n_fr.module_meta_information
@@ -231,11 +225,6 @@ msgstr "Taxe"
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_3
 msgid "DOM-TOM"
 msgstr "DOM-TOM"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
-msgstr "Vue"
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
@@ -258,6 +247,9 @@ msgstr "Nom de la variable"
 
 #~ msgid "Bilan"
 #~ msgstr "Bilan"
+
+#~ msgid "Error ! You can not create recursive Tax Codes."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
 
 #~ msgid "Fiscal year"
 #~ msgstr "Année fiscale"
@@ -437,6 +429,9 @@ msgstr "Nom de la variable"
 
 #~ msgid "Variation des stocks"
 #~ msgstr "Variation des stocks"
+
+#~ msgid "Error ! You can not create recursive account templates."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de modèles de compte récursifs"
 
 #~ msgid "( VI )"
 #~ msgstr "( VI )"
@@ -738,3 +733,24 @@ msgstr "Nom de la variable"
 
 #~ msgid "CHARGES EXCEPTIONNELLES"
 #~ msgstr "CHARGES EXCEPTIONNELLES"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle incorrect pour la définition de l'action"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML incorrect pour l'architecture de la vue !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
+#~ "spécial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La taille d'un champ ne peut jamais être inférieure à 1 !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Le nom d'un module doit être unique !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID du certificat du module doit être unique !"

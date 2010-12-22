@@ -14,10 +14,6 @@
    	<record model="res.groups" id="group_survey_user">
         	<field name="name">Survey / User</field>
    	</record>
-   	
-    <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4,ref('group_survey_user'))]"/> 
-    </record>
 
 </data>
 </openerp>

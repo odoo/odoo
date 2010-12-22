@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 14:52+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_vat
@@ -26,19 +26,27 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML non válido para a súa visualización!"
-
-#. module: base_vat
-#: constraint:ir.model:0
+#: model:ir.module.module,description:base_vat.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    Enable the VAT Number for the partner. Check the validity of that VAT "
+"Number.\n"
+"\n"
+"    This module follows the methods stated at http://sima-pc.com/nif.php "
+"for\n"
+"    checking the validity of VAT Number assigned to partners in European "
+"countries.\n"
+"    "
 msgstr ""
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: base_vat
@@ -63,6 +71,9 @@ msgstr ""
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "Declaración legal CIF/NIF"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML non válido para a súa visualización!"
 
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."

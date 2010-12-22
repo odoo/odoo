@@ -27,14 +27,14 @@ from xml.dom.minicompat import StringTypes
 import urlparse
 import urllib
 from osv import osv
+from tools.translate import _
 
 try:
     from DAV import utils
     from DAV.propfind import PROPFIND
     from DAV.report import REPORT
 except ImportError:
-    raise osv.except_osv('PyWebDAV Import Error!','Please install PyWebDAV \
-from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
+    raise osv.except_osv(_('PyWebDAV Import Error!'), _('Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/'))
 
 import tools
 
@@ -267,6 +267,39 @@ def mk_propname_response(self,uri,propnames,doc):
 
 PROPFIND.mk_prop_response = mk_prop_response
 PROPFIND.mk_propname_response = mk_propname_response
+
+def mk_lock_response(self, uri, props):
+    """ Prepare the data response to a DAV LOCK command
+    
+    This function is here, merely to be in the same file as the
+    ones above, that have similar code.
+    """
+    doc = domimpl.createDocument('DAV:', "D:prop", None)
+    ms = doc.documentElement
+    ms.setAttribute("xmlns:D", "DAV:")
+    # ms.tagName = 'D:multistatus'
+    namespaces = []
+    nsnum = 0
+    propgen = Prop2xml(doc, namespaces, nsnum)
+    # write href information
+    uparts=urlparse.urlparse(uri)
+    fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
+    davpath = self.parent.get_davpath()
+    if uparts[0] and uparts[1]:
+        hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    else:
+        # When the request has been relative, we don't have enough data to
+        # reply with absolute url here.
+        hurl = '%s%s' % (davpath, urllib.quote(fileloc))
+        
+    props.append( ('lockroot', 'DAV:', ('href', 'DAV:', (hurl))))
+    pld = doc.createElement('D:lockdiscovery')
+    ms.appendChild(pld)
+    propgen._prop_child(pld, 'DAV:', 'activelock', props)
+
+    return doc.toxml(encoding="utf-8")
 
 super_create_prop = REPORT.create_prop
 

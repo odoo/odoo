@@ -44,10 +44,10 @@ class pos_return(osv.osv_memory):
 
         res = super(pos_return, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('pos.order')
-        active_ids = context.get('active_ids')
-        if not context:
+        if context is None:
             context={}
-        for order in order_obj.browse(cr, uid, active_ids):
+        active_ids = context.get('active_ids')
+        for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
                 if 'return%s'%(line.id) in fields:
                     res['return%s'%(line.id)] = line.qty
@@ -64,11 +64,11 @@ class pos_return(osv.osv_memory):
         """
         res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
         order_obj=self.pool.get('pos.order')
-        if not context:
+        if context is None:
             context={}
 
         active_ids=context.get('active_ids')
-        for order in order_obj.browse(cr, uid, active_ids):
+        for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
                 if 'return%s'%(line.id) not in self._columns:
                     self._columns['return%s'%(line.id)] = fields.float("Quantity")
@@ -89,7 +89,7 @@ class pos_return(osv.osv_memory):
 
         """
         result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
-        if not context:
+        if context is None:
             context={}
         active_model = context.get('active_model')
         if not active_model and active_model != 'pos.order':
@@ -101,7 +101,7 @@ class pos_return(osv.osv_memory):
                             <form string="Return lines">
                             <label string="Quantities you enter, match to products that will return to the stock." colspan="4"/>"""
             _line_fields = result['fields']
-            order=order_obj.browse(cr, uid, active_id)
+            order=order_obj.browse(cr, uid, active_id, context=context)
             for line in order.lines:
                 quantity=line.qty
                 _line_fields.update({
@@ -133,7 +133,7 @@ class pos_return(osv.osv_memory):
         return result
 
 
-    def  create_returns(self, cr, uid, data, context):
+    def  create_returns(self, cr, uid, data, context=None):
         """
              @param self: The object pointer.
              @param cr: A database cursor
@@ -143,10 +143,12 @@ class pos_return(osv.osv_memory):
              @return: Return the add product form again for adding more product
 
         """
+        if context is None:
+            context = {}
         current_rec = self.read(cr, uid, data[0], context=context)
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
-        pos_current = order_obj.browse(cr, uid, context.get('active_id'))
+        pos_current = order_obj.browse(cr, uid, context.get('active_id'), context=context)
         pos_line_ids = pos_current.lines
         if pos_line_ids:
             for pos_line in pos_line_ids:
@@ -171,7 +173,9 @@ class pos_return(osv.osv_memory):
             'context': context,
             'type': 'ir.actions.act_window',
         }
-    def create_returns2(self, cr, uid, ids, context):
+    def create_returns2(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         active_id = context.get('active_id', False)
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
@@ -188,7 +192,7 @@ class pos_return(osv.osv_memory):
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
+                val = property_obj.browse(cr, uid, prop_ids[0], context=context).value_reference
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
                             (order_id.shop_id.warehouse_id.id,))
@@ -257,7 +261,7 @@ pos_return()
 
 class add_product(osv.osv_memory):
     _inherit = 'pos.add.product'
-    def select_product(self, cr, uid, ids, context):
+    def select_product(self, cr, uid, ids, context=None):
         """
              To get the product and quantity and add in order .
              @param self: The object pointer.
@@ -266,6 +270,8 @@ class add_product(osv.osv_memory):
              @param context: A standard dictionary
              @return : Retrun the add product form again for adding more product
         """
+        if context is None:
+            context = {}
 
         active_id=context.get('active_id', False)
         data =  self.read(cr, uid, ids)
@@ -293,7 +299,7 @@ class add_product(osv.osv_memory):
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
 
-                prod_id=prod_obj.browse(cr, uid, prod)
+                prod_id=prod_obj.browse(cr, uid, prod, context=context)
                 new_picking=picking_obj.create(cr, uid, {
                                 'name':'%s (Added)' %order_id.name,
                                 'move_lines':[],
@@ -329,7 +335,8 @@ class add_product(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-    def close_action(self, cr, uid, ids, context):
+    def close_action(self, cr, uid, ids, context=None):
+        if context is None: context = {}
         active_ids=context.get('active_ids', False)
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')
@@ -340,8 +347,11 @@ class add_product(osv.osv_memory):
         date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
         uom_obj = self.pool.get('product.uom')
         return_boj=self.pool.get('pos.return')
-        return_id=return_boj.search(cr,uid,[])
-        data=return_boj.read(cr,uid,return_id,[])[0]
+        return_id = return_boj.search(cr,uid,[])
+        data = {}
+        if return_id:
+            data = return_boj.read(cr,uid,return_id,[])[0]
+
         wf_service = netsvc.LocalService("workflow")
         self_data = self.read(cr, uid, ids)[0]
         order_obj.add_product(cr, uid, active_ids[0], self_data['product_id'], self_data['quantity'], context=context)

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE openerp SYSTEM "openerp-xmldata.dtd">
+<openerp>
+<data noupdate="1">
+
+<!-- 
+     Piano dei conti per una ditta di servizi, by Servabit.srl 
+     (http://www.servabit.it)
+ 
+     Qui vengono definiti, tramite "properties" i conti di default
+     da associare a partners ed a prodotti.   
+     ( from account/demo/account_minimal.xml, modified ) 
+
+     I workflow delle fatture utilizzano questi conti per generare
+     in automatico voci in contabilita' in partita doppia.
+     
+--> 
+
+  
+        <!-- 
+	      Come prodotti si definisce un generica categoria per i servizi 
+	-->
+        
+        <record id="cat0" model="product.category">
+            <field name="parent_id" ref="null"/>
+            <field name="name">Tutti i prodotti</field>
+        </record>
+ 
+        <record id="cat_services" model="product.category">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Servizi e prestazioni</field>
+        </record>
+      
+               <!--  e anche una generica categoria per gli acquisti -->      
+
+        <record id="cat_acquisti" model="product.category">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Acquisti</field>
+        </record>
+
+        <!-- vorrei dare valore ad un campo field.property, ma NON Si puo' fare in questo modo  --> 
+ 
+        <record id="product_category_consumable" model="product.category">
+            <field name="parent_id" ref="cat_acquisti"/>
+            <field name="name">Consumable</field>
+            <!-- vorrei dare valore ad un campo field.property, ma NON Si puo' fare in questo modo -->   
+            <!-- <field name="property_account_income_categ" ref="chartS_C51_003" />--> 
+        </record>
+       
+
+
+
+</data>
+</openerp>

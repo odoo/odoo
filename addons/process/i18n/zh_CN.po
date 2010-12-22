@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-03-20 09:11+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -24,33 +24,16 @@ msgid "Process Node"
 msgstr "处理节点"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中有无效的模块名"
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "帮助URL"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "相关菜单"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -74,9 +57,9 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "帮助URL"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -166,9 +149,10 @@ msgid "Dummy"
 msgstr "哑元"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -220,11 +204,6 @@ msgid "Associated Groups"
 msgstr ""
 
 #. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "相关菜单"
-
-#. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
 msgstr "状态表达式"
@@ -238,6 +217,20 @@ msgstr "动作"
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
 msgstr "开始流程"
+
+#. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -342,6 +335,13 @@ msgstr "对象方法"
 #~ msgid "Enterprise Processes"
 #~ msgstr "企业流程"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在这动作定义中有无效的模块名"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "工作流角色"
 
@@ -353,6 +353,9 @@ msgstr "对象方法"
 #~ "\n"
 #~ "这模块允许你管理你的最终用户处理\n"
 #~ "    "
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
 
 #~ msgid "Roles"
 #~ msgstr "角色"

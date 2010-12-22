@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-09-29 11:14+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -26,12 +26,6 @@ msgstr "小计"
 #: report:notify_account.invoice:0
 msgid "Note:"
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -80,19 +74,30 @@ msgid "Unit Price"
 msgstr "单价"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义使用了无效的模式名称。"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -127,6 +132,11 @@ msgid "Product"
 msgstr "产品"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "写信息"
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr ""
@@ -155,9 +165,9 @@ msgid "Source Account"
 msgstr "源科目"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "写信息"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "取消"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -192,11 +202,6 @@ msgstr "数量"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -295,12 +300,6 @@ msgstr "打印"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "税"
 
@@ -327,9 +326,9 @@ msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "取消"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -358,6 +357,9 @@ msgstr "所有通知信息"
 
 #~ msgid "Tel. :"
 #~ msgstr "电话:"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
 
 #~ msgid "Description/Taxes"
 #~ msgstr "说明 / 税"
@@ -400,6 +402,19 @@ msgstr "所有通知信息"
 #~ msgid "Total"
 #~ msgstr "合计"
 
+#~ msgid "Canceled Invoice"
+#~ msgstr "已取消的发票"
+
+#~ msgid "Taxes"
+#~ msgstr "税金"
+
+#~ msgid "(incl. taxes):"
+#~ msgstr "(含税):"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
 #~ msgid ")"
 #~ msgstr ")"
 
@@ -417,3 +432,12 @@ msgstr "所有通知信息"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "关联客户:"
+
+#~ msgid "Description"
+#~ msgstr "描述"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义使用了无效的模式名称。"
+
+#~ msgid "Total (excl. taxes):"
+#~ msgstr "总计(不含税)"

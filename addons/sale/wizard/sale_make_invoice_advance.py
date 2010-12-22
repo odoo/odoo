@@ -23,7 +23,7 @@ from tools.translate import _
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
-    _description = "Sale Advance Payment Invoice"
+    _description = "Sales Advance Payment Invoice"
     _columns = {
         'product_id': fields.many2one('product.product', 'Advance Product', required=True,
             help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
@@ -34,7 +34,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'qtty': 1.0
     }
 
-    def create_invoices(self, cr, uid, ids, context={}):
+    def create_invoices(self, cr, uid, ids, context=None):
         """
              To create invoices.
 
@@ -51,15 +51,17 @@ class sale_advance_payment_inv(osv.osv_memory):
         obj_sale = self.pool.get('sale.order')
         obj_lines = self.pool.get('account.invoice.line')
         inv_obj = self.pool.get('account.invoice')
+        if context is None:
+            context = {}
 
-        for sale_adv_obj in self.browse(cr, uid, ids):
-            for sale in obj_sale.browse(cr, uid, context['active_ids']):
+        for sale_adv_obj in self.browse(cr, uid, ids, context=context):
+            for sale in obj_sale.browse(cr, uid, context.get('active_ids', []), context=context):
                 create_ids = []
                 ids_inv = []
                 if sale.order_policy == 'postpaid':
                     raise osv.except_osv(
                         _('Error'),
-                        _("You cannot make an advance on a sale order \
+                        _("You cannot make an advance on a sales order \
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
                         uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
@@ -134,8 +136,9 @@ sale_advance_payment_inv()
 
 class sale_open_invoice(osv.osv_memory):
     _name = "sale.open.invoice"
-    _description = "Sale Open Invoice"
-    def open_invoice(self, cr, uid, ids, context):
+    _description = "Sales Open Invoice"
+
+    def open_invoice(self, cr, uid, ids, context=None):
 
         """
              To open invoice.
@@ -147,14 +150,15 @@ class sale_open_invoice(osv.osv_memory):
              @return:
 
         """
-
+        if context is None:
+            context = {}
         mod_obj = self.pool.get('ir.model.data')
-        for advance_pay in self.browse(cr, uid, ids):
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            form_id = mod_obj._get_id(cr, uid, 'account', 'invoice_form')
-            form_res = mod_obj.browse(cr, uid, form_id, context=context).res_id
-            tree_id = mod_obj._get_id(cr, uid, 'account', 'invoice_tree')
-            tree_res = mod_obj.browse(cr, uid, tree_id, context=context).res_id
+        for advance_pay in self.browse(cr, uid, ids, context=context):
+            form_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            form_id = form_res and form_res[1] or False
+            tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+            tree_id = tree_res and tree_res[1] or False
+
         return {
             'name': _('Advance Invoice'),
             'view_type': 'form',
@@ -162,7 +166,7 @@ class sale_open_invoice(osv.osv_memory):
             'res_model': 'account.invoice',
             'res_id': int(context['invoice_id'][0]),
             'view_id': False,
-            'views': [(form_res, 'form'), (tree_res, 'tree')],
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
             'context': "{'type': 'out_invoice'}",
             'type': 'ir.actions.act_window',
          }

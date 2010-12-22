@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 08:12+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -42,41 +42,14 @@ msgid ""
 msgstr ""
 
 #. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
-
-#. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
 msgid "Odoo Offers"
 msgstr ""
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+#: view:multi_company.default:0
+msgid "Returning"
 msgstr ""
-"Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Viga! Sa ei saa luua rekursiivseid kategooriaid."
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Viga! Sa ei saa luua rekursiivseid ettevõtteid."
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
@@ -90,34 +63,14 @@ msgid "Multi Company"
 msgstr ""
 
 #. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Viga: Vigane EAN kood"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
-msgstr ""
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
+msgstr ""
+
+#. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
 msgstr ""
 
 #. module: multi_company
@@ -131,15 +84,27 @@ msgid "Condition"
 msgstr "Tingimus"
 
 #. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
 msgstr ""
 
 #~ msgid "Object"
 #~ msgstr "Objekt"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
+
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Käibemaksukohuslase numbris on viga"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -149,14 +114,29 @@ msgstr ""
 #~ msgid "Main Company"
 #~ msgstr "Emaettevõte"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
+
 #~ msgid "Name"
 #~ msgstr "Nimi"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Viga! Sa ei saa luua rekursiivseid ettevõtteid."
 
 #~ msgid "Sequence"
 #~ msgstr "Tsükkel"
 
 #~ msgid "Expression"
 #~ msgstr "Avaldis"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Viga! Sa ei saa luua rekursiivseid kategooriaid."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Viga: Vigane EAN kood"
 
 #, python-format
 #~ msgid " (copy)"

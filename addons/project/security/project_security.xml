@@ -46,10 +46,5 @@
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
-    
-    <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4,ref('group_project_user'))]"/> 
-    </record>
-
 </data>
 </openerp>

@@ -44,8 +44,6 @@ class project_compute_phases(osv.osv_memory):
         """
         Compute the phases for scheduling.
         """
-        if context is None:
-            context = {}
         project_pool = self.pool.get('project.project')
         data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['project_id'] and data['target_project'] == 'one':

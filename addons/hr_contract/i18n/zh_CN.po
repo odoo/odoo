@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 05:44+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-16 05:32+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:38+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -29,57 +29,51 @@ msgstr "总数"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Trial Period"
-msgstr ""
+msgstr "试用期"
 
 #. module: hr_contract
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
-msgstr ""
-
-#. module: hr_contract
-#: selection:hr.contract.wage.type,type:0
-msgid "Net"
-msgstr "净值"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle:0
-msgid "Company Vehicle"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "每小时成本系数"
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "使用期开始日期"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Function Arguments"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Medical Examination"
+msgstr "体检"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "公司车辆"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "工资类型名称"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Miscellaneous"
+msgstr "其它"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Current"
+msgstr "当前的"
+
+#. module: hr_contract
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "部门"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Overpassed"
 msgstr ""
 
 #. module: hr_contract
@@ -88,14 +82,14 @@ msgid "Wage Types"
 msgstr "工资类型"
 
 #. module: hr_contract
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:hr.employee:0
+msgid "Calculations"
+msgstr "计算"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
 msgid "Basic"
-msgstr ""
+msgstr "基本信息"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -105,14 +99,15 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_start:0
-msgid "Trial Start Date"
-msgstr ""
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "工作安排"
 
 #. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义使用了无效的模块名。"
+#: selection:hr.contract.wage.type,type:0
+msgid "Net"
+msgstr "净值"
 
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
@@ -130,14 +125,15 @@ msgid "Function"
 msgstr "职能"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr ""
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "分组于"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "工资"
+#: view:hr.employee:0
+msgid "Description"
+msgstr "描述"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -157,51 +153,52 @@ msgstr "合同"
 #. module: hr_contract
 #: field:hr.employee,manager:0
 msgid "Is a Manager"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr ""
+msgstr "是否是经理"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
-msgstr ""
+msgstr "工作"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
 msgid "Passport"
-msgstr ""
+msgstr "护照"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Search Contract"
-msgstr ""
+msgstr "搜索合同"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
 msgid "Latest contract of the employee"
-msgstr ""
+msgstr "该雇员最近的合同"
 
 #. module: hr_contract
 #: field:hr.contract,advantages_net:0
 msgid "Deductions"
-msgstr ""
+msgstr "扣除"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "周期名称"
+#: model:ir.module.module,description:hr_contract.module_meta_information
+msgid ""
+"\n"
+"    Add all information on the employee form to manage contracts:\n"
+"    * Marital status,\n"
+"    * Security number,\n"
+"    * Place of birth, birth date, ...\n"
+"    You can assign several contracts per employee.\n"
+"    "
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
 #: view:hr.employee:0
 msgid "Advantages"
-msgstr ""
+msgstr "优点"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -218,23 +215,23 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.employee,children:0
 msgid "Number of Children"
-msgstr ""
+msgstr "子女数"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
 msgid "Contract Types"
-msgstr ""
+msgstr "合同类型"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
 msgid "Search Wage Type"
-msgstr ""
+msgstr "搜索薪酬类型"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr ""
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "错误！您不能创建循环的员工等级。"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -242,19 +239,19 @@ msgid "End Date"
 msgstr "结束日期"
 
 #. module: hr_contract
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "工资"
 
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Reference"
-msgstr ""
+msgstr "合同引用"
 
 #. module: hr_contract
 #: help:hr.employee,vehicle_distance:0
 msgid "In kilometers"
-msgstr ""
+msgstr "单位：千米"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -262,6 +259,12 @@ msgstr ""
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "备注"
+
+#. module: hr_contract
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,wage_type_id:0
@@ -297,12 +300,12 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Salary Computation"
-msgstr ""
+msgstr "薪酬计算"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Job Info"
-msgstr ""
+msgstr "招聘信息"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
@@ -314,7 +317,7 @@ msgstr "工资周期"
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
-msgstr ""
+msgstr "职位"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
@@ -325,7 +328,7 @@ msgstr "工资周期"
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "通勤距离"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -335,7 +338,7 @@ msgstr "开始日期"
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Company contribution"
-msgstr ""
+msgstr "公司贡献"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -345,13 +348,17 @@ msgstr "类型"
 #. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
-msgstr ""
+msgstr "试用期截至日期"
 
 #. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "每小时成本系数"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type.period,name:0
+msgid "Period Name"
+msgstr "周期名称"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -359,14 +366,9 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
+#: view:hr.employee:0
+msgid "Payslip Line"
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "工资类型名称"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -376,12 +378,12 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Contract Details"
-msgstr ""
+msgstr "合同明细"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Salary Structure"
-msgstr ""
+msgstr "薪酬结构"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -394,7 +396,7 @@ msgstr "这字段使用时间表系统来计算合同员工的每小时工价"
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Personal Info"
-msgstr ""
+msgstr "个人信息"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -405,12 +407,12 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
 msgid "Medical Examination Date"
-msgstr ""
+msgstr "体检日期"
 
 #. module: hr_contract
 #: field:hr.contract,advantages_gross:0
 msgid "Allowances"
-msgstr ""
+msgstr "津贴"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -420,7 +422,7 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
-msgstr ""
+msgstr "搜索合同类型"
 
 #~ msgid "Miscelleanous"
 #~ msgstr "杂项"
@@ -436,6 +438,10 @@ msgstr ""
 
 #~ msgid "Remuneration"
 #~ msgstr "报酬"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #~ msgid "Generalities"
 #~ msgstr "概论"
@@ -485,3 +491,9 @@ msgstr ""
 
 #~ msgid "Contract Duration"
 #~ msgstr "合同有效期"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义使用了无效的模块名。"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"

@@ -20,8 +20,8 @@
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Confirmed sale order to invoice.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sales Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Confirmed sales order to invoice.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="account.process_process_invoiceprocess0"/>
             <field name="subflow_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -32,8 +32,8 @@
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Sale Order Requisition&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Drives procurement orders for every sale order line.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sales Order Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Drives procurement orders for every sales order line.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="process_process_salesprocess0"/>
             <field name="process_id" ref="procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
@@ -45,7 +45,7 @@
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Draft state of sale order&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Draft state of sales order&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -55,7 +55,7 @@
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Sales Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Drives procurement and invoicing&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='manual'&quot;&quot;&quot;" name="model_states"/>
@@ -67,7 +67,7 @@
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;One Procurement order for each sale order line and for each of the components.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;One Procurement order for each sales order line and for each of the components.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="procurement.process_process_procurementprocess0"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -136,7 +136,7 @@
         <record id="process_transition_confirmquotation0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm Quotation&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;The salesman confirms the quotation. The state of the sale order becomes 'In progress' or 'Manual in progress'.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;The salesman confirms the quotation. The state of the sales order becomes 'In progress' or 'Manual in progress'.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_saleorder0"/>
             <field model="process.node" name="source_node_id" ref="process_node_quotation0"/>
             <field eval="[(6,0,[ref('sale.trans_draft_router')])]" name="transition_ids"/>
@@ -145,7 +145,7 @@
         <record id="process_transition_saleprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Procurement Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A procurement order is automatically created as soon as a sale order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sale order's parameters. &quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;A procurement order is automatically created as soon as a sales order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sales order's parameters. &quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_saleprocurement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
         </record>
@@ -153,7 +153,7 @@
         <record id="process_transition_packing0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Pick List&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sale order is confirmed, in the same time as the procurement order. It represents the assignment of parts to the sale order. There is 1 pick list by sale order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sales order is confirmed, in the same time as the procurement order. It represents the assignment of parts to the sales order. There is 1 pick list by sales order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleprocurement0"/>
         </record>
@@ -186,15 +186,15 @@
         <record id="process_transition_saleorderprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;For every sale order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;For every sales order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="procurement.process_node_procureproducts0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>
 
         <record id="process_transition_saleinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;From a sale order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A sale order generates an invoice, as soon as it is confirmed by the salesman. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;From a sales order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Depending on the Invoicing control of the sales order, the invoice can be based on delivered or on ordered quantities. Thus, a sales order can generates an invoice or a delivery order as soon as it is confirmed by the salesman.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_order0"/>
         </record>

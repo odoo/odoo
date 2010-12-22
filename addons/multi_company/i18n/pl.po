@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-04 06:51+0000\n"
-"Last-Translator: Naven <naven@ipv4.pl>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-28 12:04+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -42,45 +42,19 @@ msgid ""
 msgstr ""
 
 #. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Błąd: JS musi być innej kategorii niż JM."
-
-#. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
 msgid "Odoo Offers"
 msgstr ""
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych kategorii."
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Zwrot"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
 msgid "Multi-Companies"
-msgstr ""
+msgstr "Wielofirmowość"
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
@@ -89,35 +63,15 @@ msgid "Multi Company"
 msgstr "Wielofirmowość"
 
 #. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Błąd: Niedozwolony kod EAN"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
-msgstr ""
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Domyślna firma dla obiektów"
+
+#. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
+msgstr ""
 
 #. module: multi_company
 #: view:multi_company.default:0
@@ -130,9 +84,17 @@ msgid "Condition"
 msgstr "Warunek"
 
 #. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
 msgstr ""
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
 
 #~ msgid "Default Company"
 #~ msgstr "Domyślna firma"
@@ -141,6 +103,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Numer NIP wygląda na niepoprawny. Wpisuj numer z PL na początku. Bez kresek "
 #~ "i spacji."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #~ msgid "Object affect by this rules"
 #~ msgstr "Obiekt podlegający tej regule"
@@ -163,8 +128,17 @@ msgstr ""
 #~ msgid "Main Company"
 #~ msgstr "Główna firma"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Błąd: JS musi być innej kategorii niż JM."
+
 #~ msgid "Name"
 #~ msgstr "Nazwa"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
 
 #~ msgid "Company where the user is connected"
 #~ msgstr "Firma, do której użytkownik jest podłączony"
@@ -174,6 +148,12 @@ msgstr ""
 
 #~ msgid "Expression"
 #~ msgstr "Wyrażenie"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych kategorii."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Błąd: Niedozwolony kod EAN"
 
 #~ msgid "Default company per Object"
 #~ msgstr "Domyślna firma dla obiektu"
@@ -193,3 +173,40 @@ msgstr ""
 #~ "Ten moduł daje możliwość łatwego zarządzania \n"
 #~ "   standardową wartością dla każdego objektu\n"
 #~ "    "
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Wybrana firma nie jest dozwolona dla tego użytkownika"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Nazwa modułu musi być unikalna !"
+
+#~ msgid "Sales Credit Note Journal - (OpenERP US)"
+#~ msgstr "Dziennik korekt sprzedaży - (OpenERP US)"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Nie może być dwóch użytkowników o tym samym loginie !"
+
+#~ msgid "Checks Journal - (OpenERP IN)"
+#~ msgstr "Dziennik czeków - (OpenERP IN)"
+
+#~ msgid "Cash Journal - (OpenERP IN)"
+#~ msgstr "Dziennik kasowy - (OpenERP IN)"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr ""
+#~ "Błąd ! Tworzenie rekursywnych elementów skojarzonych jest zabronione."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "ID certyfikatu modułu musi być unikalne !"
+
+#~ msgid "Expenses Journal - (OpenERP US)"
+#~ msgstr "Dziennik wydatków - (OpenERP US)"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Kod dziennika musi być unikalny w ramach firmy !"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Nazwa dziennika musi być unikalna w ramach firmy !"

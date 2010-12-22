@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="True">
+
+#
+# Tax Code Template Definitions
+#
+
+<!-- schema dal pgc di l10n_fr -->
+
+<record id="vat_code_chart_root" model="account.tax.code.template">
+       <field name="name">Tassazione</field>
+</record>
+
+    <record model="account.tax.code.template" id="template_ivacode_riscossa">
+      <field name="name">IVA a debito</field>
+      <field name="code">IVD</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+
+
+	<record model="account.tax.code.template" id="template_ivacode_riscossa_0">
+	<field name="name">Esente IVA (debito)</field>
+	<field name="code">IVD0</field>
+	<field name="parent_id" ref="template_ivacode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_riscossa_4">
+	<field name="name">IVA  a debito 4%</field>
+	<field name="code">IVD4</field>
+	<field name="parent_id" ref="template_ivacode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_riscossa_10">
+	<field name="name">IVA a debito 10%</field>
+	<field name="code">IVD10</field>
+	<field name="parent_id" ref="template_ivacode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_riscossa_20">
+	<field name="name">IVA a debito 20%</field>
+	<field name="code">IVD20</field>
+	<field name="parent_id" ref="template_ivacode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+    <record model="account.tax.code.template" id="template_ivacode_pagata">
+      <field name="name">IVA a credito</field>
+      <field name="code">IVC</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+
+
+	<record model="account.tax.code.template" id="template_ivacode_pagata_0">
+	<field name="name">Esente IVA (credito)</field>
+	<field name="code">IVC0</field>
+	<field name="parent_id" ref="template_ivacode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_pagata_4">
+	<field name="name">IVA  a credito 4%</field>
+	<field name="code">IVC4</field>
+	<field name="parent_id" ref="template_ivacode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_pagata_10">
+	<field name="name">IVA a credito 10%</field>
+	<field name="code">IVC10</field>
+	<field name="parent_id" ref="template_ivacode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_ivacode_pagata_20">
+	<field name="name">IVA a credito 20%</field>
+	<field name="code">IVC20</field>
+	<field name="parent_id" ref="template_ivacode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+<!-- codici per l'imponibile --> 
+
+    <record model="account.tax.code.template" id="template_impcode_riscossa">
+      <field name="name">IVA a debito (imponibile)</field>
+      <field name="code">IVDI</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+
+
+	<record model="account.tax.code.template" id="template_impcode_riscossa_0">
+	<field name="name">Esente IVA a debito (imponibile)</field>
+	<field name="code">IVD0I</field>
+	<field name="parent_id" ref="template_impcode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_riscossa_4">
+	<field name="name">IVA  a debito 4% (imponibile)</field>
+	<field name="code">IVD4I</field>
+	<field name="parent_id" ref="template_impcode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_riscossa_10">
+	<field name="name">IVA a debito 10% (imponibile)</field>
+	<field name="code">IVD10I</field>
+	<field name="parent_id" ref="template_impcode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_riscossa_20">
+	<field name="name">IVA a debito 20% (imponibile)</field>
+	<field name="code">IVD20I</field>
+	<field name="parent_id" ref="template_impcode_riscossa"/>
+	<field name="sign">1.00</field>
+	</record>
+
+    <record model="account.tax.code.template" id="template_impcode_pagata">
+      <field name="name">IVA a credito (imponibile)</field>
+      <field name="code">IVCI</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_code_chart_root"/>
+    </record> 
+
+
+	<record model="account.tax.code.template" id="template_impcode_pagata_0">
+	<field name="name">Esente IVA a credito (imponibile)</field>
+	<field name="code">IVC0I</field>
+	<field name="parent_id" ref="template_impcode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_pagata_4">
+	<field name="name">IVA  a credito 4% (imponibile)</field>
+	<field name="code">IVC4I</field>
+	<field name="parent_id" ref="template_impcode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_pagata_10">
+	<field name="name">IVA a credito 10% (imponibile)</field>
+	<field name="code">IVC10I</field>
+	<field name="parent_id" ref="template_impcode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+	<record model="account.tax.code.template" id="template_impcode_pagata_20">
+	<field name="name">IVA a credito 20% (imponibile)</field>
+	<field name="code">IVC20I</field>
+	<field name="parent_id" ref="template_impcode_pagata"/>
+	<field name="sign">1.00</field>
+	</record>
+
+<!-- Chart template , 
+     after account.tax.code.template and account.account.template 
+     definitions -->
+
+
+ <record id="it_s_chart_template" model="account.chart.template">
+    <field name="name">Italian Service Company Chart of Accounts</field>
+    <field name="account_root_id"  ref="chart_s_template"/>
+    <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+
+    <!-- bank account --> 
+     <field name="bank_account_view_id" ref="chartS_C09_001"/><!-- CC Attivi  -->
+
+    <!-- some default accounts --> 
+
+    <field name="property_account_receivable"    ref="chartS_C06_001"/> <!-- crediti verso clienti italia -->
+    <field name="property_account_payable"       ref="chartS_C14_005"/> <!-- debiti verso fornitori italia-->
+    <field name="property_account_expense_categ" ref="chartS_C51_004"/> <!-- altri acquisti -->
+    <field name="property_account_income_categ"  ref="chartS_C71_001"/> <!-- ricavi da vendite italia -->
+</record>
+
+<!--
+
+       class account_chart_template:
+
+        'name':char : Name',  Required 
+        'account_root_id':many2one <- 'account.account.template','Root Account',Required,domain=[parent_id=False)] 
+        'tax_code_root_id':many2one <- 'account.tax.code.template','Root Tax Code',Required,domain=[parent_id=False)] 
+        'tax_template_ids':one2many -> 'account.tax.template', 'chart_template_id', 'Tax Template List', 
+        'bank_account_view_id':many2one <- 'account.account.template','Bank Account',Required 
+        'property_account_receivable':many2one <- 'account.account.template','Receivable Account' 
+        'property_account_payable':many2one <- 'account.account.template','Payable Account' 
+        'property_account_expense_categ':many2one <- 'account.account.template','Expense Category Account' 
+        'property_account_income_categ':many2one <- 'account.account.template','Income Category Account' 
+        'property_account_expense':many2one <- 'account.account.template','Expense Account on Product Template' 
+        'property_account_income':many2one <- 'account.account.template','Income Account on Product Template' 
+-->
+
+<!-- Aliquote IVA, a credito (paid)      conto: C07/006 "Crediti per IVA";"D"  id="chartS_C07_006" --> 
+<!-- Aliquote IVA, a debito  (collected) conto: C15/001 "IVA a debito"         id="chartS_C15_001" --> 
+<!-- 'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')] -->
+
+<record model="account.tax.template"           id="template_iva_pagata_0" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">Esente IVA (credito) </field>
+	<field name="amount">0.0</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_pagata_0"/>
+	<field name="tax_code_id"      ref="template_ivacode_pagata_0"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_pagata_0"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_pagata_0"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">purchase</field>
+</record>
+
+<record model="account.tax.template"           id="template_iva_pagata_4" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a credito 4% </field>
+	<field name="amount">0.04</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_pagata_4"/>
+	<field name="tax_code_id"      ref="template_ivacode_pagata_4"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_pagata_4"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_pagata_4"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">purchase</field>
+</record>
+
+
+<record model="account.tax.template"           id="template_iva_pagata_10" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a credito 10% </field>
+	<field name="amount">0.10</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_pagata_10"/>
+	<field name="tax_code_id"      ref="template_ivacode_pagata_10"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_pagata_10"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_pagata_10"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">purchase</field>
+</record>
+
+<record model="account.tax.template"           id="template_iva_pagata_20" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a credito 20% </field>
+	<field name="amount">0.20</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_pagata_20"/>
+	<field name="tax_code_id"      ref="template_ivacode_pagata_20"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_pagata_20"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_pagata_20"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">purchase</field>
+</record>
+
+
+<record model="account.tax.template"           id="template_iva_riscossa_0" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">Esente IVA (debito) </field>
+	<field name="amount">0.0</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_riscossa_0"/>
+	<field name="tax_code_id"      ref="template_ivacode_riscossa_0"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_riscossa_0"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_riscossa_0"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">sale</field>
+</record>
+
+<record model="account.tax.template"           id="template_iva_riscossa_4" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a debito 4% </field>
+	<field name="amount">0.04</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_riscossa_4"/>
+	<field name="tax_code_id"      ref="template_ivacode_riscossa_4"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_riscossa_4"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_riscossa_4"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">sale</field>
+</record>
+
+
+<record model="account.tax.template"           id="template_iva_riscossa_10" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a debito 10% </field>
+	<field name="amount">0.10</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_riscossa_10"/>
+	<field name="tax_code_id"      ref="template_ivacode_riscossa_10"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_riscossa_10"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_riscossa_10"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">sale</field>
+</record>
+
+<record model="account.tax.template"           id="template_iva_riscossa_20" >
+	<field name="chart_template_id" ref="it_s_chart_template"/>
+	<field name="name">IVA  a debito 20% </field>
+	<field name="amount">0.20</field>
+	<field name="type">percent</field>
+
+	<field name="account_collected_id" ref="chartS_C15_001"/>
+	<field name="account_paid_id"      ref="chartS_C07_006"/>
+
+	<field name="base_code_id"     ref="template_impcode_riscossa_20"/>
+	<field name="tax_code_id"      ref="template_ivacode_riscossa_20"/>
+
+	<field name="ref_base_code_id" ref="template_impcode_riscossa_20"/>
+	<field name="ref_tax_code_id"  ref="template_ivacode_riscossa_20"/>
+
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_sign"  eval="-1"/>
+
+        <field name="type_tax_use">sale</field>
+</record>
+
+
+</data>
+</openerp>
+

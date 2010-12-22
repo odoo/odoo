@@ -22,7 +22,6 @@
 import time
 from report import report_sxw
 
-
 class pos_details_summary(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(pos_details_summary, self).__init__(cr, uid, name, context=context)
@@ -138,4 +137,3 @@ report_sxw.report_sxw('report.pos.details_summary',
                                             header='internal')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

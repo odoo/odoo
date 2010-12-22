@@ -40,9 +40,13 @@ class report_tasks(report_int):
 
         canv = canvas.init(fname=io, format='pdf')
         canv.set_author("OpenERP")
+        canv.set_title("Burndown Chart")
         pool = pooler.get_pool(cr.dbname)
         sprint_pool = pool.get('project.scrum.sprint')
         task_pool = pool.get('project.task')
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(320, 500), text="/hL/15/bBurndown Chart", line_style=None)
+        tb.draw()
         int_to_date = lambda x: '/a60{}' + datetime(time.localtime(x).tm_year, time.localtime(x).tm_mon, time.localtime(x).tm_mday).strftime('%d %m %Y')
         for sprint in sprint_pool.browse(cr, uid, ids, context=context):
             task_ids = task_pool.search(cr, uid, [('sprint_id','=',sprint.id)], context=context)

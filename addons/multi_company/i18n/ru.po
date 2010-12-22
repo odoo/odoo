@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-26 08:32+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -56,41 +56,14 @@ msgstr ""
 "        "
 
 #. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Ошибка. UOS и UOM должны принадлежать к разным категориям."
-
-#. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
 msgid "Odoo Offers"
 msgstr "Предложения Odoo"
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Ошибка. ЕИМ по умолчанию и закупочная ЕИМ должны иметь одинаковую категорию."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Ошибка ! Невозможно создать рекурсивную категорию."
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Ошибка! Невозможно создать рекурсивную компанию."
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Некорректный формат XML структуры для просмотра."
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Возвращаемое"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
@@ -104,36 +77,15 @@ msgid "Multi Company"
 msgstr "Концерн"
 
 #. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Ошибка! Вы не можете создать рекурсивных связанных участников."
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Выбранной компании нет в разрешенных компаниях для этого пользователя"
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
-msgstr "Возвращаемое"
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Компании по умолчанию для объекта"
+
+#. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
+msgstr "Предложение Odoo"
 
 #. module: multi_company
 #: view:multi_company.default:0
@@ -146,15 +98,22 @@ msgid "Condition"
 msgstr "Условие"
 
 #. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
-msgstr "Предложение Odoo"
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
 
 #~ msgid "Object"
 #~ msgstr "Объект"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "НДС выглядит неправильно"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -168,14 +127,29 @@ msgstr "Предложение Odoo"
 #~ msgid "Main Company"
 #~ msgstr "Головная компания"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Некорректный формат XML структуры для просмотра."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Ошибка. UOS и UOM должны принадлежать к разным категориям."
+
 #~ msgid "Name"
 #~ msgstr "Имя"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Ошибка! Невозможно создать рекурсивную компанию."
 
 #~ msgid "Sequence"
 #~ msgstr "Последовательность"
 
 #~ msgid "Expression"
 #~ msgstr "Выражение"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Ошибка ! Невозможно создать рекурсивную категорию."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ошибка: Неправильный штрих-код"
 
 #, python-format
 #~ msgid " (copy)"
@@ -192,3 +166,18 @@ msgstr "Предложение Odoo"
 
 #~ msgid "Default company per Object"
 #~ msgstr "Компания по умолчанию для объекта"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Ошибка. ЕИМ по умолчанию и закупочная ЕИМ должны иметь одинаковую категорию."
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "Выбранной компании нет в разрешенных компаниях для этого пользователя"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Ошибка! Вы не можете создать рекурсивных связанных участников."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 09:09+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-12 09:21+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: view:product.product:0
 #: field:product.product,turnover:0
 msgid "Turnover"
-msgstr "Ανατροπή"
+msgstr "Τζίρος"
 
 #. module: product_margin
 #: field:product.product,expected_margin_rate:0
@@ -36,14 +36,17 @@ msgid "From"
 msgstr "Από"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
+"Άθροισμα των Γινομένων του Τιμοκαταλόγου Πωλήσεων και των ποσοτήτων στα "
+"Τιμολόγια Πώλησης"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnorder - Standard price"
-msgstr ""
+msgstr "Τζίρος- Καθορισμένη Τιμή"
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -61,29 +64,10 @@ msgid "From Date"
 msgstr "Από Ημερ/νία"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Πρόχειρα, Ανοικτά και Πληρωμένα"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
-"Άθροισμα των Γινομένων του Τιμοκαταλόγου Πωλήσεων και των ποσοτήτων στα "
-"Τιμολόγια Πώλησης"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -99,7 +83,7 @@ msgstr "Περιθώρια στα Προϊόντα"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Προϊόν"
 
 #. module: product_margin
 #: view:product.product:0
@@ -115,12 +99,16 @@ msgstr "Πληρωμένα"
 #. module: product_margin
 #: help:product.product,sales_gap:0
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Προσδοκόμενη Πώληση - Τζίρος"
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Αναμενόμενη Πώληση"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -128,9 +116,9 @@ msgid "Standard Price"
 msgstr "Σταθερή Τιμή"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Άθροισμα των ποσοτήτων στα Τιμολόγια Αγοράς"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Αναμενόμενη Πώληση"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -142,24 +130,18 @@ msgstr ""
 #. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Προσδοκόμενη Πώληση -  Κανονικό Κόστος"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Τιμολογημένων"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Κριτήρια Ανάλυσης"
 
 #. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Σύνολο Κόστους"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -235,9 +217,14 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Μέση Τιμή στα Τιμολόγια Προμηθευτή "
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Άθροισμα των ποσοτήτων στα Τιμολόγια Αγοράς"
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
-msgstr ""
+msgstr "Ιδοότητες κατηγοριών"
 
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
@@ -245,9 +232,10 @@ msgid "Total margin * 100 / Turnover"
 msgstr "(Σύνολο Περιθωρίων * 100) / (Κύκλος Εργασιών)"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Κριτήρια Ανάλυσης"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Τιμολογημένων"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -272,6 +260,11 @@ msgstr "Περιθώρια Προϊόντων"
 #. module: product_margin
 #: view:product.margin:0
 msgid "General Information"
+msgstr "Γενικές Πληροφορίες"
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: product_margin
@@ -307,13 +300,16 @@ msgstr "Άθροισμα Ποσοτήτων στα Τιμολόγια Πελάτ
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr ""
+msgstr "Περιθόριο Προϊόντος"
 
 #~ msgid "Reporting"
 #~ msgstr "Αναφορές"
 
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "(Εξαιρούμενη Πώληση) - (Κύκλος Εργασιών)"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Εξαιρούμενη Πώληση - Κανονικό Κόστος"
@@ -326,3 +322,12 @@ msgstr ""
 
 #~ msgid "Turnorder - Total Cost"
 #~ msgstr "Τζίρος - Συνολικό Κόστος"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου θα πρέπει να ξεκινά με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"

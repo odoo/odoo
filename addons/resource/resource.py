@@ -203,8 +203,8 @@ class resource_calendar_attendance(osv.osv):
         'name' : fields.char("Name", size=64, required=True),
         'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week'),
         'date_from' : fields.date('Starting date'),
-        'hour_from' : fields.float('Work from', size=8, required=True),
-        'hour_to' : fields.float("Work to", size=8, required=True),
+        'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from"),
+        'hour_to' : fields.float("Work to", size=8, required=True, help="Working time will end at"),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
     _order = 'dayofweek, hour_from'
@@ -224,7 +224,7 @@ class resource_resource(osv.osv):
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
         'code': fields.char('Code', size=16),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
+        'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
@@ -250,8 +250,6 @@ class resource_resource(osv.osv):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
-        if context is None:
-            context = {}
         resource_objs = []
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
@@ -281,8 +279,6 @@ class resource_resource(osv.osv):
         @param resource_id : resource working on phase/task
         @param resource_calendar : working calendar of the resource
         """
-        if context is None:
-            context = {}
         resource_calendar_leaves_pool = self.pool.get('resource.calendar.leaves')
         leave_list = []
         if resource_id:
@@ -308,8 +304,6 @@ class resource_resource(osv.osv):
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
         """
-        if context is None:
-            context = {}
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""
@@ -364,7 +358,7 @@ class resource_calendar_leaves(osv.osv):
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
     }
 
-    def check_dates(self, cr, uid, ids, context={}):
+    def check_dates(self, cr, uid, ids, context=None):
          leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
          if leave['date_from'] and leave['date_to']:
              if leave['date_from'] > leave['date_to']:
@@ -379,7 +373,7 @@ class resource_calendar_leaves(osv.osv):
         result = {}
         if resource:
             resource_pool = self.pool.get('resource.resource')
-            result['calendar_id'] = resource_pool.browse(cr, uid, resource).calendar_id.id
+            result['calendar_id'] = resource_pool.browse(cr, uid, resource, context=context).calendar_id.id
             return {'value': result}
         return {'value': {'calendar_id': []}}
 

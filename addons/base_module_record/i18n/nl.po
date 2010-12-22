@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-08 07:38+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-27 08:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_record
@@ -33,12 +33,16 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Als u denkt dat uw module ander mensen kan interesseren, willen we graag dat "
+"u het publiceert op OpenERP.com, in de 'Modules' sectie. U kunt dat via de "
+"website doen of gebruik maken van de functionaliteit van de "
+"'base_module_publish' module."
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "Einde"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -91,22 +95,10 @@ msgid "Objects Recording"
 msgstr "Objecten opname"
 
 #. module: base_module_record
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
 #: wizard_field:base_module_record.module_record_objects,init,check_date:0
 msgid "Record from Date"
 msgstr "Opnemen vanaf datum"
-
-#. module: base_module_record
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,end:0
@@ -142,7 +134,7 @@ msgstr "Volledige omschrijving"
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,name:0
 msgid "Module Name"
-msgstr "Module Naam"
+msgstr "Modulenaam"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,objects:0
@@ -164,13 +156,13 @@ msgstr "Module succesvol aangemaakt"
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "YAML file successfully created !"
-msgstr ""
+msgstr "YAML bestand maken geslaagd !"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Resultaat, plak dit in de xml van uw module"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -204,7 +196,7 @@ msgstr "Opnemen"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Module opnemen"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -215,13 +207,13 @@ msgstr "Doorgaan"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "Exporteer aanpassingen als gegevensbestand"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -253,13 +245,13 @@ msgstr "Module Informatie"
 #: wizard_field:base_module_record.module_record_data,init,info_yaml:0
 #: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
 msgid "YAML"
-msgstr ""
+msgstr "YAML"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
 #: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
 msgid "Result"
-msgstr ""
+msgstr "Resultaat"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,init,end:0
@@ -279,6 +271,36 @@ msgstr "Afsluiten"
 #: selection:base_module_record.module_record_objects,init,filter_cond:0
 msgid "Created & Modified"
 msgstr "Aangemaakt en gewijzigd"
+
+#. module: base_module_record
+#: model:ir.module.module,description:base_module_record.module_meta_information
+msgid ""
+"\n"
+"This module allows you to create a new module without any development.\n"
+"It records all operations on objects during the recording session and\n"
+"produce a .ZIP module. So you can create your own module directly from\n"
+"the OpenERP client.\n"
+"\n"
+"This version works for creating and updating existing records. It "
+"recomputes\n"
+"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+"It also support workflows and demo/update data.\n"
+"\n"
+"This should help you to easily create reusable and publishable modules\n"
+"for custom configurations and demo/testing data.\n"
+"\n"
+"How to use it:\n"
+"Run Administration/Customization/Module Creation/Export Customizations As a "
+"Module wizard.\n"
+"Select datetime criteria of recording and objects to be recorded and Record "
+"module.\n"
+"    "
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #~ msgid "Recording Information"
 #~ msgstr "Opname Informatie"
@@ -345,3 +367,12 @@ msgstr "Aangemaakt en gewijzigd"
 #~ "Deze module opname laat u elke gemaakte bewerking in de Open ERP client "
 #~ "opnemen en ze opslaan als een module. U kunt deze module installeren in elke "
 #~ "database voor hergebruik of publicatie."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout! U kunt geen recursief menu maken."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

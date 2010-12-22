@@ -146,16 +146,18 @@ class abstracted_fs(object):
 
                 ret = child.open_data(cr, mode)
                 cr.commit()
+                assert ret, "Cannot create descriptor for %r: %r" % (child, ret)
                 return ret
         except EnvironmentError:
             raise
-        except Exception,e:
+        except Exception:
             self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
             pass
 
         try:
             child = node.create_child(cr, objname, data=None)
             ret = child.open_data(cr, mode)
+            assert ret, "cannot create descriptor for %r" % child
             cr.commit()
             return ret
         except EnvironmentError:

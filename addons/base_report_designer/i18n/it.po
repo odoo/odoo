@@ -6,30 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-17 10:11+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-22 07:25+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_sxw
 msgid "base.report.sxw"
-msgstr ""
+msgstr "base.report.sxw"
 
 #. module: base_report_designer
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_report_designer
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:base_report_designer.installer:0
+msgid "OpenERP Report Designer Configuration"
 msgstr ""
 
 #. module: base_report_designer
@@ -38,8 +32,28 @@ msgid "Report designer interface module"
 msgstr "Modulo interfaccia di \"Report Designer\""
 
 #. module: base_report_designer
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:base_report_designer.installer:0
+msgid ""
+"This plug-in allows you to create/modify OpenERP Reports into OpenOffice "
+"Writer."
+msgstr ""
+
+#. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid "Upload the modified report"
+msgstr "Pubblica il tuo Report modificato"
+
+#. module: base_report_designer
+#: model:ir.module.module,description:base_report_designer.module_meta_information
+msgid ""
+"\n"
+"This module is used along with OpenERP OpenOffice plugin.\n"
+"You have to first install the plugin which is available at\n"
+"http://www.openerp.com\n"
+"\n"
+"This module adds wizards to Import/Export .sxw report that\n"
+"you can modify in OpenOffice.Once you have modified it you can\n"
+"upload the report using the same wizard.\n"
 msgstr ""
 
 #. module: base_report_designer
@@ -48,39 +62,34 @@ msgid "The .SXW report"
 msgstr "Report .SXW"
 
 #. module: base_report_designer
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_designer_installer
 msgid "base_report_designer.installer"
-msgstr ""
+msgstr "base_report_designer.installer"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "_Close"
-msgstr ""
+msgstr "_Chiuso"
 
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "The RML report"
-msgstr ""
+msgstr "Il report RML"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "title"
-msgstr ""
+msgstr "titolo"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
@@ -91,7 +100,7 @@ msgstr "Report"
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_rml_save
 msgid "base.report.rml.save"
-msgstr ""
+msgstr "base.report.rml.save"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -99,18 +108,9 @@ msgid "Report Designer"
 msgstr "Report Designer"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid ""
-"This is the template of your requested report.\n"
-"Save it as a .SXW file and open it with OpenOffice.\n"
-"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
-"Once it is modified, re-upload it in OpenERP using this wizard."
-msgstr ""
-
-#. module: base_report_designer
 #: field:base_report_designer.installer,name:0
 msgid "File name"
-msgstr ""
+msgstr "Nome file"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -119,14 +119,10 @@ msgid "Get a report"
 msgstr "Scarica un Report"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-msgid "Upload the modified report"
-msgstr "Pubblica il tuo Report modificato"
-
-#. module: base_report_designer
+#: view:base_report_designer.installer:0
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_wizard
 msgid "OpenERP Report Designer"
-msgstr ""
+msgstr "Report Designer di OpenERP"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0
@@ -136,7 +132,7 @@ msgstr "Continua"
 #. module: base_report_designer
 #: field:base.report.rml.save,file_rml:0
 msgid "Save As"
-msgstr ""
+msgstr "Salva come"
 
 #. module: base_report_designer
 #: help:base_report_designer.installer,plugin_file:0
@@ -144,11 +140,13 @@ msgid ""
 "OpenObject Report Designer plug-in file. Save as this file and install this "
 "plug-in in OpenOffice."
 msgstr ""
+"Plug-in di OpenObject Report Designer. Salvare con nome questo file ed "
+"installarlo come plug-in in OpenOffice"
 
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "Save RML FIle"
-msgstr ""
+msgstr "Salva il file RML"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,file_sxw:0
@@ -159,7 +157,7 @@ msgstr "Il tuo file .SXW"
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
+msgstr "Passi per l'installazione e configurazione"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,progress:0
@@ -167,14 +165,28 @@ msgid "Configuration Progress"
 msgstr ""
 
 #. module: base_report_designer
+#: view:base.report.file.sxw:0
+msgid ""
+"This is the template of your requested report.\n"
+"Save it as a .SXW file and open it with OpenOffice.\n"
+"Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
+"Once it is modified, re-upload it in OpenERP using this wizard."
+msgstr ""
+"Questo è il modello del vostro Report richiesto\n"
+"Salvatelo come un file: .SXW e apritelo con OpenOffice.\n"
+"Non dimenticate di installare il pacchetto OpenERP SA OpenOffice per "
+"modificarlo.\n"
+"Una volta modificato, ricaricatelo in OpenERP utilizzando il wizard."
+
+#. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Skip"
-msgstr ""
+msgstr "Salta"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Imagine"
 
 #. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
@@ -184,17 +196,17 @@ msgstr ""
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_file_sxw
 msgid "base.report.file.sxw"
-msgstr ""
+msgstr "base.report.file.sxw"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,plugin_file:0
 msgid "OpenObject Report Designer Plug-in"
-msgstr ""
+msgstr "Plug in di OpenObject Report Designer"
 
 #. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
-msgstr ""
+msgstr "Installazione di OpenObject Report Designer"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -206,7 +218,7 @@ msgstr "Annulla"
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0
@@ -227,6 +239,14 @@ msgstr "Seleziona il tuo Report"
 
 #~ msgid "Your report has been modified."
 #~ msgstr "Il tuo Report è stato modificato"
+
+#, python-format
+#~ msgid "Report does not contain the sxw content!"
+#~ msgstr "Il report non ha contenuto sxw!"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Errore"
 
 #~ msgid "Report designer"
 #~ msgstr "Report Designer"
@@ -259,3 +279,30 @@ msgstr "Seleziona il tuo Report"
 
 #~ msgid "Report designer introduction"
 #~ msgstr "Introduzione a Report Designer"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per \"x_\" e non contenere alcun "
+#~ "carattere speciale!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per la struttura della vista!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore! Non è possibile creare un menù ricorsivo"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Il nome del gruppo deve essere unico!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"

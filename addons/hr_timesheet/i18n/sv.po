@@ -4,29 +4,29 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 06:17+0000\n"
-"Last-Translator: Anders Eriksson (Mobila System) <ae@mobilasystem.se>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 00:16+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Underhåll på tidsrapporter"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Wed"
-msgstr ""
+msgstr "Wed"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -37,27 +37,34 @@ msgstr "(Lämna blankt för aktuell tid)"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
 #, python-format
 msgid "No employee defined for your user !"
-msgstr ""
+msgstr "No employee defined for your user !"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppera på..."
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
 msgstr ""
+"Anställda kan anteckna tidsåtgång i olika projekt. Ett projekt är ett "
+"analyserande konto som ger möjlighet att både registrera närvaro och "
+"tidsrapport samtitidigt."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Today"
-msgstr ""
+msgstr "Idag"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "Analytic Journal"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -92,7 +99,7 @@ msgstr "januari"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Mon"
-msgstr ""
+msgstr "Mon"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -100,30 +107,37 @@ msgid "Sign in"
 msgstr "Logga in"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "april"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
+"Anställda kan anteckna tidsåtgång i olika projekt. Ett projekt är ett "
+"analyserande konto som ger möjlighet att både registrera närvaro och "
+"tidsrapport samtitidigt."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr ""
+msgstr "Minimum Analytic Amount"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Logga in / Logga ut"
+msgstr "Månatlig tidsrapport"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Utfört arbete i senaste perioden"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr "Fel ! Du kan inte välja en avdelning där den anställde är chef"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -135,37 +149,37 @@ msgstr "Aktuell status"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Namn på anställda"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr ""
+msgstr "Skriv ut tidrapport för anställda"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Varning!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "UserError"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
 #, python-format
 msgid "No cost unit defined for this employee !"
-msgstr ""
+msgstr "No cost unit defined for this employee !"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Tue"
-msgstr ""
+msgstr "Tue"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
@@ -176,43 +190,46 @@ msgstr "Objekt"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varning"
 
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
 msgid "Human Resources (Timesheet encoding)"
-msgstr ""
+msgstr "Human Resources (Timesheet encoding)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out By Project"
-msgstr ""
+msgstr "Logga in eller ut projekt"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sat"
-msgstr ""
+msgstr "Sat"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
+msgstr "Sun"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
 msgstr ""
+"Arbetstider ger dig möjlighet att dagligen anteckna dina arbetstimmar i "
+"projekten."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Skriv ut"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -228,14 +245,14 @@ msgstr "juli"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr ""
+msgstr "Månatliga tidsrapporter"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,date:0
@@ -246,17 +263,7 @@ msgstr "Startdatum"
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Kategorier"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -265,11 +272,27 @@ msgid "novembre"
 msgstr "november"
 
 #. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
+
+#. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "March"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -287,19 +310,17 @@ msgstr "december"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr ""
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Tidrapportrad"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "anställda"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -340,13 +361,20 @@ msgstr "Logga in till/Logga ut från projektet"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Fri"
-msgstr ""
+msgstr "Fri"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Logga in / Logga ut"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Standardenhet och inköpsenhet måste tillhöra samma kategori."
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -359,34 +387,29 @@ msgid "Timesheets"
 msgstr "Tidrapporter"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
+msgstr "Anger den anställda som en produkt av typen 'tjänst'"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "août"
-msgstr ""
+msgstr "Augusti"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -402,14 +425,19 @@ msgstr "mars"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "November"
-msgstr ""
+msgstr "November"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Fel! Du kan inte skapa omvänd rangordning av anställda."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -421,22 +449,14 @@ msgstr "Slutdatum"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "October"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
+msgstr "October"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "January"
-msgstr ""
+msgstr "January"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -448,23 +468,23 @@ msgstr "Nyckeldatum"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Thu"
-msgstr ""
+msgstr "Thu"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis stats"
-msgstr ""
+msgstr "Analysis stats"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
+msgstr "Skriv ut tidsrapport(er)"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "Anställningsnummer"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -474,12 +494,19 @@ msgstr "Allmän information"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
 msgid "My Timesheet"
-msgstr ""
+msgstr "Min tidsrapport"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis summary"
-msgstr ""
+msgstr "Analysis summary"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "December"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -506,20 +533,19 @@ msgstr "februari"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
-
-#. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgstr "Information"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Anställd"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "april"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -533,14 +559,9 @@ msgid "Anlytic account"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Tidrapportrad"
-
-#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "Denna wizard skriver ut månatlig tidsrapport"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -551,14 +572,14 @@ msgstr "Produkt"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturering"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -586,37 +607,29 @@ msgstr "Arbetstimmar"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Logga in per projekt"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "February"
-msgstr ""
+msgstr "February"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic line"
-msgstr ""
+msgstr "Analytic line"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
-msgstr ""
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
+msgstr "Logga utper projekt"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
-msgstr ""
+msgstr "Anställda"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -629,7 +642,17 @@ msgstr "oktober"
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "April"
+msgstr "April"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
 msgstr ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -649,11 +672,6 @@ msgid "Start Working"
 msgstr "Börja arbeta"
 
 #. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fel: felaktig ean kod"
-
-#. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
 msgstr "Status per anställd"
@@ -662,7 +680,7 @@ msgstr "Status per anställd"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
 #, python-format
 msgid "No employee defined for this user"
-msgstr ""
+msgstr "Inga anställda definierade för användaren"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -673,12 +691,12 @@ msgstr "År"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
-msgstr ""
+msgstr "Redovisning"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner Id"
-msgstr ""
+msgstr "Partner ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -691,8 +709,17 @@ msgstr "Ändra arbete"
 msgid "septembre"
 msgstr "september"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
 #~ msgid "Sign in status"
 #~ msgstr "Logga in status"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Standardenhet och inköpsenhet måste tillhöra samma kategori."
 
 #~ msgid "Choose your month"
 #~ msgstr "Välj din månad"
@@ -736,5 +763,30 @@ msgstr "september"
 #~ msgid "Timesheet Process"
 #~ msgstr "Tidrapportprocess"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fel: felaktig ean kod"
+
 #~ msgid "Working Time"
 #~ msgstr "Arbetstid"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
+#, python-format
+#~ msgid ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+#~ msgstr ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+
+#, python-format
+#~ msgid "UnknownError"
+#~ msgstr "UnknownError"
+
+#, python-format
+#~ msgid "ValidateError"
+#~ msgstr "ValidateError"

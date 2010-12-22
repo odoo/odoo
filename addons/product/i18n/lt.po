@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-09 07:17+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-15 05:08+0000\n"
 "Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: lt\n"
 
@@ -28,9 +28,7 @@ msgid "Number of Layers"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
@@ -44,11 +42,6 @@ msgid ""
 msgstr ""
 "Nustatyti šabloną, jeigu taisyklė galioja tik produkto šablonui. Palikti "
 "tuščią visiems produktams."
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -152,6 +145,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Klaida ! Negalima sukurti pasikartojančių kategorijų."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Klaviatūra"
@@ -202,7 +202,6 @@ msgid "PriceList"
 msgstr "Kainoraštis"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "Matai"
@@ -232,7 +231,7 @@ msgstr ""
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr ""
+msgstr "Numatyta vieša kainoraščio versija"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -261,12 +260,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Produktai: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Klaida: Numat. mat. vnt. turi būti kitos kategorijos negu pardavimo mat. vnt."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -332,6 +325,7 @@ msgstr "Kategorija"
 msgid ""
 "The rule only applies if the partner buys/sells more than this quantity."
 msgstr ""
+"Taisyklė taikoma tik, jeigu partneris perka/parduoda daugiau negu šis kiekis."
 
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
@@ -352,15 +346,6 @@ msgstr ""
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
 msgstr "Kiekis pakuotėje"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"Could not resolve product category, ' \\n                                    "
-"'you have defined cyclic categories ' \\n                                    "
-"'of products!"
-msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -386,6 +371,7 @@ msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Galutinė kaina"
 
@@ -489,6 +475,13 @@ msgid "Codes"
 msgstr "Kodai"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Kiekis-4"
@@ -504,8 +497,23 @@ msgid "Working Time"
 msgstr ""
 
 #. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
+msgstr ""
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"No active version for the selected pricelist !\n"
+"Please create or activate one."
 msgstr ""
 
 #. module: product
@@ -516,7 +524,7 @@ msgstr "Produkto mato vieneto kategorija"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr ""
+msgstr "Dėžė 20x20x40"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -573,6 +581,7 @@ msgid "Restaurant Expenses"
 msgstr ""
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Klaida: Netinkamas EAN kodas"
@@ -590,7 +599,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "Maks. Skirtumas"
+msgstr "Maks. marža"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -605,7 +614,7 @@ msgstr "Tylus ventiliatorius"
 #. module: product
 #: help:product.supplierinfo,name:0
 msgid "Supplier of this product"
-msgstr "Šio produkto tiekėjas"
+msgstr "Produkto tiekėjas"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -641,13 +650,6 @@ msgid "Price Name"
 msgstr "Kainos pavadinimas"
 
 #. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
-
-#. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
 msgstr "Procesorius AMD Athlon XP 2200+"
@@ -673,13 +675,28 @@ msgid "To Purchase"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Pagrindinė plokštė ASUStek A7N8X"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Nauja kaina ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -713,7 +730,7 @@ msgstr "Min. skirtumas"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Vaikinės kategorijos"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -771,11 +788,6 @@ msgstr ""
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr ""
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros strūkturai!"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -899,7 +911,7 @@ msgstr "Pirkimo aprašymas"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Jūs negalite turėti 2 kainoraščius kurių datos persidengia!"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -907,6 +919,16 @@ msgid ""
 "Lead time in days between the confirmation of the purchase order and the "
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A pricelist contains rules to be evaluated in order to compute the purchase "
+"or sale price for all the partners assigned to a pricelist. Pricelists have "
+"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
+"version has several rules. Example: the customer price of this category of "
+"product will be based on the supplier price multiplied by 1.80."
 msgstr ""
 
 #. module: product
@@ -938,6 +960,15 @@ msgstr "Pristatymo vienetas"
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
 msgstr "Partnerio informacija"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. They can be raw "
+"materials, stockable products, consumables or services. The Product form "
+"contains a detailed information of your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -997,9 +1028,12 @@ msgid "Price Surcharge"
 msgstr "Kainos priemoka"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Pagrindinė plokštė ASUStek A7N8X"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate to be used between the several Unit of "
+"Measure within the same category."
+msgstr ""
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1020,26 +1054,18 @@ msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"' \\n                                'Please create or activate one."
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 msgid "Stockable"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.product_uom_kgm
-msgid "kg"
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
 msgstr ""
 
 #. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
 msgstr ""
 
 #. module: product
@@ -1090,7 +1116,7 @@ msgstr "Nustatyti ar produktas bus matomas perkamų produktų sąraše."
 #. module: product
 #: field:product.template,weight_net:0
 msgid "Net weight"
-msgstr "Neto svoris"
+msgstr "Grynasis svoris"
 
 #. module: product
 #: field:product.packaging,width:0
@@ -1121,6 +1147,30 @@ msgstr ""
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
 msgstr "Pardavimo vienetas"
+
+#. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1165,7 +1215,7 @@ msgstr ""
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "The mode for computing the price for this rule."
-msgstr ""
+msgstr "Būdas kainos skaičiavimui šiai taisyklei."
 
 #. module: product
 #: view:product.packaging:0
@@ -1185,11 +1235,25 @@ msgid "Partners"
 msgstr "Partneriai"
 
 #. module: product
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: product
 #: help:product.template,sale_delay:0
 msgid ""
 "This is the average delay in days between the confirmation of the customer "
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measures are in the same category, they can "
+"be converted within each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
 
 #. module: product
@@ -1199,8 +1263,9 @@ msgid "Second UoM"
 msgstr "Antriniai matai"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: product
@@ -1239,6 +1304,14 @@ msgid "Price List Version"
 msgstr "Kainoraščio versija"
 
 #. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Suvartojamas"
@@ -1275,6 +1348,14 @@ msgid "Purchase Unit of Measure"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click on "
+"a category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
+
+#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "Tiekimo būdas"
@@ -1288,6 +1369,14 @@ msgstr ""
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
 msgstr "Įprasta procesoriaus konfigūracija"
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1318,6 +1407,13 @@ msgid "Basic PC"
 msgstr "Bazinis PK"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Tikros atsargos"
@@ -1341,9 +1437,14 @@ msgstr ""
 "kategorijos."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Apvalinimo tikslumas"
 
 #. module: product
 #: view:product.uom:0
@@ -1388,6 +1489,11 @@ msgstr "Aktyvus"
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr "Varianto kainos marža"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1439,6 +1545,15 @@ msgid "Unit Price"
 msgstr "Vieneto kaina"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains a detailed "
+"information on your  products related to procurement logistics, sales price, "
+"product category, suppliers and so on."
+msgstr ""
+
+#. module: product
 #: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
@@ -1460,13 +1575,6 @@ msgid "Supplier Product Code"
 msgstr ""
 
 #. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
-
-#. module: product
 #: view:product.product:0
 msgid "Default UOM"
 msgstr ""
@@ -1474,7 +1582,7 @@ msgstr ""
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr ""
+msgstr "Paletė"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
@@ -1508,6 +1616,11 @@ msgstr "Gamyba"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Pateikus užsakymą"
+
+#. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
 
 #. module: product
 #: field:product.product,variants:0
@@ -1547,6 +1660,11 @@ msgid "ATX Mid-size Tower"
 msgstr "ATX vidutinio dydžio korpusas"
 
 #. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Apvalinimo metodas"
@@ -1559,7 +1677,7 @@ msgstr "Produktų etiketės"
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
 msgid "Box 30x40x60"
-msgstr ""
+msgstr "Dežė 30x40x60"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1586,11 +1704,6 @@ msgid "Company"
 msgstr "Įmonė"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Pardavimo kaina"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Kainų tipai"
@@ -1600,7 +1713,9 @@ msgstr "Kainų tipai"
 msgid ""
 "Base price for computing the customer price. Sometimes called the catalog "
 "price."
-msgstr "Bazinė kaina suskaičiuoti pardavimo kainą."
+msgstr ""
+"Bazinė kaina skaičiavimui pirkėjo kainai. Retkarčiais vadinama kataloginė "
+"kaina."
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -1614,8 +1729,8 @@ msgid "Name of this kind of price."
 msgstr "Šios kainos rūšies pavadinimas."
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1706,16 +1821,6 @@ msgid "Pricelist Name"
 msgstr "Kainoraščio pavadinimas"
 
 #. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr ""
-
-#. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Apvalinimo tikslumas"
-
-#. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
@@ -1776,16 +1881,16 @@ msgid "Supplier Lead Time"
 msgstr "Tiekimo vėlavimo laikas"
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-
-#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr "Dėžė"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
@@ -1886,6 +1991,11 @@ msgid "Weigths"
 msgstr "Gabenimo matai"
 
 #. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
 msgstr ""
@@ -1925,13 +2035,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
-msgstr ""
-
-#. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Kintantis"
@@ -1950,7 +2053,7 @@ msgstr "Savikaina"
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "Min. kainos marža"
 
 #. module: product
 #: field:product.template,weight:0
@@ -2035,9 +2138,12 @@ msgid "Description"
 msgstr "Aprašymas"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"Could not resolve product category, you have defined cyclic categories of "
+"products!"
+msgstr ""
 
 #. module: product
 #: view:product.template:0
@@ -2047,7 +2153,7 @@ msgstr "Produkto aprašymas"
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -2163,6 +2269,14 @@ msgid "The volume in m3."
 msgstr "Tūris išreikštas kubiniais metrais."
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. If you need to create new "
+"versions of a pricelist, you can do it and manage them from here. Some "
+"examples of versions: 2010, 2011, Promotion of February 2010, etc."
+msgstr ""
+
+#. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
@@ -2177,11 +2291,17 @@ msgstr ""
 #~ msgid "Customer Price"
 #~ msgstr "Pirkėjo kaina"
 
+#~ msgid "List Price"
+#~ msgstr "Pardavimo kaina"
+
 #~ msgid "In Production"
 #~ msgstr "Gaminamas"
 
 #~ msgid "Priority"
 #~ msgstr "Svarbumas"
+
+#~ msgid "Palet"
+#~ msgstr "Paletė"
 
 #~ msgid "Can be sold"
 #~ msgstr "Galima parduoti"
@@ -2195,8 +2315,14 @@ msgstr ""
 #~ msgid "Price type"
 #~ msgstr "Kainos tipas"
 
+#~ msgid "Paletization"
+#~ msgstr "Palečių kūrimas"
+
 #~ msgid "Configuration"
 #~ msgstr "Nustatymai"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Produkto tiekėjas"
 
 #~ msgid "Create new Product"
 #~ msgstr "Sukurti naują produktą"
@@ -2204,11 +2330,40 @@ msgstr ""
 #~ msgid "Partner Product Name"
 #~ msgstr "Partnerio produkto pavadinimas"
 
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "Vidutinis laikas tarp pirkėjo užsakymo patvirtinimo ir prekių pristatymo "
+#~ "pirkėjui. Pirkėjams pažadėtas laikas."
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "Kainos skaičiavumo būdas šiai taisyklei"
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "Šio kainoraščio versijos galiojimo pradžios data."
+
+#~ msgid "Rentable product"
+#~ msgstr "Nuomojamas produktas"
+
+#~ msgid "Childs Categories"
+#~ msgstr "Vaikinės kategorijos"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Kainos maks. marža"
+
 #~ msgid "Price list"
 #~ msgstr "Kainoraštis"
 
 #~ msgid "Partner Product Code"
 #~ msgstr "Partnerio produkto kodas"
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "Šios kainoraščio versijos galiojimo pabaigos data"
+
+#~ msgid "Packagings"
+#~ msgstr "Pakuotės"
 
 #, python-format
 #~ msgid "%d units"
@@ -2217,19 +2372,58 @@ msgstr ""
 #~ msgid "Supplier Info"
 #~ msgstr "Tiekėjo informacija"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Klaida: Numat. mat. vnt. turi būti kitos kategorijos negu pardavimo mat. vnt."
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr ""
+#~ "Tos pačios kategorijos mato vienetai gali būti perversti iš vieno į kitą"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "Kainos min. marža"
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Produkto tiekėjų sąrašas"
+
 #, python-format
 #~ msgid "%d unit"
 #~ msgstr "%d vnt."
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Paletės matmenys"
 
 #~ msgid "KGM"
 #~ msgstr "KG"
 
 #~ msgid ""
-#~ "The cost of the product for accounting stock valuation. It can serves as a "
-#~ "base price for supplier price."
+#~ "The rule only apply if the partner buys/sells more than this quantity."
 #~ msgstr ""
-#~ "Produkto kaina apskaitos būklės įvertinimui. Gali būti naudojama tiekėjo "
-#~ "bazinė kainą."
+#~ "Ši taisyklė taikoma tada, kai parteris parduoda/perka daugiau nei šis kiekis."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+#~ msgstr ""
+#~ "Formulės koeficientas:\n"
+#~ "koef(bazinis vienetas) = 1 (šis vienetas)"
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coef (this unit)"
+#~ msgstr ""
+#~ "Formulės koeficientas:\n"
+#~ "1 (bazinis vienetas) = koef (šis vienetas)"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "'Gaminti į sandėlį': Kai yra poreikis, imti iš sandėlio arba laukti kol bus "
+#~ "papildytas sandėlys. 'Gaminti pagal užsakymą': Kai yra poreikis,pirkti arba "
+#~ "gaminti."
 
 #~ msgid ""
 #~ "The minimal quantity to purchase for this supplier, expressed in the default "
@@ -2273,6 +2467,9 @@ msgstr ""
 #~ "This pricelist will be used, instead of the default one,                     "
 #~ "for sales to the current partner"
 #~ msgstr "Šis kainoraštis bus naudojamas vietoj numatytojo."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros strūkturai!"
 
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "
@@ -2323,15 +2520,13 @@ msgstr ""
 #~ msgid "You can not have 2 pricelist version that overlaps!"
 #~ msgstr "Jūs negalite turėti 2 kainoraščių versijų, kurios sutampa!"
 
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-#~ msgstr ""
-#~ "Formulės koeficientas:\n"
-#~ " koef (šis vnt.) = 1 (bazinis vnt.). Rodiklis = 1 / koeficientas."
-
 #~ msgid "The total number of products you can put by palet or box."
 #~ msgstr "Bendras produktų kiekis, kurį galima sudėtį ant paletės ar į dėžę"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
@@ -2380,13 +2575,6 @@ msgstr ""
 #~ "Nurodo skirtingas produkto pakuotes. Dažniausiai naudojama kartu su EDI "
 #~ "moduliu."
 
-#~ msgid ""
-#~ "The coefficient for the formula:\n"
-#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-#~ msgstr ""
-#~ "Formulės koeficientas:\n"
-#~ "1 (bazinis vnt.) = koef (šis vnt.). Koeficiantas = 1 / rodiklis."
-
 #~ msgid "Delivery Delay"
 #~ msgstr "Pristatymo laikas"
 
@@ -2416,3 +2604,27 @@ msgstr ""
 
 #~ msgid "Price List Name :"
 #~ msgstr "Kainoraščio pavadinimas :"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Netinkamas modelio pavadinimas veiksmo apibrėžime."
+
+#~ msgid ""
+#~ "The cost of the product for accounting stock valuation. It can serves as a "
+#~ "base price for supplier price."
+#~ msgstr ""
+#~ "Produkto kaina apskaitos būklės įvertinimui. Ji gali būti naudojama kaip "
+#~ "tiekėjo bazinė kainą."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
+#~ msgstr ""
+#~ "Formulės koeficientas:\n"
+#~ "1 (bazinis vnt.) = koef. (šis vnt.). Koeficientas = 1 / rodiklis."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
+#~ msgstr ""
+#~ "Formulės koeficientas:\n"
+#~ "koef. (bazinis vnt.) = 1 (šis vnt.). Rodiklis = 1 / koeficientas."

@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 13:03+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-30 17:48+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -33,30 +34,43 @@ msgid "Budgetary Positions"
 msgstr "Budget Positionen"
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "Printed at:"
-msgstr "Druck am:"
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and expenses expected for a "
+"period in the future. With a budget, a company is able to carefully look at "
+"how much money they are taking in during a given period, and figure out the "
+"best way to divide it among various categories. By keeping  track of where "
+"your money goes, you may be less likely to overspend, and more likely to "
+"meet your financial goals. Forecast a budget by detailing the expected "
+"revenue per analytic account and monitor its evolution based on the actuals "
+"realised during that period."
+msgstr ""
+"Ein Budget repräsentiert die Planung für Umsatzerlöse und Aufwendungen einer "
+"zukünftigen Periode. Durch ein Budget kann das Unternehmen Kosten und "
+"Umsätze insgesamt planen und auf bestimmte Kategorien verteilen. Durch eine "
+"Kontrolle mit tatsächlichen Kosten und Aufwendungen kann dann verglichen "
+"werden, inwieweit die Kosten und Erlöse Ihrer Planung entsprechen und dabei "
+"so zeitnahe wie möglich Hinweise für erforderliche Anpassungen geben."
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Confirm"
-msgstr "Manuelle Bestätigung"
+msgstr "Bestätigung"
 
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr "Validiere Benutzer"
+msgstr "Genehmige Benutzer"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Drucke Finanzbudget"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -69,7 +83,7 @@ msgstr "Zahldatum"
 #: field:account.budget.crossvered.summary.report,date_to:0
 #: field:account.budget.report,date_to:0
 msgid "End of period"
-msgstr "Periodenende:"
+msgstr "Periodenende"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -79,33 +93,25 @@ msgstr "Entwurf"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "at"
 msgstr "bei"
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Druck Budgets..."
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Currency:"
 msgstr "Währung:"
 
 #. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "Budget Auswertung Kreuzanalyse"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -118,16 +124,17 @@ msgid "Percentage"
 msgstr "Prozentsatz"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "bis"
+
+#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Status"
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr ""
-
-#. module: account_budget
+#: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "%"
 msgstr "%"
@@ -139,16 +146,31 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Currency"
+msgstr "Währung"
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Total :"
+msgstr "Summe :"
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Unternehmen"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Zur Genehmigung"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Zurücksetzen"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -173,7 +195,7 @@ msgstr "Fertig"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Ist"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -189,15 +211,10 @@ msgid "End Date"
 msgstr "Enddatum:"
 
 #. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Budget Auswertung Analyt. Konto"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -210,12 +227,12 @@ msgstr "Planwert"
 #: field:account.budget.post,name:0
 #: field:crossovered.budget,name:0
 msgid "Name"
-msgstr "Name"
+msgstr "Bezeichnung"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Budgetposition"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -234,6 +251,11 @@ msgid "Budget"
 msgstr "Budget"
 
 #. module: account_budget
+#: report:account.budget:0
+msgid "Printed at:"
+msgstr "Druck am:"
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "Error!"
@@ -249,7 +271,7 @@ msgstr "Kurzbez."
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Dieser Assistent wird genutzt, um Budgets zu drucken."
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -267,7 +289,7 @@ msgstr "Budgets"
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "Das Allgemeine Budget '%s' beinhaltet keine Konten"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -277,12 +299,13 @@ msgstr "Abgebrochen"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Genehmige"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr ""
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Anfangsdatum"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -300,27 +323,15 @@ msgid "Start of period"
 msgstr "Startdatum"
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr "Druck Budgets..."
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Budget"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Soll"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -366,6 +377,32 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"Dieses Modul ermöglicht Buchhaltern die Budgetierung von analytischen "
+"Konten.\n"
+"\n"
+"Zuerst müssen die zu budgetierenden Einzelpositionen unter Finanzen/Budgets "
+"definiert werden,\n"
+"bevor dann die Projekt- und Abteilungsleiter die Planwert für die "
+"analytischen Konten definieren können.\n"
+"Der Finanzbuchhalter hat dann die Möglichkeit alle geplanten Positionen im "
+"Gesamtüberblick des \n"
+"Budgets nachzuvollziehen und sicherzustellen, dass die Summe aller einzelnen "
+"Planungspositionen \n"
+"bestimmte festgesetzte Grenzwerte nicht übersteigt. Jedes Budget mit seinen "
+"Einzelposten \n"
+"kann auch in einer grafischen Balkendiagramm Ansicht angesehen werden.\n"
+"\n"
+"Drei Auswertungen sind vorhanden:\n"
+"    1. Die erste Auswertung zeigt ein zusammengefasstes Budget aufgeteilt "
+"nach seinen einzelnen in einer Zeile zusammengefassten Analyt. Konten. \n"
+"\n"
+"    2. Die zweite Auswertung zeigt zusätzlich Zeile für Zeile alle einzelnen "
+"Planungspositionen für die Analyt. Konten.\n"
+"\n"
+"    3. Der dritte Bericht wird über das Analytische Konto selbst erstellt. "
+"Angezeigt werden alle einzelnen Planungspositionen zu einem einzelnen "
+"Analysekonto.\n"
+"\n"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -375,7 +412,6 @@ msgstr "Analytisches Konto"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Budget :"
 msgstr "Budget:"
 
@@ -383,7 +419,7 @@ msgstr "Budget:"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Plan"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -420,10 +456,9 @@ msgid "Budget Management"
 msgstr "Budget Management"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Anfangsdatum"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -433,6 +468,15 @@ msgstr "Analyse vom"
 
 #~ msgid "% performance"
 #~ msgstr "% Leistungsfähigkeit"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "Period"
+#~ msgstr "Periode"
 
 #~ msgid "Printing date:"
 #~ msgstr "Druckdatum:"
@@ -455,12 +499,6 @@ msgstr "Analyse vom"
 #~ msgid "A/c No."
 #~ msgstr "Nr."
 
-#~ msgid "to"
-#~ msgstr "bis"
-
-#~ msgid "Total :"
-#~ msgstr "Summe :"
-
 #~ msgid "Period Budget"
 #~ msgstr "Budget Periode"
 
@@ -473,14 +511,32 @@ msgstr "Analyse vom"
 #~ msgid "Select Options"
 #~ msgstr "Wähe Optionen"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Print Summary of Budgets"
 #~ msgstr "Drucke Finanzbudget"
 
 #~ msgid "Spread amount"
 #~ msgstr "Spanne"
 
+#~ msgid "Amount"
+#~ msgstr "Betrag"
+
+#~ msgid "Budget Dotation"
+#~ msgstr "Budgetrahmen"
+
+#~ msgid "Budget Dotations"
+#~ msgstr "Budgetrahmen"
+
 #~ msgid "Budget Item Detail"
 #~ msgstr "Budget Einzelpositionen"
+
+#~ msgid "Total Planned Amount"
+#~ msgstr "Gesamtsumme Planung"
+
+#~ msgid "Item"
+#~ msgstr "Pos."
 
 #~ msgid "Spreading"
 #~ msgstr "Spannweite"
@@ -499,6 +555,15 @@ msgstr "Analyse vom"
 
 #~ msgid "Select period"
 #~ msgstr "Wähle Zeitraum"
+
+#, python-format
+#~ msgid "Insufficient Data!"
+#~ msgstr "Unzureichende Daten"
+
+#, python-format
+#~ msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
+#~ msgstr ""
+#~ "Keine Zuweisungen oder Master Budget  Ausgaben für Budget %s gefunden"
 
 #~ msgid ""
 #~ "This module allows accountants to manage analytic and crossovered budgets.\n"
@@ -544,3 +609,26 @@ msgstr "Analyse vom"
 #~ "\n"
 #~ "    3. von den Analysekonten zeigt die Abweichungen.\n"
 #~ "\n"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules werden nicht unterstützt für osv_memory Objekte"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr ""
+#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
+#~ "vorhanden sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

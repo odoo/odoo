@@ -39,7 +39,7 @@ class report_workcenter_load(osv.osv):
             create or replace view report_workcenter_load as (
                 SELECT
                     min(wl.id) as id,
-                    to_char(p.date_planned,'YYYY:IW') as name,
+                    to_char(p.date_planned,'YYYY:mm:dd') as name,
                     SUM(wl.hour) AS hour,
                     SUM(wl.cycle) AS cycle,
                     wl.workcenter_id as workcenter_id
@@ -49,7 +49,7 @@ class report_workcenter_load(osv.osv):
                         ON p.id = wl.production_id
                 GROUP BY
                     wl.workcenter_id,
-                    to_char(p.date_planned,'YYYY:IW')
+                    to_char(p.date_planned,'YYYY:mm:dd')
             )""")
 
 report_workcenter_load()

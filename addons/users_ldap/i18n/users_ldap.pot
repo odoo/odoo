@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:06+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:19+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,18 +16,23 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: users_ldap
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
 msgstr ""
 
 #. module: users_ldap
 #: view:res.company:0
 msgid "LDAP Configuration"
-msgstr ""
-
-#. module: users_ldap
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: users_ldap
@@ -56,23 +61,18 @@ msgid "LDAP Server address"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: users_ldap
-#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
-msgid "Authenticate users with ldap server"
-msgstr ""
-
-#. module: users_ldap
 #: field:res.company.ldap,ldap_server_port:0
 msgid "LDAP Server port"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company_ldap
-msgid "res.company.ldap"
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: users_ldap
@@ -81,13 +81,13 @@ msgid "LDAP password"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company.ldap,user:0
-msgid "Model User"
+#: model:ir.module.module,description:users_ldap.module_meta_information
+msgid "Adds support for authentication by ldap server"
 msgstr ""
 
 #. module: users_ldap
@@ -96,13 +96,23 @@ msgid "Sequence"
 msgstr ""
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_users
-msgid "res.users"
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company.ldap,ldap_base:0
-msgid "LDAP base"
+#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
+msgid "Authenticate users with ldap server"
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
 msgstr ""
 
 #. module: users_ldap

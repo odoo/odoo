@@ -99,7 +99,8 @@
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>
                <field name="view_id" ref="view_report_crm_oppor_graph"/>
-            <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="context">{'search_default_Stage':1}</field>
           </record>
 
           <record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -152,12 +153,14 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_crm_form"/>
         </record>
-         <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+        <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
         <menuitem
             name="Sales Dashboard" parent="board.menu_dasboard"
             action="open_board_crm"
             sequence="1"
             id="menu_board_crm" icon="terp-graph"
             groups="base.group_sale_salesman"/>
+
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" action="open_board_crm"/>
     </data>
 </openerp>

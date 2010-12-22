@@ -6,42 +6,43 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-02 07:24+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-09 11:30+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki_sale_faq
+#: model:ir.actions.act_window,help:wiki_sale_faq.action_wiki_test
+msgid ""
+"Wiki pages allow you to share ideas and questions with co-workers. You can "
+"create a new document that can be linked to one or several applications "
+"(specifications of a project, a FAQ for sales teams, etc.). Keywords can be "
+"used to easily tag wiki pages. You should use this application with the "
+"OpenERP web client interface."
+msgstr ""
+
+#. module: wiki_sale_faq
+#: model:ir.actions.act_window,name:wiki_sale_faq.action_document_form
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_document_files
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_sales
 msgid "Documents"
 msgstr "Dokumente"
 
 #. module: wiki_sale_faq
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
-
-#. module: wiki_sale_faq
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Fehler! Sie können keine rekursiven Ordner erzeugen."
+#: model:ir.actions.act_window,name:wiki_sale_faq.action_wiki_test
+msgid "Wiki Pages"
+msgstr "Wiki Seiten"
 
 #. module: wiki_sale_faq
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_action_wiki_wiki
 msgid "FAQ"
-msgstr "Häufig gestellte Fragen"
-
-#. module: wiki_sale_faq
-#: model:ir.actions.act_window,name:wiki_sale_faq.action_wiki_test
-msgid "Wiki Pages"
-msgstr "Wiki Seiten"
+msgstr "Häufige Fragen"
 
 #. module: wiki_sale_faq
 #: model:ir.module.module,description:wiki_sale_faq.module_meta_information
@@ -53,11 +54,50 @@ msgstr ""
 "    "
 
 #. module: wiki_sale_faq
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modulname in der Aktionsdefinition."
+#: model:ir.actions.act_window,help:wiki_sale_faq.action_document_form
+msgid ""
+"Documents gives you an access to all attached files to any record. It is a "
+"repository of all documents such as emails, project related attachments or "
+"any other documents. From this view, you can search on the content of the "
+"documents. OpenERP automatically assign meta-data based on the record like "
+"the related partner and indexes the content of .DOC, .ODT, .TXT, .SXW and "
+".PDF documents."
+msgstr ""
+"Dokumente ermöglichen Ihnen einen Zugriff auf alle Dateianhänge zu "
+"Datenobjekten in OpenERP. Es handelt sich dabei um ein Verzeichniss aller "
+"Dokumente, wie Emails, Projektdokumente oder diverse andere Dokumente. Über "
+"diese Ansicht können Sie dabei nach Inhalten dieser Dokumente suchen, "
+"OpenERP ermittelt automatisch Meta Daten zum Dokument, z.B. den verknüpften "
+"Partner und indiziert hierzu ausserdem Inhalte für die Dokument Formate "
+".DOC, .ODT, .TXT, .SXW and .PDF."
 
 #. module: wiki_sale_faq
 #: model:ir.module.module,shortdesc:wiki_sale_faq.module_meta_information
 msgid "Wiki -Sale - FAQ"
 msgstr "Wiki -Verkauf - F&A"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Fehler! Sie können keine rekursiven Ordner erzeugen."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "This module provides a wiki FAQ Template\n"
+#~ msgstr "Das Modul bietet in Wiki Form ein FAQ Template\n"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr ""
+#~ "Das Verzeichnis muss ein Hauptverzeichnis oder einen Speicher zugewiesen "
+#~ "haben"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The directory name must be unique !"
+#~ msgstr "Das Verzeichnis muss eindeutig sein"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

@@ -38,7 +38,7 @@ class stock_location_path(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Status",
+            ("none", "Not Applicable")], "Invoice Status",
             required=True,),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'auto': fields.selection(
@@ -52,10 +52,10 @@ class stock_location_path(osv.osv):
             ),
     }
     _defaults = {
-        'auto': lambda *arg: 'auto',
-        'delay': lambda *arg: 1,
-        'invoice_state': lambda *args: 'none',
-        'picking_type':lambda *args:'internal',
+        'auto': 'auto',
+        'delay': 1,
+        'invoice_state': 'none',
+        'picking_type': 'internal',
     }
 stock_location_path()
 
@@ -65,8 +65,8 @@ class product_pulled_flow(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, help="This field will fill the packing Origin and the name of its moves"),
         'cancel_cascade': fields.boolean('Cancel Cascade', help="Allow you to cancel moves related to the product pull flow"),
-        'location_id': fields.many2one('stock.location','Location', required=True, help="Is the destination location that needs supplying"),
-        'location_src_id': fields.many2one('stock.location','Location Source', help="Location used by Destination Location to supply"),
+        'location_id': fields.many2one('stock.location','Destination Location', required=True, help="Is the destination location that needs supplying"),
+        'location_src_id': fields.many2one('stock.location','Source Location', help="Location used by Destination Location to supply"),
         'journal_id': fields.many2one('stock.journal','Journal'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
@@ -77,7 +77,7 @@ class product_pulled_flow(osv.osv):
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Picking")], "Invoice Status",
+            ("none", "Not Applicable")], "Invoice Status",
             required=True,),
     }
     _defaults = {
@@ -106,7 +106,7 @@ class stock_move(osv.osv):
     _columns = {
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too')
     }
-    def action_cancel(self,cr,uid,ids,context={ }):
+    def action_cancel(self, cr, uid, ids, context=None):
         for m in self.browse(cr, uid, ids, context=context):
             if m.cancel_cascade and m.move_dest_id:
                 self.action_cancel(cr, uid, [m.move_dest_id.id], context=context)
@@ -116,7 +116,7 @@ stock_move()
 
 class stock_location(osv.osv):
     _inherit = 'stock.location'
-    def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
+    def chained_location_get(self, cr, uid, location, partner=None, product=None, context=None):
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:

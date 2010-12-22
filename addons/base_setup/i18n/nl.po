@@ -6,32 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:29+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 01:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr "Plaats"
+msgstr "Woonplaats"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Installeren"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -39,9 +32,9 @@ msgid "Invoicing"
 msgstr "Facturatie"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Bedrijfsnaam"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Personeel"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -51,7 +44,7 @@ msgstr "E-mail"
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr "Bank Rekening Nr"
+msgstr "Bankrekening Nr"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
@@ -102,13 +95,10 @@ msgstr ""
 "om alleen de facturatie te installeren "
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
-"U kunt beginnen met de configuratie van het systeem of direct verbinden met "
-"de database als beheerder."
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
@@ -157,6 +147,15 @@ msgstr ""
 "enquête, lunch en ideeënbus installeren."
 
 #. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"U kunt beginnen met de configuratie van het systeem of direct verbinden met "
+"de database als beheerder."
+
+#. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
 msgstr "Geavanceerde overzichten"
@@ -172,19 +171,42 @@ msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+"Uw bedrijfsinformatie wordt gebruikt voor het personaliseren van OpenERP "
+"documenten zoals facturen, verkooporders en nog veel meer."
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr "titel"
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Direct Gebruiken"
-
-#. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
 msgstr "Kennisbeheer"
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -205,14 +227,14 @@ msgstr ""
 "genereren, etc..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
-"Helpt u het meeste te halen uit uw kassa's met snelle codering, eenvoudige "
-"betaalmethode codering, automatische piklijst generatie en meer."
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Bedrijfsnaam"
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr "Configuratie assistenten overslaan"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -233,14 +255,9 @@ msgstr ""
 "van de boekhoud module voor managers die geen boekhouders zijn."
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr "Personeel"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -312,6 +329,16 @@ msgstr ""
 "en tussen uw medewerkers."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+"Selecteer de applicaties waar uw systeem in moet voorzien. Als u nu niet "
+"zeker bent van uw behoeftes, kunt u ze later eenvoudig installeren."
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr "Bedrijf configuratie"
@@ -320,6 +347,16 @@ msgstr "Bedrijf configuratie"
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Helpt u het meeste te halen uit uw kassa's met snelle codering, eenvoudige "
+"betaalmethode codering, automatische piklijst generatie en meer."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -436,7 +473,7 @@ msgstr "Website bedrijf"
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install Specific Industry Applications"
-msgstr "Installeer specifieke bedrijfstak appliacties"
+msgstr "Installeer specifieke bedrijfstak applicaties"
 
 #. module: base_setup
 #: field:base.setup.company,street:0
@@ -444,9 +481,9 @@ msgid "Street"
 msgstr "Adres"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
-msgstr "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
+msgstr "Uw bedrijfsinformatie configureren"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
@@ -454,6 +491,7 @@ msgid "Example: http://openerp.com"
 msgstr "Voorbeeld: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr "Installeer applicaties"
@@ -497,12 +535,6 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
 msgstr "base.setup.config"
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 
 #~ msgid ""
 #~ "You can start configuring the system or connect directly to the database "
@@ -562,14 +594,34 @@ msgstr "De volgende gebruikers zijn geïnstalleerd: \n"
 #~ msgid "Summary"
 #~ msgstr "Samenvatting"
 
-#~ msgid "Install"
-#~ msgstr "Installeren"
-
 #~ msgid "Installation Done"
 #~ msgstr "Installatie Gereed"
+
+#~ msgid "Use Directly"
+#~ msgstr "Direct Gebruiken"
 
 #~ msgid "Cancel"
 #~ msgstr "Annuleren"
 
 #~ msgid "Previous"
 #~ msgstr "Vorige"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

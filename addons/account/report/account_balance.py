@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-
 from report import report_sxw
 from common_report_header import common_report_header
 
@@ -85,11 +84,12 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 }
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
+                acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                 if disp_acc == 'bal_movement':
-                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0:
+                    if round(res['credit'], acc_digit) > 0  or round(res['debit'], acc_digit) > 0 or round(res['balance'], acc_digit) != 0:
                         self.result_acc.append(res)
                 elif disp_acc == 'bal_solde':
-                    if  res['balance'] != 0:
+                    if round(res['balance'], acc_digit) != 0:
                         self.result_acc.append(res)
                 else:
                     self.result_acc.append(res)

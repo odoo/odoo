@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2009-11-17 10:54+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-01 08:19+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -21,12 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Einkaufspositionen"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -39,12 +34,16 @@ msgid "Message for Purchase Order Line"
 msgstr "Bachricht bei Beschaffungsauftragsposition"
 
 #. module: warning
-#: model:ir.model,name:warning.model_stock_picking
-msgid "Picking List"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Lieferschein"
+
+#. module: warning
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Verkaufsauftragsposition"
@@ -57,13 +56,23 @@ msgstr "Warnung beim Einkauf dieses Produktes"
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Warnungen"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: warning
 #: selection:product.product,purchase_line_warn:0
@@ -91,11 +100,6 @@ msgid "No Message"
 msgstr "Keine Nachricht"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
@@ -112,7 +116,6 @@ msgid "Warning when Selling this Product"
 msgstr "Warnung beim Verkauf des Produktes"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Verkaufsauftrag"
@@ -159,6 +162,12 @@ msgstr ""
 "Die Meldung bitte ins nächste Feld eintragen."
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Nachricht zu Rechnung"
@@ -182,7 +191,7 @@ msgstr "Warnung beim Einkaufsauftrag"
 #: code:addons/warning/warning.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Warnung für %s"
 
 #. module: warning
 #: view:res.partner:0
@@ -190,14 +199,9 @@ msgid "Warning on the Sale Order"
 msgstr "Warnung beim Verkaufsauftrag"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Warnung"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -207,4 +211,36 @@ msgstr "Nachricht zu Packauftrag"
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
+msgstr "Partner"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
 msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#, python-format
+#~ msgid "Alert for ' + product_info.name +' !"
+#~ msgstr "Warnnng für ' + product_info.name +' !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objektname muss mit \"x_\" Beginnen und darf keine Sonderzeichen "
+#~ "beinhalten"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

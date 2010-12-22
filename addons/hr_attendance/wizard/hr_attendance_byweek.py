@@ -30,13 +30,11 @@ class hr_attendance_byweek(osv.osv_memory):
         'end_date': fields.date('Ending Date', required=True)
     }
     _defaults = {
-         'init_date': time.strftime('%Y-%m-%d'),
-         'end_date': time.strftime('%Y-%m-%d'),
+         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         datas = {
              'ids': [],
              'model': 'hr.employee',
@@ -47,6 +45,7 @@ class hr_attendance_byweek(osv.osv_memory):
             'report_name': 'hr.attendance.allweeks',
             'datas': datas,
         }
+
 hr_attendance_byweek()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -33,8 +33,9 @@ class account_chart(osv.osv_memory):
                                     help = 'Keep empty for all open fiscal years'),
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required = True),
+        'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                         ('all', 'All Entries'),
+                                        ], 'Target Moves', required = True),
     }
 
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
@@ -79,8 +80,8 @@ class account_chart(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
-        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['periods'] = []
         if data['period_from'] and data['period_to']:
@@ -92,7 +93,7 @@ class account_chart(osv.osv_memory):
         return result
 
     _defaults = {
-        'target_move': 'all'
+        'target_move': 'posted'
     }
 
 account_chart()

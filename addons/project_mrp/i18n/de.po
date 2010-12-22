@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-01-30 07:25+0000\n"
-"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-01 08:06+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_mrp
@@ -24,23 +25,14 @@ msgstr ""
 "Beschaffungsmethode 'von Auftrag'"
 
 #. module: project_mrp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Beschaffungsauftrags Aufgabe"
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_project_task
-#: model:process.node,name:project_mrp.process_node_mrptask0
-#: model:process.node,name:project_mrp.process_node_procuretasktask0
-#: field:procurement.order,task_id:0
-msgid "Task"
-msgstr "Aufgaben"
-
-#. module: project_mrp
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Procurement and Project Management integration"
+msgstr "Beschaffungs und Projketmanagement Integration"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -55,19 +47,24 @@ msgstr ""
 "Falls Produkttyp \"Service\" (Dienstleistung) wird eine Aufgabe erzeugt."
 
 #. module: project_mrp
-#: model:ir.model,name:project_mrp.model_product_product
-msgid "Product"
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_mrp
-#: model:process.transition,name:project_mrp.process_transition_procuretask0
-msgid "Procurement Task"
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Produkt"
+
+#. module: project_mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
@@ -76,9 +73,12 @@ msgid "Procurement"
 msgstr "Beschaffung"
 
 #. module: project_mrp
-#: model:process.transition,note:project_mrp.process_transition_ordertask0
-msgid "If procurement method is Make to order and supply method is produce"
-msgstr ""
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Aufgaben"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -101,9 +101,37 @@ msgid "Create Task"
 msgstr "Erzeuge Aufgabe"
 
 #. module: project_mrp
-#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
-msgid "Procurement and Project Management integration"
+#: model:ir.module.module,description:project_mrp.module_meta_information
+msgid ""
+"\n"
+"This module creates a link between procurement orders\n"
+"containing \"service\" lines and project management tasks.\n"
+"\n"
+"When installed, this module will automatically create a new task\n"
+"for each procurement order line, when the corresponding product\n"
+"meets the following characteristics:\n"
+"  * Type = Service\n"
+"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+"  * Supply/Procurement method = Produce\n"
+"\n"
+"The new task is created outside of any existing project, but\n"
+"can be added to a project manually.\n"
+"\n"
+"When the project task is completed or cancelled, the workflow of the "
+"corresponding\n"
+"procurement line is updated accordingly.\n"
+"\n"
+"This module is useful to be able to invoice services based on tasks\n"
+"automatically created via sale orders.\n"
+"\n"
 msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr ""
+"Wenn die Beschaffungsmethode  \"Auftragsfertigung\" und die Liefermethode  "
+"\"Produktion\" ist"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
@@ -121,3 +149,21 @@ msgstr ""
 
 #~ msgid "Procure Task"
 #~ msgstr "Beschaffung Aufgabe"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen \r\n"
+#~ "beinhalten"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "ungültige XML Architektur"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

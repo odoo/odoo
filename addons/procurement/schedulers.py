@@ -34,23 +34,23 @@ class procurement_order(osv.osv):
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
         Call the scheduler to check the procurement order
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values        
+        @return:  Dictionary of values
         '''
-        if not context:
+        if context is None:
             context = {}
 
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
             wf_service = netsvc.LocalService("workflow")
-    
+
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
                 ids = procurement_obj.search(cr, uid, [], order="date_planned")
@@ -69,13 +69,13 @@ class procurement_order(osv.osv):
             while True:
                 cr.execute("select id from procurement_order where state='confirmed' and procure_method='make_to_order' order by priority,date_planned limit 500 offset %s", (offset,))
                 ids = map(lambda x: x[0], cr.fetchall())
-                for proc in procurement_obj.browse(cr, uid, ids):
+                for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
                     else:
                         offset += 1
                         report_later += 1
-                for proc in procurement_obj.browse(cr, uid, ids):
+                for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if proc.state == 'exception':
                         report.append('PROC %d: on order - %3.2f %-5s - %s' % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -98,7 +98,7 @@ class procurement_order(osv.osv):
                     else:
                         report_later += 1
                     report_total += 1
-                for proc in procurement_obj.browse(cr, uid, report_ids):
+                for proc in procurement_obj.browse(cr, uid, report_ids, context=context):
                     if proc.state == 'exception':
                         report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -112,13 +112,13 @@ class procurement_order(osv.osv):
             if uid:
                 request = self.pool.get('res.request')
                 summary = '''Here is the procurement scheduling report.
-    
+
         Start Time: %s
         End Time: %s
         Total Procurements processed: %d
         Procurements with exceptions: %d
         Skipped Procurements (scheduled date outside of scheduler range) %d
-    
+
         Exceptions:\n'''% (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
                 request.create(cr, uid,
@@ -141,14 +141,14 @@ class procurement_order(osv.osv):
     def create_automatic_op(self, cr, uid, context=None):
         """
         Create procurement of  virtual stock < 0
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         """
-        if not context:
+        if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('procurement.order')
@@ -157,7 +157,9 @@ class procurement_order(osv.osv):
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
 
-        cr.execute('select id from product_product')
+        cr.execute('select p.id from product_product p \
+                        join product_template t on (p.product_tmpl_id=t.id) \
+                        where p.active=True and t.purchase_ok=True')
         products_id = [x for x, in cr.fetchall()]
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
@@ -191,16 +193,16 @@ class procurement_order(osv.osv):
         '''
         Create procurement based on Orderpoint
         use_new_cursor: False or the dbname
-        
+
         @param self: The object pointer
         @param cr: The current row, from the database cursor,
         @param user_id: The current user ID for security checks
         @param context: A standard dictionary for contextual values
         @param param: False or the dbname
         @return:  Dictionary of values
-        """        
+        """
         '''
-        if not context:
+        if context is None:
             context = {}
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()
@@ -216,23 +218,42 @@ class procurement_order(osv.osv):
             self.create_automatic_op(cr, uid, context=context)
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
-            for op in orderpoint_obj.browse(cr, uid, ids):
+            for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 if op.procurement_id.state != 'exception':
                     if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
                         continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
+
                 if prods < op.product_min_qty:
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
+
                     reste = qty % op.qty_multiple
                     if reste > 0:
                         qty += op.qty_multiple - reste
+
                     newdate = datetime.today() + relativedelta(
                             days = int(op.product_id.seller_delay))
                     if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
+                        if op.procurement_draft_ids:
+                        # Check draft procurement related to this order point
+                            pro_ids = [x.id for x in op.procurement_draft_ids]
+                            cr.execute('select id, product_qty from procurement_order where id in %s order by product_qty desc', (tuple(pro_ids), ))
+                            procure_datas = cr.dictfetchall()
+                            to_generate = qty
+                            for proc_data in procure_datas:
+                                if to_generate >= proc_data['product_qty']:
+                                    wf_service.trg_validate(uid, 'procurement.order', proc_data['id'], 'button_confirm', cr)
+                                    procurement_obj.write(cr, uid, [proc_data['id']],  {'origin': op.name}, context=context)
+                                    to_generate -= proc_data['product_qty']
+                                if not to_generate:
+                                    break
+                            qty = to_generate
+
+                    if qty:
                         proc_id = procurement_obj.create(cr, uid, {
                             'name': op.name,
                             'date_planned': newdate.strftime('%Y-%m-%d'),
@@ -248,7 +269,7 @@ class procurement_order(osv.osv):
                         wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_check', cr)
                         orderpoint_obj.write(cr, uid, [op.id],
-                                {'procurement_id': proc_id})
+                                {'procurement_id': proc_id}, context=context)
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()

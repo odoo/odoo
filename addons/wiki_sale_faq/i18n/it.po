@@ -7,41 +7,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-11-02 07:23+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-11-14 08:08+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki_sale_faq
+#: model:ir.actions.act_window,help:wiki_sale_faq.action_wiki_test
+msgid ""
+"Wiki pages allow you to share ideas and questions with co-workers. You can "
+"create a new document that can be linked to one or several applications "
+"(specifications of a project, a FAQ for sales teams, etc.). Keywords can be "
+"used to easily tag wiki pages. You should use this application with the "
+"OpenERP web client interface."
+msgstr ""
+
+#. module: wiki_sale_faq
+#: model:ir.actions.act_window,name:wiki_sale_faq.action_document_form
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_document_files
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_sales
 msgid "Documents"
 msgstr "Documenti"
 
 #. module: wiki_sale_faq
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore! Non è possibile creare Menu ricorsivi."
-
-#. module: wiki_sale_faq
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Errore! Non è possibile creare Cartelle ricorsive."
+#: model:ir.actions.act_window,name:wiki_sale_faq.action_wiki_test
+msgid "Wiki Pages"
+msgstr "Pagine del Wiki"
 
 #. module: wiki_sale_faq
 #: model:ir.ui.menu,name:wiki_sale_faq.menu_action_wiki_wiki
 msgid "FAQ"
 msgstr "FAQ"
-
-#. module: wiki_sale_faq
-#: model:ir.actions.act_window,name:wiki_sale_faq.action_wiki_test
-msgid "Wiki Pages"
-msgstr "Pagine del Wiki"
 
 #. module: wiki_sale_faq
 #: model:ir.module.module,description:wiki_sale_faq.module_meta_information
@@ -53,11 +54,26 @@ msgstr ""
 "    "
 
 #. module: wiki_sale_faq
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.actions.act_window,help:wiki_sale_faq.action_document_form
+msgid ""
+"Documents gives you an access to all attached files to any record. It is a "
+"repository of all documents such as emails, project related attachments or "
+"any other documents. From this view, you can search on the content of the "
+"documents. OpenERP automatically assign meta-data based on the record like "
+"the related partner and indexes the content of .DOC, .ODT, .TXT, .SXW and "
+".PDF documents."
 msgstr ""
 
 #. module: wiki_sale_faq
 #: model:ir.module.module,shortdesc:wiki_sale_faq.module_meta_information
 msgid "Wiki -Sale - FAQ"
 msgstr ""
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore! Non è possibile creare Menu ricorsivi."
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Errore! Non è possibile creare Cartelle ricorsive."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."

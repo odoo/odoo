@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-29 11:21+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-21 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_coda
@@ -24,17 +24,10 @@ msgid "Bank Journal"
 msgstr "Giornale Banca"
 
 #. module: account_coda
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
-
-#. module: account_coda
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modello non valido nella definizione dell'azione."
+#: view:account.coda:0
+#: field:account.coda.import,note:0
+msgid "Log"
+msgstr "Log"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
@@ -49,7 +42,7 @@ msgstr "File CODA"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Group By..."
-msgstr ""
+msgstr "Raggruppa per..."
 
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
@@ -62,11 +55,6 @@ msgid "Import Date"
 msgstr "Importa data"
 
 #. module: account_coda
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
 msgstr "Importa il log"
@@ -74,7 +62,7 @@ msgstr "Importa il log"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Import"
-msgstr ""
+msgstr "Importa"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -82,10 +70,10 @@ msgid "Coda import"
 msgstr "Importa CODA"
 
 #. module: account_coda
-#: view:account.coda:0
-#: field:account.coda.import,note:0
-msgid "Log"
-msgstr "Log"
+#: code:addons/account_coda/account_coda.py:0
+#, python-format
+msgid "Coda file not found for bank statement !!"
+msgstr ""
 
 #. module: account_coda
 #: help:account.coda.import,awaiting_account:0
@@ -98,7 +86,7 @@ msgstr ""
 #: view:account.coda:0
 #: field:account.coda,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compagnia"
 
 #. module: account_coda
 #: help:account.coda.import,def_payable:0
@@ -122,17 +110,12 @@ msgstr "Utente"
 #: view:account.coda:0
 #: field:account.coda,date:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
 msgid "Coda Import Logs"
 msgstr ""
-
-#. module: account_coda
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzare l'architettura!"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
@@ -152,12 +135,18 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
 msgstr ""
+
+#. module: account_coda
+#: code:addons/account_coda/wizard/account_coda_import.py:0
+#, python-format
+msgid "The bank account %s is not defined for the partner %s.\n"
+msgstr "Il conto \"Banca\" %s non è definito per il partner %s.\n"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
@@ -171,13 +160,17 @@ msgid "Import Coda Statement"
 msgstr "Importa dichiarazione CODA"
 
 #. module: account_coda
-#: view:account.coda:0
-msgid "Statements"
+#: model:ir.module.module,description:account_coda.module_meta_information
+msgid ""
+"\n"
+"    Module provides functionality to import\n"
+"    bank statements from coda files.\n"
+"    "
 msgstr ""
 
 #. module: account_coda
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: view:account.coda:0
+msgid "Statements"
 msgstr ""
 
 #. module: account_coda
@@ -222,12 +215,12 @@ msgstr ""
 #: code:addons/account_coda/wizard/account_coda_import.py:0
 #, python-format
 msgid "Result"
-msgstr ""
+msgstr "Risultato"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Click on 'New' to select your file :"
-msgstr ""
+msgstr "Clicca su \"Nuovo\" per selezioanre il tuo file:"
 
 #. module: account_coda
 #: field:account.coda.import,def_receivable:0
@@ -237,7 +230,7 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: account_coda
 #: field:account.coda,statement_ids:0
@@ -252,17 +245,11 @@ msgstr ""
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Configure Your Journal and Account :"
-msgstr ""
+msgstr "Configura il Giornale e i conti:"
 
 #. module: account_coda
 #: view:account.coda:0
 msgid "Coda Import"
-msgstr ""
-
-#. module: account_coda
-#: code:addons/account_coda/wizard/account_coda_import.py:0
-#, python-format
-msgid "The bank account %s is not defined for the partner %s.\n"
 msgstr ""
 
 #. module: account_coda
@@ -274,14 +261,26 @@ msgstr ""
 #~ msgid "Clic on 'New' to select your file :"
 #~ msgstr "Clicca su \"Nuovo\" per selezionare il tuo file:"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "_Open Statement"
 #~ msgstr "_Apre Dichiarazione"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #~ msgid "Account CODA"
 #~ msgstr "Conto CODA"
 
 #~ msgid "Import Coda File"
 #~ msgstr "Importa file CODA"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzare l'architettura!"
 
 #~ msgid ""
 #~ "Module provides functionality to import\n"
@@ -304,3 +303,18 @@ msgstr ""
 
 #~ msgid "Coda Statements"
 #~ msgstr "Dichiarazione CODA"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Le regole non sono supportate per gli oggetti: osv_memory!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "La regola deve avere almeno un diritto di accesso spuntato!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"

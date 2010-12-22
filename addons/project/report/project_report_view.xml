@@ -270,14 +270,15 @@
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
+        <field name="context">{'group_by':['project'],'group_by_no_leaf':1}</field>
         <field name="domain">[('uid','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
     </record>
 
 	<record id="open_view_project_vs_planned_total_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_vs_planned_total_hours_tree"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
     </record>
     <record id="open_view_project_vs_planned_total_hours_graph" model="ir.actions.act_window.view">

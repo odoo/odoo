@@ -74,10 +74,10 @@ class survey_question_wiz(osv.osv_memory):
                     'response': 0
                 }
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
-                sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id)
+                sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id' :wiz_id})
             else:
-                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
+                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
 
             if context.has_key('active_id'):
                 context.pop('active_id')
@@ -96,7 +96,7 @@ class survey_question_wiz(osv.osv_memory):
                     return super(survey_question_wiz, self).\
                                 fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                         toolbar=toolbar, submenu=submenu)
-            sur_rec = survey_obj.browse(cr, uid, survey_id)
+            sur_rec = survey_obj.browse(cr, uid, survey_id, context=context)
             p_id = map(lambda x:x.id, sur_rec.page_ids)
             total_pages = len(p_id)
             pre_button = False
@@ -109,7 +109,7 @@ class survey_question_wiz(osv.osv_memory):
             if not sur_name_rec.page_no + 1 :
                 surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'store_ans':{}})
 
-            sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'])
+            sur_name_read = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
             page_number = int(sur_name_rec.page_no)
             if sur_name_read.transfer or not sur_name_rec.page_no + 1:
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':False})
@@ -120,14 +120,14 @@ class survey_question_wiz(osv.osv_memory):
                         if ((context.has_key('active') and not context.get('active', False)) \
                                     or not context.has_key('active')) and not sur_name_rec.page_no + 1:
                             if sur_rec.state != "open" :
-                                raise osv.except_osv(_('Warning !'),_("You can not give answer because of survey is not open for answer"))
+                                raise osv.except_osv(_('Warning !'),_("You can not answer because the survey is not open"))
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s', (uid,survey_id))
                             res = cr.fetchone()[0]
                             user_limit = survey_obj.browse(cr, uid, survey_id)
                             user_limit = user_limit.response_user
                             if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning !'),_("You can not give answer for this survey more than %s times") % (user_limit))
+                                raise osv.except_osv(_('Warning !'),_("You can not answer this survey more than %s times") % (user_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
@@ -149,8 +149,8 @@ class survey_question_wiz(osv.osv_memory):
                     if sur_name_rec.page_no > 1:
                         pre_button = True
                 if flag:
-                    pag_rec = page_obj.browse(cr, uid, p_id)
-                    xml_form = etree.Element('form', {'string': _(tools.ustr(pag_rec.title))})
+                    pag_rec = page_obj.browse(cr, uid, p_id, context=context)
+                    xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title)})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                     if context.has_key('response_id') and context.get('response_id', False) \
                          and int(context.get('response_id',0)[0]) > 0:
@@ -177,7 +177,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     for que in que_ids:
                         qu_no += 1
-                        que_rec = que_obj.browse(cr, uid, que.id)
+                        que_rec = que_obj.browse(cr, uid, que.id, context=context)
                         descriptive_text = ""
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec.question)
                         if ((context.has_key('active') and not context.get('active',False)) or not context.has_key('active')) and que_rec.is_require_answer:
@@ -424,7 +424,7 @@ class survey_question_wiz(osv.osv_memory):
                             cr.execute("select email from res_partner_address where id =%s", (resp_id.id,))
                             resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
-                            user_name = user_obj.browse(cr, uid, uid).name
+                            user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
                             tools.email_send(user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attach = attachments)
 
@@ -479,6 +479,8 @@ class survey_question_wiz(osv.osv_memory):
         @return : Dictionary value for fields list with value.
         """
         value = {}
+        if context is None:
+            context = {}
         for field in fields_list:
             if field.split('_')[0] == 'progress':
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id',False))
@@ -558,6 +560,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : True.
         """
+        if context is None: context = {}
         if context.has_key('active') and context.get('active',False):
             return True
 
@@ -692,7 +695,7 @@ class survey_question_wiz(osv.osv_memory):
                                 if error:
                                     for res in resp_id_list:
                                         sur_name_read['store_ans'].pop(res)
-                                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg'])))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
 
                                 resp_obj.write(cr, uid, resp_id, {'comment':val1})
                                 sur_name_read['store_ans'][resp_id].update({key1:val1})
@@ -731,7 +734,7 @@ class survey_question_wiz(osv.osv_memory):
                             if error:
                                 for res in resp_id_list:
                                     sur_name_read['store_ans'].pop(res)
-                                raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg'])))
+                                raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
 
                             if key1.split('_')[1] == "single" :
                                 resp_obj.write(cr, uid, resp_id, {'single_text':val1})
@@ -751,7 +754,7 @@ class survey_question_wiz(osv.osv_memory):
                                 except:
                                     for res in resp_id_list:
                                         sur_name_read['store_ans'].pop(res)
-                                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' \nPlease enter an integer value " ))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' \n" + _("Please enter an integer value"))
 
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 3:
                             if type(val1) == type('') or type(val1) == type(u''):
@@ -780,12 +783,12 @@ class survey_question_wiz(osv.osv_memory):
                     if comment_field and comment_value:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Warning !'), _("'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
+                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
 
                     if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "\n you cannot select same answer more than one times'"))
+                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("You cannot select the same answer more than one time"))
 
                     if not select_count:
                         resp_obj.write(cr, uid, resp_id, {'state':'skip'})
@@ -793,7 +796,7 @@ class survey_question_wiz(osv.osv_memory):
                     if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
+                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
 
                     if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
                         if matrix_list:
@@ -804,7 +807,7 @@ class survey_question_wiz(osv.osv_memory):
                             (que_rec['required_type'] == 'a range' and (len(list(set(matrix_list))) < que_rec['minimum_req_ans'] or len(list(set(matrix_list))) > que_rec['maximum_req_ans'])):
                                 for res in resp_id_list:
                                     sur_name_read['store_ans'].pop(res)
-                                raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                                raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
                         elif (que_rec['required_type'] == 'all' and select_count < len(que_rec['answer_choice_ids'])) or \
                             (que_rec['required_type'] == 'at least' and select_count < que_rec['req_ans']) or \
@@ -813,12 +816,12 @@ class survey_question_wiz(osv.osv_memory):
                             (que_rec['required_type'] == 'a range' and (select_count < que_rec['minimum_req_ans'] or select_count > que_rec['maximum_req_ans'])):
                             for res in resp_id_list:
                                 sur_name_read['store_ans'].pop(res)
-                            raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                            raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
                     if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                        raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
         else:
             resp_id_list = []
@@ -892,7 +895,7 @@ class survey_question_wiz(osv.osv_memory):
                                     if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val) == None:
                                             error = True
                                 if error:
-                                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg'])))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg']))
                                 resp_obj.write(cr, uid, update, {'comment':val,'state': 'done'})
                                 sur_name_read['store_ans'][update].update({key:val})
 
@@ -928,7 +931,7 @@ class survey_question_wiz(osv.osv_memory):
                                 if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val) == None:
                                         error = True
                             if error:
-                                raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg'])))
+                                raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg']))
                             if key.split('_')[1] == "single" :
                                 resp_obj.write(cr, uid, update, {'single_text':val,'state': 'done'})
                             else:
@@ -946,7 +949,7 @@ class survey_question_wiz(osv.osv_memory):
                                     sur_name_read['store_ans'][update].update({key:val})
                                     select_count += 1
                                 except:
-                                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' \n Please enter an integer value " ))
+                                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "'\n" + _("Please enter an integer value"))
 
                         elif val and len(key.split('_')) == 3:
                             resp_obj.write(cr, uid, update, {'state': 'done'})
@@ -974,13 +977,13 @@ class survey_question_wiz(osv.osv_memory):
                                 sur_name_read['store_ans'][update].update({key:val})
 
                 if comment_field and comment_value:
-                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
+                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg']))
 
                 if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
-                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "\n you cannot select same answer more than one times'"))
+                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "\n" + _("You cannot select same answer more than one time'"))
 
                 if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
-                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
+                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg']))
 
                 if not select_count:
                     resp_obj.write(cr, uid, update, {'state': 'skip'})
@@ -992,21 +995,21 @@ class survey_question_wiz(osv.osv_memory):
                         (que_rec['required_type'] == 'at most' and len(list(set(matrix_list))) > que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'exactly' and len(list(set(matrix_list))) != que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'a range' and (len(list(set(matrix_list))) < que_rec['minimum_req_ans'] or len(list(set(matrix_list))) > que_rec['maximum_req_ans'])):
-                            raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                            raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
                     elif (que_rec['required_type'] == 'all' and select_count < len(que_rec['answer_choice_ids'])) or \
                         (que_rec['required_type'] == 'at least' and select_count < que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'at most' and select_count > que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'exactly' and select_count != que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'a range' and (select_count < que_rec['minimum_req_ans'] or select_count > que_rec['maximum_req_ans'])):
-                            raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                            raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
                 if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
-                    raise osv.except_osv(_('Warning !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
+                    raise osv.except_osv(_('Warning !'), "'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg']))
 
         return True
 
-    def action_new_question(self,cr, uid, ids, context):
+    def action_new_question(self,cr, uid, ids, context=None):
         """
         New survey.Question form.
 
@@ -1017,6 +1020,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.Qestion form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1032,7 +1037,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_new_page(self, cr, uid, ids, context):
+    def action_new_page(self, cr, uid, ids, context=None):
         """
         New survey.Page form.
 
@@ -1043,6 +1048,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open new survey.page form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1058,7 +1065,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_page(self,cr, uid, ids, context):
+    def action_edit_page(self,cr, uid, ids, context=None):
         """
         Edit survey.page.
 
@@ -1069,6 +1076,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.page form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1085,7 +1094,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_page(self,cr, uid, ids, context):
+    def action_delete_page(self,cr, uid, ids, context=None):
         """
         Delete survey.page.
 
@@ -1096,6 +1105,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open next survey.page form, but delete the selected page.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1116,7 +1127,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_question(self,cr, uid, ids, context):
+    def action_edit_question(self,cr, uid, ids, context=None):
         """
         Edit survey.question.
 
@@ -1127,6 +1138,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Edit survey.question form.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1143,7 +1156,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_question(self,cr, uid, ids, context):
+    def action_delete_question(self,cr, uid, ids, context=None):
         """
         Delete survey.question.
 
@@ -1154,6 +1167,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
         """
+        if context is None:
+            context = {}
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1186,6 +1201,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous Answer form.
         """
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\
@@ -1216,6 +1233,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next Answer form.
         """
+        if context is None:
+            context = {}
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\
@@ -1246,6 +1265,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Next survey.page form.
         """
+        if context is None:
+            context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1271,6 +1292,8 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for Open Previous survey.page form.
         """
+        if context is None:
+            context = {}
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),\

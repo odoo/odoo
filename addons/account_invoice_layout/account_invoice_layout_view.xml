@@ -9,10 +9,10 @@
             <field name="inherit_id" ref="account.view_invoice_line_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='name']" position="before">
+                <field name="name" position="before">
                     <field name="state" select="1" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
-                </xpath>
+            	</field>
             </field>
         </record>
 

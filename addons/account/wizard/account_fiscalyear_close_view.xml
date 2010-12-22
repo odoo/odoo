@@ -7,8 +7,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 	            <form string="Generate Fiscal Year Opening Entries">
+	                <separator string="Generate Fiscal Year Opening Entries" colspan="4"/>
 	                <label string="This wizard will generate the end of year journal entries of selected fiscal year. Note that you can run this wizard many times for the same fiscal year: it will simply replace the old opening entries with the new ones." colspan="4"/>
-	                <separator colspan="4"/>
+	                <newline/>
 	                <field name="fy_id" domain = "[('state','=','draft')]"/>
 	                <field name="fy2_id" domain = "[('state','=','draft')]"/>
 	                <field name="journal_id"/>

@@ -23,7 +23,6 @@
 ##############################################################################
 
 from datetime import datetime
-
 from report import report_sxw
 from tools import amount_to_text_en
 
@@ -51,7 +50,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type in ('advance', 'loan', 'otherpay', 'otherdeduct', 'installment'):
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -62,7 +61,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].type == 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -73,7 +72,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
@@ -84,7 +83,7 @@ class payslip_report(report_sxw.rml_parse):
         for id in range(len(obj)):
             if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
                 ids.append(obj[id].id)
-        if len(ids):
+        if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 

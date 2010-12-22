@@ -8,54 +8,89 @@
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/exportTools.js"></script>
 
-<menupopup id="taskPopup">
-    <menuitem id="tiny-plugin2" label="&tinyplugin;"
-          oncommand="Config.onMenuItemCommand(event);"
-          image="&menuicon.value;"
-          class="menuitem-iconic"
-          tooltiptext="&pluginconfig.value;"/>
-</menupopup>
+<menubar id="mail-menubar" >
+    <menu insertafter="messageMenu" id="menu_openerp" label="&openerpMenu.label;" accesskey="&openerpMenu.accesskey;"> 
+        <menupopup id="taskPopup">
+            <menuitem id="tiny-plugin3" label="&tinyplugin;"
+                      oncommand="Config.onMenuItemCommand(event);"
+                      image="&menuicon.settings;"
+                      class="menuitem-iconic"
+                      tooltiptext="&pluginconfig.value;"
+                      />
+            <menuseparator/>
+            <menuitem id="tiny-plugin4" label="&tinypluginconfig;"
+                      oncommand="searchmail();"
+                      image="&menuicon.value;"
+                      class="menuitem-iconic"
+                      tooltiptext="&pluginconfigvalue.value;"
+                      />
+            <menuseparator/>
+            <menuitem id="tiny-openpartner" label="&openpartner.value;"
+                      oncommand="open_partner();"
+                      image="&menuicon.value;"
+                      class="menuitem-iconic"
+                      tooltiptext="&openpartnertooltip.value;"
+                      />
 
-<menupopup id="taskPopup">
-    <menuitem id="tiny-plugin1" label="&tinypluginconfig;"
-          oncommand="searchmail();"
-          image="&menuicon.value;"
-          class="menuitem-iconic"
-          tooltiptext="&pluginconfigvalue.value;"/>
-</menupopup>
+            <menuitem id="tiny-opendocument" label="&opendocument.value;"
+                      oncommand="open_document();"
+                      image="&menuicon.value;"
+                      class="menuitem-iconic"
+                      tooltiptext="&opendocumenttooltip.value;"
+                      />
+            
+        </menupopup>
+    </menu>
+</menubar>
+
+<!--<menupopup id="taskPopup">-->
+<!--    <menuitem id="tiny-plugin2" label="&tinyplugin;"-->
+<!--          oncommand="Config.onMenuItemCommand(event);"-->
+<!--          image="&menuicon.value;"-->
+<!--          class="menuitem-iconic"-->
+<!--          tooltiptext="&pluginconfig.value;"/>-->
+<!--</menupopup>-->
+
+<!--<menupopup id="taskPopup">-->
+<!--    <menuitem id="tiny-plugin1" label="&tinypluginconfig;"-->
+<!--          oncommand="searchmail();"-->
+<!--          image="&menuicon.value;"-->
+<!--          class="menuitem-iconic"-->
+<!--          tooltiptext="&pluginconfigvalue.value;"/>-->
+<!--</menupopup>-->
 
 <popup id="threadPaneContext">
-	<menuitem id="threadPaneContext-saveAsMultiple"
-		insertbefore="threadPaneContext-print"
-		class="menuitem-iconic"
-		image="&menuicon.value;"
-		label="Archive To OpenERP"
-		accesskey="T"
-		oncommand="searchmail();"/>
+    <menuitem id="threadPaneContext-saveAsMultiple"
+        insertbefore="threadPaneContext-print"
+        class="menuitem-iconic"
+        image="&menuicon.value;"
+        label="Archive To OpenERP"
+        accesskey="T"
+        oncommand="searchmail();"/>
 </popup>
 
 <toolbarpalette id="MailToolbarPalette">
-	<toolbarbutton id="GA-button"
-		class="toolbarbutton-1"
-		image="&menuicon.value;"
-		label= "Push To OpenERP"
-		oncommand="searchmail();" />
+    <toolbarbutton id="GA-button"
+        class="toolbarbutton-1"
+        image="&menuicon.value;"
+        label= "Push"
+        oncommand="searchmail();" />
 </toolbarpalette> 
 
 <toolbarpalette id="MailToolbarPalette">
-	<toolbarbutton id="GA-button2"
-		class="toolbarbutton-1"
-		image="&partnericon.value;"
-		label= "Open Partner"
+    <toolbarbutton id="GA-button2"
+        class="toolbarbutton-1"
+        image="&partnericon.value;"
+        label= "Partner"
         oncommand="open_partner();"
-		  />
+          />
 </toolbarpalette>
 <toolbarpalette id="MailToolbarPalette">
-	<toolbarbutton id="GA-button3"
-		class="toolbarbutton-1"
-		image="&imagearchive.value;"
-		label= "Open Document"
-		oncommand="open_document();"  />
+    <toolbarbutton id="GA-button3"
+        class="toolbarbutton-1"
+        image="&imagearchive.value;"
+        label= "Document"
+        oncommand="open_document();"  />
 </toolbarpalette> 
 
 </overlay>

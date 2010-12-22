@@ -37,7 +37,7 @@ class stock_move(osv.osv):
         """
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
         if move.product_id.cost_method != 'average' or not move.price_unit:
-            # no average price costing or cost not specified during picking validation, we will 
+            # no average price costing or cost not specified during picking validation, we will
             # plug the purchase line values if they are found.
             if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
                 reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.purchase_id.pricelist_id.currency_id.id
@@ -55,7 +55,7 @@ class stock_picking(osv.osv):
             ondelete='set null', select=True),
     }
     _defaults = {
-        'purchase_id': lambda *a: False,
+        'purchase_id': False,
     }
 
     def get_currency_id(self, cursor, user, picking):
@@ -118,11 +118,15 @@ class stock_partial_picking(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
+        if context is None:
+            context = {}
         pick_obj = self.pool.get('stock.picking')
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             has_product_cost = (pick.type == 'in' and pick.purchase_id)
             for m in pick.move_lines:
+                if m.state in ('done','cancel') :
+                    continue
                 if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed
                     # in the currency of the PO (i.e the PO's pricelist currency)
@@ -142,9 +146,11 @@ class stock_partial_move(osv.osv_memory):
         @param context: A standard dictionary
         @return: A dictionary which of fields with values.
         """
+        if context is None:
+            context = {}
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
         move_obj = self.pool.get('stock.move')
-        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
+        for m in move_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if m.picking_id.type == 'in' and m.product_id.cost_method == 'average' \
                 and m.purchase_line_id and m.picking_id.purchase_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed

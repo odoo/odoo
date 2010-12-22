@@ -6,25 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 14:51+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-30 15:59+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: board
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  Jahr  "
 
 #. module: board
 #: model:ir.model,name:board.model_board_menu_create
 msgid "Menu Create"
-msgstr ""
+msgstr "Erzeuge Menü"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Notizart"
 
 #. module: board
 #: view:board.note:0
@@ -35,7 +43,12 @@ msgstr "Autor"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr "Anzeige Tafel Hauptmodul"
+msgstr "Pinnwand Hauptmodul"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Letzte Anmeldungen"
 
 #. module: board
 #: code:addons/board/wizard/board_menu_create.py:0
@@ -48,7 +61,7 @@ msgstr "Benutzerfehler!"
 #: model:ir.actions.act_window,name:board.open_board_administration_form
 #: model:ir.ui.menu,name:board.menu_board_admin
 msgid "Administration Dashboard"
-msgstr ""
+msgstr "Pinnwand Administration"
 
 #. module: board
 #: view:board.note:0
@@ -59,18 +72,21 @@ msgstr "Bemerkung"
 
 #. module: board
 #: view:board.note:0
+#: view:res.log.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppierung..."
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
-msgstr ""
+msgstr "Pinnwand"
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr "Wöchentliche Aktivitäten"
 
 #. module: board
 #: field:board.board.line,name:0
@@ -78,23 +94,59 @@ msgid "Title"
 msgstr "Titel"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr "# Einträge"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
-msgstr ""
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Pinnwand öffnen"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr "Monatliche Aktivität nach Belegen"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Statistik Protokolle"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
-msgstr "Tafel Definition"
+msgstr "Definition Pinnwand"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "März"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "August"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr "Benutzer Anmeldungen"
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "Datum Erstellung"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
@@ -108,11 +160,9 @@ msgid "Menu Information"
 msgstr "Menü Information"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "Juni"
 
 #. module: board
 #: field:board.note,type:0
@@ -122,7 +172,12 @@ msgstr "Mitteilung Art"
 #. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr "Aktion Sichten"
+msgstr "Aktion Ansichten"
+
+#. module: board
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr "Protokoll Bericht"
 
 #. module: board
 #: view:board.note:0
@@ -131,25 +186,40 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Notizart"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "Erweiterter Filter..."
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr "Tag"
 
 #. module: board
 #: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
-msgstr "Erstelle Menüeintrag für Tafel"
+msgstr "Erstelle Menü für Pinnwand"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "Februar"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "Oktober"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
 msgid "Board Line"
-msgstr ""
+msgstr "Pinnwand Positionen"
 
 #. module: board
 #: field:board.menu.create,menu_parent_id:0
@@ -157,22 +227,36 @@ msgid "Parent Menu"
 msgstr "Obermenü"
 
 #. module: board
+#: view:res.log.report:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "Januar"
+
+#. module: board
 #: view:board.note:0
 msgid "Notes"
 msgstr "Bemerkungen"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "November"
 
 #. module: board
 #: help:board.board.line,sequence:0
 msgid ""
 "Gives the sequence order                         when displaying a list of "
 "board lines."
-msgstr ""
+msgstr "Reihenfolge für die Ansichtsliste der Pinnwand Positionen."
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:0
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Bitte Ansichten in Anzeigetafel einfügen"
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "April"
 
 #. module: board
 #: view:board.board:0
@@ -181,12 +265,17 @@ msgstr "Bitte Ansichten in Anzeigetafel einfügen"
 #: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
-msgstr "Anzeigetafel"
+msgstr "Pinnwand"
 
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr "Basis Module für Anzeigetafeln"
+msgstr "Basis Module für Pinnwand"
+
+#. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr "Aktion"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -194,9 +283,9 @@ msgid "Position"
 msgstr "Position"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Tafel öffnen"
+#: view:res.log.report:0
+msgid "Model"
+msgstr "Modul"
 
 #. module: board
 #: field:board.menu.create,menu_name:0
@@ -207,7 +296,7 @@ msgstr "Menü Bezeichnung"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
-msgstr ""
+msgstr "Letzte Aktivitäten"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -217,7 +306,7 @@ msgstr "Links"
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr "Tafel Anzeige"
+msgstr "Pinnwand Anzeige"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -230,9 +319,24 @@ msgid "Width"
 msgstr "Breite"
 
 #. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr "   Monat   "
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Sequenz"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "September"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "Dezember"
 
 #. module: board
 #: view:board.board:0
@@ -248,7 +352,23 @@ msgstr "Höhe"
 #. module: board
 #: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
-msgstr "Erzeuge Menü für Anzeigetafel"
+msgstr "Erzeuge Menü für Pinnwand"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr "Mai"
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Objekt"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr "Jahr"
 
 #. module: board
 #: view:board.menu.create:0
@@ -258,13 +378,25 @@ msgstr "Abbruch"
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
-msgstr "Anzeigetafel Anzeige"
+msgstr "Pinnwand Anzeige"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Bitte Ansichten in Pinnwand einfügen"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Thema"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
 
 #~ msgid "board.board"
 #~ msgstr "board.board"
@@ -275,6 +407,9 @@ msgstr "Thema"
 #~ msgid "Configuration"
 #~ msgstr "Konfiguration"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"
 
@@ -283,3 +418,21 @@ msgstr "Thema"
 
 #~ msgid "board.board.line"
 #~ msgstr "board.board.line"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
+
+#~ msgid "NOte Type"
+#~ msgstr "Mitteilung Art"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

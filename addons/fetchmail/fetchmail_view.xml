@@ -7,11 +7,13 @@
             <field name="model">email.server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('wating');gray:state in('done')" string="POP/IMAP Servers">
+                <tree colors="blue:state in ('draft');black:state in ('waiting');gray:state in('done')" string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="user"/>
                     <field name="is_ssl"/>
+                    <field name="object_id"/>
+                    <field name="message_ids" string="# of emails"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -46,6 +48,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Auto Reply?" colspan="2"/>
                                 <field name="action_id"/>
+                                <field name="user_id"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Process Parameter" colspan="2"/>
@@ -117,11 +120,39 @@
 	          </field>
 	      </field>
       </record>
+      
+      <record model="ir.ui.view" id="mailgate_message_search_view">
+	      <field name="name">mailgate.message.inherit.search</field>
+	      <field name="model">mailgate.message</field>
+	      <field name="type">search</field>
+	      <field name="inherit_id" ref="mail_gateway.view_mailgate_message_search"/>
+	      <field name="arch" type="xml">
+			<xpath expr="/search/field[@name='name']" position="before">
+			     <filter string="Emails" name="emails" domain="[('server_id','!=',False)]" icon="terp-mail-message-new"/>
+			     <separator orientation="vertical"/>
+			</xpath>
+			<xpath expr="/search/group/filter[@string='Thread']" position="before">
+                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>
+            </xpath>
+	      </field>
+      </record>
+      
+      <record id="action_view_mail_message_emails" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mailgate.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_emails': 1}</field>
+            <field name="search_view_id" ref="mailgate_message_search_view"/>
+      </record>
+        
+      <menuitem id="base.menu_email_gateway_form"
+               parent="base.menu_mail_gateway" action="action_view_mail_message_emails" />
 
-        <act_window 
+      <act_window 
             context="{'server_id': active_id}"
             domain="[('server_id', '=', active_id)]"
-            id="act_server_history" name="Email History"
+            id="act_server_history" name="Emails"
             res_model="mailgate.message" src_model="email.server"/>
             
     </data>

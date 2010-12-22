@@ -31,15 +31,15 @@ class account_budget_analytic(osv.osv_memory):
         'date_to': fields.date('End of period', required=True),
     }
     _defaults= {
-        'date_from': time.strftime('%Y-01-01'),
-        'date_to': time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': context.get('active_ids',[]),
              'model': 'account.analytic.account',

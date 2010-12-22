@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-03 07:55+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_fundraising
@@ -39,14 +39,9 @@ msgid "Avg. Probability"
 msgstr ""
 
 #. module: crm_fundraising
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcije."
-
-#. module: crm_fundraising
-#: view:crm.fundraising:0
-msgid "Funds Form"
-msgstr "Obrazac Sredstava"
+#: selection:crm.fundraising.report,month:0
+msgid "March"
+msgstr "Mart"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,delay_close:0
@@ -167,7 +162,6 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_fundraising
-#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.ui.menu,name:crm_fundraising.menu_report_crm_fundraising_tree
 msgid "Fundraising Analysis"
 msgstr "Analiza Priklupljanja Sredstava"
@@ -179,18 +173,13 @@ msgstr "CRM Prikupljanje Sredstava"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Estimates"
-msgstr "Procene"
+msgid "Misc"
+msgstr "Ostalo"
 
 #. module: crm_fundraising
 #: field:crm.fundraising.report,section_id:0
 msgid "Section"
 msgstr "Sekcija"
-
-#. module: crm_fundraising
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za Pregled Arhitekture"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -240,13 +229,6 @@ msgid "Creation Date"
 msgstr "Datum Kreacije"
 
 #. module: crm_fundraising
-#: field:crm.fundraising,date_closed:0
-#: selection:crm.fundraising,state:0
-#: selection:crm.fundraising.report,state:0
-msgid "Closed"
-msgstr "Zatvoreno"
-
-#. module: crm_fundraising
 #: field:crm.fundraising,date_deadline:0
 msgid "Deadline"
 msgstr "Krajnji Rok"
@@ -282,6 +264,11 @@ msgid "Employee Email"
 msgstr "Email Radnika"
 
 #. module: crm_fundraising
+#: view:crm.fundraising.report:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: crm_fundraising
 #: selection:crm.fundraising,state:0
 #: selection:crm.fundraising.report,state:0
 msgid "Cancelled"
@@ -298,9 +285,9 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: crm_fundraising
-#: selection:crm.fundraising.report,month:0
-msgid "March"
-msgstr "Mart"
+#: view:crm.fundraising:0
+msgid "Funds Form"
+msgstr "Obrazac Sredstava"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -319,9 +306,18 @@ msgstr "Reference"
 
 #. module: crm_fundraising
 #: view:crm.fundraising.report:0
+#: model:ir.actions.act_window,name:crm_fundraising.action_report_crm_fundraising
 #: model:ir.module.module,description:crm_fundraising.module_meta_information
 msgid "Fundraising"
 msgstr "Prikupljanje Sredstava"
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.action_report_crm_fundraising
+msgid ""
+"Have a general overview of all fund raising activities by sorting them with "
+"specific criteria such as the estimated revenue, average success probability "
+"and delay to close."
+msgstr ""
 
 #. module: crm_fundraising
 #: selection:crm.fundraising.report,month:0
@@ -388,6 +384,14 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_case_category_act_fund_all1
+msgid ""
+"If you need to support your organization or a campaign, with 'Fund Raising' "
+"you can track all you fund raising activities. The search list allows you to "
+"filter by funds description, email, history and probability of success."
+msgstr ""
+
+#. module: crm_fundraising
 #: view:crm.fundraising.report:0
 msgid "  Year  "
 msgstr "  Godina  "
@@ -422,9 +426,11 @@ msgid "Low"
 msgstr "Nizak"
 
 #. module: crm_fundraising
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekurzivni meni."
+#: field:crm.fundraising,date_closed:0
+#: selection:crm.fundraising,state:0
+#: selection:crm.fundraising.report,state:0
+msgid "Closed"
+msgstr "Zatvoreno"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -516,6 +522,13 @@ msgid "Cheque"
 msgstr "Ček"
 
 #. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fund_categ_action
+msgid ""
+"Manage and define the fund raising categories you want to be maintained in "
+"the system."
+msgstr ""
+
+#. module: crm_fundraising
 #: help:crm.fundraising,email_from:0
 msgid "These people will receive email."
 msgstr "Ovi ce ljudi primite Email."
@@ -542,8 +555,8 @@ msgstr "Dodatak"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
-msgid "Misc"
-msgstr "Ostalo"
+msgid "Estimates"
+msgstr "Procene"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -577,13 +590,6 @@ msgstr "Otkazi"
 #: selection:crm.fundraising.report,state:0
 msgid "Open"
 msgstr "Otvori"
-
-#. module: crm_fundraising
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere !"
 
 #. module: crm_fundraising
 #: view:crm.fundraising:0
@@ -624,6 +630,13 @@ msgstr "Tip Prikupljanja Sredstava"
 #: view:crm.fundraising.report:0
 #: field:crm.fundraising.report,amount_revenue_prob:0
 msgid "Est. Rev*Prob."
+msgstr ""
+
+#. module: crm_fundraising
+#: model:ir.actions.act_window,help:crm_fundraising.crm_fundraising_stage_act
+msgid ""
+"Create and manage fund raising activity categories you want to be maintained "
+"in the system."
 msgstr ""
 
 #. module: crm_fundraising
@@ -751,3 +764,17 @@ msgstr "Godina"
 #: field:crm.fundraising,duration:0
 msgid "Duration"
 msgstr "Kasnjenje"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcije."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za Pregled Arhitekture"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekurzivni meni."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere !"

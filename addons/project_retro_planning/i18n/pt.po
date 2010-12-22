@@ -6,28 +6,53 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-08 15:55+0000\n"
-"Last-Translator: Madalena_prime <madalena.barreto@prime.cv>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-09 09:47+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_retro_planning
 #: model:ir.model,name:project_retro_planning.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "Projecto"
 
 #. module: project_retro_planning
 #: model:ir.module.module,shortdesc:project_retro_planning.module_meta_information
 msgid "Project Retro planning"
+msgstr "Projecto Retro Planeamento"
+
+#. module: project_retro_planning
+#: model:ir.module.module,description:project_retro_planning.module_meta_information
+msgid ""
+"\n"
+"        - If end date of project is changed\n"
+"          then the deadline date and start date for all the tasks will "
+"change accordingly  "
 msgstr ""
 
 #. module: project_retro_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "Erro ! A data de início do projeto deve ser anterior à do seu fim"
+
+#. module: project_retro_planning
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"

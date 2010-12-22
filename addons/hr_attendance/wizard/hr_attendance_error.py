@@ -33,14 +33,12 @@ class hr_attendance_error(osv.osv_memory):
         'max_delay': fields.integer('Max. Delay (Min)', required=True)
     }
     _defaults = {
-         'init_date': time.strftime('%Y-%m-%d'),
-         'end_date': time.strftime('%Y-%m-%d'),
+         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
          'max_delay': 120,
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         emp_ids = []
         data_error = self.read(cr, uid, ids, context=context)[0]
         date_from = data_error['init_date']

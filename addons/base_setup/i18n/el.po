@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-08 12:34+0000\n"
-"Last-Translator: Makis Nicolaou <mark.nicolaou@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-15 03:01+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -23,25 +23,19 @@ msgid "City"
 msgstr "Πόλη"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Εγκατάσταση"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Τιμολόγηση"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Επωνυμία Επιχείρησης"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Ανθρώπινο Δυναμικό"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -51,12 +45,12 @@ msgstr "E-mail"
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr ""
+msgstr "Αρ. Λογαριασμού Τραπέζης"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr ""
+msgstr "Επιπλέον Εργαλεία"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
@@ -69,26 +63,28 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Βοηθά στην διαχείρηση των διαδικασιών παραγωγής και παράγει αναφορές γι' "
+"αυτές"
 
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
+msgstr "Βοηθά στην διαχείριση των εκστρατειών μάρκετινγκ βήμα προς βήμα."
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr ""
+msgstr "Η βάση σου έχει δημιουργηθεί"
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Σημείο πώλησης"
 
 #. module: base_setup
 #: field:base.setup.installer,association:0
 msgid "Associations"
-msgstr ""
+msgstr "Αντιστοιχήσεις"
 
 #. module: base_setup
 #: help:base.setup.installer,account_accountant:0
@@ -96,19 +92,20 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing "
 msgstr ""
+"Σε βοηθά να διαχειριστείς τις λογιστικές σου ανάγκες, εάν δεν είσαι "
+"λογιστής, σας προτείνουμε να εγκαταστήσετε μόνο την Τιμολόγηση "
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "Οι ακόλουθοι χρήστες έχουν εγκατασταθεί: \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Πρόοδος Ρυθμίσεων"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
@@ -124,22 +121,22 @@ msgstr "Νόμισμα"
 #. module: base_setup
 #: field:base.setup.company,state_id:0
 msgid "Fed. State"
-msgstr ""
+msgstr "Πολιτεία"
 
 #. module: base_setup
 #: field:base.setup.installer,marketing:0
 msgid "Marketing"
-msgstr ""
+msgstr "Μάρκετινγκ"
 
 #. module: base_setup
 #: field:base.setup.company,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Εταιρία"
 
 #. module: base_setup
 #: field:base.setup.installer,sale:0
 msgid "Sales Management"
-msgstr ""
+msgstr "Διαχείριση Πωλήσεων"
 
 #. module: base_setup
 #: help:base.setup.installer,profile_tools:0
@@ -147,11 +144,22 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+"Σας επιτρέπει να εγκαταστήσετε διάφορα ενδιαφέροντα αλλά όχι απαραίτητα "
+"εργαλεία όπως την Έρευνα (Survey), το Γεύμα και το Κουτί ιδεών."
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"Μπορείς να ξεκινήσεις την παραμετροποίηση του συστήματος ή να συνδεθείς "
+"απευθείας στην βάση ως διαχειριστής."
 
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Προχωρημένες Αναφορές"
 
 #. module: base_setup
 #: field:base.setup.company,phone:0
@@ -161,21 +169,42 @@ msgstr "Τηλέφωνο"
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "res_config_contents"
+msgstr "res_config_contents"
+
+#. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
 msgstr ""
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Χρήση Απευθείας"
+msgstr "τίτλος"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
+msgstr "Διαχείριση Γνώσης"
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
 msgstr ""
 
 #. module: base_setup
@@ -184,6 +213,8 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
 msgstr ""
+"Εγκαθίστανται μια σειρά από προεγκατεστημένες εφαρμογές του OpenERP που θα "
+"σε βοηθήσουν να διαχειριστείς την εταιρία σου"
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
@@ -191,14 +222,17 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Βοηθά στην παρακολούθηση των έργων και εργασιών παράγοντας σχέδια , κλπ..."
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Επωνυμία Επιχείρησης"
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr "Παράβλεψη των οδηγών διαμόρφωσης"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -206,6 +240,8 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
+"Σε βοηθά να διαχειριστείς τους ανθρώπινους πόρους καταγράφοντας τη δομή των "
+"υπαλήλων,δημιουργώντας φύλλα εργασιών, καταγραφή παρουσίας"
 
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
@@ -213,16 +249,14 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
+"Επιτρέπει να δημιουργήσεις τιμολόγια και να παρακολουθήσεις τις πληρωμές. "
+"Είναι μια πρώιμη έκδοση του πρόσθετου της Λογιστικής για διαχειριστές που "
+"δεν είναι λογιστές."
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr ""
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -230,6 +264,8 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier invoices, etc..."
 msgstr ""
+"Σας βοηθάει να διαχειριστείτε τις σχετικές με τις προμήθειες διαδικασίες σας "
+"όπως αιτήματα προσφορών, τιμολόγια προμηθευτών κλπ"
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer2:0
@@ -245,12 +281,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,street2:0
 msgid "Street 2"
-msgstr ""
+msgstr "Οδός 2"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_installer
 msgid "base.setup.installer"
-msgstr ""
+msgstr "base.setup.installer"
 
 #. module: base_setup
 #: field:base.setup.company,country_id:0
@@ -265,17 +301,17 @@ msgstr "Εγκατάσταση"
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Λογιστικά & Χρηματοοικονομικά"
 
 #. module: base_setup
 #: field:base.setup.installer,auction:0
 msgid "Auction Houses"
-msgstr ""
+msgstr "Οίκοι δημοπρασιών"
 
 #. module: base_setup
 #: field:base.setup.company,zip:0
 msgid "Zip Code"
-msgstr ""
+msgstr "Ταχυδρομικός Κώδικας"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -288,51 +324,74 @@ msgid ""
 "Lets you install addons geared towards sharing knowledge with and between "
 "your employees."
 msgstr ""
+"Σας επιτρέπει να εγκαταστήσετε πρόσθετα σχεδιασμένα να προωθούν τη διάχυση "
+"της γνώσης μεταξύ εσάς και των υπαλλήλων σας."
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
-msgstr ""
+msgstr "Ρύθμιση Εταιρίας"
 
 #. module: base_setup
 #: field:base.setup.company,logo:0
 msgid "Logo"
-msgstr "Logo"
+msgstr "Λογότυπο"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+"Σας βοηθά να αξιοποιήσετε στο μέγιστο τα σημεία σας πωλήσεων με γρήγορη "
+"κωδικοποίηση πωλήσεων, απλοποιημένη κωδικοποίηση τρόπου πληρωμής, αυτόματα "
+"δημιουργία λιστών περισυλλογής και άλλα."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
-msgstr ""
+msgstr "Διαχείριση Αγορών"
 
 #. module: base_setup
 #: help:base.setup.installer,sale:0
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
+"Σας βοηθά να διαχειριστείτε τις προσφορές, παραγγελίες πωλήσεων και την "
+"τιμολόγηση"
 
 #. module: base_setup
 #: field:base.setup.installer,stock:0
 msgid "Warehouse Management"
-msgstr ""
+msgstr "Διαχείριση Αποθήκης"
 
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr ""
+msgstr "Διαχείριση Έργων"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
 msgid "Installed Users"
-msgstr ""
+msgstr "Εγκατεστημένοι χρήστες"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "New Database"
-msgstr ""
+msgstr "Νέα Βάση Δεδομένων"
 
 #. module: base_setup
 #: field:base.setup.installer,crm:0
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Διαχείριση Πελατειακών Σχέσεων (CRM)"
 
 #. module: base_setup
 #: help:base.setup.installer,auction:0
@@ -340,6 +399,9 @@ msgid ""
 "Installs a preselected set of OpenERP applications selected to help you "
 "manage your auctions as well as the business processes around them."
 msgstr ""
+"Εγκαθιστά ένα προεπιλεγμένο σύνολο εφαρμογών του OpenERP επιλεγμένων για να "
+"σας βοηθήσουν να διαχειριστείτε τις δημοπρασίες σας καθώς και τις "
+"επιχειρησιακές διαδικασίες γύρω από αυτές."
 
 #. module: base_setup
 #: help:base.setup.company,rml_header1:0
@@ -358,6 +420,8 @@ msgid ""
 "Lets you install various tools to simplify and enhance OpenERP's report "
 "creation."
 msgstr ""
+"Γίνεται εγκατάσταση εργαλείων για την απλοποίηση και την ενίσχυση των "
+"αναφορών του OpenERP"
 
 #. module: base_setup
 #: field:base.setup.company,rml_header1:0
@@ -367,29 +431,29 @@ msgstr "Κεφαλίδα Αναφοράς"
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Information about your new database"
-msgstr ""
+msgstr "Πληροφορίες σχετικά με την νέα βάση δεδομένων"
 
 #. module: base_setup
 #: field:base.setup.company,config_logo:0
 #: field:base.setup.config,config_logo:0
 #: field:base.setup.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Εικόνα"
 
 #. module: base_setup
 #: field:base.setup.installer,product_expiry:0
 msgid "Food Industry"
-msgstr ""
+msgstr "Βιομηχανία Τροφίμων"
 
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
 msgid "Manufacturing"
-msgstr ""
+msgstr "Παραγωγή"
 
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "Your Logo - Use a size of about 450x150 pixels."
-msgstr "Το Logo σας - Χρησιμοποιήστε ένα μέγεθος περίπου 450x150 pixels."
+msgstr "Λογότυπο - Χρησιμοποιείστε μέγεθος 450x150 pixels."
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer1:0
@@ -405,12 +469,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,website:0
 msgid "Company Website"
-msgstr ""
+msgstr "Ιστοσελίδα Εταιρίας"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install Specific Industry Applications"
-msgstr ""
+msgstr "Εγκαθιστά Συγκεκριμένες Επιχειρησιακές Εφαρμογές"
 
 #. module: base_setup
 #: field:base.setup.company,street:0
@@ -418,19 +482,20 @@ msgid "Street"
 msgstr "Οδός"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
 #: help:base.setup.company,website:0
 msgid "Example: http://openerp.com"
-msgstr ""
+msgstr "Παράδειγμα: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
-msgstr ""
+msgstr "Εγκατάσταση Εφαρμογών"
 
 #. module: base_setup
 #: help:base.setup.installer,crm:0
@@ -439,6 +504,9 @@ msgid ""
 "or issues. Can automatically send reminders, escalate requests or trigger "
 "business-specific actions based on standard events."
 msgstr ""
+"Σε βοηθά να καταγράψεις και και να διαχειριστείς τις σχέσεις με τους "
+"υποψήφιους πελάτες, αιτήσεις και θέματα. Μπορεί να στείλει υπενθυμίσεις "
+"αυτόματα, να κλημακώσει απαιτήσεις ή να ενεργήσει βάσει κάποιον γεγονότων."
 
 #. module: base_setup
 #: help:base.setup.installer,stock:0
@@ -446,6 +514,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Σας βοηθάει να διαχειριστείτε την αποθήκη σας και τις κύριες λειτουργίες "
+"αποθέματος: παράδοση παραγγελιών, παραλαβές κλπ"
 
 #. module: base_setup
 #: model:ir.module.module,shortdesc:base_setup.module_meta_information
@@ -458,17 +528,13 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your association more efficiently."
 msgstr ""
+"Εγκαθιστά ένα προεπιλεγμένο σύνολο εφαρμογών του OpenERP που θα σας "
+"βοηθήσουν να διαχειριστείτε την εταιρεία σας πιο αποτελεσματικά."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr ""
+msgstr "base.setup.config"
 
 #~ msgid ""
 #~ "A profile sets a pre-selection of modules for specific needs. These profiles "
@@ -529,14 +595,20 @@ msgstr ""
 #~ msgid "Installation Done"
 #~ msgstr "Ολοκλήρωση Εγκατάστασης"
 
-#~ msgid "Install"
-#~ msgstr "Εγκατάσταση"
-
 #~ msgid "Summary"
 #~ msgstr "Περίληψη"
+
+#~ msgid "Use Directly"
+#~ msgstr "Χρήση Απευθείας"
 
 #~ msgid "Previous"
 #~ msgstr "Προηγούμενο"
 
 #~ msgid "Cancel"
 #~ msgstr "Άκυρο"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου(Object) θα πρέπει να ξεκινά με x_ και δεν θα "
+#~ "πρέπει να περιέχει ειδικούς χαρακτήρες."

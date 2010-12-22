@@ -28,16 +28,16 @@ class report_timesheet_line(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'date' : fields.date('Date', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'cost': fields.float('Cost', readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product',readonly=True),
-        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'general_account_id': fields.many2one('account.account', 'General Account', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,user_id desc'
@@ -223,11 +223,11 @@ class report_random_timsheet(osv.osv):
     _auto = False
 
     _columns = {
-        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'analytic_account_id': fields.many2one('account.analytic.account','Analytic Account', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
-        'quantity' : fields.float('Quantity', readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
         'date': fields.date('Date', readonly=True),
-        'user_id' : fields.many2one('res.users', 'User', readonly=True)
+        'user_id': fields.many2one('res.users', 'User', readonly=True)
     }
     _order = "date desc"
 
@@ -273,14 +273,14 @@ class random_timesheet_lines(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
-        'user_id' : fields.many2one('res.users', 'User', readonly=True),
-        'quantity' : fields.float('Quantity', readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product', readonly=True),
-        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
-        'uom_id' : fields.many2one('product.uom', 'UoM', readonly=True),
-        'amount' : fields.float('Amount', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
+        'analytic_account_id': fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'uom_id': fields.many2one('product.uom', 'UoM', readonly=True),
+        'amount': fields.float('Amount', readonly=True),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing', readonly=True),
-        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True)
+        'general_account_id': fields.many2one('account.account', 'General Account', readonly=True)
     }
 
     _order = "date desc"

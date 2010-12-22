@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 11:52+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -55,13 +55,9 @@ msgstr ""
 #. module: hr_holidays
 #: view:available.holidays.report:0
 #: view:hr.holidays:0
+#: view:hr.holidays.status:0
 msgid "Group By..."
 msgstr ""
-
-#. module: hr_holidays
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
@@ -83,9 +79,8 @@ msgid "Refused"
 msgstr "Απορριφθείσα"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
-#: field:available.holidays.report,max_leave:0
-msgid "Allocated Leaves"
+#: help:hr.holidays,category_id:0
+msgid "Category Of employee"
 msgstr ""
 
 #. module: hr_holidays
@@ -99,7 +94,6 @@ msgid "Brown"
 msgstr "Καφέ"
 
 #. module: hr_holidays
-#: view:available.holidays.report:0
 #: view:hr.holidays:0
 msgid "Remaining Days"
 msgstr ""
@@ -119,11 +113,6 @@ msgstr ""
 msgid ""
 "Leave Manager can let this field empty if this leave request/allocation is "
 "for every employee"
-msgstr ""
-
-#. module: hr_holidays
-#: view:available.holidays.report:0
-msgid "Leave Days"
 msgstr ""
 
 #. module: hr_holidays
@@ -205,10 +194,23 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Validation"
+msgstr ""
+
+#. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Προσοχή!"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for category %s while there are too few remaining "
+"leave days."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -222,6 +224,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: field:available.holidays.report,holiday_status_id:0
+#: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
@@ -400,6 +403,11 @@ msgid "Wheat"
 msgstr "Σιταρένιο"
 
 #. module: hr_holidays
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
@@ -407,8 +415,9 @@ msgid "Number of Days"
 msgstr "Ημέρες"
 
 #. module: hr_holidays
-#: help:hr.holidays,category_id:0
-msgid "Category Of employee"
+#: view:available.holidays.report:0
+#: field:available.holidays.report,max_leave:0
+msgid "Allocated Leaves"
 msgstr ""
 
 #. module: hr_holidays
@@ -417,20 +426,25 @@ msgid "Remaining Leave by Type and User"
 msgstr ""
 
 #. module: hr_holidays
-#: selection:available.holidays.report,month:0
-msgid "July"
+#: view:hr.holidays.status:0
+msgid "Search Leave Type"
 msgstr ""
 
 #. module: hr_holidays
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: selection:available.holidays.report,month:0
+msgid "July"
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
 "If its True then its Allocation/Request have to be validated by second "
 "validator"
+msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "    Month-1    "
 msgstr ""
 
 #. module: hr_holidays
@@ -446,6 +460,19 @@ msgstr "Υπάλληλος/οι"
 #. module: hr_holidays
 #: view:available.holidays.report:0
 msgid " Month "
+msgstr ""
+
+#. module: hr_holidays
+#: view:board.board:0
+msgid "Leaves By Month"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:0
+#, python-format
+msgid ""
+"You cannot validate leaves for employee %s while there are too few remaining "
+"leave days."
 msgstr ""
 
 #. module: hr_holidays
@@ -558,11 +585,6 @@ msgid "Black"
 msgstr "Μαύρο"
 
 #. module: hr_holidays
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
 msgstr ""
@@ -571,29 +593,6 @@ msgstr ""
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Leaves Allowed"
 msgstr "Ανώτατο όριο αδειών"
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.category_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            else:\n"
-"                nb = record.number_of_days_temp\n"
-"\n"
-"            if record.holiday_type == 'employee' and record.employee_id:\n"
-"                user_id = record.employee_id.user_id and "
-"record.employee_id.user_id.id or uid\n"
-"\n"
-"            self.write(cr, uid, [record.id], {'state':'confirm', "
-"'number_of_days': nb, 'user_id': user_id })\n"
-"        return True\n"
-"\n"
-"    def holidays_refuse(self, cr, uid, ids, *args):\n"
-"        vals = {'state': 'refuse'}\n"
-"        ids2 = self.pool.get('hr.employee"
-msgstr ""
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
@@ -650,6 +649,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:available.holidays.report:0
+#: view:hr.holidays:0
 msgid "Extended Filters..."
 msgstr ""
 
@@ -685,27 +685,14 @@ msgstr "Ημερ/νία"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Extended options..."
+#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
+msgid "Leaves Summary"
 msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:0
 #, python-format
 msgid "Error"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:0
-#, python-format
-msgid ""
-"You cannot validate leaves for %s while available leaves are less than asked "
-"leaves.' %(record.employee_id.name)))\n"
-"                nb = -(record.number_of_days_temp)\n"
-"            elif record.holiday_type == 'category' and record.type == "
-"'remove':\n"
-"                if record.category_id and not "
-"record.holiday_status_id.limit:\n"
-"                    leaves_rest = self.pool.get('hr.holidays.status"
 msgstr ""
 
 #. module: hr_holidays
@@ -745,6 +732,15 @@ msgid "Reasons"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
+msgid ""
+"Leaves requests can be recorded by employees and validated by their "
+"managers. Once a leave request is validated it appears automatically in the "
+"agenda of the employee. You can define several allowance types (paid "
+"holidays, sickness, etc) and manage allowances per type."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
@@ -780,13 +776,6 @@ msgid "Allocation Request"
 msgstr ""
 
 #. module: hr_holidays
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες"
-
-#. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
 msgstr ""
@@ -797,25 +786,20 @@ msgid "Apply Double Validation"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,holiday_status_id:0
-msgid " Leave Type"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Εκτύπωση"
 
 #. module: hr_holidays
-#: view:board.board:0
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
-msgid "My Leaves"
+#: view:hr.holidays.status:0
+msgid "Details"
 msgstr ""
 
 #. module: hr_holidays
 #: view:board.board:0
-msgid "My Leaves by Type"
+#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_board
+msgid "My Leaves"
 msgstr ""
 
 #. module: hr_holidays
@@ -840,6 +824,7 @@ msgid "May"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.status:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Category"
 msgstr ""
@@ -951,11 +936,6 @@ msgid "Linked Requests"
 msgstr ""
 
 #. module: hr_holidays
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
@@ -970,12 +950,6 @@ msgstr "Κίτρινο"
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
 msgstr "Ροζ"
-
-#. module: hr_holidays
-#: view:hr.holidays:0
-#: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
-msgid "Leaves Summary"
-msgstr ""
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
@@ -1080,6 +1054,9 @@ msgstr ""
 #~ msgid "Vacation end day"
 #~ msgstr "Τέλος άδειας"
 
+#~ msgid "Holidays Allowed"
+#~ msgstr "Επιτρεπτές άδειες"
+
 #~ msgid "Legal Declaration Document to declare new employee"
 #~ msgstr "Επίσημο Έγγραφο Πρόσληψης"
 
@@ -1112,6 +1089,9 @@ msgstr ""
 
 #~ msgid "Report Options"
 #~ msgstr "Επιλογές Αναφοράς"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #~ msgid "His manager approves the request"
 #~ msgstr "Ο Προϊστάμενος εγκρίνει την αίτηση"
@@ -1224,11 +1204,19 @@ msgstr ""
 #~ msgid "Holidays Requests Awaiting for Validation"
 #~ msgstr "Αιτήσεις Αδείας προς Επικύρωση"
 
+#~ msgid "General Information"
+#~ msgstr "Γενικές Πληροφορίες"
+
 #~ msgid "Holidays def Request"
 #~ msgstr "Holidays def Request"
 
 #~ msgid "My Holidays Request Refused"
 #~ msgstr "Αιτήσεις Αδείας μου Απορριφθείσες"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες"
 
 #~ msgid "Print Summary of Holidays"
 #~ msgstr "Εκτύπωση Αδειών Συνοπτικά"
@@ -1265,6 +1253,9 @@ msgstr ""
 
 #~ msgid "Holiday per user"
 #~ msgstr "Άδειες ανα χρήστη"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #~ msgid ""
 #~ "Human Ressources: Holidays tracking and workflow\n"

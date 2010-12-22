@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 14:27+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-03 07:46+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -26,13 +26,6 @@ msgstr "Subtotaal"
 #: report:notify_account.invoice:0
 msgid "Note:"
 msgstr "Opmerking:"
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -82,19 +75,30 @@ msgid "Unit Price"
 msgstr "Eenheidsprijs"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "BTW :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -129,9 +133,14 @@ msgid "Product"
 msgstr "Product"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Schrijf berichten"
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
-msgstr ""
+msgstr "Bepaalt de volgorde bij het afbeelden van de factuurregels"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -157,9 +166,9 @@ msgid "Source Account"
 msgstr "Bron rekening"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Schrijf berichten"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -181,7 +190,7 @@ msgstr "Bijzonder bericht:"
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "Bericht om onder op het overzicht af te drukken"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -194,11 +203,6 @@ msgstr "Aantal"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr "Ref. relatie"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -260,7 +264,7 @@ msgstr "Volgnummer"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
 msgid "Account Invoice Special Message"
-msgstr ""
+msgstr "Klantfactuur speciaal bericht"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -281,7 +285,7 @@ msgstr "Scheidingslijn"
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Factuurlayout verbetering"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -297,19 +301,13 @@ msgstr "Afdrukken"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr "BTW :"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "BTW"
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Factuurregel"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -329,9 +327,9 @@ msgid "Fax :"
 msgstr "Fax :"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Annuleren"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr "Wees expert onder de experts..."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -349,14 +347,23 @@ msgstr "Bericht"
 msgid "All Notification Messages"
 msgstr "Alle berichten"
 
+#~ msgid ":"
+#~ msgstr ":"
+
 #~ msgid "Invoice Date:"
 #~ msgstr "Factuurdatum:"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Klant ref:"
 
+#~ msgid "Description"
+#~ msgstr "Omschrijving"
+
 #~ msgid "account_invoice_layout"
 #~ msgstr "account_invoice_layout"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Geannuleerde factuur"
 
 #~ msgid "Fax :"
 #~ msgstr "Fax:"
@@ -364,8 +371,17 @@ msgstr "Alle berichten"
 #~ msgid "Tel. :"
 #~ msgstr "Tel. :"
 
+#~ msgid "Total (excl. taxes):"
+#~ msgstr "Totaal (excl. BTW):"
+
+#~ msgid "Taxes"
+#~ msgstr "Belastingen"
+
 #~ msgid "VAT :"
 #~ msgstr "BTW:"
+
+#~ msgid "(incl. taxes):"
+#~ msgstr "(incl. BTW):"
 
 #~ msgid "Total"
 #~ msgstr "Totaal"
@@ -390,3 +406,26 @@ msgstr "Alle berichten"
 
 #~ msgid "Total (Excl. taxes):"
 #~ msgstr "Totaal (ex. belastingen)"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

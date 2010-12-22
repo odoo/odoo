@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:25+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:25+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:04+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,23 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: document_ftp
-#: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
 msgid "Auto Directory Configuration"
 msgstr ""
 
 #. module: document_ftp
-#: help:document.ftp.configuration,host:0
-msgid "Server address or IP and port to which users should connect to for DMS access"
-msgstr ""
-
-#. module: document_ftp
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: view:document.ftp.configuration:0
+msgid "Indicate the network address on which your OpenERP server should be reachable for end-users. This depends on your network topology and configuration, and will only affect the links displayed to the users. The format is HOST:PORT and the default host (localhost) is only suitable for access from the server machine itself.."
 msgstr ""
 
 #. module: document_ftp
@@ -51,8 +41,8 @@ msgid "Image"
 msgstr ""
 
 #. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
+#: field:document.ftp.configuration,host:0
+msgid "Address"
 msgstr ""
 
 #. module: document_ftp
@@ -80,8 +70,8 @@ msgid "_Browse"
 msgstr ""
 
 #. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "res_config_contents"
+#: help:document.ftp.configuration,host:0
+msgid "Server address or IP and port to which users should connect to for DMS access"
 msgstr ""
 
 #. module: document_ftp
@@ -90,13 +80,13 @@ msgid "Shared Repository (FTP)"
 msgstr ""
 
 #. module: document_ftp
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:document.ftp.browse:0
+msgid "_Cancel"
 msgstr ""
 
 #. module: document_ftp
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
 msgstr ""
 
 #. module: document_ftp
@@ -105,13 +95,18 @@ msgid "Integrated FTP Server with Document Management System"
 msgstr ""
 
 #. module: document_ftp
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:document.ftp.configuration:0
+msgid "title"
 msgstr ""
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
 msgid "Document FTP Browse"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Knowledge Application Configuration"
 msgstr ""
 
 #. module: document_ftp
@@ -122,5 +117,10 @@ msgstr ""
 #. module: document_ftp
 #: view:document.ftp.browse:0
 msgid "Browse Document"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "res_config_contents"
 msgstr ""
 

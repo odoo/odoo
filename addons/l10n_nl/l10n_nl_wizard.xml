@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <record id="config_call_account_template" model="ir.actions.todo">
+        <field name="name">Genereer Grootboekrekingschema vanuit het Nederlandse Grootboek Template</field>
+ <field name="note">Na installatie van deze module word de configuratie wizard voor "Accounting" aangeroepen.
+* U krijgt een lijst met grootboektemplates aangeboden waarin zich ook het Nederlandse grootboekschema bevind.
+* Als de configuratie wizard start, wordt u gevraagd om de naam van uw bedrijf in te voeren, welke grootboekschema te installeren, uit hoeveel cijfers een grootboekrekening mag bestaan, het rekeningnummer van uw bank en de currency om Journalen te creeren.
+    
+Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd uit 4 cijfers. Dit is het minimale aantal welk u moet invullen, u mag het aantal verhogen. De extra cijfers worden dan achter het rekeningnummer aangevult met "nullen"
+    
+* Dit is dezelfe configuratie wizard welke aangeroepen kan worden via Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+</field>
+        <field name="action_id" ref="account.action_wizard_multi_chart"/>
+    </record>
+
+    </data>
+</openerp>

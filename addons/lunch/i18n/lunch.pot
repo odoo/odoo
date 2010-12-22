@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:39+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:39+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:37+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,6 +57,16 @@ msgid "    7 Days    "
 msgstr ""
 
 #. module: lunch
+#: model:ir.module.module,description:lunch.module_meta_information
+msgid "\n"
+"    The base module to manage lunch\n"
+"\n"
+"    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.\n"
+"    Apply Different Category for the product.\n"
+"    "
+msgstr ""
+
+#. module: lunch
 #: view:lunch.cashmove:0
 #: view:lunch.order:0
 msgid "Today"
@@ -66,6 +76,11 @@ msgstr ""
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "March"
+msgstr ""
+
+#. module: lunch
+#: report:lunch.order:0
+msgid "Total :"
 msgstr ""
 
 #. module: lunch
@@ -125,11 +140,6 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: lunch
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: lunch
 #: view:lunch.order.confirm:0
 msgid "Confirm"
 msgstr ""
@@ -165,6 +175,11 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: lunch
+#: report:lunch.order:0
+msgid "Name/Date"
+msgstr ""
+
+#. module: lunch
 #: field:lunch.order,descript:0
 msgid "Description Order"
 msgstr ""
@@ -188,11 +203,6 @@ msgstr ""
 #: view:report.lunch.amount:0
 #: view:report.lunch.order:0
 msgid "Box"
-msgstr ""
-
-#. module: lunch
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: lunch
@@ -301,11 +311,6 @@ msgid "Draft"
 msgstr ""
 
 #. module: lunch
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "August"
@@ -349,7 +354,6 @@ msgstr ""
 
 #. module: lunch
 #: view:lunch.cashmove:0
-#: report:lunch.order:0
 #: field:lunch.order,date:0
 msgid "Date"
 msgstr ""
@@ -364,11 +368,6 @@ msgstr ""
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "October"
-msgstr ""
-
-#. module: lunch
-#: report:lunch.order:0
-msgid "Total:"
 msgstr ""
 
 #. module: lunch
@@ -418,11 +417,6 @@ msgstr ""
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_form
 msgid " Cashboxes "
-msgstr ""
-
-#. module: lunch
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: lunch
@@ -488,7 +482,6 @@ msgstr ""
 #. module: lunch
 #: field:lunch.cashbox,name:0
 #: field:lunch.category,name:0
-#: report:lunch.order:0
 #: field:lunch.product,name:0
 #: field:report.lunch.order,box_name:0
 msgid "Name"

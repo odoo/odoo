@@ -20,16 +20,17 @@
 ##############################################################################
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 import netsvc
+import pooler
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
 
-def check_cycle(self, cr, uid, ids):
+def check_cycle(self, cr, uid, ids, context=None):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
     until it can't find any more parent(s)
 
@@ -53,7 +54,7 @@ class account_payment_term(osv.osv):
     _description = "Payment Term"
     _columns = {
         'name': fields.char('Payment Term', size=64, translate=True, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the payment term without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
         'note': fields.text('Description', translate=True),
         'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
     }
@@ -115,13 +116,13 @@ class account_payment_term_line(osv.osv):
     _order = "sequence"
 
     def _check_percent(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0])
+        obj = self.browse(cr, uid, ids[0], context=context)
         if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
             return False
         return True
 
     _constraints = [
-        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+        (_check_percent, 'Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% ', ['value_amount']),
     ]
 
 account_payment_term_line()
@@ -193,7 +194,7 @@ class account_account(osv.osv):
                 if not args[pos][2]:
                     del args[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2])
+                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
                 if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
                     args[pos] = ('type','not in',('consolidation','view'))
                     continue
@@ -206,7 +207,7 @@ class account_account(osv.osv):
         if context and context.has_key('consolidate_childs'): #add consolidated childs of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
-            for consolidate_child in self.browse(cr, uid, context['account_id']).child_consol_ids:
+            for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
                 ids.append(consolidate_child.id)
             return ids
 
@@ -214,8 +215,6 @@ class account_account(osv.osv):
                 order, context=context, count=count)
 
     def _get_children_and_consol(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         #this function search for all the children and all consolidated children (recursively) of the given account ids
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context)
         ids3 = []
@@ -288,35 +287,35 @@ class account_account(osv.osv):
             sums = {}
             while brs:
                 current = brs[0]
-                can_compute = True
-                for child in current.child_id:
-                    if child.id not in sums:
-                        can_compute = False
-                        try:
-                            brs.insert(0, brs.pop(brs.index(child)))
-                        except ValueError:
-                            brs.insert(0, child)
-                if can_compute:
-                    brs.pop(0)
-                    for fn in field_names:
-                        sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                        if current.child_id:
-                            sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
+#                can_compute = True
+#                for child in current.child_id:
+#                    if child.id not in sums:
+#                        can_compute = False
+#                        try:
+#                            brs.insert(0, brs.pop(brs.index(child)))
+#                        except ValueError:
+#                            brs.insert(0, child)
+#                if can_compute:
+                brs.pop(0)
+                for fn in field_names:
+                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
+                    if current.child_id:
+                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
             return res
 
-    def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
-        for rec in self.browse(cr, uid, ids, context):
-            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.symbol)
         return result
 
-    def _get_child_ids(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_child_ids(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             if record.child_parent_ids:
                 result[record.id] = [x.id for x in record.child_parent_ids]
             else:
@@ -329,9 +328,9 @@ class account_account(osv.osv):
 
         return result
 
-    def _get_level(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
         res={}
-        accounts = self.browse(cr, uid, ids)
+        accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
             if account.parent_id:
@@ -343,7 +342,7 @@ class account_account(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64, required=True),
+        'code': fields.char('Code', size=64, required=True, select=1),
         'type': fields.selection([
             ('view', 'View'),
             ('other', 'Regular'),
@@ -373,7 +372,7 @@ class account_account(osv.osv):
         'note': fields.text('Note'),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'active': fields.boolean('Active', select=2, help="If the active field is set to true, it will allow you to hide the account without removing it."),
+        'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
@@ -395,8 +394,8 @@ class account_account(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        obj_self = self.browse(cr, uid, ids[0])
+    def _check_recursion(self, cr, uid, ids, context=None):
+        obj_self = self.browse(cr, uid, ids[0], context=context)
         p_id = obj_self.parent_id and obj_self.parent_id.id
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
@@ -425,14 +424,12 @@ class account_account(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if not context:
-            context = {}
         args = args[:]
         ids = []
         try:
             if name and str(name).startswith('partner:'):
                 part_id = int(name.split(':')[1])
-                part = self.pool.get('res.partner').browse(cr, user, part_id, context)
+                part = self.pool.get('res.partner').browse(cr, user, part_id, context=context)
                 args += [('id', 'in', (part.property_account_payable.id, part.property_account_receivable.id))]
                 name = False
             if name and str(name).startswith('type:'):
@@ -583,14 +580,14 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=16, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
-        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'name': fields.char('Journal Name', size=64, required=True),
+        'code': fields.char('Code', size=5, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' to be used at the time of stock input/output."\
-                                 " Select 'Situation' to be used at the time of making vouchers."),
+                                 " Select 'General' for miscellaneous operations."\
+                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -613,12 +610,30 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    _sql_constraints = [
+        ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
+        ('name_company_uniq', 'unique (name, company_id)', 'The name of the journal must be unique per company !'),
+    ]
+
+    _order = 'code'
+
+    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+        journal = self.browse(cr, uid, id, context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['code'] = (journal['code'] or '') + '(copy)'
+        default['name'] = (journal['name'] or '') + '(copy)'
+        return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
-            if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+        if context is None:
+            context = {}
+        for journal in self.browse(cr, uid, ids, context=context):
+            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
+                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+                if move_lines:
+                    raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
@@ -669,7 +684,7 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
-        result = self.browse(cr, user, ids, context)
+        result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
             name = rs.name
@@ -693,7 +708,8 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, currency):
+
+    def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
         user_pool = self.pool.get('res.users')
 
@@ -710,14 +726,13 @@ class account_journal(osv.osv):
 
         res = {}
 
-        view_id = type_map.get(type, 'general')
+        view_id = type_map.get(type, 'account_journal_view')
 
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
-
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
 
         res.update({
             'centralisation':type == 'situation',
@@ -762,8 +777,8 @@ class account_fiscalyear(osv.osv):
                     return False
         return True
 
-    def _check_duration(self,cr,uid,ids):
-        obj_fy = self.browse(cr,uid,ids[0])
+    def _check_duration(self, cr, uid, ids, context=None):
+        obj_fy = self.browse(cr, uid, ids[0], context=context)
         if obj_fy.date_stop < obj_fy.date_start:
             return False
         return True
@@ -773,11 +788,11 @@ class account_fiscalyear(osv.osv):
         (_check_fiscal_year, 'Error! You cannot define overlapping fiscal years',['date_start', 'date_stop'])
     ]
 
-    def create_period3(self,cr, uid, ids, context={}):
+    def create_period3(self,cr, uid, ids, context=None):
         return self.create_period(cr, uid, ids, context, 3)
 
-    def create_period(self,cr, uid, ids, context={}, interval=1):
-        for fy in self.browse(cr, uid, ids, context):
+    def create_period(self,cr, uid, ids, context=None, interval=1):
+        for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
@@ -795,7 +810,7 @@ class account_fiscalyear(osv.osv):
                 ds = ds + relativedelta(months=interval)
         return True
 
-    def find(self, cr, uid, dt=None, exception=True, context={}):
+    def find(self, cr, uid, dt=None, exception=True, context=None):
         if not dt:
             dt = time.strftime('%Y-%m-%d')
         ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
@@ -840,14 +855,14 @@ class account_period(osv.osv):
     }
     _order = "date_start"
 
-    def _check_duration(self,cr,uid,ids,context={}):
-        obj_period=self.browse(cr,uid,ids[0])
+    def _check_duration(self,cr,uid,ids,context=None):
+        obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
             return False
         return True
 
-    def _check_year_limit(self,cr,uid,ids,context={}):
-        for obj_period in self.browse(cr,uid,ids):
+    def _check_year_limit(self,cr,uid,ids,context=None):
+        for obj_period in self.browse(cr, uid, ids, context=context):
             if obj_period.special:
                 continue
 
@@ -868,13 +883,13 @@ class account_period(osv.osv):
         (_check_year_limit, 'Invalid period ! Some periods overlap or the date period is not in the scope of the fiscal year. ', ['date_stop'])
     ]
 
-    def next(self, cr, uid, period, step, context={}):
+    def next(self, cr, uid, period, step, context=None):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
             return ids[step-1]
         return False
 
-    def find(self, cr, uid, dt=None, context={}):
+    def find(self, cr, uid, dt=None, context=None):
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
@@ -890,7 +905,7 @@ class account_period(osv.osv):
             cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
             args = []
         if context is None:
@@ -902,7 +917,7 @@ class account_period(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
@@ -928,7 +943,7 @@ class account_journal_period(osv.osv):
     _name = "account.journal.period"
     _description = "Journal Period"
 
-    def _icon_get(self, cr, uid, ids, field_name, arg=None, context={}):
+    def _icon_get(self, cr, uid, ids, field_name, arg=None, context=None):
         result = {}.fromkeys(ids, 'STOCK_NEW')
         for r in self.read(cr, uid, ids, ['state']):
             result[r['id']] = {
@@ -943,35 +958,35 @@ class account_journal_period(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='char', size=32),
-        'active': fields.boolean('Active', required=True, help="If the active field is set to true, it will allow you to hide the journal period without removing it."),
+        'active': fields.boolean('Active', required=True, help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company')
     }
 
-    def _check(self, cr, uid, ids, context={}):
-        for obj in self.browse(cr, uid, ids, context):
+    def _check(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
             cr.execute('select * from account_move_line where journal_id=%s and period_id=%s limit 1', (obj.journal_id.id, obj.period_id.id))
             res = cr.fetchall()
             if res:
                 raise osv.except_osv(_('Error !'), _('You can not modify/delete a journal with entries for this period !'))
         return True
 
-    def write(self, cr, uid, ids, vals, context={}):
-        self._check(cr, uid, ids, context)
-        return super(account_journal_period, self).write(cr, uid, ids, vals, context)
+    def write(self, cr, uid, ids, vals, context=None):
+        self._check(cr, uid, ids, context=context)
+        return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         period_id=vals.get('period_id',False)
         if period_id:
-            period = self.pool.get('account.period').browse(cr, uid,period_id)
+            period = self.pool.get('account.period').browse(cr, uid, period_id, context=context)
             vals['state']=period.state
         return super(account_journal_period, self).create(cr, uid, vals, context)
 
-    def unlink(self, cr, uid, ids, context={}):
-        self._check(cr, uid, ids, context)
-        return super(account_journal_period, self).unlink(cr, uid, ids, context)
+    def unlink(self, cr, uid, ids, context=None):
+        self._check(cr, uid, ids, context=context)
+        return super(account_journal_period, self).unlink(cr, uid, ids, context=context)
 
     _defaults = {
         'state': 'draft',
@@ -1022,8 +1037,6 @@ class account_move(osv.osv):
 
         if not args:
           args = []
-        if not context:
-          context = {}
         ids = []
         if name:
             ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
@@ -1042,7 +1055,7 @@ class account_move(osv.osv):
         if not ids:
             return []
         res = []
-        data_move = self.pool.get('account.move').browse(cursor,user,ids)
+        data_move = self.pool.get('account.move').browse(cursor, user, ids, context=context)
         for move in data_move:
             if move.state=='draft':
                 name = '*' + str(move.id)
@@ -1051,7 +1064,7 @@ class account_move(osv.osv):
             res.append((move.id, name))
         return res
 
-    def _get_period(self, cr, uid, context):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -1108,12 +1121,12 @@ class account_move(osv.osv):
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
-    def _check_centralisation(self, cursor, user, ids):
-        for move in self.browse(cursor, user, ids):
+    def _check_centralisation(self, cursor, user, ids, context=None):
+        for move in self.browse(cursor, user, ids, context=context):
             if move.journal_id.centralisation:
                 move_ids = self.search(cursor, user, [
                     ('period_id', '=', move.period_id.id),
@@ -1123,8 +1136,8 @@ class account_move(osv.osv):
                     return False
         return True
 
-    def _check_period_journal(self, cursor, user, ids):
-        for move in self.browse(cursor, user, ids):
+    def _check_period_journal(self, cursor, user, ids, context=None):
+        for move in self.browse(cursor, user, ids, context=context):
             for line in move.line_id:
                 if line.period_id.id != move.period_id.id:
                     return False
@@ -1150,7 +1163,7 @@ class account_move(osv.osv):
         if not valid_moves:
             raise osv.except_osv(_('Integrity Error !'), _('You cannot validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         obj_sequence = self.pool.get('ir.sequence')
-        for move in self.browse(cr, uid, valid_moves):
+        for move in self.browse(cr, uid, valid_moves, context=context):
             if move.name =='/':
                 new_name = False
                 journal = move.journal_id
@@ -1175,7 +1188,7 @@ class account_move(osv.osv):
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
-        for move in self.browse(cursor, user, ids):
+        for move in self.browse(cursor, user, ids, context=context):
             top = None
             for line in move.line_id:
                 account = line.account_id
@@ -1188,8 +1201,8 @@ class account_move(osv.osv):
                     raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
-    def button_cancel(self, cr, uid, ids, context={}):
-        for line in self.browse(cr, uid, ids, context):
+    def button_cancel(self, cr, uid, ids, context=None):
+        for line in self.browse(cr, uid, ids, context=context):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if ids:
@@ -1198,18 +1211,21 @@ class account_move(osv.osv):
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
         c = context.copy()
         c['novalidate'] = True
         result = super(osv.osv, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context)
+        self.validate(cr, uid, ids, context=context)
         return result
 
     #
     # TODO: Check if period is closed !
     #
     def create(self, cr, uid, vals, context=None):
-        context = context or {}
+        if context is None:
+            context = {}
         if 'line_id' in vals and context.get('copy'):
             for l in vals['line_id']:
                 if not l[0]:
@@ -1249,8 +1265,9 @@ class account_move(osv.osv):
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default={}, context={}):
-        context = context or {}
+    def copy(self, cr, uid, id, default={}, context=None):
+        if context is None:
+            context = {}
         default.update({
             'state':'draft',
             'name':'/',
@@ -1261,10 +1278,9 @@ class account_move(osv.osv):
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None, check=True):
-        context = context or {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
-        for move in self.browse(cr, uid, ids, context):
+        for move in self.browse(cr, uid, ids, context=context):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('UserError'),
                         _('You can not delete posted movement: "%s"!') % \
@@ -1278,8 +1294,8 @@ class account_move(osv.osv):
         result = super(account_move, self).unlink(cr, uid, toremove, context)
         return result
 
-    def _compute_balance(self, cr, uid, id, context={}):
-        move = self.browse(cr, uid, [id])[0]
+    def _compute_balance(self, cr, uid, id, context=None):
+        move = self.browse(cr, uid, id, context=context)
         amount = 0
         for line in move.line_id:
             amount+= (line.debit - line.credit)
@@ -1342,7 +1358,7 @@ class account_move(osv.osv):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
-    def validate(self, cr, uid, ids, context={}):
+    def validate(self, cr, uid, ids, context=None):
         if context and ('__last_update' in context):
             del context['__last_update']
 
@@ -1373,7 +1389,7 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id and line.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
-                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
+                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""") % (line.account_id.code, line.account_id.name))
 
             if abs(amount) < 10 ** -4:
                 # If the move is balanced
@@ -1456,9 +1472,9 @@ class account_move_reconcile(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
-    def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
+    def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
-        for rec in self.browse(cr, uid, ids, context):
+        for rec in self.browse(cr, uid, ids, context=context):
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
@@ -1472,7 +1488,7 @@ class account_move_reconcile(osv.osv):
         if not ids:
             return []
         result = []
-        for r in self.browse(cr, uid, ids, context):
+        for r in self.browse(cr, uid, ids, context=context):
             total = reduce(lambda y,t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
             if total:
                 name = '%s (%.2f)' % (r.name, total)
@@ -1521,7 +1537,7 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
                 for rec in record.child_ids:
@@ -1583,7 +1599,6 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
@@ -1604,7 +1619,7 @@ class account_tax_code(osv.osv):
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -1626,7 +1641,7 @@ class account_tax_code(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
-    _order = 'code,name'
+    _order = 'code'
 account_tax_code()
 
 class account_tax(osv.osv):
@@ -1641,13 +1656,20 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+
+    def get_precision_tax():
+        def change_digit_tax(cr):
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            return (16, res+2)
+        return change_digit_tax
+
     _name = 'account.tax'
     _description = 'Tax'
     _columns = {
         'name': fields.char('Tax Name', size=64, required=True, translate=True, help="This name will be displayed on reports"),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits_compute=dp.get_precision('Account'), help="For taxes of type percentage, enter % ratio between 0-1."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tax without removing it."),
+        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
         'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
             help="The computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
@@ -1701,10 +1723,15 @@ class account_tax(osv.osv):
         """
         if not args:
             args = []
-        if not context:
+        if context is None:
             context = {}
         ids = []
-        ids = self.search(cr, user, args, limit=limit, context=context)
+        if name:
+            ids = self.search(cr, user, [('description', '=', name)] + args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context or {})
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -2035,7 +2062,7 @@ class account_model(osv.osv):
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
 
-        for model in self.browse(cr, uid, ids, context):
+        for model in self.browse(cr, uid, ids, context=context):
             entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
@@ -2060,8 +2087,8 @@ class account_model(osv.osv):
                 date_maturity = time.strftime('%Y-%m-%d')
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
-                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term! \
-                    \nPlease define partner on it!"%(line.name, model.name)))
+                        raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
+                                                                "\nPlease define partner on it!")%(line.name, model.name))
                     if line.partner_id.property_payment_term:
                         payment_term_id = line.partner_id.property_payment_term.id
                         pterm_list = pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_maturity)
@@ -2135,19 +2162,19 @@ class account_subscription(osv.osv):
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'period_type': 'month',
         'period_total': 12,
         'period_nbr': 1,
         'state': 'draft',
     }
-    def state_draft(self, cr, uid, ids, context={}):
+    def state_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'})
         return False
 
-    def check(self, cr, uid, ids, context={}):
+    def check(self, cr, uid, ids, context=None):
         todone = []
-        for sub in self.browse(cr, uid, ids, context):
+        for sub in self.browse(cr, uid, ids, context=context):
             ok = True
             for line in sub.lines_id:
                 if not line.move_id.id:
@@ -2159,9 +2186,9 @@ class account_subscription(osv.osv):
             self.write(cr, uid, todone, {'state':'done'})
         return False
 
-    def remove_line(self, cr, uid, ids, context={}):
+    def remove_line(self, cr, uid, ids, context=None):
         toremove = []
-        for sub in self.browse(cr, uid, ids, context):
+        for sub in self.browse(cr, uid, ids, context=context):
             for line in sub.lines_id:
                 if not line.move_id.id:
                     toremove.append(line.id)
@@ -2170,8 +2197,8 @@ class account_subscription(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         return False
 
-    def compute(self, cr, uid, ids, context={}):
-        for sub in self.browse(cr, uid, ids, context):
+    def compute(self, cr, uid, ids, context=None):
+        for sub in self.browse(cr, uid, ids, context=context):
             ds = sub.date_start
             for i in range(sub.period_total):
                 self.pool.get('account.subscription.line').create(cr, uid, {
@@ -2232,7 +2259,7 @@ class account_account_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
-        'code': fields.char('Code', size=64),
+        'code': fields.char('Code', size=64, select=1),
         'type': fields.selection([
             ('receivable','Receivable'),
             ('payable','Payable'),
@@ -2269,10 +2296,10 @@ class account_account_template(osv.osv):
     ]
 
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','code'], context)
+        reads = self.read(cr, uid, ids, ['name','code'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -2289,7 +2316,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
     With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
     _name = 'account.addtmpl.wizard'
 
-    def _get_def_cparent(self, cr, uid, context):
+    def _get_def_cparent(self, cr, uid, context=None):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
@@ -2311,6 +2338,8 @@ class account_add_tmpl_wizard(osv.osv_memory):
     }
 
     def action_create(self,cr,uid,ids,context=None):
+        if context is None:
+            context = {}
         acc_obj = self.pool.get('account.account')
         tmpl_obj = self.pool.get('account.account.template')
         data = self.read(cr, uid, ids)
@@ -2432,19 +2461,20 @@ class account_tax_template(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name', size=32),
-        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,)
+        'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
+        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
         res = []
-        for record in self.read(cr, uid, ids, ['description','name'], context):
+        for record in self.read(cr, uid, ids, ['description','name'], context=context):
             name = record['description'] and record['description'] or record['name']
             res.append((record['id'],name ))
         return res
 
-    def _default_company(self, cr, uid, context={}):
+    def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             return user.company_id.id
@@ -2463,6 +2493,7 @@ class account_tax_template(osv.osv):
         'base_sign': 1,
         'include_base_amount': False,
         'type_tax_use': 'all',
+        'price_include': 0,
     }
     _order = 'sequence'
 
@@ -2550,7 +2581,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
-    def _get_chart(self, cr, uid, context={}):
+    def _get_chart(self, cr, uid, context=None):
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
             return ids[0]
@@ -2596,7 +2627,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #create all the tax code
         children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         children_tax_code_template.sort()
-        for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template):
+        for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template, context=context):
             vals={
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
@@ -2636,7 +2667,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'include_base_amount': tax.include_base_amount,
                 'description':tax.description,
                 'company_id': company_id,
-                'type_tax_use': tax.type_tax_use
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
             }
             new_tax = obj_acc_tax.create(cr, uid, vals_tax)
             tax_template_to_tax[tax.id] = new_tax
@@ -2648,11 +2680,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
-        self.pool._init = True
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
         children_acc_template.sort()
-        for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
+        for account_template in obj_acc_template.browse(cr, uid, children_acc_template,context=context):
             tax_ids = []
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
@@ -2676,23 +2709,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
-            new_account = obj_acc.create(cr, uid, vals)
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
         #reactivate the parent_store functionnality on account_account
-        self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)
 
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
-                    'account_collected_id': acc_template_ref[value['account_collected_id']],
-                    'account_paid_id': acc_template_ref[value['account_paid_id']],
+                    'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
+                    'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
 
         # Creating Journals Sales and Purchase
         vals_journal={}
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
         view_id = data.res_id
 
         seq_id = obj_sequence.search(cr, uid, [('name','=','Account Journal')])[0]
@@ -2700,9 +2732,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if obj_multi.seq_journal:
             seq_id_sale = obj_sequence.search(cr, uid, [('name','=','Sale Journal')])[0]
             seq_id_purchase = obj_sequence.search(cr, uid, [('name','=','Purchase Journal')])[0]
+            seq_id_sale_refund = obj_sequence.search(cr, uid, [('name','=','Sales Refund Journal')])
+            if seq_id_sale_refund:
+                seq_id_sale_refund = seq_id_sale_refund[0]
+            seq_id_purchase_refund = obj_sequence.search(cr, uid, [('name','=','Purchase Refund Journal')])
+            if seq_id_purchase_refund:
+                seq_id_purchase_refund = seq_id_purchase_refund[0]
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
+            seq_id_sale_refund = seq_id
+            seq_id_purchase_refund = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -2741,13 +2781,67 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         obj_journal.create(cr,uid,vals_journal)
 
+        # Creating Journals Sales Refund and Purchase Refund
+        vals_journal = {}
+        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        #Sales Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Sales Refund Journal'),
+            'type': 'sale_refund',
+            'refund_journal': True,
+            'code': _('SCNJ'),
+            'sequence_id': seq_id_sale_refund,
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+
+
+#        if obj_multi.property_account_receivable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Purchase Refund Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Purchase Refund Journal'),
+            'type': 'purchase_refund',
+            'refund_journal': True,
+            'code': _('ECNJ'),
+            'sequence_id': seq_id_purchase_refund,
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id
+        }
+
+        if obj_multi.chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+
+
+#        if obj_multi.property_account_payable:
+#            vals_journal.update({
+#                'default_credit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id],
+#                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
+#            })
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
         view_id_cash = data.res_id
 
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])
-        data = obj_data.browse(cr, uid, data_id[0])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
         view_id_cur = data.res_id
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
@@ -2765,7 +2859,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
-                'type': 'other',
+                'type': 'liquidity',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
@@ -2787,7 +2881,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
-            vals_journal['type'] = 'cash'
+            vals_journal['type'] = line.account_type == 'cash' and 'cash' or 'bank'
             vals_journal['company_id'] =  company_id
             vals_journal['analytic_journal_id'] = analitical_journal_bank
 
@@ -2840,7 +2934,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             obj_tax_fp = self.pool.get('account.fiscal.position.tax')
             obj_ac_fp = self.pool.get('account.fiscal.position.account')
 
-            for position in obj_fiscal_position_template.browse(cr, uid, fp_ids):
+            for position in obj_fiscal_position_template.browse(cr, uid, fp_ids, context=context):
 
                 vals_fp = {
                     'company_id': company_id,
@@ -2875,17 +2969,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
-    _name='account.bank.accounts.wizard'
+    _name = 'account.bank.accounts.wizard'
 
     _columns = {
-        'acc_name':fields.char('Account Name.', size=64, required=True),
-        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
-        'currency_id':fields.many2one('res.currency', 'Currency'),
-        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
+        'acc_name': fields.char('Account Name.', size=64, required=True),
+        'bank_account_id': fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency'),
+        'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-        }
+    }
 
 account_bank_accounts_wizard()
 

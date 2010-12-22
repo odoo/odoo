@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-31 08:59+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-23 09:48+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -27,14 +27,6 @@ msgstr "Subtotal"
 #: report:notify_account.invoice:0
 msgid "Note:"
 msgstr "Observación:"
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -85,19 +77,30 @@ msgid "Unit Price"
 msgstr "Precio unidad"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "¡Error! No puede crear menús recursivos."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr "Sea experto con los expertos..."
-
-#. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "CIF/NIF:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -132,6 +135,11 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Escribir mensajes"
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr ""
@@ -162,9 +170,9 @@ msgid "Source Account"
 msgstr "Cuenta origen"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Escribir mensajes"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -199,11 +207,6 @@ msgstr "Cantidad"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr "Ref. empresa"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -302,12 +305,6 @@ msgstr "Imprimir"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr "CIF/NIF:"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "Impuesto"
 
@@ -334,9 +331,9 @@ msgid "Fax :"
 msgstr "Fax:"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr "Sea experto con los expertos..."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -354,14 +351,29 @@ msgstr "Mensaje"
 msgid "All Notification Messages"
 msgstr "Todos los mensajes de notificación"
 
+#~ msgid ":"
+#~ msgstr ":"
+
 #~ msgid "Invoice Date:"
 #~ msgstr "Fecha factura:"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Ref. cliente:"
 
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
 #~ msgid "account_invoice_layout"
 #~ msgstr "contabilidad_factura_plantilla"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Factura cancelada"
 
 #~ msgid "Fax :"
 #~ msgstr "Fax :"
@@ -369,14 +381,29 @@ msgstr "Todos los mensajes de notificación"
 #~ msgid "Tel. :"
 #~ msgstr "Tel. :"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Total (excl. taxes):"
+#~ msgstr "Total (sin impuestos):"
+
+#~ msgid "Taxes"
+#~ msgstr "Impuestos"
+
 #~ msgid "VAT :"
 #~ msgstr "IVA :"
+
+#~ msgid "(incl. taxes):"
+#~ msgstr "(con impuestos):"
 
 #~ msgid "Total"
 #~ msgstr "Total"
 
 #~ msgid "Document:"
 #~ msgstr "Documento:"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
 
 #~ msgid ")"
 #~ msgstr ")"
@@ -395,3 +422,15 @@ msgstr "Todos los mensajes de notificación"
 
 #~ msgid "Description/Taxes"
 #~ msgstr "Descripción/Imp."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

@@ -90,7 +90,6 @@ class stock_partial_picking(osv.osv_memory):
         result['fields'] = _moves_fields
         return result
 
-
     def __create_partial_picking_memory(self, picking, is_in):
         move_memory = {
             'product_id' : picking.product_id.id,
@@ -129,7 +128,7 @@ class stock_partial_picking(osv.osv_memory):
     }
     
 
-    def do_partial(self, cr, uid, ids, context):
+    def do_partial(self, cr, uid, ids, context=None):
         """ Makes partial moves and pickings done.
         @param self: The object pointer.
         @param cr: A database cursor
@@ -140,13 +139,12 @@ class stock_partial_picking(osv.osv_memory):
         """
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
-        partial = self.browse(cr, uid, ids[0], context)
+        partial = self.browse(cr, uid, ids[0], context=context)
         partial_datas = {
             'delivery_date' : partial.date
         }
-        
-       
-        for pick in pick_obj.browse(cr, uid, picking_ids):
+
+        for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             need_product_cost = (pick.type == 'in')
             moves_list = need_product_cost and partial.product_moves_in  or partial.product_moves_out
             p_moves = {}

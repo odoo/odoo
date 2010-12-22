@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-02 21:44+0000\n"
 "Last-Translator: Cédric VALMARY (Tot en òc) <cvalmary@yahoo.fr>\n"
 "Language-Team: Occitan (post 1500) <oc@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -27,14 +27,6 @@ msgstr ""
 #: report:notify_account.invoice:0
 msgid "Note:"
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Lo nom de l'objècte deu començar amb x_ e conténer pas de caractèrs "
-"especials !"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -83,19 +75,30 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom del Modèl invalid per la definicion de l'accion."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -130,6 +133,11 @@ msgid "Product"
 msgstr "Produch"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr ""
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr ""
@@ -158,9 +166,9 @@ msgid "Source Account"
 msgstr "Compte d'origina"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Anullar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -195,11 +203,6 @@ msgstr "Quantitat"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid per l'arquitectura de la vista"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -298,12 +301,6 @@ msgstr "Estampar"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "Impòstes e taxas"
 
@@ -330,9 +327,9 @@ msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Anullar"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -350,14 +347,26 @@ msgstr "Messatge"
 msgid "All Notification Messages"
 msgstr ""
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Lo nom de l'objècte deu començar amb x_ e conténer pas de caractèrs "
+#~ "especials !"
+
 #~ msgid "Customer Ref:"
 #~ msgstr "Referéncia Client :"
 
 #~ msgid ")"
 #~ msgstr ")"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom del Modèl invalid per la definicion de l'accion."
+
 #~ msgid "/ ("
 #~ msgstr "/ ("
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid per l'arquitectura de la vista"
 
 #~ msgid "Total"
 #~ msgstr "Total"

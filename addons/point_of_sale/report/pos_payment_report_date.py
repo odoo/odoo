@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_payment_report_date(report_sxw.rml_parse):
 
@@ -43,14 +43,14 @@ class pos_payment_report_date(report_sxw.rml_parse):
                              "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu " \
                              "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and pu.id=pt.uom_id " \
                              "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
-                             ,(dt1,dt2,tuple(form['user_id'])))
+                    ,(dt1,dt2,tuple(form['user_id'])))
         else:
             self.cr.execute ("select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
                              "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
                              "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu " \
                              "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  and pu.id=pt.uom_id " \
                              "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s" \
-                             ,(dt1,dt2))
+                    ,(dt1,dt2))
         data=self.cr.dictfetchall()
         return data
 
@@ -63,23 +63,17 @@ class pos_payment_report_date(report_sxw.rml_parse):
                              "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                              "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                              "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id IN %s " \
-                             ,(dt1,dt2,tuple(form['user_id'])))
+                        ,(dt1,dt2,tuple(form['user_id'])))
         else:
             self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
                              "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                              "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                              "and po.state IN ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s" \
-                             ,(dt1,dt2))
+                        ,(dt1,dt2))
         res=self.cr.fetchone()[0] or 0.0
         return res
 
 
 report_sxw.report_sxw('report.pos.payment.report.date', 'pos.order', 'addons/point_of_sale/report/pos_payment_report_date.rml', parser=pos_payment_report_date,header='internal')
 
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

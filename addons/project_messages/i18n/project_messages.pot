@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:52+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:52+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:59+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,8 @@ msgid "To"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
 msgstr ""
 
 #. module: project_messages
@@ -31,8 +31,9 @@ msgid "From"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+msgid "Communication Messages"
 msgstr ""
 
 #. module: project_messages
@@ -46,13 +47,13 @@ msgid "Creation Date"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: view:project.messages:0
+msgid "Today"
 msgstr ""
 
 #. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid "An in-project messagery system permits an efficient and trackable communication between project members. The messages are kept in the system and can then be used for post-analysis."
 msgstr ""
 
 #. module: project_messages
@@ -77,13 +78,22 @@ msgid "Group By..."
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: model:ir.module.module,description:project_messages.module_meta_information
+msgid "\n"
+"    This module provides the functionality to send messages within a project.\n"
+"    A user can send messages individually to other user. He can even broadcast\n"
+"    it to all the users.\n"
+"    "
 msgstr ""
 
 #. module: project_messages
 #: view:project.messages:0
 msgid "Message To"
+msgstr ""
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_messages
@@ -99,15 +109,13 @@ msgid "Message From"
 msgstr ""
 
 #. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
 #: view:project.messages:0
 msgid "Project Messages"
 msgstr ""
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Today"
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_messages

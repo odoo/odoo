@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_sales_user(report_sxw.rml_parse):
 
@@ -41,17 +41,11 @@ class pos_sales_user(report_sxw.rml_parse):
                         "from pos_order as po,res_users as ru,res_company as rc " \
                         "where po.date_order >= %s and po.date_order <= %s " \
                         "and po.company_id=rc.id and po.user_id=ru.id and po.user_id IN %s " \
-                            ,(dt1,dt2,tuple(form['user_id'])))
+                    ,(dt1,dt2,tuple(form['user_id'])))
 
         data = self.cr.dictfetchall()
         return data
 
 report_sxw.report_sxw('report.pos.sales.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user.rml', parser=pos_sales_user,header='internal')
 
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

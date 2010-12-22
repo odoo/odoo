@@ -7,34 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-02-16 01:29+0000\n"
-"Last-Translator: Sebastien LANGE - http://www.Syleam.fr <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-21 15:06+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: thunderbird
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux !"
-
-#. module: thunderbird
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: thunderbird
 #: field:thunderbird.installer,plugin_file:0
 #: field:thunderbird.installer,thunderbird:0
 msgid "Thunderbird Plug-in"
-msgstr ""
+msgstr "Module pour Thunderbird"
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -42,6 +29,8 @@ msgid ""
 "Allows you to select an object that you’d like to add to your email and its "
 "attachments."
 msgstr ""
+"Vous permet de sélectionner un objet que vous souhaitez ajouter à votre "
+"courriel et ses pièces jointes."
 
 #. module: thunderbird
 #: help:thunderbird.installer,plugin_file:0
@@ -49,51 +38,72 @@ msgid ""
 "Thunderbird plug-in file. Save as this file and install this plug-in in "
 "thunderbird."
 msgstr ""
+"Fichier du module pour Thunderbird. Enregistrer ce fichier sur votre "
+"ordinateur et installer ce module dans Thunderbird."
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
 msgid "The documentation file :- how to install Thunderbird Plug-in."
 msgstr ""
-
-#. module: thunderbird
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+"Fichier de la documentation : comment installer le module pour Thunderbird."
 
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_email_server_tools
 msgid "Email Server Tools"
-msgstr ""
+msgstr "Outils pour le serveur de courriels"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "_Close"
-msgstr ""
+msgstr "_Fermer"
 
 #. module: thunderbird
 #: field:thunderbird.installer,pdf_file:0
 msgid "Installation Manual"
-msgstr ""
+msgstr "Manuel d'installation"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 #. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid mails"
-msgstr "Messagerie Thunderbird"
+#: model:ir.module.module,description:thunderbird.module_meta_information
+msgid ""
+"\n"
+"      This module is required for the thuderbird plug-in to work\n"
+"      properly.\n"
+"      The Plugin allows you archive email and its attachments to the "
+"selected \n"
+"      OpenERP objects. You can select a partner, a task, a project, an "
+"analytical\n"
+"      account,or any other object and attach selected mail as .eml file in \n"
+"      attachment of selected record. You can create Documents for crm Lead,\n"
+"      HR Applicant and project issue from selected mails.\n"
+"\n"
+"      "
+msgstr ""
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In"
+msgstr "Module pour Thunderbird"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid ""
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
+"Ce greffon vous permet de connecter votre email aux documents d'OpenERP. "
+"Vous pouvez l'attacher sur n'importe quel objet existant dans OpenERP ou en "
+"créer un nouveau."
 
 #. module: thunderbird
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
@@ -101,30 +111,25 @@ msgid "Thunderbird Interface"
 msgstr "Interface Thunderbird"
 
 #. module: thunderbird
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: thunderbird
 #: model:ir.model,name:thunderbird.model_thunderbird_installer
 msgid "thunderbird.installer"
-msgstr ""
+msgstr "thunderbird.installer"
 
 #. module: thunderbird
 #: field:thunderbird.installer,name:0
 #: field:thunderbird.installer,pdf_name:0
 msgid "File name"
-msgstr ""
+msgstr "Nom du fichier"
 
 #. module: thunderbird
 #: field:thunderbird.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Avancement de la configuration"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
+msgstr "Étapes d'installation et de configuration"
 
 #. module: thunderbird
 #: field:thunderbird.installer,description:0
@@ -134,21 +139,33 @@ msgstr "Description"
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In Configuration"
+msgstr "Configuration du module pour Thunderbird"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid Plugin Tools"
 msgstr ""
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Skip"
-msgstr ""
+msgstr "Passer"
 
 #. module: thunderbird
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #~ msgid "Copy To"
 #~ msgstr "Copier vers"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
+#~ "caractères spéciaux !"
 
 #~ msgid "Reference"
 #~ msgstr "Référence"
@@ -174,3 +191,9 @@ msgstr ""
 #, python-format
 #~ msgid "Archive"
 #~ msgstr "Archive"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer un menu récursif."
+
+#~ msgid "Thunderbid mails"
+#~ msgstr "Courriels Thunderbird"

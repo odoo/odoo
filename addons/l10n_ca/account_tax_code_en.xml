@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+	<record model="account.tax.code.template" id="vat_code_tax_en">
+		<field name="name">Tax</field>
+	</record>
+	
+	<record model="account.tax.code.template" id="vat_code_balance_net_en">
+		<field name="name">Tax Balance to Pay</field>
+		<field name="parent_id" ref="vat_code_tax_en"/>
+	</record>
+
+	<record model="account.tax.code.template" id="vat_code_due_tva_en">
+		<field name="name">Tax Due (Tax to pay)</field>
+		<field name="parent_id" ref="vat_code_balance_net_en"/>
+	</record>
+
+	<record model="account.tax.code.template" id="vat_code_payable_en">
+		<field name="name">Tax Payable</field>
+		<field name="parent_id" ref="vat_code_balance_net_en"/>
+	</record>
+
+	<record model="account.tax.code.template" id="vat_code_base_net_en">
+		<field name="name">Tax Bases</field>
+		<field name="parent_id" ref="vat_code_tax_en"/>
+	</record>
+
+
+	<record model="account.tax.code.template" id="vat_code_base_due_en">
+		<field name="name">Base of Taxed Sales</field>
+		<field name="parent_id" ref="vat_code_base_net_en"/>
+	</record>
+
+
+	<record model="account.tax.code.template" id="vat_code_receivable_net_en">
+		<field name="name">Base of Taxed Purchases</field>
+		<field name="parent_id" ref="vat_code_base_net_en"/>
+	</record>
+
+    </data>
+</openerp>

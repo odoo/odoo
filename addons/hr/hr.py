@@ -19,21 +19,16 @@
 #
 ##############################################################################
 
-import os
-
 from osv import fields, osv
-import tools
-from tools.translate import _
-import addons
 
 import addons
 
 class hr_employee_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
@@ -42,8 +37,8 @@ class hr_employee_category(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.name_get(cr, uid, ids, context)
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
     _name = "hr.employee.category"
@@ -75,7 +70,7 @@ class hr_employee_marital_status(osv.osv):
     _name = "hr.employee.marital.status"
     _description = "Employee Marital Status"
     _columns = {
-        'name': fields.char('Marital Status', size=32, required=True),
+        'name': fields.char('Marital Status', size=32, required=True, translate=True),
         'description': fields.text('Status Description'),
     }
 
@@ -85,13 +80,13 @@ class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for job in self.browse(cr, uid, ids, context):
+        for job in self.browse(cr, uid, ids, context=context):
             res[job.id] = len(job.employee_ids or [])
         return res
 
     def _no_of_recruitement(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for job in self.browse(cr, uid, ids, context):
+        for job in self.browse(cr, uid, ids, context=context):
             res[job.id] = job.expected_employees - job.no_of_employee
         return res
 
@@ -154,8 +149,8 @@ class hr_employee(osv.osv):
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
-        'work_phone': fields.related('address_id', 'phone', type='char', size=32, string='Work Phone', readonly=True),
-        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
+        'work_phone': fields.char('Work Phone', size=32, readonly=False),
+        'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, readonly=True, help="It is linked with manager of Department"),
@@ -165,13 +160,19 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
-        'passport_id':fields.char('Passport', size=64)
+        'passport_id':fields.char('Passport No', size=64)
     }
 
-    def onchange_company(self, cr, uid, ids, company, context=None):       
+    def onchange_address_id(self, cr, uid, ids, address, context=None):
+        if address:
+            address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
+            return {'value': {'work_email': address.email, 'work_phone': address.phone}}
+        return {'value': {}}
+
+    def onchange_company(self, cr, uid, ids, company, context=None):
         address_id = False
-        if company:            
-            company_id = self.pool.get('res.company').browse(cr,uid,company)
+        if company:
+            company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False
         return {'value': {'address_id' : address_id}}
@@ -179,11 +180,11 @@ class hr_employee(osv.osv):
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
         if user_id:
-            work_email = self.pool.get('res.users').browse(cr, uid, user_id).user_email
+            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
         return {'value': {'work_email' : work_email}}
 
     def _get_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('hr','image','photo.png')
+        photo_path = addons.get_module_resource('hr','images','photo.png')
         return open(photo_path, 'rb').read().encode('base64')
 
     _defaults = {

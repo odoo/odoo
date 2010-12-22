@@ -41,6 +41,7 @@
 
     """,
     'website': 'http://www.openerp.com',
+    'demo_xml': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
         'share_view.xml',
@@ -48,6 +49,7 @@
         'wizard/share_wizard_view.xml'
     ],
     'installable': True,
+    'web': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

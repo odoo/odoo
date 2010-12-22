@@ -34,8 +34,8 @@ class account_journal_select(osv.osv_memory):
         if context is None:
             context = {}
 
-        result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_select')
-        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_move_line_select')
+        id = result and result[1] or False
         result = act_obj.read(cr, uid, [id])[0]
         cr.execute('select journal_id, period_id from account_journal_period where id=%s', (context['active_id'],))
         res = cr.fetchone()

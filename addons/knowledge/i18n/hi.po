@@ -7,30 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-05 07:27+0000\n"
 "Last-Translator: vir (Open ERP) <vir@tinyerp.com>\n"
 "Language-Team: Hindi <hi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: knowledge
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr ""
+#: model:ir.ui.menu,name:knowledge.menu_document
+msgid "Knowledge"
+msgstr "ज्ञान"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki_quality_manual:0
 msgid "Creates an example skeleton for a standard quality manual."
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Share information within the company with these specific Addons."
 msgstr ""
 
 #. module: knowledge
@@ -44,19 +43,9 @@ msgid "Knowledge Management System"
 msgstr ""
 
 #. module: knowledge
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:knowledge.installer,wiki:0
+msgid "Collaborative Content (Wiki)"
 msgstr ""
-
-#. module: knowledge
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "कार्य की परिभाषा में मॉडल का नाम अमान्य है."
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr "ज्ञान"
 
 #. module: knowledge
 #: help:knowledge.installer,document_ftp:0
@@ -74,8 +63,8 @@ msgid ""
 msgstr ""
 
 #. module: knowledge
-#: field:knowledge.installer,progress:0
-msgid "Configuration Progress"
+#: view:knowledge.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: knowledge
@@ -96,9 +85,9 @@ msgid "Configuration"
 msgstr "कॉन्फ़िगरेशन"
 
 #. module: knowledge
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "संरचना देखने के लिए अमान्य XML!"
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+msgid "Knowledge Modules Installation"
+msgstr ""
 
 #. module: knowledge
 #: field:knowledge.installer,wiki_quality_manual:0
@@ -108,6 +97,11 @@ msgstr ""
 #. module: knowledge
 #: field:knowledge.installer,document_webdav:0
 msgid "Shared Repositories (WebDAV)"
+msgstr ""
+
+#. module: knowledge
+#: field:knowledge.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: knowledge
@@ -123,12 +117,17 @@ msgid "Internal FAQ"
 msgstr ""
 
 #. module: knowledge
+#: model:ir.ui.menu,name:knowledge.menu_document2
+msgid "Collaborative Content"
+msgstr ""
+
+#. module: knowledge
 #: field:knowledge.installer,config_logo:0
 msgid "Image"
 msgstr "चित्र"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+#: view:knowledge.installer:0
 msgid "Knowledge Application Configuration"
 msgstr ""
 
@@ -136,6 +135,11 @@ msgstr ""
 #: model:ir.model,name:knowledge.model_knowledge_installer
 msgid "knowledge.installer"
 msgstr "knowledge.installer"
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Configure Your Knowledge Application"
+msgstr ""
 
 #. module: knowledge
 #: help:knowledge.installer,wiki:0
@@ -148,3 +152,9 @@ msgstr ""
 #: view:knowledge.installer:0
 msgid "Content templates"
 msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "कार्य की परिभाषा में मॉडल का नाम अमान्य है."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "संरचना देखने के लिए अमान्य XML!"
