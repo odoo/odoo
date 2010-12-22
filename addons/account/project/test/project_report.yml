@@ -42,13 +42,13 @@
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_analytic_journal',wiz_data=data_dict, context=ctx, our_module='account')
 
--
- Print the Inverted Analytic Balance Report through the wizard
--
-  !python {model: account.analytic.account}: |
-    import netsvc, tools, os, time
-    ctx={}
-    ctx.update({'model': 'account.analytic.account','active_ids': []})
-    data_dict = {'date1' : time.strftime('%Y-01-01'), 'date2' : time.strftime('%Y-%m-%d')}
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')
+#-
+# Print the Inverted Analytic Balance Report through the wizard
+#-
+#  !python {model: account.analytic.account}: |
+#    import netsvc, tools, os, time
+#    ctx={}
+#    ctx.update({'model': 'account.analytic.account','active_ids': []})
+#    data_dict = {'date1' : time.strftime('%Y-01-01'), 'date2' : time.strftime('%Y-%m-%d')}
+#    from tools import test_reports
+#    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')
