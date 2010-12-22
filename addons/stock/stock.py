@@ -1763,7 +1763,7 @@ class stock_move(osv.osv):
                     result[m.picking_id].append( (m, dest) )
         return result
 
-    def _create_chained_picking(self, cr, uid, pick_name,picking,ptype,move, context=None):
+    def _create_chained_picking(self, cr, uid, pick_name, picking, ptype, move, context=None):
         res_obj = self.pool.get('res.company')
         picking_obj = self.pool.get('stock.picking')
         pick_id= picking_obj.create(cr, uid, {
@@ -1796,11 +1796,18 @@ class stock_move(osv.osv):
             new_moves = []
             if context is None:
                 context = {}
+            seq_obj = self.pool.get('ir.sequence')
             for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                pick_name = picking.name or ''
                 if picking:
-                    pickid = self._create_chained_picking(cr, uid, pick_name,picking,ptype,todo,context)
+                    # name of new picking according to its type
+                    new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
+                    pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
+                    # Need to check name of old picking because it always considers picking as "OUT" when created from Sale Order
+                    old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
+                    if old_ptype != picking.type:
+                        old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
+                        self.pool.get('stock.picking').write(cr, uid, picking.id, {'name': old_pick_name}, context=context)
                 else:
                     pickid = False
                 for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
