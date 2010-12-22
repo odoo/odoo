@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-10 18:57+0000\n"
 "Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_visible_discount
@@ -27,6 +27,24 @@ msgstr ""
 #: code:addons/product_visible_discount/product_visible_discount.py:0
 #, python-format
 msgid "No Sale Pricelist Found "
+msgstr ""
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
+msgid ""
+"\n"
+"    This module lets you calculate discounts on Sale Order lines and Invoice "
+"lines base on the partner's pricelist.\n"
+"    To this end, a new check box named \"Visible Discount\" is added to the "
+"pricelist form.\n"
+"    Example:\n"
+"        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+"and the price calculated using Asustek's pricelist is 225\n"
+"        If the check box is checked, we will have on the sale order line: "
+"Unit price=450, Discount=50,00, Net price=225\n"
+"        If the check box is unchecked, we will have on Sale Order and "
+"Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+"    "
 msgstr ""
 
 #. module: product_visible_discount
@@ -59,5 +77,5 @@ msgstr ""
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_sale_order_line
-msgid "Sale Order Line"
+msgid "Sales Order Line"
 msgstr ""

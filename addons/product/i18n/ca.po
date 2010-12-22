@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 15:08+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:24+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -144,6 +144,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Error! No podeu crear categories recursives."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Teclat"
@@ -194,7 +201,6 @@ msgid "PriceList"
 msgstr "Tarifa"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "UdM"
@@ -253,11 +259,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Productes: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV ha d'estar en una categoria diferent que la UdM"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -475,6 +476,13 @@ msgid "Codes"
 msgstr "Codis"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Quantitat-4"
@@ -676,13 +684,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "Placa mare ASUStek A7N8X"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Nou Preu ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1137,6 +1155,30 @@ msgid "Unit of Sale"
 msgstr "Unitat de venda"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1268,6 +1310,14 @@ msgstr "Obtenir per estoc"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Versió de llista de preus"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1575,6 +1625,11 @@ msgid "Make to Order"
 msgstr "Obtenir sota comanda"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Variant"
@@ -1680,8 +1735,8 @@ msgid "Name of this kind of price."
 msgstr "Nom d'aquest tipus de preu."
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1770,11 +1825,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Nom tarifa"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1988,13 +2038,6 @@ msgstr "Marge preu màx."
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2253,6 +2296,125 @@ msgstr ""
 "d'una categoria i als seus descendents. Deixeu-lo buit per a tots els "
 "productes"
 
+#~ msgid "Childs Categories"
+#~ msgstr "Categories filles"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "Marge preu mín."
+
+#~ msgid "Palet"
+#~ msgstr "Palet"
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Dimensió palet"
+
+#~ msgid "Paletization"
+#~ msgstr "Paletització"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Marge preu màx."
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "No podeu tenir 2 versions de tarifes que es superposin!"
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "És la mitja de temps entre la confirmació de la comanda del client i el "
+#~ "lliurament dels productes finalitzats. És el temps que promet als seus "
+#~ "clients."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed, consumable are stockable "
+#~ "products with infinite stock, or without a stock management in the system."
+#~ msgstr ""
+#~ "Canviarà la forma en que els abastaments són processats: Els consumibles són "
+#~ "productes amb  estoc infinit o sense una gestió de l'estoc en el sistema."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+#~ msgstr ""
+#~ "El coeficient per la fórmula:\n"
+#~ "coef (unitat base) = 1 (aquesta unitat)"
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coef (this unit)"
+#~ msgstr ""
+#~ "El coeficient per la fórmula:\n"
+#~ "1 (unitat base) = coef (aquesta unitat)"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "'Obtenir per estoc': Quan és necessari, s'agafa dels estocs o espera fins al "
+#~ "re-proveïment. 'Obtenir sota comanda': Quan és necessari, es compra o es "
+#~ "produeix per a la petició de proveïment."
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "El mode de calcular el preu per aquesta regla."
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "Data inicial per validar aquesta versió de tarifa."
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Proveïdor del producte"
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "Data final per validar aquesta versió de tarifa."
+
+#~ msgid ""
+#~ "The rule only apply if the partner buys/sells more than this quantity."
+#~ msgstr ""
+#~ "La regla només s'aplica si l'empresa compra/vent més que aquesta quantitat."
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Podeu veure la llista de proveïdors per aquest producte."
+
+#~ msgid ""
+#~ "Sets the price so that it is a multiple of this value.\n"
+#~ "Rounding is applied after the discount and before the surcharge.\n"
+#~ "To have prices that ends by 9.99, set rounding 10, surcharge -0.01"
+#~ msgstr ""
+#~ "Fixa el preu per que sigui un múltiple d'aquest valor.\n"
+#~ "S'aplica arrodoniment després del descompte i abans de l'increment.\n"
+#~ "Per tenir preus que acabin en 9.99, fixeu arrodoniment 10, increment -0.01"
+
+#~ msgid ""
+#~ "The cost of the product for accounting stock valorisation. It can serves as "
+#~ "a base price for supplier price."
+#~ msgstr ""
+#~ "﻿El cost del producte per la valorització comptable de l'estoc. Pot servir "
+#~ "com un preu base pel preu de proveïdor."
+
+#~ msgid "Packagings"
+#~ msgstr "Empaquetament"
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr ""
+#~ "Unitats de mesura de la mateixa categoria pot ser convertides entre elles."
+
+#~ msgid ""
+#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
+#~ "that can not be splitted."
+#~ msgstr ""
+#~ "﻿La quantitat calculada serà un múltiple d'aquest valor. Utilitzeu 1.0 per "
+#~ "productes que no es poden partir."
+
+#, python-format
+#~ msgid "%d unit"
+#~ msgstr "%d unitat"
+
+#, python-format
+#~ msgid "%d units"
+#~ msgstr "%d unitats"
+
 #~ msgid ""
 #~ "The minimal quantity to purchase for this supplier, expressed in the default "
 #~ "unit of measure."
@@ -2330,6 +2492,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Indica si el producte és visible en la llista de productes dins d'una "
 #~ "selecció des d'una línia de comanda de venda."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV ha d'estar en una categoria diferent que la UdM"
 
 #~ msgid ""
 #~ "Name of the product for this partner, will be used when printing a request "
@@ -2480,11 +2645,23 @@ msgstr ""
 #~ "lliurament dels productes acabats. És el temps que promet als seus clients."
 
 #~ msgid ""
+#~ "Will change the way procurements are processed. Consumables are stockable "
+#~ "products with infinite stock, or for use when you have no stock management "
+#~ "in the system."
+#~ msgstr ""
+#~ "Modifica la manera com es processen els proveïments. Consumibles són "
+#~ "productes emmagatzemables amb estoc infinit, o podeu utilitzar-los quan no "
+#~ "gestioneu les existències en el sistema."
+
+#~ msgid ""
 #~ "The coefficient for the formula:\n"
 #~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
 #~ msgstr ""
 #~ "El coeficient per la fórmula:\n"
 #~ "coef. (unitat base) = 1 (aquesta unitat). Factor = 1 / Rati."
+
+#~ msgid "Rentable product"
+#~ msgstr "Pot ser llogat"
 
 #~ msgid "Rentable Product"
 #~ msgstr "Pot ser llogat"

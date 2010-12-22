@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 12:23+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -26,11 +26,6 @@ msgstr "Gegenereerde boekingen"
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Aantal cycli"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of operations this workcenter can do."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -105,6 +100,11 @@ msgid "Routings"
 msgstr "Routes"
 
 #. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
 msgstr ""
@@ -117,6 +117,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
 msgstr ""
 
 #. module: mrp
@@ -214,6 +221,13 @@ msgstr "ME"
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to track easily your production costs in the analytic "
+"accounting."
 msgstr ""
 
 #. module: mrp
@@ -542,11 +556,6 @@ msgid "March"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
-msgid "Workcenter Load"
-msgstr "Werkcenterbelasting"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Workcenter per cycle."
 msgstr ""
@@ -561,13 +570,6 @@ msgstr ""
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this qunatity."
 msgstr ""
 
 #. module: mrp
@@ -614,6 +616,7 @@ msgstr "Fout! U kunt geen recursieve stuklijst aanmaken."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr ""
@@ -641,12 +644,11 @@ msgid "Planning"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr ""
+#: view:mrp.production:0
+msgid "Ready"
+msgstr "Gereed"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
 msgstr "Tijd in uren voor één productiecyclus."
@@ -810,6 +812,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
+msgid ""
+"Time in hours for this work center to achieve the operation of the specified "
+"routing."
 msgstr ""
 
 #. module: mrp
@@ -1066,6 +1075,45 @@ msgstr ""
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp
+#: model:ir.module.module,description:mrp.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the manufacturing process in OpenERP.\n"
+"\n"
+"    Features:\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure\n"
+"        that include child and phantom BoMs\n"
+"    It supports complete integration and planification of stockable goods,\n"
+"    consumable of services. Services are completely integrated with the "
+"rest\n"
+"    of the software. For instance, you can set up a sub-contracting service\n"
+"    in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"    Reports provided by this module:\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on workcenters\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"    Dashboard provided by this module::\n"
+"    * List of next production orders\n"
+"    * List of deliveries (out picking)\n"
+"    * Graph of work center load\n"
+"    * List of procurement in exception\n"
+"    "
 msgstr ""
 
 #. module: mrp
@@ -1585,6 +1633,12 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Copy"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
 msgstr "Maakartikelen"
@@ -1926,6 +1980,11 @@ msgid "Number of Hours"
 msgstr "Aantal uren"
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Costing Information"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
 msgstr "Verwervingsopdrachten"
@@ -2002,7 +2061,6 @@ msgid "BoM Revisions"
 msgstr "Stuklijstversies"
 
 #. module: mrp
-#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -2301,6 +2359,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this quantity."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
 msgstr "Op voorraad"
@@ -2343,6 +2408,14 @@ msgstr ""
 #~ msgid "Not used in computations, for information purpose only."
 #~ msgstr "Niet gebruikt in berekeningen, alleen ter informatie."
 
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Productnaam"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "producten"
+
 #~ msgid "Status"
 #~ msgstr "Status"
 
@@ -2355,11 +2428,16 @@ msgstr ""
 #~ msgid "product"
 #~ msgstr "product"
 
-#~ msgid "Ready"
-#~ msgstr "Gereed"
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "Standaard productprijs"
 
 #~ msgid "For stockable and consumable"
 #~ msgstr "Voor voorraadartikel en verbruiksartikel"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "SUBTOTAAL"
 
 #~ msgid "Workcenters"
 #~ msgstr "Werkplaatsen"
@@ -2395,11 +2473,23 @@ msgstr ""
 #~ "Productie-efficiëntie. Een factor van 0.9 betekent een productieverlies van "
 #~ "10%"
 
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Geen adres gedefinieerd voor de leverancier"
+
 #~ msgid "Minimum Stock Rule"
 #~ msgstr "Minimum voorraadregel"
 
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Producthoeveelheid"
+
 #~ msgid "Stockable Product Process"
 #~ msgstr "Voorraadartikelen proces"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "TOTAAL"
 
 #~ msgid "Print product price"
 #~ msgstr "Druk productprijs af"
@@ -2412,6 +2502,10 @@ msgstr ""
 
 #~ msgid "Production scheduled products"
 #~ msgstr "Producten ingepland voor productie"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Bestede uren"
 
 #~ msgid "A Request for Quotation is created and sent to the supplier."
 #~ msgstr ""
@@ -2476,6 +2570,9 @@ msgstr ""
 #~ msgid "Parameters"
 #~ msgstr "Parameters"
 
+#~ msgid "Production workcenters used"
+#~ msgstr "Productie workcenters gebruikt"
+
 #~ msgid "plus"
 #~ msgstr "plus"
 
@@ -2499,6 +2596,10 @@ msgstr ""
 
 #~ msgid "Sale Ref"
 #~ msgstr "Verkoopreferentie"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "Productleverancier"
 
 #~ msgid "Planned Date"
 #~ msgstr "Geplande datum"
@@ -2560,6 +2661,10 @@ msgstr ""
 #~ msgid "Create minimum stock rules"
 #~ msgstr "Maak minimale voorraad-regels."
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Waarschuwing !"
+
 #~ msgid "Ask New Products"
 #~ msgstr "Vraag nieuwe producten"
 
@@ -2570,11 +2675,18 @@ msgstr ""
 #~ "Aantal handelingen dat deze werkplaats parallel kan uitvoeren. Als deze "
 #~ "werkplaats bijv. 5 werkeenheden heeft, is de capaciteit per cyclus 5."
 
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Geen leverancier voor dit product opgegeven!"
+
 #~ msgid ""
 #~ "This is the days added to what you promise to customers for security purpose"
 #~ msgstr ""
 #~ "Dit is het aantal dagen dat als veiligheidsmarge wordt toegevoegd aan de "
 #~ "beloofde levertijd."
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "MRP & logistieke planning"
 
 #~ msgid "Product & Location"
 #~ msgstr "Product & locatie"
@@ -2596,8 +2708,24 @@ msgstr ""
 #~ msgid "Service on Order"
 #~ msgstr "Dienst op bestelling"
 
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Naam werkplaats"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Hoeveelheid product"
+
 #~ msgid "Product to stock rules"
 #~ msgstr "Product naar voorraadregels"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "uit voorraad: producten toegewezen."
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "uit voorraad en geen minimum bestelpunt regel gedefinieerd"
 
 #~ msgid ""
 #~ "This is the internal picking list take bring the raw materials to the "
@@ -2625,11 +2753,30 @@ msgstr ""
 #~ msgid "BoM Hyerarchy"
 #~ msgstr "Materiaallijst"
 
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "Eenheid productprijs"
+
 #~ msgid "References"
 #~ msgstr "Verwijzingen"
 
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "Product meeteenheid"
+
 #~ msgid "Workcenter Name"
 #~ msgstr "Naam werkplaats"
+
+#~ msgid "Create Procurement"
+#~ msgstr "Maak bestelling"
+
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr ""
+#~ "De productie is in '%s' status. U kunt de productiehoeveelheid niet meer "
+#~ "wijzigen."
 
 #~ msgid "If product type is service and procure method is Make to order"
 #~ msgstr ""
@@ -3019,6 +3166,9 @@ msgstr ""
 
 #~ msgid "Workcenters load"
 #~ msgstr "Werkcentersbelasting"
+
+#~ msgid "Workcenter Load"
+#~ msgstr "Werkcenterbelasting"
 
 #~ msgid "MRP Management - Reporting"
 #~ msgstr "MRP beheer - Rapportage"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-19 07:35+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -189,6 +189,11 @@ msgid "Reset"
 msgstr "Herstellen"
 
 #. module: marketing_campaign
+#: help:marketing.campaign,object_id:0
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
 msgstr ""
@@ -350,6 +355,11 @@ msgstr "Marketingrapporten"
 #: field:marketing.campaign.activity,type:0
 msgid "Type"
 msgstr "Soort"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Related Resource"
+msgstr "Gekoppelde resource"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -620,9 +630,31 @@ msgid "Preview"
 msgstr "Voorbeeld"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "Gekoppelde resource"
+#: model:ir.module.module,description:marketing_campaign.module_meta_information
+msgid ""
+"\n"
+"This module provides leads automation through marketing campaigns (campaigns "
+"can in fact be defined on any resource, not just CRM Leads).\n"
+"         The campaigns are dynamic and multi-channels. The process is as "
+"follows:\n"
+"          * Design marketing campaigns like workflows, including email "
+"templates to send, reports to print and send by email, custom actions, etc.\n"
+"          * Define input segments that will select the items that should "
+"enter the campaign (e.g leads from certain countries, etc.)\n"
+"          * Run you campaign in simulation mode to test it real-time or "
+"accelerated, and fine-tune it\n"
+"          * You may also start the real campaign in manual mode, where each "
+"action requires manual validation\n"
+"          * Finally launch your campaign live, and watch the statistics as "
+"the campaign does everything fully automatically. \n"
+"          While the campaign runs you can of course continue to fine-tune "
+"the parameters, input segments, workflow, etc.\n"
+"          \n"
+"          Note: If you need demo data, you can install the "
+"marketing_campaign_crm_demo module, but this will also install the CRM "
+"application as it depends on CRM Leads.\n"
+"    "
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -727,10 +759,9 @@ msgid "Campaign Workitem"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,ir_filter_id:0
-msgid "Filter"
-msgstr "Filter"
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr "Campagne activiteit"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
@@ -760,11 +791,6 @@ msgstr "Automatische overgang"
 #: view:res.partner:0
 msgid "History"
 msgstr "Geschiedenis"
-
-#. module: marketing_campaign
-#: help:marketing.campaign,object_id:0
-msgid "Choose the model on which you want this campaign to be run"
-msgstr "Kies het model waarmee u deze campagne wilt laten lopen"
 
 #. module: marketing_campaign
 #: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
@@ -1008,9 +1034,10 @@ msgid "Next Synchronization"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
-msgid "Campaign Activity"
-msgstr "Campagne activiteit"
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,ir_filter_id:0
+msgid "Filter"
+msgstr "Filter"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1061,3 +1088,6 @@ msgstr "Jaar"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Choose the model on which you want this campaign to be run"
+#~ msgstr "Kies het model waarmee u deze campagne wilt laten lopen"
