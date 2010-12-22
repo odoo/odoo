@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-09-29 10:27+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -58,9 +58,13 @@ msgid "Group By..."
 msgstr ""
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
 msgstr ""
 
 #. module: account_followup
@@ -149,6 +153,12 @@ msgstr "借方合计"
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading):凭证明细的头"
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -874,3 +884,11 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义使用了无效的模式名称。"
+
+#, python-format
+#~ msgid ""
+#~ "Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "电子邮件不发送到下列业务伙伴,电子邮箱无效!\n"
+#~ "\n"

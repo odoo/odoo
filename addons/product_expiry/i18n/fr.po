@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-04 09:45+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 08:06+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
@@ -58,11 +57,13 @@ msgstr "Durée d'utilisation du produit"
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
+"La combinaison du numéro de série et de la référence interne doit être "
+"unique !"
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid "The date on which the lot should be removed."
-msgstr ""
+msgstr "La date à laquelle le lot doit être enlevé."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
@@ -75,6 +76,8 @@ msgid ""
 "The number of days after which an alert should be notified about the "
 "production lot."
 msgstr ""
+"Le nombre de jours après lesquelles une alerte doit être affichée à propos "
+"du lot de production."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -91,6 +94,8 @@ msgstr "Date de retrait"
 msgid ""
 "The date on which the lot may become dangerous and should not be consumed."
 msgstr ""
+"La date à laquelle le lot peut devenir dangereux et ne doit pas être "
+"consommé."
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -148,6 +153,11 @@ msgstr ""
 "Le nombre de jours après lesquels un lot de production doit être retiré."
 
 #. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Date d'alerte"
+
+#. module: product_expiry
 #: help:product.product,use_time:0
 msgid ""
 "The number of days before a production lot starts deteriorating without "
@@ -175,6 +185,8 @@ msgstr ""
 msgid ""
 "The date on which an alert should be notified about the production lot."
 msgstr ""
+"La date à laquelle une alerte doit être affichée à propos du lot de "
+"production."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
@@ -209,9 +221,6 @@ msgstr "Durée avant alerte sur le produit"
 
 #~ msgid "Product usetime"
 #~ msgstr "Durée limite d'utilisation optimale"
-
-#~ msgid "Alert Date"
-#~ msgstr "Date d'alerte"
 
 #~ msgid "Product removal time"
 #~ msgstr "Durée avant retrait"

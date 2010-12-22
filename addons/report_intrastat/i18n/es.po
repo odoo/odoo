@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-09 09:01+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
@@ -86,9 +86,10 @@ msgid "March"
 msgstr "Marzo"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "August"
-msgstr "Agosto"
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
+msgstr "Descripción"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -189,9 +190,13 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: report_intrastat
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
+#: model:ir.module.module,description:report_intrastat.module_meta_information
+msgid ""
+"\n"
+"    A module that adds intrastat reports.\n"
+"    This module gives the details of the goods traded between the countries "
+"of European Union "
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_res_country
@@ -256,10 +261,9 @@ msgid "November"
 msgstr "Noviembre"
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
-msgstr "Descripción"
+#: selection:report.intrastat,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -392,3 +396,6 @@ msgstr "Código Intrastat"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-12 09:32+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:18+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_visible_discount
@@ -28,6 +28,24 @@ msgstr "Δεν υπάρχει Τιμοκατάλογος Αγοράς!"
 #, python-format
 msgid "No Sale Pricelist Found "
 msgstr "Δεν βρέθηκε Τιμοκατάλογος Πώλησης "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
+msgid ""
+"\n"
+"    This module lets you calculate discounts on Sale Order lines and Invoice "
+"lines base on the partner's pricelist.\n"
+"    To this end, a new check box named \"Visible Discount\" is added to the "
+"pricelist form.\n"
+"    Example:\n"
+"        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+"and the price calculated using Asustek's pricelist is 225\n"
+"        If the check box is checked, we will have on the sale order line: "
+"Unit price=450, Discount=50,00, Net price=225\n"
+"        If the check box is unchecked, we will have on Sale Order and "
+"Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+"    "
+msgstr ""
 
 #. module: product_visible_discount
 #: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
@@ -59,8 +77,11 @@ msgstr "Θα πρέπει πρώτα να ορίσεις τιμοκατάλογ�
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Γραμμή Παραγγελίας Πώλησης"
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Γραμμή Παραγγελίας Πώλησης"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Λανθασμένο XML για προβολή Αρχιτεκτονικής"

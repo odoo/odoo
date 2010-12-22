@@ -6,21 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-04 09:32+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 05:07+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:18+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing
 #: model:ir.module.module,description:marketing.module_meta_information
 msgid "Menu for Marketing"
 msgstr "Menu pour le marketing"
+
+#. module: marketing
+#: help:marketing.installer,marketing_campaign:0
+msgid ""
+"Helps you to manage marketing campaigns and automate actions and "
+"communication steps."
+msgstr ""
+"Permet de gérer vos campagnes marketing et d'automatiser vos actions et vos "
+"scénarios de communication."
 
 #. module: marketing
 #: field:marketing.installer,progress:0
@@ -33,9 +42,9 @@ msgid "title"
 msgstr "Titre"
 
 #. module: marketing
-#: model:ir.module.module,shortdesc:marketing.module_meta_information
-msgid "Marketing"
-msgstr "Marketing"
+#: field:marketing.installer,email_template:0
+msgid "Automated E-Mails"
+msgstr ""
 
 #. module: marketing
 #: field:marketing.installer,config_logo:0
@@ -43,13 +52,9 @@ msgid "Image"
 msgstr "Image"
 
 #. module: marketing
-#: help:marketing.installer,marketing_campaign:0
-msgid ""
-"Helps you to manage marketing campaigns and automate actions and "
-"communication steps."
-msgstr ""
-"Permet de gérer vos campagnes marketing et d'automatiser vos actions et vos "
-"scénarios de communication."
+#: view:marketing.installer:0
+msgid "Configure Your Marketing Application"
+msgstr "Configurer votre application marketing"
 
 #. module: marketing
 #: help:marketing.installer,email_template:0
@@ -66,14 +71,33 @@ msgid "marketing.installer"
 msgstr "marketing.installer"
 
 #. module: marketing
-#: model:ir.actions.act_window,name:marketing.action_marketing_installer
-msgid "Marketing Applications Configuration"
-msgstr "Configuration des applications marketing"
+#: model:ir.module.module,shortdesc:marketing.module_meta_information
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: marketing
 #: field:marketing.installer,crm_profiling:0
 msgid "Profiling Tools"
 msgstr "Outils d'analyse"
+
+#. module: marketing
+#: view:marketing.installer:0
+msgid ""
+"OpenERP provides Addons to better manage your sales and marketing processes. "
+"Select the ones you would be interested in."
+msgstr ""
+"OpenERP fournit des modules pour mieux gérer vos ventes et vos processus "
+"marketing. Sélectionnez ceux qui vous intéressent."
+
+#. module: marketing
+#: view:marketing.installer:0
+msgid "Marketing Application Configuration"
+msgstr "Configuration de l'application marketing"
+
+#. module: marketing
+#: model:ir.actions.act_window,name:marketing.action_marketing_installer
+msgid "Marketing Modules Installation"
+msgstr ""
 
 #. module: marketing
 #: field:marketing.installer,marketing_campaign:0
@@ -89,6 +113,11 @@ msgstr ""
 "Ceci permet d'effectuer la segmentation des partenaires et de concevoir des "
 "questionnaires de segmentation."
 
+#. module: marketing
+#: view:marketing.installer:0
+msgid "Configure"
+msgstr "Configurer"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -97,6 +126,9 @@ msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML incorrect pour l'architecture de la vue !"
+
+#~ msgid "Marketing Applications Configuration"
+#~ msgstr "Configuration des applications marketing"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de modèle incorrect dans la définition de l'action"

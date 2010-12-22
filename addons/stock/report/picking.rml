@@ -34,6 +34,10 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Content_Order_Reference_Table">
       <blockAlignment value="LEFT"/>
@@ -51,6 +55,11 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+
     </blockTableStyle>
     <blockTableStyle id="Move_Line_Header">
       <blockAlignment value="LEFT"/>
@@ -180,15 +189,20 @@
     <blockTable colWidths="538.0" style="Table_Title_String">
       <tr>
         <td>
-          <para style="terp_header">Packing List: [[ picking.name ]]</para>
+          <para style="terp_header">Delivery Order: [[ (picking.type == 'out' or removeParentNode('para')) and '' ]] [[ picking.name ]] </para>
+          <para style="terp_header">Reception: [[ (picking.type == 'in' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
+          <para style="terp_header">Picking List: [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]] [[ picking.name ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="123.0,134.0,133.0,134.0" style="Header_Order_Reference_Tbl">
+    <blockTable colWidths="100.0,110.0,130.0,120.0,60.0" style="Header_Order_Reference_Tbl">
       <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Journal</para>
+        </td>
         <td>
           <para style="terp_tblheader_General_Centre">Order(Origin)</para>
         </td>
@@ -199,12 +213,15 @@
           <para style="terp_tblheader_General_Centre">Expected Shipping Date </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">weight</para>
+          <para style="terp_tblheader_General_Centre">Weight</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="123.0,134.0,133.0,134.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="100.0,110.0,130.0,120.0,60.0" style="Content_Order_Reference_Table">
       <tr>
+        <td>
+          <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
+        </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
         </td>

@@ -70,8 +70,21 @@
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <separator string="Journal Items" colspan="4"/>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
+                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                               <tree string="Journal Items">
+                                   <field name="move_id"/>
+                                   <field name="ref"/>
+                                   <field name="date"/>
+                                   <field name="statement_id"/>
+                                   <field name="partner_id"/>
+                                   <field name="account_id"/>
+                                   <field name="name"/>
+                                   <field name="debit"/>
+                                   <field name="credit"/>
+                                   <field name="state"/>
+                                   <field name="reconcile_id"/>
+                               </tree>
+                            </field> 
                         </page>
                     </notebook>
                     <group col="10" colspan="4">

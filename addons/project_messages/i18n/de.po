@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-01 09:45+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_messages
@@ -33,6 +33,12 @@ msgid "From"
 msgstr "Von"
 
 #. module: project_messages
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+msgid "Communication Messages"
+msgstr "Projekt Mitteilungen"
+
+#. module: project_messages
 #: help:project.messages,to_id:0
 msgid "Keep this empty to broadcast the message."
 msgstr "Feld leer lassen, um Nachricht allgemein zu veröffentlichen."
@@ -41,6 +47,11 @@ msgstr "Feld leer lassen, um Nachricht allgemein zu veröffentlichen."
 #: field:project.messages,create_date:0
 msgid "Creation Date"
 msgstr "Erzeugungsdatum"
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Today"
+msgstr "Heute"
 
 #. module: project_messages
 #: model:ir.actions.act_window,help:project_messages.messages_form
@@ -76,9 +87,23 @@ msgid "Group By..."
 msgstr "Gruppiere je ..."
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Today"
-msgstr "Heute"
+#: model:ir.module.module,description:project_messages.module_meta_information
+msgid ""
+"\n"
+"    This module provides the functionality to send messages within a "
+"project.\n"
+"    A user can send messages individually to other user. He can even "
+"broadcast\n"
+"    it to all the users.\n"
+"    "
+msgstr ""
+"\n"
+"    Dieses Modul ermöglicht den Versand von Nachrichten zu einem Projekt.\n"
+"    Ein Benutzer kann persönliche Nachrichten an andere Benutzer senden. "
+"Alternativ kann eine Benachrichtigung\n"
+"    auch allgemein erfolgen und über das Nachrichtensystem allen Benutzern "
+"zur Verfügung gestellt werden.\n"
+"    "
 
 #. module: project_messages
 #: view:project.messages:0
@@ -103,8 +128,6 @@ msgid "Message From"
 msgstr "Mitteilung von"
 
 #. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
 #: view:project.messages:0
 msgid "Project Messages"
 msgstr "Projekt Mitteilungen"
@@ -128,6 +151,9 @@ msgstr "Integriertes Projekt Nachrichten System"
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "Group by...."
+#~ msgstr "Gruppieren..."
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können keine rekursiven Menüs erzeugen."

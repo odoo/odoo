@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-16 01:20+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-16 17:53+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -142,6 +142,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "错误!你不能创建递归的分类"
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "键盘"
@@ -190,7 +197,6 @@ msgid "PriceList"
 msgstr "价格表"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "计量单位"
@@ -249,11 +255,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "产品： "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -467,6 +468,13 @@ msgid "Codes"
 msgstr "代码"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "数量4"
@@ -667,13 +675,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "ASUStek A7N8X主板"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "新价格 ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1123,6 +1141,30 @@ msgid "Unit of Sale"
 msgstr "销售单位"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1252,6 +1294,14 @@ msgstr "按库存生产"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "价格表版本"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1554,6 +1604,11 @@ msgid "Make to Order"
 msgstr "按订单生产"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "系列型号"
@@ -1658,8 +1713,8 @@ msgid "Name of this kind of price."
 msgstr "价格类型名称"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1748,11 +1803,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "价格表名称"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr "供应商产品计量单位"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1964,13 +2014,6 @@ msgstr "最大的价格上浮金额"
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2222,6 +2265,21 @@ msgid ""
 "and his childs. Keep empty for all products"
 msgstr "如果这规则只适合这产品类型和它的子项,设置产品类型. ( 留空为适合全部)"
 
+#~ msgid "Childs Categories"
+#~ msgstr "子项分类"
+
+#~ msgid "Rentable product"
+#~ msgstr "可出租产品"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "最高价"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "最低价"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "产品供应商"
+
 #~ msgid "Prices Computations"
 #~ msgstr "价格计算"
 
@@ -2231,6 +2289,15 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgid "Priority"
 #~ msgstr "优先级"
 
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr "从确认用户订单到发货给客户的平均时间。也就是您承诺给您的客户的时间。"
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "价该格表版本的生效时间"
+
 #~ msgid "Default UoM"
 #~ msgstr "默认计量单位"
 
@@ -2239,6 +2306,13 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 
 #~ msgid "Partner Product Name"
 #~ msgstr "业务伙伴产品名称"
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "您可以看见该产品的供应商列表。"
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr "同一分类下的计量单位可以互相转换。"
 
 #~ msgid "Price list"
 #~ msgstr "价格表"
@@ -2255,8 +2329,17 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgid "Supplier Info"
 #~ msgstr "供应商信息"
 
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "价格表版本失效时间。"
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "您不能有2个重叠的价格表版本。"
+
 #~ msgid "KGM"
 #~ msgstr "千克"
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "该规则的价格计算模式"
 
 #~ msgid "Customer Price"
 #~ msgstr "客户价格"
@@ -2276,8 +2359,16 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgid "Price type"
 #~ msgstr "价格类型"
 
+#, python-format
+#~ msgid "%d unit"
+#~ msgstr "%d 单位"
+
 #~ msgid "Rate"
 #~ msgstr "比率"
+
+#, python-format
+#~ msgid "%d units"
+#~ msgstr "%d 单位"
 
 #~ msgid "Delivery Delay"
 #~ msgstr "交货延迟"
@@ -2307,6 +2398,9 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效XML视图结构!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #~ msgid "Currency :"
 #~ msgstr "货币:"
@@ -2425,6 +2519,22 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ msgstr "同一类型的计量单位可以相互转换"
 
 #~ msgid ""
+#~ "Used by companies that manages two unit of measure: invoicing and stock "
+#~ "management. For example, in food industries, you will manage a stock of ham "
+#~ "but invoice in Kg. Keep empty to use the default UOM."
+#~ msgstr ""
+#~ "公司管理使用两个计量单位:发票和库存管理. ( 留空为使用默认计量单位)\r\n"
+#~ "例如:食品公司的火腿仓库用块,发票用公斤为单位."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed. Consumables are stockable "
+#~ "products with infinite stock, or for use when you have no stock management "
+#~ "in the system."
+#~ msgstr ""
+#~ "将改变产品需求处理.\r\n"
+#~ "消耗品是有无限的库存的可库存的产品.或在使用时无需用库存管理系统来管理"
+
+#~ msgid ""
 #~ "Code of the product for this partner, will be used when printing a request "
 #~ "for quotation. Keep empty to use the internal one."
 #~ msgstr "该产品在业务伙伴里所用的代码,它用于向业务伙伴咨询报价.  (留空为使用内部代码)"
@@ -2498,3 +2608,6 @@ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类�
 #~ "If the active field is set to true, it will allow you to hide the pricelist "
 #~ "without removing it."
 #~ msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"
+
+#~ msgid "Supplier Product UoM."
+#~ msgstr "供应商产品计量单位"

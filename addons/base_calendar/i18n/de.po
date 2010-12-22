@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-30 12:13+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:19+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -589,11 +589,6 @@ msgid "Created"
 msgstr "Erstellt"
 
 #. module: base_calendar
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
-msgid "Set Exclude range"
-msgstr "Definiere Ausnahmezeiten"
-
-#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -835,6 +830,7 @@ msgstr "Termin Erinnerung"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr "Definiere Ausnahme"
@@ -925,12 +921,10 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
-msgstr "Aktiv"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -1036,10 +1030,12 @@ msgid "Summary"
 msgstr "Zusammenfassung"
 
 #. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1563,6 +1559,13 @@ msgid "Accept"
 msgstr "Akzeptiert"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr "Samstag"
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
 msgstr "Einladung an"
@@ -1606,11 +1609,20 @@ msgid "Trigger Date"
 msgstr "Auslösedatum"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
-msgstr "Samstag"
+#: help:calendar.alarm,attach:0
+msgid ""
+"* Points to a sound resource,                     which is rendered when the "
+"alarm is triggered for audio,\n"
+"                    * File which is intended to be sent as message "
+"attachments for email,\n"
+"                    * Points to a procedure resource, which is invoked when  "
+"                    the alarm is triggered for procedure."
+msgstr ""
+"* Verweis zu Sound Datei, die abgespielt wird, wenn Warnmeldung ausgelöst "
+"wird,\n"
+"                    * Datei, die als Anhang zur EMail gesendet werden soll,\n"
+"                    * Verweis zu Prozess der ausgelöst wird, wenn ein        "
+"              Warnhinweis hierzu ausgelöst wird."
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -1618,6 +1630,10 @@ msgstr "Samstag"
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "5ter"
+
+#~ msgid ""
+#~ "defines a rule or repeating pattern for an exception to a recurrence set"
+#~ msgstr "definiert Regel für Ausschluss von wiederkehrenden Ereignissen"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Fehler in Datenmodell der definierten Aktion"
@@ -1628,12 +1644,18 @@ msgstr "5ter"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter XML Quellcode für Ansicht"
 
+#~ msgid "Select data for ExRule"
+#~ msgstr "Wähle Daten f. Ausschluss"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können keine rekursiven Einträge im Menü vornehmen"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "ExRule"
+#~ msgstr "Regel f. Aussch."
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
@@ -1643,3 +1665,6 @@ msgstr "5ter"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Set Exclude range"
+#~ msgstr "Definiere Ausnahmezeiten"

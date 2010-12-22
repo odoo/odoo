@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-30 08:46+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -129,11 +129,6 @@ msgid "Bank Statement Line"
 msgstr ""
 
 #. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Cont analitic"
@@ -155,9 +150,16 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Data tipăririi"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Model de repartizare salvat"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -173,11 +175,6 @@ msgstr "Tipărire"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Procentaj"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -215,16 +212,21 @@ msgid "Maximum Allowed (%)"
 msgstr "Maxim permis (%)"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
-#: view:analytic.plan.create.model:0
-#, python-format
-msgid "Distribution Model Saved"
-msgstr "Model de repartizare salvat"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Data tipăririi"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
 msgstr "Linii plan analitic"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -270,11 +272,6 @@ msgstr "La data"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr ""
-
-#. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -463,6 +460,11 @@ msgstr "Cod repartizare"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -518,6 +520,12 @@ msgstr "Eroare valoare"
 msgid "You can not create move line on view account."
 msgstr ""
 
+#~ msgid "Currency:"
+#~ msgstr "Monedă:"
+
+#~ msgid "to"
+#~ msgstr "la"
+
 #~ msgid "OK"
 #~ msgstr "OK"
 
@@ -526,6 +534,9 @@ msgstr ""
 
 #~ msgid "Create Model"
 #~ msgstr "Creare model"
+
+#~ msgid "Period from"
+#~ msgstr "Perioada de la"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -611,6 +622,9 @@ msgstr ""
 #~ "This distribution model has been saved. You will be able to reuse it later."
 #~ msgstr ""
 #~ "Acest model de repartizare a fost salvat. Îl veţi putea refolosi mai târziu."
+
+#~ msgid "Printing date:"
+#~ msgstr "Data tipăririi:"
 
 #~ msgid "Crossovered Analytic -"
 #~ msgstr "Analitic încrucişat -"

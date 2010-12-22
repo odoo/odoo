@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-12 09:34+0000\n"
 "Last-Translator: Lorenzo Battistini - agilebg.com "
 "<lorenzo.battistini@agilebg.com>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:19+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -590,11 +590,6 @@ msgid "Created"
 msgstr "Creato"
 
 #. module: base_calendar
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
-msgid "Set Exclude range"
-msgstr "Imposta l'intervallo di esclusione"
-
-#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -835,6 +830,7 @@ msgstr "Promemoria"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr "Set Exrule"
@@ -925,12 +921,10 @@ msgid "User"
 msgstr "Utente"
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
-msgstr "Attivo"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
+msgstr "Data"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -1036,10 +1030,12 @@ msgid "Summary"
 msgstr "Riepilogo"
 
 #. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
-msgstr "Data"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
+msgstr "Attivo"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1565,6 +1561,13 @@ msgid "Accept"
 msgstr "Accetta"
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr "sabato"
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
 msgstr "Invito a"
@@ -1608,11 +1611,15 @@ msgid "Trigger Date"
 msgstr "Data Programmata"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
-msgstr "sabato"
+#: help:calendar.alarm,attach:0
+msgid ""
+"* Points to a sound resource,                     which is rendered when the "
+"alarm is triggered for audio,\n"
+"                    * File which is intended to be sent as message "
+"attachments for email,\n"
+"                    * Points to a procedure resource, which is invoked when  "
+"                    the alarm is triggered for procedure."
+msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -1644,6 +1651,9 @@ msgstr "Quinto"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Errore ! Non puoi creare un menù ricorsivo"
+
+#~ msgid "Set Exclude range"
+#~ msgstr "Imposta l'intervallo di esclusione"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Il nome del modulo deve essere unico!"

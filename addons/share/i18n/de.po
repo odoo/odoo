@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-15 13:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: share
@@ -45,9 +45,9 @@ msgstr ""
 "zwischen freigegebenen Benutzern."
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+#: model:ir.module.module,shortdesc:share.module_meta_information
+msgid "Share Management"
+msgstr "Management von Freigaben"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -61,9 +61,10 @@ msgid "Sharing Wizard - Step 1"
 msgstr "Freigabeassistent - Schritt 1"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Who would you want to share this data with?"
-msgstr "Mit wem möchten Sie Daten austauschen?"
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.ui.menu,name:share.menu_action_share_wizard
+msgid "Share Access Rules"
+msgstr "Freigaben Berechtigungen"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -76,14 +77,9 @@ msgstr ""
 "\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid ""
-"You may use your existing login and password to view it. As a reminder, your "
-"login is %s.\n"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
-"Zur Anzeige können Sie Ihren definierten Benutzer und Ihr persönliches "
-"Passwort benutzen, zur Erinnerung: Ihr Login ist %s.\n"
 
 #. module: share
 #: model:ir.model,name:share.model_res_users
@@ -212,15 +208,15 @@ msgid "New users"
 msgstr "Neue Benutzer"
 
 #. module: share
+#: model:ir.model,name:share.model_res_groups
+msgid "res.groups"
+msgstr ""
+
+#. module: share
 #: code:addons/share/wizard/share_wizard.py:0
 #, python-format
 msgid "%s (Shared)"
 msgstr "%s (Veröffentlicht)"
-
-#. module: share
-#: selection:share.wizard,user_type:0
-msgid "New users (emails required)"
-msgstr "Neue Benutzer (Email erforderlich)"
 
 #. module: share
 #: sql_constraint:res.groups:0
@@ -228,15 +224,9 @@ msgid "The name of the group must be unique !"
 msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
 
 #. module: share
-#: model:ir.module.module,shortdesc:share.module_meta_information
-msgid "Sharing Tools"
-msgstr "Tools für Freigaben"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:0
-#, python-format
-msgid "Database"
-msgstr ""
+#: selection:share.wizard,user_type:0
+msgid "New users (emails required)"
+msgstr "Neue Benutzer (Email erforderlich)"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -267,9 +257,31 @@ msgid "Password"
 msgstr "Passwort"
 
 #. module: share
-#: field:share.wizard,user_type:0
-msgid "Users to share with"
-msgstr "Freigegebene Benutzer"
+#: view:share.wizard:0
+msgid "Who would you want to share this data with?"
+msgstr "Mit wem möchten Sie Daten austauschen?"
+
+#. module: share
+#: model:ir.module.module,description:share.module_meta_information
+msgid ""
+"The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
+"can share data from OpenERP to their colleagues, customers, or friends.\n"
+"The system will work by creating new users and groups on the fly, and by\n"
+"combining the appropriate access rights and ir.rules to ensure that the "
+"/shared\n"
+"users/ will only have access to the correct data.\n"
+"    "
+msgstr ""
+"Das Ziel ist die Implementierung eines generischen Freigabesystems, wodurch "
+"Benutzer\n"
+"Daten auf einfache Weise an Kollegen, externen Kunden oder Lieferanten "
+"weitergeben können  .\n"
+"Das System funktioniert durch die Erzeugung neuer Benutzer und Gruppen on "
+"the fly. Durch\n"
+"eine Kombination der Vergabe entsprechender Rechte und Rollen ist "
+"sichergestellt dass /Benutzer\n"
+"denen eine Freigabe erteilt wurde Zugriff auf freigegebene Daten erhalten .\n"
+"    "
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -283,9 +295,20 @@ msgid "Send Email Notification(s)"
 msgstr "Sende EMail Bestätigung(en)"
 
 #. module: share
-#: model:ir.model,name:share.model_res_groups
-msgid "Access Groups"
-msgstr "Berechtigungsgruppen"
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid ""
+"You may use your existing login and password to view it. As a reminder, your "
+"login is %s.\n"
+msgstr ""
+"Zur Anzeige können Sie Ihren definierten Benutzer und Ihr persönliches "
+"Passwort benutzen, zur Erinnerung: Ihr Login ist %s.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:0
+#, python-format
+msgid "Database"
+msgstr ""
 
 #. module: share
 #: model:ir.model,name:share.model_share_wizard_user
@@ -311,6 +334,11 @@ msgstr "Vorhandene externe Benutzer"
 #: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Zusammenfassung"
+
+#. module: share
+#: field:share.wizard,user_type:0
+msgid "Users to share with"
+msgstr "Freigegebene Benutzer"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:0
@@ -439,10 +467,8 @@ msgid "Sharing access could not be setup"
 msgstr "Freigabe konnte nicht erteilt werden"
 
 #. module: share
-#: model:ir.actions.act_window,name:share.action_share_wizard
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
 #: model:ir.model,name:share.model_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
 #: field:share.wizard.user,share_wizard_id:0
 msgid "Share Wizard"
@@ -486,11 +512,82 @@ msgstr "Schreiben"
 msgid "*usual password*"
 msgstr "* übliches Passwort*"
 
+#~ msgid "Exising Users"
+#~ msgstr "Existierende Benutzer"
+
+#~ msgid "Step 1: Chose the action and the additional domain"
+#~ msgstr "Schritt 1: Wähle Aktion und die zusätzliche Domain"
+
+#~ msgid "Share Users"
+#~ msgstr "Freigaben Benutzer"
+
+#~ msgid "Step 3: Chose Access Mode"
+#~ msgstr "Schritt 3: Wähle Modus für Zugriff"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler! Sie können kein rekursives Menü erstellen."
 
+#~ msgid "New Users"
+#~ msgstr "Neue Benutzer"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#~ msgid "Step 4: Share Users Detail"
+#~ msgstr "Schritt 4: Freigaben Benutzer Details"
+
+#, python-format
+#~ msgid "Share Group is exits without sharing !"
+#~ msgstr "Freigaben Gruppe existiert ohne Freigabe"
+
+#~ msgid "New"
+#~ msgstr "Neu"
+
+#~ msgid "READ ONLY"
+#~ msgstr "NUR LESEN"
+
+#~ msgid "Send Email"
+#~ msgstr "Sende EMail"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht"
+
+#~ msgid "READ & WRITE"
+#~ msgstr "LESEN & SCHREIBEN"
+
+#, python-format
+#~ msgid "Step:3 Sharing Wizard"
+#~ msgstr "Schritt 3: Freigaben Assistent"
+
+#~ msgid "Create share"
+#~ msgstr "Erzeuge Freigabe"
+
+#~ msgid "User Type"
+#~ msgstr "Benutzertyp"
+
+#~ msgid "Step 2: Chose the User type"
+#~ msgstr "Schritt 2: Wähle Benutzertyp"
+
+#~ msgid "New user"
+#~ msgstr "Neuer Benutzer"
+
+#~ msgid "Action"
+#~ msgstr "Aktion"
+
+#, python-format
+#~ msgid "Step:2 Sharing Wizard"
+#~ msgstr "Schritt 2: Freigaben Assistent"
+
+#~ msgid "Existing"
+#~ msgstr "Existierende"
+
+#, python-format
+#~ msgid "Step:4 Share Users Detail"
+#~ msgstr "Step 4: Freigaben Benutzer Details"
+
+#~ msgid "Write Access"
+#~ msgstr "Schreib Zugriff"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
@@ -508,6 +605,9 @@ msgstr "* übliches Passwort*"
 #~ "Bitte spezifiere \"share_root_url\" in der Server Konfiguration oder im "
 #~ "Kontext."
 
+#~ msgid "Sharing Tools"
+#~ msgstr "Tools für Freigaben"
+
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
@@ -516,3 +616,6 @@ msgstr "* übliches Passwort*"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Access Groups"
+#~ msgstr "Berechtigungsgruppen"

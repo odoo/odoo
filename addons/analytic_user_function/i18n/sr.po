@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:42+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-27 08:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
@@ -62,14 +62,31 @@ msgid "Relation table between users and products on a analytic account"
 msgstr "Relaciona tabela izmedju korisnika i proizvoda u analitickom kontu"
 
 #. module: analytic_user_function
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
+#: model:ir.module.module,description:analytic_user_function.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default function of a "
+"specific user on a given account. This is mostly used when a user encodes "
+"his timesheet: the values are retrieved and the fields are auto-filled... "
+"but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the employee data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
 msgstr "Korisnicka Funkcija Analitike"
+
+#. module: analytic_user_function
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0

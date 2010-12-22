@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 06:13+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -1068,6 +1068,11 @@ msgid "_Subcribe"
 msgstr ""
 
 #. module: event
+#: model:ir.model,name:event.model_partner_event_registration
+msgid "  event Registration "
+msgstr ""
+
+#. module: event
 #: help:event.event,date_begin:0
 #: help:partner.event.registration,start_date:0
 msgid "Beginning Date of Event"
@@ -1311,8 +1316,15 @@ msgstr ""
 #~ msgstr ""
 #~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
+#~ msgid "Error ! You can not create recursive sections."
+#~ msgstr "Viga ! Sa ei sa luua korduvat jaotist"
+
 #~ msgid "Badge"
 #~ msgstr "Tunnusmärk"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Viga!"
 
 #~ msgid "All Registrations"
 #~ msgstr "Kõik registreerimised"
@@ -1355,6 +1367,17 @@ msgstr ""
 
 #~ msgid "List Register Partners"
 #~ msgstr "Registreeritud partnerite nimekiri"
+
+#, python-format
+#~ msgid ""
+#~ "You must define a reply-to address in order to mail the participant. You can "
+#~ "do this in the Mailing tab of your event. Note that this is also the place "
+#~ "where you can configure your event to not send emails automaticly while "
+#~ "registering"
+#~ msgstr ""
+#~ "Sa pead määrama vastuse aadressi, et saada kirja osalejale. Sa sad teha seda "
+#~ "oma sündmuse postituse kaardil. See on ka koht kus sa saad määrata, et "
+#~ "registreerimisel ei saadetaks automaatselt e-kirja."
 
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"

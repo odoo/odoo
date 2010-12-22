@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:16+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2009-11-17 10:55+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:31+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -43,12 +43,6 @@ msgid "Picking List"
 msgstr ""
 
 #. module: warning
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
-
-#. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Postavka prodajnega naloga"
@@ -121,7 +115,6 @@ msgid "Warning when Selling this Product"
 msgstr "Opozorilo pri prodaji tega produkta"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "Prodajni nalog"
@@ -166,6 +159,12 @@ msgstr ""
 "zaustavila potek. Sporočilo je potrebno zapisati v naslednje polje."
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "Sporočilo za račun"
@@ -174,11 +173,6 @@ msgstr "Sporočilo za račun"
 #: model:ir.module.module,description:warning.module_meta_information
 msgid "Module for Warnings form onchange Event."
 msgstr "Modula za opozorila dogodka spremembe na formi"
-
-#. module: warning
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
 
 #. module: warning
 #: view:res.partner:0
@@ -194,7 +188,7 @@ msgstr "Opozorilo na nakupnem nalogu"
 #: code:addons/warning/warning.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Opozorila za %s"
 
 #. module: warning
 #: view:res.partner:0
@@ -216,5 +210,19 @@ msgstr "Sporočilo za izbiro zaloge"
 msgid "Partner"
 msgstr ""
 
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#, python-format
+#~ msgid "Alert for ' + product_info.name +' !"
+#~ msgstr "Opozorilo za ' + product_info.name +' !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 14:36+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -93,11 +93,6 @@ msgid "Company"
 msgstr "Compagnia"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_date:0
-msgid "Next Evaluation"
-msgstr ""
-
-#. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Evaluation Interviews"
 msgstr ""
@@ -116,6 +111,13 @@ msgstr "Giorno"
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
 msgid "Send an anonymous summary to the employee"
+msgstr ""
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
 msgstr ""
 
 #. module: hr_evaluation
@@ -174,6 +176,11 @@ msgid "July"
 msgstr "Luglio"
 
 #. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Evaluations (months)"
+msgstr ""
+
+#. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid ""
@@ -184,6 +191,11 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date_close:0
 msgid "Ending Date"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Evaluation in (months)"
 msgstr ""
 
 #. module: hr_evaluation
@@ -223,11 +235,6 @@ msgid "Send to Employees"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr.evaluation.report,deadline:0
 msgid "Deadline"
 msgstr ""
@@ -238,14 +245,11 @@ msgid " Month "
 msgstr " Mese "
 
 #. module: hr_evaluation
-#: help:hr.employee,evaluation_date:0
-msgid "Date of the next evaluation"
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
 msgstr ""
-
-#. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_survey_request
-msgid "survey.request"
-msgstr "survey.request"
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
@@ -258,8 +262,21 @@ msgid "Send evaluation reminder"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.evaluation,note_summary:0
-msgid "Evaluation Summary"
+#: model:ir.module.module,description:hr_evaluation.module_meta_information
+msgid ""
+"\n"
+"          Ability to create employees evaluation.\n"
+"          An evaluation can be created by employee for subordinates,\n"
+"          juniors as well as his manager.The evaluation is done under a "
+"plan\n"
+"          in which various surveys can be created and it can be defined "
+"which\n"
+"          level of employee hierarchy fills what and final review and "
+"evaluation\n"
+"          is done by the manager.Every evaluation filled by the employees "
+"can be viewed\n"
+"          in the form of.Implements a dashboard for My Current Evaluations\n"
+"         "
 msgstr ""
 
 #. module: hr_evaluation
@@ -411,11 +428,6 @@ msgid "All Answers"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "Next Evaluation After"
-msgstr ""
-
-#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "September"
 msgstr ""
@@ -462,6 +474,11 @@ msgid "Is Evaluation?"
 msgstr ""
 
 #. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr "survey.request"
+
+#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
@@ -492,6 +509,11 @@ msgstr ""
 #: selection:hr.evaluation.report,state:0
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Draft"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Evaluation Summary"
 msgstr ""
 
 #. module: hr_evaluation
@@ -679,6 +701,11 @@ msgid "Send all answers to the employee"
 msgstr ""
 
 #. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Evaluation Date"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: selection:hr.evaluation.report,state:0
 #: view:hr_evaluation.evaluation:0
@@ -854,6 +881,13 @@ msgstr ""
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,year:0
 msgid "Year"
+msgstr ""
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next evaluation is computed by the evaluation plan's dates "
+"(first evaluation + periodicity)."
 msgstr ""
 
 #~ msgid "Invalid model name in the action definition."

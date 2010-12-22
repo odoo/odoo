@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 09:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -468,6 +468,11 @@ msgid "Codes"
 msgstr ""
 
 #. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
+msgstr ""
+
+#. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 #: view:pos.details:0
 #: view:pos.payment.report:0
@@ -790,6 +795,13 @@ msgid "Draft Invoice"
 msgstr "Arve mustand"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr ""
@@ -809,11 +821,6 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -1178,6 +1185,22 @@ msgid "Connected Salesman"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr ""
@@ -1266,11 +1289,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
 msgstr ""
 
 #. module: point_of_sale
@@ -1824,11 +1842,6 @@ msgid "Discount "
 msgstr ""
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Ostuarve"
@@ -1954,6 +1967,11 @@ msgstr ""
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Arveldatud"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2394,17 +2412,32 @@ msgstr ""
 #~ msgid "Detail of Sales"
 #~ msgstr "Müügid detailselt"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Toimingu N° :"
+
 #~ msgid "VAT(%)"
 #~ msgstr "KM(%)"
 
 #~ msgid "Date :"
 #~ msgstr "Kuupäev :"
 
+#~ msgid "User :"
+#~ msgstr "Kasutaja :"
+
+#~ msgid "Total :"
+#~ msgstr "Kokku :"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Vigane XML vaate arhitektuurile!"
 
+#~ msgid "Tel :"
+#~ msgstr "Tel :"
+
 #~ msgid "E-mail :"
 #~ msgstr "E-post :"
+
+#~ msgid "."
+#~ msgstr "."
 
 #~ msgid "Discount"
 #~ msgstr "Allahindlus"
@@ -2435,6 +2468,10 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Ei saa luua arvet ilma partnerita."
+
 #~ msgid "Default journal"
 #~ msgstr "Vaikimisi päevik"
 
@@ -2459,8 +2496,15 @@ msgstr ""
 #~ msgid "Piece Number"
 #~ msgstr "Tüki nr."
 
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Kasutaja Viga"
+
 #~ msgid "Payment Term"
 #~ msgstr "Maksetingimus"
+
+#~ msgid "Disc :"
+#~ msgstr "Allahi. :"
 
 #~ msgid "Order Payments"
 #~ msgstr "Korralduse maksed"
@@ -2482,6 +2526,10 @@ msgstr ""
 
 #~ msgid "Ma_ke payment"
 #~ msgstr "_Loo makse"
+
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "Ei saa kustutada müügipunkti mis on juba kinnitatud !"
 
 #~ msgid "Tel : + 32 (0) 2 231 04 35"
 #~ msgstr "Tel : + 32 (0) 2 231 04 35"
