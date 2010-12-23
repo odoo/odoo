@@ -21,7 +21,7 @@
                 <form string="Project">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
-                        <field name="parent_id" string="Parent Project"/>
+                        <field name="parent_id" domain="[('id','!=',active_id)]"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
@@ -211,7 +211,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
+                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="[('user_id','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>

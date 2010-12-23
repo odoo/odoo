@@ -165,11 +165,9 @@ class contentIndex(object):
                     os.write(fd, content)
                     os.close(fd)
             
-                fp = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE).stdout
-                try:
-                    result = fp.read()
-                finally:    
-                    fp.close()
+                pop = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE)
+                (result, _) = pop.communicate()
+                
                 mime2 = result.split(';')[0]
                 self.__logger.debug('File gave us: %s', mime2)
                 # Note that the temporary file still exists now.

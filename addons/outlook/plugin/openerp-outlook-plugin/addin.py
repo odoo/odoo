@@ -175,6 +175,12 @@ class OutlookAddin:
             toolbar = bars.Item("Standard")
             openerp_bar = bars.Item('Open ERP')
 
+            item = openerp_bar.Controls.Add(Type = constants.msoControlButton, Temporary = True)
+            item = self.toolbarButtonConfig = DispatchWithEvents(item, Configuration)
+            item.Caption = "Configuration"
+            item.TooltipText = "Click to configure OpenERP."
+            item.Enabled = True
+
             item = openerp_bar.Controls.Add(Type=constants.msoControlButton, Temporary=True)
             # Hook events for the item
             item = self.toolbarButton = DispatchWithEvents(item, ArchiveEvent)

@@ -65,8 +65,6 @@ class crossovered_analytic(report_sxw.rml_parse):
     def _ref_lines(self,form):
         result = []
         res = {}
-        acc_id = []
-        final = []
         acc_pool = self.pool.get('account.analytic.account')
         line_pool = self.pool.get('account.analytic.line')
 
@@ -128,7 +126,6 @@ class crossovered_analytic(report_sxw.rml_parse):
         line_pool = self.pool.get('account.analytic.line')
         acc_id = []
         final = []
-        child_ids = []
         self.list_ids = []
 
         self.final_list = self.find_children(ids)
