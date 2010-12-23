@@ -74,6 +74,7 @@ class crm_claim_report(osv.osv):
         'date_deadline': fields.date('Deadline', readonly=True), 
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'email': fields.integer('# Emails', size=128, readonly=True),
+         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg")
     }
 
     def init(self, cr):
@@ -104,7 +105,8 @@ class crm_claim_report(osv.osv):
                     c.type_action as type_action,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.helpdesk' AND res_id=c.id AND history=True) AS email,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.claim' AND res_id=c.id AND history=True) AS email,
+                    (SELECT avg(probability) FROM crm_case_stage WHERE type='claim' AND id=c.stage_id) AS probability,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c
