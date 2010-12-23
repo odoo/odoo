@@ -165,6 +165,15 @@ class document_file(osv.osv):
                 return False
         return True
 
+    def check(self, cr, uid, ids, mode, context=None, values=None):
+        """Check access wrt. res_model, relax the rule of ir.attachment parent
+        
+        With 'document' installed, everybody will have access to attachments of
+        any resources they can *read*.
+        """
+        return super(document_file, self).check(cr, uid, ids, mode='read',
+                                            context=context, values=values)
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
