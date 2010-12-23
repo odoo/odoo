@@ -7,83 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-11-25 19:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
-#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
-#: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In Configuration"
-msgstr "Configuração do Plug-in no Thunderbird"
-
-#. module: thunderbird
-#: field:thunderbird.installer,pdf_file:0
-msgid "Installation Manual"
-msgstr "Manual de instalação"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr "Configurar"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_installer
-msgid "thunderbird.installer"
-msgstr "thunderbird.instalador"
-
-#. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "Descrição"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "title"
-msgstr "Título"
-
-#. module: thunderbird
-#: help:thunderbird.installer,plugin_file:0
-msgid ""
-"Thunderbird plug-in file. Save as this file and install this plug-in in "
-"thunderbird."
-msgstr ""
-"Arquivo plug-in do Thunderbird. Salve este arquivo e instale este plug-in no "
-"Thunderbird."
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Skip"
-msgstr "Pular"
-
-#. module: thunderbird
-#: field:thunderbird.installer,name:0
-#: field:thunderbird.installer,pdf_name:0
-msgid "File name"
-msgstr "Nome do arquivo"
-
-#. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid mails"
-msgstr "Emails do Thunderbird"
-
-#. module: thunderbird
-#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
-#: view:thunderbird.installer:0
-msgid "Thunderbird Plug-In"
+#: field:thunderbird.installer,plugin_file:0
+#: field:thunderbird.installer,thunderbird:0
+msgid "Thunderbird Plug-in"
 msgstr "Plug-in Thunderbird"
-
-#. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "_Close"
-msgstr "Fe_char"
 
 #. module: thunderbird
 #: help:thunderbird.installer,thunderbird:0
@@ -95,11 +33,13 @@ msgstr ""
 "seus anexos."
 
 #. module: thunderbird
-#: view:thunderbird.installer:0
+#: help:thunderbird.installer,plugin_file:0
 msgid ""
-"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
-"attach it to any existing one in OpenERP or create a new one."
+"Thunderbird plug-in file. Save as this file and install this plug-in in "
+"thunderbird."
 msgstr ""
+"Arquivo plug-in do Thunderbird. Salve este arquivo e instale este plug-in no "
+"Thunderbird."
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
@@ -112,9 +52,75 @@ msgid "Email Server Tools"
 msgstr "Ferramentas do Servidor de Email"
 
 #. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "_Close"
+msgstr "Fe_char"
+
+#. module: thunderbird
+#: field:thunderbird.installer,pdf_file:0
+msgid "Installation Manual"
+msgstr "Manual de instalação"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Configure"
+msgstr "Configurar"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "title"
+msgstr "Título"
+
+#. module: thunderbird
+#: model:ir.module.module,description:thunderbird.module_meta_information
+msgid ""
+"\n"
+"      This module is required for the thuderbird plug-in to work\n"
+"      properly.\n"
+"      The Plugin allows you archive email and its attachments to the "
+"selected \n"
+"      OpenERP objects. You can select a partner, a task, a project, an "
+"analytical\n"
+"      account,or any other object and attach selected mail as .eml file in \n"
+"      attachment of selected record. You can create Documents for crm Lead,\n"
+"      HR Applicant and project issue from selected mails.\n"
+"\n"
+"      "
+msgstr ""
+
+#. module: thunderbird
+#: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
+msgid "Thunderbird Plug-In"
+msgstr "Plug-in Thunderbird"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid ""
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
+msgstr ""
+
+#. module: thunderbird
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
 msgid "Thunderbird Interface"
 msgstr "Interface do Thunderbird"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_installer
+msgid "thunderbird.installer"
+msgstr "thunderbird.instalador"
+
+#. module: thunderbird
+#: field:thunderbird.installer,name:0
+#: field:thunderbird.installer,pdf_name:0
+msgid "File name"
+msgstr "Nome do arquivo"
+
+#. module: thunderbird
+#: field:thunderbird.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Configuração em Progresso"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
@@ -122,20 +128,31 @@ msgid "Installation and Configuration Steps"
 msgstr "Instalação e Passos de Configuração"
 
 #. module: thunderbird
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "Descrição"
+
+#. module: thunderbird
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
+#: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
+msgid "Thunderbird Plug-In Configuration"
+msgstr "Configuração do Plug-in no Thunderbird"
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid Plugin Tools"
+msgstr ""
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Skip"
+msgstr "Pular"
+
+#. module: thunderbird
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
 msgstr "Imagem"
-
-#. module: thunderbird
-#: field:thunderbird.installer,plugin_file:0
-#: field:thunderbird.installer,thunderbird:0
-msgid "Thunderbird Plug-in"
-msgstr "Plug-in Thunderbird"
-
-#. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Configuração em Progresso"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -148,6 +165,9 @@ msgstr "Configuração em Progresso"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da ação."
+
+#~ msgid "Thunderbid mails"
+#~ msgstr "Emails do Thunderbird"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML inválido para Arquitetura da View"

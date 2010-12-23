@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-29 11:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_issue
@@ -247,13 +247,6 @@ msgid "Convert To Task"
 msgstr "Skonwertuj do zadania"
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
 msgstr ""
@@ -497,6 +490,17 @@ msgid "Update Date"
 msgstr "Zaktualizuj datę"
 
 #. module: project_issue
+#: model:ir.module.module,description:project_issue.module_meta_information
+msgid ""
+"\n"
+"        This module provide Issues/Bugs Management in Project\n"
+"    "
+msgstr ""
+"\n"
+"        Ten moduł pomaga zarządzać problemami/błędami w projekcie\n"
+"    "
+
+#. module: project_issue
 #: view:project.issue:0
 #: field:project.issue,categ_id:0
 #: view:project.issue.report:0
@@ -634,9 +638,9 @@ msgid "Feature Tracker Tree"
 msgstr ""
 
 #. module: project_issue
-#: help:project.issue,email_from:0
-msgid "These people will receive email."
-msgstr "Ci ludzie otrzymają wiadomość"
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Bugs"
+msgstr "Błędy"
 
 #. module: project_issue
 #: view:board.board:0
@@ -773,6 +777,11 @@ msgid "Details"
 msgstr "Szczegóły"
 
 #. module: project_issue
+#: help:project.issue,email_from:0
+msgid "These people will receive email."
+msgstr "Ci ludzie otrzymają wiadomość"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Reply"
 msgstr "Odpowiedz"
@@ -802,6 +811,12 @@ msgstr "Zespół sprzedaży"
 #: selection:project.issue.report,month:0
 msgid "May"
 msgstr "Maj"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+msgid "Issue Analysis"
+msgstr "Analiza problemu"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -965,6 +980,9 @@ msgstr ""
 #~ msgid "Fixed"
 #~ msgstr "Naprawione"
 
+#~ msgid "%Done"
+#~ msgstr "%Wykonano"
+
 #~ msgid "Version 4.4"
 #~ msgstr "Wersja 4.4"
 
@@ -977,8 +995,14 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Niewłaściwy XML dla architektury widoku!"
 
+#~ msgid "Avg. Answers"
+#~ msgstr "Śred. odpowiedzi"
+
 #~ msgid "Won't fix"
 #~ msgstr "Nie do naprawienia"
+
+#~ msgid "%Cancel"
+#~ msgstr "%Anulowanych"
 
 #~ msgid "Communication history"
 #~ msgstr "Historia komunikacji"
@@ -991,15 +1015,6 @@ msgstr ""
 
 #~ msgid "Salesman"
 #~ msgstr "Sprzedawca"
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module provide Issues/Bugs Management in Project\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Ten moduł pomaga zarządzać problemami/błędami w projekcie\n"
-#~ "    "
 
 #~ msgid "Works For Me"
 #~ msgstr "Praca dla mnie"
@@ -1019,9 +1034,6 @@ msgstr ""
 #, python-format
 #~ msgid "Issue "
 #~ msgstr "Problem "
-
-#~ msgid "Bugs"
-#~ msgstr "Błędy"
 
 #~ msgid "   Today   "
 #~ msgstr "   Dzisiaj   "
@@ -1046,9 +1058,6 @@ msgstr ""
 
 #~ msgid "Working Time"
 #~ msgstr "Czas pracy"
-
-#~ msgid "Issue Analysis"
-#~ msgstr "Analiza problemu"
 
 #~ msgid "Emails"
 #~ msgstr "Emaile"

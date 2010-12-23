@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-16 07:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -90,6 +90,12 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr "Deseja gerar a(s) Nota(s) de Entrada ?"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
 msgid "Supplier Invoices"
@@ -136,12 +142,6 @@ msgstr "Empresa"
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
 msgstr "This is the leads/security time for each purchase order."
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
-msgstr ""
 
 #. module: purchase
 #: view:board.board:0
@@ -260,6 +260,11 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
+msgstr "Setembro"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -422,6 +427,7 @@ msgid "# of Lines"
 msgstr "# de Linhas"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_order_group.py:0
 #, python-format
 msgid "Warning"
@@ -578,6 +584,11 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr "Address Contact Name"
@@ -591,6 +602,11 @@ msgid ""
 "receptions.\n"
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
@@ -673,6 +689,7 @@ msgid "July"
 msgstr "Julho"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
 msgstr "Configuração"
@@ -734,9 +751,10 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: purchase
-#: help:purchase.order,invoice_id:0
-msgid "An invoice generated for a purchase order"
-msgstr "An invoice generated for a purchase order"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -809,9 +827,10 @@ msgid "Procurement"
 msgstr "Aquisição"
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
-msgstr "Setembro"
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -1106,6 +1125,39 @@ msgid "Compute"
 msgstr "Calcular"
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
 msgstr "Janeiro"
@@ -1249,7 +1301,6 @@ msgstr "Requisição para Cotação N°"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-#: field:purchase.order,invoice_id:0
 msgid "Invoice"
 msgstr "Nota Fiscal"
 
@@ -1645,6 +1696,11 @@ msgid "Total"
 msgstr "Total"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr "Endereços"
@@ -1753,11 +1809,25 @@ msgstr ""
 msgid "Purchase Dashboard"
 msgstr "Dashboard de Compras"
 
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "Você não pode ter 2 listas de preços que sobrepoem!"
+
 #~ msgid "Confirm Purchase Order"
 #~ msgstr "Confirmar Ordem de Compra"
 
 #~ msgid "Order Ref"
 #~ msgstr "Ref. Pedido"
+
+#~ msgid "N°"
+#~ msgstr "Nº"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Deve-se selecionar uma lista de preço no formulario de compra!\n"
+#~ " Favor selecionar uma antes de escolher o produto"
 
 #~ msgid "Confirm Purchase order from Request for quotation without origin"
 #~ msgstr ""
@@ -1807,6 +1877,15 @@ msgstr "Dashboard de Compras"
 
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Fatura do fornecedor pré-gerada nos recebimentos para controle"
+
+#~ msgid ""
+#~ "Please note that orders will only be merged if they are to the same partner "
+#~ "and going to the same location, and lines will only be merged if they are "
+#~ "exactly the same except for the quantity and unit."
+#~ msgstr ""
+#~ "Por favor note que as ordens só serão agrupadas se forem do mesmo parceiro e "
+#~ "estiverem indo para mesma localidade, e as linhas serão agrupadas se forem "
+#~ "exatamente iguais, com exceção da quantidade e da unidade."
 
 #~ msgid "Confirmed Purchase"
 #~ msgstr "Compra Confirmada"
@@ -1859,11 +1938,97 @@ msgstr "Dashboard de Compras"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo inválido na definição da ação."
 
+#~ msgid "Extended filters..."
+#~ msgstr "Extended filters..."
+
+#~ msgid "To Invoice"
+#~ msgstr "Para Faturar"
+
+#~ msgid ""
+#~ "From Order: a draft invoice will be pre-generated based on the purchase "
+#~ "order. The accountant will just have to validate this invoice for control.\n"
+#~ "From Picking: a draft invoice will be pre-generated based on validated "
+#~ "receptions.\n"
+#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
+#~ "manually."
+#~ msgstr ""
+#~ "From Order: a draft invoice will be pre-generated based on the purchase "
+#~ "order. The accountant will just have to validate this invoice for control.\n"
+#~ "From Picking: a draft invoice will be pre-generated based on validated "
+#~ "receptions.\n"
+#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
+#~ "manually."
+
+#~ msgid "Quotation Request"
+#~ msgstr "Requisição de Cotação"
+
+#~ msgid "This Year"
+#~ msgstr "Este Ano"
+
+#~ msgid "Launch"
+#~ msgstr "Executar"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ " Please note that:\n"
+#~ "\n"
+#~ "   Orders will only be merged if: \n"
+#~ "   * Purchase Orders are in draft \n"
+#~ "   * Purchase Orders belong to the same supplier \n"
+#~ "   * Purchase Orders are have same stock location, same pricelist \n"
+#~ "\n"
+#~ "    Lines will only be merged if: \n"
+#~ "   * Order lines are exactly the same except for the product,quantity and "
+#~ "unit \n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ " Please note that:\n"
+#~ "\n"
+#~ "   Orders will only be merged if: \n"
+#~ "   * Purchase Orders are in draft \n"
+#~ "   * Purchase Orders belong to the same supplier \n"
+#~ "   * Purchase Orders are have same stock location, same pricelist \n"
+#~ "\n"
+#~ "    Lines will only be merged if: \n"
+#~ "   * Order lines are exactly the same except for the product,quantity and "
+#~ "unit \n"
+#~ "\n"
+
+#~ msgid "Total Quantity per product"
+#~ msgstr "Total Quantity per product"
+
 #~ msgid "You cannot have 2 pricelist versions that overlap!"
 #~ msgstr "You cannot have 2 pricelist versions that overlap!"
 
+#~ msgid "Purchase Lines not Invoiced"
+#~ msgstr "Linhas de Ordens de Compras não Faturadas"
+
+#~ msgid "# of Products"
+#~ msgstr "# de Produtos"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalid XML for View Architecture!"
+
+#~ msgid "Draft Purchases"
+#~ msgstr "Compras em Rascunho"
+
+#~ msgid "An invoice generated for a purchase order"
+#~ msgstr "An invoice generated for a purchase order"
+
+#~ msgid "Purchase  Profile : Install Extra Modules"
+#~ msgstr "Purchase  Profile : Install Extra Modules"
+
+#~ msgid "Inventory Control"
+#~ msgstr "Controle de Inventário"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar menu recursivo."
+
+#~ msgid "7 Days"
+#~ msgstr "7 Dias"
 
 #~ msgid "Delivery & Invoices"
 #~ msgstr "Entrega & Faturamento"
@@ -1872,12 +2037,35 @@ msgstr "Dashboard de Compras"
 #~ msgstr "Compras"
 
 #~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+
+#~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "The Object name must start with x_ and not contain any special character !"
 
 #~ msgid "Scheduled date"
 #~ msgstr "Data Prevista"
+
+#~ msgid ""
+#~ "Manages your Purchase Requisition and allow you to easily keep track and "
+#~ "manage all your purchase orders."
+#~ msgstr ""
+#~ "Manages your Purchase Requisition and allow you to easily keep track and "
+#~ "manage all your purchase orders."
+
+#~ msgid "Picking"
+#~ msgstr "Separação"
+
+#~ msgid "This Month"
+#~ msgstr "Este Mês"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Rules are not supported for osv_memory objects !"
 
 #~ msgid "Purchase Order lines"
 #~ msgstr "Linhas da Ordem de Compra"

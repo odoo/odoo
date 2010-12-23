@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-27 01:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
@@ -81,11 +81,6 @@ msgstr ""
 "selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Verkooporderregel"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
 msgstr "Standaard begindatum voor deze kostenplaats"
@@ -138,6 +133,19 @@ msgid "Analytic Defaults"
 msgstr "Analytische standaarden"
 
 #. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
 msgid ""
 "select a product which will use analytical account specified in analytic "
@@ -186,6 +194,11 @@ msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
 
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -205,6 +218,9 @@ msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Verkooporderregel"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
