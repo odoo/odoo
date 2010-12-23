@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-21 14:12+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2010-12-22 22:19+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -2408,6 +2407,8 @@ msgid ""
 "A supplier refund is a credit note from your supplier indicating that he "
 "refunds part or totality of the invoice sent to you."
 msgstr ""
+"Un avoir fournisseur est une note de crédit reçue de votre fournisseur qui "
+"vous indique vous faire un avoir sur tout ou partie de sa facture."
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -6629,6 +6630,13 @@ msgid ""
 "\n"
 "e.g. My model on %(date)s"
 msgstr ""
+"Vous pouvez indiquer l'année, le mois et la date dans le nom du modèle en "
+"utilisant les étiquettes suivantes :\n"
+"%(year)s : pour indiquer l'année \n"
+"%(month)s : pour indique le mois \n"
+"%(date)s : date actuelle\n"
+"\n"
+"par exmple : Mon modèle du %(date)s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
@@ -6705,6 +6713,9 @@ msgid ""
 "Here you can personalize and create each view of your financial journals by "
 "selecting the fields you want to appear and the sequence they will appear."
 msgstr ""
+"Ici, vous pouvez personnaliser et créer chaque vue de vos journaux "
+"financiers en sélectionnant les champs que vous voulez afficher et l'ordre "
+"dans lequel ils vont s'afficher."
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -6804,6 +6815,8 @@ msgid ""
 "Can not find account chart for this company in invoice line account, Please "
 "Create account."
 msgstr ""
+"Impossible de trouver le plan comptable pour cette société dans le compte de "
+"la ligne de facture. Créer le compte SVP."
 
 #. module: account
 #: view:account.tax.template:0
@@ -7020,6 +7033,9 @@ msgid ""
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
 msgstr ""
+"Ce champ vous indique le prochain partenaire qui sera automatiquement choisi "
+"par le système pour passer au travers du processus de rapprochement, en "
+"fonction du dernier jour où il a été rapproché."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7328,7 +7344,7 @@ msgstr "Ventes par type de compte"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr ""
+msgstr "Lier automatiquement à la ligne d'écriture générée"
 
 #. module: account
 #: selection:account.installer,period:0
@@ -7575,6 +7591,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product"
 msgstr ""
+"Ce compte sera utilisé pour les factures à la place du compte par défaut "
+"pour valoriser les ventes du produit actuel"
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -7704,7 +7722,7 @@ msgstr ""
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
 msgid "Accounting and Financial Management"
-msgstr ""
+msgstr "Gestion de la comptabilité et des finances"
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -7804,7 +7822,7 @@ msgstr "Devise société"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Chart of Account"
-msgstr ""
+msgstr "Plan comptable"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
