@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,32 +20,23 @@
 ##############################################################################
 
 {
-    "name" : "Resource",
+    "name" : "purchase_double_validation",
     "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category" : "Generic Modules/Projects & Services",
-    "website" : "http://www.openerp.com",
+    "category": 'Generic Modules/Sales & Purchases',
+    "depends" : ["base","purchase"],
+    "author" : 'OpenERP SA',
     "description": """
-    Module for resource management
-     A resource represent something that can be scheduled
-     (a developer on a task or a work center on manufacturing orders).
-     This module manages a resource calendar associated to every resource.
-     It also manages the leaves of every resource.
-
+		This module modifies purchase workflow in order to validate purchases that exceeds minimum amount set by configuration wizard
     """,
-    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['process'],
     'init_xml': [],
     'update_xml': [
-        'security/ir.model.access.csv',
-        'resource_view.xml',
-    ],
-    'demo_xml': ['resource_demo.xml'
-    ],
+                   'purchase_double_validation_view.xml',
+                   'purchase_double_validation_workflow.xml',
+                   'purchase_double_validation_installer.xml'
+                    ],
+    'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': None,
-}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+}

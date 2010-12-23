@@ -133,8 +133,8 @@
 -
   I check that Traceability moves are created.
 -
-  I check that an invoice_id field of Delivery&Invoices gets bind with the value.  
+  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.  
 -
   !python {model: purchase.order}: |
     pur_id2=self.browse(cr, uid, ref("purchase_order_po0"))
-    assert(pur_id2.invoice_id)
+    assert(pur_id2.invoice_ids)

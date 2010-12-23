@@ -53,7 +53,7 @@ def check_ean(eancode):
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
-    check = int(10 - math.ceil(total % 10.0))
+    check = int(10 - math.ceil(total % 10.0)) %10
 
     if check != int(eancode[-1]):
         return False
@@ -705,8 +705,8 @@ class product_supplierinfo(osv.osv):
         'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
-        'product_uom': fields.many2one('product.uom', string="UOM", help="Supplier Product UoM."),
-        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
+        'product_uom': fields.many2one('product.uom', string="Supplier UoM", help="Choose here the Unit of Measure in which the prices and quantities are expressed below."),
+        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product UoM if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, method=True, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Uom."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
@@ -775,8 +775,8 @@ class pricelist_partnerinfo(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
-        'min_quantity': fields.float('Quantity', required=True),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="This price will be considered as a price for default Unit of Measure of the product"),
+        'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the supplier UoM if any or in the default UoM of the product otherrwise."),
+        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="This price will be considered as a price for the supplier UoM if any or the default Unit of Measure of the product otherwise"),
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
