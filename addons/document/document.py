@@ -35,6 +35,17 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
+
+    def attach_parent_id(self, cr, uid, ids=[], context=None):
+        """Attach Parent id For document"""
+        
+        parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
+        ids = self.search(cr, uid, [('parent_id', '=', False)])
+        attach_doc = self.browse(cr, uid, ids, context=context)
+        for attach in attach_doc:
+            cr.execute("UPDATE ir_attachment SET parent_id = %s,db_datas = decode(encode(%s,'escape'), 'base64') WHERE id = %s", (parent_id, attach.db_datas, attach.id))
+        return True
+        
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
@@ -42,32 +53,21 @@ class document_file(osv.osv):
         if context is None:
             context = {}
         fbrl = self.browse(cr, uid, ids, context=context)
-        nctx = nodes.get_node_context(cr, uid, context={})
+        
+        nctx = nodes.get_node_context(cr, uid, context=context)
         # nctx will /not/ inherit the caller's context. Most of
         # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
-        
         result = {}
         bin_size = context.get('bin_size', False)
         for fbro in fbrl:
-            if not fbro.parent_id:
-                cr.execute("select db_datas from ir_attachment where id = %s" ,(fbro.id,))
-                res = cr.fetchone()
-                datas = res[0] or ''
-                size = len(datas)
-            else:
-                fnode = nodes.node_file(None, None, nctx, fbro)
-                datas = fnode.get_data(cr, fbro)
-                datas = base64.encodestring(datas or '')
-                size = fnode.get_data_len(cr, fbro)
-                
+            fnode = nodes.node_file(None, None, nctx, fbro)
             if not bin_size:
-                result[fbro.id] = datas 
+                    data = fnode.get_data(cr, fbro)
+                    result[fbro.id] = base64.encodestring(data or '')
             else:
-                result[fbro.id] = size
-
+                    result[fbro.id] = fnode.get_data_len(cr, fbro)
         return result
-
     #
     # This code can be improved
     #
@@ -178,10 +178,11 @@ class document_file(osv.osv):
             ids2 = []
             for fbro in self.browse(cr, uid, ids, context=context):
                 if ('parent_id' not in vals or fbro.parent_id.id == vals['parent_id']) \
-                    and ('name' not in vals or fbro.name == vals['name']) :
+                    and ('name' not in vals or fbro.name == vals['name']) or not fbro.parent_id:
                         ids2.append(fbro.id)
                         continue
                 fnode = nctx.get_file_node(cr, fbro)
+                print "fnode",fnode
                 res = fnode.move_to(cr, dnode or fnode.parent, vals.get('name', fbro.name), fbro, dbro, True)
                 if isinstance(res, dict):
                     vals2 = vals.copy()
