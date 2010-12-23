@@ -29,6 +29,7 @@ from tools.translate import _
 class res_payterm(osv.osv):
     _description = 'Payment term'
     _name = 'res.payterm'
+    _order = 'name'
     _columns = {
         'name': fields.char('Payment Term (short name)', size=64),
     }
@@ -47,36 +48,44 @@ class res_partner_category(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        if name:
+            # Be sure name_search is symetric to name_get
+            name = name.split(' / ')[-1]
+            ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+
+
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
-
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from res_partner_category where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
 
     _description='Partner Categories'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
-        'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
+        'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
         'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
+        'parent_left' : fields.integer('Left parent', select=True),
+        'parent_right' : fields.integer('Right parent', select=True),
     }
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
         'active' : lambda *a: 1,
     }
-    _order = 'parent_id,name'
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
 res_partner_category()
 
 class res_partner_title(osv.osv):
@@ -149,7 +158,7 @@ class res_partner(osv.osv):
     def do_share(self, cr, uid, ids, *args):
         return True
 
-    def _check_ean_key(self, cr, uid, ids):
+    def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
             if thisean and thisean!='':
@@ -264,6 +273,7 @@ res_partner()
 class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
+    _order = 'name'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
@@ -337,6 +347,7 @@ res_partner_address()
 class res_partner_bank_type(osv.osv):
     _description='Bank Account Type'
     _name = 'res.partner.bank.type'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=64, required=True),
@@ -347,6 +358,7 @@ res_partner_bank_type()
 class res_partner_bank_type_fields(osv.osv):
     _description='Bank type fields'
     _name = 'res.partner.bank.type.field'
+    _order = 'name'
     _columns = {
         'name': fields.char('Field Name', size=64, required=True, translate=True),
         'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank Type', required=True, ondelete='cascade'),
@@ -362,7 +374,7 @@ class res_partner_bank(osv.osv):
     _name = "res.partner.bank"
     _rec_name = "acc_number"
     _description = __doc__
-    _order = 'sequence'
+    _order = 'sequence,name'
 
     def _bank_type_get(self, cr, uid, context=None):
         bank_type_obj = self.pool.get('res.partner.bank.type')

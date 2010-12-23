@@ -31,8 +31,8 @@ def check_ssl():
     try:
         from OpenSSL import SSL
         import socket
-
-        return hasattr(socket, 'ssl')
+        
+        return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
     except:
         return False
 
@@ -91,7 +91,10 @@ class configmanager(object):
             'static_http_url_prefix': None,
             'secure_cert_file': 'server.cert',
             'secure_pkey_file': 'server.pkey',
+            'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
         }
+        
+        self.blacklist_for_save = set(["publisher_warranty_url"])
 
         self.misc = {}
         self.config_file = fname
@@ -224,7 +227,7 @@ class configmanager(object):
         parser.add_option_group(security)
 
     def parse_config(self):
-        (opt, args) = self.parser.parse_args()
+        opt = self.parser.parse_args()[0]
 
         def die(cond, msg):
             if cond:
@@ -317,7 +320,7 @@ class configmanager(object):
             # If an explicit TZ was provided in the config, make sure it is known
             try:
                 import pytz
-                tz = pytz.timezone(self.options['timezone'])
+                pytz.timezone(self.options['timezone'])
             except pytz.UnknownTimeZoneError:
                 die(True, "The specified timezone (%s) is invalid" % self.options['timezone'])
             except:
@@ -374,7 +377,10 @@ class configmanager(object):
         fp.close()
 
         if is_win32:
-            import _winreg
+            try:
+                import _winreg
+            except ImportError:
+                _winreg = None
             x=_winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
             y = _winreg.OpenKey(x, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", 0,_winreg.KEY_ALL_ACCESS)
             _winreg.SetValueEx(y,"PGPASSFILE", 0, _winreg.REG_EXPAND_SZ, filename )
@@ -436,16 +442,18 @@ class configmanager(object):
         p = ConfigParser.ConfigParser()
         loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS.keys()))
         p.add_section('options')
-        for opt in self.options.keys():
+        for opt in sorted(self.options.keys()):
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'init', 'update'):
+                continue
+            if opt in self.blacklist_for_save:
                 continue
             if opt in ('log_level', 'assert_exit_level'):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
 
-        for sec in self.misc.keys():
-            for opt in self.misc[sec].keys():
+        for sec in sorted(self.misc.keys()):
+            for opt in sorted(self.misc[sec].keys()):
                 p.set(sec,opt,self.misc[sec][opt])
 
         # try to create the directories and write the file

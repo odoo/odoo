@@ -29,12 +29,11 @@ import makohtml2html as makohtml
 
 
 class rml(render.render):
-    def __init__(self, rml, localcontext = None, datas={}, path='.', title=None):
-        render.render.__init__(self, datas)
+    def __init__(self, rml, localcontext = None, datas=None, path='.', title=None):
+        render.render.__init__(self, datas, path)
         self.localcontext = localcontext
         self.rml = rml
         self.output_type = 'pdf'
-        self.path = path
         self.title=title
 
 
@@ -42,7 +41,7 @@ class rml(render.render):
         return rml2pdf.parseNode(self.rml, self.localcontext, images=self.bin_datas, path=self.path,title=self.title)
 
 class rml2html(render.render):
-    def __init__(self, rml,localcontext = None, datas = {}):
+    def __init__(self, rml,localcontext = None, datas=None):
         super(rml2html, self).__init__(datas)
         self.rml = rml
         self.localcontext = localcontext
@@ -52,17 +51,17 @@ class rml2html(render.render):
         return htmlizer.parseString(self.rml,self.localcontext)
 
 class rml2txt(render.render):
-    def __init__(self, rml, localcontext= None, datas={}):
+    def __init__(self, rml, localcontext= None, datas=None):
         super(rml2txt, self).__init__(datas)
         self.rml = rml
-	self.localcontext = localcontext
+        self.localcontext = localcontext
         self.output_type = 'txt'
 
     def _render(self):
         return txtizer.parseString(self.rml, self.localcontext)
 
 class odt2odt(render.render):
-    def __init__(self, rml, localcontext = None, datas = {}):
+    def __init__(self, rml, localcontext=None, datas=None):
         render.render.__init__(self, datas)
         self.rml_dom = rml
         self.localcontext = localcontext
@@ -72,7 +71,7 @@ class odt2odt(render.render):
         return odt.parseNode(self.rml_dom,self.localcontext)
 
 class html2html(render.render):
-    def __init__(self, rml, localcontext = None, datas = {}):
+    def __init__(self, rml, localcontext=None, datas=None):
         render.render.__init__(self, datas)
         self.rml_dom = rml
         self.localcontext = localcontext

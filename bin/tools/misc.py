@@ -25,6 +25,7 @@ Miscelleanous tools used by OpenERP.
 """
 
 import inspect
+import subprocess
 import logging
 import os
 import re
@@ -33,6 +34,7 @@ import socket
 import sys
 import threading
 import time
+import warnings
 import zipfile
 from datetime import datetime
 from email.MIMEText import MIMEText
@@ -47,6 +49,10 @@ if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
+try:
+    from html2text import html2text
+except ImportError:
+    html2text = None
 
 import netsvc
 from config import config
@@ -74,20 +80,19 @@ def init_db(cr):
         p_id = None
         while categs:
             if p_id is not None:
-                cr.execute('select id \
-                           from ir_module_category \
-                           where name=%s and parent_id=%s', (categs[0], p_id))
+                cr.execute('SELECT id \
+                           FROM ir_module_category \
+                           WHERE name=%s AND parent_id=%s', (categs[0], p_id))
             else:
-                cr.execute('select id \
-                           from ir_module_category \
-                           where name=%s and parent_id is NULL', (categs[0],))
+                cr.execute('SELECT id \
+                           FROM ir_module_category \
+                           WHERE name=%s AND parent_id IS NULL', (categs[0],))
             c_id = cr.fetchone()
             if not c_id:
-                cr.execute('select nextval(\'ir_module_category_id_seq\')')
+                cr.execute('INSERT INTO ir_module_category \
+                        (name, parent_id) \
+                        VALUES (%s, %s) RETURNING id', (categs[0], p_id))
                 c_id = cr.fetchone()[0]
-                cr.execute('insert into ir_module_category \
-                        (id, name, parent_id) \
-                        values (%s, %s, %s)', (c_id, categs[0], p_id))
             else:
                 c_id = c_id[0]
             p_id = c_id
@@ -102,23 +107,23 @@ def init_db(cr):
                 state = 'uninstalled'
         else:
             state = 'uninstallable'
-        cr.execute('select nextval(\'ir_module_module_id_seq\')')
-        id = cr.fetchone()[0]
-        cr.execute('insert into ir_module_module \
-                (id, author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web) \
-                values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (
-            id, info.get('author', ''),
+        cr.execute('INSERT INTO ir_module_module \
+                (author, website, name, shortdesc, description, \
+                    category_id, state, certificate, web, license) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+            info.get('author', ''),
             info.get('website', ''), i, info.get('name', False),
             info.get('description', ''), p_id, state, info.get('certificate') or None,
-            info.get('web') or False))
-        cr.execute('insert into ir_model_data \
-            (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
+            info.get('web') or False,
+            info.get('license') or 'AGPL-3'))
+        id = cr.fetchone()[0]
+        cr.execute('INSERT INTO ir_model_data \
+            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
                 'module_meta_information', 'ir.module.module', i, id, True))
         dependencies = info.get('depends', [])
         for d in dependencies:
-            cr.execute('insert into ir_module_module_dependency \
-                    (module_id,name) values (%s, %s)', (id, d))
+            cr.execute('INSERT INTO ir_module_module_dependency \
+                    (module_id,name) VALUES (%s, %s)', (id, d))
         cr.commit()
 
 def find_in_path(name):
@@ -140,28 +145,25 @@ def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    args2 = (os.path.basename(prog),) + args
-    return os.spawnv(os.P_WAIT, prog, args2)
+    args2 = (prog,) + args
+    
+    return subprocess.call(args2)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"' + prog + '" ' + ' '.join(args)
-    else:
-        cmd = prog + ' ' + ' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
-    if os.name == "nt":
-        cmd = '"'+prog+'" '+' '.join(args)
-    else:
-        cmd = prog+' '+' '.join(args)
-    return os.popen2(cmd, 'b')
+    pop = subprocess.Popen((prog,) + args, bufsize= -1,
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    return (pop.stdin, pop.stdout)
 
 #----------------------------------------------------------
 # File paths
@@ -501,8 +503,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     email_body = ustr(body).encode('utf-8')
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
-    if attach: msg = MIMEMultipart()
-    else: msg = email_text
+    msg = MIMEMultipart()
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -524,8 +525,16 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     for key, value in x_headers.iteritems():
         msg['%s' % key] = str(value)
 
-    if attach:
+    if html2text and subtype == 'html':
+        text = html2text(email_body.decode('utf-8')).encode('utf-8')
+        alternative_part = MIMEMultipart(_subtype="alternative")
+        alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
+        alternative_part.attach(email_text)
+        msg.attach(alternative_part)
+    else:
         msg.attach(email_text)
+
+    if attach:
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )
@@ -914,6 +923,8 @@ def get_iso_codes(lang):
     return lang
 
 def get_languages():
+    # The codes below are those from Launchpad's Rosetta, with the exception
+    # of some trivial codes where the Launchpad code is xx and we have xx_XX.
     languages={
         'ab_RU': u'Abkhazian / аҧсуа',
         'ar_AR': u'Arabic / الْعَرَبيّة',
@@ -954,6 +965,7 @@ def get_languages():
         'fr_FR': u'French / Français',
         'gl_ES': u'Galician / Galego',
         'gu_IN': u'Gujarati / ગુજરાતી',
+        'he_IL': u'Hebrew / עִבְרִי',
         'hi_IN': u'Hindi / हिंदी',
         'hr_HR': u'Croatian / hrvatski jezik',
         'hu_HU': u'Hungarian / Magyar',
@@ -980,7 +992,8 @@ def get_languages():
         'sl_SI': u'Slovenian / slovenščina',
         'sk_SK': u'Slovak / Slovenský jazyk',
         'sq_AL': u'Albanian / Shqip',
-        'sr_RS': u'Serbian / српски језик',
+        'sr_RS': u'Serbian (Cyrillic) / српски',
+        'sr@latin': u'Serbian (Latin) / srpski',
         'sv_SE': u'Swedish / svenska',
         'te_IN': u'Telugu / తెలుగు',
         'tr_TR': u'Turkish / Türkçe',
@@ -1114,6 +1127,8 @@ def debug(what):
             --log-level=debug
 
     """
+    warnings.warn("The tools.debug() method is deprecated, please use logging.",
+                      DeprecationWarning, stacklevel=2)
     from inspect import stack
     from pprint import pformat
     st = stack()[1]
@@ -1122,10 +1137,10 @@ def debug(what):
     what = pformat(what)
     if param != what:
         what = "%s = %s" % (param, what)
-    netsvc.Logger().notifyChannel(st[3], netsvc.LOG_DEBUG, what)
+    logging.getLogger(st[3]).debug(what)
 
 
-icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
+__icons_list = ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
 'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
 'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
@@ -1161,7 +1176,11 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-gdu-smart-failing','terp-go-week','terp-gtk-select-all','terp-locked','terp-mail-forward',
 'terp-mail-message-new','terp-mail-replied','terp-rating-rated','terp-stage','terp-stock_format-scientific',
 'terp-dolar_ok!','terp-idea','terp-stock_format-default','terp-mail-','terp-mail_delete'
-])
+]
+
+def icons(*a, **kw):
+    global __icons_list
+    return [(x, x) for x in __icons_list ]
 
 def extract_zip_file(zip_file, outdirectory):
     zf = zipfile.ZipFile(zip_file, 'r')

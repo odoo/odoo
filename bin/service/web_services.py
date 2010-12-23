@@ -36,6 +36,7 @@ import release
 import sql_db
 import tools
 import locale
+import logging
 from cStringIO import StringIO
 
 class db(netsvc.ExportService):
@@ -185,7 +186,7 @@ class db(netsvc.ExportService):
 
         self._set_pg_psw_env_var()
 
-        cmd = ['pg_dump', '--format=c', '--no-owner']
+        cmd = ['pg_dump', '--format=c', '--no-owner' , '-w']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:
@@ -221,7 +222,7 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        cmd = ['pg_restore', '--no-owner']
+        cmd = ['pg_restore', '--no-owner', '-w']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:
@@ -385,7 +386,7 @@ class common(_ObjectService):
                         'login_message','get_stats', 'check_connectivity',
                         'list_http_services']:
             pass
-        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
+        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -567,6 +568,15 @@ GNU Public Licence.
 
     def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
+        
+    def exp_get_os_time(self):
+        return os.times()
+
+    def exp_get_sqlcount(self):
+        logger = logging.getLogger('db.cursor')
+        if not logger.isEnabledFor(logging.DEBUG_SQL):
+            logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
+        return sql_db.sql_counter
 
 common()
 
@@ -578,8 +588,10 @@ class objects_proxy(netsvc.ExportService):
     def dispatch(self, method, auth, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
-        if method not in ['execute','exec_workflow','obj_list']:
-            raise KeyError("Method not supported %s" % method)
+        if method == 'obj_list':
+            raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
+        if method not in ['execute','exec_workflow']:
+            raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
         ls = netsvc.LocalService('object_proxy')
         fn = getattr(ls, method)

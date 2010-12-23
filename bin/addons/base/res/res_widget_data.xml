@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <record id="openerp_twitter_favorites" model="res.widget">
+    <record id="openerp_favorites_twitter_widget" model="res.widget">
       <field name="title">OpenERP Favorites</field>
       <field name="content"><![CDATA[
 <script type="text/javascript" src="http://widgets.twimg.com/j/2/widget.js"></script>
@@ -37,6 +37,195 @@ new TWTR.Widget({
   }
 }).render().setUser('openerp').start();
 </script>]]> </field>
+    </record>
+
+    <record id="odony_twitter_widget" model="res.widget">
+      <field name="title">Olivier Dony's tweets</field>
+      <field name="content"><![CDATA[<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#9A0404'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('odony').start();
+</script>]]></field>
+    </record>
+
+    <record id="matrixise_twitter_widget" model="res.widget">
+      <field name="title">Stéphane Wirtel's tweets</field>
+      <field name="content"><![CDATA[<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#9A0404'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('matrixise').start();
+</script>]]></field>
+    </record>
+
+    <record id="rvalyi_twitter_widget" model="res.widget">
+      <field name="title">Raphaël Valyi's tweets</field>
+      <field name="content"><![CDATA[<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#9A0404'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('rvalyi').start();
+</script>]]></field>
+    </record>
+
+    <record id="albertnan_twitter_widget" model="res.widget">
+      <field name="title">Albert Cervera Areny's tweets</field>
+      <field name="content"><![CDATA[<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#9A0404'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('albertnan').start();
+</script>]]></field>
+    </record>
+
+    <record id="nhomar_twitter_widget" model="res.widget">
+      <field name="title">Nhomar Hernandez's tweets</field>
+      <field name="content"><![CDATA[<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 10,
+  interval: 6000,
+  title: '',
+  subject: '',
+  width: 'auto',
+  height: 300,
+  theme: {
+    shell: {
+      background: '#F0EEEE',
+      color: '#444444'
+    },
+    tweets: {
+      background: '#F0EEEE',
+      color: '#444444',
+      links: '#9A0404'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('nhomar').start();
+</script>]]></field>
+    </record>
+
+    <record id="openerp_favorites" model="res.widget.user">
+        <field name="widget_id" ref="openerp_favorites_twitter_widget"/>
     </record>
   </data>
 </openerp>

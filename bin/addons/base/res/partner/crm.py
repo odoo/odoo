@@ -29,6 +29,7 @@ from osv import fields,osv
 class res_partner_canal(osv.osv):
     _name = "res.partner.canal"
     _description = "Channels"
+    _order = 'name'
     _columns = {
         'name': fields.char('Channel Name',size=64, required=True),
         'active': fields.boolean('Active'),

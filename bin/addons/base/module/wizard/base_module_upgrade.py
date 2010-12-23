@@ -21,6 +21,7 @@
 
 import pooler
 from osv import osv, fields
+from tools.translate import _
 
 class base_module_upgrade(osv.osv_memory):
     """ Module Upgrade """
@@ -80,7 +81,7 @@ class base_module_upgrade(osv.osv_memory):
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
-    def upgrade_module(self, cr, uid, ids, context):
+    def upgrade_module(self, cr, uid, ids, context=None):
         pool = pooler.get_pool(cr.dbname)
         mod_obj = self.pool.get('ir.module.module')
         data_obj = self.pool.get('ir.model.data')

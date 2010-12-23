@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import base64
 import re
+
 import tools
+import addons
+from osv import fields, osv
+from tools.translate import _
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -30,25 +34,6 @@ def one_in(setA, setB):
         if x in setB:
             return True
     return False
-
-def cond(C, X, Y):
-    if C: return X
-    return Y
-
-class many2many_unique(fields.many2many):
-    def set(self, cr, obj, id, name, values, user=None, context=None):
-        if not values:
-            return
-        val = values[:]
-        for act in values:
-            if act[0]==4:
-                cr.execute('SELECT * FROM '+self._rel+' \
-                        WHERE '+self._id1+'=%s AND '+self._id2+'=%s', (id, act[1]))
-                if cr.fetchall():
-                    val.remove(act)
-        return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
-                context=context)
-
 
 class ir_ui_menu(osv.osv):
     _name = 'ir.ui.menu'
@@ -67,8 +52,10 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def create_shortcut(self, cr, uid, values, context={}):
+    def create_shortcut(self, cr, uid, values, context=None):
         dataobj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
         new_context = context.copy()
         for key in context:
             if key.startswith('default_'):
@@ -91,22 +78,15 @@ class ir_ui_menu(osv.osv):
         self._cache[key] = True
         return action_id
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-               context=None, count=False):
-
-        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
-            limit=None, order=order, context=context, count=False)
-
-        if not ids:
-            if count:
-                return 0
-            return []
-
-
+    def _filter_visible_menus(self, cr, uid, ids, context=None):
+        """Filters the give menu ids to only keep the menu items that should be
+           visible in the menu hierarchy of the current user.
+           Uses a cache for speeding up the computation.
+        """
         modelaccess = self.pool.get('ir.model.access')
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         result = []
-        for menu in self.browse(cr, uid, ids):
+        for menu in self.browse(cr, uid, ids, context=context):
             # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
             key = (cr.dbname, menu.id, tuple(user_groups))
             if key in self._cache:
@@ -147,6 +127,25 @@ class ir_ui_menu(osv.osv):
 
             result.append(menu.id)
             self._cache[key] = True
+        return result
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+
+        ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0,
+            limit=None, order=order, context=context, count=False)
+
+        if not ids:
+            if count:
+                return 0
+            return []
+
+        # menu filtering is done only on main menu tree, not other menu lists
+        if context.get('ir.ui.menu.full_list'):
+            result = ids
+        else:
+            result = self._filter_visible_menus(cr, uid, ids, context=context)
 
         if offset:
             result = result[long(offset):]
@@ -171,6 +170,10 @@ class ir_ui_menu(osv.osv):
         else:
             parent_path = ''
         return parent_path + menu.name
+
+    def create(self, *args, **kwargs):
+        self.clear_cache()
+        return super(ir_ui_menu, self).create(*args, **kwargs)
 
     def write(self, *args, **kwargs):
         self.clear_cache()
@@ -251,30 +254,42 @@ class ir_ui_menu(osv.osv):
             return {}
         return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from ir_ui_menu where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-    
-    
+    def read_image(self, path):
+        path_info = path.split(',')
+        icon_path = addons.get_module_resource(path_info[0],path_info[1])
+        icon = tools.file_open(icon_path,'rb').read()
+        return base64.encodestring(icon)
+
+    def _get_image_icon(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id] = {
+                'web_icon_data': False,
+                'web_icon_hover_data': False,
+            }
+            if not menu.parent_id:
+                if menu.web_icon_hover:
+                    res[menu.id]['web_icon_hover_data'] = self.read_image(menu.web_icon_hover)
+                if menu.web_icon:
+                    res[menu.id]['web_icon_data'] = self.read_image(menu.web_icon)
+        return res
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
         'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child IDs'),
         'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
-        'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
+        'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, method=True, type='char', size=32),
+        'web_icon': fields.char('Icon File', size=128),
+        'web_icon_hover':fields.char('Icon hover File', size=128),
+        'web_icon_data': fields.function(_get_image_icon, string='Web Icons', type='binary', method=True, readonly=True, store=True, multi='icon'),
+        'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icons Hover', type='binary', method=True, readonly=True, store=True,multi='icon'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
@@ -285,13 +300,17 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
+    
+    def _rec_message(self, cr, uid, ids, context=None):
+        return _('Error ! You can not create recursive Menu.')
+
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
+        (osv.osv._check_recursion, _rec_message , ['parent_id'])
     ]
     _defaults = {
-        'icon' : lambda *a: 'STOCK_OPEN',
-        'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
-        'sequence' : lambda *a: 10,
+        'icon' : 'STOCK_OPEN',
+        'icon_pict': ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
+        'sequence' : 10,
     }
     _order = "sequence,id"
 ir_ui_menu()

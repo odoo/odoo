@@ -164,6 +164,8 @@ class report_rml(report_int):
 
         def translate(doc, lang):
             for node in doc.xpath('//*[@t]'):
+                if not node.text:
+                    continue
                 translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)
                 if translation:
                     node.text = translation
@@ -186,7 +188,7 @@ class report_rml(report_int):
         else:
             if 'logo' in self.bin_datas:
                 del self.bin_datas['logo']
-        obj = render.rml(rml, localcontext, self.bin_datas, tools.config['root_path'],title)
+        obj = render.rml(rml, localcontext, self.bin_datas, self._get_path(), title)
         obj.render()
         return obj.get()
 
@@ -226,5 +228,10 @@ class report_rml(report_int):
         obj.render()
         return obj.get()
 
+    def _get_path(self):
+        ret = []
+        ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
+        ret.append(tools.config['root_path'])
+        return ret
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

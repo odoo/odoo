@@ -72,6 +72,7 @@ multi_company_default()
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
+    _order = 'name'
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -184,16 +185,6 @@ class res_company(osv.osv):
         except:
             return False
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from res_company where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join(
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
@@ -280,7 +271,7 @@ class res_company(osv.osv):
     }
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
 
 res_company()
