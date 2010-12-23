@@ -145,11 +145,11 @@
     </record>
 
    <record id="action_sales_by_partner" model="ir.actions.act_window">
-        <field name="name">Sales by Partner</field>
+        <field name="name">Sales by Customer in last 90 days</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+        <field name="domain">[('state','=','done'),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_partner_graph"/>
         <field name="context">{'search_default_Customer':1}</field>
     </record>
