@@ -182,7 +182,6 @@ class document_file(osv.osv):
                         ids2.append(fbro.id)
                         continue
                 fnode = nctx.get_file_node(cr, fbro)
-                print "fnode",fnode
                 res = fnode.move_to(cr, dnode or fnode.parent, vals.get('name', fbro.name), fbro, dbro, True)
                 if isinstance(res, dict):
                     vals2 = vals.copy()
