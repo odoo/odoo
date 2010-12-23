@@ -26,11 +26,7 @@
     "category" : "Generic Modules/Base",
     "description": "Module for password encryption.",
     "depends" : ["base"],
-    "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : [
-        "base_update.xml",
-    ],
+    "data" : [],
     "active": False,
     "installable": True,
 }
