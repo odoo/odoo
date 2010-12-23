@@ -64,7 +64,7 @@ class stock_partial_move(osv.osv_memory):
         move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
        
         for move in move_obj.browse(cr, uid, move_ids):
-            if move.picking_id.type == 'in':
+            if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
                 return True
         return False
     

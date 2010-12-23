@@ -41,11 +41,13 @@ class stock_partial_picking(osv.osv_memory):
             return False
        
         pick_obj = self.pool.get('stock.picking')
-        move_ids = pick_obj.search(cr, uid, [('id','in',pick_ids)])
+        pick_ids = pick_obj.search(cr, uid, [('id','in',pick_ids)])
+        
        
-        for pick in pick_obj.browse(cr, uid, move_ids):
-            if pick.type == 'in':
-                return True
+        for pick in pick_obj.browse(cr, uid, pick_ids):
+            for move in pick.move_lines:
+                if pick.type == 'in' and move.product_id.cost_method == 'average':
+                    return True
         return False
     
     def __get_picking_type(self, cr, uid, pick_ids):
@@ -159,10 +161,10 @@ class stock_partial_picking(osv.osv_memory):
                     continue
                 
                 partial_datas['move%s' % (move.id)] = {
-                'product_id' : p_moves[move.id].id,
-                'product_qty' : p_moves[move.id].quantity,
-                'product_uom' :p_moves[move.id].product_uom.id,
-                'prodlot_id' : p_moves[move.id].prodlot_id.id,
+                    'product_id' : p_moves[move.id].id,
+                    'product_qty' : p_moves[move.id].quantity,
+                    'product_uom' :p_moves[move.id].product_uom.id,
+                    'prodlot_id' : p_moves[move.id].prodlot_id.id,
                 }
             
                
