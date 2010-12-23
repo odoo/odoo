@@ -56,7 +56,6 @@
  Print the POS Payment Report through the wizard
 -
   !python {model: ir.ui.menu}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'ir.ui.menu','active_ids': []})
     data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_id': [(6,0,[ref('base.user_root')])] }
@@ -67,7 +66,6 @@
  Print the POS Details Report through the wizard
 -
   !python {model: ir.ui.menu}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'ir.ui.menu','active_ids': []})
     data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d')}
