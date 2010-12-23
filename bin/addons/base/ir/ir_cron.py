@@ -124,7 +124,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                     cr.commit()
 
 
-            cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and nextcall>=now()')
+            cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active')
             next_call = cr.dictfetchone()['min_next_call']
             if next_call:
                 next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
