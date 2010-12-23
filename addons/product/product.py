@@ -53,7 +53,7 @@ def check_ean(eancode):
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
-    check = int(10 - math.ceil(total % 10.0))
+    check = int(10 - math.ceil(total % 10.0)) %10
 
     if check != int(eancode[-1]):
         return False

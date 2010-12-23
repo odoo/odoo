@@ -188,7 +188,7 @@
                                 <field name="state" readonly="1"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
+                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
                                 <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
@@ -234,7 +234,7 @@
                  <group col='10' colspan='4'>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" separator="1" help="Purchase order which are in draft state"/>
                     <filter icon="terp-camera_test" name="confirmed" string="To Approve" domain="[('state','in',('wait','confirmed'))]" separator="1" help="Purchase order to be approved"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" separator="1" help="Approved purchase order"/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]" separator="1" help="Approved purchase order"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" separator="1" help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
