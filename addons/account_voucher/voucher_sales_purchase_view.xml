@@ -96,11 +96,11 @@
             <field name="arch" type="xml">
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="4"/>
-                        <field name="date" on_change="onchange_date(date)"/>
                         <field name="type" invisible="True"/>
                         <field name="currency_id" invisible="True" nolabel="1"/>
                     </group>
@@ -222,10 +222,11 @@
             <field name="arch" type="xml">
                 <form string="Supplier Voucher">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type)"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
-                        <field name="name" colspan="4"/>
+                        <field name="name" colspan="2"/>
                         <field name="reference" select="1"/>
                         <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                         <field name="type" invisible="True"/>
@@ -248,7 +249,6 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Terms" colspan="2"/>
-                                    <field name="date" string="Bill Date" select="1" on_change="onchange_date(date)"/>
                                     <field name="date_due"/>
                                 </group>
                                 <group col="4" colspan="1">
