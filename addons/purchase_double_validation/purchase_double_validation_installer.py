@@ -1,24 +1,24 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from osv import fields, osv
 
@@ -27,7 +27,7 @@ class purchase_double_validation_installer(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'limit_amount': fields.integer('Limit Amount', required=True, help="Minimum amount after which validation of purchase is required"),
+        'limit_amount': fields.integer('Limit Amount', required=True, help="Minimum amount after which validation of purchase is required."),
     }
 
     _defaults = {
@@ -36,6 +36,8 @@ class purchase_double_validation_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)
+        if not data:
+            return {}
         amt = data[0]['limit_amount']
         data_pool = self.pool.get('ir.model.data')
         transition_obj = self.pool.get('workflow.transition')

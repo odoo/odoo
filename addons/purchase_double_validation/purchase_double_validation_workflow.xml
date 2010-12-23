@@ -33,6 +33,7 @@
             <field name="act_from" ref="act_router1"/>
             <field name="act_to" ref="purchase.act_confirmed"/>
             <field name="condition">True</field>
+            <field name="signal">waiting_confirmed</field>
         </record>
 
         <record id="trans_waiting_confirmed" model="workflow.transition">

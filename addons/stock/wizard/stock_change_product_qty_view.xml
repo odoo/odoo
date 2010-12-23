@@ -11,9 +11,9 @@
                     <newline/>
                     <field name="new_quantity" />
                     <newline/>
-                    <field name="prodlot_id" />
                     <field name="product_id" invisible="1"/>
                     <field name="location_id" />
+                    <field name="prodlot_id" />
                     <separator string="" colspan="4" />
                     <label string="" colspan="2"/>
                     <group col="2" colspan="2">
@@ -30,7 +30,6 @@
             <field name="res_model">stock.change.product.qty</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="context">{'default_product_id': active_id}</field>
             <field name="view_id" ref="view_change_product_quantity"/>
             <field name="target">new</field>
         </record>

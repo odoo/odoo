@@ -29,8 +29,8 @@ class stock_change_product_qty(osv.osv_memory):
     _columns = {
         'product_id' : fields.many2one('product.product', 'Product'),
         'new_quantity': fields.float('Quantity', required=True, help='This quantity is expressed in the Default UoM of the product.'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number',domain="[('product_id','=',product_id)]"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade", domain="[('usage', '=', 'internal')]"),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 
     def default_get(self, cr, uid, fields, context):
@@ -89,7 +89,7 @@ class stock_change_product_qty(osv.osv_memory):
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
 
         return {
-            'domain': "[('id','=',inventory_id])]",
+            'domain': "[('id','=', %s)]" % (inventory_id),
             'name' : _('Physical Inventories'),
             'view_type': 'form',
             'view_mode': 'tree,form',

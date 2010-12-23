@@ -60,60 +60,50 @@ class stock_period_createlines(osv.osv_memory):
         period_obj = self.pool.get('stock.period')
         lines = []
         for p in self.browse(cr, uid, ids, context=context):
-            dt = p.date_start
-            dt_s = p.date_stop
             dt_stp = datetime.strptime(p.date_stop, '%Y-%m-%d')
             ds = datetime.strptime(p.date_start, '%Y-%m-%d')
-            while ds.strftime('%Y-%m-%d') <= p.date_stop:
+
+            while ds <= dt_stp:
                 if name =='Daily':
                     de = ds + relativedelta(days=(interval + 1), seconds =-1)
-                    new_name = de.strftime('%Y-%m-%d')
                     new_id = period_obj.create(cr, uid, {
-                    'name': new_name,
-                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'name': de.strftime('%Y-%m-%d'),
+                    'date_start': ds.strftime('%Y-%m-%d %H:%M:%S'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
                     ds = ds + relativedelta(days=(interval + 1))
                 if name =="Weekly":
                     de = ds + relativedelta(days=(interval + 1), seconds =-1)
                     if dt_stp < de:
-                        de = dt_stp + relativedelta(days=1,seconds =-1)
+                        de = dt_stp + relativedelta(days=1, seconds =-1)
                     else:
                         de = ds + relativedelta(days=(interval + 1), seconds =-1)
-                    start_week = ds.strftime('%W')
-                    start_year = ds.strftime('%Y')
-                    end_week = de.strftime('%W')
-                    end_year = de.strftime('%Y')
-                    if start_year <> end_year:
-                        if end_week == '00':
-                            new_name = "Week " + start_week +"-" + start_year
-                        else:
-                            new_name = "Week " + start_week +", " + start_year +" - Week " +end_week +", " + end_year
-                    elif start_week == end_week:
-                        new_name = "Week " + start_week +"-" +start_year
-
-                    else:
-                        new_name = "Week " + start_week +"-" + end_week+", " + start_year
+                    new_name = ds.strftime('Week %W-%Y')
+                    if ds.strftime('%Y') != de.strftime('%Y'):
+                        new_name = ds.strftime('Week %W-%Y') + ', ' + de.strftime('Week %W-%Y')
                     new_id = period_obj.create(cr, uid, {
                     'name': new_name,
-                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'date_start': ds.strftime('%Y-%m-%d %H:%M:%S'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
                     ds = ds + relativedelta(days=(interval + 1))
                 if name == "Monthly":
                     de = ds + relativedelta(months=interval, seconds=-1)
                     if dt_stp < de:
-                        de = dt_stp + relativedelta(days=1,seconds =-1)
+                        de = dt_stp + relativedelta(days=1, seconds =-1)
                     else:
                         de = ds + relativedelta(months=interval, seconds=-1)
                     new_name = ds.strftime('%Y/%m')
+                    if ds.strftime('%m') != de.strftime('%m'):
+                        new_name = ds.strftime('%Y/%m') + '-' + de.strftime('%Y/%m')
                     new_id =period_obj.create(cr, uid, {
-                    'name': new_name,
-                    'date_start': ds.strftime('%Y-%m-%d'),
+                    'name': new_name, 
+                    'date_start': ds.strftime('%Y-%m-%d %H:%M:%S'),
                     'date_stop': de.strftime('%Y-%m-%d %H:%M:%S'),
                     })
                     ds = ds + relativedelta(months=interval)
                 lines.append(new_id)
+
         return {
             'domain': "[('id','in', ["+','.join(map(str, lines))+"])]",
             'view_type': 'form',
