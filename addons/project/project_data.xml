@@ -17,12 +17,13 @@
         
         <!--
 		Resource: project.project
-		-->
+		
         <record id="all_projects_account" model="account.analytic.account">
             <field name="name">Projects</field>
             <field name="code">3</field>
         </record>
 	
 		<function eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)" id="parent_project_default_set" model="ir.values" name="set"/>
+        -->
     </data>
 </openerp>

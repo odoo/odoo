@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-09 10:59+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -45,9 +45,9 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Planung"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -191,6 +191,11 @@ msgid "Stock Move"
 msgstr "Lieferung"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Planung"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Fertig"
@@ -234,6 +239,11 @@ msgid ""
 msgstr ""
 "Referenziert Beleg der die Beschaffungsregel ausgelöst hat.\n"
 "Der Vorgang wird durch OpenERP automatisch vorgenommen."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
 
 #. module: procurement
 #: constraint:res.company:0
@@ -433,6 +443,22 @@ msgstr "Verspätet"
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Dienstleistung"
+
+#. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+"\n"
+"    Dieses Modul errechnet Beschaffungsvorschläge.\n"
+"    "
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -637,9 +663,7 @@ msgid "Procurement Reason"
 msgstr "Beschaffungsgrund"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Multiple Menge muss grösser 0 sein."
 
@@ -944,6 +968,16 @@ msgstr "DISPOSITION"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Fehlerhafte Modellbezeichnung bei dieser Aktion."
 
+#~ msgid "Temporary Procurement Exceptions"
+#~ msgstr "Temporäre Fehlerliste"
+
+#, python-format
+#~ msgid "has an exception."
+#~ msgstr "hat Fehler verursacht"
+
+#~ msgid "Procurement Exceptions to Fix"
+#~ msgstr "Fehlerliste Beschaffungsvorschläge"
+
 #~ msgid "Invalid arguments"
 #~ msgstr "Fehlerhafte Argumente"
 
@@ -954,10 +988,22 @@ msgstr "DISPOSITION"
 #~ msgstr "Assitent Beschaffungsvorschlag"
 
 #~ msgid ""
+#~ "Wizard run all the procurements, and generate task, production order or "
+#~ "purchase order based on the product type"
+#~ msgstr ""
+#~ "Assistent prüft vorhandene Bestände, und generiert Aufgabe, "
+#~ "Fertigungsauftrag oder Bestellvorschlag bei Lieferanten in Abhängigkeit vom "
+#~ "konfigurierten Produkttyp"
+
+#~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Die Objektbezeichnung muss mit einem x_ starten und darf keine Sonderzeichen "
 #~ "haben!"
+
+#, python-format
+#~ msgid "Procurement "
+#~ msgstr "Beschaffung "
 
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the orderpoint "
@@ -965,6 +1011,22 @@ msgstr "DISPOSITION"
 #~ msgstr ""
 #~ "Wenn dieses Feld aktiviert wird kann die Beschaffungsregel verborgen werden "
 #~ "ohne die Regel komplett zu löschen."
+
+#, python-format
+#~ msgid "is running."
+#~ msgstr "ist in Bearbeitung"
+
+#, python-format
+#~ msgid "Not enough stock "
+#~ msgstr "Nicht genug Bestand "
+
+#, python-format
+#~ msgid "Project_mrp module not installed !"
+#~ msgstr "Modul project_mrp ist nicht installiert!"
+
+#, python-format
+#~ msgid "is done."
+#~ msgstr "ist erledigt"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"

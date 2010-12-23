@@ -38,7 +38,7 @@ class sale_report(osv.osv):
             ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'uom_name': fields.char('Default UoM', size=128, readonly=True),
+        'uom_name': fields.char('Reference UoM', size=128, readonly=True),
         'product_uom_qty': fields.float('# of Qty', readonly=True),
 
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
@@ -47,7 +47,6 @@ class sale_report(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
-        'price_average': fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -90,24 +89,26 @@ class sale_report(osv.osv):
                 sale_order s,
                     (
                     select l.id as id,
-                         l.product_id as product_id,
-                         u.name as uom_name,
-                         sum(l.product_uom_qty * u.factor) as product_uom_qty,
-                         sum(l.product_uom_qty*l.price_unit) as price_total,
-                         (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor)*count(l.product_id))::decimal(16,2) as price_average,
-                         pt.categ_id, l.order_id
+                        l.product_id as product_id,
+                        (case when u.uom_type not in ('reference') then
+                            (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                        else
+                            u.name
+                        end) as uom_name,
+                        sum(l.product_uom_qty/u.factor) as product_uom_qty,
+                        sum(l.product_uom_qty*l.price_unit) as price_total,
+                        pt.categ_id, l.order_id
                     from
                      sale_order_line l
                      left join product_uom u on (u.id=l.product_uom)
                      left join product_template pt on (pt.id=l.product_id)
-                    group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
+                      group by l.id, l.order_id, l.product_id, u.name, pt.categ_id, u.uom_type, u.category_id) el
                 where s.id = el.order_id
                 group by el.id,
                     el.product_id,
                     el.uom_name,
                     el.product_uom_qty,
                     el.price_total,
-                    el.price_average,
                     el.categ_id,
                     el.order_id,
                     s.date_order,

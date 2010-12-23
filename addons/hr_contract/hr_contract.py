@@ -116,9 +116,8 @@ class hr_contract(osv.osv):
 
     def _check_dates(self, cr, uid, ids, context=None):
         for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
-             if contract['date_start'] and contract['date_end']:
-                 if contract['date_start'] > contract['date_end']:
-                     return False
+             if contract['date_start'] and contract['date_end'] and contract['date_start'] > contract['date_end']:
+                 return False
         return True
 
     _constraints = [

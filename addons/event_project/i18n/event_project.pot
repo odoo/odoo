@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:19+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:19+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:07+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,11 +50,6 @@ msgid "Retro-Planning"
 msgstr ""
 
 #. module: event_project
-#: view:event.event:0
-msgid "Create Retro-Planning"
-msgstr ""
-
-#. module: event_project
 #: constraint:event.event:0
 msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr ""
@@ -65,8 +60,14 @@ msgid "Project"
 msgstr ""
 
 #. module: event_project
-#: field:event.project,project_id:0
-msgid "Template of Project"
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr ""
+
+#. module: event_project
+#: view:event.event:0
+msgid "All tasks"
 msgstr ""
 
 #. module: event_project
@@ -75,9 +76,13 @@ msgid "Event Project - Create Retro-Planning to manage your Events"
 msgstr ""
 
 #. module: event_project
-#: view:event.event:0
-#: model:ir.actions.act_window,name:event_project.act_event_task
-msgid "Tasks"
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr ""
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
 msgstr ""
 
 #. module: event_project
@@ -96,8 +101,8 @@ msgid "Date Start"
 msgstr ""
 
 #. module: event_project
-#: constraint:event.event:0
-msgid "Error ! You cannot create recursive event."
+#: view:event.event:0
+msgid "Create Retro-Planning"
 msgstr ""
 
 #. module: event_project

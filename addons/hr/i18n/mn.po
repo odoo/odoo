@@ -13,14 +13,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 17:21+0000\n"
-"PO-Revision-Date: 2010-11-25 19:26+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 10:14+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -164,7 +164,7 @@ msgstr "Манай хэлтсийн ажилчид"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Гэрлэсэн"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -272,11 +272,6 @@ msgid "Office Location"
 msgstr "Ажлын байршил"
 
 #. module: hr
-#: field:hr.employee,passport_id:0
-msgid "Passport"
-msgstr "Пасспорт"
-
-#. module: hr
 #: view:hr.employee:0
 #: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
@@ -339,6 +334,8 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"ХН-н аппликешн баазыг хэдэн ХН-тэй холбоотой функцууд суулган өргөтгөх "
+"боломжтой."
 
 #. module: hr
 #: view:hr.employee:0
@@ -465,6 +462,14 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Энд та ажилтнуудаа үүсгэн тэднийг системдэх тодорхойm төлөв байдалд руу "
+"оруулан өөрийн ажиллах хүчнээ удирдах боломжтой. Ажилтнуудтай холбоотой бүх "
+"мэдээлэл болон ажилтнуудад зориулсан бүх бичлэгүүдийг хадгална уу. Хувийн "
+"мэдээллийн таб нь хувь хүн бүрийн мэдээллийг хадгалахад туслана. Категориуд "
+"таб нь ажилтнуудыг албан тушаал, үйл ажиллагаа дээр нь тулгуурлан холбогдох "
+"категорид хамруулна. Категори нь компани дотор эсвэл хэлтэс дотор ахлах "
+"түвшин болох юм. Цаг бүртгэл таб нь ажилтнуудыг тодорхой цагийн бүртгэлд "
+"болон шинжилгээний бүртгэлд системийн туршид хамруулна."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -480,6 +485,7 @@ msgstr "Тэмдэглэл"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
 
 #. module: hr
 #: view:hr.employee:0
@@ -508,11 +514,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitements, etc."
 msgstr ""
+"Таны Компанийн Хэлтсийн Бүтэц нь хэлтэс дэх ажилтнуудтай холбоотой бүх бичиг "
+"баримтуудыг удирдана: зардлын болон цаг бүргэлийн баталгаажуулалт, хоцролт "
+"болон ажилд авах г.м."
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Тохируулах"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -551,6 +560,25 @@ msgid "Companies"
 msgstr "Компаниуд"
 
 #. module: hr
+#: model:ir.module.module,description:hr.module_meta_information
+msgid ""
+"\n"
+"    Module for human resource management. You can manage:\n"
+"    * Employees and hierarchies : You can define your employee with User and "
+"display hierarchies\n"
+"    * HR Departments\n"
+"    * HR Jobs\n"
+"    "
+msgstr ""
+"\n"
+"    Module for human resource management. You can manage:\n"
+"    * Employees and hierarchies : You can define your employee with User and "
+"display hierarchies\n"
+"    * HR Departments\n"
+"    * HR Jobs\n"
+"    "
+
+#. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
@@ -575,7 +603,7 @@ msgstr "Гэрлэлтийн байдлын тайлбар"
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
 
 #. module: hr
 #: view:hr.job:0
@@ -623,6 +651,11 @@ msgid "Personal Information"
 msgstr "Хувийн мэдээлэл"
 
 #. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr ""
+
+#. module: hr
 #: view:res.users:0
 msgid "Current Activity"
 msgstr "Одоогийн ажилбар"
@@ -658,7 +691,6 @@ msgstr "Гэрийн хаяг"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Ирцүүд"
 
@@ -682,7 +714,7 @@ msgstr "Цалингийн цэс"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Ганц бие"
 
 #. module: hr
 #: field:hr.job,name:0
@@ -789,7 +821,7 @@ msgstr "Дадлагажуулагч"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Хүний Нөөцийн Аппликэшныг Тохируулах"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
@@ -807,7 +839,7 @@ msgstr "Менежер"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Бэлэвсэн"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
@@ -821,6 +853,10 @@ msgid ""
 "a survey to a job position. This survey will be used in the recruitment "
 "process to evaluate the applicants for this job position."
 msgstr ""
+"JJob Positions нь ажлын байр болон ажлын байрны шаардлагыг тодорхойлоход "
+"ашиглагдана. Ажлын байранд мөн санал асуулга хавсаргаж болно. Энэ санал "
+"асуулгыг энэхүү ажлын байранд орох ажил горилогчийг үнэлэхэд ашиглах "
+"боломжтой."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -920,8 +956,35 @@ msgstr "Харьяалагдсан"
 #~ msgid "All Employees"
 #~ msgstr "Бүх ажилчид"
 
+#~ msgid "Working Time Categories"
+#~ msgstr "Ажиллах цагийн зэрэглэл"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Моделийн нэр алдаатай тодорхойлсон байна."
+
+#~ msgid "Working Time Category"
+#~ msgstr "Ажиллах цагийн зэрэглэл"
+
+#~ msgid "Workgroup manager"
+#~ msgstr "Ажлын хэсгийн менежер"
+
+#~ msgid "Fill up contact information"
+#~ msgstr "Гэрээний мэдээлэл бөглөх"
+
+#~ msgid "Employee's timesheet group"
+#~ msgstr "Ажилчдын цаг бүртгэлийн груп"
+
+#~ msgid "Employee Complete Form"
+#~ msgstr "Ажилтны анкет бүрдүүлэх"
+
+#~ msgid "Work to"
+#~ msgstr "Ажилруугаа"
+
+#~ msgid "Fill up employee's contact information"
+#~ msgstr "Ажилтны гэрээний мэдээллийг бөглөх"
+
+#~ msgid "Passport"
+#~ msgstr "Пасспорт"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Харагдацын архитектурын xml алдаатай !"

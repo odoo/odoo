@@ -108,6 +108,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -118,17 +119,19 @@
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
             <field name="type">form</field>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
                     <field name="type" invisible="1" />
-                     <field name="section_ids" invisible="1" />
+                     
                     <field name="sequence"/>
                     <field name="probability"/>
                     <field name="on_change"/>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
+            <field name="section_ids" invisible="1" />
                 </form>
             </field>
         </record>
@@ -141,6 +144,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
+       
 
  <!-- Case Categories Form View -->
 
@@ -375,7 +379,7 @@
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <field name="parent_id" position="after">
+                    <field name="user_id" position="after">
                         <field name="section_id" completion="1" widget="selection"
                             groups="base.group_extended"/>
                     </field>

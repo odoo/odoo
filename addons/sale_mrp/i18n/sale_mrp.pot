@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06:21+0000\n"
-"PO-Revision-Date: 2010-12-15 15:06:21+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:10+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,17 +17,12 @@ msgstr ""
 
 #. module: sale_mrp
 #: help:mrp.production,sale_ref:0
-msgid "Indicate the Customer Reference from sale order."
+msgid "Indicate the Customer Reference from sales order."
 msgstr ""
 
 #. module: sale_mrp
-#: help:mrp.production,sale_name:0
-msgid "Indicate the name of sale order."
-msgstr ""
-
-#. module: sale_mrp
-#: field:mrp.production,sale_name:0
-msgid "Sale Name"
+#: field:mrp.production,sale_ref:0
+msgid "Sales Reference"
 msgstr ""
 
 #. module: sale_mrp
@@ -36,8 +31,18 @@ msgid "Manufacturing Order"
 msgstr ""
 
 #. module: sale_mrp
-#: field:mrp.production,sale_ref:0
-msgid "Sale Reference"
+#: model:ir.module.module,description:sale_mrp.module_meta_information
+msgid "\n"
+"    This module provides facility to the user to install mrp and sales modules\n"
+"    at a time. It is basically used when we want to keep track of production\n"
+"    orders generated from sales order.\n"
+"    It adds sales name and sales Reference on production order\n"
+"    "
+msgstr ""
+
+#. module: sale_mrp
+#: field:mrp.production,sale_name:0
+msgid "Sales Name"
 msgstr ""
 
 #. module: sale_mrp
@@ -48,5 +53,10 @@ msgstr ""
 #. module: sale_mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: sale_mrp
+#: help:mrp.production,sale_name:0
+msgid "Indicate the name of sales order."
 msgstr ""
 
