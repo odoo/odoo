@@ -82,8 +82,11 @@ class calendar_event_import(osv.osv_memory):
                   'msg': fields.text('', readonly=True),
                }
 
+    def _get_msg(self, cr, uid, context):
+        return _('Import Sucessful')
+        
     _defaults = {
-                'msg': _get_msg,
+               'msg': _get_msg,
                }
 
 calendar_event_import()

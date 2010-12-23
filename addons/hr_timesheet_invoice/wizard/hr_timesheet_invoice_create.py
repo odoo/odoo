@@ -63,7 +63,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         data = self.read(cr, uid, ids, [], context=context)[0]
 
         account_ids = {}
@@ -92,7 +91,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     date_due = pterm_list[-1]
 
             curr_invoice = {
-                'name': time.strftime('%D')+' - '+account.name,
+                'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
                 'address_contact_id': res_partner_obj.address_get(cr, uid,
                     [account.partner_id.id], adr_pref=['contact'])['contact'],

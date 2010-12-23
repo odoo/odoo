@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04:40+0000\n"
-"PO-Revision-Date: 2010-12-15 15:04:40+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:24+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,9 +54,13 @@ msgid "Group By..."
 msgstr ""
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+""
 msgstr ""
 
 #. module: account_followup
@@ -143,6 +147,12 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
+msgstr ""
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
 msgstr ""
 
 #. module: account_followup

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06:22+0000\n"
-"PO-Revision-Date: 2010-12-15 15:06:22+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:11+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_order_dates
-#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
-msgid "Sale Order Dates"
+#: help:sale.order,requested_date:0
+msgid "Date on which customer has requested for sales."
 msgstr ""
 
 #. module: sale_order_dates
@@ -26,32 +26,39 @@ msgid "Commitment Date"
 msgstr ""
 
 #. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sale Order"
-msgstr ""
-
-#. module: sale_order_dates
-#: help:sale.order,effective_date:0
-msgid "Date on which picking is created"
-msgstr ""
-
-#. module: sale_order_dates
 #: field:sale.order,effective_date:0
 msgid "Effective Date"
 msgstr ""
 
 #. module: sale_order_dates
-#: help:sale.order,commitment_date:0
-msgid "Date on which delivery of products is to be made"
+#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
+msgid "Sales Order Dates"
 msgstr ""
 
 #. module: sale_order_dates
-#: help:sale.order,requested_date:0
-msgid "Date on which customer has requested for sales"
+#: help:sale.order,effective_date:0
+msgid "Date on which picking is created."
 msgstr ""
 
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
+msgstr ""
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_order_dates
+#: model:ir.module.module,description:sale_order_dates.module_meta_information
+msgid "\n"
+"Add commitment, requested and effective dates on the sales order.\n"
+""
+msgstr ""
+
+#. module: sale_order_dates
+#: help:sale.order,commitment_date:0
+msgid "Date on which delivery of products is to be made."
 msgstr ""
 

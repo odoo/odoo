@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-04 10:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
@@ -45,6 +45,28 @@ msgid "Customer has no addresses defined!"
 msgstr "O Cliente não tem endereço definido!"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.module.module,description:sale_crm.module_meta_information
+msgid ""
+"\n"
+"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
+"This shortcut allows you to generate a sales order based on the selected "
+"case.\n"
+"If different cases are open (a list), it generates one sale order by\n"
+"case.\n"
+"The case is then closed and linked to the generated sales order.\n"
+"\n"
+"We suggest you to install this module if you installed both the sale and "
+"the\n"
+"crm modules.\n"
+"    "
+msgstr ""
+
+#. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
 msgstr ""
@@ -73,11 +95,6 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Fazer Cotação"
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
 #, python-format
 msgid "Opportunity "
@@ -88,11 +105,6 @@ msgstr "Oportunidade "
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Oportunidade: %s"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sale Order"
-msgstr "Ordem de venda"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
@@ -131,14 +143,19 @@ msgid "Sales Team"
 msgstr "Equipa de vendas"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
-msgstr "Fazer uma venda"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
+msgstr "Fazer Cotação"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #~ msgid "Create"
 #~ msgstr "Criar"
@@ -160,3 +177,100 @@ msgstr "Cancelar"
 
 #~ msgid "Case Description"
 #~ msgstr "Descrição do Processo"
+
+#~ msgid "All at once"
+#~ msgstr "Todos de uma vez"
+
+#~ msgid "Opportunity Analytic"
+#~ msgstr "Oportunidade Analítica"
+
+#~ msgid "CRM Opportunity"
+#~ msgstr "Oportunidade CRM"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Conta Analítica"
+
+#~ msgid "Crm opportunity quotation"
+#~ msgstr "Oportunidade de  cotação Crm"
+
+#~ msgid "Use this partner if there is no partner on the case"
+#~ msgstr "Utilizar este terceiro se não existir terceiro no processo"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista!"
+
+#~ msgid "Opportunity goes into the quotation"
+#~ msgstr "Oportunidade vai para a cotação"
+
+#~ msgid "Analytic account"
+#~ msgstr "Conta analítica"
+
+#~ msgid "Convert opportunity to quotation"
+#~ msgstr "Converter oportunidade para cotação"
+
+#~ msgid "Packing Policy"
+#~ msgstr "Política da Embalagem"
+
+#~ msgid "Create Quote"
+#~ msgstr "Criar Cotação"
+
+#~ msgid "Contract Volume (pricelist)"
+#~ msgstr "Volume do Contracto (lista de preço)"
+
+#~ msgid "Sale CRM Stuff"
+#~ msgstr "Funcionalidades de Vendas CRM"
+
+#~ msgid "Opportunity convert into quotation"
+#~ msgstr "Converter oportunidade em cotação"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "Entrega Directa"
+
+#~ msgid "Opportunity Quotation"
+#~ msgstr "Oportunidade de Cotação"
+
+#~ msgid "Check this to close the case after having created the sale order."
+#~ msgstr ""
+#~ "Verifique isto para fechar o processo depois de ter criado a ordem de venda."
+
+#~ msgid "Opporunity convert to the Pricelist"
+#~ msgstr "Converter oportunidade para a Lista de Preços"
+
+#~ msgid "Reflect the contract made with customer"
+#~ msgstr "Refletir o contrato feito com o cliente"
+
+#~ msgid "Close Case"
+#~ msgstr "Fechar Processo"
+
+#~ msgid "The CRM Opportunity can lead to a quotation."
+#~ msgstr "A Oportunidade CRM pode levar a uma cotação"
+
+#~ msgid "Opportunity Pricelist"
+#~ msgstr "Lista de Preço de Oportunidade"
+
+#~ msgid "Contract Pricelist"
+#~ msgstr "Lista de Preço do Contracto"
+
+#~ msgid "Case Section"
+#~ msgstr "Secção do Processo"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objeto deve começar com x_ e não pode conter nenhum caracter "
+#~ "especial !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo tem de ser único!"
+
+#~ msgid "Make sale"
+#~ msgstr "Fazer uma venda"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser inferior a 1!"
+
+#~ msgid "Sale Order"
+#~ msgstr "Ordem de venda"

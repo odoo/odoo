@@ -225,9 +225,11 @@ class account_bank_statement(osv.osv):
             account_id = st.journal_id.default_debit_account_id.id
 
         acc_cur = ((st_line.amount<=0) and st.journal_id.default_debit_account_id) or st_line.account_id
+        context.update({
+                'res.currency.compute.account': acc_cur,
+            })
         amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                company_currency_id, st_line.amount, context=context,
-                account=acc_cur)
+                company_currency_id, st_line.amount, context=context)
 
         val = {
             'name': st_line.name,
@@ -245,20 +247,15 @@ class account_bank_statement(osv.osv):
             'analytic_account_id': st_line.analytic_account_id and st_line.analytic_account_id.id or False
         }
 
-        amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                company_currency_id, st_line.amount, context=context,
-                account=acc_cur)
         if st.currency.id <> company_currency_id:
             amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                        st.currency.id, amount, context=context,
-                        account=acc_cur)
+                        st.currency.id, amount, context=context)
             val['amount_currency'] = -amount_cur
 
         if st_line.account_id and st_line.account_id.currency_id and st_line.account_id.currency_id.id <> company_currency_id:
             val['currency_id'] = st_line.account_id.currency_id.id
             amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                    st_line.account_id.currency_id.id, amount, context=context,
-                    account=acc_cur)
+                    st_line.account_id.currency_id.id, amount, context=context)
             val['amount_currency'] = -amount_cur
 
         move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
@@ -432,7 +429,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'name': fields.char('Communication', size=64, required=True),
         'date': fields.date('Date', required=True),
-        'amount': fields.float('Amount'),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'type': fields.selection([
             ('supplier','Supplier'),
             ('customer','Customer'),

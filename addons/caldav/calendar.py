@@ -596,8 +596,8 @@ class Calendar(CalDAV, osv.osv):
                                     string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
             'create_date': fields.datetime('Created Date', readonly=True),
-            'write_date': fields.datetime('Modifided Date', readonly=True),
-            'description': fields.text("description"),
+            'write_date': fields.datetime('Write Date', readonly=True),
+            'description': fields.text("Description"),
             'calendar_color': fields.char('Color', size=20, help="For supporting clients, the color of the calendar entries"),
             'calendar_order': fields.integer('Order', help="For supporting clients, the order of this folder among the calendars"),
             'has_webcal': fields.boolean('WebCal', required=True, help="Also export a <name>.ics entry next to the calendar folder, with WebCal content."),
@@ -835,6 +835,7 @@ class basic_calendar_fields(osv.osv):
 
     _name = 'basic.calendar.fields'
     _description = 'Calendar fields'
+    _order = 'name'
 
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),

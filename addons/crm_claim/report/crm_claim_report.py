@@ -60,12 +60,14 @@ class crm_claim_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
+        'email': fields.integer('# Emails', size=128, readonly=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('type','=','claim')]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
+        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
@@ -101,6 +103,7 @@ class crm_claim_report(osv.osv):
                     count(*) as nbr,
                     c.priority as priority,
                     c.type_action as type_action,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.claim' AND res_id=id AND history=True) AS email,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected

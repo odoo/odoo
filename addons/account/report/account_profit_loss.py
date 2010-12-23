@@ -106,15 +106,16 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
             accounts_temp = []
             for account in accounts:
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
+                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0:
+                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if  account.balance != 0:
+                        if round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)

@@ -841,7 +841,9 @@ class node_res_dir(node_class):
             where.append(('id','=',self.resm_id))
 
         if name:
-            where.append((self.namefield,'=',name))
+            # The =like character will match underscores against any characters
+            # including the special ones that couldn't exist in a FTP/DAV request
+            where.append((self.namefield,'=like',name.replace('\\','\\\\')))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
@@ -862,12 +864,22 @@ class node_res_dir(node_class):
         for bo in obj.browse(cr, uid, resids, context=ctx):
             if not bo:
                 continue
-            name = getattr(bo, self.namefield)
-            if not name:
+            res_name = getattr(bo, self.namefield)
+            if not res_name:
                 continue
                 # Yes! we can't do better but skip nameless records.
+            
+            # Escape the name for characters not supported in filenames
+            res_name = res_name.replace('/','_') # any other weird char?
+            
+            if name and (res_name != name):
+                # we have matched _ to any character, but we only meant to match
+                # the special ones.
+                # Eg. 'a_c' will find 'abc', 'a/c', 'a_c', may only
+                # return 'a/c' and 'a_c'
+                continue
 
-            res.append(self.res_obj_class(name, self.dir_id, self, self.context, self.res_model, bo))
+            res.append(self.res_obj_class(res_name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
     def _get_ttag(self,cr):
@@ -900,7 +912,10 @@ class node_res_obj(node_class):
         self.domain = parent.domain
         self.displayname = path
         self.dctx_dict = parent.dctx_dict
-        self.res_find_all = parent.res_find_all
+        if isinstance(parent, node_res_dir):
+            self.res_find_all = parent.res_find_all
+        else:
+            self.res_find_all = False
         if res_bo:
             self.res_id = res_bo.id
             dc2 = self.context.context.copy()
@@ -1020,8 +1035,10 @@ class node_res_obj(node_class):
         # Directory Structure display in tree structure
         if self.res_id and directory.ressource_tree:
             where1 = []
+            if name:
+                where1.append(('name','=like',name.replace('\\','\\\\')))
             if obj._parent_name in obj.fields_get(cr, uid):
-                where1 = where + [(obj._parent_name, '=', self.res_id)]
+                where1.append((obj._parent_name, '=', self.res_id))
             namefield = directory.resource_field.name or 'name'
             resids = obj.search(cr, uid, where1, context=ctx)
             for bo in obj.browse(cr, uid, resids, context=ctx):
@@ -1030,27 +1047,37 @@ class node_res_obj(node_class):
                 res_name = getattr(bo, namefield)
                 if not res_name:
                     continue
+                res_name = res_name.replace('/', '_')
+                if name and (res_name != name):
+                    continue
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)
-                res.append(klass(res_name, dir_id=self.dir_id, parent=self, context=self.context, res_model=self.res_model, res_bo=bo))
+                rnode = klass(res_name, dir_id=self.dir_id, parent=self, context=self.context,
+                                res_model=self.res_model, res_bo=bo)
+                rnode.res_find_all = self.res_find_all
+                res.append(rnode)
 
 
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
+        bo = obj.browse(cr, uid, self.res_id, context=ctx)
+        
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            if name and (name != dirr.name):
+                continue
             if dirr.type == 'directory':
                 klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
                 klass = dirr.get_node_class(dirr, context=ctx)
-                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
+                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id})) # bo?
 
         fil_obj = dirobj.pool.get('ir.attachment')
         if self.res_find_all:
             where2 = where
-        where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
-        # print "where clause for dir_obj", where2
+        where3 = where2 + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
+        # print "where clause for dir_obj", where3
         ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
@@ -1061,17 +1088,19 @@ class node_res_obj(node_class):
         # Get Child Ressource Directories
         if directory.ressource_type_id and directory.ressource_type_id.id:
             where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
-            where5 = where4 + [('ressource_id','=',0)]
+            where5 = where4 + ['|', ('ressource_id','=',0), ('ressource_id','=',self.res_id)]
             dirids = dirobj.search(cr,uid, where5)
-            where5 = where4 + [('ressource_id','=',self.res_id)]
-            dirids = dirids + dirobj.search(cr,uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
                     klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                    res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id)
+                    rnode.res_find_all = dirr.resource_find_all
+                    res.append(rnode)
                 if dirr.type == 'ressource':
                     klass = dirr.get_node_class(dirr, context=ctx)
-                    res.append(klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
+                    rnode = klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id})
+                    rnode.res_find_all = dirr.resource_find_all
+                    res.append(rnode)
         return res
 
     def create_child_collection(self, cr, objname):
@@ -1096,7 +1125,8 @@ class node_res_obj(node_class):
                 'name': objname,
                 'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False,
-                'parent_id' : False
+                'parent_id' : False,
+                'resource_find_all': False,
         }
         if (obj and (obj.type in ('directory'))) or not object2:
             val['parent_id'] =  obj and obj.id or False

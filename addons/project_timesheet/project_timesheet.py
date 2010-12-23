@@ -220,4 +220,15 @@ class task(osv.osv):
         return super(task,self).write(cr, uid, ids, vals, context)
 
 task()
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    def unlink(self, cursor, user, ids, context=None):
+        parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
+        if parnter_id:
+            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Partner which is Assigned to project  !'))            
+        return super(res_partner,self).unlink(cursor, user, ids,
+                context=context)
+res_partner()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

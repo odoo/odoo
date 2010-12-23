@@ -133,7 +133,7 @@
             <field name="arch" type="xml">
                 <group name="logistics" position="inside">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':active_id}"/>
+                    <field name="carrier_id" context="{'order_id':active_id or False}"/>
                 </group>
             </field>
         </record>
@@ -280,7 +280,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Products']/group/button[@name='action_process']" position="after">
+                <xpath expr="/form/notebook/page[@string='Products']/group/button[@string='Create Invoice']" position="after">
                     <button name="%(report_shipping)d" string="Delivery Order" states="done,assigned" type="action" icon="gtk-print"/>
                 </xpath>
             </field>

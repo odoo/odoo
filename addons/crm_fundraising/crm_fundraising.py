@@ -94,3 +94,19 @@ class crm_fundraising(crm.crm_case, osv.osv):
             }
 
 crm_fundraising()
+
+
+class crm_stage_fundraising(osv.osv):
+    
+    def _get_type_value(self, cr, user, context):
+        list = super(crm_stage_fundraising, self)._get_type_value(cr, user, context)
+        list.append(('fundraising','Fundraising'))
+        return list
+    
+    _inherit = "crm.case.stage"
+    _columns = {
+            'type': fields.selection(_get_type_value, 'Type'),
+    }
+   
+    
+crm_stage_fundraising()

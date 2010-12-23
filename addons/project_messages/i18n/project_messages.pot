@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06:11+0000\n"
-"PO-Revision-Date: 2010-12-15 15:06:11+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:59+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,12 @@ msgid "From"
 msgstr ""
 
 #. module: project_messages
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+msgid "Communication Messages"
+msgstr ""
+
+#. module: project_messages
 #: help:project.messages,to_id:0
 msgid "Keep this empty to broadcast the message."
 msgstr ""
@@ -38,6 +44,11 @@ msgstr ""
 #. module: project_messages
 #: field:project.messages,create_date:0
 msgid "Creation Date"
+msgstr ""
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Today"
 msgstr ""
 
 #. module: project_messages
@@ -67,8 +78,12 @@ msgid "Group By..."
 msgstr ""
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Today"
+#: model:ir.module.module,description:project_messages.module_meta_information
+msgid "\n"
+"    This module provides the functionality to send messages within a project.\n"
+"    A user can send messages individually to other user. He can even broadcast\n"
+"    it to all the users.\n"
+"    "
 msgstr ""
 
 #. module: project_messages
@@ -94,8 +109,6 @@ msgid "Message From"
 msgstr ""
 
 #. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
 #: view:project.messages:0
 msgid "Project Messages"
 msgstr ""

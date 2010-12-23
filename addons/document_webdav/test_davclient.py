@@ -324,7 +324,7 @@ class DAVClient(object):
     """An instance of a WebDAV client, connected to the OpenERP server
     """
     
-    def __init__(self, user=None, passwd=None, dbg=0, use_ssl=False, useragent=False):
+    def __init__(self, user=None, passwd=None, dbg=0, use_ssl=False, useragent=False, timeout=None):
         if use_ssl:
             self.host = config.get_misc('httpsd', 'interface', False)
             self.port = config.get_misc('httpsd', 'port', 8071)
@@ -346,6 +346,7 @@ class DAVClient(object):
         self.user = user
         self.passwd = passwd
         self.dbg = dbg
+        self.timeout = timeout or 5.0 # seconds, tests need to respond pretty fast!
         self.hdrs = {}
         if useragent:
             self.set_useragent(useragent)
@@ -386,7 +387,7 @@ class DAVClient(object):
         dbg = self.dbg
         hdrs.update(self.hdrs)
         log.debug("Getting %s http://%s:%d/%s", method, self.host, self.port, path)
-        conn = httplib.HTTPConnection(self.host, port=self.port)
+        conn = httplib.HTTPConnection(self.host, port=self.port, timeout=self.timeout)
         conn.set_debuglevel(dbg)
         if not path:
             path = "/index.html"
