@@ -235,7 +235,7 @@
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
-                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
+                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'invisible':[('state','in',['draft'])],'readonly':[('state','=','done')]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
