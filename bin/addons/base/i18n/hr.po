@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-16 08:53+0000\n"
 "Last-Translator: nafterburner <nafterburner@gmail.com>\n"
 "Language-Team: openerp-translators\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
@@ -385,16 +385,6 @@ msgid "Schedule Upgrade"
 msgstr "Postavi za nadogradnju"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -412,11 +402,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Prodaja i naručivanje"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -699,11 +684,6 @@ msgstr "Stvori izbornik"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "India"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "moduli s ugovorom o održavanju"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1862,11 +1842,6 @@ msgid "Invalid arguments"
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Švedska"
@@ -2083,6 +2058,11 @@ msgstr "Mapiranje polja"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "G."
 
 #. module: base
 #: view:base.module.import:0
@@ -2340,6 +2320,11 @@ msgstr "Tadžikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 ili novija verzija"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3034,6 +3019,11 @@ msgid "Hungary"
 msgstr "Mađarska"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazil"
@@ -3178,6 +3168,17 @@ msgstr "Povijest"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Autor"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3906,11 +3907,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -3970,6 +3966,11 @@ msgid "Project"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr ""
@@ -4009,7 +4010,6 @@ msgid "Saint Lucia"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr ""
@@ -4538,6 +4538,15 @@ msgstr ""
 #. module: base
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
 
 #. module: base
@@ -5746,6 +5755,11 @@ msgid "Panama"
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "d.o.o."
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5835,11 +5849,6 @@ msgstr ""
 #: view:ir.attachment:0
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
 msgstr ""
 
 #. module: base
@@ -6305,6 +6314,11 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr ""
@@ -6424,11 +6438,6 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -7321,14 +7330,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7421,6 +7422,11 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
 msgstr ""
 
 #. module: base
@@ -7794,11 +7800,6 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8507,11 +8508,6 @@ msgid "View Name"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr ""
@@ -8644,6 +8640,7 @@ msgid "Delivery"
 msgstr ""
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Corp."
@@ -8812,6 +8809,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - Godina bez stoljeća kao decimalni broj [00,99]"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Pravilo je zadovoljeno ako je barem jedan test točan"
+
 #~ msgid "Get Max"
 #~ msgstr "Dobiti maksimum"
 
@@ -8866,6 +8866,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "Moglo bi biti potrebno ponovno instaliranje jezičnog paketa."
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "moduli s ugovorom o održavanju"
+
 #~ msgid "Factor"
 #~ msgstr "Faktor"
 
@@ -8898,6 +8901,9 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Testovi"
 
 #~ msgid "Repository"
 #~ msgstr "Repozitorij"
@@ -9030,6 +9036,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "STOCK_REDO"
 #~ msgstr "STOCK_REDO"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Napravite globalno pravilo, inače je potrebno staviti ga u grupu"
+
 #~ msgid "in"
 #~ msgstr "u"
 
@@ -9090,9 +9099,6 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "Document Link"
 #~ msgstr "Poveznica na dokument"
-
-#~ msgid "Sir"
-#~ msgstr "G."
 
 #~ msgid "Start Upgrade"
 #~ msgstr "Prekini dogradnju"
@@ -9157,9 +9163,6 @@ msgstr "Ruski / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Repozitorij"
 
-#~ msgid "Ltd"
-#~ msgstr "d.o.o."
-
 #~ msgid "New modules"
 #~ msgstr "Novi moduli"
 
@@ -9222,11 +9225,11 @@ msgstr "Ruski / русский язык"
 #~ msgid "Scan for new modules"
 #~ msgstr "Pretraži za nove module"
 
+#~ msgid "Module Repository"
+#~ msgstr "Repozitorij modula"
+
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Albanian / Shqipëri"
 #~ msgstr "Albanski / Shqipëri"

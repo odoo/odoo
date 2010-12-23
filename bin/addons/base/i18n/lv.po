@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-19 08:19+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -386,16 +386,6 @@ msgid "Schedule Upgrade"
 msgstr "Ieplānot Jauninājumus"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Kungs"
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -413,11 +403,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Tirdzniecība un Iepirkumi"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "SIA"
 
 #. module: base
 #: view:ir.translation:0
@@ -701,11 +686,6 @@ msgstr "Izveidot Izvēlni"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Indija"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "atbalsta līguma moduļi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1877,11 +1857,6 @@ msgid "Invalid arguments"
 msgstr "Nederīgi argumenti"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Kundze"
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Zviedrija"
@@ -2102,6 +2077,11 @@ msgstr "Lauku Sasaiste"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Kungs"
 
 #. module: base
 #: view:base.module.import:0
@@ -2361,6 +2341,11 @@ msgstr "Tadžikistāna"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 vai vēlāka versija"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3061,6 +3046,11 @@ msgid "Hungary"
 msgstr "Ungārija"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazīlija"
@@ -3210,6 +3200,17 @@ msgstr "Vēsture"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Izveidotājs"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3940,11 +3941,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Ierobežots uzņēmums"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4006,6 +4002,11 @@ msgid "Project"
 msgstr "Projekts"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Moduļa fails veiksmīgi importēts!"
@@ -4045,7 +4046,6 @@ msgid "Saint Lucia"
 msgstr "Sentlūsija"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Apkalpošanas Līgums"
@@ -4574,6 +4574,15 @@ msgstr "Holandiešu / Nederlands"
 #. module: base
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
 
 #. module: base
@@ -5789,6 +5798,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "SIA"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5879,11 +5893,6 @@ msgstr "Valodas kodam jābūt unikālam!"
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Pielikumi"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6350,6 +6359,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6469,11 +6483,6 @@ msgstr "Filtrs"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -7370,14 +7379,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7471,6 +7472,11 @@ msgstr "Avota Nosaukums"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5. %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7843,11 +7849,6 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8565,11 +8566,6 @@ msgid "View Name"
 msgstr "Skatījuma Nosaukums"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Itāļu / Italiano"
@@ -8702,6 +8698,7 @@ msgid "Delivery"
 msgstr "Sūtījums"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Korp."
@@ -8842,6 +8839,9 @@ msgstr "Krievu / русский язык"
 #~ msgid "Validated"
 #~ msgstr "Apstiprināts"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Filtrs ir derīgs, ja vismaz viens notikums izpildās (True)."
+
 #~ msgid "Get Max"
 #~ msgstr "Saņemt max."
 
@@ -8888,6 +8888,9 @@ msgstr "Krievu / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "Iespējams, ka atsevišķas valodu pakas ir jāpārinstalē."
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "atbalsta līguma moduļi"
+
 #~ msgid "Factor"
 #~ msgstr "Koeficients"
 
@@ -8932,6 +8935,9 @@ msgstr "Krievu / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Pārbaudes"
 
 #~ msgid "Repository"
 #~ msgstr "Repozitorijs"
@@ -9125,9 +9131,6 @@ msgstr "Krievu / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "Dokumenta Norāde"
 
-#~ msgid "Sir"
-#~ msgstr "Kungs"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Sākt Jaunināšanu"
 
@@ -9212,9 +9215,6 @@ msgstr "Krievu / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Repozitoriji"
 
-#~ msgid "Ltd"
-#~ msgstr "SIA"
-
 #~ msgid "Report Ref."
 #~ msgstr "Atskaites Atsauce"
 
@@ -9286,6 +9286,9 @@ msgstr "Krievu / русский язык"
 #~ msgid "Error occurred while validating the field(s) %s: %s"
 #~ msgstr "Lauku %s: %s pārbaudes kļūda!"
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Noteikums ir pieņemts, ja visas pārbaudes atgriež True (AND)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
@@ -9295,15 +9298,15 @@ msgstr "Krievu / русский язык"
 #~ msgid "Scan for new modules"
 #~ msgstr "Pārbaudīt vai ir pieejami jauni moduļi"
 
+#~ msgid "Module Repository"
+#~ msgstr "Moduļu Repozitorijs"
+
 #, python-format
 #~ msgid "Using a relation field which uses an unknown object"
 #~ msgstr "Tiek lietots saistītais lauks, kurā tiek izmantots nezināms objekts"
 
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Field child3"
 #~ msgstr "Lauks child3"
@@ -9454,6 +9457,9 @@ msgstr "Krievu / русский язык"
 #~ msgid "Couldn't find tag '%s' in parent view !"
 #~ msgstr "Nevar atrast '%s' tegu virsskatījumā!"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Uzstādītie moduļi"
 
@@ -9485,6 +9491,11 @@ msgstr "Krievu / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Multi izpildes noteikumi vieniem un tiem pašiem objektiem, tiek apvienoti ar "
+#~ "operatoru OR"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9727,6 +9738,9 @@ msgstr "Krievu / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_Validate"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -10231,3 +10245,15 @@ msgstr "Krievu / русский язык"
 #~ "%%W - gada nedēļas numurs kā decimāls skaitlis (pirmdiena kā pirmā nedēļas "
 #~ "diena).Visas jauna gada dienas, kas iekrīt pirms pirmās pirmdienas tiek "
 #~ "ieskaitītas 0 nedēļā."
+
+#~ msgid "Mister"
+#~ msgstr "Kungs"
+
+#~ msgid "Corporation"
+#~ msgstr "SIA"
+
+#~ msgid "Mss."
+#~ msgstr "Kundze"
+
+#~ msgid "Limited Company"
+#~ msgstr "Ierobežots uzņēmums"

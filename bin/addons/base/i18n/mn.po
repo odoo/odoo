@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-16 08:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -387,16 +387,6 @@ msgid "Schedule Upgrade"
 msgstr "Шинэчлэл төлөвлөлт"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Ноён"
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -414,11 +404,6 @@ msgstr "Палау"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Борлуулалт & Худалдан авалт"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Корпораци"
 
 #. module: base
 #: view:ir.translation:0
@@ -710,11 +695,6 @@ msgstr "Цэс үүсгэх"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Энэтхэг"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "Засвар үйлчилгээний гэрээтэй модулиуд"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1917,11 +1897,6 @@ msgid "Invalid arguments"
 msgstr "Алдаатай аргумент"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Хттай"
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Швед"
@@ -2140,6 +2115,11 @@ msgstr "Талбарын зурагжуулалт"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr "Португаль / Português"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Ноён"
 
 #. module: base
 #: view:base.module.import:0
@@ -2397,6 +2377,11 @@ msgstr "Тажикстан"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 болон дараагийн хувилбар"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr "M."
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3092,6 +3077,11 @@ msgid "Hungary"
 msgstr "Унгар"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Бразил"
@@ -3237,6 +3227,17 @@ msgstr "Түүх"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Үүсгэгч"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3967,11 +3968,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Хэрэв харилцагч нь ажилтан бол үүнийг чеклнэ үү."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Хязгаарлагдмал компани"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4033,6 +4029,11 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Модел амжилттай импортлогдлоо !"
@@ -4072,7 +4073,6 @@ msgid "Saint Lucia"
 msgstr "Санта лучиа"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Үйлчилгээний гэрээ"
@@ -4602,6 +4602,18 @@ msgstr "Голланд хэл / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Энэ нь таны системд аль хэдийн суулгагдсан байна"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5816,6 +5828,11 @@ msgid "Panama"
 msgstr "Панама"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "ХК"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5910,11 +5927,6 @@ msgstr "Хэлний код давхцахгүй байх ёстой !"
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Хавсралтууд"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6382,6 +6394,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr "Хатагтай"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6503,11 +6520,6 @@ msgstr "Шүүлт"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Хатагтай."
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7399,17 +7411,6 @@ msgid ""
 msgstr "Тухайн обьектын дуудагдаж ажиллах функцын нэр."
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Олон төрлийн"
@@ -7505,6 +7506,11 @@ msgstr "Сувгийн нэр"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5. %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "ххк"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7878,11 +7884,6 @@ msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч бай�
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
 msgstr "Үндсэн компаниуд"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -8594,11 +8595,6 @@ msgid "View Name"
 msgstr "Дэлгэцийн нэр"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Итал хэл / Italiano"
@@ -8731,6 +8727,7 @@ msgid "Delivery"
 msgstr "Хүргэлт"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Корп."
@@ -8809,6 +8806,10 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Outgoing transitions"
 #~ msgstr "Гарах шилжилтүүд"
 
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Барааны тоо"
+
 #~ msgid "Operand"
 #~ msgstr "Операнд"
 
@@ -8850,6 +8851,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - Мянгатын оронгүй жилийн тоон дугаар [00,99]"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Дор хаяж нэг тест давбал дүрэмд нийцнэ"
+
 #~ msgid "Configure"
 #~ msgstr "Тохируулах"
 
@@ -8871,6 +8875,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Factor"
 #~ msgstr "Коэффицент"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "Засвар үйлчилгээний гэрээтэй модулиуд"
+
 #~ msgid "Objects Security Grid"
 #~ msgstr "Обьект хандалтын хүснэгт"
 
@@ -8882,6 +8889,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Alignment"
 #~ msgstr "Зэрэгцүүлэлт"
+
+#~ msgid "Tests"
+#~ msgstr "Тестүүд"
 
 #~ msgid "Planned Cost"
 #~ msgstr "Төлөвлөсөн өртөг"
@@ -8997,9 +9007,6 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Document Link"
 #~ msgstr "Баримтын холбоос"
-
-#~ msgid "Sir"
-#~ msgstr "Ноён"
 
 #~ msgid "Start Upgrade"
 #~ msgstr "Шинэчлэлтийг эхлэх"
@@ -9216,6 +9223,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Skip Step"
 #~ msgstr "Алхамыг алгасах"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "Validated"
 #~ msgstr "Батлагдсан"
@@ -9518,9 +9528,6 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-purchase"
 #~ msgstr "terp-purchase"
 
-#~ msgid "Ltd"
-#~ msgstr "ХК"
-
 #~ msgid "Language name"
 #~ msgstr "Хэлний нэр"
 
@@ -9552,9 +9559,6 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
 
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
-
 #~ msgid "Sale Opportunity"
 #~ msgstr "Худалдах боломж"
 
@@ -9564,6 +9568,14 @@ msgstr "Орос хэл / русский язык"
 #~ msgstr ""
 #~ "UTF-8-аар кодлогдсон .CSV файл оруулах хэрэгтэй. Файлынхаа эхний мөрийг "
 #~ "шалгана уу:"
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" нь хэт олон цэг агуулж байна. XML id цэг агуулах ёсгүй ! Бусад "
+#~ "модульд байгаа өгөгдлийг module.reference_id байдлаар заахад цэгийг хэрэглэнэ"
 
 #~ msgid "STOCK_DIALOG_WARNING"
 #~ msgstr "STOCK_DIALOG_WARNING"
@@ -9606,6 +9618,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "STOCK_ADD"
 #~ msgstr "STOCK_ADD"
+
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
 
 #~ msgid "Installed modules"
 #~ msgstr "Суусан модулиуд"
@@ -9784,6 +9799,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Choose a language to install:"
 #~ msgstr "Суулгах хэлээ сонгоно уу:"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Дүрмийг глобаль болгох эсвэл группэд байрлуулах хэрэгтэй"
+
 #~ msgid "Repository"
 #~ msgstr "Агуулах"
 
@@ -9825,6 +9843,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
 #~ msgstr "%I - Цагийн тоон дугаар [01,12]."
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr "Нэг объект дээр олон дүрмүүд OR үйлдлээр холбогдсон байна"
 
 #~ msgid "Note that this operation my take a few minutes."
 #~ msgstr "Энэ үйлдэл бага зэрэг хугацаа авна."
@@ -9922,6 +9943,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr "Групп нь дэлгэц, цэснүүдэд хандах эрхийг тохируулахад хэрэглэгдэнэ."
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Бүх шалгалтыг давбал дүрэм хангагдана"
+
 #~ msgid "Connect Actions To Client Events"
 #~ msgstr "Үйлдлүүдийг клиент үзэгдлүүдтэй холбох"
 
@@ -10005,14 +10029,114 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "All Properties"
 #~ msgstr "Бүх шинжүүд"
 
+#~ msgid "Configure simple view"
+#~ msgstr "Энгийн харагдацыг тохируулах"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).81.81.37.00."
+#~ msgstr ""
+#~ "Таны төлбөр энэ имэйл илгээгдсэн дараа төлөгдөх үү, одоогийн төлбөрийг "
+#~ "хоосон болгох талаар бодолцоно уу. Манай санхүүгийн албатай санаа зоволтгүй "
+#~ "холбогдоно уу. Утас: (+32).81.81.37.00."
+
+#~ msgid "Get Max"
+#~ msgstr "Максимум утга авах"
+
+#~ msgid "Children"
+#~ msgstr "Дэд дүр"
+
+#, python-format
+#~ msgid "Using a relation field which uses an unknown object"
+#~ msgstr "Мэдэгдэхгүй обьектийг хэрэглэдэг харьцааны талбарыг хэрэглэж"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "[object with reference: %s - %s]"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "[обьектийн сурвалж: %s - %s]"
+
+#, python-format
+#~ msgid "Integrity Error"
+#~ msgstr "Нэгдмэл уялдааны Алдаа"
+
+#, python-format
+#~ msgid ""
+#~ "The operation cannot be completed, probably due to the following:\n"
+#~ "- deletion: you may be trying to delete a record while other records still "
+#~ "reference it\n"
+#~ "- creation/update: a mandatory field is not correctly set"
+#~ msgstr ""
+#~ "Үйлдлийг гүйцэтгэх боломжгүй, дараах шалтгаантай байж болзошгүй:\n"
+#~ "- устгах: ондоо бичлгэгүүдэд заагдаж хэрэглэгдэж байгаа бичлэгийг устгах гэж "
+#~ "байгаа\n"
+#~ "- үүсгэх/засах: заавал утгатай байх талбарт утга байхгүй"
+
+#~ msgid "The name of the Partner must be unique !"
+#~ msgstr "Түншийн нэр үл давхцах байх ёстой !"
+
+#~ msgid "The Code of the Partner Function must be unique !"
+#~ msgstr "Түншлэлийн Функцийн Код үл давхцах байх ёстой !"
+
+#, python-format
+#~ msgid "Constraint Error"
+#~ msgstr "Хориг, хязгаарлалтын Алдаа"
+
+#~ msgid "Sequence Code"
+#~ msgstr "Дарааллын Код"
+
+#~ msgid "Unsubscribe Report"
+#~ msgstr "Тайланг Бүртгэлээс хасах"
+
 #~ msgid "terp-emblem-important"
 #~ msgstr "terp-emblem-important"
+
+#~ msgid "Serbian / Serbia"
+#~ msgstr "Серби хэл / Серби"
+
+#~ msgid "Mongolian / Mongolia"
+#~ msgstr "Монгол хэл / Монгол"
 
 #~ msgid "terp-gtk-jump-to-ltr"
 #~ msgstr "terp-gtk-jump-to-ltr"
 
+#~ msgid "Korean / Korea, Democratic Peoples Republic of"
+#~ msgstr "Солонгос хэл / Бүгд найрамдах ардчилсан Солонгос улс"
+
+#~ msgid "Bulgarian / български"
+#~ msgstr "Болгар хэл / български"
+
 #~ msgid "terp-folder-yellow"
 #~ msgstr "terp-folder-yellow"
+
+#, python-format
+#~ msgid ""
+#~ "Model %s Does not Exist !\" % vals['relation']))\n"
+#~ "\n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                #Added context to _auto_init for special treatment to custom "
+#~ "field for select_level\n"
+#~ "                ctx = context.copy()\n"
+#~ "                "
+#~ "ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
+#~ "t('select_level','0"
+#~ msgstr ""
+#~ "Модел %s тодорхойлогдоогүй байна !\" % vals['relation']))\n"
+#~ "\n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                #Added context to _auto_init for special treatment to custom "
+#~ "field for select_level\n"
+#~ "                ctx = context.copy()\n"
+#~ "                "
+#~ "ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
+#~ "t('select_level','0"
 
 #~ msgid "terp-stock_align_left_24"
 #~ msgstr "terp-stock_align_left_24"
@@ -10035,6 +10159,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-personal-"
 #~ msgstr "terp-personal-"
 
+#~ msgid "Ukrainian / украї́нська мо́ва"
+#~ msgstr "Украйн хэл / украї́нська мо́ва"
+
 #~ msgid "terp-mail-forward"
 #~ msgstr "terp-mail-forward"
 
@@ -10043,6 +10170,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "terp-dolar_ok!"
 #~ msgstr "terp-dolar_ok!"
+
+#~ msgid "Hindi / India"
+#~ msgstr "Хинди хэл / India"
 
 #~ msgid "terp-mail-replied"
 #~ msgstr "terp-mail-replied"
@@ -10053,14 +10183,29 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-gdu-smart-failing"
 #~ msgstr "terp-gdu-smart-failing"
 
+#~ msgid "Finland / Suomi"
+#~ msgstr "Финлянд хэл / Suomi"
+
 #~ msgid "terp-folder-orange"
 #~ msgstr "terp-folder-orange"
+
+#~ msgid "Latvian / Latvia"
+#~ msgstr "Латви хэл / Latvia"
+
+#~ msgid "Urdu / Pakistan"
+#~ msgstr "Urdu / Pakistan"
 
 #~ msgid "terp-gtk-media-pause"
 #~ msgstr "terp-gtk-media-pause"
 
+#~ msgid "Albanian / Shqipëri"
+#~ msgstr "Албани хэл / Shqipëri"
+
 #~ msgid "terp-gtk-go-back-rtl"
 #~ msgstr "terp-gtk-go-back-rtl"
+
+#~ msgid "Malayalam / India"
+#~ msgstr "Malayalam / India"
 
 #~ msgid "terp-accessories-archiver-minus"
 #~ msgstr "terp-accessories-archiver-minus"
@@ -10076,6 +10221,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Maintenance Contracts"
 #~ msgstr "Үйлдвэрлэлийн гэрээ"
+
+#~ msgid "Romanian / limba română"
+#~ msgstr "Рум хэл / limba română"
 
 #~ msgid "terp-mail-"
 #~ msgstr "terp-mail-"
@@ -10098,11 +10246,23 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-accessories-archiver"
 #~ msgstr "terp-accessories-archiver"
 
+#~ msgid "Occitan (post 1500) / France"
+#~ msgstr "Occitan (post 1500) / France"
+
 #~ msgid "terp-face-plain"
 #~ msgstr "terp-face-plain"
 
+#~ msgid "Japanese / Japan"
+#~ msgstr "Япон хэл / Japan"
+
 #~ msgid "terp-stock_format-scientific"
 #~ msgstr "terp-stock_format-scientific"
+
+#~ msgid "Inuktitut / Canada"
+#~ msgstr "Inuktitut / Canada"
+
+#~ msgid "Norwegian Bokmål / Norway"
+#~ msgstr "Norwegian Bokmål / Norway"
 
 #~ msgid "terp-dialog-close"
 #~ msgstr "terp-dialog-close"
@@ -10110,8 +10270,14 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-folder-blue"
 #~ msgstr "terp-folder-blue"
 
+#~ msgid "Sinhalese / Sri Lanka"
+#~ msgstr "Sinhalese / Sri Lanka"
+
 #~ msgid "terp-gnome-cpu-frequency-applet+"
 #~ msgstr "terp-gnome-cpu-frequency-applet+"
+
+#~ msgid "Abkhazian (RU)"
+#~ msgstr "Abkhazian (RU)"
 
 #~ msgid "terp-accessories-archiver+"
 #~ msgstr "terp-accessories-archiver+"
@@ -10119,8 +10285,23 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-check"
 #~ msgstr "terp-check"
 
+#~ msgid "Portugese / português"
+#~ msgstr "Португал хэл / português"
+
 #~ msgid "terp-gtk-go-back-ltr"
 #~ msgstr "terp-gtk-go-back-ltr"
+
+#~ msgid "Dutch (Belgium) / Nederlands (Belgïe)"
+#~ msgstr "Dutch (Belgium) / Nederlands (Belgïe)"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
 
 #~ msgid "terp-folder-green"
 #~ msgstr "terp-folder-green"
@@ -10143,8 +10324,17 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-gtk-jump-to-rtl"
 #~ msgstr "terp-gtk-jump-to-rtl"
 
+#~ msgid "Gujarati / India"
+#~ msgstr "Gujarati / India"
+
 #~ msgid "States"
 #~ msgstr "Муж"
+
+#~ msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
+#~ msgstr "Вьетнам / Cộng hòa xã hội chủ nghĩa Việt Nam"
+
+#~ msgid "Telugu / India"
+#~ msgstr "Telugu / India"
 
 #~ msgid "terp-mail_delete"
 #~ msgstr "terp-mail_delete"
@@ -10155,8 +10345,62 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-mail-message-new"
 #~ msgstr "terp-mail-message-new"
 
+#~ msgid "Korean / Korea, Republic of"
+#~ msgstr "Солонгоч хэл / Бүгд найрамдах Солонгос улс"
+
+#~ msgid "Report Custom"
+#~ msgstr "Хэвшсэн тайлан"
+
+#~ msgid "in"
+#~ msgstr "Дотор"
+
+#~ msgid "module,type,name,res_id,src,value"
+#~ msgstr "модуль,төрөл,нэр,нөөцийн дугаар,срс,утга"
+
+#~ msgid "type,name,res_id,src,value"
+#~ msgstr "төрөл,нэр,нөөцийн дугаар,срс,утга"
+
+#~ msgid "Ok"
+#~ msgstr "Тийм"
+
+#~ msgid "Returning"
+#~ msgstr "Буцах"
+
+#~ msgid "Tabular"
+#~ msgstr "Хүснэгтэн"
+
+#~ msgid "Start On"
+#~ msgstr "Эхлэх"
+
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
+#~ msgid "Purchase Offer"
+#~ msgstr "Худалдан авалтын санал"
+
+#~ msgid "At Once"
+#~ msgstr "Нэг удаа"
+
+#~ msgid "Next Configuration Wizard"
+#~ msgstr "Дараагийн тохиргооны визард"
+
+#~ msgid "Report custom"
+#~ msgstr "Уламжлалт тайлан"
+
 #~ msgid "Your maintenance contract is already subscribed in the system !"
 #~ msgstr "Таны арчилгаа, үйлчилгээний гэрээ системд бүртгэгдсэн байна !"
 
+#~ msgid "Mister"
+#~ msgstr "Ноён"
+
+#~ msgid "Corporation"
+#~ msgstr "Корпораци"
+
 #~ msgid "Serbian / српски језик"
 #~ msgstr "Серби хэл / српски језик"
+
+#~ msgid "Mss."
+#~ msgstr "Хттай"
+
+#~ msgid "Limited Company"
+#~ msgstr "Хязгаарлагдмал компани"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-01 06:59+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -382,16 +382,6 @@ msgid "Schedule Upgrade"
 msgstr "Razporedi nadgradnjo"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -409,11 +399,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Prodaja in nabava"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -696,11 +681,6 @@ msgstr "Ustvari menu"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Indija"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1850,11 +1830,6 @@ msgid "Invalid arguments"
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Švedska"
@@ -2071,6 +2046,11 @@ msgstr "Preslikava polj"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Gospod"
 
 #. module: base
 #: view:base.module.import:0
@@ -2327,6 +2307,11 @@ msgstr "Tadžikistan"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
 msgstr ""
 
 #. module: base
@@ -3021,6 +3006,11 @@ msgid "Hungary"
 msgstr "Madžarska"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazilija"
@@ -3165,6 +3155,17 @@ msgstr "Zgodovina"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Avtor"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3894,11 +3895,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -3958,6 +3954,11 @@ msgid "Project"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr ""
@@ -3997,7 +3998,6 @@ msgid "Saint Lucia"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Vzdrežvalna pogodba"
@@ -4526,6 +4526,15 @@ msgstr "Nizozemska"
 #. module: base
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
 
 #. module: base
@@ -5732,6 +5741,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "d.o.o."
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5822,11 +5836,6 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Priloge"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6291,6 +6300,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6410,11 +6424,6 @@ msgstr "Filter"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -7307,14 +7316,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7407,6 +7408,11 @@ msgstr "Naziv kanala"
 #. module: base
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
+msgstr ""
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
 msgstr ""
 
 #. module: base
@@ -7780,11 +7786,6 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8495,11 +8496,6 @@ msgid "View Name"
 msgstr "Naziv pogleda"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italijansko"
@@ -8632,6 +8628,7 @@ msgid "Delivery"
 msgstr "Dostava"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "d.d."
@@ -8734,6 +8731,9 @@ msgstr "rusko"
 #~ msgid "STOCK_DELETE"
 #~ msgstr "STOCK_DELETE"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Pravilo je izpolnjeno, če je vsaj en test resničen"
+
 #~ msgid "Get Max"
 #~ msgstr "Dobi maksimum"
 
@@ -8799,6 +8799,9 @@ msgstr "rusko"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Kriteriji"
 
 #~ msgid "Repository"
 #~ msgstr "Odlagališče"
@@ -8938,9 +8941,6 @@ msgstr "rusko"
 #~ msgid "Document Link"
 #~ msgstr "Povezava dokumenta"
 
-#~ msgid "Sir"
-#~ msgstr "Gospod"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Začni nadgradnjo"
 
@@ -8983,9 +8983,6 @@ msgstr "rusko"
 #~ msgid "Repositories"
 #~ msgstr "Odlagališča"
 
-#~ msgid "Ltd"
-#~ msgstr "d.o.o."
-
 #~ msgid "Report Ref."
 #~ msgstr "Sklic poročila"
 
@@ -9025,17 +9022,20 @@ msgstr "rusko"
 #~ "možnosti ali polja bodo samodejno skrita. To lahko spremenite kasneje preko "
 #~ "menuja Skrbištvo."
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Pravilo je izpolnjeno, če so vsi testi resnični (IN)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Preveri za nove module"
 
+#~ msgid "Module Repository"
+#~ msgstr "Odlagališče modulov"
+
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "Prodajna priložnost"
@@ -9124,6 +9124,9 @@ msgstr "rusko"
 #~ msgid "Modules to download"
 #~ msgstr "Moduli za prenest"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Nameščeni moduli"
 
@@ -9138,6 +9141,9 @@ msgstr "rusko"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr "Več pravil na istih objektih jih združenih z uporabo operatorja ALI"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9618,8 +9624,20 @@ msgstr "rusko"
 #~ msgid "Choose a language to install:"
 #~ msgstr "Izberi jezik za namestiti:"
 
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr "Dnevnik za zaključne vknjižbe za poslovno leto ni definiran"
+
 #~ msgid "%j - Day of the year as a decimal number [001,366]."
 #~ msgstr "%j - Dan v letu kot predtavljen z decimalnim število [001,366]."
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Količina izdelka"
+
+#, python-format
+#~ msgid "Result (/10)"
+#~ msgstr "Rezultat (/10)"
 
 #, python-format
 #~ msgid "The unlink method is not implemented on this object !"
@@ -9636,22 +9654,66 @@ msgstr "rusko"
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - Leto brez stoletij predstavljeno kot decimalno število [00,99]."
 
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr "V zaprtem dnevniku ne morete dodajati/spreminjati postavk."
+
 #~ msgid "Validated"
 #~ msgstr "Potrjeno"
+
+#, python-format
+#~ msgid "June"
+#~ msgstr "junij"
 
 #, python-format
 #~ msgid "The read method is not implemented on this object !"
 #~ msgstr "Metoda 'read' ni implementirana za ta objekt."
 
+#, python-format
+#~ msgid "Tag Name"
+#~ msgstr "Ime oznake"
+
 #~ msgid "Bulgarian / български"
 #~ msgstr "Bolgarščina"
+
+#, python-format
+#~ msgid "File Name"
+#~ msgstr "Ime datoteke"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "SKUPAJ"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Poskušate zaobiti pravila dostopa (vrsta dokumenta: %s)."
+
+#, python-format
+#~ msgid "September"
+#~ msgstr "september"
+
+#, python-format
+#~ msgid "Bad account!"
+#~ msgstr "Napačni konto!"
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Prejeta količina"
 
 #, python-format
 #~ msgid "Pie charts need exactly two fields"
 #~ msgstr "Tortni diagrami zahtevajo natančno dva polji"
 
+#, python-format
+#~ msgid "No Analytic Journal !"
+#~ msgstr "Ni analitičnega dnevnika!"
+
 #~ msgid "Define New Users"
 #~ msgstr "Določi nove uporabnike"
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Proizvodi: "
 
 #, python-format
 #~ msgid "Not implemented search_memory method !"
@@ -9664,6 +9726,10 @@ msgstr "rusko"
 #~ msgid "Not implemented set_memory method !"
 #~ msgstr "Metoda 'set_memory' ni implementirana."
 
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Napaka, ni partnerja!"
+
 #~ msgid "Maintenance contract added !"
 #~ msgstr "Vzdrževalna pogodba je dodana!"
 
@@ -9675,14 +9741,46 @@ msgstr "rusko"
 #~ msgstr "Vpišite vsaj eno polje."
 
 #, python-format
+#~ msgid "CHECK: "
+#~ msgstr "KONTROLA: "
+
+#, python-format
 #~ msgid "The perm_read method is not implemented on this object !"
 #~ msgstr "Metoda 'perm_read' ni implementirana za ta objekt."
+
+#, python-format
+#~ msgid "Message !"
+#~ msgstr "Sporočilo!"
 
 #~ msgid "Installation Done"
 #~ msgstr "Namestitev končana"
 
+#, python-format
+#~ msgid "No Partner!"
+#~ msgstr "Ni partnerja!"
+
 #~ msgid "Year with century: %(year)s"
 #~ msgstr "Leto s stoletjem: %(year)s"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Ni razpoložljivih podatkov"
+
+#, python-format
+#~ msgid "January"
+#~ msgstr "januar"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "Dobavitelj proizvoda"
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Napaka v vrednosti"
+
+#, python-format
+#~ msgid "Open"
+#~ msgstr "Odpri"
 
 #, python-format
 #~ msgid "Please check that all your lines have %d columns."
@@ -9692,8 +9790,28 @@ msgstr "rusko"
 #~ msgstr "ni pričeto"
 
 #, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "Napačen izvorni dokument!"
+
+#, python-format
 #~ msgid "Can not define a column %s. Reserved keyword !"
 #~ msgstr "Ne morem definirati stolpca %s. Rezervirana ključna beseda."
+
+#, python-format
+#~ msgid "August"
+#~ msgstr "avgust"
+
+#, python-format
+#~ msgid "N/2"
+#~ msgstr "N/2"
+
+#, python-format
+#~ msgid "October"
+#~ msgstr "oktober"
+
+#, python-format
+#~ msgid "Analytic Entries"
+#~ msgstr "Analitične vknjižbe"
 
 #~ msgid "Subscribed"
 #~ msgstr "Naročen"
@@ -9701,6 +9819,10 @@ msgstr "rusko"
 #, python-format
 #~ msgid "The create method is not implemented on this object !"
 #~ msgstr "Metoda 'create' ni implementirana za ta objekt."
+
+#, python-format
+#~ msgid "1"
+#~ msgstr "1"
 
 #, python-format
 #~ msgid "Invalid operation"
@@ -9715,15 +9837,67 @@ msgstr "rusko"
 #~ "vendar ta modul v vašem sistemu ni na voljo."
 
 #, python-format
+#~ msgid "No Partner Defined !"
+#~ msgstr "Partner ni izbran!"
+
+#, python-format
+#~ msgid "No sequence defined in the journal !"
+#~ msgstr "V dnevnilku ni definirano zaporedje!"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Status računa"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "VMESNA VSOTA"
+
+#, python-format
 #~ msgid "The write method is not implemented on this object !"
 #~ msgstr "Metoda 'write' ni implementirana za ta objekt."
+
+#, python-format
+#~ msgid "Unable to change tax !"
+#~ msgstr "Ne morem spremeniti davka!"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "ME proizvoda"
+
+#, python-format
+#~ msgid "Wed"
+#~ msgstr "sre"
+
+#, python-format
+#~ msgid "Insufficient Data!"
+#~ msgstr "Premalo podatkov!"
 
 #~ msgid "%H - Hour (24-hour clock) as a decimal number [00,23]."
 #~ msgstr "%H - Ura (24-urni format) kot decimalno število [00,23]."
 
 #, python-format
+#~ msgid "Product name"
+#~ msgstr "Ime proizvoda"
+
+#, python-format
+#~ msgid "Data Insufficient!"
+#~ msgstr "Premalo podatkov!"
+
+#, python-format
 #~ msgid "Tree can only be used in tabular reports"
 #~ msgstr "Drevesa se lahko uporabljajo samo v tabelaričnih poročilih"
+
+#, python-format
+#~ msgid "not implemented"
+#~ msgstr "še ni del programa"
+
+#, python-format
+#~ msgid ""
+#~ "Please provide another source document.\n"
+#~ "This one does not exist !"
+#~ msgstr ""
+#~ "Prosim, podajte nov izvorni dokument.\n"
+#~ "Podani namreč ne obstaja!"
 
 #~ msgid "%m - Month as a decimal number [01,12]."
 #~ msgstr "%m - mesec kot decimalno število [01,12]."
@@ -9739,28 +9913,84 @@ msgstr "rusko"
 #~ msgstr "Označbe '%s' ni bilo mogoče najti v nadrejenem pogledu."
 
 #, python-format
+#~ msgid "Case"
+#~ msgstr "Primer"
+
+#, python-format
 #~ msgid "The name_get method is not implemented on this object !"
 #~ msgstr "Metoda 'name_get' ni implementirana za ta objekt."
+
+#, python-format
+#~ msgid "cancel"
+#~ msgstr "prekliči"
 
 #, python-format
 #~ msgid "Not Implemented"
 #~ msgstr "Ni implementirano"
 
+#, python-format
+#~ msgid "Invoices"
+#~ msgstr "Računi"
+
 #~ msgid "Maintenance"
 #~ msgstr "Vzdrževanje"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "Manjkajo davki!"
+
+#, python-format
+#~ msgid "Efficient"
+#~ msgstr "Učinkovit"
+
+#, python-format
+#~ msgid "Field name"
+#~ msgstr "Ime polja"
+
+#, python-format
+#~ msgid "Task '%s' closed"
+#~ msgstr "Naloga '%s' zaprta"
 
 #~ msgid "Macedonia"
 #~ msgstr "Makedonija"
 
 #, python-format
+#~ msgid "Speed Test"
+#~ msgstr "Test hitrosti"
+
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "Na računu ni obdobja!"
+
+#, python-format
+#~ msgid "No period found !"
+#~ msgstr "Ne najdem obdobja!"
+
+#, python-format
 #~ msgid "The name_search method is not implemented on this object !"
 #~ msgstr "Metoda 'name_search' ni implementirana za ta objekt."
+
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Bančni dnevnik "
+
+#, python-format
+#~ msgid "Attention!"
+#~ msgstr "Pozor!"
+
+#, python-format
+#~ msgid "Operation is Already Cancelled  !"
+#~ msgstr "Operacija je bila že preklicana!"
 
 #~ msgid "Default Properties"
 #~ msgstr "Privzete lastnosti"
 
 #~ msgid "Full"
 #~ msgstr "Polno"
+
+#, python-format
+#~ msgid "March"
+#~ msgstr "marec"
 
 #, python-format
 #~ msgid "UserError"
@@ -9770,12 +10000,28 @@ msgstr "rusko"
 #~ msgid "The copy method is not implemented on this object !"
 #~ msgstr "Metoda 'copy' ni implementirana za ta objekt."
 
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Napaka celovitosti!"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Nepravilno dejanje!"
+
 #~ msgid "Partial"
 #~ msgstr "Delno"
 
 #, python-format
+#~ msgid "Fri"
+#~ msgstr "pet"
+
+#, python-format
 #~ msgid "Not implemented get_memory method !"
 #~ msgstr "Metoda 'get_memory' ni implementirana."
+
+#, python-format
+#~ msgid "Thu"
+#~ msgstr "čet"
 
 #~ msgid "GPL-3"
 #~ msgstr "GPL-3"
@@ -9791,12 +10037,43 @@ msgstr "rusko"
 #~ msgid "Preview"
 #~ msgstr "Predogled"
 
+#, python-format
+#~ msgid "Sorry!"
+#~ msgstr "Žal!"
+
+#, python-format
+#~ msgid "meeting"
+#~ msgstr "sestanek"
+
+#, python-format
+#~ msgid "N"
+#~ msgstr "N"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "Ni dovolj podatkov!"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
+
+#, python-format
+#~ msgid "error"
+#~ msgstr "napaka"
+
 #~ msgid "Portugese / português"
 #~ msgstr "Portugalsko"
 
 #, python-format
+#~ msgid "open"
+#~ msgstr "open"
+
+#, python-format
 #~ msgid "Unknown position in inherited view %s !"
 #~ msgstr "Neznan položaj v podedovanem pogledu %s."
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Ni razpoložljive cene!"
 
 #, python-format
 #~ msgid "ValidateError"
@@ -9807,21 +10084,102 @@ msgstr "rusko"
 #~ msgstr "Polje %d mora biti številka"
 
 #, python-format
+#~ msgid "No python file found"
+#~ msgstr "Ni python datoteke"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Pričakovano stanje (%.2f) je različno od izračunanega (%.2f)"
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Napaka uporabnika!"
+
+#, python-format
+#~ msgid "The journal must have default credit and debit account"
+#~ msgstr "Dnevnik mora imeti privzeta konta za breme in dobro."
+
+#, python-format
+#~ msgid "Bad account !"
+#~ msgstr "Napačni konto!"
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Prodajni dnevnik"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "bo zaračunan"
+
+#, python-format
+#~ msgid "May"
+#~ msgstr "maj"
+
+#, python-format
 #~ msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 #~ msgstr "Vrednost \"%s\" za polje \"%s\" ni na voljo pri izbiri"
+
+#, python-format
+#~ msgid "Analytic account incomplete"
+#~ msgstr "Nepopoln analitični konto"
+
+#, python-format
+#~ msgid "Report does not contain the sxw content!"
+#~ msgstr "Poročilo ne vsebuje sxw vsebin!"
+
+#, python-format
+#~ msgid "No data"
+#~ msgstr "Ni podatkov"
 
 #~ msgid "Children"
 #~ msgstr "Otroci"
 
 #, python-format
+#~ msgid "products"
+#~ msgstr "proizvodi"
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "Najprej morate izbrati partnerja!"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Nepravilna konfiguracija!"
+
+#, python-format
 #~ msgid "undefined get method !"
 #~ msgstr "Nedefinirana metoda 'get'"
+
+#, python-format
+#~ msgid "Workflow Test"
+#~ msgstr "Test delovnega toka"
+
+#, python-format
+#~ msgid "Opportunity"
+#~ msgstr "Priložnost"
+
+#, python-format
+#~ msgid "Reconciliation"
+#~ msgstr "Uskladitev"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Vpisi: "
+
+#, python-format
+#~ msgid "Purchase Journal"
+#~ msgstr "Dnevnik nabav"
 
 #~ msgid "Function Name"
 #~ msgstr "Ime funkcije"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Prekliči"
+
+#, python-format
+#~ msgid "Sat"
+#~ msgstr "sob"
 
 #, python-format
 #~ msgid "Password empty !"
@@ -9831,15 +10189,67 @@ msgstr "rusko"
 #~ msgstr "Nastavi"
 
 #, python-format
+#~ msgid "Tue"
+#~ msgstr "tor"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Urni strošek"
+
+#, python-format
+#~ msgid "Configration Error !"
+#~ msgstr "Napaka pri konfiguraciji!"
+
+#, python-format
+#~ msgid "Exception"
+#~ msgstr "Izjema"
+
+#, python-format
 #~ msgid "Bad query."
 #~ msgstr "Napačna poizvedba."
+
+#, python-format
+#~ msgid "Open Page"
+#~ msgstr "Odpri stran"
 
 #~ msgid "Import New Language"
 #~ msgstr "Uvozi nov jezik"
 
 #, python-format
+#~ msgid "Line number"
+#~ msgstr "Številka vrstice"
+
+#, python-format
+#~ msgid "Suggestion"
+#~ msgstr "Predlog"
+
+#, python-format
 #~ msgid "You can not remove the field '%s' !"
 #~ msgstr "Ne morete odstraniti polja  '%s'."
+
+#, python-format
+#~ msgid "Programming Error"
+#~ msgstr "Napaka programerja"
+
+#, python-format
+#~ msgid "No Pricelist !"
+#~ msgstr "Ni cenika!"
+
+#, python-format
+#~ msgid "Mon"
+#~ msgstr "pon"
+
+#, python-format
+#~ msgid "N (Number of Records)"
+#~ msgstr "Število zapisov"
+
+#, python-format
+#~ msgid "Partner incomplete"
+#~ msgstr "Nepopolni podatki partnerja"
+
+#, python-format
+#~ msgid "July"
+#~ msgstr "julij"
 
 #, python-format
 #~ msgid "Bar charts need at least two fields"
@@ -9848,6 +10258,22 @@ msgstr "rusko"
 #~ msgid "Titles"
 #~ msgstr "Naslovi"
 
+#, python-format
+#~ msgid "Result"
+#~ msgstr "Rezultat"
+
+#, python-format
+#~ msgid "Bad total !"
+#~ msgstr "Napačna skupna vsota!"
+
+#, python-format
+#~ msgid "Pending"
+#~ msgstr "Na čakanju"
+
+#, python-format
+#~ msgid "Questionnaire"
+#~ msgstr "Vprašalnik"
+
 #~ msgid "Contract ID"
 #~ msgstr "Oznaka pogodbe"
 
@@ -9855,8 +10281,36 @@ msgstr "rusko"
 #~ msgid "The search method is not implemented on this object !"
 #~ msgstr "Metoda 'search' ni implementirana za ta objekt."
 
+#, python-format
+#~ msgid "Sun"
+#~ msgstr "ned"
+
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Napaka pri obračunu DDV"
 
+#, python-format
+#~ msgid "December"
+#~ msgstr "december"
+
+#, python-format
+#~ msgid "This period is already closed !"
+#~ msgstr "To obdobje je že zaprto!"
+
+#, python-format
+#~ msgid "November"
+#~ msgstr "november"
+
 #~ msgid "Image Preview"
 #~ msgstr "Predogled slike"
+
+#, python-format
+#~ msgid "February"
+#~ msgstr "februar"
+
+#, python-format
+#~ msgid "April"
+#~ msgstr "april"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Ni analitičnega dnevnika!"

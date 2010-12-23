@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-16 08:41+0000\n"
 "Last-Translator: avion <nat@sethack.com>\n"
 "Language-Team: OpenERP Iran <info@openerp-iran.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: IRAN, ISLAMIC REPUBLIC OF\n"
 "X-Poedit-Language: Persian\n"
@@ -385,16 +385,6 @@ msgid "Schedule Upgrade"
 msgstr "ارتقا زمان‌بندی شده"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -412,11 +402,6 @@ msgstr "پالائو"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "فروش‌ها و خریدها"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -699,11 +684,6 @@ msgstr "پدیدن منو"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "هند"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "ماژول‌های قرارداد نگهداری"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1876,11 +1856,6 @@ msgid "Invalid arguments"
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "سوئد"
@@ -2099,6 +2074,11 @@ msgstr "نگاشت فیلدها"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "آقا"
 
 #. module: base
 #: view:base.module.import:0
@@ -2359,6 +2339,11 @@ msgstr "تاجیکستان"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "مجوز GPL-2 یا نگارش بالاتر"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3055,6 +3040,11 @@ msgid "Hungary"
 msgstr "مجارستان"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "برزیل"
@@ -3204,6 +3194,17 @@ msgstr "تاریخچه"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "پدیدار"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3932,11 +3933,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -3998,6 +3994,11 @@ msgid "Project"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr ""
@@ -4037,7 +4038,6 @@ msgid "Saint Lucia"
 msgstr "سنت لوشا"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "قرارداد نگهداری"
@@ -4566,6 +4566,15 @@ msgstr "هلندی / Nederlands"
 #. module: base
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
 
 #. module: base
@@ -5781,6 +5790,11 @@ msgid "Panama"
 msgstr "پاناما"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "محدود"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5871,11 +5885,6 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "پیوست‌ها"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6342,6 +6351,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6461,11 +6475,6 @@ msgstr "پالایه"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -7362,14 +7371,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7463,6 +7464,11 @@ msgstr "نام کانال"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7835,11 +7841,6 @@ msgstr "نمی‌توانید دو کاربر با یک لاگین داشته ب
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8559,11 +8560,6 @@ msgid "View Name"
 msgstr "نام نما"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "ایتالیایی / Italiano"
@@ -8696,6 +8692,7 @@ msgid "Delivery"
 msgstr "تحویل"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "شرکت"
@@ -8825,6 +8822,9 @@ msgstr "روسی / русский язык"
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "در صورتی که یک تست درست باشد قاعده رعایت شده است"
+
 #~ msgid "Get Max"
 #~ msgstr "بیشینه دریافت"
 
@@ -8867,6 +8867,9 @@ msgstr "روسی / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "ممکن است برخی بسته‌های زبان را دوباره برپاسازی کنید."
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "ماژول‌های قرارداد نگهداری"
+
 #~ msgid "Factor"
 #~ msgstr "مضرب"
 
@@ -8899,6 +8902,9 @@ msgstr "روسی / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "آزمایش‌ها"
 
 #~ msgid "Repository"
 #~ msgstr "مخزن"
@@ -9069,9 +9075,6 @@ msgstr "روسی / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "پیوندِ سند"
 
-#~ msgid "Sir"
-#~ msgstr "آقا"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "آغاز ارتقا"
 
@@ -9145,9 +9148,6 @@ msgstr "روسی / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "مخازن"
 
-#~ msgid "Ltd"
-#~ msgstr "محدود"
-
 #~ msgid "Unvalid"
 #~ msgstr "نامعتبر"
 
@@ -9203,6 +9203,9 @@ msgstr "روسی / русский язык"
 #~ msgid "State of Mind"
 #~ msgstr "وضعیت فکری"
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "در صورتی که تمامی تست‌ها درست باشند قاعده رعایت شده است. (و منطقی)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
@@ -9217,9 +9220,6 @@ msgstr "روسی / русский язык"
 
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Field child2"
 #~ msgstr "فیلد فرزند ۲"
@@ -9355,6 +9355,9 @@ msgstr "روسی / русский язык"
 #~ msgid "Modules to download"
 #~ msgstr "پیمانه‌ها برای داونلود"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "پیمانه‌های برپاسازی‌شده"
 
@@ -9384,6 +9387,10 @@ msgstr "روسی / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "چندین قاعده روی اشیای همسان بوسیله گرداننده یای منطقی به هم پیوسته شدند"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9594,6 +9601,9 @@ msgstr "روسی / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_تایید"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "Validated"
 #~ msgstr "تایید شده"
@@ -10058,6 +10068,11 @@ msgstr "روسی / русский язык"
 #~ msgid "This user can not connect using this company !"
 #~ msgstr "این کاربر نمی‌تواند به این شرکت وصل شود!"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr ""
+#~ "قاعده را فراگیر می‌کند، در غیر این صورت لازم است آن را به یک گروه یا کاربر "
+#~ "بدهید"
+
 #, python-format
 #~ msgid "Enter at least one field !"
 #~ msgstr "دست‌کم یک فیلد را وارد کنید!"
@@ -10091,6 +10106,15 @@ msgstr "روسی / русский язык"
 
 #~ msgid "Multi company"
 #~ msgstr "چند شرکتی"
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" دارای تیک نقطه بیش از حد است. شناسه‌های XML نباید دارای نقطه باشنتد! "
+#~ "آنها برای ارجاع به داده‌های پیمانه‌های دیگر آنگونه که در module.reference_id "
+#~ "آمده، هستند."
 
 #, python-format
 #~ msgid "Tree can only be used in tabular reports"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-17 08:54+0000\n"
 "Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -388,16 +388,6 @@ msgid "Schedule Upgrade"
 msgstr "Agendar Atualização"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -415,11 +405,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Compras & Vendas"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -713,11 +698,6 @@ msgstr "Criar Menu"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Índia"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "Módulo de contratos de manutenção"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1933,11 +1913,6 @@ msgid "Invalid arguments"
 msgstr "Argumentos inválidos"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Suécia"
@@ -2161,6 +2136,11 @@ msgstr "Mapendo campos"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Sr."
 
 #. module: base
 #: view:base.module.import:0
@@ -2423,6 +2403,11 @@ msgstr "Tajiquistão"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 ou versão superior"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3128,6 +3113,11 @@ msgid "Hungary"
 msgstr "Hungria"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brasil"
@@ -3277,6 +3267,17 @@ msgstr "Histórico"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Criador"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -4019,11 +4020,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Marque esta caixa se o parceiro for um empregado."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4085,6 +4081,11 @@ msgid "Project"
 msgstr "Projeto"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Módulo importado com sucesso!"
@@ -4124,7 +4125,6 @@ msgid "Saint Lucia"
 msgstr "Santa Lúcia"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Contrato de manutenção"
@@ -4662,6 +4662,18 @@ msgstr "Holandês / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Este addon já está instalado em seu sistema"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5885,6 +5897,11 @@ msgid "Panama"
 msgstr "Panamá"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "Ltd"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5975,11 +5992,6 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Anexos"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6445,6 +6457,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6565,11 +6582,6 @@ msgstr "Filtro"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
 msgstr ""
 
 #. module: base
@@ -7466,14 +7478,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7570,6 +7574,11 @@ msgstr "Nome do canal"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y  ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7942,11 +7951,6 @@ msgstr "Não é permitido criar dois usuários com o mesmo login!"
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8664,11 +8668,6 @@ msgid "View Name"
 msgstr "Nome da view"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italian / Italiano"
@@ -8801,6 +8800,7 @@ msgid "Delivery"
 msgstr "Entrega"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Empr."
@@ -8926,6 +8926,9 @@ msgstr "Russo / русский язык"
 #~ msgid "Validated"
 #~ msgstr "Validado"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "A regra será satisfeita se pelo menos um teste for verdadeiro"
+
 #~ msgid "Get Max"
 #~ msgstr "Pegar o máximo"
 
@@ -8962,6 +8965,9 @@ msgstr "Russo / русский язык"
 #~ msgid "STOCK_DIALOG_QUESTION"
 #~ msgstr "STOCK_DIALOG_QUESTION"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "Módulo de contratos de manutenção"
+
 #~ msgid "Factor"
 #~ msgstr "Fator"
 
@@ -8988,6 +8994,9 @@ msgstr "Russo / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Testes"
 
 #~ msgid "Repository"
 #~ msgstr "Repositório"
@@ -9137,9 +9146,6 @@ msgstr "Russo / русский язык"
 #~ msgid "res.partner.som"
 #~ msgstr "res.partner.som"
 
-#~ msgid "Sir"
-#~ msgstr "Sr."
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Iniciar atualização"
 
@@ -9188,9 +9194,6 @@ msgstr "Russo / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Repositórios"
 
-#~ msgid "Ltd"
-#~ msgstr "Ltd"
-
 #~ msgid "Unvalid"
 #~ msgstr "Inválido"
 
@@ -9230,17 +9233,20 @@ msgstr "Russo / русский язык"
 #~ "primeira vez. Opções ou campos menos usados são automaticamente escondidos. "
 #~ "Voce pode alterar isto mais tarde no menu Administração"
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "A regra será satisfeita se todos os testes forem verdadeiros (AND)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Procurando por novos módulos"
 
+#~ msgid "Module Repository"
+#~ msgstr "Repositório de módulos"
+
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr ""
@@ -9359,6 +9365,9 @@ msgstr "Russo / русский язык"
 #~ msgid "Modules to download"
 #~ msgstr "Módulos para donwload"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Módulos instalados"
 
@@ -9373,6 +9382,9 @@ msgstr "Russo / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr "Multiplas regras em um mesmo objeto são unidas usando o operador OR"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9557,6 +9569,9 @@ msgstr "Russo / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_Validar"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -9956,6 +9971,11 @@ msgstr "Russo / русский язык"
 #~ msgid "Simple domain setup"
 #~ msgstr "Comfiguração simples de domínio"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr ""
+#~ "Marque a regra como global - caso contrário, esta deve ser colocada em um "
+#~ "grupo"
+
 #~ msgid ""
 #~ "Regexp to search module on the repository webpage:\n"
 #~ "- The first parenthesis must match the name of the module.\n"
@@ -9972,6 +9992,15 @@ msgstr "Russo / русский язык"
 
 #~ msgid "Multi company"
 #~ msgstr "Multiplas Companhias"
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" contem muitos pontos. Identificações XML não devem conter ponto "
+#~ "final! Estes devem ser utilizados para referência a dados de outros módulos "
+#~ "como em: module.reference_id"
 
 #~ msgid "Accumulate"
 #~ msgstr "Acumulado"
@@ -10214,8 +10243,59 @@ msgstr "Russo / русский язык"
 #~ msgid "raw"
 #~ msgstr "não processado"
 
+#~ msgid "is cancelled"
+#~ msgstr "Esta Cancelada"
+
+#, python-format
+#~ msgid "Result (/10)"
+#~ msgstr "Resultado (/10)"
+
+#~ msgid "Warning!"
+#~ msgstr "Informação!"
+
+#~ msgid "Uninstalled"
+#~ msgstr "Desinstalado"
+
+#~ msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Não há diário de ordem de compra definido para esta empresa: \"%s\" (id:%d)"
+
+#~ msgid "View architecture"
+#~ msgstr "Arquitetura da View"
+
 #~ msgid "Calculate Sum"
 #~ msgstr "Calcular a Soma"
+
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr ""
+#~ "Você não pode adicionar ou modificar lançamentos em um diário encerrado."
+
+#~ msgid "(vacation)"
+#~ msgstr "(férias)"
+
+#~ msgid "A Lead created"
+#~ msgstr "Um Contato Criado"
+
+#, python-format
+#~ msgid "June"
+#~ msgstr "Junho"
+
+#~ msgid "    Confirmed In: "
+#~ msgstr "    Confirmada Em: "
+
+#~ msgid "You don't have enough access to validate this sale!"
+#~ msgstr "Você não as permissões necessárias para validar esta venda!"
+
+#~ msgid "No account defined for product \"%s\"."
+#~ msgstr "Conta contábil não definida para este produto \"%s\"."
+
+#~ msgid "Cosmetic"
+#~ msgstr "Cosmético"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Quantidade do Produto"
 
 #~ msgid "Report Ref."
 #~ msgstr "Ref. do Relatório"
@@ -10226,26 +10306,447 @@ msgstr "Russo / русский язык"
 #~ msgid "Language name"
 #~ msgstr "Nome do Idioma"
 
+#~ msgid "Please Specify Project to be schedule"
+#~ msgstr "Por Favor Espeficique um projeto para ser agendado"
+
+#~ msgid "Add Product"
+#~ msgstr "Adicionar Produto"
+
 #~ msgid "Korean / Korea, Democratic Peoples Republic of"
 #~ msgstr "Coreano / Korea, Democratic Peoples Republic of"
 
 #~ msgid "Bulgarian / български"
 #~ msgstr "Búlgaro / български"
 
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Nota Fiscal não Criada"
+
+#, python-format
+#~ msgid "File Name"
+#~ msgstr "Nome do Arquivo"
+
+#, python-format
+#~ msgid "Eff. Hours"
+#~ msgstr "Horas Eferivas"
+
+#~ msgid "Purchase order"
+#~ msgstr "Ordem de Compra"
+
+#~ msgid "Total hourly costs"
+#~ msgstr "Total Custo Horário"
+
+#, python-format
+#~ msgid "No enough data"
+#~ msgstr "Dados insuficiente"
+
 #~ msgid "My Requests"
 #~ msgstr "Minhas Mensagens"
+
+#, python-format
+#~ msgid "September"
+#~ msgstr "Setembro"
+
+#, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Qtd Recebida"
+
+#~ msgid "Work Center name"
+#~ msgstr "Nome de Centro de Trabalho"
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "Preço Unitário do Produto"
+
+#~ msgid "Active Id is not found"
+#~ msgstr "Id Atual não foi encontrado"
+
+#, python-format
+#~ msgid "Connection to WWW.Auction-in-Europe.com failed !"
+#~ msgstr "A conexão com WWW.Auction-in-Europe.com falhou !"
+
+#~ msgid "Access Rights (groups)"
+#~ msgstr "Permissões de Acesso (Grupos)"
+
+#, python-format
+#~ msgid "O(1)"
+#~ msgstr "O(1)"
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Produtos: "
+
+#~ msgid "Lead "
+#~ msgstr "Contato "
+
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr "Por Favor, Insira a visão(oẽs) de Dashboard !"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Erro, Sem Parceiro !"
+
+#~ msgid "Confirm Registration"
+#~ msgstr "Confirmar Registro"
+
+#~ msgid "Internal Picking"
+#~ msgstr "Separação Interna"
+
+#~ msgid "Send Mail (%s)"
+#~ msgstr "Enviar Email (%s)"
+
+#, python-format
+#~ msgid "Please create an invoice for this sale."
+#~ msgstr "Por favor, crie uma Nota Fiscal para este venda."
 
 #~ msgid "Bank List"
 #~ msgstr "Lista de Bancos"
 
+#~ msgid "for"
+#~ msgstr "para"
+
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "Nome do arquivo deve ser único!"
+
+#, python-format
+#~ msgid "Open"
+#~ msgstr "Abrir"
+
+#~ msgid "Product "
+#~ msgstr "Produto "
+
+#~ msgid "Invoiced"
+#~ msgstr "Faturado"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "Não é possível cancelar a ordem de venda !"
+
+#, python-format
+#~ msgid "March"
+#~ msgstr "Março"
+
+#~ msgid "System update done"
+#~ msgstr "Atualização do sistema concluida"
+
+#, python-format
+#~ msgid "Free Reference"
+#~ msgstr "Referência Livre"
+
+#~ msgid "Email Send to Customer"
+#~ msgstr "enviar Email para Cliente"
+
+#~ msgid "Sale order "
+#~ msgstr "Ordem de venda "
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Erro de Integridade !"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Ação inválida !"
+
 #~ msgid "None"
 #~ msgstr "Nenhum"
+
+#~ msgid "Email Template"
+#~ msgstr "Modelo de Email"
+
+#~ msgid "You must specify a Source Warehouse !"
+#~ msgstr "Você precisa especificar um estoque de destino !"
+
+#~ msgid "Step:3 Sharing Wizard"
+#~ msgstr "Passo:3 Assistente de Compartilhamento"
+
+#~ msgid "Price"
+#~ msgstr "Preço"
+
+#~ msgid "    Planned In: "
+#~ msgstr "    Planejado Em: "
+
+#, python-format
+#~ msgid "Operation Not Permitted !"
+#~ msgstr "Operação não Permitida !"
+
+#~ msgid "Confirm Event"
+#~ msgstr "Confirmar Evento"
+
+#, python-format
+#~ msgid " Quantity: "
+#~ msgstr " Quantiade: "
+
+#~ msgid "Select Partners"
+#~ msgstr "Selecionar Parceiros"
+
+#, python-format
+#~ msgid "Sorry!"
+#~ msgstr "Desculpe!"
+
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "Dados Insuficiente !"
+
+#~ msgid "receive"
+#~ msgstr "receber"
+
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Preço não disponível"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Endereço não definido para o fornecedor"
+
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Não é permitido criar nota fiscal sem um parceiro."
+
+#, python-format
+#~ msgid "ValidateError"
+#~ msgstr "ErroDeValidação"
+
+#, python-format
+#~ msgid "No Related Models!!"
+#~ msgstr "Nenhum Modelo Relacionado!!"
+
+#~ msgid "The Lead"
+#~ msgstr "Contato"
+
+#, python-format
+#~ msgid "No python file found"
+#~ msgstr "Arquivo python não encontrado"
+
+#~ msgid "Voucher "
+#~ msgstr "Despesa "
+
+#, python-format
+#~ msgid "Bad account !"
+#~ msgstr "Conta Contábil Inválida !"
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Diário de Vendas"
+
+#~ msgid "Django templates not installed"
+#~ msgstr "Django templates não instalado"
+
+#~ msgid "Not enough stock !"
+#~ msgstr "Saldo de Estoque Insuficiente !"
+
+#, python-format
+#~ msgid "Could not cancel this purchase order !"
+#~ msgstr "Não é possível cancelar esta ordem de compra !"
+
+#, python-format
+#~ msgid "May"
+#~ msgstr "Maio"
+
+#, python-format
+#~ msgid "Result of views in %"
+#~ msgstr "Resultado das views em %"
+
+#~ msgid "Web Dependencies"
+#~ msgstr "Dependências Web"
 
 #~ msgid "States of mind"
 #~ msgstr "Estado Emocional"
 
+#~ msgid "Task "
+#~ msgstr "Tarefa "
+
+#, python-format
+#~ msgid "You cannot delete any record!"
+#~ msgstr "Você não pode excluir nenhum registro!"
+
+#~ msgid "No Description"
+#~ msgstr "Sem Descrição"
+
+#~ msgid "Invoice "
+#~ msgstr "Nota Fiscal "
+
+#~ msgid "Mako templates not installed"
+#~ msgstr "Mako templates não instalado"
+
+#~ msgid "Web Module"
+#~ msgstr "Módulo Web"
+
+#, python-format
+#~ msgid "No data"
+#~ msgstr "Sem data"
+
+#, python-format
+#~ msgid "No valid pricelist line found !"
+#~ msgstr "Nenhuma linha válida na lista de Preço encontrada !"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "Produtos"
+
+#, python-format
+#~ msgid "Opportunity"
+#~ msgstr "Oportunidade"
+
+#~ msgid "You cannot duplicate the resource!"
+#~ msgstr "Você não pode duplicar este recurso!"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Entradas: "
+
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Você só pode excluir movimentações em rascunho."
+
+#, python-format
+#~ msgid "Sat"
+#~ msgstr "Sáb"
+
+#~ msgid "Root Menu"
+#~ msgstr "Menu Raiz"
+
+#, python-format
+#~ msgid "Tue"
+#~ msgstr "Qui"
+
+#, python-format
+#~ msgid "Configration Error !"
+#~ msgstr "Erro de Configuração !"
+
+#, python-format
+#~ msgid "No Invoice Address"
+#~ msgstr "Sem Endereço de Faturamento"
+
+#, python-format
+#~ msgid "Result of fields in %"
+#~ msgstr "Resultado dos campos em %"
+
+#, python-format
+#~ msgid "Exception"
+#~ msgstr "Pendência"
+
+#, python-format
+#~ msgid "Operation is not started yet !"
+#~ msgstr "A operação ainda não foi iniciada !"
+
+#, python-format
+#~ msgid "not implemented"
+#~ msgstr "não implementado"
+
+#~ msgid "Please Enter Periods ! "
+#~ msgstr "Por Favor, Insira o(s) Periodo(s) ! "
+
+#~ msgid "Sale order line"
+#~ msgstr "Linha da Ordem de venda"
+
+#~ msgid "You must enter one or more answer."
+#~ msgstr "Você precisa adicionar uma ou mais respostas."
+
+#~ msgid "Active ID is not Found"
+#~ msgstr "ID Atual não foi encontrado"
+
+#~ msgid "Purchase order required"
+#~ msgstr "Ordem de compra requerida"
+
+#, python-format
+#~ msgid "Suggestion"
+#~ msgstr "Sugestão"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Nenhum fornecedor definido para este produto !"
+
+#, python-format
+#~ msgid "No Pricelist !"
+#~ msgstr "Nenhuma Lista de Preço !"
+
+#~ msgid "Move line"
+#~ msgstr "Linhas de Movimentação"
+
+#, python-format
+#~ msgid "Mon"
+#~ msgstr "Seg"
+
+#, python-format
+#~ msgid "July"
+#~ msgstr "Julho"
+
+#, python-format
+#~ msgid "Result"
+#~ msgstr "Resultado"
+
+#, python-format
+#~ msgid "Pending"
+#~ msgstr "Pendente"
+
+#, python-format
+#~ msgid "Questionnaire"
+#~ msgstr "Questionário"
+
+#~ msgid "Picking Information !"
+#~ msgstr "Informação de Separação"
+
+#~ msgid "Supplier Invoices"
+#~ msgstr "Notas Fiscais de Entrada"
+
+#~ msgid "Product"
+#~ msgstr "Produto"
+
 #~ msgid "States"
 #~ msgstr "Status"
+
+#~ msgid "Future Productions"
+#~ msgstr "Produções Futuras"
+
+#~ msgid "Alert for %s !"
+#~ msgstr "Alerta para %s !"
+
+#, python-format
+#~ msgid "Sun"
+#~ msgstr "Dom"
+
+#~ msgid "Please specify the email address of partner."
+#~ msgstr "Por Favor, Especifique o email do parceiro."
+
+#~ msgid "Fwd"
+#~ msgstr "Enc"
+
+#~ msgid "Document "
+#~ msgstr "Documento "
+
+#~ msgid "Future Receptions"
+#~ msgstr "Recepções Futuras"
+
+#, python-format
+#~ msgid "Result in %"
+#~ msgstr "Resultado em %"
+
+#, python-format
+#~ msgid "December"
+#~ msgstr "Dezembro"
+
+#, python-format
+#~ msgid "November"
+#~ msgstr "Novembro"
+
+#~ msgid "Auto Confirmation: [%s] %s"
+#~ msgstr "Confirmação Automática: [%s] %s"
+
+#~ msgid "Save"
+#~ msgstr "salvar"
+
+#, python-format
+#~ msgid "February"
+#~ msgstr "Fevereiro"
+
+#, python-format
+#~ msgid "April"
+#~ msgstr "Abril"
+
+#~ msgid "created on"
+#~ msgstr "criado em"
 
 #~ msgid "Outgoing transitions"
 #~ msgstr "Transições de saída"
@@ -10270,16 +10771,6 @@ msgstr "Russo / русский язык"
 
 #~ msgid "You cannot have two users with the same login !"
 #~ msgstr "Não é permitido criar dois usuários com o mesmo login!"
-
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Este addon já está instalado em seu sistema"
 
 #~ msgid "Serbian / Serbia"
 #~ msgstr "Sérvia"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
-"PO-Revision-Date: 2010-12-21 18:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-22 08:06+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -387,16 +387,6 @@ msgid "Schedule Upgrade"
 msgstr "Запланировать обновление"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -414,11 +404,6 @@ msgstr "Палау"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Продажи и закупки"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Компания"
 
 #. module: base
 #: view:ir.translation:0
@@ -703,11 +688,6 @@ msgstr "Создать меню"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Индия"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "модули обслуживания договоров"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1900,11 +1880,6 @@ msgid "Invalid arguments"
 msgstr "Неправильные параметры"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Швеция"
@@ -2123,6 +2098,11 @@ msgstr "Соответствие полей"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Г-н"
 
 #. module: base
 #: view:base.module.import:0
@@ -2382,6 +2362,11 @@ msgstr "Таджикистан"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL версии 2 или более поздней"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3083,6 +3068,11 @@ msgid "Hungary"
 msgstr "Венгрия"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Бразилия"
@@ -3232,6 +3222,17 @@ msgstr "Журнал"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Автор"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3964,11 +3965,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Отметьте, если партнер является сотрудником"
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4030,6 +4026,11 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Файл модуля успешно импортирован !"
@@ -4069,7 +4070,6 @@ msgid "Saint Lucia"
 msgstr "Сент-Люсия"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Договор на обслуживание"
@@ -4599,6 +4599,18 @@ msgstr "Голландский / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Это дополнение/модуль уже установлено в вашей системе"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5820,6 +5832,11 @@ msgid "Panama"
 msgstr "Панама"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "ООО"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5913,11 +5930,6 @@ msgstr "Код языка должен быть уникальным !"
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Вложения"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "Диалог контракта обслуживания"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6391,6 +6403,11 @@ msgid "ir.actions.report.xml"
 msgstr "События отчетов"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "Обзор"
@@ -6513,11 +6530,6 @@ msgstr "Фильтр"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Г-жа"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr "ООО"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7419,14 +7431,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Прочее"
@@ -7522,6 +7526,11 @@ msgstr "Название канала"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "ООО"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7894,11 +7903,6 @@ msgstr "Вы не можете иметь двух одинаковых поль
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
 msgstr ""
 
 #. module: base
@@ -8612,11 +8616,6 @@ msgid "View Name"
 msgstr "Название вида"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr "Группы доступа"
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Итальянский / Italiano"
@@ -8749,6 +8748,7 @@ msgid "Delivery"
 msgstr "Доставка"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Корпорация"
@@ -9040,9 +9040,6 @@ msgstr "Русский / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "Ссылка на документ"
 
-#~ msgid "Sir"
-#~ msgstr "Г-н"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Начать обновление"
 
@@ -9087,9 +9084,6 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Repositories"
 #~ msgstr "Репозитории"
-
-#~ msgid "Ltd"
-#~ msgstr "ООО"
 
 #~ msgid "Report Ref."
 #~ msgstr "Ссылка на отчет"
@@ -9893,9 +9887,6 @@ msgstr "Русский / русский язык"
 #~ msgstr ""
 #~ "Использование связанного поля, которое ссылается на неизвестный объект"
 
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
-
 #~ msgid "Field child3"
 #~ msgstr "Поле child3"
 
@@ -10173,6 +10164,9 @@ msgstr "Русский / русский язык"
 #~ msgid "If two sequences match, the highest weight will be used."
 #~ msgstr "Если две последовательности совпадают, старшия будет использоваться."
 
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "Диалог контракта обслуживания"
+
 #~ msgid "res.company"
 #~ msgstr "Компания"
 
@@ -10228,16 +10222,6 @@ msgstr "Русский / русский язык"
 
 #~ msgid "terp-folder-yellow"
 #~ msgstr "terp-folder-yellow"
-
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Это дополнение/модуль уже установлено в вашей системе"
 
 #~ msgid "terp-stock_align_left_24"
 #~ msgstr "terp-stock_align_left_24"
@@ -10375,11 +10359,20 @@ msgstr "Русский / русский язык"
 #~ msgid "Add Maintenance Contract"
 #~ msgstr "Добавить договор на обслуживание"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "модули обслуживания договоров"
+
 #~ msgid "Maintenance"
 #~ msgstr "Обслуживание"
 
 #~ msgid "Maintenance Contracts"
 #~ msgstr "Обслуживание договоров"
 
-#~ msgid "ltd"
+#~ msgid "Corporation"
+#~ msgstr "Компания"
+
+#~ msgid "Ltd."
 #~ msgstr "ООО"
+
+#~ msgid "Access Groups"
+#~ msgstr "Группы доступа"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-19 08:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -391,16 +391,6 @@ msgid "Schedule Upgrade"
 msgstr "Upgrade inplannen"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Mijnheer"
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -418,11 +408,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Verkopen & inkopen"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Bedrijf"
 
 #. module: base
 #: view:ir.translation:0
@@ -716,11 +701,6 @@ msgstr "Maak menu"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "India"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "onderhoudscontract modules"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1943,11 +1923,6 @@ msgid "Invalid arguments"
 msgstr "Ongeldige argumenten"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Mw."
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Zweden"
@@ -2171,6 +2146,11 @@ msgstr "Velden koppeling"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr "Portugees / Portugal"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "De heer"
 
 #. module: base
 #: view:base.module.import:0
@@ -2434,6 +2414,11 @@ msgstr "Tadjikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 of latere versie"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr "Hr."
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3145,6 +3130,11 @@ msgid "Hungary"
 msgstr "Hongarije"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazilië"
@@ -3300,6 +3290,17 @@ msgstr "Historie"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Maker"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -4043,11 +4044,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Vink aan als de relatie een medewerker is."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Besloten Vennootschap"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4109,6 +4105,11 @@ msgid "Project"
 msgstr "Project"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Importeren modulebestand geslaagd!Geannu"
@@ -4148,7 +4149,6 @@ msgid "Saint Lucia"
 msgstr "Santa Lucia"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Onderhoudscontract"
@@ -4689,6 +4689,18 @@ msgstr "Dutch / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr "Raphaël Valyi's tweets"
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Deze aanvulling is al op uw systeem geïnstalleerd"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5936,6 +5948,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "Ltd"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -6032,11 +6049,6 @@ msgstr "De taalcode moet uniek zijn !"
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Bijlagen"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6517,6 +6529,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr "Mej."
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6644,11 +6661,6 @@ msgstr "Filter"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Mw."
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr "Ltd."
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7561,17 +7573,6 @@ msgstr ""
 "uitgevoerd."
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-"Als u betaling al is uitgevoerd nadat deze mail is gestuurd, beschouw deze "
-"dan als niet gestuurd. Aarzel niet om contact met onze boekhouding op te "
-"nemen."
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Overig"
@@ -7674,6 +7675,11 @@ msgstr "Kanaalnaam"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "ltd"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -8052,11 +8058,6 @@ msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
 msgstr "Standaard meerdere bedrijven"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr "Dhr."
 
 #. module: base
 #: view:res.request:0
@@ -8792,11 +8793,6 @@ msgid "View Name"
 msgstr "Naam weergave"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr "Toegangsgroepen"
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italiaans / Italiano"
@@ -8931,6 +8927,7 @@ msgid "Delivery"
 msgstr "Levering"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Bedrijf"
@@ -9051,6 +9048,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "STOCK_DIALOG_QUESTION"
 #~ msgstr "STOCK_DIALOG_QUESTION"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "onderhoudscontract modules"
+
 #~ msgid "Factor"
 #~ msgstr "Factor"
 
@@ -9168,6 +9168,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "right"
 #~ msgstr "rechts"
 
+#~ msgid "Others Partners"
+#~ msgstr "Andere Relaties"
+
 #~ msgid "Year with century: %(year)s"
 #~ msgstr "Jaar met eeuw: %(year)s"
 
@@ -9188,9 +9191,6 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "res.partner.som"
 #~ msgstr "res.partner.som"
-
-#~ msgid "Sir"
-#~ msgstr "De heer"
 
 #~ msgid "You can also import .po files."
 #~ msgstr "U kunt ook .po bestanden importeren"
@@ -9222,9 +9222,6 @@ msgstr "Russisch / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Pakketbronnen"
 
-#~ msgid "Ltd"
-#~ msgstr "Ltd"
-
 #~ msgid "Unvalid"
 #~ msgstr "Ongeldig"
 
@@ -9246,6 +9243,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "res.roles"
 #~ msgstr "res.roles"
 
+#~ msgid "Grant Access To Menus"
+#~ msgstr "Geeft toegang tot menu's"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
@@ -9254,9 +9254,6 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Field child3"
 #~ msgstr "Onderliggend veld3"
@@ -9343,6 +9340,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "Modules to download"
 #~ msgstr "Modules te downloaden"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Geïnstalleerde modules"
 
@@ -9354,6 +9354,14 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "STOCK_DIALOG_AUTHENTICATION"
 #~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#~ msgid "Macedonia"
+#~ msgstr "Macedonië"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Meerdere regels voor dezelfde objecten worden samengevoegd met behulp van de "
+#~ "operator OR"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9455,6 +9463,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "STOCK_GO_BACK"
 #~ msgstr "STOCK_GO_BACK"
 
+#~ msgid "Customers Partners"
+#~ msgstr "Klanten"
+
 #~ msgid "Roles are used to defined available actions, provided by workflows."
 #~ msgstr ""
 #~ "Rollen worden gebruikt om beschikbare acties in werkschema's te definieren"
@@ -9500,6 +9511,9 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_Valideren"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -9675,6 +9689,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "Module import"
 #~ msgstr "Module import"
 
+#~ msgid "Suppliers Partners"
+#~ msgstr "Leveranciers"
+
 #~ msgid "STOCK_STRIKETHROUGH"
 #~ msgstr "STOCK_STRIKETHROUGH"
 
@@ -9831,6 +9848,9 @@ msgstr "Russisch / русский язык"
 #~ msgid "Sequence Name"
 #~ msgstr "Naam reeks"
 
+#~ msgid "Tests"
+#~ msgstr "Testen"
+
 #~ msgid "Planned Cost"
 #~ msgstr "Geraamde kosten"
 
@@ -9843,6 +9863,40 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "Dedicated Salesman"
 #~ msgstr "Verantwoordelijke verkoper"
+
+#, python-format
+#~ msgid ""
+#~ "Model %s Does not Exist !\" % vals['relation']))\n"
+#~ "                 \n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                self.pool.get(vals['model'])._auto_init(cr, {})\n"
+#~ "                \n"
+#~ "        return res\n"
+#~ "ir_model_fields()\n"
+#~ "\n"
+#~ "class ir_model_access(osv.osv):\n"
+#~ "    _name = 'ir.model.access'\n"
+#~ "    _columns = {\n"
+#~ "        'name': fields.char('Name', size=64, required=True),\n"
+#~ "        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
+#~ "        'group_id': fields.many2one('res.groups', 'Group"
+#~ msgstr ""
+#~ "Model %s bestaat niet !\" % vals['relation']))\n"
+#~ "                 \n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                self.pool.get(vals['model'])._auto_init(cr, {})\n"
+#~ "                \n"
+#~ "        return res\n"
+#~ "ir_model_fields()\n"
+#~ "\n"
+#~ "class ir_model_access(osv.osv):\n"
+#~ "    _name = 'ir.model.access'\n"
+#~ "    _columns = {\n"
+#~ "        'name': fields.char('Name', size=64, required=True),\n"
+#~ "        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
+#~ "        'group_id': fields.many2one('res.groups', 'Group"
 
 #~ msgid "Check new modules"
 #~ msgstr "Zoek naar nieuwe modules"
@@ -9923,6 +9977,9 @@ msgstr "Russisch / русский язык"
 #~ "Kies de eenvoudige interface als u OpenERP voor de eerste keer test. Minder "
 #~ "gebruikte opties of velden worden automatisch verborgen. U kunt dit later "
 #~ "wijzigen in het Beheer-menu."
+
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "De regel is voldaan als alle testen Waar (AND) zijn."
 
 #~ msgid "Albanian / Shqipëri"
 #~ msgstr "Albaans / Shqipëri"
@@ -10042,6 +10099,9 @@ msgstr "Russisch / русский язык"
 #~ "Deze url '%s' dient een HTML-bestand te leveren met daarin verwijzingen naar "
 #~ "ZIP-modules"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Aan deze regel is voldaan als er tenminste één test 'waar' is."
+
 #~ msgid "Repository"
 #~ msgstr "Repository"
 
@@ -10074,6 +10134,10 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "Commercial Prospect"
 #~ msgstr "Commercieel prospect"
+
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr ""
+#~ "Maak de regel globaal, anders dient deze in een groep te worden geplaatst"
 
 #, python-format
 #~ msgid "Enter at least one field !"
@@ -10109,6 +10173,9 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Zoek naar nieuwe modules"
+
+#~ msgid "Module Repository"
+#~ msgstr "Module-repository"
 
 #, python-format
 #~ msgid "Using a relation field which uses an unknown object"
@@ -10359,6 +10426,15 @@ msgstr "Russisch / русский язык"
 #~ msgstr "Kies de te installeren taal:"
 
 #, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" bevat teveel punten. XML-ids behoren geen punten te bevatten ! Punten "
+#~ "worden gebruikt om te verwijzen naar gegevens in andere modules, zoals in "
+#~ "module.reference_id"
+
+#, python-format
 #~ msgid "Model %s Does not Exist !"
 #~ msgstr "Model %s bestaat niet !"
 
@@ -10452,16 +10528,6 @@ msgstr "Russisch / русский язык"
 #~ msgid "terp-emblem-important"
 #~ msgstr "terp-emblem-important"
 
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Deze aanvulling is al op uw systeem geïnstalleerd"
-
 #~ msgid "terp-folder-yellow"
 #~ msgstr "terp-folder-yellow"
 
@@ -10518,9 +10584,6 @@ msgstr "Russisch / русский язык"
 
 #~ msgid "terp-personal+"
 #~ msgstr "terp-personal+"
-
-#~ msgid "M."
-#~ msgstr "Hr."
 
 #~ msgid "terp-stock_effects-object-colorize"
 #~ msgstr "terp-stock_effects-object-colorize"
@@ -10721,14 +10784,17 @@ msgstr "Russisch / русский язык"
 #~ msgid "terp-check"
 #~ msgstr "terp-check"
 
-#~ msgid "Mss"
-#~ msgstr "Mej."
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Als u betaling al is uitgevoerd nadat deze mail is gestuurd, beschouw deze "
+#~ "dan als niet gestuurd. Aarzel niet om contact met onze boekhouding op te "
+#~ "nemen."
 
 #~ msgid "terp-folder-green"
 #~ msgstr "terp-folder-green"
-
-#~ msgid "ltd"
-#~ msgstr "ltd"
 
 #~ msgid "terp-go-today"
 #~ msgstr "terp-go-today"
@@ -10778,8 +10844,29 @@ msgstr "Russisch / русский язык"
 #~ msgid "Korean / Korea, Republic of"
 #~ msgstr "Koreans / Korea, Republiek"
 
+#~ msgid "Mister"
+#~ msgstr "Mijnheer"
+
+#~ msgid "Corporation"
+#~ msgstr "Bedrijf"
+
 #~ msgid "Serbian / српски језик"
 #~ msgstr "Servisch / Servië"
+
+#~ msgid "Mss."
+#~ msgstr "Mw."
+
+#~ msgid "Limited Company"
+#~ msgstr "Besloten Vennootschap"
+
+#~ msgid "Ltd."
+#~ msgstr "Ltd."
+
+#~ msgid "Access Groups"
+#~ msgstr "Toegangsgroepen"
+
+#~ msgid "Sr."
+#~ msgstr "Dhr."
 
 #, python-format
 #~ msgid "You do not have the permission to perform this operation !!!"

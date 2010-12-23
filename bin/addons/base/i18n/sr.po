@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-15 08:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -389,16 +389,6 @@ msgid "Schedule Upgrade"
 msgstr "Planiraj nadogradnju"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr ""
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -416,11 +406,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Prodaja & Nabavka"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr ""
 
 #. module: base
 #: view:ir.translation:0
@@ -713,11 +698,6 @@ msgstr "Kreirajte meni"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Indija"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "moduli ugovora o održavanju"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1922,11 +1902,6 @@ msgid "Invalid arguments"
 msgstr ""
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Švedska"
@@ -2147,6 +2122,11 @@ msgstr "Mapiranje polja"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr ""
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Gospodin"
 
 #. module: base
 #: view:base.module.import:0
@@ -2410,6 +2390,11 @@ msgstr "Tadžikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2  ili novija verzija"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr "M."
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3111,6 +3096,11 @@ msgid "Hungary"
 msgstr "Mađarska"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brazil"
@@ -3260,6 +3250,17 @@ msgstr "Istorija"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Autor"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -4000,11 +4001,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Čekiraj ovu kućicu ukoliko je partner istovremeno i zapošljenik."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4066,6 +4062,11 @@ msgid "Project"
 msgstr "Projekat"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Fajl modula je uspešno uvežen!"
@@ -4105,7 +4106,6 @@ msgid "Saint Lucia"
 msgstr "Sveta Lucija"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Ugovor o održavanju"
@@ -4638,6 +4638,18 @@ msgstr "Holandski / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"ovaj dodatak je već instaliran na vašem sistemu"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5873,6 +5885,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "d.o.o."
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5968,11 +5985,6 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Dodaci"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6447,6 +6459,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr "Mss"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6567,11 +6584,6 @@ msgstr "Filter"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Ms."
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7475,17 +7487,6 @@ msgid ""
 msgstr "Ime metode koja će biti pozvata nad objektom kada se pokrene planer."
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-"Hoće li vaša ulata biti izvršena nakon slanja ovog Maila, molim da smatrate "
-"prisutnu kao validnu. Ne ustručavajte se da kontaktirate naše odoljenje "
-"računovodstva."
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Ostale Sitnice"
@@ -7584,6 +7585,11 @@ msgstr "Naziv kanala"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5. %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "Copy text \t ltd"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7957,11 +7963,6 @@ msgstr "Ne možeš imati dva korisnika sa istom prijavom !"
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
 msgstr "Podraumevano Multi Preduzeće"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -8683,11 +8684,6 @@ msgid "View Name"
 msgstr "Naziv pregleda"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italijanski / Italiano"
@@ -8822,6 +8818,7 @@ msgid "Delivery"
 msgstr "Dostava"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Korporacija"
@@ -8962,6 +8959,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "Validated"
 #~ msgstr "Potvrđeno"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Pravilo je zadovoljeno ako je bar jedan test tačan"
+
 #~ msgid "Get Max"
 #~ msgstr "Preuzmi maksimum"
 
@@ -9008,6 +9008,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "Možda ćete morati ponovo da instalirate neke pakete jezika."
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "moduli ugovora o održavanju"
+
 #~ msgid "Factor"
 #~ msgstr "Faktor"
 
@@ -9025,6 +9028,10 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "STOCK_OK"
 #~ msgstr "STOCK_OK"
+
+#, python-format
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Pokušavate da zaobiđete pravilo za pristup (Dokument tipa: %s)."
 
 #, python-format
 #~ msgid ""
@@ -9048,6 +9055,9 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Testovi"
 
 #~ msgid "Repository"
 #~ msgstr "Repozitorijum"
@@ -9226,9 +9236,6 @@ msgstr "Ruski / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "Veza dokumenta"
 
-#~ msgid "Sir"
-#~ msgstr "Gospodin"
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Pokreni nadogradnju"
 
@@ -9304,9 +9311,6 @@ msgstr "Ruski / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Skladište"
 
-#~ msgid "Ltd"
-#~ msgstr "d.o.o."
-
 #~ msgid "Report Ref."
 #~ msgstr "Veza na izveštaj"
 
@@ -9375,11 +9379,17 @@ msgstr "Ruski / русский язык"
 #~ msgid "Error occurred while validating the field(s) %s: %s"
 #~ msgstr "Greška prilikom provere polja %s: %s"
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Pravilo je zadovoljeno ako su svi testovi istina (logičko I (AND))"
+
 #~ msgid "Next Call Date"
 #~ msgstr "Sledeće vreme pokretanja"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Traži nove module"
+
+#~ msgid "Module Repository"
+#~ msgstr "Skladište modula"
 
 #, python-format
 #~ msgid "Using a relation field which uses an unknown object"
@@ -9387,9 +9397,6 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Field child3"
 #~ msgstr "Pod polje3"
@@ -9532,6 +9539,9 @@ msgstr "Ruski / русский язык"
 #~ msgid "Couldn't find tag '%s' in parent view !"
 #~ msgstr "Ne mogu da pronađem oznaku '%s' u nad pregledu !"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Instalirani moduli"
 
@@ -9560,6 +9570,11 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Više pravila nad istim objektom se priključuju korišćenjem operatora "
+#~ "logičkog ILI (OR)"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9785,6 +9800,9 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_Potvrdi"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -10252,16 +10270,6 @@ msgstr "Ruski / русский язык"
 #~ msgid "Korean / Korea, Democratic Peoples Republic of"
 #~ msgstr "Korean / Korea, Democratic Peoples Republic o"
 
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "ovaj dodatak je već instaliran na vašem sistemu"
-
 #~ msgid "terp-folder-yellow"
 #~ msgstr "terp-folder-yellow"
 
@@ -10320,9 +10328,6 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "Hindi / India"
 #~ msgstr "Hindi / India"
-
-#~ msgid "M."
-#~ msgstr "M."
 
 #~ msgid "terp-stock_effects-object-colorize"
 #~ msgstr "terp-stock_effects-object-colorize"
@@ -10487,9 +10492,6 @@ msgstr "Ruski / русский язык"
 #~ msgid "This error occurs on database %s"
 #~ msgstr "Ova greška je primećena u DataBazi %s"
 
-#~ msgid "Mss"
-#~ msgstr "Mss"
-
 #, python-format
 #~ msgid ""
 #~ "No rate found \n"
@@ -10506,6 +10508,15 @@ msgstr "Ruski / русский язык"
 #~ msgid "terp-administration"
 #~ msgstr "terp-administration"
 
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Hoće li vaša ulata biti izvršena nakon slanja ovog Maila, molim da smatrate "
+#~ "prisutnu kao validnu. Ne ustručavajte se da kontaktirate naše odoljenje "
+#~ "računovodstva."
+
 #~ msgid "terp-report"
 #~ msgstr "terp-report"
 
@@ -10517,9 +10528,6 @@ msgstr "Ruski / русский язык"
 
 #~ msgid "terp-folder-green"
 #~ msgstr "terp-folder-green"
-
-#~ msgid "ltd"
-#~ msgstr "Copy text \t ltd"
 
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-02 07:35+0000\n"
 "Last-Translator: Davide Corio - Domsense <davide.corio@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-23 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -389,16 +389,6 @@ msgid "Schedule Upgrade"
 msgstr "Pianifica l'aggiornamento"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Signore"
-
-#. module: base
 #: help:res.country,code:0
 msgid ""
 "The ISO country code in two chars.\n"
@@ -416,11 +406,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Vendite e Acquisti"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Azienda"
 
 #. module: base
 #: view:ir.translation:0
@@ -716,11 +701,6 @@ msgstr "Crea Menu"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "India"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "Moduli di contratto di manutenzione"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -1945,11 +1925,6 @@ msgid "Invalid arguments"
 msgstr "Argomenti non validi"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Sig.na"
-
-#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Svezia"
@@ -2175,6 +2150,11 @@ msgstr "Mappatura Campi"
 #: selection:base.language.install,lang:0
 msgid "Portugese / Português"
 msgstr "Portugese / Português"
+
+#. module: base
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Sig."
 
 #. module: base
 #: view:base.module.import:0
@@ -2438,6 +2418,11 @@ msgstr "Tagikistan"
 #: selection:ir.module.module,license:0
 msgid "GPL-2 or later version"
 msgstr "GPL-2 o successiva"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -3146,6 +3131,11 @@ msgid "Hungary"
 msgstr "Ungheria"
 
 #. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
+
+#. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
 msgstr "Brasile"
@@ -3301,6 +3291,17 @@ msgstr "Riepilogo"
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr "Creatore"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -4045,11 +4046,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Seleziona questa casella se il partner è un dipendente."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Società a Responsabilità Limitata"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4111,6 +4107,11 @@ msgid "Project"
 msgstr "Progetto"
 
 #. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "File del modulo importato con successo!"
@@ -4150,7 +4151,6 @@ msgid "Saint Lucia"
 msgstr "Saint Lucia"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Contratto di manutenzione"
@@ -4688,6 +4688,18 @@ msgstr "Dutch / Nederlands"
 #: model:res.widget,title:base.rvalyi_twitter_widget
 msgid "Raphaël Valyi's tweets"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Il componente aggiuntivo è già installato nel sistema"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -5942,6 +5954,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "Ltd"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -6040,11 +6057,6 @@ msgstr "Il codice della lingua deve essere unico!"
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Allegati"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6525,6 +6537,11 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
 msgstr "ir.ui.view"
@@ -6652,11 +6669,6 @@ msgstr "Filtro"
 #: model:res.partner.title,shortcut:base.res_partner_title_madam
 msgid "Ms."
 msgstr "Sig.ra"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr "S.r.l."
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -7567,17 +7579,6 @@ msgstr ""
 "eseguita."
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-"Se il vostro pagamento è stato già effettuato prima che questa mail fosse "
-"spedita, per favore considerate la presente nulla. Non esitate a contattare "
-"il nostro ufficio contabile."
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Varie"
@@ -7680,6 +7681,11 @@ msgstr "Nome Canale"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5. %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -8060,11 +8066,6 @@ msgstr "Non è possibile inserire due utenti con lo stesso nome di login!"
 #: model:ir.model,name:base.model_multi_company_default
 msgid "Default multi company"
 msgstr "Default Multi Compagnia"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr "Sig."
 
 #. module: base
 #: view:res.request:0
@@ -8800,11 +8801,6 @@ msgid "View Name"
 msgstr "Nome Vista"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr "Gruppi di accesso"
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italian / Italiano"
@@ -8939,6 +8935,7 @@ msgid "Delivery"
 msgstr "Consegna"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Corp."
@@ -9066,6 +9063,10 @@ msgstr "Russian / русский язык"
 #~ msgid "Validated"
 #~ msgstr "Convalidato"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr ""
+#~ "La regola viene soddisfatta se almeno un test restituisce il valore True"
+
 #~ msgid "Get Max"
 #~ msgstr "Visualizza Massimo"
 
@@ -9105,6 +9106,9 @@ msgstr "Russian / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "Potrebbe essere necessario reinstallare alcuni file di lingua"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "Moduli di contratto di manutenzione"
+
 #~ msgid "Factor"
 #~ msgstr "Fattore"
 
@@ -9134,6 +9138,9 @@ msgstr "Russian / русский язык"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
+
+#~ msgid "Tests"
+#~ msgstr "Test"
 
 #~ msgid "Repository"
 #~ msgstr "Repository"
@@ -9301,9 +9308,6 @@ msgstr "Russian / русский язык"
 #~ msgid "Document Link"
 #~ msgstr "Collegamento Documento"
 
-#~ msgid "Sir"
-#~ msgstr "Sig."
-
 #~ msgid "Start Upgrade"
 #~ msgstr "Inizia Aggiornamento"
 
@@ -9410,17 +9414,22 @@ msgstr "Russian / русский язык"
 #~ "automaticamente. Potrai tornare all'interfaccia completa dal Menu di "
 #~ "Amministrazione"
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr ""
+#~ "La regola viene soddisfatta se tutti i test testituiscono il valore True "
+#~ "(AND)"
+
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Cerca nuovi Moduli"
 
+#~ msgid "Module Repository"
+#~ msgstr "Repository dei Moduli"
+
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
-
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
 
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr ""
@@ -9539,6 +9548,9 @@ msgstr "Russian / русский язык"
 #~ msgid "Modules to download"
 #~ msgstr "Moduli da Scaricare"
 
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
+
 #~ msgid "Installed modules"
 #~ msgstr "Moduli Installati"
 
@@ -9556,6 +9568,11 @@ msgstr "Russian / русский язык"
 
 #~ msgid "a4"
 #~ msgstr "a4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Regole multiple sugli stessi oggetti possonon essere combinate utilizzando "
+#~ "l'operatore OR"
 
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
@@ -9757,6 +9774,9 @@ msgstr "Russian / русский язык"
 
 #~ msgid "_Validate"
 #~ msgstr "_Valida"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -10171,12 +10191,36 @@ msgstr "Russian / русский язык"
 #~ "permessi di lettura dell'oggetto associato."
 
 #, python-format
+#~ msgid "Result (/10)"
+#~ msgstr "Risultato (/10)"
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Quantità del prodotto"
+
+#, python-format
 #~ msgid "Password mismatch !"
 #~ msgstr "Le password non corrispondono !"
 
 #, python-format
+#~ msgid "June"
+#~ msgstr "Giugno"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Quantità prodotto"
+
+#, python-format
 #~ msgid "The read method is not implemented on this object !"
 #~ msgstr "Il metodo 'Lettura' non è implementato per questo oggetto."
+
+#, python-format
+#~ msgid "Tag Name"
+#~ msgstr "Nome del tag"
+
+#, python-format
+#~ msgid "You need to choose a model"
+#~ msgstr "Devi scegliere un modello"
 
 #~ msgid "txt"
 #~ msgstr "txt"
@@ -10225,6 +10269,10 @@ msgstr "Russian / русский язык"
 #, python-format
 #~ msgid "Enter at least one field !"
 #~ msgstr "Inserisci almeno un campo !"
+
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr ""
+#~ "Rende la regola globale, altrimenti deve essere inserita in un gruppo"
 
 #~ msgid "Installation Done"
 #~ msgstr "Installazione Completata"
@@ -10326,9 +10374,6 @@ msgstr "Russian / русский язык"
 #~ msgid "Delete Permission"
 #~ msgstr "Permesso di cancellazione"
 
-#~ msgid "Ltd"
-#~ msgstr "Ltd"
-
 #~ msgid ""
 #~ "Would your payment have been carried out after this mail was sent, please "
 #~ "consider the present one as void. Do not hesitate to contact our accounting "
@@ -10337,6 +10382,15 @@ msgstr "Russian / русский язык"
 #~ "Se il vostro pagamento è stato effettuato prima del ricevimento di questa "
 #~ "mail, prego considerate nullo questo avvertimento. Non esitate a contattare "
 #~ "la nostra amministrazione al (+32).81.81.37.00."
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" contiene troppi punti. Gli IDS XML non devono contenere punti! Questi "
+#~ "sono usati per riferisti ad altri modelli di dato, come in: "
+#~ "module.reference_id"
 
 #~ msgid "Default Properties"
 #~ msgstr "Proprietà predefinite"
@@ -10480,16 +10534,6 @@ msgstr "Russian / русский язык"
 #~ msgid "Korean / Korea, Democratic Peoples Republic of"
 #~ msgstr "Koreano / Korea, Republica popolare democratica di"
 
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Il componente aggiuntivo è già installato nel sistema"
-
 #~ msgid "Bulgarian / български"
 #~ msgstr "Bulgaro / български"
 
@@ -10534,6 +10578,12 @@ msgstr "Russian / русский язык"
 
 #~ msgid "Serbian / српски језик"
 #~ msgstr "Serbian / српски језик"
+
+#~ msgid "Access Groups"
+#~ msgstr "Gruppi di accesso"
+
+#~ msgid "Mister"
+#~ msgstr "Signore"
 
 #~ msgid "Add a widget"
 #~ msgstr "Aggiungi un Widget"
@@ -10675,6 +10725,15 @@ msgstr "Russian / русский язык"
 #~ msgid "terp-stage"
 #~ msgstr "terp-stage"
 
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Se il vostro pagamento è stato già effettuato prima che questa mail fosse "
+#~ "spedita, per favore considerate la presente nulla. Non esitate a contattare "
+#~ "il nostro ufficio contabile."
+
 #~ msgid "terp-go-month"
 #~ msgstr "terp-go-month"
 
@@ -10683,3 +10742,18 @@ msgstr "Russian / русский язык"
 
 #~ msgid "terp-mail-message-new"
 #~ msgstr "terp-mail-message-new"
+
+#~ msgid "Ltd."
+#~ msgstr "S.r.l."
+
+#~ msgid "Corporation"
+#~ msgstr "Azienda"
+
+#~ msgid "Sr."
+#~ msgstr "Sig."
+
+#~ msgid "Mss."
+#~ msgstr "Sig.na"
+
+#~ msgid "Limited Company"
+#~ msgstr "Società a Responsabilità Limitata"
