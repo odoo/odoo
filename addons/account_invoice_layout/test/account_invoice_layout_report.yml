@@ -19,12 +19,15 @@
     (data, format) = netsvc.LocalService('report.account.invoice.layout').create(cr, uid, [ref('test_invoice_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout.'+format), 'wb+').write(data)
+
 -
-  Print the Invoice Layout Report with Message in Normal mode
+  Print the Invoice Layout Report with Message through wizard
 -
   !python {model: account.invoice}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.invoice', 'form': {'message':ref('account_invoice_layout.demo_message1'),'id':ref('test_invoice_1'),'context':{}}}
-    (data, format) = netsvc.LocalService('report.notify_account.invoice').create(cr, uid, [ref('test_invoice_1')], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_invoice_layout_message_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'account.invoice','active_ids': [ref('test_invoice_1')]})
+    data_dict = {'message':ref('account_invoice_layout.demo_message1')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_invoice_special_msg',wiz_data=data_dict, context=ctx, our_module='account_invoice_layout')
+
