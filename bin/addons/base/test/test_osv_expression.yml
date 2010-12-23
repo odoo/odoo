@@ -44,3 +44,70 @@
     Filtering on invalid value across x2many relationship should return an empty set
 -
     !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
+-
+    Check if many2one works with empty search list
+-
+    !assert {model: res.partner, search: "[('company_id','in', [])]", count: 0, string: "Searching for company_id in [] should be empty!" }
+-
+    For the sake of the following tests, I will create a second company
+-
+    !record {model: res.company, id: ymltest_company2}:
+        name: Acme 2
+-
+    And create a few partners with that company or no company
+-
+    !python {model: res.partner }: |
+        for r in range(4):
+            self.create(cr, uid, { 'name': 'P of Acme %d' % r, 
+                    'company_id': ref('ymltest_company2') })
+        for r in range(4):
+            self.create(cr, uid, { 'name': 'P of All %d' % r, 
+                    'company_id': False })
+-
+    Check if many2one works with negative empty list
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [])
+        all_ids.sort()
+        res_ids = self.search(cr, uid,['|',('company_id','not in', []), ('company_id','=',False)])
+        res_ids.sort()
+        assert all_ids == res_ids, "not in [] fails"
+-
+    Check that many2one will pick the correct records with a list
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('company_id', 'in', [False,])])
+        assert len(res_ids) >= 4, "We created 4 partners w/company, why find %d? %r" % \
+                    (len(res_ids), res_ids)
+-
+    Check that many2one will exclude the correct records with a list
+-
+    !python {model: res.partner }: |
+        # assuming that the default company is #1
+        res_ids = self.search(cr, uid, [('company_id', 'not in', [1])])
+        assert len(res_ids) >= 4, "We should have found 4 records at least, only have %d! %r" % \
+            (len(res_ids), res_ids)
+-
+    Check that we exclude the correct records, + False
+-
+    !python {model: res.partner }: |
+        # assuming that the default company is #1
+        res_ids = self.search(cr, uid, ['|', ('company_id', 'not in', [1]), ('company_id', '=', False)])
+        assert len(res_ids) >= 8, "We should have found 8 records at least, only have %d! %r" % \
+            (len(res_ids), res_ids)
+-
+    Check that multi-level expressions also work
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('company_id.partner_id', 'in', [])])
+        assert res_ids == [], "Searching an empty set should return empty result, not %r" % res_ids
+-
+    Check that multi-level expressions with negative op work
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [('company_id', '!=', False)])
+        all_ids.sort()
+        res_ids = self.search(cr, uid, [('company_id.partner_id', 'not in', [])])
+        res_ids.sort()
+        assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
+    
