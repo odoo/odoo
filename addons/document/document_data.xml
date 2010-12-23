@@ -98,9 +98,10 @@
         <field name="parent_id" ref="dir_root"/>
         <field name="ressource_id">0</field>
     </record>
-       
-    <function model="ir.attachment" name="attach_parent_id"/>   
-   
-       
+
+    <!-- After we have setup the root directory, migrate the attachments
+        to point to that. -->
+    <function model="ir.attachment" name="_attach_parent_id"/>
+
 </data>
 </openerp>

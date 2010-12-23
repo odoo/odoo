@@ -36,14 +36,33 @@ class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
 
-    def attach_parent_id(self, cr, uid, ids=[], context=None):
-        """Attach Parent id For document"""
+    def _attach_parent_id(self, cr, uid, ids=None, context=None):
+        """Migrate ir.attachments to the document module.
+        
+        When the 'document' module is loaded on a db that has had plain attachments,
+        they will need to be attached to some parent folder, and be converted from 
+        base64-in-bytea to raw-in-bytea format.
+        This function performs the internal migration, once and forever, for these
+        attachments. It cannot be done through the nominal ORM maintenance code,
+        because the root folder is only created after the document_data.xml file
+        is loaded.
+        It also establishes the parent_id NOT NULL constraint that ir.attachment
+        should have had (but would have failed if plain attachments contained null
+        values).
+        """
         
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
-        ids = self.search(cr, uid, [('parent_id', '=', False)])
-        attach_doc = self.browse(cr, uid, ids, context=context)
-        for attach in attach_doc:
-            cr.execute("UPDATE ir_attachment SET parent_id = %s,db_datas = decode(encode(%s,'escape'), 'base64') WHERE id = %s", (parent_id, attach.db_datas, attach.id))
+        if not parent_id:
+            logging.getLogger('document').warning("at _attach_parent_id(), still not able to set the parent!")
+            return False
+
+        if ids is not None:
+            raise NotImplementedError("Ids is just there by convention! Don't use it yet, please.")
+
+        cr.execute("UPDATE ir_attachment " \
+                    "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
+                    "WHERE parent_id IS NULL", (parent_id,))
+        cr.execute("ALTER TABLE ir_attachment ALTER parent_id SET NOT NULL")
         return True
         
     def _get_filestore(self, cr):
