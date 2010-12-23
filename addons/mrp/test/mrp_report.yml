@@ -20,7 +20,6 @@
   Print Product Price Report through the wizard
 -
   !python {model: product.product}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'product.product','active_ids': [1,2,3,5]})
     data_dict = {'number': 1}
@@ -31,7 +30,6 @@
   Print Workcenter Load Report through the wizard
 -
   !python {model: mrp.workcenter}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
     data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}

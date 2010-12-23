@@ -24,7 +24,6 @@
   Print the Invoice Layout Report with Message through wizard
 -
   !python {model: account.invoice}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'account.invoice','active_ids': [ref('test_invoice_1')]})
     data_dict = {'message':ref('account_invoice_layout.demo_message1')}

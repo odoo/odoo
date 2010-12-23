@@ -2,7 +2,6 @@
  Print the Products Pricelists Report through the wizard
 -
   !python {model: product.product}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'product.product','active_ids': [ref('product.product_product_pc1'), ref('product.product_product_pc3')]})
     data_dict = {'qty1': 1,

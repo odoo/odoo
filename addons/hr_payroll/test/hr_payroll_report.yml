@@ -20,7 +20,6 @@
   Print Employee Salary Statement through wizard
 -
   !python {model: hr.payslip}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
     data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
@@ -31,7 +30,6 @@
   Print Salary Register through wizard
 -
   !python {model: hr.payslip}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'hr.payslip','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
     data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}

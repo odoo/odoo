@@ -133,7 +133,7 @@ module named account_voucher.
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
         'test/account_report.yml',
-        'project/test/project_report.yml',
+        
 
             ],
     'installable': True,

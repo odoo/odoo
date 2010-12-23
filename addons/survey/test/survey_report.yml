@@ -2,7 +2,6 @@
  Print the Survey Browse Response Report through the wizard
 -
   !python {model: survey}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
     data_dict = {'response_ids' : [(6,0,[ref('survey.survey_partner_feedback')])], 'page_number' : True, 'without_pagebreak': True}
@@ -13,7 +12,6 @@
  Print the Survey Analysis Report through the wizard
 -
   !python {model: survey}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
     data_dict = {'survey_ids' : [(6,0,[ref('survey.survey_partner_feedback')])]}
@@ -24,7 +22,6 @@
  Print the Survey Form Report through the wizard
 -
   !python {model: survey}: |
-    import netsvc, tools, os, time
     ctx={}
     ctx.update({'model': 'survey','active_ids': [(6,0,[ref('survey.survey_partner_feedback')])]})
     data_dict = {'survey_ids' : [(6,0,[ref('survey.survey_partner_feedback')])], 'page_number' : True, 'without_pagebreak': True}
