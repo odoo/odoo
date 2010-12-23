@@ -160,7 +160,7 @@ class users(osv.osv):
             # Return early if no such id.
             return False
 
-        stored_pw = self.maybe_encrypt_and_store(cr, stored_pw, id)
+        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
 
         res = {}
         res[id] = stored_pw
@@ -202,7 +202,7 @@ class users(osv.osv):
             # Return early if there is no such login.
             return False
 
-        stored_pw = self.maybe_encrypt_and_store(cr, stored_pw, id)
+        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
 
         # Calculate an encrypted password from the user-provided
         # password.
@@ -222,7 +222,7 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         print ">>>>>> check"
         # TODO cannot use the cache as it would prevent the update by
-        # maybe_encrypt_and_store.
+        # maybe_encrypt.
         #cached_pass = self._uid_cache.get(db, {}).get(uid)
         #if (cached_pass is not None) and cached_pass == passwd:
         #    return True
@@ -254,17 +254,24 @@ class users(osv.osv):
         #        self._uid_cache[db] = {uid: passwd}
         return bool(res)
 
-    def maybe_encrypt_and_store(self, cr, pw, id):
-        # Calculate a new password 'encrypted' from 'pw' if the
-        # latter isn't encrypted yet. Use it to update the database entry
-        # and return it, or simply return 'pw'.
+    def maybe_encrypt(self, cr, pw, id):
+        # If the password 'pw' is not encrypted, then encrypt all passwords
+        # in the db. Returns the (possibly newly) encrypted password for 'id'.
 
         if pw[0:len(magic_md5)] != magic_md5:
-            encrypted = encrypt_md5(pw, gen_salt())
-            cr.execute('update res_users set password=%s where id=%s',
-                (encrypted.encode('utf-8'), id))
+            cr.execute('select id, password from res_users')
+            res = cr.fetchall()
+            for i, p in res:
+                encrypted = p
+                if p[0:len(magic_md5)] != magic_md5:
+                    encrypted = encrypt_md5(p, gen_salt())
+                    print ">>>>>> changing %s to %s" % (p, encrypted)
+                    cr.execute('update res_users set password=%s where id=%s',
+                        (encrypted.encode('utf-8'), i))
+                if i == id:
+                    encrypted_res = encrypted
             cr.commit()
-            return encrypted
+            return encrypted_res
         return pw
 
 users()
