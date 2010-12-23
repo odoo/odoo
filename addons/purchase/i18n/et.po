@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-16 05:14+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -80,6 +80,9 @@ msgid ""
 msgstr ""
 "Sa pead valima partneri ostuvormil!\n"
 "Palun määra partner enne toote valimist."
+
+#~ msgid "Request For Quotations"
+#~ msgstr "Hinnapäringud"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -151,6 +154,12 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:0
 #, python-format
 msgid "Supplier Invoices"
@@ -190,12 +199,6 @@ msgstr ""
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -313,6 +316,11 @@ msgstr "Märkused"
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
 msgstr ""
 
 #. module: purchase
@@ -456,6 +464,7 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
 #: code:addons/purchase/wizard/purchase_order_group.py:0
 #, python-format
 msgid "Warning"
@@ -609,6 +618,11 @@ msgid "To be Invoiced"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+msgid "Pricelists"
+msgstr ""
+
+#. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
 msgstr ""
@@ -622,6 +636,11 @@ msgid ""
 "receptions.\n"
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
@@ -690,6 +709,7 @@ msgid "July"
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
 msgstr ""
@@ -751,8 +771,9 @@ msgid "Manual"
 msgstr "Käsitsi"
 
 #. module: purchase
-#: help:purchase.order,invoice_id:0
-msgid "An invoice generated for a purchase order"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
@@ -826,8 +847,9 @@ msgid "Procurement"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.report,month:0
-msgid "September"
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
 msgstr ""
 
 #. module: purchase
@@ -1118,6 +1140,29 @@ msgid "Compute"
 msgstr "Arvuta"
 
 #. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
 msgstr ""
@@ -1260,7 +1305,6 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-#: field:purchase.order,invoice_id:0
 msgid "Invoice"
 msgstr "Arve"
 
@@ -1627,6 +1671,11 @@ msgid "Total"
 msgstr "Kokku"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
 msgstr ""
@@ -1720,6 +1769,17 @@ msgstr ""
 msgid "Purchase Dashboard"
 msgstr ""
 
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "Sul ei saa olla 2 hinnakirja versiooni mis kattuvad!"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Sa pead valima hinnakirja ostuvormil!\n"
+#~ "Palun vali üks enne toote valimist."
+
 #~ msgid "Product recept invoice"
 #~ msgstr "Toote kviitungi arve"
 
@@ -1728,6 +1788,9 @@ msgstr ""
 
 #~ msgid "Purchase Process"
 #~ msgstr "Ostuprotseduur"
+
+#~ msgid "N°"
+#~ msgstr "N°"
 
 #~ msgid "Planned Date"
 #~ msgstr "Planeeritud kuupäev"
@@ -1769,6 +1832,15 @@ msgstr ""
 
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Vastuvõtmistel kontrolliks eelgenereeritud tarnija arve"
+
+#~ msgid ""
+#~ "Please note that orders will only be merged if they are to the same partner "
+#~ "and going to the same location, and lines will only be merged if they are "
+#~ "exactly the same except for the quantity and unit."
+#~ msgstr ""
+#~ "Pane tähele, et korraldused liidetakse ainult siis, kui nad lähevad samale "
+#~ "partnerile ja samasse kohta. Read liidetakse ainult siis, kui nad on täpselt "
+#~ "samad välja arvatud kogus ja ühik."
 
 #~ msgid "Packing"
 #~ msgstr "Pakkimine"
@@ -1824,6 +1896,12 @@ msgstr ""
 
 #~ msgid "Create Packing list"
 #~ msgstr "Loo pakkeleht"
+
+#, python-format
+#~ msgid "You must first cancel all packing attached to this purchase order."
+#~ msgstr ""
+#~ "Sa pead kõigepealt tühistama kõik pakendamised, mis on manustatud sellele "
+#~ "ostukorraldusele."
 
 #~ msgid "From Packing list, Create invoice."
 #~ msgstr "Loo arve pakkelehest"
@@ -1894,9 +1972,6 @@ msgstr ""
 
 #~ msgid "Purchase Orders in Progress"
 #~ msgstr "Ostukorraldused töötlemisel"
-
-#~ msgid "Request For Quotations"
-#~ msgstr "Hinnapäringud"
 
 #~ msgid "Date"
 #~ msgstr "Kuupäev"
