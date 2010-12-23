@@ -53,8 +53,7 @@ class document_file(osv.osv):
         if context is None:
             context = {}
         fbrl = self.browse(cr, uid, ids, context=context)
-        
-        nctx = nodes.get_node_context(cr, uid, context=context)
+        nctx = nodes.get_node_context(cr, uid, context={})
         # nctx will /not/ inherit the caller's context. Most of
         # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
@@ -67,7 +66,9 @@ class document_file(osv.osv):
                     result[fbro.id] = base64.encodestring(data or '')
             else:
                     result[fbro.id] = fnode.get_data_len(cr, fbro)
+
         return result
+
     #
     # This code can be improved
     #
@@ -178,7 +179,7 @@ class document_file(osv.osv):
             ids2 = []
             for fbro in self.browse(cr, uid, ids, context=context):
                 if ('parent_id' not in vals or fbro.parent_id.id == vals['parent_id']) \
-                    and ('name' not in vals or fbro.name == vals['name']) or not fbro.parent_id:
+                    and ('name' not in vals or fbro.name == vals['name']):
                         ids2.append(fbro.id)
                         continue
                 fnode = nctx.get_file_node(cr, fbro)

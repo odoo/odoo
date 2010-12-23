@@ -148,7 +148,6 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         @param calname: Get Calendar name
         @param context: A standard dictionary for contextual values """
 
-
     if context is None:
         context = {}
     pool = pooler.get_pool(cr.dbname)
@@ -230,7 +229,6 @@ def map_data(cr, uid, obj, context=None):
                     id = modobj.create(cr, uid, map_val, context=context)
                 vals[field] = id
                 continue
-            
             if field_type == 'timedelta':
                 if map_val:
                     vals[field] = (map_val.seconds/float(86400) + map_val.days)
@@ -904,6 +902,7 @@ class basic_calendar_fields(osv.osv):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
+
         if not vals:
             return
         for id in ids:
@@ -1295,6 +1294,5 @@ class Attendee(CalDAV, osv.osv_memory):
         return vevent
 
 Attendee()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

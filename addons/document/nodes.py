@@ -525,9 +525,6 @@ class node_dir(node_database):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
-
-        self.unixperms = 040750
-
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:
@@ -767,7 +764,6 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
-        self.unixperms = 040750
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:

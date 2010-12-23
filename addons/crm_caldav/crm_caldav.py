@@ -44,7 +44,6 @@ class crm_meeting(osv.osv):
         ical = event_obj.export_cal(cr, uid, event_data, context=context)
         return ical.serialize()
 
-
     def import_cal(self, cr, uid, data, data_id=None, context=None):
         """
             @param self: The object pointer
@@ -89,7 +88,6 @@ class crm_meeting(osv.osv):
                     val.update({'recurrent_uid': exists})
                     model_obj.write(cr, uid, [r_id], val)
                     ids.append(r_id)
-                    
                 elif exists:
                     model_obj.write(cr, uid, [exists], val)
                     ids.append(exists)
