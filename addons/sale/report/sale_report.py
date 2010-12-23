@@ -94,7 +94,8 @@ class sale_report(osv.osv):
                          u.name as uom_name,
                          sum(l.product_uom_qty * u.factor) as product_uom_qty,
                          sum(l.product_uom_qty*l.price_unit) as price_total,
-                         (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor)*count(l.product_id))::decimal(16,2) as price_average,
+                         (sum(l.product_uom_qty*l.price_unit)/sum(nullif(l.product_uom_qty * u.factor,0))*count(l.product_id))::decimal(16,2) as price_average,
+
                          pt.categ_id, l.order_id
                     from
                      sale_order_line l
