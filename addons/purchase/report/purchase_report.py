@@ -99,7 +99,7 @@ class purchase_report(osv.osv):
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
                     (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
-                    avg(case when t.standard_price <= 0 then (100.0 * (l.price_unit*l.product_qty*u.factor))
+                    avg(case when t.standard_price <= 0 then (l.price_unit*l.product_qty*u.factor)
                     else
                     (100.0 * (l.price_unit*l.product_qty*u.factor) / (t.standard_price*l.product_qty*u.factor))
                     end) as negociation,

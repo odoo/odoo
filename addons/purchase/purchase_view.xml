@@ -11,13 +11,42 @@
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
             parent="base.menu_purchase_root" sequence="100"/>
 
+        <menuitem 
+            id="menu_purchase_config_pricelist" name="Pricelists"
+            parent="menu_purchase_config_purchase" sequence="50"/>
+            
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
-            parent="menu_purchase_config_purchase" sequence="2"/>
+            parent="menu_purchase_config_pricelist" sequence="20"/>
 
         <menuitem
             action="product.product_pricelist_action2" id="menu_product_pricelist_action2_purchase"
-            parent="menu_purchase_config_purchase" sequence="1"/>
+            parent="menu_purchase_config_pricelist" sequence="10"/>
+
+        <menuitem
+            action="product.product_pricelist_type_action" id="menu_purchase_product_pricelist_type"
+            parent="menu_purchase_config_pricelist" sequence="2"
+            groups="base.group_extended"/>
+
+        <menuitem 
+            id="menu_product_in_config_purchase" name="Product"
+            parent="menu_purchase_config_purchase" sequence="30"/>
+          
+        <menuitem
+            action="product.product_category_action_form" id="menu_product_category_config_purchase"
+            parent="purchase.menu_product_in_config_purchase" sequence="10"/>
+          
+        <menuitem 
+            id="menu_purchase_unit_measure_purchase" name="Units of Measure"
+            parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
+            
+        <menuitem
+             action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
+             parent="menu_purchase_unit_measure_purchase" sequence="30"/>
+             
+        <menuitem
+              action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
+              parent="menu_purchase_unit_measure_purchase" sequence="30"/>
 
 
         <!--supplier addresses action-->
@@ -83,6 +112,10 @@
       <!--product menu-->
       <menuitem id="menu_procurement_management_product" name="Products"
           parent="base.menu_purchase_root" sequence="8"/>
+          
+      <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
+           parent="menu_procurement_management_product" sequence="10"/>
+          
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
           parent="menu_procurement_management_product"/>
 
@@ -155,7 +188,7 @@
                                 <field name="state" readonly="1"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
+                                <button name="action_cancel" states="approved,except_picking,except_invoice,wait" string="Cancel Purchase Order" type="object" icon="gtk-cancel"/>
                                 <button name="picking_ok" states="except_picking" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
                                 <button name="purchase_confirm" states="draft" string="Convert to Purchase Order" icon="gtk-go-forward"/>
@@ -201,11 +234,11 @@
                  <group col='10' colspan='4'>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" separator="1" help="Purchase order which are in draft state"/>
                     <filter icon="terp-camera_test" name="confirmed" string="To Approve" domain="[('state','in',('wait','confirmed'))]" separator="1" help="Purchase order to be approved"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" separator="1" help="Approved purchase order"/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]" separator="1" help="Approved purchase order"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" separator="1" help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To be Invoiced" domain="[('invoiced','=',1)]" separator="1" help="Purchase order to be invoiced"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="No Invoice" domain="[('invoice_ids','=', False)]" separator="1" help="Purchase order with No Invoice" groups="base.group_extended"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1" string="Reference"/>
                     <field name="partner_id" select="1"/>
@@ -282,8 +315,8 @@
                 <form string="Purchase Order Line">
                     <notebook colspan="4">
                         <page string="Order Line">
-                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
-                            <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
+                            <field name="product_id" colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
+                            <field name="product_qty" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
