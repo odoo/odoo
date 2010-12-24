@@ -2,6 +2,7 @@
  Print the HR Holidays(Summary Department) Report through the wizard
 -
   !python {model: hr.holidays}: |
+    import time
     ctx={}
     ctx.update({'model': 'hr.department','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
     data_dict = {'date_from': time.strftime('%Y-%m-01'), 'depts' : [(6,0,[ref('hr.dep_sales')])],'holiday_type' : 'Validated'}
@@ -12,6 +13,7 @@
  Print the HR Holidays(Summary Employee) Report through the wizard
 -
   !python {model: hr.holidays}: |
+    import time
     ctx={}
     ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
     data_dict = {'date_from': time.strftime('%Y-%m-01'), 'emp' : [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')])],'holiday_type' : 'Validated'}
