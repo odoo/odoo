@@ -17,7 +17,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="period_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="date_due" invisible="1"/>
@@ -25,6 +24,8 @@
                 <field name="nbr" sum="# of Voucher Lines"/>
                 <field name="price_total" sum="Total Without Tax"/>
                 <field name="price_total_tax" sum="Total With Tax"/>
+                <field name="due_delay"  sum="Avg. Due Delay"/>
+                <field name="delay_to_pay"  sum="Avg. Delay To Pay"/>
             </tree>
         </field>
     </record>
@@ -66,11 +67,6 @@
                             name="sale"
                             domain="[('type','=','sale')]"
                             help="Sale Type Vouchers"/>
-                    <filter icon="terp-personal"
-                            string="Purchase"
-                            separator="1"
-                            domain="[('type','=','purchase')]"
-                            help="Purchase Type Vouchers"/>
                    <separator orientation="vertical"/>
                    <field name="partner_id"/>
                    <field name="date" string="Voucher Date"/>
@@ -78,6 +74,7 @@
                 <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="journal_id" widget="selection"/>
+                    <field name="pay_now"/>
                     <field name="account_id"/>
                     <separator orientation="vertical"/>
                     <field name="date_due"/>
@@ -86,7 +83,7 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
-                    <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -95,7 +92,6 @@
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
-                    <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
@@ -118,7 +114,7 @@
 
     </record>
 
-    <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_statistic_report_statement"/>
+    <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_statistic_report_statement" sequence="3"/>
        
    </data>
 </openerp>

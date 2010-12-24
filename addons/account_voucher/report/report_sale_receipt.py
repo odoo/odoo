@@ -36,7 +36,6 @@ class sale_receipt_report(osv.osv):
         'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
@@ -57,21 +56,26 @@ class sale_receipt_report(osv.osv):
              ('posted','Posted'),
              ('cancel','Cancelled')
             ], 'Voucher State', readonly=True),
+        'pay_now':fields.selection([
+            ('pay_now','Pay Directly'),
+            ('pay_later','Pay Later or Group Funds'),
+        ],'Payment', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
+        'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg")
     }
     _order = 'date desc'
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_receipt_report')
         cr.execute("""
             create or replace view sale_receipt_report as (
-                 select min(avl.id) as id,
+                select min(avl.id) as id,
                     av.date as date,
                     to_char(av.date, 'YYYY') as year,
                     to_char(av.date, 'MM') as month,
                     to_char(av.date, 'YYYY-MM-DD') as day,
                     av.partner_id as partner_id,
-                    av.period_id as period_id,
                     av.currency_id as currency_id,
                     av.journal_id as journal_id,
                     rp.user_id as user_id,
@@ -79,6 +83,7 @@ class sale_receipt_report(osv.osv):
                     count(avl.*) as nbr,
                     av.type as type,
                     av.state,
+                    av.pay_now,
                     av.date_due as date_due,
                     av.account_id as account_id,
                     sum(av.amount-av.tax_amount)/(select count(l.id) from account_voucher_line as l
@@ -86,7 +91,17 @@ class sale_receipt_report(osv.osv):
                             where a.id=av.id) as price_total,
                     sum(av.amount)/(select count(l.id) from account_voucher_line as l
                             left join account_voucher as a ON (a.id=l.voucher_id)
-                            where a.id=av.id) as price_total_tax
+                            where a.id=av.id) as price_total_tax,
+                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
+                        from account_move_line as aml
+                        left join account_voucher as a ON (a.move_id=aml.move_id)
+                        left join account_voucher_line as l ON (a.id=l.voucher_id)
+                        where a.id=av.id)) as delay_to_pay,
+                    sum((select extract(epoch from avg(date_trunc('day',a.date_due)-date_trunc('day',a.date)))/(24*60*60)::decimal(16,2)
+                        from account_move_line as aml
+                        left join account_voucher as a ON (a.move_id=aml.move_id)
+                        left join account_voucher_line as l ON (a.id=l.voucher_id)
+                        where a.id=av.id)) as due_delay
                 from account_voucher_line as avl
                 left join account_voucher as av on (av.id=avl.voucher_id)
                 left join res_partner as rp ON (rp.id=av.partner_id)
@@ -99,7 +114,6 @@ class sale_receipt_report(osv.osv):
                     to_char(av.date, 'MM'),
                     to_char(av.date, 'YYYY-MM-DD'),
                     av.partner_id,
-                    av.period_id,
                     av.currency_id,
                     av.journal_id,
                     rp.user_id,
@@ -110,7 +124,8 @@ class sale_receipt_report(osv.osv):
                     av.account_id,
                     av.tax_amount, 
                     av.amount, 
-                    av.tax_amount
+                    av.tax_amount,
+                    av.pay_now
             )
         """)
 
