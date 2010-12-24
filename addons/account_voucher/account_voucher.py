@@ -982,7 +982,7 @@ class account_bank_statement_line(osv.osv):
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
-                if not (obj.amount == obj.voucher_id.amount):
+                if not (abs(obj.amount) == obj.voucher_id.amount):
                     return False
         return True
 
