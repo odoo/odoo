@@ -2613,11 +2613,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
-        if unconfigured_cmp:
-            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-            for field in res['fields']:
-               if field == 'company_id':
-                   res['fields'][field]['domain'] = unconfigured_cmp
+        print unconfigured_cmp
+        for field in res['fields']:
+           if field == 'company_id':
+               res['fields'][field]['domain'] = unconfigured_cmp
+               res['fields'][field]['selection'] = [('', '')]
+               if unconfigured_cmp:
+                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
                    res['fields'][field]['selection'] = cmp_select
         return res
 
