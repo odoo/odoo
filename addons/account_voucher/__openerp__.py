@@ -48,7 +48,7 @@
         "voucher_sales_purchase_view.xml",
         "account_voucher_wizard.xml",
         "account_voucher_pay_invoice.xml",
-        "report/report_sale_receipt_view.xml",
+        "report/account_voucher_sales_receipt_view.xml",
         "security/account_voucher_security.xml"
     ],
     "test" : [
