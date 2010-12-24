@@ -277,7 +277,9 @@ class openerp_dav_handler(dav_interface):
         ua = self.parent.headers.get('User-Agent', False)
         ctx = {}
         if ua:
+            print ua
             if 'iPhone' in ua:
+                print "iphone"
                 ctx['DAV-client'] = 'iPhone'
             elif 'Konqueror' in ua:
                 ctx['DAV-client'] = 'GroupDAV'

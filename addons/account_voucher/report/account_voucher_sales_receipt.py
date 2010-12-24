@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,14 +14,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
-from osv import fields,osv
+from osv import fields, osv
 import pooler
 from tools import config
-import time
 import tools
 
 class sale_receipt_report(osv.osv):
@@ -107,7 +107,7 @@ class sale_receipt_report(osv.osv):
                 left join res_partner as rp ON (rp.id=av.partner_id)
                 left join account_journal as aj ON (aj.id=av.journal_id)
                 where av.type='sale' and aj.type in ('sale','sale_refund')
-                group by 
+                group by
                     av.date,
                     av.id,
                     to_char(av.date, 'YYYY'),
@@ -122,8 +122,8 @@ class sale_receipt_report(osv.osv):
                     av.state,
                     av.date_due,
                     av.account_id,
-                    av.tax_amount, 
-                    av.amount, 
+                    av.tax_amount,
+                    av.amount,
                     av.tax_amount,
                     av.pay_now
             )
