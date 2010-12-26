@@ -131,39 +131,27 @@ class users(osv.osv):
 
     # Maps a res_users id to the salt used to encrypt its associated password.
     _salt_cache = {}
+    _clear_uid_cache = True
 
     def set_pw(self, cr, uid, id, name, value, args, context):
-        print ">>>>>> set_pw %s" % str((self, cr, uid, id, name, value, args, context))
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
 
         salt = self._salt_cache[id] = gen_salt()
         encrypted = encrypt_md5(value, salt)
         cr.execute('update res_users set password=%s where id=%s',
-            (encrypted.encode('utf-8'), id))
+            (encrypted.encode('utf-8'), int(id)))
         cr.commit()
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):
-        print ">>>>>> get_pw"
-        if len(ids) != 1:
-            # TODO multiple ids (and no id)
-            return {}
-        id = ids[0]
-
-        cr.execute('select password from res_users where id=%s', (id,))
-        stored_pw = cr.fetchone()
-
-        if stored_pw:
-            stored_pw = stored_pw[0]
-        else:
-            # Return early if no such id.
-            return False
-
-        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
-
+        cr.execute('select id, password from res_users where id in %s', (tuple(map(int, ids)),))
+        stored_pws = cr.fetchall()
         res = {}
-        res[id] = stored_pw
+
+        for id, stored_pw in stored_pws:
+            res[id] = stored_pw
+
         return res
 
     _columns = {
@@ -175,24 +163,10 @@ class users(osv.osv):
             store=True),
     }
 
-    # TODO This doesn't seem right: _salt_cache doesn't necessarily contain uid.
-    def access(self, db, uid, passwd, sec_level, ids):
-        print ">>>>>> access"
-        cr = pooler.get_db(db).cursor()
-        salt = self._salt_cache[uid]
-        cr.execute('select id from res_users where id=%s and password=%s',
-            (uid, encrypt_md5(passwd, salt)))
-        res = cr.fetchone()
-        cr.close()
-        if not res:
-            raise Exception('Bad username or password')
-        return res[0]
-
     def login(self, db, login, password):
-        print ">>>>>> login"
         cr = pooler.get_db(db).cursor()
         cr.execute('select password, id from res_users where login=%s',
-            (login.encode( 'utf-8' ),))
+            (login.encode('utf-8'),))
         stored_pw = id = cr.fetchone()
 
         if stored_pw:
@@ -210,7 +184,7 @@ class users(osv.osv):
         encrypted_pw = encrypt_md5(password, salt)
 
         # Check if the encrypted password matches against the one in the db.
-        cr.execute('select id from res_users where id=%s and password=%s and active', (id, encrypted_pw.encode('utf-8')))
+        cr.execute('select id from res_users where id=%s and password=%s and active', (int(id), encrypted_pw.encode('utf-8')))
         res = cr.fetchone()
         cr.close()
 
@@ -220,16 +194,17 @@ class users(osv.osv):
             return False
 
     def check(self, db, uid, passwd):
-        print ">>>>>> check"
-        # TODO cannot use the cache as it would prevent the update by
-        # maybe_encrypt.
-        #cached_pass = self._uid_cache.get(db, {}).get(uid)
-        #if (cached_pass is not None) and cached_pass == passwd:
-        #    return True
+        # Get a chance to hash all passwords in db before using the uid_cache.
+        if self._clear_uid_cache:
+            self._uid_cache.clear()
+            self._clear_uid_cache = False
+
+        cached_pass = self._uid_cache.get(db, {}).get(uid)
+        if (cached_pass is not None) and cached_pass == passwd:
+            return True
 
         cr = pooler.get_db(db).cursor()
         if uid not in self._salt_cache:
-            # TODO is int() useful ?
             cr.execute('select login from res_users where id=%s', (int(uid),))
             stored_login = cr.fetchone()
             if stored_login:
@@ -246,12 +221,12 @@ class users(osv.osv):
         if not bool(res):
             raise Exception('AccessDenied')
 
-        #if res:
-        #    if self._uid_cache.has_key(db):
-        #        ulist = self._uid_cache[db]
-        #        ulist[uid] = passwd
-        #    else:
-        #        self._uid_cache[db] = {uid: passwd}
+        if res:
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid: passwd}
         return bool(res)
 
     def maybe_encrypt(self, cr, pw, id):
@@ -265,9 +240,8 @@ class users(osv.osv):
                 encrypted = p
                 if p[0:len(magic_md5)] != magic_md5:
                     encrypted = encrypt_md5(p, gen_salt())
-                    print ">>>>>> changing %s to %s" % (p, encrypted)
                     cr.execute('update res_users set password=%s where id=%s',
-                        (encrypted.encode('utf-8'), i))
+                        (encrypted.encode('utf-8'), int(i)))
                 if i == id:
                     encrypted_res = encrypted
             cr.commit()
