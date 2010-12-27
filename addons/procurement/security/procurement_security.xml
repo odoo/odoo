@@ -6,7 +6,7 @@
             <field name="name">procurement multi-company</field>
             <field name="model_id" search="[('model','=','procurement.order')]" model="ir.model"/>
             <field name="global" eval="True"/>
-            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+            <field name="domain_force">['|','|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 
         <record model="ir.rule" id="stock_warehouse_orderpoint_rule">

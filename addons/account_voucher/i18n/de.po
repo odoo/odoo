@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-15 21:40+0000\n"
+"PO-Revision-Date: 2010-12-25 19:07+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:31+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
@@ -26,7 +26,7 @@ msgstr "Storno Rechnungsausgleich"
 #: code:addons/account_voucher/account_voucher.py:0
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "Abschreibung"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -140,7 +140,7 @@ msgstr "Entwurf"
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Write-Off Comment"
-msgstr ""
+msgstr "Abschreibungsgrund"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
@@ -193,6 +193,7 @@ msgstr "Fälligkeitsdatum"
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
 msgstr ""
+"Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
 
 #. module: account_voucher
 #: field:account.voucher,narration:0
@@ -243,7 +244,7 @@ msgstr "Zahlungsalternativen"
 #. module: account_voucher
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Falscher Buchungsbetrag in Soll oder Haben"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -297,6 +298,8 @@ msgstr "Analytisches Konto"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Sie können keine Buchung auf Forderungs- oder Verbindlichkeitskonten "
+"erstellen, ohne vorher einen Partner erstellt zu haben."
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -310,6 +313,14 @@ msgid ""
 "\n"
 "* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
+" * Ein Zahlungsbeleg befindet sich unmittelbar nach der Erstellung im "
+"\"Entwurf\" Zustand.\n"
+"* Durch Änderung auf den Status \"Pro-Forma\" wird der Status geändert, aber "
+"keine Belegnummer vergeben.\n"
+"* Der Status \"Gebucht\"  wird angewendet, wenn ein Benutzer einen "
+"Zahlungsbeleg mitsamt Belegnummer vollständig gebucht hat.\n"
+"\n"
+"* Der Zustand \"Abgebrochen\" kennzeichnet den Abbruch eines Zahlungsbelegs."
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -355,7 +366,7 @@ msgstr "Bezug Konto:"
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Write-Off Amount"
-msgstr ""
+msgstr "Abschreibungskonto"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -470,7 +481,7 @@ msgstr "Einzahlung"
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Zahlungsdifferenz"
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
@@ -478,6 +489,8 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
+"Der Betrag des Zahlungsbelegs sollte mit dem Betrag der Position auf dem "
+"Bankauszug übereinstimmen."
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -575,7 +588,7 @@ msgstr "Zahlungsbedingungen"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record ?"
-msgstr ""
+msgstr "Möchten Sie wirklich den Rechnungsausgleich zurücksetzen ?"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -606,7 +619,7 @@ msgstr "Betrag Ausgeglichen"
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr ""
+msgstr "Analytisches Abschreibungskonto"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -649,7 +662,7 @@ msgstr "Durch :"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payment"
-msgstr ""
+msgstr "Lieferantenzahlung"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -670,6 +683,7 @@ msgstr "Rechnungsdatum"
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -765,12 +779,12 @@ msgstr "Konto belasten (Soll)"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to confirm this record ?"
-msgstr ""
+msgstr "Möchten Sie diesen Eintrag wirklich bestätigen?"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile with Write-Off"
-msgstr ""
+msgstr "Ausgleichen mit Abschreibung"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -834,17 +848,17 @@ msgstr "Kunde"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr ""
+msgstr "Abschreibungskonto"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Invoices and Outstanding transactions"
-msgstr ""
+msgstr "Lieferantenrechnungen und offene Transaktionen"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Öffne Lieferantenbuchungen"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
@@ -865,7 +879,7 @@ msgstr "Tatsächliches Buchungsdatum"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr ""
+msgstr "Offen halten"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -896,7 +910,7 @@ msgstr "Summe"
 #. module: account_voucher
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #~ msgid "Posted Cash Receipt"
 #~ msgstr "Versendeter Zahlungsbeleg"
