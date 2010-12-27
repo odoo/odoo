@@ -542,7 +542,7 @@ class account_journal_view(osv.osv):
     _name = "account.journal.view"
     _description = "Journal View"
     _columns = {
-        'name': fields.char('Journal View', size=64, required=True),
+        'name': fields.char('Journal View', size=64, required=True, translate=True),
         'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
     }
     _order = "name"
