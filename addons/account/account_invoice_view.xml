@@ -433,7 +433,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Customer Invoices allows you create and manage invoices issued to your customers. OpenERP generates draft of invoices automatically so that you only have to confirm them before sending them to your customers.</field>
+            <field name="help">With Customer Invoices you can create and manage sales invoices issued to your customers. OpenERP can also generate draft invoices automatically from sales orders or deliveries. You should only confirm them before sending them to your customers.</field>
         </record>
 
 
@@ -461,7 +461,7 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Supplier Invoices allows you to enter and manage invoices issued by your suppliers. OpenERP generates draft of supplier invoices automatically so that you can control what you received from your supplier according to what you purchased or received.</field>
+            <field name="help">With Supplier Invoices you can enter and manage invoices issued by your suppliers. OpenERP can also generate draft invoices automatically from purchase order or receipt. This way, you can control the invoice from your supplier according to what you purchased or received.</field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
@@ -474,7 +474,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">This menu helps you manage the credit notes issued/to be issued for your customers. A refund invoice is a document that cancels an invoice or a part of it. You can easily generate refunds and reconcile them from the invoice form.</field>
+            <field name="help">With Customer Refunds you can manage the credit notes for your customers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
@@ -500,7 +500,7 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">A supplier refund is a credit note from your supplier indicating that he refunds part or totality of the invoice sent to you.</field>
+            <field name="help">With Supplier Refunds you can manage the credit notes you receive from your suppliers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 

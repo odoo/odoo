@@ -199,7 +199,6 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        print "===== check ======",user.context_section_id.id
         return user.context_section_id.id or False
 
     def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):

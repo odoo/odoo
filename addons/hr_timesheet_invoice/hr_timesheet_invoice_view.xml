@@ -119,7 +119,7 @@
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
  			<field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
-            <field name="help">This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically.</field>
+            <field name="help">This list shows you every task you can invoice to the customer. Select the lines and click the Action button to generate the invoices automatically.</field>
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
@@ -170,7 +170,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
             <field name="search_view_id" ref="view_hr_timesheet_invoice_factor_search"/>
-            <field name="help">OpenERP allows you to create default invoicing types. You could need to regularly make discounts based on a specific contract or agreement with a customer. From this menu, you can create additional default types of invoicing that will speed up your invoicing.</field>
+            <field name="help">OpenERP allows you to create default invoicing types. You might have to regularly assign discounts because of a specific contract or agreement with a customer. From this menu, you can create additional types of invoicing to speed up your invoicing.</field>
         </record>
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
