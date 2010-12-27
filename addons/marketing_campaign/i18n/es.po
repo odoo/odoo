@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-21 09:08+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"PO-Revision-Date: 2010-12-25 21:46+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -155,7 +156,7 @@ msgstr ""
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Set to Draft"
-msgstr "Canviar a borrador"
+msgstr "Cambiar a borrador"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,to_ids:0
@@ -322,6 +323,14 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"El tipo de acción a ejecutar cuando se introduce un registro en esta "
+"actividad, como:\n"
+"   - Correo: envía un correo usando una plantilla predeterminada de correo\n"
+"   - Informe: imprime un informe existente definido en el recurso y lo "
+"guarda en el directorio especificado\n"
+"   - Acción personalizada: ejecuta una acción predeterminada, por ejemplo "
+"para modificar los campos del recurso\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
@@ -467,6 +476,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Indique un coste variable si considera que cada elemento de campaña que ha "
+"llegado a este punto ha supuesto un coste determinado. Puede obtener "
+"estadísticas de los costes en la sección de informes."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -699,6 +711,8 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Una actividad con una señal puede ser llamada mediante programación. Tenga "
+"cuidado, el elemento siempre se crea cuando se envía una señal."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -891,6 +905,11 @@ msgid ""
 "possible action could be sending an email template that has previously been "
 "created in the system."
 msgstr ""
+"Una campaña de marketing es un evento o actividad que le ayudará a gestionar "
+"y contactar sus empresas con mensajes específicos. Una campaña puede tener "
+"muchas actividades que se ejecutarán en una situación específica. Una acción "
+"posible podría ser el envío de una plantilla de correo electrónico que ha "
+"sido creada previamente en el sistema."
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -995,6 +1014,9 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"Coste fijo para el funcionamiento de esta campaña. También puede especificar "
+"los costes variables y los ingresos en cada actividad de la campaña. Se "
+"incluyen estadísticas de costes e ingresos en los informes de la campaña."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -1048,6 +1070,11 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Filtro para seleccionar los registros de recursos que pertenecen a este "
+"segmento. Se pueden crear y guardar nuevos filtros con la búsqueda avanzada "
+"en la vista de lista de los recursos. Si no hay ningún filtro establecido, "
+"se seleccionan todos los registros sin filtrar. El modo de sincronización "
+"también puede añadir un criterio para el filtro."
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
