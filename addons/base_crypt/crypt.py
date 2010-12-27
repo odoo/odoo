@@ -137,7 +137,8 @@ class users(osv.osv):
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
 
-        salt = self._salt_cache[id] = gen_salt()
+        self._salt_cache.setdefault(cr.dbname, {})
+        salt = self._salt_cache[cr.dbname][id] = gen_salt()
         encrypted = encrypt_md5(value, salt)
         cr.execute('update res_users set password=%s where id=%s',
             (encrypted.encode('utf-8'), int(id)))
@@ -180,7 +181,8 @@ class users(osv.osv):
 
         # Calculate an encrypted password from the user-provided
         # password.
-        salt = self._salt_cache[id] = stored_pw[len(magic_md5):11]
+        self._salt_cache.setdefault(db, {})
+        salt = self._salt_cache[db][id] = stored_pw[len(magic_md5):11]
         encrypted_pw = encrypt_md5(password, salt)
 
         # Check if the encrypted password matches against the one in the db.
@@ -196,16 +198,16 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         # Get a chance to hash all passwords in db before using the uid_cache.
         if self._clear_uid_cache:
-            self._uid_cache.clear()
+            self._uid_cache.get(db, {}).clear()
             self._clear_uid_cache = False
-            self._salt_cache.clear()
+            self._salt_cache.get(db, {}).clear()
 
         cached_pass = self._uid_cache.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
         cr = pooler.get_db(db).cursor()
-        if uid not in self._salt_cache:
+        if uid not in self._salt_cache.get(db, {}):
             cr.execute('select login from res_users where id=%s', (int(uid),))
             stored_login = cr.fetchone()
             if stored_login:
@@ -214,7 +216,7 @@ class users(osv.osv):
             if not self.login(db,stored_login,passwd):
                 return False
 
-        salt = self._salt_cache[uid]
+        salt = self._salt_cache[db][uid]
         cr.execute('select count(id) from res_users where id=%s and password=%s',
             (int(uid), encrypt_md5(passwd, salt)))
         res = cr.fetchone()[0]
