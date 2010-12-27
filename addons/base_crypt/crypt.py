@@ -198,6 +198,7 @@ class users(osv.osv):
         if self._clear_uid_cache:
             self._uid_cache.clear()
             self._clear_uid_cache = False
+            self._salt_cache.clear()
 
         cached_pass = self._uid_cache.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
