@@ -747,6 +747,7 @@ class orm_template(object):
             row = {}
             warning = []
             data_res_id = False
+            xml_id = False
             nbrmax = position+1
 
             done = {}
@@ -765,7 +766,11 @@ class orm_template(object):
 
                 # ID of the record using a XML ID
                 if field[len(prefix)]=='id':
-                    data_res_id = _get_id(model_name, line[i], current_module, 'id')
+                    try:
+                        data_res_id = _get_id(model_name, line[i], current_module, 'id')
+                    except ValueError, e:
+                        pass
+                    xml_id = line[i]
                     continue
 
                 # ID of the record using a database ID
@@ -787,7 +792,7 @@ class orm_template(object):
                         res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
                         if not res2:
                             break
-                        (newrow, pos, w2, data_res_id2) = res2
+                        (newrow, pos, w2, data_res_id2, xml_id2) = res2
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
@@ -837,7 +842,7 @@ class orm_template(object):
 
                 row[field[len(prefix)]] = res or False
 
-            result = (row, nbrmax, warning, data_res_id)
+            result = (row, nbrmax, warning, data_res_id, xml_id)
             return result
 
         fields_def = self.fields_get(cr, uid, context=context)
@@ -850,7 +855,7 @@ class orm_template(object):
         while position<len(datas):
             res = {}
 
-            (res, position, warning, res_id) = \
+            (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
                 cr.rollback()
@@ -858,7 +863,7 @@ class orm_template(object):
 
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
-                     current_module, res, mode=mode,
+                     current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 return (-1, res, 'Line ' + str(position) +' : ' + str(e), '')
