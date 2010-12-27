@@ -34,8 +34,7 @@ class account_bs_report(osv.osv_memory):
 
     def _get_def_reserve_account(self, cr, uid, context=None):
         chart_id = self._get_account(cr, uid, context=context)
-        # Reuse the onchange function, for symmetry
-        res = self.onchange_chart_id(cr, uid, chart_id, context=context)
+        res = self.onchange_chart_id(cr, uid, [], chart_id, context=context)
         if not res:
             return False
         return res['value']['reserve_account_id']
@@ -56,12 +55,12 @@ class account_bs_report(osv.osv_memory):
         'reserve_account_id': _get_def_reserve_account,
     }
 
-    def onchange_chart_id(self, cr, uid, chart_id, context=None):
+    def onchange_chart_id(self, cr, uid, ids, chart_id, context=None):
         if not chart_id:
-            return False
+            return {}
         account = self.pool.get('account.account').browse(cr, uid, chart_id , context=context)
         if not account.company_id.property_reserve_and_surplus_account:
-            return False # We cannot raise an exception, because that's before the wizard
+            return { 'value': {'reserve_account_id': False}}
         return { 'value': {'reserve_account_id': account.company_id.property_reserve_and_surplus_account.id}}
 
 
@@ -70,7 +69,6 @@ class account_bs_report(osv.osv_memory):
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_type','reserve_account_id'])[0])
         if not data['form']['reserve_account_id']:
-            # only in < v6.1, where orm_memory does not honor required fields
             raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         if data['form']['display_type']:

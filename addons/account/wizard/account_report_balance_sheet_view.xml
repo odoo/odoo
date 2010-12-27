@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
             <data>
             <xpath expr="//field[@name='chart_account_id']" position="replace">
-                <field name="chart_account_id" widget='selection' onchange="onchange_chart_id"/>
+                <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id)"/>
             </xpath>
             <xpath expr="//field[@name='journal_ids']" position="replace">
                 <field name="journal_ids" colspan="4" nolabel="1" required="0" readonly="1"/>
@@ -21,8 +21,8 @@
             </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
                 <field name="display_account"/>
-                <field name="display_type"/>
                 <field name="reserve_account_id" required="1"/>
+                <field name="display_type"/>
                 <newline/>
             </xpath>
             </data>
