@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 09:06+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -144,6 +144,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Napaka! Rekurzivnih kategorij ne morete ustvariti."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Tipkovnica"
@@ -194,7 +201,6 @@ msgid "PriceList"
 msgstr "Cenik"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "ME"
@@ -253,11 +259,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr ""
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -469,6 +470,13 @@ msgid "Codes"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr ""
@@ -667,13 +675,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "Matična plošča ASUStek A7N8X"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Nova cena ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1123,6 +1141,30 @@ msgid "Unit of Sale"
 msgstr "Prodajna EM"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1254,6 +1296,14 @@ msgstr "Iz zaloge"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Različica cenika"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1556,6 +1606,11 @@ msgid "Make to Order"
 msgstr "Naroči"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Inačice"
@@ -1660,8 +1715,8 @@ msgid "Name of this kind of price."
 msgstr ""
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1749,11 +1804,6 @@ msgstr ""
 #. module: product
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
 msgstr ""
 
 #. module: product
@@ -1966,13 +2016,6 @@ msgstr ""
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2223,6 +2266,68 @@ msgid ""
 msgstr ""
 
 #~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "To je povprečni čas med potrditvijo kupčevega naročila in dostavo dokončanih "
+#~ "izdelkov. V bistvu je čas, ki ste ga obljubili vašim kupcem."
+
+#~ msgid "Childs Categories"
+#~ msgstr "Podkategorije"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "Min.marža"
+
+#~ msgid ""
+#~ "Will change the way procurements are processed, consumable are stockable "
+#~ "products with infinite stock, or without a stock management in the system."
+#~ msgstr ""
+#~ "Določa, kako se obdelujejo nabave, potrošni material so izdelki z neomejeno "
+#~ "zalogo, ali pa brez upravljanja zaloge v sistemu."
+
+#~ msgid "Palet"
+#~ msgstr "Paleta"
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Dimenzije palete"
+
+#~ msgid "Rentable product"
+#~ msgstr "Najemljiv izdelek"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "'Iz zaloge': Ko je potreba, vzemi iz zaloge ali počakaj, dokler ni na "
+#~ "voljo.\n"
+#~ "'Naroči': Ko je potreba, nabavi ali proizvedi glede na nabavne zahteve."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+#~ msgstr ""
+#~ "Koeficient za formulo:\n"
+#~ "koef (osnovna enota) = 1 (ta enota)"
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coef (this unit)"
+#~ msgstr ""
+#~ "Koeficient za formulo:\n"
+#~ "1 (osnova nenota) = koef (ta enota)"
+
+#~ msgid "Paletization"
+#~ msgstr "Paletizacija"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Maks.marža"
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "Ne morete imeti 2 različic cenika, ki se prekrivata."
+
+#~ msgid ""
 #~ "The minimal quantity to purchase for this supplier, expressed in the default "
 #~ "unit of measure."
 #~ msgstr ""
@@ -2266,6 +2371,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Določa, če je izdelek viden v seznamu pri polnjenju postavk prodajnega "
 #~ "naloga."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
 
 #~ msgid "Can be sold"
 #~ msgstr "Se lahko proda"

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <!--        Attendee form view-->
+        <!-- Attendee form view-->
 
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
             <field name="name">calendar.attendee.form</field>
@@ -348,18 +347,21 @@
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
-                                   attrs="{'readonly':[('recurrent_uid','!=',False)]}" />                               
-                                <label string="" colspan="2"/>                           
+                                   attrs="{'readonly':[('recurrent_uid','!=',False)]}" />
+                                <field name="interval" />                               
+                                                       
                                 
                                 <separator string="End of recurrency" colspan="4"/>
-                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
+                                <field name="end_type" />
                                 <label string=" " colspan="2" />
                                 <newline />
-                                <field name="end_date" attrs="{'readonly': [('count','!=',False)]}"/>
+                                <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
+                                <label string=" " colspan="2" />
+                                <newline />
+                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
                                 <newline />
                            
-                                <separator string="Repeat interval" colspan="4"/>
-                                <field name="interval" /> <label string="" colspan="2"/>
+                      
                             </group>
                             <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
                                 <separator string="Choose day where repeat the meeting" colspan="8"/>
@@ -379,13 +381,13 @@
                                 <group col="2" colspan="1">
                                     <field name="select1" />
                                 </group>
-                                <group col="2" colspan="1"
-                                    attrs="{'invisible' : [('select1','=','day')]}">
+                                <group col="2" colspan="1">
                                     <field name="day"
-                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')]}" />
+                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
+                                            'invisible' : ['|', ('select1','=','day'), ('rrule_type','!=','monthly')]}" />
                                 </group>
                                 <group col="3" colspan="1"
-                                    attrs="{'invisible' : [('select1','=','date'), ('rrule_type','=','monthly')]}">
+                                    attrs="{'invisible' : ['|', ('select1','=','date'), ('rrule_type','!=','monthly')]}">
                                     <field name="byday" string="The"
                                         attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}" />
                                     <field name="week_list" nolabel="1"

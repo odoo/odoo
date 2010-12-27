@@ -988,7 +988,6 @@ class pos_order_line(osv.osv):
                     else:
                         res[line.id][f] = line.price_unit * line.qty
                 elif f == 'price_subtotal_incl':
-                    tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
                         res[line.id][f] = 0.0

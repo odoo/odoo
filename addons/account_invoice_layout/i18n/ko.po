@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 16:22+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:28+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -75,8 +75,23 @@ msgid "Unit Price"
 msgstr "유닛 가격"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
@@ -118,6 +133,11 @@ msgid "Product"
 msgstr "상품"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "메시지 쓰기"
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr ""
@@ -146,9 +166,9 @@ msgid "Source Account"
 msgstr "소스 금액"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "메시지 쓰기"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "취소"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -307,9 +327,9 @@ msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "취소"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0

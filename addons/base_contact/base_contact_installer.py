@@ -38,8 +38,6 @@ class base_contact_installer(osv.osv_memory):
         obj = self.pool.get("base.contact.installer").browse(cr, uid, uid, context=context)
         if obj.migrate:
             cr.execute("""DROP TRIGGER  IF EXISTS contactjob on res_partner_contact;
-                            DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;
-                            CREATE LANGUAGE plpgsql ;
                             CREATE OR REPLACE FUNCTION add_to_job() RETURNS TRIGGER AS $contactjob$
                             DECLARE
                             new_name varchar;
@@ -57,7 +55,7 @@ class base_contact_installer(osv.osv_memory):
             cr.execute("INSERT into res_partner_contact (name, title, email, first_name, website)  (SELECT coalesce(name, 'Noname'), title, email, function , to_char(id, '99999999') from res_partner_address)")
 
             cr.execute("DROP TRIGGER  IF EXISTS contactjob  on res_partner_contact")
-            cr.execute("DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;")
+            
             cr.execute("DROP FUNCTION IF EXISTS  add_to_job()")
 
 base_contact_installer()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:10+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:10+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:57+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -81,6 +81,7 @@ msgid "Select Opportunities"
 msgstr ""
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -136,11 +137,6 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
-msgstr ""
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
 msgstr ""
 
 #. module: crm
@@ -690,6 +686,11 @@ msgstr ""
 #. module: crm
 #: help:crm.meeting,exrule:0
 msgid "Defines a rule or repeating pattern of time to exclude from the recurring rule."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
 msgstr ""
 
 #. module: crm
@@ -3015,11 +3016,6 @@ msgid "Daily"
 msgstr ""
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr ""
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 #: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
@@ -3203,6 +3199,7 @@ msgstr ""
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr ""

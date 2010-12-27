@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04:36+0000\n"
-"PO-Revision-Date: 2010-12-15 15:04:36+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:20+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -68,11 +68,6 @@ msgid "select a company which will use analytical account specified in analytic 
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
-msgstr ""
-
-#. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
 msgstr ""
@@ -123,6 +118,18 @@ msgid "Analytic Defaults"
 msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid "\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
 msgid "select a product which will use analytical account specified in analytic default (eg. create new cutomer invoice or Sale order if we select this product, it will automatically take this as an analytical account)"
 msgstr ""
@@ -162,5 +169,10 @@ msgstr ""
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid "Gives the sequence order when displaying a list of analytic distribution"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
