@@ -60,8 +60,8 @@ class account_bs_report(osv.osv_memory):
             return {}
         account = self.pool.get('account.account').browse(cr, uid, chart_id , context=context)
         if not account.company_id.property_reserve_and_surplus_account:
-            return { 'value': {'reserve_account_id': False}}
-        return { 'value': {'reserve_account_id': account.company_id.property_reserve_and_surplus_account.id}}
+            return {'value': {'reserve_account_id': False}}
+        return {'value': {'reserve_account_id': account.company_id.property_reserve_and_surplus_account.id}}
 
 
     def _print_report(self, cr, uid, ids, data, context=None):
