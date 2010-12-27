@@ -192,7 +192,6 @@ class crm_case(object):
         return uid
 
     def _get_section(self, cr, uid, context=None):
-        print "<<<<<<_get_section_get_section<<<<<<<<<<<<<"
         """Gives section id for current User
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
