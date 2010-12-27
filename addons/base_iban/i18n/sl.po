@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-16 17:26+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-25 15:25+0000\n"
+"Last-Translator: Simon Vidmar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_iban
@@ -55,6 +55,21 @@ msgid "bic"
 msgstr "koda banke (bic)"
 
 #. module: base_iban
+#: model:ir.module.module,description:base_iban.module_meta_information
+msgid ""
+"\n"
+"This module installs the base for IBAN (International Bank Account Number) "
+"bank accounts and checks for its validity\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"Ta modul namesti osnovo za delo z bančnimi računi oblike IBAN (International "
+"Bank Account Number) in preverja njihovo pravilnost\n"
+"\n"
+"    "
+
+#. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
 msgid "iban"
 msgstr "številka računa (iban)"
@@ -69,11 +84,6 @@ msgstr "Napačen IBAN. Začeti se mora z oznako države"
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
 msgstr "IBAN"
-
-#. module: base_iban
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
-msgstr ""
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban

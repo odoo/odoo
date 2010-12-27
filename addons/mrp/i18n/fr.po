@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-17 19:58+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 07:54+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -31,6 +30,9 @@ msgstr "UdV du produit"
 msgid "Product UOM"
 msgstr "UdM du produit"
 
+#~ msgid "Product UoM"
+#~ msgstr "UdM du produit"
+
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 #: field:mrp.production,move_created_ids2:0
@@ -41,11 +43,6 @@ msgstr "Mouvements créés"
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Nombre de Cycles"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of operations this workcenter can do."
-msgstr "Nombre d'opérations simultanées du poste de charge"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -122,6 +119,11 @@ msgid "Routings"
 msgstr "Gammes"
 
 #. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
 msgstr "Rechercher une nomenclature"
@@ -135,6 +137,13 @@ msgstr "Pour les produits stockables et les consommables"
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
 msgstr "À produire"
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -237,6 +246,15 @@ msgstr "UdM"
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
+msgstr ""
+"Défini des groupes de propriétés spécifiques pouvant être assignées aux "
+"propriété de vos nomenclatures."
+
+#. module: mrp
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to track easily your production costs in the analytic "
+"accounting."
 msgstr ""
 
 #. module: mrp
@@ -573,11 +591,6 @@ msgid "March"
 msgstr "Mars"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
-msgid "Workcenter Load"
-msgstr "Occupation du poste"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Workcenter per cycle."
 msgstr "Précisez le coût par cycle du poste de charge"
@@ -593,15 +606,6 @@ msgstr "Hiérarchie de la nomenclature"
 #: view:mrp.production:0
 msgid "Produce"
 msgstr "Fabriquer"
-
-#. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this qunatity."
-msgstr ""
-"Précisez la quantité de produits à fabriquer ou acheter. Le rapport de la "
-"structure de coût sera affiché en fonction de cette quantité"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -647,6 +651,7 @@ msgstr "Erreur! Vous ne pouvez pas créer de nomenclatures récursives"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr "Occupation du poste de charge"
@@ -674,12 +679,11 @@ msgid "Planning"
 msgstr "Planification"
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr "Information de coût"
+#: view:mrp.production:0
+msgid "Ready"
+msgstr "Prêt"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
 msgstr "Temps nécessaire à la réalisation d'un cycle"
@@ -851,6 +855,13 @@ msgstr ""
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
 msgstr "Besoin de matière première"
+
+#. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
+msgid ""
+"Time in hours for this work center to achieve the operation of the specified "
+"routing."
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1121,6 +1132,45 @@ msgstr "Détermine l'ordre d'affichage des postes de charge d'une gamme."
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
 msgstr "La quantité à produire ne peut être ni négative ni nulle !"
+
+#. module: mrp
+#: model:ir.module.module,description:mrp.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the manufacturing process in OpenERP.\n"
+"\n"
+"    Features:\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure\n"
+"        that include child and phantom BoMs\n"
+"    It supports complete integration and planification of stockable goods,\n"
+"    consumable of services. Services are completely integrated with the "
+"rest\n"
+"    of the software. For instance, you can set up a sub-contracting service\n"
+"    in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"    Reports provided by this module:\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on workcenters\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"    Dashboard provided by this module::\n"
+"    * List of next production orders\n"
+"    * List of deliveries (out picking)\n"
+"    * Graph of work center load\n"
+"    * List of procurement in exception\n"
+"    "
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1628,7 +1678,7 @@ msgstr "Ordres de fabrication"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Produits consommés"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
@@ -1642,6 +1692,12 @@ msgstr "Fabrication à la commande"
 #: model:ir.ui.menu,name:mrp.menu_report_mrp_production_orders_tree
 msgid "Production Analysis"
 msgstr "Analyse de la production"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Copy"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -2004,6 +2060,11 @@ msgid "Number of Hours"
 msgstr "Nombre d'Heures"
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Costing Information"
+msgstr "Information de coût"
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
 msgstr "Besoins"
@@ -2080,7 +2141,6 @@ msgid "BoM Revisions"
 msgstr "Révisions des Nomenclatures"
 
 #. module: mrp
-#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -2394,6 +2454,13 @@ msgstr ""
 "dans la nomenclature, par le biais des planificateurs (MRP)."
 
 #. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this quantity."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
 msgstr "Sur Stock"
@@ -2430,8 +2497,31 @@ msgstr "Produits à consommer"
 msgid "Year"
 msgstr ""
 
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "SOUS-TOTAL"
+
+#~ msgid "Create Procurement"
+#~ msgstr "Créer un approvisionnement"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "TOTAL"
+
 #~ msgid "Serivce Stockable Order"
 #~ msgstr "Ordre de Service Stockable"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Nom du poste de charge"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Aucun fournisseur defini pour ce produit !"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "Fournisseur du produit"
 
 #~ msgid "Packing list"
 #~ msgstr "Liste des Colisages"
@@ -2604,6 +2694,9 @@ msgstr ""
 #~ msgid "Parameters"
 #~ msgstr "Paramètres"
 
+#~ msgid "Production workcenters used"
+#~ msgstr "Centre de Travail de Production Utilisés"
+
 #~ msgid "New Bill of Materials"
 #~ msgstr "Nouvelle Nomenclature"
 
@@ -2649,6 +2742,10 @@ msgstr ""
 #~ msgid "Do nothing"
 #~ msgstr "Ne rien faire"
 
+#, python-format
+#~ msgid "products"
+#~ msgstr "produits"
+
 #~ msgid "This wizard will schedule procurements."
 #~ msgstr "Cet assistant planifiera les approvisionnements."
 
@@ -2667,11 +2764,12 @@ msgstr ""
 #~ msgid "Production Orders Planning"
 #~ msgstr "Planification des Ordres de Production"
 
-#~ msgid "Ready"
-#~ msgstr "Prêt"
-
 #~ msgid "Production orders are created for the product manufacturing."
 #~ msgstr "Des Ordres de Production sont créés pour la fabrication des produits"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Coût horaire"
 
 #~ msgid "BoM Hyerarchy"
 #~ msgstr "Hiérarchie de la Nomenclature des Matériaux"
@@ -2740,6 +2838,10 @@ msgstr ""
 #~ msgid "Your procurement request has been sent !"
 #~ msgstr "Votre demande d'approvisionnement  a été envoyée !"
 
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Quantité de Produits"
+
 #~ msgid "Minimum Stock Rule"
 #~ msgstr "Règle de Stock Minimum"
 
@@ -2763,6 +2865,10 @@ msgstr ""
 
 #~ msgid "The normal working time of the workcenter."
 #~ msgstr "Le temps normal de travail du Centre de Production"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Avertissement !"
 
 #~ msgid "Automatic Procurements"
 #~ msgstr "Approvisionnements Automatiques"
@@ -2874,8 +2980,53 @@ msgstr ""
 #~ msgid "Internal Procurement Request"
 #~ msgstr "Demande d'approvisionnement interne"
 
+#~ msgid "Production Workcenters"
+#~ msgstr "Unités de production"
+
 #~ msgid "Stockable Request"
 #~ msgstr "Demande stockable"
+
+#~ msgid "Routing workcenter usage"
+#~ msgstr "Usage de l'unité d'acheminement"
+
+#~ msgid "Factor that multiplies all times expressed in the workcenter."
+#~ msgstr ""
+#~ "Facteur multiplicateur de tous les temps exprimés dans le centre de "
+#~ "production"
+
+#~ msgid ""
+#~ "This is the internal picking list take bring the raw materials to the "
+#~ "production plan."
+#~ msgstr ""
+#~ "Ceci est la liste interne des matières premières pour le plan de production."
+
+#~ msgid "Workcenter Name"
+#~ msgstr "Nom de l'unité de production"
+
+#~ msgid "Compute All Schedulers"
+#~ msgstr "Calculer toutes les planifications"
+
+#~ msgid "Wait for available products for reservation"
+#~ msgstr "Attendre la disponibilité des produits pour la réservation"
+
+#~ msgid "Procure Stockable Product"
+#~ msgstr "Approvisionner en produit « stockable »"
+
+#~ msgid "Procurement for raw materials."
+#~ msgstr "Approvisionnement en matières premières"
+
+#~ msgid "Define the product structure, with sub-products and/or components."
+#~ msgstr ""
+#~ "Définir la composition du produit, avec les sous-produits et/ou composants"
+
+#~ msgid "Define a routing to describe the manufacturing steps."
+#~ msgstr "Définir les étapes de la production"
+
+#~ msgid "Workcenter"
+#~ msgstr "Unité de production"
+
+#~ msgid "Workcenters Utilisation"
+#~ msgstr "Utilisation des unités de production"
 
 #~ msgid ""
 #~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
@@ -2884,11 +3035,32 @@ msgstr ""
 #~ "Rendement de la production. Un facteur de 0,9 traduit une perte de "
 #~ "production de 10 %"
 
+#~ msgid "Bill of Materials Components"
+#~ msgstr "Composition de la nomenclature"
+
+#~ msgid "You can see its bill of material which are used to make product"
+#~ msgstr ""
+#~ "Vous pouvez consulter la nomenclature utilisée pour fabriquer le produit."
+
+#~ msgid "Procurement Details"
+#~ msgstr "Détails de l'approvisionnement"
+
+#~ msgid "When any procuere products, it comes into the prpcurement orders"
+#~ msgstr "### what on earth does that mean? ###"
+
 #~ msgid "Procurement Reason"
 #~ msgstr "Motif d'approvisionnement"
 
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "UdM produit"
+
 #~ msgid "Packing Exception"
 #~ msgstr "Exception de colisage"
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "Depuis le stock et pas de règle de stock minimum définie."
 
 #~ msgid "Stockable Stock"
 #~ msgstr "Stock de produit stockable"
@@ -2909,6 +3081,10 @@ msgstr ""
 #~ "Nombre d'opérations que ce poste de charge peut faire en parallèle. si ce "
 #~ "centre de travail représente une équipe de 5 personnes, la capacité par "
 #~ "cycle est 5."
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Nom du produit"
 
 #~ msgid "you can see the minimum stock rules from product"
 #~ msgstr "Vous pouvez visualiser les règles de stock minimum pour le produit"
@@ -3025,6 +3201,14 @@ msgstr ""
 #~ "Quand le stock virtuel descendra en dessous de la quantité minimale, OpenERP "
 #~ "générera un approvisionnement pour porter le stock virtuel à la quantité Max."
 
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Quantité de produit"
+
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "Prix standard du produit"
+
 #~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
 #~ msgstr ""
 #~ "Si le stock d'un produit est négatif, il est considéré comme un point de "
@@ -3042,12 +3226,32 @@ msgstr ""
 #~ msgid "Workcenter Loads"
 #~ msgstr "Charges du Centre de Travail"
 
+#~ msgid "Make Procurement"
+#~ msgstr "Effectuer l'approvisionnement."
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "depuis le stock : produit assigné."
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "Planificateur MRP & logistique"
+
+#~ msgid "Number of operations this workcenter can do."
+#~ msgstr "Nombre d'opérations simultanées du poste de charge"
+
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the bills of "
 #~ "material without removing it."
 #~ msgstr ""
 #~ "Si la coche Active est validée, la nomenclature n'est pas visible sans pour "
 #~ "autant la supprimer"
+
+#~ msgid ""
+#~ "Specify quantity of products to produce or buy. Report of Cost structure "
+#~ "will be displayed base on this qunatity."
+#~ msgstr ""
+#~ "Précisez la quantité de produits à fabriquer ou acheter. Le rapport de la "
+#~ "structure de coût sera affiché en fonction de cette quantité"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
@@ -3057,3 +3261,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
 #~ "spécial!"
+
+#~ msgid "A cycle is defined in the workcenter definition."
+#~ msgstr "Un cycle est défini dans la définition du Centre de Production."
+
+#~ msgid "Production Orders To Start"
+#~ msgstr "Ordres de Production pour démarrer"
+
+#~ msgid "Workcenter Load"
+#~ msgstr "Occupation du poste"

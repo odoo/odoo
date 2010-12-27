@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-12 09:21+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -102,9 +102,13 @@ msgid "Expected Sale - Turn Over"
 msgstr "Προσδοκόμενη Πώληση - Τζίρος"
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Αναμενόμενη Πώληση"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -112,9 +116,9 @@ msgid "Standard Price"
 msgstr "Σταθερή Τιμή"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Άθροισμα των ποσοτήτων στα Τιμολόγια Αγοράς"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Αναμενόμενη Πώληση"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -129,10 +133,9 @@ msgid "Expected Sale - Normal Cost"
 msgstr "Προσδοκόμενη Πώληση -  Κανονικό Κόστος"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Τιμολογημένων"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Κριτήρια Ανάλυσης"
 
 #. module: product_margin
 #: view:product.product:0
@@ -214,6 +217,11 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Μέση Τιμή στα Τιμολόγια Προμηθευτή "
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Άθροισμα των ποσοτήτων στα Τιμολόγια Αγοράς"
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr "Ιδοότητες κατηγοριών"
@@ -224,9 +232,10 @@ msgid "Total margin * 100 / Turnover"
 msgstr "(Σύνολο Περιθωρίων * 100) / (Κύκλος Εργασιών)"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Κριτήρια Ανάλυσης"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Τιμολογημένων"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0

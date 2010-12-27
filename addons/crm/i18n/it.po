@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-24 09:40+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -82,6 +82,7 @@ msgid "Select Opportunities"
 msgstr "Seleziona opportunità"
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -138,11 +139,6 @@ msgstr "L'iniziativa \"%s\" è stata chiusa."
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
 msgstr "Nessuna ripetizione"
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Calendario Risorse"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
@@ -737,6 +733,11 @@ msgstr "Attività corrente"
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
 msgstr ""
 
 #. module: crm
@@ -3197,11 +3198,6 @@ msgid "Daily"
 msgstr "Giornaliero"
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr ""
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 #: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
@@ -3392,6 +3388,7 @@ msgstr "Da"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr "Riunione"
@@ -4361,8 +4358,24 @@ msgstr "Newsletter"
 #~ msgid "Trigger Date"
 #~ msgstr "Data Avvio Automatico"
 
+#~ msgid "Deadline Date is automatically computed from Start Date + Duration"
+#~ msgstr ""
+#~ "La Data di Scadenza viene calcolato automaticamente dalla Data di Inizio + "
+#~ "Durata"
+
+#~ msgid "this wizard will create all sub-menus, within the selected menu."
+#~ msgstr ""
+#~ "la procedura guidata creerà tutte le sotto-menu, all'interno del menu "
+#~ "selezionato."
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome di modulo non valido nella definizione dell'azione."
+
+#~ msgid ""
+#~ "You may want to create a new parent menu to put all the created menus in."
+#~ msgstr ""
+#~ "Si consiglia di creare un nuovo menu principale di mettere dentro tutti i "
+#~ "menu creati."
 
 #~ msgid "%(case_description)s = Case description"
 #~ msgstr "%(case_description)s = Descrizione del Caso"
@@ -5338,6 +5351,13 @@ msgstr "Newsletter"
 #~ msgid "Provide path for remote calendar"
 #~ msgstr "Fornisce il percorso per il calendario remoto"
 
+#, python-format
+#~ msgid ""
+#~ "Can not send mail with empty body,you should have description in the body"
+#~ msgstr ""
+#~ "Impossibile inviare un e-mail con corpo vuoto, dovresti compilare il corpo "
+#~ "del messaggio"
+
 #~ msgid "Extended Options..."
 #~ msgstr "Opzioni estese..."
 
@@ -5363,6 +5383,9 @@ msgstr "Newsletter"
 #, python-format
 #~ msgid "is converted to Opportunity."
 #~ msgstr "è convertito a Opportunità"
+
+#~ msgid "Resource's Calendar"
+#~ msgstr "Calendario Risorse"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "L'ID del certificato del modulo deve essere unico!"

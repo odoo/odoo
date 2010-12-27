@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-18 10:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 14:09+0000\n"
 "Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-19 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_claim
@@ -132,6 +132,11 @@ msgstr "Annulé"
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
 msgid "Preventive"
 msgstr "Préventive"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Fixed"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,partner_address_id:0
@@ -301,7 +306,6 @@ msgid "Stages"
 msgstr "Étapes"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Analyse des réclamations"
@@ -450,6 +454,11 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Awaiting Response"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr "Catégories de réclamation"
@@ -480,6 +489,17 @@ msgid "October"
 msgstr "octobre"
 
 #. module: crm_claim
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "janvier"
@@ -498,6 +518,7 @@ msgstr "Ces personnes recevront un courriel."
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -658,16 +679,6 @@ msgid "Report a Claim"
 msgstr "Etablir une réclamation"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr "Actions terminées"
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr "Actions définies"
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Suivi"
@@ -743,3 +754,9 @@ msgstr "Date de création"
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Année"
+
+#~ msgid "Actions Defined"
+#~ msgstr "Actions définies"
+
+#~ msgid "Actions Done"
+#~ msgstr "Actions terminées"

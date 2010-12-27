@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-17 07:58+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
@@ -47,13 +47,18 @@ msgstr "Stanje"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
-msgstr "Postavi u pripremu"
+msgid "POP"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
 msgstr "Nije potvrdjeno"
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Korisničko ime"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -90,13 +95,13 @@ msgstr "Dodajes Attachmente ( dodatke) ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr "Korisničko ime"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
+msgstr "Email Istorija"
 
 #. module: fetchmail
 #: field:email.server,user_id:0
@@ -119,7 +124,6 @@ msgid "Password"
 msgstr "Lozinka"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr ""
@@ -150,16 +154,25 @@ msgid "Mailgateway Message"
 msgstr "Poruka Email prolaza"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr "POP Serveri"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Postavi u pripremu"
+
+#. module: fetchmail
 #: field:email.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
 msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
-msgstr ""
+msgid "Fetchmail Services"
+msgstr "Email Servisi"
 
 #. module: fetchmail
 #: field:email.server,server:0
@@ -320,17 +333,8 @@ msgstr "Hvata Emailove"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"
 
-#~ msgid "POP Servers"
-#~ msgstr "POP Serveri"
-
-#~ msgid "Fetchmail Services"
-#~ msgstr "Email Servisi"
-
 #~ msgid "Received Email History"
 #~ msgstr "Istorija Primljenih E-mailova"
-
-#~ msgid "Email History"
-#~ msgstr "Email Istorija"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Pravila nisu podrzana od strane osv_memory objekata !"

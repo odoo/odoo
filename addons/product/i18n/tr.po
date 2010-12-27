@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 09:31+0000\n"
 "Last-Translator: Angel Spy <melissadilara@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -142,6 +142,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr ""
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr ""
@@ -190,7 +197,6 @@ msgid "PriceList"
 msgstr "Fiyat Listesi"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "Birim"
@@ -249,11 +255,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Ürünler: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -465,6 +466,13 @@ msgid "Codes"
 msgstr "Kodlar"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Miktar-4"
@@ -663,13 +671,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Yeni Fiyat ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1117,6 +1135,30 @@ msgid "Unit of Sale"
 msgstr "Satış Birimi"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1244,6 +1286,14 @@ msgstr "Stoğa Üretim"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Fiyat Listesi Versiyonu"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1546,6 +1596,11 @@ msgid "Make to Order"
 msgstr "Siparişe Üretim"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Değişkenler"
@@ -1650,8 +1705,8 @@ msgid "Name of this kind of price."
 msgstr ""
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1740,11 +1795,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Fiyat Listesi Adı"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1956,13 +2006,6 @@ msgstr ""
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2218,6 +2261,12 @@ msgstr ""
 #~ msgid "Customer Price"
 #~ msgstr "Müşteri Fiyatı"
 
+#~ msgid "Supplier of Product"
+#~ msgstr "Ürün tedarikçisi"
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Palet boyutu"
+
 #~ msgid "Number of Layer"
 #~ msgstr "Tabaka Sayısı"
 
@@ -2227,23 +2276,50 @@ msgstr ""
 #~ msgid "Priority"
 #~ msgstr "Öncelik"
 
+#~ msgid "Palet"
+#~ msgstr "Palet"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "En Yüksek Fiyat Marjini"
+
+#~ msgid "Rentable product"
+#~ msgstr "Kiralanabilir ürün"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "En Düşük Fiyat Marjini"
+
 #~ msgid "Price list"
 #~ msgstr "Fiyat Listesi"
 
 #~ msgid "Cancel"
 #~ msgstr "İptal"
 
+#~ msgid "Childs Categories"
+#~ msgstr "Alt Kategorisi"
+
 #~ msgid "Prices & Suppliers"
 #~ msgstr "Fiyatlar & Tedarikçiler"
 
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "Bu fiyat listesi sürümünün, geçerlilik başlangıç tarihi."
+
 #~ msgid "Prices Computations"
 #~ msgstr "Fiyat Hesaplamaları"
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Bu ürün için tedarikçi listesini görebilirsiniz."
 
 #~ msgid "Can be sold"
 #~ msgstr "Satılabilir"
 
 #~ msgid "Rate"
 #~ msgstr "Oran"
+
+#~ msgid "Packagings"
+#~ msgstr "Paketlemeler"
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "Fiyat listesi son geçerlilik tarihi"
 
 #~ msgid "Configuration"
 #~ msgstr "Ayarlar"
@@ -2294,3 +2370,9 @@ msgstr ""
 
 #~ msgid "Delivery Delay"
 #~ msgstr "Temin Gecikmesi"
+
+#~ msgid "Currency :"
+#~ msgstr "Döviz :"
+
+#~ msgid "Printing Date :"
+#~ msgstr "Yazdırma Tarihi :"
