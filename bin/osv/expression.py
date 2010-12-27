@@ -153,8 +153,8 @@ class expression(object):
                 if not isinstance(field,fields.property):
                     continue
 
-            if field._properties and ((not field.store) or field._fnct_search):
-                # this is a function field
+            if field._properties and not field.store:
+                # this is a function field that is not stored
                 if not field._fnct_search:
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
