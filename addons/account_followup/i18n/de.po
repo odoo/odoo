@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
-"PO-Revision-Date: 2010-11-30 12:28+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-25 10:13+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -83,10 +83,18 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
-msgstr "Zahlungserinnerung Benachrichtigung"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"Email, wurde erfolgreich an Partnern versendet.\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -138,6 +146,7 @@ msgstr "Wähle Partner für Zahlungserinnerung"
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
 msgstr ""
+"Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -147,7 +156,7 @@ msgstr "Datum der Erinnerung"
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Falscher Buchungsbetrag in Soll oder Haben"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -174,6 +183,12 @@ msgstr "Gesamt Soll"
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Buchungsposition Kopf"
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Zahlungserinnerung Benachrichtigung"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -324,6 +339,8 @@ msgstr "Sende EMail in Sprache d. Partners"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Sie können keine Buchung auf Forderungs- oder Verbindlichkeitskonten "
+"erstellen, ohne vorher einen Partner erstellt zu haben."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -511,6 +528,7 @@ msgstr "Journal Zeilen"
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -530,7 +548,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -783,7 +801,7 @@ msgstr "Zahlungserinnerung Kriterien"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
 
 #~ msgid "All payable entries"
 #~ msgstr "Alle offenen Posten"
@@ -821,8 +839,29 @@ msgstr ""
 #~ msgid "Follow-up and Date Selection"
 #~ msgstr "Erinnerungdsdatum und Datumsauswahl"
 
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Mail sent to following Partners successfully, !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail wurde erfolgreich an folgende Partner versandt !\n"
+#~ "\n"
+
 #~ msgid "Amount In Currency"
 #~ msgstr "Betrag in Währung"
+
+#, python-format
+#~ msgid ""
+#~ "Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "E-Mail wurde nicht an folgende Partner versandt, kein E-Mail Konto "
+#~ "definiert\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "\n"
@@ -855,6 +894,14 @@ msgstr ""
 
 #~ msgid "Print Follow Ups & Send Mails"
 #~ msgstr "Drucke Mahnungen & E-Mail Versand"
+
+#, python-format
+#~ msgid ""
+#~ "All emails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Alle E-Mails wurden erfolgreich an die Partner versandt:\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "\n"
@@ -944,16 +991,13 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
-#, python-format
 #~ msgid ""
 #~ "\n"
-#~ "\n"
-#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "E-Mail not sent to following Partners, Email not available !\n"
 #~ "\n"
 #~ msgstr ""
 #~ "\n"
-#~ "\n"
-#~ "Email, wurde erfolgreich an Partnern versendet.\n"
+#~ "EMail die noch nicht versendet wurden z.B. an Partner, EMails, Konten\n"
 #~ "\n"
 
 #~ msgid "The certificate ID of the module must be unique !"

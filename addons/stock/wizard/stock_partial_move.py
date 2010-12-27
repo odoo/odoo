@@ -24,19 +24,23 @@ from tools.translate import _
 import time
 
 
-class stock_partial_move_memory(osv.osv_memory):
-    _name = "stock.move.memory"
+class stock_partial_move_memory_out(osv.osv_memory):
+    _name = "stock.move.memory.out"
     _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True, readonly=True),
+        'product_id' : fields.many2one('product.product', string="Product", required=True),
         'quantity' : fields.float("Quantity", required=True),
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
         'move_id' : fields.many2one('stock.move', "Move"),
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line", readonly=True),
-        'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", readonly=True),
+        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
+        'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
     }
+    
+class stock_partial_move_memory_in(osv.osv_memory):
+    _inherit = "stock.move.memory.out"
+    _name = "stock.move.memory.in"
     
 class stock_partial_move(osv.osv_memory):
     _name = "stock.partial.move"
@@ -44,8 +48,31 @@ class stock_partial_move(osv.osv_memory):
     _columns = {
         'date': fields.datetime('Date', required=True),
         'type': fields.char("Type", size=3),
-        'product_moves' : fields.one2many('stock.move.memory', 'wizard_id', 'Moves'),
+        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_id', 'Moves'),
+        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'),
      }
+    
+    
+    def __is_in(self,cr, uid, move_ids):
+        """
+            @return: True if one of the moves has as picking type 'in'
+        """
+        if not move_ids:
+            return False
+       
+        move_obj = self.pool.get('stock.move')
+        move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
+       
+        for move in move_obj.browse(cr, uid, move_ids):
+            if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
+                return True
+        return False
+    
+    def __get_picking_type(self, cr, uid, move_ids):
+        if self.__is_in(cr, uid, move_ids):
+            return "product_moves_in"
+        else:
+            return "product_moves_out"
     
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(stock_partial_move, self).view_init(cr, uid, fields_list, context=context)
@@ -68,6 +95,7 @@ class stock_partial_move(osv.osv_memory):
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
         }
+    
         if move.picking_id.type == 'in':
             move_memory.update({
                 'cost' : move.product_id.standard_price,
@@ -89,37 +117,36 @@ class stock_partial_move(osv.osv_memory):
         return res
     
     _defaults = {
-        'product_moves' : __get_active_stock_moves,
-        'date' : time.strftime('%Y-%m-%d %H:%M:%S'),
+        'product_moves_in' : __get_active_stock_moves,
+        'product_moves_out' : __get_active_stock_moves,
+        'date' : lambda *a : time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     
-
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        height = 2 * 25;
+        if not context:
+            context = {}
+        
         message = {
                 'title' : _('Deliver Products'),
                 'info' : _('Delivery Information'),
                 'button' : _('Deliver'),
                 }
-        if context:
-            height = (len(context.get('active_ids', [])) + 1) * 25  
+        if context:            
             if context.get('product_receive', False):
                 message = {
                     'title' : _('Receive Products'),
                     'info' : _('Receive Information'),
                     'button' : _('Receive'),
-                }
-        message['height'] = height       
-                
-        
+                }   
+         
+        move_ids = context.get('active_ids', False)    
+        message['picking_type'] = self.__get_picking_type(cr, uid, move_ids)
         result = super(stock_partial_move, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         _moves_fields = result['fields']
-        _moves_fields.update({'product_moves' : 
-                            { 
-                                'relation': 'stock.move.memory',
-                                'type' : 'one2many',
-                                'string' : 'Product Moves',
-                            }
+        _moves_fields.update({
+                            'product_moves_in' : {'relation': 'stock.move.memory.in', 'type' : 'one2many', 'string' : 'Product Moves'},
+                            'product_moves_out' : {'relation': 'stock.move.memory.out', 'type' : 'one2many', 'string' : 'Product Moves'}
                             })
         
         _moves_arch_lst = """
@@ -127,7 +154,7 @@ class stock_partial_move(osv.osv_memory):
                     <separator colspan="4" string="%(info)s"/>
                     <field name="date" colspan="2"/>
                     <separator colspan="4" string="Move Detail"/>
-                    <field name="product_moves" colspan="4" nolabel="1" width="550" height="200" />
+                    <field name="%(picking_type)s" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>      
                     <separator string="" colspan="4" />
                     <label string="" colspan="2"/>
                     <group col="2" colspan="2">
@@ -162,21 +189,33 @@ class stock_partial_move(osv.osv_memory):
         }
         
         p_moves = {}
-        for product_move in partial.product_moves:
+        picking_type = self.__get_picking_type(cr, uid, move_ids)
+        print picking_type
+        moves_list = picking_type == 'product_moves_in' and partial.product_moves_in  or partial.product_moves_out
+        print picking_type == 'product_moves_in'
+        print partial.product_moves_out
+        print moves_list
+        for product_move in moves_list:
             p_moves[product_move.move_id.id] = product_move
             
         moves_ids_final = []
         for move in move_obj.browse(cr, uid, move_ids, context=context):
             if move.state in ('done', 'cancel'):
                 continue
-            if not p_moves.get(move.id, False):
+            if not p_moves.get(move.id):
                 continue
+            
+            print p_moves[move.id].product_id.id
+            print p_moves[move.id].quantity
+            print p_moves[move.id].product_uom.id
+            
             partial_datas['move%s' % (move.id)] = {
-                'product_id' : p_moves[move.id].product_id.id,
+                'product_id' : p_moves[move.id].id,
                 'product_qty' : p_moves[move.id].quantity,
-                'product_uom' : p_moves[move.id].product_uom.id,
+                'product_uom' :p_moves[move.id].product_uom.id,
                 'prodlot_id' : p_moves[move.id].prodlot_id.id,
             }
+            
             moves_ids_final.append(move.id)
             if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
                 partial_datas['move%s' % (move.id)].update({
@@ -184,11 +223,13 @@ class stock_partial_move(osv.osv_memory):
                     'product_currency': p_moves[move.id].currency.id,
                 })
                 
-                
+            
+        print partial_datas
         move_obj.do_partial(cr, uid, moves_ids_final, partial_datas, context=context)
         return {}
 
 stock_partial_move()
-stock_partial_move_memory()
+stock_partial_move_memory_out()
+stock_partial_move_memory_in()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

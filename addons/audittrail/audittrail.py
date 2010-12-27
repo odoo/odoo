@@ -106,14 +106,16 @@ class audittrail_rule(osv.osv):
         """
         obj_action = self.pool.get('ir.actions.act_window')
         val_obj = self.pool.get('ir.values')
+        value=''
         #start Loop
         for thisrule in self.browse(cr, uid, ids):
             if thisrule.id in self.__functions:
                 for function in self.__functions[thisrule.id]:
                     setattr(function[0], function[1], function[2])
             w_id = obj_action.search(cr, uid, [('name', '=', 'View Log'), ('res_model', '=', 'audittrail.log'), ('src_model', '=', thisrule.object_id.model)])
-            obj_action.unlink(cr, uid, w_id)
-            value = "ir.actions.act_window" + ',' + str(w_id[0])
+            if w_id:
+                obj_action.unlink(cr, uid, w_id)
+                value = "ir.actions.act_window" + ',' + str(w_id[0])
             val_id = val_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
                 res = ir.ir_del(cr, uid, val_id[0])

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-09 11:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-26 20:31+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:09+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
@@ -45,7 +45,7 @@ msgstr "Fecha inicial del trabajo (fecha de unión)."
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Select the Option for Addresses Migration"
-msgstr ""
+msgstr "Seleccione la opción para la migración de direcciones"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
@@ -132,6 +132,49 @@ msgid ""
 msgstr ""
 "Si el campo activo se desmarca, permite ocultar el contacto de la empresa "
 "sin eliminarlo."
+
+#. module: base_contact
+#: model:ir.module.module,description:base_contact.module_meta_information
+msgid ""
+"\n"
+"        This module allows you to manage your contacts entirely.\n"
+"\n"
+"    It lets you define\n"
+"        *contacts unrelated to a partner,\n"
+"        *contacts working at several addresses (possibly for different "
+"partners),\n"
+"        *contacts with possibly different functions for each of its job's "
+"addresses\n"
+"\n"
+"    It also adds new menu items located in\n"
+"        Partners \\ Contacts\n"
+"        Partners \\ Functions\n"
+"\n"
+"    Pay attention that this module converts the existing addresses into "
+"\"addresses + contacts\". It means that some fields of the addresses will be "
+"missing (like the contact name), since these are supposed to be defined in "
+"an other object.\n"
+"    "
+msgstr ""
+"\n"
+"        Este módulo le permite gestionar sus contactos de forma completa.\n"
+"\n"
+"    Le permite definir:\n"
+"        *contactos sin ninguna relación con una empresa,\n"
+"        *contactos que trabajan en varias direcciones (probablemente para "
+"distintas empresas),\n"
+"        *contactos con varias funciones para cada una de sus direcciones de "
+"trabajo\n"
+"\n"
+"    También añade nuevas entradas de menús localizadas en:\n"
+"        Empresas \\ Contactos\n"
+"        Empresas \\ Funciones\n"
+"\n"
+"    Tenga cuidado que este módulo convierte las direcciones existentes en "
+"\"direcciones + contactos\". Esto significa que algunos campos de las "
+"direcciones desaparecerán (como el nombre del contacto), ya que se supone "
+"que estarán definidos en otro objeto.\n"
+"    "
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -240,7 +283,7 @@ msgstr "Direcciones de empresa"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Address's Migration to Contacts"
-msgstr ""
+msgstr "Migración de direcciones a contactos"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -305,7 +348,7 @@ msgstr "Sino estos detalles no serán visibles desde direcciones/contactos."
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -458,7 +501,7 @@ msgstr "Nombre"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
+msgstr "Puede migrar las direcciones actuales de la empresa al contacto."
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0

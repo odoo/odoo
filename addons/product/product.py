@@ -461,7 +461,7 @@ class product_product(osv.osv):
     _description = "Product"
     _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _order = 'default_code'
+    _order = 'default_code,name_template'
     _columns = {
         'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
         'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
@@ -480,6 +480,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -530,7 +531,13 @@ class product_product(osv.osv):
                               }
                     result.append(_name_get(mydict))
             else:
-                result.append(_name_get(self.read(cr, user, product.id, ['variants','name','default_code'], context=context)))
+                mydict = {
+                          'id': product.id,
+                          'name': product.name,
+                          'default_code': product.default_code,
+                          'variants': product.variants
+                          }
+                result.append(_name_get(mydict))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):

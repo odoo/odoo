@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-12 09:53+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_webkit
@@ -357,9 +357,9 @@ msgid "Portrait"
 msgstr "Retrato"
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: selection:ir.header_webkit,orientation:0
+msgid "Landscape"
+msgstr "Orientação na horizontal"
 
 #. module: report_webkit
 #: view:ir.header_webkit:0
@@ -452,6 +452,18 @@ msgid "A3  8   297 x 420 mm"
 msgstr "A3 8 297 x 420 mm"
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:0
+#, python-format
+msgid ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('No header defined for this Webkit report!"
+msgstr ""
+
+#. module: report_webkit
 #: help:res.company,lib_path:0
 msgid "Complete (Absolute) path to the wkhtmltopdf executable."
 msgstr ""
@@ -540,6 +552,6 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report_webkit
-#: selection:ir.header_webkit,orientation:0
-msgid "Landscape"
-msgstr "Orientação na horizontal"
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"

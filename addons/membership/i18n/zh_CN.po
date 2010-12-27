@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 07:28+0000\n"
 "Last-Translator: Eleanor Chen <chenyueg@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -308,11 +308,6 @@ msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误:销售单位和计量单位必须是不同类型"
-
-#. module: membership
 #: view:product.product:0
 msgid "Membership products"
 msgstr "会员产品"
@@ -358,8 +353,20 @@ msgid "September"
 msgstr ""
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid ""
+"\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 msgstr ""
 
 #. module: membership
@@ -664,6 +671,11 @@ msgid "Last 30 Days"
 msgstr ""
 
 #. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr ""
+
+#. module: membership
 #: view:membership.invoice:0
 msgid "Close"
 msgstr ""
@@ -846,6 +858,9 @@ msgstr ""
 
 #~ msgid "Membership by Years"
 #~ msgstr "会籍年份"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误:销售单位和计量单位必须是不同类型"
 
 #~ msgid "Future members (invoice not confirmed)"
 #~ msgstr "未来会员(发票没确认)"

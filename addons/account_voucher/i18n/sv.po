@@ -6,19 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
-"PO-Revision-Date: 2010-12-19 18:41+0000\n"
-"Last-Translator: Anders Eriksson, Aspirix AB <ae@mobilasystem.se>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 14:44+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Write-Off"
 msgstr ""
 
 #. module: account_voucher
@@ -32,7 +38,6 @@ msgid "Open Customer Journal Entries"
 msgstr "Öppna kundjournal transaktioner"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Particulars"
 msgstr "Uppgifter"
@@ -47,11 +52,6 @@ msgstr "Gruppera efter"
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Kan inte ta bort verifikation som redan är öppnade eller betalda !"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "Ref. :"
-msgstr "Ref. :"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -126,6 +126,11 @@ msgstr "Företag"
 #: view:account.voucher:0
 msgid "Set to Draft"
 msgstr "Sätt till utkast"
+
+#. module: account_voucher
+#: field:account.voucher,comment:0
+msgid "Write-Off Comment"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
@@ -244,12 +249,6 @@ msgid "Date payment"
 msgstr "Betalningsdag"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Receiver's Signature"
-msgstr "Mottagarens signatur"
-
-#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Kontoutdragsrad"
@@ -272,26 +271,14 @@ msgid "Tax"
 msgstr "Skatt"
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_journal_id:0
-msgid "Write-Off journal"
-msgstr "Avskrivningsjournal"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Amount (in words) :"
 msgstr "Belopp (verbalt):"
 
 #. module: account_voucher
-#: field:account.voucher,analytic_id:0
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
 msgstr "Analys konto"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "Journal:"
-msgstr "Journal:"
 
 #. module: account_voucher
 #: constraint:account.move.line:0
@@ -301,9 +288,17 @@ msgstr ""
 "Du kan inte skapa en transaktion på en ett konto utan en kund/leverantör"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Betalningsinformation"
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
+msgstr ""
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -330,9 +325,9 @@ msgid ""
 msgstr "Du ska konfigurera kontokod och kontoskattekod för '%s' skatten!"
 
 #. module: account_voucher
-#: report:voucher.print:0
-msgid "Account :"
-msgstr "Konto:"
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later or Group Funds"
+msgstr "Betal senare eller gruppera belopp"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -340,9 +335,13 @@ msgid "Receipt"
 msgstr "Kvitto"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "On Account of :"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_amount:0
+msgid "Write-Off Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -351,7 +350,6 @@ msgid "Sales Lines"
 msgstr "Försäljningstransaktion"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Date:"
 msgstr "Datum:"
@@ -396,10 +394,9 @@ msgid "Vouchers Entries"
 msgstr "Verfikatstransaktioner"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Authorised Signatory"
-msgstr ""
+#: field:account.voucher,name:0
+msgid "Memo"
+msgstr "Anteckning"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -425,10 +422,9 @@ msgid "Unreconciliation"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
-#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
-msgid "Vendor Payment"
-msgstr "Leverantörsbetalning"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Skattebelopp"
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -444,9 +440,9 @@ msgid "No Account Base Code and Account Tax Code!"
 msgstr "Ingen kontokod och skattekod"
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Skattebelopp"
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Betalningsinformation"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -457,6 +453,18 @@ msgstr "Verifikatstransaktion"
 #: view:account.voucher:0
 msgid "Paid Amount"
 msgstr "Betalt belopp"
+
+#. module: account_voucher
+#: field:account.voucher,payment_option:0
+msgid "Payment Difference"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -491,22 +499,21 @@ msgid "Payable and Receivables"
 msgstr "Leveranöts och kundfakturor"
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-msgid "Pay Later or Group Funds"
-msgstr "Betal senare eller gruppera belopp"
+#: report:voucher.print:0
+msgid "Account :"
+msgstr "Konto:"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Draft"
 msgstr "Preliminär"
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_acc_id:0
-msgid "Write-Off account"
-msgstr "Konto för avskrivning"
+#: field:account.voucher,type:0
+msgid "Default Type"
+msgstr "Standardtyp"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -514,7 +521,6 @@ msgid "Currency:"
 msgstr "Valuta:"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
@@ -545,11 +551,6 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Vendor"
-msgstr "Leverantör"
-
-#. module: account_voucher
-#: view:account.voucher:0
 msgid "Payment Terms"
 msgstr "Betalningsvillkor"
 
@@ -575,14 +576,19 @@ msgid "Extended Filters..."
 msgstr "Utökade filter..."
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Företaget måste vara samma för relaterat konto och period."
+#: report:voucher.print:0
+msgid "Number:"
+msgstr "Nummer:"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,amount_reconciled:0
 msgid "Amount reconciled"
 msgstr "Avstämt belopp"
+
+#. module: account_voucher
+#: field:account.voucher,analytic_id:0
+msgid "Write-Off Analytic Account"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -593,11 +599,6 @@ msgstr "Utläggstransaktioner"
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
 msgstr "Tidigare betalningar ?"
-
-#. module: account_voucher
-#: field:account.voucher,comment:0
-msgid "Comment"
-msgstr "Kommentar"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
@@ -612,7 +613,6 @@ msgstr "Beräkna skatt"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
-#: report:voucher.cash_receipt.drcr:0
 msgid "Credit"
 msgstr "Kredit"
 
@@ -623,15 +623,15 @@ msgid "Please define a sequence on the journal !"
 msgstr "Definiera en sekvens för denna journal !"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Through :"
 msgstr "Genom :"
 
 #. module: account_voucher
-#: selection:account.voucher,payment_option:0
-msgid "Without Write-off"
-msgstr "Utan avskrivning"
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payment"
+msgstr ""
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -649,10 +649,9 @@ msgid "Bill Date"
 msgstr "Fakturadatum"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-#: report:voucher.print:0
-msgid "Number:"
-msgstr "Nummer:"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr "Företaget måste vara samma för relaterat konto och period."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -681,13 +680,7 @@ msgid "Sales Information"
 msgstr "Försäljningsinformation"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Open Vendor Journal Entries"
-msgstr "Öppna leverantörjournalstransaktioner"
-
-#. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
 msgstr "Verifikat"
@@ -748,7 +741,6 @@ msgstr "Betala"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
-#: report:voucher.cash_receipt.drcr:0
 msgid "Debit"
 msgstr "Debet"
 
@@ -756,6 +748,11 @@ msgstr "Debet"
 #: view:account.voucher:0
 msgid "Are you sure to confirm this record ?"
 msgstr "Är du säker på att du vill godkänna denna post?"
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Reconcile with Write-Off"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -768,15 +765,9 @@ msgid "Description"
 msgstr "Beskrivning"
 
 #. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Canceled"
 msgstr "Avbruten"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Vendor Invoices and Outstanding transactions"
-msgstr "Leverantörsfakturor och utestående transaktioner"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,journal_ids:0
@@ -784,16 +775,6 @@ msgstr "Leverantörsfakturor och utestående transaktioner"
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Journal"
-
-#. module: account_voucher
-#: field:account.voucher,payment_option:0
-msgid "Payment Option"
-msgstr "Betalningsalternativ"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
-msgid "-"
-msgstr "-"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -807,12 +788,6 @@ msgid "Credits"
 msgstr "Krediteringar"
 
 #. module: account_voucher
-#: field:account.voucher,writeoff_amount:0
-msgid "Writeoff Amount"
-msgstr "Avskrivningsbelopp"
-
-#. module: account_voucher
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "State:"
 msgstr "Status:"
@@ -829,7 +804,6 @@ msgstr "Betalning"
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: report:voucher.cash_receipt.drcr:0
 #: report:voucher.print:0
 msgid "Posted"
 msgstr "Bokförd"
@@ -840,14 +814,19 @@ msgid "Customer"
 msgstr "Kund"
 
 #. module: account_voucher
-#: selection:account.voucher,payment_option:0
-msgid "With Write-off"
-msgstr "Med avskrivning"
+#: field:account.voucher,writeoff_acc_id:0
+msgid "Write-Off account"
+msgstr "Konto för avskrivning"
 
 #. module: account_voucher
-#: field:account.voucher,type:0
-msgid "Default Type"
-msgstr "Standardtyp"
+#: view:account.voucher:0
+msgid "Supplier Invoices and Outstanding transactions"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Open Supplier Journal Entries"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
@@ -864,6 +843,11 @@ msgstr "Kontotransaktion"
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
 msgstr "Bokföringsdatum för konteringstransaktioner"
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Keep Open"
+msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -890,11 +874,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account_voucher
-#: field:account.voucher,name:0
-msgid "Memo"
-msgstr "Anteckning"
-
-#. module: account_voucher
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
 msgstr "Du kan inte skapa en transaktion för ett vykonto"
@@ -904,8 +883,86 @@ msgstr "Du kan inte skapa en transaktion för ett vykonto"
 #~ msgstr ""
 #~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "Total Credit"
+#~ msgstr "Total Kredit"
+
+#~ msgid "Receiver's Signature"
+#~ msgstr "Mottagarens signatur"
+
+#~ msgid "No."
+#~ msgstr "Nej."
+
+#~ msgid "Create"
+#~ msgstr "Skapa"
+
+#~ msgid "Type"
+#~ msgstr "Typ"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Felaktig XML för Vyarkitektur!"
 
+#~ msgid "Dated :"
+#~ msgstr "Daterad"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Optional Information"
+#~ msgstr "Valfri information"
+
+#~ msgid "General Information"
+#~ msgstr "Allmän information"
+
+#~ msgid "Other Info"
+#~ msgstr "Annan information"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Name"
+#~ msgstr "Namn"
+
+#~ msgid "State :"
+#~ msgstr "Tillstånd:"
+
+#~ msgid "Ref. :"
+#~ msgstr "Ref. :"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Felaktigt namn för modellen i händelsedefinitionen."
+
+#~ msgid "Write-Off journal"
+#~ msgstr "Avskrivningsjournal"
+
+#~ msgid "Journal:"
+#~ msgstr "Journal:"
+
+#~ msgid "Vendor Payment"
+#~ msgstr "Leverantörsbetalning"
+
+#~ msgid "Vendor"
+#~ msgstr "Leverantör"
+
+#~ msgid "Without Write-off"
+#~ msgstr "Utan avskrivning"
+
+#~ msgid "Comment"
+#~ msgstr "Kommentar"
+
+#~ msgid "Open Vendor Journal Entries"
+#~ msgstr "Öppna leverantörjournalstransaktioner"
+
+#~ msgid "Vendor Invoices and Outstanding transactions"
+#~ msgstr "Leverantörsfakturor och utestående transaktioner"
+
+#~ msgid "Payment Option"
+#~ msgstr "Betalningsalternativ"
+
+#~ msgid "Writeoff Amount"
+#~ msgstr "Avskrivningsbelopp"
+
+#~ msgid "With Write-off"
+#~ msgstr "Med avskrivning"

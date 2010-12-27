@@ -35,6 +35,7 @@ class account_analytic_account(osv.osv):
         res = dict([(i, {}) for i in ids])
 
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+        res.update(dict([(i, {}) for i in parent_ids]))
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
