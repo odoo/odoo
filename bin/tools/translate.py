@@ -934,8 +934,13 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
             if dic['type'] == 'model':
                 args.append(('res_id', '=', dic['res_id']))
             ids = trans_obj.search(cr, uid, args)
+            if dic['src'] == "Coach" or dic['src'] == "Work E-mail":
+                print ">>>>>> %s %s" % (ids, context)
+                print ">>>>>> %s -> %s" % (dic['src'], dic['value'])
             if ids:
-                if context.get('overwrite'):
+                if context.get('overwrite') and dic['value']:
+                    if dic['src'] == "Coach" or dic['src'] == "Work E-mail":
+                        print ">>>>>> overwriting"
                     trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
                 trans_obj.create(cr, uid, dic)

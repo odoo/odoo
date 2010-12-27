@@ -495,6 +495,14 @@ class module(osv.osv):
             for lang in filter_lang:
                 iso_lang = tools.get_iso_codes(lang)
                 f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang.split('_')[0] + '.po')
+                    iso_lang2 = iso_lang.split('_')[0]
+                    if f2:
+                        logger.info('module %s: loading translation file for language %s', mod.name, iso_lang2)
+                        tools.trans_load(cr.dbname, f2, lang, verbose=False, context=context)
+                    context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
                 # like "en".
@@ -503,7 +511,7 @@ class module(osv.osv):
                     iso_lang = iso_lang.split('_')[0]
                 if f:
                     logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
-                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
+                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 
