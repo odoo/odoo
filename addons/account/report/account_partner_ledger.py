@@ -37,6 +37,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
 #            'sum_debit': self._sum_debit,
 #            'sum_credit': self._sum_credit,
             'get_currency': self._get_currency,
+            'sum_currency_amount_account': self._sum_currency_amount_account,
             'comma_me': self.comma_me,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
@@ -160,6 +161,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             r['progress'] = sum
             full_account.append(r)
         return full_account
+    
+    def _get_currency(self):
+        self.cr.execute("select distinct currency_id from account_invoice")
+        return self.cr.fetchall()
 
     def _get_intial_balance(self, partner):
         move_state = ['draft','posted']
@@ -390,16 +395,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return 'Receivable and Payable Accounts'
         return ''
 
-    def _sum_currency_amount_account(self, account, form):
-        self._set_get_account_currency_code(account.id)
-        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
+    def _sum_currency_amount_account(self, account):
+        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s" %(account.id))
         total = self.cr.fetchone()
-        if self.account_currency:
-            return_field = str(total[0]) + self.account_currency
-            return return_field
-        else:
-            currency_total = self.tot_currency = 0.0
-            return currency_total
+        return total[0] or 0.0
 
     def _display_initial_balance(self, data):
          if self.initial_balance:

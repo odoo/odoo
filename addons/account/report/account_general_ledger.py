@@ -159,13 +159,19 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         else:
             sql_sort='l.date, l.move_id'
         sql = """
-            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.amount_currency,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
+            SELECT l.id AS lid, l.date AS ldate, j.code AS lcode, l.currency_id,l.ref AS lref, l.name AS lname, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id AS lperiod_id, l.partner_id AS lpartner_id,
             m.name AS move_name, m.id AS mmove_id,per.code as period_code,
+            case when a.currency_id is not null then
+                l.amount_currency
+                else
+                0.0
+                end as amount_currency,
             c.symbol AS currency_code,
             i.id AS invoice_id, i.type AS invoice_type, i.number AS invoice_number,
             p.name AS partner_name
             FROM account_move_line l
             JOIN account_move m on (l.move_id=m.id)
+            LEFT JOIN account_account a ON (l.account_id=a.id)
             LEFT JOIN res_currency c on (l.currency_id=c.id)
             LEFT JOIN res_partner p on (l.partner_id=p.id)
             LEFT JOIN account_invoice i on (m.id =i.move_id)
@@ -179,19 +185,26 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id, '' AS period_code,
-                '' AS currency_code,
-                NULL AS currency_id,
+                sum(case when a.currency_id is not null then
+                         l.amount_currency
+                        else
+                         0.0
+                        end) as amount_currency,
+                c.symbol AS currency_code,
+                l.currency_id AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
                 '' AS partner_name
                 FROM account_move_line l
                 LEFT JOIN account_move m on (l.move_id=m.id)
+                LEFT JOIN account_account a ON (l.account_id=a.id)
                 LEFT JOIN res_currency c on (l.currency_id=c.id)
                 LEFT JOIN res_partner p on (l.partner_id=p.id)
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
                 WHERE %s AND m.state IN %s AND l.account_id = %%s
+                group by c.symbol, l.currency_id
             """ %(self.init_query, tuple(move_state))
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
@@ -209,6 +222,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                     l['amount_currency'] = abs(l['amount_currency']) * -1
             if l['amount_currency'] != None:
                 self.tot_currency = self.tot_currency + l['amount_currency']
+            self.cr.execute("select distinct currency_id from account_invoice")
+            l['cur_id']=self.cr.fetchall()
         return res
 
     def _sum_debit_account(self, account):

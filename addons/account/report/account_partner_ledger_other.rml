@@ -470,7 +470,7 @@
         <font face="Helvetica" color="white">[[ display_currency(data) == False or removeParentNode('section') ]]</font>
       </para>
 
-      <blockTable rowHeights="0.55cm" colWidths="332.0,64.0,64.0,79.0" style="Table3">
+      <blockTable rowHeights="0.55cm" colWidths="262.0,64.0,64.0,79.0,70.0" style="Table3">
         <tr>
           <td>
             <para style="terp_default_Bold_9">[[ p.ref ]] - [[ p.name ]]</para>
@@ -484,13 +484,16 @@
           <td>
             <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
           </td>
+          <td>
+            <para style="terp_default_Bold_9_Right">[[ p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
+          </td>
         </tr>
       </blockTable>
       <section>
         <para style="terp_default_2">
           <font face="Helvetica" color="white">[[data['form']['initial_balance']==True or removeParentNode('section') ]]</font>
         </para>
-        <blockTable rowHeights="0.55cm" colWidths="332.0,64.0,64.0,79.0" style="Table5">
+        <blockTable rowHeights="0.55cm" colWidths="262.0,64.0,64.0,79.0,70.0" style="Table5">
           <tr>
             <td>
               <para style="terp_default_9">Initial Balance</para>
@@ -503,6 +506,9 @@
             </td>
             <td>
               <para style="terp_default_Right_9">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
+            </td>
+            <td>
+              <para style="terp_default_Right_9">[[ len(get_currency())==1 and p.property_account_receivable.currency_id and formatLang(sum_currency_amount_account(p.property_account_receivable), digits=get_digits(dp='Account')) + p.property_account_receivable.currency_id.symbol or '' ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -653,7 +659,7 @@
             </td>
             <td>
               <para style="terp_default_Right_8">
-                <font face="Helvetica" size="8.0">[[ (line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[ formatLang(line['amount_currency'] ) ]] [[ line['currency_code'] or '' ]]</font>
+                <font face="Helvetica" size="8.0">[[ (len(get_currency())==1 and p.property_account_receivable.currency_id and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']] </font>
               </para>
             </td>
           </tr>
