@@ -65,15 +65,17 @@ class account_invoice_bvr(report_sxw.rml_parse):
             '_get_ref': self._get_ref,
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,
+            'bvr_format': self._bvr_format,
         })
     def _get_and_change_date_format_for_swiss (self,date_to_format):
         date_formatted=''
-        print date_to_format
-        if date_to_format:
+        if date_to_format and date_to_format != 'False':  # happens: str(False)
             date_formatted = time.strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
     def comma_me(self,amount):
+        if amount is False or amount is None :
+            return ''
         if  type(amount) is float :
             amount = str('%.2f'%amount)
         else :
@@ -101,6 +103,15 @@ class account_invoice_bvr(report_sxw.rml_parse):
         if o.number:
             invoice_number = re.sub('[^0-9]', '0', o.number)
         return mod10r(res + invoice_number.rjust(26-len(res), '0'))
+
+    def _bvr_format(self, o):
+        bvr_number = o.partner_bank_id.bvr_number
+        if (not bvr_number) or '-' not in bvr_number:
+            return '**** *******' # FIXME, what is the official "n/a" string, 
+                                  # should we raise exception instead?
+        return bvr_number.split('-')[0] + \
+            (str(bvr_number.split('-')[1])).rjust(6,'0') + \
+            bvr_number.split('-')[2]
 
 report_sxw.report_sxw(
     'report.l10n_ch.bvr',

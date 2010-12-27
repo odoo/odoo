@@ -373,7 +373,7 @@
 		-->
 
 		<setFont name="ocrb" size="11.5"/>
-	<drawRightString x="195mm" y="15mm">[[mod10r('01'+str('%.2f' % o.amount_total).replace('.','').rjust(10,'0'))]]&gt;[[ _get_ref(o) ]]+ [[o.partner_bank_id.bvr_number.split('-')[0]+(str(o.partner_bank_id.bvr_number.split('-')[1])).rjust(6,'0')+o.partner_bank_id.bvr_number.split('-')[2] ]]&gt;</drawRightString>
+	<drawRightString x="195mm" y="15mm">[[mod10r('01'+str('%.2f' % o.amount_total).replace('.','').rjust(10,'0'))]]&gt;[[ _get_ref(o) ]]+ [[ bvr_format(o) ]]&gt;</drawRightString>
 
 	</illustration>
 
