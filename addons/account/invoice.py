@@ -95,7 +95,7 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         data_inv = self.browse(cr, uid, ids, context=context)
         for inv in data_inv:
-            if inv.reconciled: 
+            if inv.reconciled:
                 res[inv.id] = 0.0
                 continue
             inv_total = inv.amount_total
@@ -111,7 +111,7 @@ class account_invoice(osv.osv):
                    amount_in_invoice_currency = cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id,abs(lines.debit-lines.credit),round=False,context=context_unreconciled)
                    inv_total -= amount_in_invoice_currency
 
-            result = inv_total 
+            result = inv_total
             res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
         return res
 
@@ -947,22 +947,22 @@ class account_invoice(osv.osv):
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         return {
             'date_maturity': x.get('date_maturity', False),
-            'partner_id':part,
-            'name':x['name'][:64],
+            'partner_id': part,
+            'name': x['name'][:64],
             'date': date,
-            'debit':x['price']>0 and x['price'],
-            'credit':x['price']<0 and -x['price'],
-            'account_id':x['account_id'],
-            'analytic_lines':x.get('analytic_lines', []),
-            'amount_currency':x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
-            'currency_id':x.get('currency_id', False),
+            'debit': x['price']>0 and x['price'],
+            'credit': x['price']<0 and -x['price'],
+            'account_id': x['account_id'],
+            'analytic_lines': x.get('analytic_lines', []),
+            'amount_currency': x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
+            'currency_id': x.get('currency_id', False),
             'tax_code_id': x.get('tax_code_id', False),
             'tax_amount': x.get('tax_amount', False),
-            'ref':x.get('ref',False),
-            'quantity':x.get('quantity',1.00),
-            'product_id':x.get('product_id', False),
-            'product_uom_id':x.get('uos_id',False),
-            'analytic_account_id':x.get('account_analytic_id',False),
+            'ref': x.get('ref', False),
+            'quantity': x.get('quantity',1.00),
+            'product_id': x.get('product_id', False),
+            'product_uom_id': x.get('uos_id', False),
+            'analytic_account_id': x.get('account_analytic_id', False),
         }
 
     def action_number(self, cr, uid, ids, context=None):
@@ -1132,6 +1132,7 @@ class account_invoice(osv.osv):
                 invoice[field] = invoice[field] and invoice[field][0]
             # create the new invoice
             new_ids.append(self.create(cr, uid, invoice))
+
         return new_ids
 
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context=None, name=''):
@@ -1232,6 +1233,7 @@ class account_invoice(osv.osv):
         # Update the stored value (fields.function), so we write to trigger recompute
         self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
@@ -1643,6 +1645,7 @@ class account_invoice_tax(osv.osv):
                 'tax_amount': t['tax_amount']
             })
         return res
+
 account_invoice_tax()
 
 
