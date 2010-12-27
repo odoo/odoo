@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv
-from tools.translate import _
 
 class pos_payment_report(osv.osv_memory):
     _name = 'pos.payment.report'

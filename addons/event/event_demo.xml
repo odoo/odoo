@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-
+    <record id="base.user_demo" model="res.users">
+             <field name="groups_id" eval="[(4, ref('marketing.group_marketing_user')),(4, ref('base.group_sale_salesman'))]"/>
+     </record>
 <!-- Demo Data for Product -->
 	<record id="event_product_0" model="product.product">
 		<field name="list_price">68.00</field>

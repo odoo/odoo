@@ -57,6 +57,8 @@
                         'webdav_setup.xml',
                         ],
         "demo_xml" : [],
+        "test": [ #'test/webdav_test1.yml', 
+                ],
         "active": False,
         "installable": True
 }

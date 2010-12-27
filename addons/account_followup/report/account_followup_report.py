@@ -55,15 +55,14 @@ class account_followup_stat(osv.osv):
             return super(account_followup_stat, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
                 context=context, count=count)
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
-            todel=[]
+    def read_group(self, cr, uid, domain, *args, **kwargs):
             for arg in domain:
                 if arg[0] == 'period_id' and arg[2] == 'current_year':
                     current_year = self.pool.get('account.fiscalyear').find(cr, uid)
                     ids = self.pool.get('account.fiscalyear').read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
                     domain.append(['period_id','in',ids])
                     domain.remove(arg)
-            return super(account_followup_stat, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context)
+            return super(account_followup_stat, self).read_group(cr, uid, domain, *args, **kwargs)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat')
@@ -91,7 +90,7 @@ class account_followup_stat(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
-                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id 
+                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
 account_followup_stat()
 

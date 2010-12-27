@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-06-15 07:18+0000\n"
-"Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-12 09:18+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -35,12 +35,16 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Εάν νομίζεις ότι το πρόσθετο θα ενδιαφέρει και άλλους, θα θέλαμε να το "
+"δημοσιεύσουμε στο OpenERP.com, στο τμήμα 'Πρόσθετα'. Μπορείς να το κάνεις "
+"είται μέσω της ιστοσελίδας ή χρησιμοποιόντας το 'base_module_publish' "
+"πρόσθετο"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "Τέλος"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -93,22 +97,10 @@ msgid "Objects Recording"
 msgstr "Εγγραφή Αντικειμένων"
 
 #. module: base_module_record
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
 #: wizard_field:base_module_record.module_record_objects,init,check_date:0
 msgid "Record from Date"
 msgstr "Εγγραφή από Ημερ/νία"
-
-#. module: base_module_record
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,end:0
@@ -172,7 +164,7 @@ msgstr ""
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Αποτέλεσμα, επικόλλησε αυτό στο xml του προσθέτου"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -206,7 +198,7 @@ msgstr "Εγγραφή"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Εγγραφή Προσθέτου"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -217,13 +209,13 @@ msgstr "Συνέχεια"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "Εξαγωγή Παραμετροποίησης ως αρχείο"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Λάθος"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -261,7 +253,7 @@ msgstr ""
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
 #: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
 msgid "Result"
-msgstr ""
+msgstr "Αποτέλεσμα"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,init,end:0
@@ -281,6 +273,36 @@ msgstr "Κλείσιμο"
 #: selection:base_module_record.module_record_objects,init,filter_cond:0
 msgid "Created & Modified"
 msgstr "Δημιουργημένα και Τροποποιημένα"
+
+#. module: base_module_record
+#: model:ir.module.module,description:base_module_record.module_meta_information
+msgid ""
+"\n"
+"This module allows you to create a new module without any development.\n"
+"It records all operations on objects during the recording session and\n"
+"produce a .ZIP module. So you can create your own module directly from\n"
+"the OpenERP client.\n"
+"\n"
+"This version works for creating and updating existing records. It "
+"recomputes\n"
+"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+"It also support workflows and demo/update data.\n"
+"\n"
+"This should help you to easily create reusable and publishable modules\n"
+"for custom configurations and demo/testing data.\n"
+"\n"
+"How to use it:\n"
+"Run Administration/Customization/Module Creation/Export Customizations As a "
+"Module wizard.\n"
+"Select datetime criteria of recording and objects to be recorded and Record "
+"module.\n"
+"    "
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
 
 #~ msgid "Recording Information"
 #~ msgstr "Πληροφορίες Εγγραφής"

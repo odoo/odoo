@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('base.group_tool_user'))]" name="groups_id"/>
+        </record>
+    
         <record id="subscription_document_partner0" model="subscription.document">
             <field eval="1" name="active"/>
             <field name="model" ref="base.model_res_partner"/>

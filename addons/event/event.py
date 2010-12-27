@@ -101,7 +101,7 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
+        if context is None:
             context = {}
         res = False
         if type(ids) in (int, long,):
@@ -115,9 +115,8 @@ class event_event(osv.osv):
             else:
                 unconfirmed_ids.append(event.id)
         if unconfirmed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm')
-            view_data = data_pool.browse(cr, uid, view_id, context=context)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm')
+            view_id = view_id and view_id[1] or False
             context['event_ids'] = unconfirmed_ids
             return {
                 'name': _('Confirm Event'),
@@ -247,23 +246,11 @@ class event_event(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        """
-        Checks for recursion level for event
-        """
-        level = 100
+    def _check_recursion(self, cr, uid, ids, context=None):
+        return super(event_event, self)._check_recursion(cr, uid, ids, context=context)
 
-        while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM event_event WHERE id IN %s', (tuple(ids),))
-            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-
-        return True
-
-    def _check_closing_date(self, cr, uid, ids):
-        for event in self.browse(cr, uid, ids):
+    def _check_closing_date(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
             if event.date_end < event.date_begin:
                 return False
         return True
@@ -280,11 +267,9 @@ class event_event(osv.osv):
         """
         if not team_id:
             return {}
-        if context is None:
-            context = {}
         team_pool = self.pool.get('crm.case.section')
-        team = team_pool.browse(cr, uid, team_id, context=context)
         res = {}
+        team = team_pool.browse(cr, uid, team_id, context=context)
         if team.reply_to:
             res = {'value': {'reply_to': team.reply_to}}
         return res
@@ -300,7 +285,6 @@ class event_registration(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
         res = {}
-        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.unit_price * line.nb_register
             pricelist = line.event_id.pricelist_id or line.partner_invoice_id.property_product_pricelist
@@ -373,6 +357,18 @@ class event_registration(osv.osv):
         self.history(cr, uid, [reg], _('Invoiced'))
         return inv_id
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """ Copy record of Given id
+        @param id: Id of Registration record.
+        @param context: A standard dictionary for contextual values
+        """
+        if not default:
+            default = {}
+        default.update({
+            'invoice_id': False,
+        })
+        return super(event_registration, self).copy(cr, uid, id, default=default, context=context)
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, date_inv = False, context=None):
         """ Action of Create Invoice """
         res = False
@@ -383,7 +379,7 @@ class event_registration(osv.osv):
         inv_pool = self.pool.get('account.invoice')
         product_pool = self.pool.get('product.product')
         contact_pool = self.pool.get('res.partner.contact')
-        if not context:
+        if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
@@ -426,7 +422,6 @@ class event_registration(osv.osv):
                    res = self._make_invoice(cr, uid, k, [v], context=context)
                    self.do_close(cr, uid, [k.id], context={'invoice_id': res})
             if res: new_invoice_ids.append(res)
-
         return new_invoice_ids
 
     def do_open(self, cr, uid, ids, context=None):
@@ -440,7 +435,7 @@ class event_registration(osv.osv):
     def do_close(self, cr, uid, ids, context=None):
         """ Close Registration
         """
-        if not context:
+        if context is None:
             context = {}
         invoice_id = context.get('invoice_id', False)
         values = {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
@@ -457,12 +452,12 @@ class event_registration(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        if not context:
-            context = {}
         if type(ids) in (int, long,):
             ids = [ids]
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
+        if context is None:
+            context = {}
         for registration in self.browse(cr, uid, ids, context=context):
             total_confirmed = registration.event_id.register_current + registration.nb_register
             if total_confirmed <= registration.event_id.register_max or registration.event_id.register_max == 0:
@@ -470,9 +465,8 @@ class event_registration(osv.osv):
             else:
                 unconfirmed_ids.append(registration.id)
         if unconfirmed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_confirm_registration')
-            view_data = data_pool.browse(cr, uid, view_id, context=context)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_confirm_registration')
+            view_id = view_id and view_id[1] or False
             context['registration_ids'] = unconfirmed_ids
             return {
                 'name': _('Confirm Registration'),
@@ -491,8 +485,6 @@ class event_registration(osv.osv):
     def button_reg_close(self, cr, uid, ids, context=None):
         """This Function Close Event Registration.
         """
-        if not context:
-            context = {}
         data_pool = self.pool.get('ir.model.data')
         unclosed_ids = []
         for registration in self.browse(cr, uid, ids, context=context):
@@ -501,9 +493,8 @@ class event_registration(osv.osv):
             else:
                 self.do_close(cr, uid, [registration.id], context=context)
         if unclosed_ids:
-            view_id = data_pool._get_id(cr, uid, 'event', 'view_event_make_invoice')
-            view_data = data_pool.browse(cr, uid, view_id, context=context)
-            view_id = view_data.res_id
+            view_id = data_pool.get_object_reference(cr, uid, 'event', 'view_event_make_invoice')
+            view_id = view_id and view_id[1] or False
             context['active_ids'] = unclosed_ids
             return {
                 'name': _('Close Registration'),
@@ -530,8 +521,6 @@ class event_registration(osv.osv):
         """
         Send email to user
         """
-        if not context:
-            context = {}
 
         for regestration in self.browse(cr, uid, ids, context=context):
             src = regestration.event_id.reply_to or False
@@ -556,11 +545,11 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                tools.email_send(src, email_to, subject, body, email_cc = email_cc, openobject_id = regestration.id)
+                tools.email_send(src, email_to, subject, body, email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
-                        email = email_to, details = body, \
-                        subject = subject, email_from = src, \
-                        email_cc = ', '.join(email_cc))
+                        email=email_to, details=body, \
+                        subjec=subject, email_from=src, \
+                        email_cc=', '.join(email_cc))
 
         return True
 
@@ -607,7 +596,7 @@ class event_registration(osv.osv):
         @param event_id: Event ID
         @param partner_invoice_id: Partner Invoice ID
         """
-        context={}
+        context = {}
         if not event_id:
             return {'value': {'unit_price': False, 'event_product': False}}
 

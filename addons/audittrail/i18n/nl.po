@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 08:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-24 09:28+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -22,18 +22,18 @@ msgid "Audit Trail"
 msgstr "Audittrail"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
+msgstr "WAARSCHUWING: audittrail is geen onderdeel van de pool"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Log"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Geabonneerd"
@@ -46,15 +46,29 @@ msgstr "Audittrail-regel"
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "Audit logs"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Status"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Concept"
@@ -63,11 +77,6 @@ msgstr "Concept"
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
 msgstr "Oude waarde"
-
-#. module: audittrail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -94,9 +103,9 @@ msgid "Log From"
 msgstr "Log van"
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "Log"
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "Log ID"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -129,16 +138,12 @@ msgid "Log Lines"
 msgstr "Logregels"
 
 #. module: audittrail
-#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Geabonneerde regels"
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
 msgstr "Regels"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -160,6 +165,11 @@ msgid "New Value Text: "
 msgstr "Nieuwe waarde tekst: "
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 msgid "Audit Rules"
 msgstr "Audit-regels"
@@ -175,6 +185,7 @@ msgid "Resource Name"
 msgstr "Resourcenaam"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Datum"
@@ -187,11 +198,6 @@ msgid ""
 msgstr ""
 "Selecteer dit als u de wijzigingen van elk record van het object van deze "
 "regel wilt bijhouden"
-
-#. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
-msgstr "Log ID"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
@@ -214,9 +220,17 @@ msgid "Log Workflow"
 msgstr "Log workflow"
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"\n"
+"    This module gives the administrator the rights\n"
+"    to track every user operation on all the objects\n"
+"    of the system.\n"
+"\n"
+"    Administrator can subscribe rules for read,write and\n"
+"    delete on objects and can check logs.\n"
+"    "
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
@@ -233,20 +247,6 @@ msgstr "Wijzig audittrail afhankelijkheden -- Zet regel op CONCEPT"
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
 msgstr "Log regels"
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' Model does not exist...\" %(model))\n"
-"        model = model_pool.browse(cr, uid, model_id)\n"
-"\n"
-"        if method in ('create"
-msgstr ""
-"'%s' Model bestaat niet...\" %(model))\n"
-"        model = model_pool.browse(cr, uid, model_id)\n"
-"\n"
-"        if method in ('create"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -268,6 +268,7 @@ msgstr ""
 "wilt bijhouden"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr "Gebruiker"
@@ -289,12 +290,6 @@ msgid "UnSubscribe"
 msgstr "Uitschrijven"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid "WARNING: audittrail is not part of the pool"
-msgstr "WAARSCHUWING: audittrail is geen onderdeel van de pool"
-
-#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr "Log verwijderen"
@@ -305,50 +300,9 @@ msgid "Field Description"
 msgstr "Omschrijving veld"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
-"\n"
-"        field = field_pool.read(cr, uid, field_id)\n"
-"        relation_model = field['relation']\n"
-"        relation_model_pool = relation_model and pool.get(relation_model) or "
-"False\n"
-"\n"
-"        if field['ttype'] == 'many2one':\n"
-"            res = False\n"
-"            relation_id = False\n"
-"            if values and type(values) == tuple:\n"
-"                relation_id = values[0]\n"
-"                if relation_id and relation_model_pool:\n"
-"                    relation_model_object = relation_model_pool.read(cr, "
-"uid, relation_id, [relation_model_pool._rec_name])\n"
-"                    res = "
-"relation_model_object[relation_model_pool._rec_name]\n"
-"            return res\n"
-"\n"
-"        elif field['ttype'] in ('many2many','one2many"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
 msgstr ""
-"'%s' veld bestaat niet in '%s' model\" %(field_name, model.model))\n"
-"\n"
-"        field = field_pool.read(cr, uid, field_id)\n"
-"        relation_model = field['relation']\n"
-"        relation_model_pool = relation_model and pool.get(relation_model) or "
-"False\n"
-"\n"
-"        if field['ttype'] == 'many2one':\n"
-"            res = False\n"
-"            relation_id = False\n"
-"            if values and type(values) == tuple:\n"
-"                relation_id = values[0]\n"
-"                if relation_id and relation_model_pool:\n"
-"                    relation_model_object = relation_model_pool.read(cr, "
-"uid, relation_id, [relation_model_pool._rec_name])\n"
-"                    res = "
-"relation_model_object[relation_model_pool._rec_name]\n"
-"            return res\n"
-"\n"
-"        elif field['ttype'] in ('many2many','one2many"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
@@ -371,29 +325,14 @@ msgid "Rule Name"
 msgstr "Naam regel"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Logs"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "Nieuwe waarde"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "Log Line"
-msgstr "Log regel"
-
-#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "AuditTrails-logs"
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Abonneren"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
@@ -413,6 +352,15 @@ msgid "New Value : "
 msgstr "Nieuwe waarde: "
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
+"Er is een regel gedefinieerd bij dit object\n"
+" U kunt geen andere definiëren bij dezelfde!"
+
+#. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
 msgstr "Oude waarde tekst"
@@ -428,106 +376,9 @@ msgid "View Log"
 msgstr "Log bekijken"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
-"\n"
-"            field = field_pool.read(cr, uid, field_id)\n"
-"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
-"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
-"            old_value_text = 'old_value_text' in line and  "
-"line['old_value_text'] or ''\n"
-"            new_value_text = 'new_value_text' in line and  "
-"line['new_value_text'] or ''\n"
-"\n"
-"            if old_value_text == new_value_text:\n"
-"                continue\n"
-"            if field['ttype'] == 'many2one':\n"
-"                if type(old_value) == tuple:\n"
-"                    old_value = old_value[0]\n"
-"                if type(new_value) == tuple:\n"
-"                    new_value = new_value[0]\n"
-"            vals = {\n"
-"                    \"log_id\": log_id,\n"
-"                    \"field_id\": field_id,\n"
-"                    \"old_value\": old_value,\n"
-"                    \"new_value\": new_value,\n"
-"                    \"old_value_text\": old_value_text,\n"
-"                    \"new_value_text\": new_value_text,\n"
-"                    \"field_description\": field['field_description']\n"
-"                    }\n"
-"            line_id = log_line_pool.create(cr, uid, vals)\n"
-"        #End Loop\n"
-"        return True\n"
-"\n"
-"\n"
-"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
-"        \"\"\"\n"
-"        Logging function: This function is performs logging oprations "
-"according to method\n"
-"        @param db: the current database\n"
-"        @param uid: the current user’s ID for security checks,\n"
-"        @param object: Object who's values are being changed\n"
-"        @param method: method to log: create, read, write, unlink\n"
-"        @param fct_src: execute method of Object proxy\n"
-"\n"
-"        @return: Returns result as per method of Object proxy\n"
-"        \"\"\"\n"
-"        res2 = args\n"
-"        pool = pooler.get_pool(db)\n"
-"        cr = pooler.get_db(db).cursor()\n"
-"        resource_pool = pool.get(model)\n"
-"        log_pool = pool.get('audittrail.log"
-msgstr ""
-"'%s' veld bestaat niet in '%s' model\" %(line['name'], model.model))\n"
-"\n"
-"            field = field_pool.read(cr, uid, field_id)\n"
-"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
-"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
-"            old_value_text = 'old_value_text' in line and  "
-"line['old_value_text'] or ''\n"
-"            new_value_text = 'new_value_text' in line and  "
-"line['new_value_text'] or ''\n"
-"\n"
-"            if old_value_text == new_value_text:\n"
-"                continue\n"
-"            if field['ttype'] == 'many2one':\n"
-"                if type(old_value) == tuple:\n"
-"                    old_value = old_value[0]\n"
-"                if type(new_value) == tuple:\n"
-"                    new_value = new_value[0]\n"
-"            vals = {\n"
-"                    \"log_id\": log_id,\n"
-"                    \"field_id\": field_id,\n"
-"                    \"old_value\": old_value,\n"
-"                    \"new_value\": new_value,\n"
-"                    \"old_value_text\": old_value_text,\n"
-"                    \"new_value_text\": new_value_text,\n"
-"                    \"field_description\": field['field_description']\n"
-"                    }\n"
-"            line_id = log_line_pool.create(cr, uid, vals)\n"
-"        #End Loop\n"
-"        return True\n"
-"\n"
-"\n"
-"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
-"        \"\"\"\n"
-"        Logging function: This function is performs logging oprations "
-"according to method\n"
-"        @param db: the current database\n"
-"        @param uid: the current user’s ID for security checks,\n"
-"        @param object: Object who's values are being changed\n"
-"        @param method: method to log: create, read, write, unlink\n"
-"        @param fct_src: execute method of Object proxy\n"
-"\n"
-"        @return: Returns result as per method of Object proxy\n"
-"        \"\"\"\n"
-"        res2 = args\n"
-"        pool = pooler.get_pool(db)\n"
-"        cr = pooler.get_db(db).cursor()\n"
-"        resource_pool = pool.get(model)\n"
-"        log_pool = pool.get('audittrail.log"
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr "Log regel"
 
 #. module: audittrail
 #: field:audittrail.rule,log_action:0
@@ -558,6 +409,9 @@ msgstr ""
 #~ msgid "audittrail.log"
 #~ msgstr "audittrail.log"
 
+#~ msgid "Logs"
+#~ msgstr "Logs"
+
 #~ msgid "Log writes"
 #~ msgstr "Log schrijfacties"
 
@@ -583,6 +437,14 @@ msgstr ""
 #~ msgstr "Maak"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
 #~ "Allows the administrator to track every user operations on all objects of "
 #~ "the system.\n"
 #~ "    Subscribe Rules for read, write, create and delete on objects and check "
@@ -593,5 +455,182 @@ msgstr ""
 #~ "    Beschrijf regels voor lezen, schrijven, maken en verwijderen van "
 #~ "objecten en controleer logbestanden"
 
+#~ msgid "Subscribe"
+#~ msgstr "Abonneren"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Geabonneerde regels"
+
 #~ msgid "View Logs"
 #~ msgstr "Bekijk logs"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#, python-format
+#~ msgid ""
+#~ "'%s' Model does not exist...\" %(model))\n"
+#~ "        model = model_pool.browse(cr, uid, model_id)\n"
+#~ "\n"
+#~ "        if method in ('create"
+#~ msgstr ""
+#~ "'%s' Model bestaat niet...\" %(model))\n"
+#~ "        model = model_pool.browse(cr, uid, model_id)\n"
+#~ "\n"
+#~ "        if method in ('create"
+
+#, python-format
+#~ msgid ""
+#~ "'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
+#~ "\n"
+#~ "        field = field_pool.read(cr, uid, field_id)\n"
+#~ "        relation_model = field['relation']\n"
+#~ "        relation_model_pool = relation_model and pool.get(relation_model) or "
+#~ "False\n"
+#~ "\n"
+#~ "        if field['ttype'] == 'many2one':\n"
+#~ "            res = False\n"
+#~ "            relation_id = False\n"
+#~ "            if values and type(values) == tuple:\n"
+#~ "                relation_id = values[0]\n"
+#~ "                if relation_id and relation_model_pool:\n"
+#~ "                    relation_model_object = relation_model_pool.read(cr, "
+#~ "uid, relation_id, [relation_model_pool._rec_name])\n"
+#~ "                    res = "
+#~ "relation_model_object[relation_model_pool._rec_name]\n"
+#~ "            return res\n"
+#~ "\n"
+#~ "        elif field['ttype'] in ('many2many','one2many"
+#~ msgstr ""
+#~ "'%s' veld bestaat niet in '%s' model\" %(field_name, model.model))\n"
+#~ "\n"
+#~ "        field = field_pool.read(cr, uid, field_id)\n"
+#~ "        relation_model = field['relation']\n"
+#~ "        relation_model_pool = relation_model and pool.get(relation_model) or "
+#~ "False\n"
+#~ "\n"
+#~ "        if field['ttype'] == 'many2one':\n"
+#~ "            res = False\n"
+#~ "            relation_id = False\n"
+#~ "            if values and type(values) == tuple:\n"
+#~ "                relation_id = values[0]\n"
+#~ "                if relation_id and relation_model_pool:\n"
+#~ "                    relation_model_object = relation_model_pool.read(cr, "
+#~ "uid, relation_id, [relation_model_pool._rec_name])\n"
+#~ "                    res = "
+#~ "relation_model_object[relation_model_pool._rec_name]\n"
+#~ "            return res\n"
+#~ "\n"
+#~ "        elif field['ttype'] in ('many2many','one2many"
+
+#, python-format
+#~ msgid ""
+#~ "'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
+#~ "\n"
+#~ "            field = field_pool.read(cr, uid, field_id)\n"
+#~ "            old_value = 'old_value' in line and  line['old_value'] or ''\n"
+#~ "            new_value = 'new_value' in line and  line['new_value'] or ''\n"
+#~ "            old_value_text = 'old_value_text' in line and  "
+#~ "line['old_value_text'] or ''\n"
+#~ "            new_value_text = 'new_value_text' in line and  "
+#~ "line['new_value_text'] or ''\n"
+#~ "\n"
+#~ "            if old_value_text == new_value_text:\n"
+#~ "                continue\n"
+#~ "            if field['ttype'] == 'many2one':\n"
+#~ "                if type(old_value) == tuple:\n"
+#~ "                    old_value = old_value[0]\n"
+#~ "                if type(new_value) == tuple:\n"
+#~ "                    new_value = new_value[0]\n"
+#~ "            vals = {\n"
+#~ "                    \"log_id\": log_id,\n"
+#~ "                    \"field_id\": field_id,\n"
+#~ "                    \"old_value\": old_value,\n"
+#~ "                    \"new_value\": new_value,\n"
+#~ "                    \"old_value_text\": old_value_text,\n"
+#~ "                    \"new_value_text\": new_value_text,\n"
+#~ "                    \"field_description\": field['field_description']\n"
+#~ "                    }\n"
+#~ "            line_id = log_line_pool.create(cr, uid, vals)\n"
+#~ "        #End Loop\n"
+#~ "        return True\n"
+#~ "\n"
+#~ "\n"
+#~ "    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
+#~ "        \"\"\"\n"
+#~ "        Logging function: This function is performs logging oprations "
+#~ "according to method\n"
+#~ "        @param db: the current database\n"
+#~ "        @param uid: the current user’s ID for security checks,\n"
+#~ "        @param object: Object who's values are being changed\n"
+#~ "        @param method: method to log: create, read, write, unlink\n"
+#~ "        @param fct_src: execute method of Object proxy\n"
+#~ "\n"
+#~ "        @return: Returns result as per method of Object proxy\n"
+#~ "        \"\"\"\n"
+#~ "        res2 = args\n"
+#~ "        pool = pooler.get_pool(db)\n"
+#~ "        cr = pooler.get_db(db).cursor()\n"
+#~ "        resource_pool = pool.get(model)\n"
+#~ "        log_pool = pool.get('audittrail.log"
+#~ msgstr ""
+#~ "'%s' veld bestaat niet in '%s' model\" %(line['name'], model.model))\n"
+#~ "\n"
+#~ "            field = field_pool.read(cr, uid, field_id)\n"
+#~ "            old_value = 'old_value' in line and  line['old_value'] or ''\n"
+#~ "            new_value = 'new_value' in line and  line['new_value'] or ''\n"
+#~ "            old_value_text = 'old_value_text' in line and  "
+#~ "line['old_value_text'] or ''\n"
+#~ "            new_value_text = 'new_value_text' in line and  "
+#~ "line['new_value_text'] or ''\n"
+#~ "\n"
+#~ "            if old_value_text == new_value_text:\n"
+#~ "                continue\n"
+#~ "            if field['ttype'] == 'many2one':\n"
+#~ "                if type(old_value) == tuple:\n"
+#~ "                    old_value = old_value[0]\n"
+#~ "                if type(new_value) == tuple:\n"
+#~ "                    new_value = new_value[0]\n"
+#~ "            vals = {\n"
+#~ "                    \"log_id\": log_id,\n"
+#~ "                    \"field_id\": field_id,\n"
+#~ "                    \"old_value\": old_value,\n"
+#~ "                    \"new_value\": new_value,\n"
+#~ "                    \"old_value_text\": old_value_text,\n"
+#~ "                    \"new_value_text\": new_value_text,\n"
+#~ "                    \"field_description\": field['field_description']\n"
+#~ "                    }\n"
+#~ "            line_id = log_line_pool.create(cr, uid, vals)\n"
+#~ "        #End Loop\n"
+#~ "        return True\n"
+#~ "\n"
+#~ "\n"
+#~ "    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
+#~ "        \"\"\"\n"
+#~ "        Logging function: This function is performs logging oprations "
+#~ "according to method\n"
+#~ "        @param db: the current database\n"
+#~ "        @param uid: the current user’s ID for security checks,\n"
+#~ "        @param object: Object who's values are being changed\n"
+#~ "        @param method: method to log: create, read, write, unlink\n"
+#~ "        @param fct_src: execute method of Object proxy\n"
+#~ "\n"
+#~ "        @return: Returns result as per method of Object proxy\n"
+#~ "        \"\"\"\n"
+#~ "        res2 = args\n"
+#~ "        pool = pooler.get_pool(db)\n"
+#~ "        cr = pooler.get_db(db).cursor()\n"
+#~ "        resource_pool = pool.get(model)\n"
+#~ "        log_pool = pool.get('audittrail.log"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"

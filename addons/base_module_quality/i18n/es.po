@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:39+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-26 20:20+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -23,71 +23,64 @@ msgstr ""
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Suggestion"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"<html>O(1) means that the number of SQL requests to read the object does not "
-"depand on the number of objects we are reading. This feature is mostly "
-"wished.\n"
-"</html>"
-msgstr ""
+msgstr "Sugerencia"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "Programming Error"
-msgstr ""
+msgstr "Error de programación"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Method Test"
-msgstr ""
+msgstr "Test del método"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
 msgid "Base module quality - To check the quality of other modules"
-msgstr ""
+msgstr "Módulo base de calidad - Para comprobar la calidad de otros módulos"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
+#: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid ""
-"\"\"\n"
-"This test checks if the module satisfy tiny structure\n"
-"\"\""
+"\n"
+"Test checks for fields, views, security rules, dependancy level\n"
 msgstr ""
-
-#. module: base_module_quality
-#: selection:module.quality.detail,state:0
-msgid "Skipped"
-msgstr "Ignorado"
+"\n"
+"Test para comprobar los campos, vistas, reglas de seguridad y niveles de "
+"dependencia\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"This test checks the speed of the module. Note that at least 5 demo data is "
-"needed in order to run it.\n"
-"\n"
-"\"\""
-msgstr ""
+msgid "O(n) or worst"
+msgstr "O(n) o peor"
+
+#. module: base_module_quality
+#: selection:module.quality.detail,state:0
+msgid "Skipped"
+msgstr "Omitido"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid "Module has no objects"
+msgstr "El módulo no tiene objetos"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Speed Test"
-msgstr ""
+msgstr "Test de velocidad"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "The module does not contain the __openerp__.py file"
-msgstr ""
+msgstr "El módulo no contiene el archivo __openerp__.py"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
@@ -98,13 +91,13 @@ msgstr ""
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Object Name"
-msgstr ""
+msgstr "Nombre del objeto"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Aceptar"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
@@ -113,28 +106,20 @@ msgid ""
 "This test checks if the module satisfies the current coding standard used by "
 "OpenERP."
 msgstr ""
+"Este test comprueba si el módulo satisface los estándares de código actuales "
+"de OpenERP."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
 #, python-format
 msgid "No report to save!"
-msgstr ""
+msgstr "¡No hay informe a guardar!"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of dependancy in %"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks if the module classes are raising exception when calling "
-"basic methods or not.\n"
-"\"\""
-msgstr ""
+msgstr "Resultado de la dependencia en %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -142,40 +127,26 @@ msgid ""
 "The test will be completed only if the module is installed or if the test "
 "may be processed on uninstalled module."
 msgstr ""
-"La prueba solo se podrá completarse si se instala el módulo or si se puede "
-"procesar con el módulo desinstalado."
+"El test sólo se podrá completar si el módulo está instalado o si se puede "
+"probar con el módulo desinstalado."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Result (/10)"
-msgstr ""
+msgstr "Resultado (/10)"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
-msgid ""
-"\"\"\n"
-"Test checks for fields, views, security rules, dependancy level\n"
-"\"\""
-msgstr ""
+msgid "Terp Test"
+msgstr "Test terp"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Object Test"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid ""
-"Error in Read method:\" + str(e))]\n"
-"                else:\n"
-"                    if size < 5:\n"
-"                        speed_list = [obj, size, code_base_complexity, "
-"code_half_complexity, code_size_complexity, _(\"Warning! Not enough demo data"
-msgstr ""
+msgstr "Test objeto"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -193,59 +164,42 @@ msgstr "Comprobar la calidad"
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "No es eficiente"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/wizard/quality_save_report.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/structure_test/structure_test.py:0
-#, python-format
-msgid "Feedback about structure of module"
-msgstr ""
+msgstr "Aviso"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Unit Test"
-msgstr ""
+msgstr "Test unitario"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Reading Complexity"
-msgstr ""
+msgstr "Complejidad de lectura"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Result of pep8_test in %"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/unit_test/unit_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
-"'unit_test/test.py' is needed in module.\n"
-"\n"
-"\"\""
-msgstr ""
+msgstr "Resultado del test pep8 en %"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
-msgstr "Estado / provincia"
+msgstr "Estado"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Module does not have 'unit_test/test.py' file"
-msgstr ""
+msgstr "El módulo no tiene un archivo 'unit_test/test.py'"
 
 #. module: base_module_quality
 #: field:module.quality.detail,ponderation:0
@@ -256,7 +210,7 @@ msgstr "Ponderación"
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of Security in %"
-msgstr ""
+msgstr "Resultado de seguridad en %"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -268,53 +222,33 @@ msgstr ""
 "en el cálculo de la valoración final."
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/pep8_test/pep8_test.py:0
-#, python-format
-msgid ""
-"\"\"\n"
-"PEP-8 Test , copyright of py files check, method can not call from loops\n"
-"\"\""
-msgstr ""
-
-#. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "No hay datos suficientes"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Result (/1)"
-msgstr ""
+msgstr "Resultado (/1)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N (Number of Records)"
-msgstr ""
+msgstr "N (Número de registros)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Sin datos"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
 msgid "module.quality.detail"
-msgstr "detalles.calidad.módulo"
-
-#. module: base_module_quality
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML no válido para ver arquitectura"
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/speed_test/speed_test.py:0
-#, python-format
-msgid "O(n) or worst"
-msgstr ""
+msgstr "módulo.calidad.detalle"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
@@ -328,30 +262,27 @@ msgid ""
 "This test checks where object has workflow or not on it if there is a state "
 "field and several buttons on it and also checks validity of workflow xml file"
 msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/method_test/method_test.py:0
-#, python-format
-msgid "Module has no objects"
-msgstr ""
+"Este test comprueba si el objeto tiene un flujo de trabajo, si hay un campo "
+"de estado y varios botones y también comprueba la validez del archivo xml "
+"del flujo de trabajo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Result in %"
-msgstr ""
+msgstr "Resultado en %"
 
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
 msgid "Standard entries"
-msgstr "Asientos normales"
+msgstr "Entradas estándar"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "No python file found"
-msgstr ""
+msgstr "No se ha encontrado un archivo Python"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -374,19 +305,33 @@ msgstr "Detalle"
 #. module: base_module_quality
 #: field:module.quality.detail,note:0
 msgid "Note"
-msgstr "Notas"
+msgstr "Nota"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"<html>O(1) means that the number of SQL requests to read the object does not "
+"depand on the number of objects we are reading. This feature is mostly "
+"wished.\n"
+"</html>"
+msgstr ""
+"<html>O(1) significa que el número de peticiones SQL para leer el objeto no "
+"depende el número de objetos que estamos leyendo. Esta característica sería "
+"la más deseable.\n"
+"</html>"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "__openerp__.py file"
-msgstr ""
+msgstr "archivo __openerp__.py"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #. module: base_module_quality
 #: view:module.quality.check:0
@@ -395,69 +340,83 @@ msgid "Tests"
 msgstr "Pruebas"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the speed of the module. Note that at least 5 demo data is "
+"needed in order to run it.\n"
+"\n"
+msgstr ""
+"\n"
+"Este test comprueba la velocidad del módulo. Observe que se necesitan por lo "
+"menos 5 datos de demostración para poder ejecutarlo.\n"
+"\n"
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Unable to parse the result. Check the details."
+msgstr "No se pudo parsear el resultado. Compruebe los detalles."
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module satisfy tiny structure\n"
 msgstr ""
+"\n"
+"Este test comprueba si el módulo satisface la estructura de tiny.\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Module Name"
-msgstr ""
+msgstr "Nombre del módulo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
 #, python-format
 msgid "Error! Module is not properly loaded/installed"
-msgstr ""
+msgstr "¡Error! El módulo no está cargado/instalado correctamente"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Error in Read method"
-msgstr ""
+msgstr "Error en el método de lectura"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Score is below than minimal score(%s%%)"
-msgstr ""
+msgstr "La puntuación está por debajo de la mínima(%s%%)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N/2"
-msgstr ""
+msgstr "N/2"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Exception"
-msgstr ""
+msgstr "Excepción"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "Test Is Not Implemented"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
-#, python-format
-msgid ""
-"\"\"This test uses Pylint and checks if the module satisfies the coding "
-"standard of Python. See http://www.logilab.org/project/name/pylint for "
-"further info.\n"
-" \"\""
-msgstr ""
+msgstr "El test no está implementado"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
@@ -465,10 +424,10 @@ msgid "Report Save"
 msgstr "Guardar informe"
 
 #. module: base_module_quality
-#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
-msgid "Feed back About Workflow of Module"
-msgstr ""
+msgid "Feedback about structure of module"
+msgstr "Información sobre la estructura del módulo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -477,12 +436,33 @@ msgid ""
 "Given module has no objects.Speed test can work only when new objects are "
 "created in the module along with demo data"
 msgstr ""
+"El módulo no tiene objetos. El test de velocidad sólo puede ejecutarse "
+"cuando se crean nuevos objetos en el módulo junto con datos de demostración"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid ""
+"This test uses Pylint and checks if the module satisfies the coding standard "
+"of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
+" "
+msgstr ""
+"Este test utiliza Pylint y comprueba si el módulo satisface los estándares "
+"de código Python. Consulte http://www.logilab.org/project/name/pylint para "
+"más información.\n"
+" "
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "Feed back About Workflow of Module"
+msgstr "Información sobre el flujo de trabajo del módulo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "No Workflow define"
-msgstr ""
+msgstr "No se ha definido flujo de trabajo"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
@@ -495,17 +475,20 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid ""
+"\n"
+"PEP-8 Test , copyright of py files check, method can not call from loops\n"
+msgstr ""
+"\n"
+"Test PEP-8, comprobación del copyright de los ficheros py y que los métodos "
+"no sean llamados desde bucles\n"
+
+#. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
 msgstr "Puntuación final (%)"
-
-#. module: base_module_quality
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nombre del objeto debe comenzar por x_ y no contener ningún símbolo "
-"especial"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -513,12 +496,14 @@ msgstr ""
 msgid ""
 "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
+"Error. ¿Está pylint correctamente instalado? "
+"(http://pypi.python.org/pypi/pylint)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Efficient"
-msgstr ""
+msgstr "Eficiente"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
@@ -529,7 +514,33 @@ msgstr "Módulo evaluado"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Workflow Test"
+msgstr "Test del flujo de trabajo"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/unit_test/unit_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks the Unit Test(PyUnit) Cases of the module. Note that "
+"'unit_test/test.py' is needed in module.\n"
+"\n"
 msgstr ""
+"\n"
+"Este test comprueba los casos del test unitario (PyUnit) del módulo. Observe "
+"que es necesario definir 'unit_test/test.py' en el módulo.\n"
+"\n"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid ""
+"\n"
+"This test checks if the module classes are raising exception when calling "
+"basic methods or not.\n"
+msgstr ""
+"\n"
+"Este test comprueba si las clases del módulo están lanzando una excepción o "
+"no cuando se llaman a los métodos básicos.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -537,40 +548,46 @@ msgid "Details"
 msgstr "Detalles"
 
 #. module: base_module_quality
+#: code:addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Warning! Not enough demo data"
+msgstr "¡Aviso! No hay suficientes datos de demostración."
+
+#. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Pylint Test"
-msgstr ""
+msgstr "Test Pylint"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "PEP-8 Test"
-msgstr ""
+msgstr "Test PEP-8"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Field name"
-msgstr ""
+msgstr "Nombre del campo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "1"
-msgstr ""
+msgstr "1"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Warning! Object has no demo data"
-msgstr ""
+msgstr "¡Aviso! El objeto no tiene datos de demostración"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Tag Name"
-msgstr ""
+msgstr "Nombre de etiqueta"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,name:0
@@ -578,9 +595,46 @@ msgid "File name"
 msgstr "Nombre del archivo"
 
 #. module: base_module_quality
+#: model:ir.module.module,description:base_module_quality.module_meta_information
+msgid ""
+"\n"
+"The aim of this module is to check the quality of other modules.\n"
+"\n"
+"It defines a wizard on the list of modules in OpenERP, which allows you to\n"
+"evaluate them on different criteria such as: the respect of OpenERP coding\n"
+"standards, the speed efficiency...\n"
+"\n"
+"This module also provides generic framework to define your own quality "
+"test.\n"
+"For further info, coders may take a look into base_module_quality\\"
+"README.txt\n"
+"\n"
+"WARNING: This module can not work as a ZIP file, you must unzip it before\n"
+"using it, otherwise it may crash.\n"
+"    "
+msgstr ""
+"\n"
+"El propósito de este módulo es el de comprobar la calidad de otros módulos.\n"
+"\n"
+"Proporciona un asistente en la lista de módulos de OpenERP, el cual le "
+"permitirá\n"
+"evaluarlos bajo diferentes criterios como: la conformidad a los estándares\n"
+"de código OpenERP, la eficiencia en velocidad, ...\n"
+"\n"
+"El módulo también proporciona una plataforma genérica para definir sus "
+"propios tests de calidad.\n"
+"Para más información, los programadores pueden mirar base_module_quality\\"
+"README.txt\n"
+"\n"
+"AVISO: Este módulo no puede trabajar como archivo ZIP, debe descomprimirlo "
+"antes\n"
+"de utilizarlo, en caso contrario puede fallar.\n"
+"    "
+
+#. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
-msgstr "comprobar.calidad.módulo"
+msgstr "módulo.calidad.comprobación"
 
 #. module: base_module_quality
 #: field:module.quality.detail,name:0
@@ -592,7 +646,7 @@ msgstr "Nombre"
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Result of views in %"
-msgstr ""
+msgstr "Resultado de las vistas en %"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
@@ -608,19 +662,19 @@ msgstr "Guardar el informe como archivo con formato .html"
 #: code:addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "The module has to be installed before running this test."
-msgstr ""
+msgstr "El módulo tiene que estar instalado antes de ejecutar este test."
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "O(1)"
-msgstr ""
+msgstr "O(1)"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of fields in %"
-msgstr ""
+msgstr "Resultado de los campos en %"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/unit_test/unit_test.py:0
@@ -635,25 +689,19 @@ msgstr "Resumen"
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "File Name"
-msgstr ""
+msgstr "Nombre del archivo"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Line number"
-msgstr ""
+msgstr "Número de línea"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Structure Test"
-msgstr ""
-
-#. module: base_module_quality
-#: code:addons/base_module_quality/terp_test/terp_test.py:0
-#, python-format
-msgid "Terp Test"
-msgstr ""
+msgstr "Test de estructura"
 
 #. module: base_module_quality
 #: field:module.quality.detail,quality_check_id:0
@@ -664,7 +712,31 @@ msgstr "Calidad"
 #: code:addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Feed back About terp file of Module"
-msgstr ""
+msgstr "Información sobre el archivo terp del módulo"
+
+#~ msgid "wizard.quality.check"
+#~ msgstr "asistente.calidad.comprobar"
+
+#~ msgid "Verbose detail"
+#~ msgstr "Detalle exhaustivo"
+
+#~ msgid "General Info"
+#~ msgstr "Información general"
+
+#~ msgid "quality.check.detail"
+#~ msgstr "calidad.comprobar.detalle"
+
+#~ msgid "Verbose Detail"
+#~ msgstr "Detalle exhaustivo"
 
 #~ msgid "Base module quality"
 #~ msgstr "Calidad del módulo base"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML no válido para ver arquitectura"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nombre del objeto debe comenzar por x_ y no contener ningún símbolo "
+#~ "especial"

@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:25+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-14 23:04+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Referência da encomenda"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -34,23 +34,23 @@ msgstr "Destino"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Peso líquido"
+
+#. module: delivery
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr "Ordem de entrega"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Nenhum preço disponivel !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
 msgstr ""
-
-#. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -72,7 +72,7 @@ msgstr "Linha da grelha"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Ordem de entrega"
 
 #. module: delivery
 #: view:res.partner:0
@@ -98,12 +98,7 @@ msgstr "Países"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sale Order"
-msgstr ""
+msgstr "Ordem de entrega :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -121,15 +116,9 @@ msgstr "Fixo"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
+#: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Método de expedição"
-
-#. module: delivery
-#: help:delivery.grid,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"grid without removing it."
-msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -141,6 +130,8 @@ msgstr ""
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
+"Nenhuma correspondência da linha nesta ordem na grelha de entregas "
+"escolhidas !"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -150,12 +141,13 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Peso líquido"
 
 #. module: delivery
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
-msgstr "Linhas da grelha"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr "Aviso"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -165,7 +157,7 @@ msgstr "Definição da grelha"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -175,17 +167,22 @@ msgstr "Operador"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
+msgstr "Terceiro"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Grelha de expedição"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Faturado a"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -195,7 +192,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Fazer entrega"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -209,10 +206,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
-msgstr ""
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
+msgstr "Linhas da grelha"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -220,24 +216,21 @@ msgid "Grid"
 msgstr "Grelha"
 
 #. module: delivery
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "Patra zip"
 
 #. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura da vista"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: UdV deve estar numa categoria diferente da UdC"
-
-#. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data da encomenda"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -247,12 +240,12 @@ msgstr "Nome da grelha"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Pesos"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Número de embalagens"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -264,9 +257,11 @@ msgid "Weight"
 msgstr "Peso"
 
 #. module: delivery
-#: field:sale.order,carrier_id:0
-msgid "Delivery method"
-msgstr "Método de expedição"
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -280,17 +275,10 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: A UdM pré-defenida e a UdM de compra devem ser da mesma categoria."
-
-#. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Ordem não se encontra no estado de rascunho !"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -300,12 +288,12 @@ msgstr "Erro! Não pode criar membros associados recursivamente."
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Lote"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
-msgstr "Grelha de expedição"
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "Está a tentar associar a um lote, que não é do mesmo artigo."
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -316,7 +304,7 @@ msgstr "Activo"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Data de envio"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -329,9 +317,20 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Preço de custo"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+"Criar e gerir os métodos de entrega que se pretende aplicar às vendas. Cada "
+"método pode ser associado a uma lista de preços que calcula o preço de "
+"entrega de acordo com os produtos sendo vendidos ou entregues"
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Tem de associar um lote de produção a este artigo"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -352,7 +351,7 @@ msgstr "Valor máximo"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantidade"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -366,14 +365,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
-"especial !"
-
-#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr "Parceiro portador"
@@ -384,9 +375,28 @@ msgid "Sales & Purchases"
 msgstr "Vendas & Compras"
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid "<="
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Preço de custo"
+
+#. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "Criar entregas"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -397,7 +407,7 @@ msgstr "Custos de expedição"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -416,7 +426,7 @@ msgstr "Preço"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Nenhuma grelha correspondente para esta transportadora !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -438,19 +448,12 @@ msgstr "="
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "A transportadora %s (id: %d) não tem grelha de entrega !"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "Nome"
-
-#. module: delivery
-#: help:delivery.carrier,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the delivery "
-"carrier without removing it."
-msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -465,7 +468,7 @@ msgstr "Transportador"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Aplicar"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -477,6 +480,7 @@ msgstr "ID"
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"O estado da ordem tem que estar em rascunho para adicionar linhas de entrega."
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
@@ -505,11 +509,6 @@ msgid "States"
 msgstr "Estados"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código ean inválido"
-
-#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Tipo de preço"
@@ -517,11 +516,17 @@ msgstr "Tipo de preço"
 #~ msgid "Notes"
 #~ msgstr "Notas"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erro: Código ean inválido"
+
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "O IVA não parece estar correcto."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção"
 
 #~ msgid ""
 #~ "Complete this field if you plan to invoice the shipping based on packing."
@@ -536,6 +541,15 @@ msgstr "Tipo de preço"
 #~ "Pode definir grelhas de transitários e expedição por preços. Ao criar "
 #~ "facturas por recolha, o OpenERP pode calcular a via de expedição."
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
+#~ "especial !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a arquitectura da vista"
+
 #~ msgid "This delivery method will be used when invoicing from packing."
 #~ msgstr "Este método de expedição será usado se facturar por empacotamento"
 
@@ -548,8 +562,45 @@ msgstr "Tipo de preço"
 #~ msgid "Carrier and delivery grids"
 #~ msgstr "Grelha de transitário e expedição"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Erro: UdV deve estar numa categoria diferente da UdC"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A UdM pré-defenida e a UdM de compra devem ser da mesma categoria."
+
 #~ msgid "Add Delivery Costs"
 #~ msgstr "Adicionar custos de expedição"
 
+#~ msgid "Delivery method"
+#~ msgstr "Método de expedição"
+
 #~ msgid "Packing to be invoiced"
 #~ msgstr "Empacotamento a facturar."
+
+#, python-format
+#~ msgid "No grid avaible !"
+#~ msgstr "Nenhuma grelha disponivel !"
+
+#~ msgid "Sale Order"
+#~ msgstr "Ordem de venda"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Não pode criar menus recursivos"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the delivery "
+#~ "carrier without removing it."
+#~ msgstr ""
+#~ "Se o campo 'ativo' estiver selecionado, permitir-lhe-á esconder o "
+#~ "transportador sem ter de o remover"

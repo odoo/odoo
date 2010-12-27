@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:55+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:55+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:04+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,12 +17,8 @@ msgstr ""
 
 #. module: report_designer
 #: model:ir.actions.act_window,name:report_designer.action_report_designer_installer
+#: view:report_designer.installer:0
 msgid "Reporting Tools Configuration"
-msgstr ""
-
-#. module: report_designer
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: report_designer
@@ -31,8 +27,8 @@ msgid "Query Builder"
 msgstr ""
 
 #. module: report_designer
-#: field:report_designer.installer,progress:0
-msgid "Configuration Progress"
+#: view:report_designer.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: report_designer
@@ -61,13 +57,23 @@ msgid "Reporting Tools"
 msgstr ""
 
 #. module: report_designer
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:report_designer.installer:0
+msgid "OpenERP's built-in reporting abilities can be improved even further with some of the following applications"
 msgstr ""
 
 #. module: report_designer
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: view:report_designer.installer:0
+msgid "Configure Reporting Tools"
+msgstr ""
+
+#. module: report_designer
+#: help:report_designer.installer,base_report_creator:0
+msgid "Allows you to create any statistic reports  on several objects. It's a SQL query builder and browser for end users."
+msgstr ""
+
+#. module: report_designer
+#: help:report_designer.installer,base_report_designer:0
+msgid "Adds wizards to Import/Export .SXW report which you can modify in OpenOffice.Once you have modified it you can upload the report using the same wizard."
 msgstr ""
 
 #. module: report_designer
@@ -77,7 +83,7 @@ msgid "Installer for reporting tools selection\n"
 msgstr ""
 
 #. module: report_designer
-#: help:report_designer.installer,base_report_creator:0
-msgid "Allows you to create any statistic reports  on several objects. It's a SQL query builder and browser for end users."
+#: field:report_designer.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 

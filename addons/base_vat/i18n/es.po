@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-31 08:45+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-25 18:58+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_vat
@@ -28,22 +28,37 @@ msgstr ""
 "esto %s"
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: base_vat
-#: constraint:ir.model:0
+#: model:ir.module.module,description:base_vat.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    Enable the VAT Number for the partner. Check the validity of that VAT "
+"Number.\n"
+"\n"
+"    This module follows the methods stated at http://sima-pc.com/nif.php "
+"for\n"
+"    checking the validity of VAT Number assigned to partners in European "
+"countries.\n"
+"    "
 msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+"\n"
+"    Permite la validación del CIF/NIF de las empresas. Comprueba si el "
+"CIF/NIF es un número válido.\n"
+"\n"
+"    Este módulo usa los métodos especificados en http://sima-pc.com/nif.php "
+"para\n"
+"    la validación del CIF/NIF asignado a las empresas de los países "
+"europeos.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
 msgstr "Base CIF/NIF - Para comprobar la validez de los CIF/NIF"
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivos."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:0
@@ -70,6 +85,9 @@ msgstr "Empresa"
 msgid "VAT Legal Statement"
 msgstr "Sujeto a IVA"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
 #~ msgstr ""
@@ -78,3 +96,18 @@ msgstr "Sujeto a IVA"
 
 #~ msgid "VAT"
 #~ msgstr "IVA"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"

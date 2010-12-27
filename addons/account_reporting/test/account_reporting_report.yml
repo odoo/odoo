@@ -1,9 +1,0 @@
--
-  Print the Balance Sheet Report in Normal mode
--
-  !python {model: account.report.bs }: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'account.report.bs', 'form': {'fiscalyear':ref('account.data_fiscalyear'),'periods':[ref('account.period_1'),ref('account.period_2'),ref('account.period_3')],'context':{}}}
-    (data, format) = netsvc.LocalService('report.account.report.bs').create(cr, uid, [ref('account_reporting.account_balance_sheet_1')], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_reporting-balance_sheet_report.'+format), 'wb+').write(data)

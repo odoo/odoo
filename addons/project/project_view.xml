@@ -5,7 +5,9 @@
         <menuitem
             icon="terp-project" id="base.menu_main_pm"
             name="Project" sequence="10"
-            groups="group_project_manager,group_project_user"/>
+            groups="group_project_manager,group_project_user"
+            web_icon="images/project.png"
+            web_icon_hover="images/project-hover.png"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
@@ -19,7 +21,7 @@
                 <form string="Project">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
-                        <field name="parent_id" string="Parent Project"/>
+                        <field name="parent_id" domain="[('id','!=',active_id)]"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
@@ -107,13 +109,13 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
+                       <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects"/>
                        <separator orientation="vertical"/>
-                       <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
+                       <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager" default="1">
-                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
+                       <field name="user_id" string="Project Manager">
+                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                        </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
@@ -158,7 +160,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
-            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned on it. A project can be put into a hierarchy, as a child of a Parent Project. This allows you to  design large project structure with different phases spread over the project duration cycle. Each user can set his default project in his own preferences, in order to filter automatically the tasks or issues he usually works on.</field>
+            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -209,7 +211,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
+                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="[('user_id','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
@@ -223,20 +225,20 @@
                                     widget="float_time"
                                     attrs="{'readonly':[('state','!=','draft')]}"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="effective_hours" widget="float_time"/>
+                                <field
+                                    name="effective_hours"
+                                    widget="float_time" invisible="1"/>
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-
-                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
-                                    <field name="hours" widget="float_time" />
+                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="user_id" />
                                     <field name="date" />
                                 </tree>
@@ -310,7 +312,8 @@
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
+		    <field name="effective_hours" widget="float_time" sum="Spent Hours"/>                    
+		    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="type_id" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <button name="next_type" invisible="context.get('set_visible',False)"
@@ -379,7 +382,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -423,9 +426,9 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid, "search_default_current": 1}</field>
+            <field name="context">{"search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to antoher user. If you delegate a task to another user, you get a new task in pending state, which will be re-opened when you have to review the work achieved. If you install the project_timesheet module, tasks works can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
 
@@ -489,7 +492,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
-            <field name="help">Define here the steps that will be used on the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress of the resolution of a task or an issue.</field>
+            <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>

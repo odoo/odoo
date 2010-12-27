@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -147,9 +147,7 @@ msgid "My Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
 #: constraint:project.task:0
-#, python-format
 msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
@@ -343,6 +341,11 @@ msgid "Mail Header"
 msgstr ""
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr ""
@@ -404,15 +407,18 @@ msgid "res.users"
 msgstr ""
 
 #. module: project
-#: help:project.project,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the project "
-"without removing it."
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Reactivate Project"
 msgstr ""
 
 #. module: project
@@ -433,8 +439,11 @@ msgid "Done by"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Planning"
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define here the steps that will be used on the project from the creation of "
+"the task, up to the closing of the task or issue. You will use these stages "
+"in order to track the progress of the resolution of a task or an issue."
 msgstr ""
 
 #. module: project
@@ -449,11 +458,6 @@ msgstr ""
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "_Delegate"
 msgstr ""
 
 #. module: project
@@ -474,6 +478,11 @@ msgstr ""
 #: code:addons/project/project.py:0
 #, python-format
 msgid " (copy)"
+msgstr ""
+
+#. module: project
+#: field:project.task,user_id:0
+msgid "Responsible"
 msgstr ""
 
 #. module: project
@@ -499,8 +508,13 @@ msgid "Reevaluate Task"
 msgstr ""
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
+#: view:project.project:0
+msgid "Date Stop: %(date)s"
+msgstr ""
+
+#. module: project
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: project
@@ -509,8 +523,8 @@ msgid "Reset as Project"
 msgstr ""
 
 #. module: project
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: selection:project.vs.hours,state:0
+msgid "Template"
 msgstr ""
 
 #. module: project
@@ -524,8 +538,8 @@ msgid "My projects"
 msgstr ""
 
 #. module: project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: project
@@ -558,9 +572,16 @@ msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr ""
 
 #. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"A task represents a work that has to be done. Each user works in his own "
+"list of tasks where he can record his task work in hours. He can work and "
+"close the task itself or delegate it to antoher user. If you delegate a task "
+"to another user, you get a new task in pending state, which will be re-"
+"opened when you have to review the work achieved. If you install the "
+"project_timesheet module, tasks works can be invoiced based on the project "
+"configuration. With the project_mrp module, sales orders can create tasks "
+"automatically when they are confirmed."
 msgstr ""
 
 #. module: project
@@ -614,11 +635,6 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Medium"
-msgstr ""
-
-#. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
 msgstr ""
 
 #. module: project
@@ -735,6 +751,18 @@ msgid "New title of the task delegated to the user"
 msgstr ""
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr ""
@@ -756,6 +784,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
 msgstr ""
@@ -814,8 +843,8 @@ msgid "Project Management"
 msgstr ""
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
+#: selection:report.project.task.user,month:0
+msgid "August"
 msgstr ""
 
 #. module: project
@@ -934,8 +963,16 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
 msgstr ""
 
 #. module: project
@@ -990,8 +1027,8 @@ msgid "Project Tasks"
 msgstr ""
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: project
@@ -1009,11 +1046,6 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
-
-#. module: project
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: project
@@ -1056,8 +1088,8 @@ msgid "Stages"
 msgstr ""
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
+#: view:project.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: project
@@ -1071,6 +1103,11 @@ msgstr ""
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
+msgstr ""
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
 msgstr ""
 
 #. module: project
@@ -1154,8 +1191,10 @@ msgid "Manager Email"
 msgstr ""
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
 msgstr ""
 
 #. module: project
@@ -1204,14 +1243,13 @@ msgid "User's projects"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Urgent"
+#: view:project.task.delegate:0
+msgid "_Delegate"
 msgstr ""
 
 #. module: project
@@ -1290,6 +1328,14 @@ msgid "State"
 msgstr ""
 
 #. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "Task '%s' set in progress"
@@ -1359,12 +1405,6 @@ msgid "In Progress"
 msgstr ""
 
 #. module: project
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: project
 #: code:addons/project/wizard/project_task_close.py:0
 #, python-format
 msgid "Please specify the email address of Customer."
@@ -1387,8 +1427,9 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: field:project.task,user_id:0
-msgid "Responsible"
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
 msgstr ""
 
 #. module: project
@@ -1419,6 +1460,11 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Planning"
 msgstr ""
 
 #. module: project
@@ -1488,8 +1534,9 @@ msgid "Your Task Title"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Scheduling"
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Urgent"
 msgstr ""
 
 #. module: project
@@ -1521,6 +1568,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr ""
 
@@ -1538,6 +1586,11 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
+msgstr ""
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
 msgstr ""
 
 #. module: project
@@ -1657,6 +1710,11 @@ msgid "Project Time Unit"
 msgstr ""
 
 #. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr ""
+
+#. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "The task '%s' is pending."
@@ -1688,11 +1746,6 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
-
-#. module: project
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: project
@@ -1730,6 +1783,11 @@ msgid "Task '%s' cancelled"
 msgstr ""
 
 #. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr ""
+
+#. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
@@ -1764,7 +1822,7 @@ msgstr ""
 
 #. module: project
 #: view:project.project:0
-msgid "Date Stop: %(date_stop)s"
+msgid "Scheduling"
 msgstr ""
 
 #. module: project

@@ -1,20 +1,19 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_timesheet
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:37+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 01:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:32+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
@@ -43,12 +42,19 @@ msgstr "Таны хэрэглэгчид ажилтан харгалзаагүй 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл..."
+msgstr "Бүлэглэх..."
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
+"Ажилтан янз бүрийн төслүүд дээр ажилласан цагаа бүртгэнэ. Төсөл нь аналитик "
+"данс бөгөөд энэ аналитик дансанд төсөл дээр ажилласан цагаар өртөг үүсгэнэ. "
+"Энэ функц нь ирц ба цаг бүртгэлийг 1 зэрэг бүртгэх боломж олгоно."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -101,10 +107,17 @@ msgid "Sign in"
 msgstr "Нэвтрэх"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "4 сар"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
+"Ажилтнууд хуваарилагдсан төсөл дээрээ зарцуулсан цагаа кодоор шифрлэх "
+"боломжтой. Төсөл нь шинжилгээний бүртгэл ба төсөл дээр зарцуулагдсан цаг нь "
+"үнийн гаргалгааг хийнэ. Энэ боломж нь оролцогч болон цаг бүртгэлийг нэг зэрэ "
+"бичих боломжийг олгоно."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -117,14 +130,15 @@ msgid "Monthly Employee Timesheet"
 msgstr "Ажилтны сарын цаг бүртгэл"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Нэвтрэх / Гарах"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Сүүлийн мөчлөгт ажил дууссан"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr "Алдаа! Ажилтан нь менежер байх хэлтсийг сонгож болохгүй."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -205,15 +219,17 @@ msgid "Sun"
 msgstr "Ням"
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
+msgstr ""
+"Ажлын цаг нь өдөр бүр төсөл бүрээр ажилласан цагаа хөтлөх боломж олгоно."
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Хэвлэх"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr "Гарсан үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -250,20 +266,26 @@ msgid "Categories"
 msgstr "Ангиллууд"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн xml алдаатай байна!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
 msgstr "11 сар"
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -291,11 +313,9 @@ msgid "September"
 msgstr "9 сар"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "12 сар"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Цаг бүртгэлийн мөр"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -344,12 +364,19 @@ msgid "Fri"
 msgstr "Баасан"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Нэвтрэх / Гарах"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
-"Алдаа: Өгөгдмөл хэмжих нэгж ба худалдан авах хэмжих нэгж нь 1 ангилалд байх "
-"ёстой."
+"Энэ ажилтны аналитик журнал тодорхойлогдоогүй байна.%s\n"
+"Сонгосон хэрэглэгчийн ажилтан ба ажилтны аналитик дансыг олгоно уу!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -362,11 +389,6 @@ msgid "Timesheets"
 msgstr "Цаг бүртгэл"
 
 #. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr "Ажилтны албан тушаалыг 'Үйлчилгээ' төрлийн бараа шиг тодорхойлно."
@@ -375,7 +397,7 @@ msgstr "Ажилтны албан тушаалыг 'Үйлчилгээ' төрл
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "août"
-msgstr ""
+msgstr "8 сар"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -400,7 +422,7 @@ msgstr "Өөрийн цаг бүртгэлийг хэвлэх"
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "mars"
-msgstr ""
+msgstr "3 сар"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -415,6 +437,11 @@ msgid "November"
 msgstr "11 сар"
 
 #. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Алдаа! Ажилтны рекурс иерархийг үүсгэж болохгүй"
+
+#. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
 msgstr "Хаасан өдөр"
@@ -425,16 +452,6 @@ msgstr "Хаасан өдөр"
 #, python-format
 msgid "October"
 msgstr "10 сар"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
-"Энэ төсөлд аналитик данс байхгүй байна.\n"
-"1 аналитик данс олгохгүй бол цаг бүртгэлийг автоматаар бөглөх боломжгүй."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -487,6 +504,13 @@ msgid "Analysis summary"
 msgstr "Шинжилгээний товчоо"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "12 сар"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -506,7 +530,7 @@ msgstr "Ажилчдын цаг бүртгэл"
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "février"
-msgstr ""
+msgstr "2 сар"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -514,16 +538,16 @@ msgid "Information"
 msgstr "Мэдээлэл"
 
 #. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Обьектын нэр x_-ээр эхэлж тусгай тэмдэгт агуулахгүй байх ёстой!"
-
-#. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
 msgstr "Ажилтан"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "4 сар"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -535,11 +559,6 @@ msgstr "Өнөөдөр"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr "Аналитик данс"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Цаг бүртгэлийн мөр"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -573,12 +592,12 @@ msgstr "Нийт цаг"
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "juin"
-msgstr ""
+msgstr "6 сар"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(local time on the server side)"
-msgstr "(Серве дээрх орон нутгийн цаг)"
+msgstr "(Сервер дээрх орон нутгийн цаг)"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
@@ -605,31 +624,20 @@ msgid "Analytic line"
 msgstr "Аналитик мөр"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
-msgstr ""
-"Дэлгэцийн энэ оролт нь нэвтрэх гарах үйлдлийг төслөөр харахад тусална"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
+msgstr "Гарсан үйлдлийг төслөөр харах"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr "Ажилчид"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
-msgstr ""
-"Энэ ажилтны аналитик журнал тодорхойлогдоогүй байна.%s\n"
-"Сонгосон хэрэглэгчийн ажилтан ба ажилтны аналитик дансыг олгоно уу!"
+msgstr "Ажилтнууд"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "octobre"
-msgstr ""
+msgstr "10 сар"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -639,10 +647,20 @@ msgid "April"
 msgstr "4 сар"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
+msgstr ""
+"Энэ төсөлд аналитик данс байхгүй байна.\n"
+"1 аналитик данс олгохгүй бол цаг бүртгэлийг автоматаар бөглөх боломжгүй."
+
+#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "mai"
-msgstr ""
+msgstr "5 сар"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -654,11 +672,6 @@ msgstr "Хэрэглэгчид"
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Ажиллаж эхлэх"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -706,3 +719,101 @@ msgstr "9 сар"
 
 #~ msgid "Total"
 #~ msgstr "Нийт"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Борлуулалтын нэгж нь хэмжих нэгжээс өөр ангилалд байх ёстой"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
+
+#~ msgid "This Wizard will make Sign In/Out By Project"
+#~ msgstr ""
+#~ "Дэлгэцийн энэ оролт нь нэвтрэх гарах үйлдлийг төслөөр харахад тусална"
+
+#~ msgid "Choose your month"
+#~ msgstr "Сарыг сонгоноу уу"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
+#~ msgid "Sign in status"
+#~ msgstr "Нэвтэрсэн төлөв"
+
+#~ msgid "Current Server Date"
+#~ msgstr "Серверийн одоогийн огноо"
+
+#~ msgid "Hour"
+#~ msgstr "Цаг"
+
+#~ msgid "Working Hours of The Day"
+#~ msgstr "Өдрийн ажлын цаг"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай байна!"
+
+#~ msgid "Choose Users"
+#~ msgstr "Хэрэглэгчдийг сонгоно уу!"
+
+#~ msgid "Employee's name"
+#~ msgstr "Ажилтны нэр"
+
+#~ msgid "Consultancy - Senior Developer"
+#~ msgstr "Зөвлөхийн үйлчилгээ -  Ахлах хөгжүүлэгч"
+
+#~ msgid "My Working Hours"
+#~ msgstr "Миний ажлын цаг"
+
+#~ msgid "Timesheet line"
+#~ msgstr "Цаг бүртгэлийн мөр"
+
+#~ msgid "Sum"
+#~ msgstr "Нийлбэр"
+
+#~ msgid "My Working Hours of The Day"
+#~ msgstr "Миний өдрийн ажлын цаг"
+
+#~ msgid "Timesheet Process"
+#~ msgstr "Цаг бүртгэлийг боловсруулах"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Алдаа: Буруу зураасан код"
+
+#~ msgid "Working Time"
+#~ msgstr "Ажлын цаг"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module implements a timesheet system. Each employee can encode and\n"
+#~ "track their time spent on the different projects. A project is an\n"
+#~ "analytic account and the time spent on a project generates costs on\n"
+#~ "the analytic account.\n"
+#~ "\n"
+#~ "Lots of reporting on time and employee tracking are provided.\n"
+#~ "\n"
+#~ "It is completely integrated with the cost accounting module. It allows you\n"
+#~ "to set up a management by affair.\n"
+#~ "   "
+#~ msgstr ""
+#~ "\n"
+#~ "Энэ модуль цаг бүртгэлийг зохицуулна.  Ажилтан бүр  янз бүрийн төслүүдэд\n"
+#~ "ажилласан хугацаагаа бүртгэж хянана. Төсөл нь аналитик данс бөгөөд\n"
+#~ "энэ аналитик дансанд төсөл дээр ажилласан \n"
+#~ "цагаар өртөг үүсгэнэ.\n"
+#~ "\n"
+#~ "Ажилтны цагийг хянах олон тайлан бий.\n"
+#~ "\n"
+#~ "Энэ нь өртөг бүртгэх модультай бүрэн уялдсан. Энэ нь ажил хэргийн\n"
+#~ "удирдагыг \n"
+#~ "тохируулах боломж олгоно.\n"
+#~ "   "

@@ -22,13 +22,12 @@
 import time
 
 import pooler
-import rml_parse
 from report import report_sxw
 from account.report import account_profit_loss
 from common_report_header import common_report_header
 from tools.translate import _
 
-class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
+class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
         self.obj_pl = account_profit_loss.report_pl_account_horizontal(cr, uid, name, context=context)
@@ -60,6 +59,13 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
             'get_target_move': self._get_target_move,
         })
         self.context = context
+
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def sum_dr(self):
         if self.res_bl['type'] == _('Net Profit'):
@@ -130,15 +136,16 @@ class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
                         'level': account.level,
                         'balance':account.balance,
                     }
+                    acc_digit = self.pool.get('decimal.precision').precision_get(self.cr, 1, 'Account')
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0:
+                        if round(account.credit, acc_digit) > 0  or round(account.debit, acc_digit) > 0 or round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if account.balance != 0:
+                        if round(account.balance, acc_digit) != 0:
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)

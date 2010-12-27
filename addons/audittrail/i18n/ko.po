@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 13:25+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -23,17 +23,18 @@ msgid "Audit Trail"
 msgstr "감사 트레일"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "로그"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "등록됨"
@@ -46,15 +47,29 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "감사 로그"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "상태"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "초안"
@@ -63,11 +78,6 @@ msgstr "초안"
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
 msgstr "옛 값"
-
-#. module: audittrail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
@@ -92,9 +102,9 @@ msgid "Log From"
 msgstr "로그 (From)"
 
 #. module: audittrail
-#: field:audittrail.log.line,log_id:0
-msgid "Log"
-msgstr "로그"
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "로그 ID"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
@@ -124,16 +134,12 @@ msgid "Log Lines"
 msgstr "로그 라인"
 
 #. module: audittrail
-#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "등록된 규칙들"
-
-#. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
 msgstr "규칙"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -155,6 +161,11 @@ msgid "New Value Text: "
 msgstr "새 값 텍스트: "
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
+msgstr ""
+
+#. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 msgid "Audit Rules"
 msgstr ""
@@ -170,6 +181,7 @@ msgid "Resource Name"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "날짜"
@@ -180,11 +192,6 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log.line,log:0
-msgid "Log ID"
-msgstr "로그 ID"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
@@ -207,8 +214,16 @@ msgid "Log Workflow"
 msgstr ""
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"\n"
+"    This module gives the administrator the rights\n"
+"    to track every user operation on all the objects\n"
+"    of the system.\n"
+"\n"
+"    Administrator can subscribe rules for read,write and\n"
+"    delete on objects and can check logs.\n"
+"    "
 msgstr ""
 
 #. module: audittrail
@@ -228,16 +243,6 @@ msgid "Log lines"
 msgstr "로그 라인"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' Model does not exist...\" %(model))\n"
-"        model = model_pool.browse(cr, uid, model_id)\n"
-"\n"
-"        if method in ('create"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
 msgstr "필드"
@@ -255,6 +260,7 @@ msgid ""
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr "사용자"
@@ -275,12 +281,6 @@ msgid "UnSubscribe"
 msgstr "등록 취소"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
-
-#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr ""
@@ -291,29 +291,8 @@ msgid "Field Description"
 msgstr "필드 설명"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(field_name, model.model))\n"
-"\n"
-"        field = field_pool.read(cr, uid, field_id)\n"
-"        relation_model = field['relation']\n"
-"        relation_model_pool = relation_model and pool.get(relation_model) or "
-"False\n"
-"\n"
-"        if field['ttype'] == 'many2one':\n"
-"            res = False\n"
-"            relation_id = False\n"
-"            if values and type(values) == tuple:\n"
-"                relation_id = values[0]\n"
-"                if relation_id and relation_model_pool:\n"
-"                    relation_model_object = relation_model_pool.read(cr, "
-"uid, relation_id, [relation_model_pool._rec_name])\n"
-"                    res = "
-"relation_model_object[relation_model_pool._rec_name]\n"
-"            return res\n"
-"\n"
-"        elif field['ttype'] in ('many2many','one2many"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
 msgstr ""
 
 #. module: audittrail
@@ -337,29 +316,14 @@ msgid "Rule Name"
 msgstr "규칙 이름"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "로그"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "새 값"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "Log Line"
-msgstr ""
-
-#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "감사트레일 로그"
-
-#. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "등록"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
@@ -378,6 +342,13 @@ msgid "New Value : "
 msgstr "새 값: "
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
 msgstr "옛 값 텍스트"
@@ -393,57 +364,8 @@ msgid "View Log"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
-#, python-format
-msgid ""
-"'%s' field does not exist in '%s' model\" %(line['name'], model.model))\n"
-"\n"
-"            field = field_pool.read(cr, uid, field_id)\n"
-"            old_value = 'old_value' in line and  line['old_value'] or ''\n"
-"            new_value = 'new_value' in line and  line['new_value'] or ''\n"
-"            old_value_text = 'old_value_text' in line and  "
-"line['old_value_text'] or ''\n"
-"            new_value_text = 'new_value_text' in line and  "
-"line['new_value_text'] or ''\n"
-"\n"
-"            if old_value_text == new_value_text:\n"
-"                continue\n"
-"            if field['ttype'] == 'many2one':\n"
-"                if type(old_value) == tuple:\n"
-"                    old_value = old_value[0]\n"
-"                if type(new_value) == tuple:\n"
-"                    new_value = new_value[0]\n"
-"            vals = {\n"
-"                    \"log_id\": log_id,\n"
-"                    \"field_id\": field_id,\n"
-"                    \"old_value\": old_value,\n"
-"                    \"new_value\": new_value,\n"
-"                    \"old_value_text\": old_value_text,\n"
-"                    \"new_value_text\": new_value_text,\n"
-"                    \"field_description\": field['field_description']\n"
-"                    }\n"
-"            line_id = log_line_pool.create(cr, uid, vals)\n"
-"        #End Loop\n"
-"        return True\n"
-"\n"
-"\n"
-"    def log_fct(self, db, uid, model, method, fct_src, *args):\n"
-"        \"\"\"\n"
-"        Logging function: This function is performs logging oprations "
-"according to method\n"
-"        @param db: the current database\n"
-"        @param uid: the current user’s ID for security checks,\n"
-"        @param object: Object who's values are being changed\n"
-"        @param method: method to log: create, read, write, unlink\n"
-"        @param fct_src: execute method of Object proxy\n"
-"\n"
-"        @return: Returns result as per method of Object proxy\n"
-"        \"\"\"\n"
-"        res2 = args\n"
-"        pool = pooler.get_pool(db)\n"
-"        cr = pooler.get_db(db).cursor()\n"
-"        resource_pool = pool.get(model)\n"
-"        log_pool = pool.get('audittrail.log"
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
 msgstr ""
 
 #. module: audittrail
@@ -464,6 +386,9 @@ msgstr ""
 #~ msgid "Write"
 #~ msgstr "쓰기"
 
+#~ msgid "Subscribe"
+#~ msgstr "등록"
+
 #~ msgid "Read"
 #~ msgstr "읽기"
 
@@ -483,8 +408,14 @@ msgstr ""
 #~ msgid "Log writes"
 #~ msgstr "로그 쓰기"
 
+#~ msgid "Subscribed Rules"
+#~ msgstr "등록된 규칙들"
+
 #~ msgid "Delete"
 #~ msgstr "삭제"
+
+#~ msgid "Logs"
+#~ msgstr "로그"
 
 #~ msgid "Log reads"
 #~ msgstr "로그 읽기"

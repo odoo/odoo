@@ -43,31 +43,12 @@ class account_bank_statement(osv.osv):
             seq = 0
             for line in statement.line_ids:
                 seq += 1
-                if not line.sequence:
-                    account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
+                account_bank_statement_line_obj.write(cr, uid, [line.id], {'sequence': seq}, context=context)
         return res
 
-    def button_import_invoice(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
+    def _default_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
-        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'statement_id': ids[0]})
-
-        return {
-            'name': _('Import Invoice'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.statement.from.invoice',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'nodestroy': True
-        }
-
-    def _default_journal_id(self, cr, uid, context={}):
         journal_pool = self.pool.get('account.journal')
         journal_type = context.get('journal_type', False)
         journal_id = False
@@ -77,11 +58,11 @@ class account_bank_statement(osv.osv):
                 journal_id = ids[0]
         return journal_id
 
-    def _default_balance_start(self, cr, uid, context={}):
+    def _default_balance_start(self, cr, uid, context=None):
         cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
         res = cr.fetchone()
         if res:
-            return self.browse(cr, uid, [res[0]], context)[0].balance_end
+            return self.browse(cr, uid, res[0], context=context).balance_end
         return 0.0
 
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
@@ -116,7 +97,7 @@ class account_bank_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -142,7 +123,7 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
-    _order = "date desc"
+    _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
@@ -170,11 +151,12 @@ class account_bank_statement(osv.osv):
             \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
+        'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
     }
 
     _defaults = {
         'name': "/",
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
@@ -215,11 +197,13 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {}, context=context)
 
     def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
+        if context is None:
+            context = {}
         res_currency_obj = self.pool.get('res.currency')
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context)
+        st_line = account_bank_statement_line_obj.browse(cr, uid, st_line_id, context=context)
         st = st_line.statement_id
 
         context.update({'date': st_line.date})
@@ -241,9 +225,11 @@ class account_bank_statement(osv.osv):
             account_id = st.journal_id.default_debit_account_id.id
 
         acc_cur = ((st_line.amount<=0) and st.journal_id.default_debit_account_id) or st_line.account_id
+        context.update({
+                'res.currency.compute.account': acc_cur,
+            })
         amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                company_currency_id, st_line.amount, context=context,
-                account=acc_cur)
+                company_currency_id, st_line.amount, context=context)
 
         val = {
             'name': st_line.name,
@@ -261,20 +247,15 @@ class account_bank_statement(osv.osv):
             'analytic_account_id': st_line.analytic_account_id and st_line.analytic_account_id.id or False
         }
 
-        amount = res_currency_obj.compute(cr, uid, st.currency.id,
-                company_currency_id, st_line.amount, context=context,
-                account=acc_cur)
         if st.currency.id <> company_currency_id:
             amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                        st.currency.id, amount, context=context,
-                        account=acc_cur)
+                        st.currency.id, amount, context=context)
             val['amount_currency'] = -amount_cur
 
         if st_line.account_id and st_line.account_id.currency_id and st_line.account_id.currency_id.id <> company_currency_id:
             val['currency_id'] = st_line.account_id.currency_id.id
             amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
-                    st_line.account_id.currency_id.id, amount, context=context,
-                    account=acc_cur)
+                    st_line.account_id.currency_id.id, amount, context=context)
             val['amount_currency'] = -amount_cur
 
         move_line_id = account_move_line_obj.create(cr, uid, val, context=context)
@@ -316,10 +297,10 @@ class account_bank_statement(osv.osv):
         return move_id
 
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
-        return st_number + ' - ' + str(st_line.sequence)
+        return st_number + '/' + str(st_line.sequence)
 
     def balance_check(self, cr, uid, st_id, journal_type='bank', context=None):
-        st = self.browse(cr, uid, st_id, context)
+        st = self.browse(cr, uid, st_id, context=context)
         if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
             raise osv.except_osv(_('Error !'),
                     _('The statement balance is incorrect !\n') +
@@ -338,7 +319,7 @@ class account_bank_statement(osv.osv):
         if context is None:
             context = {}
 
-        for st in self.browse(cr, uid, ids, context):
+        for st in self.browse(cr, uid, ids, context=context):
             j_type = st.journal_id.type
             company_currency_id = st.journal_id.company_id.currency_id.id
             if not self.check_status_condition(cr, uid, st.state, journal_type=j_type):
@@ -380,7 +361,7 @@ class account_bank_statement(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         done = []
         account_move_obj = self.pool.get('account.move')
-        for st in self.browse(cr, uid, ids, context):
+        for st in self.browse(cr, uid, ids, context=context):
             if st.state=='draft':
                 continue
             ids = []
@@ -390,17 +371,18 @@ class account_bank_statement(osv.osv):
             done.append(st.id)
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
-    def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
-        cursor.execute('SELECT balance_end_real \
+    def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        cr.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %s AND NOT state = %s \
                 ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-        res = cursor.fetchone()
+        res = cr.fetchone()
         balance_start = res and res[0] or 0.0
-        return {'value': {'balance_start': balance_start}}
+        account_id = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id'], context=context)['default_debit_account_id']
+        return {'value': {'balance_start': balance_start, 'account_id': account_id}}
 
     def unlink(self, cr, uid, ids, context=None):
-        stat = self.read(cr, uid, ids, ['state'])
+        stat = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for t in stat:
             if t['state'] in ('draft'):
@@ -423,9 +405,7 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context=None):
-        res_users_obj = self.pool.get('res.users')
-        res_currency_obj = self.pool.get('res.currency')
+    def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')
         if context is None:
@@ -433,41 +413,23 @@ class account_bank_statement_line(osv.osv):
         if not partner_id:
             return res
         account_id = False
-        line = self.browse(cursor, user, line_id)
+        line = self.browse(cr, uid, line_id, context=context)
         if not line or (line and not line[0].account_id):
-            part = obj_partner.browse(cursor, user, partner_id, context=context)
+            part = obj_partner.browse(cr, uid, partner_id, context=context)
             if type == 'supplier':
                 account_id = part.property_account_payable.id
             else:
                 account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
-
-        if account_id and (not line or (line and not line[0].amount)) and not context.get('amount', False):
-            company_currency_id = res_users_obj.browse(cursor, user, user,
-                    context=context).company_id.currency_id.id
-            if not currency_id:
-                currency_id = company_currency_id
-
-            cursor.execute('SELECT sum(debit-credit) \
-                FROM account_move_line \
-                WHERE (reconcile_id is null) \
-                    AND partner_id = %s \
-                    AND account_id=%s', (partner_id, account_id))
-            pgres = cursor.fetchone()
-            balance = pgres and pgres[0] or 0.0
-
-            balance = res_currency_obj.compute(cursor, user, company_currency_id,
-                currency_id, balance, context=context)
-            res['value']['amount'] = balance
         return res
 
     _order = "statement_id desc, sequence"
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Communication', size=64, required=True),
         'date': fields.date('Date', required=True),
-        'amount': fields.float('Amount'),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'type': fields.selection([
             ('supplier','Supplier'),
             ('customer','Customer'),
@@ -489,7 +451,7 @@ class account_bank_statement_line(osv.osv):
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'type': 'general',
     }
 

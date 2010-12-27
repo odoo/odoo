@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-22 15:31+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:37+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -39,11 +39,6 @@ msgstr "Establecer como borrador"
 #: field:report.auction,seller:0
 msgid "Seller"
 msgstr "Vendedor"
-
-#. module: auction
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: auction
 #: field:auction.lots,name:0
@@ -212,6 +207,13 @@ msgid "January"
 msgstr ""
 
 #. module: auction
+#: help:auction.lot.category,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the auction "
+"lot category without removing it."
+msgstr ""
+
+#. module: auction
 #: view:auction.lots:0
 msgid "Ref"
 msgstr "Ref."
@@ -220,13 +222,6 @@ msgstr "Ref."
 #: field:report.auction,total_price:0
 msgid "Total Price"
 msgstr ""
-
-#. module: auction
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Error: Registro de entrada (resp. Registro de salida) debe seguir al "
-"Registro de salida (resp. Registro de entrada)"
 
 #. module: auction
 #: view:auction.lots:0
@@ -259,11 +254,6 @@ msgstr ""
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
 msgstr ""
-
-#. module: auction
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -307,6 +297,12 @@ msgid "Object Image"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#, python-format
+msgid "No buyer is set for this lot."
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
@@ -335,13 +331,6 @@ msgstr ""
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
-
-#. module: auction
-#: help:auction.lot.category,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the auction "
-"lot category without removing it."
 msgstr ""
 
 #. module: auction
@@ -389,9 +378,10 @@ msgid "June"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Error ! No se puede crear una jerarquía recursiva de empleados."
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#, python-format
+msgid "No Lots belong to this Auction Date"
+msgstr ""
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -431,14 +421,6 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
-#, python-format
-msgid ""
-"Two different buyers for the same invoice !\n"
-"Please correct this problem before invoicing"
 msgstr ""
 
 #. module: auction
@@ -540,9 +522,9 @@ msgid "Last Auction Date"
 msgstr ""
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr "Nº de obj. codificados"
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -668,15 +650,10 @@ msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "UserError"
 msgstr ""
-
-#. module: auction
-#: constraint:account.account:0
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Error! No se pueden crear cuentas recursivas."
 
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
@@ -751,11 +728,6 @@ msgid "Object Categories"
 msgstr "Categorías de objetos"
 
 #. module: auction
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para la definición de la vista!"
-
-#. module: auction
 #: field:auction.lots.sms.send,app_id:0
 msgid "API ID"
 msgstr "ID API"
@@ -787,6 +759,11 @@ msgid "Net limit ?"
 msgstr "¿Límite neto?"
 
 #. module: auction
+#: field:aie.category,child_ids:0
+msgid "unknown"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of commissions:"
 msgstr "Nº de comisiones:"
@@ -798,9 +775,9 @@ msgid "Auction Name"
 msgstr "Nombre subasta"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr ""
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "Nº de obj. codificados"
 
 #. module: auction
 #: field:aie.category,parent_id:0
@@ -830,8 +807,9 @@ msgid "Bailiffs Listing"
 msgstr ""
 
 #. module: auction
-#: field:aie.category,child_ids:0
-msgid "unknown"
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This record does not exist !"
 msgstr ""
 
 #. module: auction
@@ -1081,9 +1059,11 @@ msgid "Invoice Number"
 msgstr "Número de Factura"
 
 #. module: auction
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Código EAN erróneo"
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "Active IDs not Found"
+msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
@@ -1237,12 +1217,6 @@ msgid "Notes"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Move to Auction date"
 msgstr "Mover hasta fecha de subasta"
@@ -1336,6 +1310,12 @@ msgid "Deposit Date"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This lot does not exist !"
+msgstr "¡Este lote no existe!"
+
+#. module: auction
 #: selection:report.auction,month:0
 msgid "July"
 msgstr ""
@@ -1355,12 +1335,6 @@ msgstr "Mín est/Adj/Máx est"
 #: field:auction.lots,lot_est1:0
 msgid "Minimum Estimation"
 msgstr "Estimación mínima"
-
-#. module: auction
-#: selection:auction.dates,state:0
-#: selection:report.auction.adjudication,state:0
-msgid "Closed"
-msgstr "Cerrado"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_sms_send
@@ -1393,6 +1367,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Payment aborted !"
 msgstr ""
 
 #. module: auction
@@ -1452,14 +1432,6 @@ msgstr ""
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr "Crear Facturas"
-
-#. module: auction
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM predeterminada y la UdM de compra deben estar en la misma "
-"categoría."
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
@@ -1582,6 +1554,14 @@ msgid "Auction manager "
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#, python-format
+msgid ""
+"Two different buyers for the same invoice !\n"
+"Please correct this problem before invoicing"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr ""
@@ -1590,14 +1570,6 @@ msgstr ""
 #: field:auction.lots,vnd_lim:0
 msgid "Seller limit"
 msgstr "Límite vendedor"
-
-#. module: auction
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
-"especial!"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1711,13 +1683,6 @@ msgid "Names"
 msgstr "Nombres"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
-#, python-format
-msgid "Active IDs not Found"
-msgstr ""
-
-#. module: auction
 #: view:auction.artists:0
 #: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Artists"
@@ -1821,6 +1786,13 @@ msgid "Net revenue"
 msgstr "Ingreso neto"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "Nº de artículos:"
@@ -1834,6 +1806,25 @@ msgstr ""
 #: field:report.object.encoded,estimation:0
 msgid "Estimation"
 msgstr "Estimación"
+
+#. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid ""
+"\n"
+"     This module manages the records of the artists,\n"
+"     the articles to be put up for auction,the buyers and\n"
+"     sellers.\n"
+"\n"
+"     It completely manages an auction such as managing bids,\n"
+"     keeping track of the sold articles along with the paid\n"
+"     and unpaid objects including delivery of the articles.\n"
+"     Dashboards for auction that includes:\n"
+"       * My Latest Objects (list)\n"
+"       * My Latest Deposits (list)\n"
+"       * Objects Statistics (list)\n"
+"       * My Objects By Day (list)\n"
+"    "
+msgstr ""
 
 #. module: auction
 #: view:auction.taken:0
@@ -1867,9 +1858,10 @@ msgid "Gross Margin (%)"
 msgstr "Margen bruto (%)"
 
 #. module: auction
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
+msgstr "Cerrado"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1930,6 +1922,13 @@ msgstr "Cuenta de destino"
 #: model:ir.ui.menu,name:auction.auction_config_menu
 msgid "Configuration"
 msgstr "Configuración"
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid ""
+"You should pay all the total: \"%.2f\" are missing to accomplish the payment."
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
@@ -2012,11 +2011,6 @@ msgstr "Lista vendedor"
 #: view:auction.deposit:0
 msgid "Deposit Costs"
 msgstr "Costos de depósito"
-
-#. module: auction
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: auction
 #: field:auction.lot.category,name:0
@@ -2103,6 +2097,8 @@ msgstr "Fecha subasta:"
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
 #: code:addons/auction/wizard/auction_aie_send_result.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -2182,6 +2178,12 @@ msgstr "Último día de subasta"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Objects Description"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "No auction date for \"%s\": Please set one."
 msgstr ""
 
 #. module: auction
@@ -2312,14 +2314,26 @@ msgstr "Historial subasta"
 #~ msgid "Bids line"
 #~ msgstr "Línea de apuestas"
 
+#~ msgid "Deposit Form"
+#~ msgstr "Formulario de depósito"
+
 #~ msgid "Buyer invoice reconciled"
 #~ msgstr "Factura comprador conciliada"
 
 #~ msgid "Antique/Tin / Copper wares"
 #~ msgstr "Antigüedades / Metal / Objetos de cobre"
 
+#~ msgid "Inv."
+#~ msgstr "Fact."
+
 #~ msgid "Mark as taken away"
 #~ msgstr "Marcar como para llevar"
+
+#~ msgid "Adjudication"
+#~ msgstr "Adjudicación"
+
+#~ msgid "VAT"
+#~ msgstr "IVA"
 
 #~ msgid "Statements"
 #~ msgstr "Extractos"
@@ -2336,11 +2350,19 @@ msgstr "Historial subasta"
 #~ msgid "Objects by Auction"
 #~ msgstr "Objetos por subasta"
 
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
+
 #~ msgid "Dates"
 #~ msgstr "Fechas"
 
 #~ msgid "Net margin (%)"
 #~ msgstr "Margen neto (%)"
+
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Error: Registro de entrada (resp. Registro de salida) debe seguir al "
+#~ "Registro de salida (resp. Registro de entrada)"
 
 #~ msgid "No of sellers"
 #~ msgstr "Núm. de vendedores"
@@ -2383,6 +2405,9 @@ msgstr "Historial subasta"
 
 #~ msgid "Antique/Cartoons"
 #~ msgstr "Antigüedades / Historietas"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Error ! No se puede crear una jerarquía recursiva de empleados."
 
 #~ msgid "Exit"
 #~ msgstr "Salir"
@@ -2435,8 +2460,14 @@ msgstr "Historial subasta"
 #~ msgid "Continue"
 #~ msgstr "Continuar"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Código EAN erróneo"
+
 #~ msgid "Confirmation set taken away"
 #~ msgstr "Fijar confirmación para llevar"
+
+#~ msgid "List N."
+#~ msgstr "N. lista"
 
 #~ msgid "Avg. Est"
 #~ msgstr "Est. promedio"
@@ -2462,6 +2493,18 @@ msgstr "Historial subasta"
 
 #~ msgid "Antique/Verreries"
 #~ msgstr "Antigüedades / Vidrierías"
+
+#~ msgid "Buyer form"
+#~ msgstr "Formulario comprador"
+
+#~ msgid "Cat"
+#~ msgstr "Cat."
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Error! No se pueden crear cuentas recursivas."
+
+#~ msgid "Estimate"
+#~ msgstr "Estimado"
 
 #~ msgid "Antique/Toys"
 #~ msgstr "Antigüedades / Juguetes"
@@ -2490,6 +2533,9 @@ msgstr "Historial subasta"
 #~ msgid "Birth / Death dates"
 #~ msgstr "Fechas nacimiento / defunción"
 
+#~ msgid "Cat. N."
+#~ msgstr "Cat. N."
+
 #~ msgid "comparaison estimate/adjudication "
 #~ msgstr "comparación estimado/adjudicado "
 
@@ -2502,6 +2548,9 @@ msgstr "Historial subasta"
 #~ msgid "Numerotation"
 #~ msgstr "Numeración"
 
+#~ msgid "Document type"
+#~ msgstr "Tipo de documento"
+
 #~ msgid "Bordereau de dépôt"
 #~ msgstr "Comprobate de depósito"
 
@@ -2513,6 +2562,9 @@ msgstr "Historial subasta"
 
 #~ msgid "General Informations"
 #~ msgstr "Información general"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para la definición de la vista!"
 
 #~ msgid "Auctions results"
 #~ msgstr "Resultados de subastas"
@@ -2556,6 +2608,9 @@ msgstr "Historial subasta"
 #~ msgid "Buyer's Summary"
 #~ msgstr "Resumen del comprador"
 
+#~ msgid "Customer Reference"
+#~ msgstr "Referencia del cliente"
+
 #~ msgid "Depositer's Statistics"
 #~ msgstr "Estadísticas del depositario"
 
@@ -2582,6 +2637,12 @@ msgstr "Historial subasta"
 
 #~ msgid "Encoded Objects Per Day"
 #~ msgstr "Objetos codificados por día"
+
+#~ msgid ", TEL:"
+#~ msgstr ", TEL:"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
 
 #~ msgid "Payment's history"
 #~ msgstr "Historial de pagos"
@@ -2628,9 +2689,6 @@ msgstr "Historial subasta"
 #~ msgid "Next Auctions"
 #~ msgstr "Próximas subastas"
 
-#~ msgid "This lot does not exist !"
-#~ msgstr "¡Este lote no existe!"
-
 #~ msgid "Antique/Art from the Ivory Coast"
 #~ msgstr "Antigüedades / Arte de la Costa de Marfil"
 
@@ -2655,8 +2713,17 @@ msgstr "Historial subasta"
 #~ msgid "Cont. Art/Sculpture"
 #~ msgstr "Arte cont. / Escultura"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Error: La UdM predeterminada y la UdM de compra deben estar en la misma "
+#~ "categoría."
+
 #~ msgid "Antique/Argenterie"
 #~ msgstr "Antigüedades / Monedas"
+
+#~ msgid "Document Number"
+#~ msgstr "Número de  documento"
 
 #~ msgid "Numerotate"
 #~ msgstr "Enumeración"
@@ -2666,6 +2733,15 @@ msgstr "Historial subasta"
 
 #~ msgid "Antique/Sculpture, bronze, eso."
 #~ msgstr "Antigüedades / Escultura, bronze, etc."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
+#~ "especial!"
+
+#~ msgid "Buyer, Price"
+#~ msgstr "Comprador, Precio"
 
 #~ msgid "Listing Huissiers"
 #~ msgstr "Listar acomododadores"
@@ -2690,6 +2766,9 @@ msgstr "Historial subasta"
 
 #~ msgid "Auction Reporting on view1"
 #~ msgstr "Informe subastas según vista1"
+
+#~ msgid "Plate Number:"
+#~ msgstr "Número placa:"
 
 #~ msgid "Object Reference"
 #~ msgstr "Referencia objeto"
@@ -2766,6 +2845,12 @@ msgstr "Historial subasta"
 #~ msgid "Bid information"
 #~ msgstr "Información de apuestas"
 
+#~ msgid "Limit"
+#~ msgstr "Límite"
+
+#~ msgid "TEL:"
+#~ msgstr "TEL:"
+
 #~ msgid "Objects to sell"
 #~ msgstr "Objetos para vender"
 
@@ -2787,11 +2872,17 @@ msgstr "Historial subasta"
 #~ msgid "Report deposit border"
 #~ msgstr "Informe justificante de depósito"
 
+#~ msgid "Adj.(EUR)"
+#~ msgstr "Adj.(EUR)"
+
 #~ msgid "Employee"
 #~ msgstr "Empleado"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "El CUIT no parece ser correcto"
+
+#~ msgid "Est."
+#~ msgstr "Est."
 
 #~ msgid "Auction report"
 #~ msgstr "Informe subasta"
@@ -2801,6 +2892,15 @@ msgstr "Historial subasta"
 
 #~ msgid "auction.lot.category"
 #~ msgstr "subasta.lote.categoría"
+
+#~ msgid "BID:"
+#~ msgstr "APUESTA:"
+
+#~ msgid "NET"
+#~ msgstr "NETO"
+
+#~ msgid "Buyer Cost:"
+#~ msgstr "Costo comprador:"
 
 #~ msgid "Buyer's auction"
 #~ msgstr "Subasta del comprador"
@@ -2813,6 +2913,12 @@ msgstr "Historial subasta"
 
 #~ msgid "Antique/Furnitures"
 #~ msgstr "Antigüedades / Muebles"
+
+#~ msgid "Customer Contact"
+#~ msgstr "Contacto cliente"
+
+#~ msgid "Inv, Name"
+#~ msgstr "Inv, Nombre"
 
 #~ msgid "Numerotation (automatic)"
 #~ msgstr "Enumeración (automático)"
@@ -2847,6 +2953,9 @@ msgstr "Historial subasta"
 #~ msgid "Cont. Art/Arts"
 #~ msgstr "Arte cont. / Artes"
 
+#~ msgid "Ref."
+#~ msgstr "Ref."
+
 #~ msgid "Antique/Wine"
 #~ msgstr "Antigüedades / Vino"
 
@@ -2856,6 +2965,9 @@ msgstr "Historial subasta"
 #~ msgid "Sum of adjustication"
 #~ msgstr "Suma de adjudicación"
 
+#~ msgid "Orders"
+#~ msgstr "Pedidos"
+
 #~ msgid "Antique/Posters"
 #~ msgstr "Antigüedades / Posters"
 
@@ -2864,3 +2976,9 @@ msgstr "Historial subasta"
 
 #~ msgid "Simplified lots for adjudication"
 #~ msgstr "Lotes simplificados para adjudicación"
+
+#~ msgid "Subtotal:"
+#~ msgstr "Subtotal:"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."

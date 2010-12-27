@@ -86,7 +86,7 @@
                                         <newline/>
                                         <field name="unit_amount"/>
                                         <field name="unit_quantity"/>
-                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" widget="selection"/>
+                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
                                     </group>
                                     <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
                                         <separator string="Customer Project" colspan="2"/>
@@ -175,7 +175,7 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
-            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
+            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, employees record their expenses. At the end of the month, the manager concerned validates the Expense Sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="4" parent="hr.menu_hr_root"/>

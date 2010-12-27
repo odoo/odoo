@@ -38,8 +38,7 @@ from tools.safe_eval import safe_eval as eval
 try:
     import vobject
 except ImportError:
-    raise osv.except_osv('vobject Import Error!','Please install python-vobject \
-                     from http://vobject.skyhouseconsulting.com/')
+    raise osv.except_osv(_('vobject Import Error!'), _('Please install python-vobject from http://vobject.skyhouseconsulting.com/'))
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -149,7 +148,7 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         @param calname: Get Calendar name
         @param context: A standard dictionary for contextual values """
 
-    if not context:
+    if context is None:
         context = {}
     pool = pooler.get_pool(cr.dbname)
     field_obj = pool.get('basic.calendar.fields')
@@ -160,7 +159,7 @@ def get_attribute_mapping(cr, uid, calname, context=None):
     type_id = type_obj.search(cr, uid, domain)
     fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
     res = {}
-    for field in field_obj.browse(cr, uid, fids):
+    for field in field_obj.browse(cr, uid, fids, context=context):
         attr = field.name.name
         res[attr] = {}
         res[attr]['field'] = field.field_id.name
@@ -470,7 +469,7 @@ class CalDAV(object):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
@@ -580,8 +579,8 @@ class Calendar(CalDAV, osv.osv):
                                     string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
             'create_date': fields.datetime('Created Date', readonly=True),
-            'write_date': fields.datetime('Modifided Date', readonly=True),
-            'description': fields.text("description"),
+            'write_date': fields.datetime('Write Date', readonly=True),
+            'description': fields.text("Description"),
             'calendar_color': fields.char('Color', size=20, help="For supporting clients, the color of the calendar entries"),
             'calendar_order': fields.integer('Order', help="For supporting clients, the order of this folder among the calendars"),
             'has_webcal': fields.boolean('WebCal', required=True, help="Also export a <name>.ics entry next to the calendar folder, with WebCal content."),
@@ -592,7 +591,7 @@ class Calendar(CalDAV, osv.osv):
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         if not domain:
             domain = []
@@ -622,7 +621,7 @@ class Calendar(CalDAV, osv.osv):
         
 
     def get_cal_max_modified(self, cr, uid, ids, parent=None, domain=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         if not domain:
             domain = []
@@ -652,12 +651,12 @@ class Calendar(CalDAV, osv.osv):
             @param vobj: the type of object to export
             @return the ical data.
         """
-        if not context:
+        if context is None:
            context = {}
         ctx_model = context.get('model', None)
         ctx_res_id = context.get('res_id', None)
         ical = vobject.iCalendar()
-        for cal in self.browse(cr, uid, ids):
+        for cal in self.browse(cr, uid, ids, context=context):
             for line in cal.line_ids:
                 if ctx_model and ctx_model != line.object_id.model:
                     continue
@@ -684,7 +683,7 @@ class Calendar(CalDAV, osv.osv):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         vals = []
         ical_data = content
@@ -770,8 +769,7 @@ class basic_calendar_line(osv.osv):
         res = cr.fetchone()
         if res:
             if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not create \
-line "%s" more than once' % (vals.get('name'))))
+                raise osv.except_osv(_('Warning !'), _('Can not create line "%s" more than once') % (vals.get('name')))
         return super(basic_calendar_line, self).create(cr, uid, vals, context=context)
 
 basic_calendar_line()
@@ -820,6 +818,7 @@ class basic_calendar_fields(osv.osv):
 
     _name = 'basic.calendar.fields'
     _description = 'Calendar fields'
+    _order = 'name'
 
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
@@ -835,7 +834,7 @@ class basic_calendar_fields(osv.osv):
     }
 
     _defaults = {
-        'fn': lambda *a: 'field',
+        'fn': 'field',
     }
 
     _sql_constraints = [
@@ -859,7 +858,7 @@ class basic_calendar_fields(osv.osv):
             line = line_obj.browse(cr, uid, l_id, context=context)[0]
             line_rel = line.object_id.model
             if (relation != 'NULL') and (not relation == line_rel):
-                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
+                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines') % (name))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -1067,7 +1066,7 @@ class Timezone(CalDAV, osv.osv_memory):
             @param model: Get Model's name
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ctx = context.copy()
         ctx.update({'model': model})
@@ -1126,8 +1125,6 @@ class Alarm(CalDAV, osv.osv_memory):
             @param alarm_id: Get Alarm's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
-            context = {}
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -1161,17 +1158,23 @@ class Alarm(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
-                seconds = child.value.seconds
-                days = child.value.days
-                diff = (days * 86400) +  seconds
-                interval = 'days'
-                related = 'before'
+                if isinstance(child.value, timedelta):
+                    seconds = child.value.seconds
+                    days = child.value.days
+                    diff = (days * 86400) +  seconds
+                    interval = 'days'
+                    related = 'before'
+                elif isinstance(child.value, datetime):
+                    # TODO
+                    # remember, spec says this datetime is in UTC
+                    raise NotImplementedError("we cannot parse absolute triggers")
                 if not seconds:
                     duration = abs(days)
                     related = days > 0 and 'after' or 'before'
@@ -1223,7 +1226,8 @@ class Attendee(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
@@ -1247,7 +1251,7 @@ class Attendee(CalDAV, osv.osv_memory):
             @param attendee_ids: Get Attendee's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         attendee_object = self.pool.get(model)
         ctx = context.copy()

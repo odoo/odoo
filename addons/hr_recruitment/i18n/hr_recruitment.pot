@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:32+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:32+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:15+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,11 +39,6 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Group By..."
-msgstr ""
-
-#. module: hr_recruitment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: hr_recruitment
@@ -222,12 +217,6 @@ msgid "Previous"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0
-#: field:hr.recruitment.report,date_closed:0
-msgid "Closed"
-msgstr ""
-
-#. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:0
 #: view:hr.applicant:0
 #, python-format
@@ -242,11 +231,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
 msgid "Recruitments Statistics"
-msgstr ""
-
-#. module: hr_recruitment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: hr_recruitment
@@ -542,8 +526,9 @@ msgid "These email addresses will be added to the CC field of all inbound and ou
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
+msgid "Closed"
 msgstr ""
 
 #. module: hr_recruitment
@@ -607,6 +592,11 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Global CC"
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.recruitment.report,month:0
+msgid "October"
 msgstr ""
 
 #. module: hr_recruitment
@@ -755,11 +745,6 @@ msgid "A partner is already existing with the same name."
 msgstr ""
 
 #. module: hr_recruitment
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
 msgstr ""
@@ -784,8 +769,15 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "October"
+#: model:ir.module.module,description:hr_recruitment.module_meta_information
+msgid "\n"
+"Manages job positions and the recruitement process. It's integrated with the\n"
+"survey module to allow you to define interview for different jobs.\n"
+"\n"
+"This module is integrated with the mail gateway to automatically tracks email\n"
+"sent to jobs@YOURCOMPANY.com. It's also integrated with the document management\n"
+"system to store and search in your CV base.\n"
+"    "
 msgstr ""
 
 #. module: hr_recruitment
@@ -827,11 +819,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
 msgid "Contract Signed"
-msgstr ""
-
-#. module: hr_recruitment
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
 msgstr ""
 
 #. module: hr_recruitment

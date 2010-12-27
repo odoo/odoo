@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-29 09:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -132,11 +132,6 @@ msgid "No Related Models!!"
 msgstr "Nema srodnih modela!!"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
-
-#. module: base_report_creator
 #: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "Informacije Menija"
@@ -145,6 +140,11 @@ msgstr "Informacije Menija"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "Suma"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -179,6 +179,7 @@ msgid "Form"
 msgstr "Obrazac"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 #: selection:base_report_creator.report.fields,calendar_mode:0
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -199,9 +200,9 @@ msgid "Starting Date"
 msgstr "Početni datum"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "Filteri na poljima"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,group_ids:0
@@ -240,6 +241,11 @@ msgstr "Naziv Menija"
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "I"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
@@ -327,15 +333,6 @@ msgid "Condition"
 msgstr "Uslov"
 
 #. module: base_report_creator
-#: help:base_report_creator.report,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the report "
-"without removing it."
-msgstr ""
-"ako je aktivno polje postavljeno na 'istina', ono ti omogucava da sakrijes "
-"izvetaj bez uklanjanja."
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
 msgstr "Brojanje"
@@ -384,11 +381,9 @@ msgid "Cancel"
 msgstr "Otkaži"
 
 #. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
 msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,menu_id:0
@@ -416,9 +411,11 @@ msgid "Unique Colors"
 msgstr "Jedinstvane Boje"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "Filteri na poljima"
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -530,17 +527,28 @@ msgstr ""
 "izvestaj u\n"
 "meniju \" Glavne Table\".\n"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
 #~ msgid "Valid"
 #~ msgstr "Potvrđeno"
 
 #~ msgid "State"
 #~ msgstr "Stanje"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "Status"
 #~ msgstr "Status"
 
 #~ msgid "Draft"
 #~ msgstr "Priprema"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #~ msgid "Uniq Colors"
 #~ msgstr "Jedinstvene boje"
@@ -562,3 +570,10 @@ msgstr ""
 
 #~ msgid "Reports"
 #~ msgstr "Izveštaji"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the report "
+#~ "without removing it."
+#~ msgstr ""
+#~ "ako je aktivno polje postavljeno na 'istina', ono ti omogucava da sakrijes "
+#~ "izvetaj bez uklanjanja."

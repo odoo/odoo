@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:28+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-19 13:35+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -43,9 +43,19 @@ msgid "Group By..."
 msgstr "Объединять по..."
 
 #. module: account_payment
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: model:ir.module.module,description:account_payment.module_meta_information
+msgid ""
+"\n"
+"This module provides :\n"
+"* a more efficient way to manage invoice payment.\n"
+"* a basic mechanism to easily plug various automated payment.\n"
+"    "
+msgstr ""
+
+#. module: account_payment
+#: field:payment.order,line_ids:0
+msgid "Payment lines"
+msgstr "Позиции платежа"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -75,11 +85,9 @@ msgstr ""
 "минус сумма, указанная в платежном поручении"
 
 #. module: account_payment
-#: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr "Если дата платежа не задана, банк сразу обработает платеж"
+#: field:payment.mode,company_id:0
+msgid "Company"
+msgstr "Компания"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -108,6 +116,11 @@ msgid "Due Date"
 msgstr "Срок"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
 msgstr "Проводка по счету"
@@ -128,6 +141,11 @@ msgstr "Заполнение заявления на оплату"
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Сумма"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
@@ -151,6 +169,11 @@ msgid "Reference"
 msgstr "Ссылка"
 
 #. module: account_payment
+#: sql_constraint:payment.line:0
+msgid "The payment line name must be unique!"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -162,10 +185,12 @@ msgid "Directly"
 msgstr "Немедленно"
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
 #: view:payment.order:0
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr "Черновик"
+msgid "Payment Line"
+msgstr "Позиция платежа"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -182,11 +207,6 @@ msgstr "Подтверждено"
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
 msgstr "Счет действителен до"
-
-#. module: account_payment
-#: field:payment.order,line_ids:0
-msgid "Payment lines"
-msgstr "Позиции платежа"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -256,6 +276,11 @@ msgid "Execution date"
 msgstr "Дата исполнения"
 
 #. module: account_payment
+#: help:payment.mode,journal:0
+msgid "Bank or Cash Journal for the Payment Mode"
+msgstr ""
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "Заданная дата"
@@ -277,9 +302,10 @@ msgid "Search Payment Orders"
 msgstr "Искать платежные поручения"
 
 #. module: account_payment
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -342,9 +368,11 @@ msgid "Address of the Main Partner"
 msgstr "Адрес основного партнера"
 
 #. module: account_payment
-#: field:payment.mode,company_id:0
-msgid "Company"
-msgstr "Компания"
+#: help:payment.line,date:0
+msgid ""
+"If no payment date is specified, the bank will treat this payment line "
+"directly"
+msgstr "Если дата платежа не задана, банк сразу обработает платеж"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -372,17 +400,10 @@ msgid "Payment amount in the partner currency"
 msgstr "Сумма платежа в валюте партнера"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
 #: view:payment.order:0
-msgid "Payment Line"
-msgstr "Позиция платежа"
-
-#. module: account_payment
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "Черновик"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
@@ -430,6 +451,11 @@ msgstr "Позиции платежа"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Элементы журнала"
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -545,14 +571,6 @@ msgid "Information"
 msgstr "Информация"
 
 #. module: account_payment
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
-
-#. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
@@ -589,9 +607,10 @@ msgid "Are you sure you want to make payment?"
 msgstr "Вы уверены, что хотите сделать платеж ?"
 
 #. module: account_payment
-#: help:payment.mode,journal:0
-msgid "Cash Journal for the Payment Mode"
-msgstr "Кассовая книга для режима платежа"
+#: view:payment.mode:0
+#: field:payment.mode,journal:0
+msgid "Journal"
+msgstr "Книга"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -654,7 +673,7 @@ msgstr "Информация проводки"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -667,9 +686,13 @@ msgid "Total"
 msgstr "Всего"
 
 #. module: account_payment
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Правила не поддерживаются для объектов osv_memory !"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request that your company does in order to pay "
+"a supplier invoice or a customer credit note. Here you can register all "
+"payment orders that should be done, keep track of all payment orders and "
+"mention the invoice reference and the partner the payment should be done for."
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -694,16 +717,18 @@ msgid "Bank Account for the Payment Mode"
 msgstr "Банковский счет для режима платежа"
 
 #. module: account_payment
-#: view:payment.mode:0
-#: field:payment.mode,journal:0
-msgid "Journal"
-msgstr "Книга"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
 #~ msgid "Execution date:"
 #~ msgstr "Дата исполнения:"
 
 #~ msgid "Suitable bank types"
 #~ msgstr "Пригодные типы банков"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
 
 #~ msgid "_Cancel"
 #~ msgstr "Отмена"
@@ -723,6 +748,12 @@ msgstr "Книга"
 #~ msgid "Code"
 #~ msgstr "Код"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
 #~ msgid "Pay"
 #~ msgstr "Заплатить"
 
@@ -738,6 +769,9 @@ msgstr "Книга"
 #~ msgid "_Add"
 #~ msgstr "Добавить"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
 #~ msgid "Specify the Code for Payment Type"
 #~ msgstr "Укажите код типа платежа"
 
@@ -749,3 +783,27 @@ msgstr "Книга"
 
 #~ msgid "Select the Payment Type for the Payment Mode."
 #~ msgstr "Выберите вид платежа для режима платежа"
+
+#~ msgid "Cash Journal for the Payment Mode"
+#~ msgstr "Кассовая книга для режима платежа"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Правила не поддерживаются для объектов osv_memory !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Размер поля никогда не может быть меньше 1 !"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Название группы должно быть уникальным !"

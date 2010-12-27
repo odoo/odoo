@@ -112,7 +112,7 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" select="1" readonly="1"/>
-                        <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-stop"/>
+                        <button type="object" string="Cancel" name="button_cancel" states="draft,open,pending" icon="gtk-stop"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -130,7 +130,7 @@
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
                     <group col="10" colspan="4">
-                        <filter default="1"
+                        <filter
                             icon="terp-check"
                             string="Current"
                             name="current"
@@ -181,7 +181,7 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_current': 1,'search_default_user_id':uid,'search_default_project_id':project_id}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
-            <field name="help">The scrum agile methodology is used in software development projects. The Product Backlog is the list of features to be implemented. A product backlog can be planified in a sprint of developement and can be split into several tasks. The product backlog is managed by the product owner of the project.</field>
+            <field name="help">The scrum agile methodology is used in software development projects. The Product Backlog is the list of features to be implemented. A product backlog can be planified in a development sprint and may be split into several tasks. The product backlog is managed by the product owner of the project.</field>
         </record>
         <menuitem
             action="action_product_backlog_form"
@@ -351,7 +351,7 @@
             <field name="view_id" ref="view_scrum_sprint_tree"/>
             <field name="context">{"search_default_filter_current": 1}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
-            <field name="help">The scrum agile methodology is used in software development projects. In this methodology, a sprint is a short period of time (one month) on which the team implement a list of product backlogs. The sprint review is organized when the team presents his work to the customer and product owner.</field>
+            <field name="help">The scrum agile methodology is used in software development projects. In this methodology, a sprint is a short period of time (e.g. one month) during which the team implements a list of product backlogs. The sprint review is organized when the team presents its work to the customer and product owner.</field>
         </record>
         <menuitem
             sequence="20"
@@ -429,7 +429,7 @@
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
-                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
+                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>

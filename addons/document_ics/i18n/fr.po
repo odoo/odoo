@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 03:48+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-19 12:17+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -22,19 +23,13 @@ msgid ""
 "Manages the supplier and customers claims,including your corrective or "
 "preventive actions."
 msgstr ""
+"Gère les réclamations des clients et des fournisseurs, y compris vos actions "
+"préventives et correctives."
 
 #. module: document_ics
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objet"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -55,6 +50,11 @@ msgid "Jobs Hiring Process"
 msgstr "Procédure de recrutement"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Configure les calendriers pour les sections de la CRM"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Support"
@@ -62,17 +62,21 @@ msgstr "Support"
 #. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Interval in hours"
-msgstr ""
+msgstr "Intervalle (en heures)"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "Participant"
+msgid "dtstamp"
+msgstr "dtstamp"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
+"Le champ de l'objet utilisé dans le nom de fichier. Ce doit être un "
+"identifiant unique."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -85,9 +89,11 @@ msgid "Calendar of Meetings"
 msgstr "Calendrier des Rendez Vous"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Calendrier partagé des rendez vous"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
+"OpenERP peut créer et pré-configurer pour vous une série d'agendas intégrés."
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -95,19 +101,19 @@ msgid "Manages an Helpdesk service."
 msgstr "Diriger un service d'assistance"
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle invalide pour la définition de l'action"
+#: selection:document.directory.ics.fields,name:0
+msgid "dtend"
+msgstr "date de fin"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "dtend"
-msgstr "dtend"
+msgid "summary"
+msgstr "résumé"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
 msgid "Meeting"
-msgstr ""
+msgstr "Réunion"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,lead:0
@@ -115,6 +121,9 @@ msgid ""
 "Allows you to track and manage leads which are pre-sales requests or "
 "contacts, the very first contact with a customer request."
 msgstr ""
+"Vous permet de suivre et de gérer les opportunités que sont les demandes ou "
+"les contacts de pré-vente, le tout premier contact avec une demande de "
+"client."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -124,7 +133,7 @@ msgstr "description"
 #. module: document_ics
 #: field:document.directory.ics.fields,fn:0
 msgid "Function"
-msgstr ""
+msgstr "Fonction"
 
 #. module: document_ics
 #: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
@@ -139,7 +148,7 @@ msgstr "Suivi des occasions identifiées d'affaires pour vos canaux de vente."
 #. module: document_ics
 #: field:document.ics.crm.wizard,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progression de la Configuration"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
@@ -147,11 +156,13 @@ msgid ""
 "Helps you to organise the jobs hiring process: evaluation, meetings, email "
 "integration..."
 msgstr ""
+"Vous aide à organiser le processus d'embauche : evaluation, réunions, "
+"intégration de courriel..."
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "title"
-msgstr ""
+msgstr "titre"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,fund:0
@@ -161,12 +172,12 @@ msgstr "Opérations de levée de fonds"
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_directory_content
 msgid "Directory Content"
-msgstr ""
+msgstr "Contenu du répertoire"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_directory_ics_fields
 msgid "Document Directory ICS Fields"
-msgstr ""
+msgstr "Champs ICS du répertoire du document"
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information
@@ -179,11 +190,20 @@ msgid ""
 "Helps you to encode the result of a phone call or to plan a list of phone "
 "calls to process."
 msgstr ""
+"Vous aide à saisir le résultat d'un appel téléphonique ou d'établir une "
+"liste des appels à traiter."
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
 
 #. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
-msgstr ""
+msgstr "Champ OpenERP"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -198,7 +218,7 @@ msgstr "Valeur ICS"
 #. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Expression as constant"
-msgstr ""
+msgstr "Expression représentant une constante"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -206,9 +226,9 @@ msgid "location"
 msgstr "emplacement"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "participant"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -218,7 +238,7 @@ msgstr "Nom"
 #. module: document_ics
 #: help:document.directory.ics.fields,fn:0
 msgid "Alternate method                 of calculating the value"
-msgstr ""
+msgstr "Méthode alternative de calcul de la valeur"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
@@ -226,9 +246,16 @@ msgid "Manages the calendar of meetings of the users."
 msgstr "Gère le calendrier des rendez-vous des utilisateurs"
 
 #. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Domaine"
+
+#. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
 msgid "Used by companies to track bugs and support requests on software"
 msgstr ""
+"Utilisé par les sociétés pour suivre les bugs et les demandes de support sur "
+"le logiciel."
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -253,12 +280,12 @@ msgstr "Réclamations"
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstart"
-msgstr "dtstart"
+msgstr "date de début"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Expression"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,bugs:0
@@ -271,24 +298,29 @@ msgid "categories"
 msgstr "catégories"
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,fn:0
-msgid "Use the field"
-msgstr ""
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr "Configurer"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Domaine"
+#: selection:document.directory.ics.fields,fn:0
+msgid "Use the field"
+msgstr "Utilise le champ"
+
+#. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Création de calendriers pré-configurer"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
 msgid "Filename field"
-msgstr ""
+msgstr "Champ de nom de fichier"
 
 #. module: document_ics
 #: field:document.directory.content,obj_iterate:0
 msgid "Iterate object"
-msgstr ""
+msgstr "Parcourir les objets"
 
 #. module: document_ics
 #: field:crm.meeting,code:0
@@ -304,7 +336,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -317,16 +349,18 @@ msgid ""
 "If set, a separate                         instance will be created for each "
 "record of Object"
 msgstr ""
+"Si coché, une instance indépendante sera créée pour chaque enregistrement de "
+"l'objet."
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "résumé"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
 msgid "Leads"
-msgstr ""
+msgstr "Pistes"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
@@ -334,9 +368,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr ""
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Calendrier partagé des rendez vous"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -358,17 +392,14 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Opportunités d'affaire"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "dtstamp"
+#~ msgid "dt-stamp"
+#~ msgstr "dt-stamp"
 
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+#~ "spéciaux !"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer de Répertoires récursivement."
@@ -376,11 +407,17 @@ msgstr ""
 #~ msgid "Open ERP Field"
 #~ msgstr "Champ Open ERP"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "document.directory.ics.fields"
 
 #~ msgid "Next"
 #~ msgstr "Suivant"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #~ msgid "Prospect"
 #~ msgstr "Prospect"
@@ -420,15 +457,9 @@ msgstr ""
 #~ msgid "Cancel"
 #~ msgstr "Annuler"
 
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "Configure les calendriers pour les sections de la CRM"
-
 #~ msgid ""
 #~ "Manages the supplier and customers claims, including your corrective or "
 #~ "preventive actions."
 #~ msgstr ""
 #~ "Gérér les réclamations fournisseurs et clients, incluant vos actions "
 #~ "correctives ou préventives."
-
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "Création de calendriers pré-configurer"

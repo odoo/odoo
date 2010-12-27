@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-29 10:43+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -28,14 +28,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Объект"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -54,6 +46,11 @@ msgid "Jobs Hiring Process"
 msgstr ""
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr ""
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr ""
@@ -65,12 +62,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "оролцогч"
+msgid "dtstamp"
+msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -84,8 +83,9 @@ msgid "Calendar of Meetings"
 msgstr "Уулзалтын хуваарь"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
 msgstr ""
 
 #. module: document_ics
@@ -94,14 +94,14 @@ msgid "Manages an Helpdesk service."
 msgstr ""
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr ""
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "хураангуй"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -180,6 +180,13 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr ""
@@ -205,9 +212,9 @@ msgid "location"
 msgstr "байршил"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "оролцогч"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -223,6 +230,11 @@ msgstr ""
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Домэйн"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -270,14 +282,19 @@ msgid "categories"
 msgstr "ангилалууд"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Домэйн"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr ""
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -317,9 +334,9 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "хураангуй"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -332,8 +349,8 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
 msgstr ""
 
 #. module: document_ics
@@ -356,18 +373,6 @@ msgstr ""
 msgid "Business Opportunities"
 msgstr "Бизнес боломжууд"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-
 #~ msgid "Next"
 #~ msgstr "Дараах"
 
@@ -377,8 +382,20 @@ msgstr ""
 #~ msgid "Open ERP Field"
 #~ msgstr "Open ERP талбар"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "Алдаа ! Рекурсив хэсэг үүсгэж болохгүй."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
 
 #~ msgid "Prospect"
 #~ msgstr "Ирээдүйн"

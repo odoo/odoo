@@ -175,6 +175,23 @@ class node_descriptor(object):
     def write(self, str):
         raise NotImplementedError
 
+    def size(self):
+        raise NotImplementedError
+
+    def __len__(self):
+        return self.size()
+
+    def __nonzero__(self):
+        """ Ensure that a node_descriptor will never equal False
+        
+            Since we do define __len__ and __iter__ for us, we must avoid
+            being regarded as non-true objects.
+        """
+        return True
+
+    def next(self, str):
+        raise NotImplementedError
+
 class node_class(object):
     """ this is a superclass for our inodes
         It is an API for all code that wants to access the document files.
@@ -366,12 +383,14 @@ class node_class(object):
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        raise NotImplementedError(repr(self))
+        logger.warning("Attempted to create a file under %r, not possible.", self)
+        raise IOError(errno.EPERM, "Not allowed to create files here")
     
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        raise NotImplementedError(repr(self))
+        logger.warning("Attempted to create a collection under %r, not possible.", self)
+        raise IOError(errno.EPERM, "Not allowed to create folders here")
 
     def rm(self, cr):
         raise NotImplementedError(repr(self))
@@ -433,12 +452,12 @@ class node_database(node_class):
             return res[0]
         return None
 
-    def _child_get(self, cr, name=False, parent_id=False, domain=None):
+    def _child_get(self, cr, name=False, domain=None):
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=',parent_id)]
+        where = [('parent_id','=', False), ('ressource_parent_type_id','=',False)]
         if name:
             where.append(('name','=',name))
             is_allowed = self.check_perms(1)
@@ -448,23 +467,14 @@ class node_database(node_class):
         if not is_allowed:
             raise IOError(errno.EPERM, "Permission into directory denied")
 
-        if not domain:
-            domain = []
-
-        where2 = where + domain + ['|', ('type', '=', 'directory'), \
-                    '&', ('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
-        ids = dirobj.search(cr, uid, where2, context=ctx)
+        if domain:
+            where = where + domain
+        ids = dirobj.search(cr, uid, where, context=ctx)
         res = []
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             klass = dirr.get_node_class(dirr, context=ctx)
             res.append(klass(dirr.name, self, self.context,dirr))
 
-        fil_obj = dirobj.pool.get('ir.attachment')
-        ids = fil_obj.search(cr, uid, where, context=ctx)
-        if ids:
-            for fil in fil_obj.browse(cr, uid, ids, context=ctx):
-                klass = self.context.node_file_class
-                res.append(klass(fil.name, self, self.context, fil))
         return res
 
     def _file_get(self,cr, nodename=False):
@@ -485,6 +495,22 @@ def mkdosname(company_name, default='noname'):
     return n
     
 
+def _uid2unixperms(perms, has_owner):
+    """ Convert the uidperms and the owner flag to full unix bits
+    """
+    res = 0
+    if has_owner:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x05) << 3
+    elif perms & 0x02:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x07) << 3
+    else:
+        res |= (perms & 0x07) << 6
+        res |= (perms & 0x05) << 3
+        res |= 0x05
+    return res
+
 class node_dir(node_database):
     our_type = 'collection'
     def __init__(self, path, parent, context, dirr, dctx=None):
@@ -499,13 +525,13 @@ class node_dir(node_database):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
-        self.unixperms = 040750
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:
             self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, dirr and dirr.user_id)
         if dctx:
             self.dctx.update(dctx)
         dc2 = self.context.context
@@ -516,7 +542,7 @@ class node_dir(node_database):
             for dfld in dirr.dctx_ids:
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-                except Exception:
+                except Exception,e:
                     print "Cannot eval %s" % dfld.expr
                     print e
                     pass
@@ -559,7 +585,46 @@ class node_dir(node_database):
         return res
     
     def _child_get(self, cr, name=None, domain=None):
-        return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('parent_id','=',self.dir_id)]
+        if name:
+            where.append(('name','=',name))
+            is_allowed = self.check_perms(1)
+        else:
+            is_allowed = self.check_perms(5)
+        
+        if not is_allowed:
+            raise IOError(errno.EPERM, "Permission into directory denied")
+
+        if not domain:
+            domain = []
+
+        where2 = where + domain + [('ressource_parent_type_id','=',False)]
+        ids = dirobj.search(cr, uid, where2, context=ctx)
+        res = []
+        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            klass = dirr.get_node_class(dirr, context=ctx)
+            res.append(klass(dirr.name, self, self.context,dirr))
+
+        # Static directories should never return files with res_model/res_id
+        # because static dirs are /never/ related to a record.
+        # In fact, files related to some model and parented by the root dir
+        # (the default), will NOT be accessible in the node system unless
+        # a resource folder for that model exists (with resource_find_all=True).
+        # Having resource attachments in a common folder is bad practice,
+        # because they would be visible to all users, and their names may be
+        # the same, conflicting.
+        where += [('res_model', '=', False)]
+        fil_obj = dirobj.pool.get('ir.attachment')
+        ids = fil_obj.search(cr, uid, where, context=ctx)
+        if ids:
+            for fil in fil_obj.browse(cr, uid, ids, context=ctx):
+                klass = self.context.node_file_class
+                res.append(klass(fil.name, self, self.context, fil))
+        return res
 
     def rmcol(self, cr):
         uid = self.context.uid
@@ -699,13 +764,13 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
-        self.unixperms = 040750
         try:
             self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
         except Exception:
             self.uuser = 'nobody'
         self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
         self.uidperms = dirr.get_dir_permissions()
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, dirr and dirr.user_id)
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
         self.res_find_all = dirr.resource_find_all
@@ -759,7 +824,7 @@ class node_res_dir(node_class):
         ctx.update(self.dctx)
         where = []
         if self.domain:
-            app = safe_eval(self.domain, self.dctx)
+            app = safe_eval(self.domain, ctx)
             if not app:
                 pass
             elif isinstance(app, list):
@@ -772,7 +837,9 @@ class node_res_dir(node_class):
             where.append(('id','=',self.resm_id))
 
         if name:
-            where.append((self.namefield,'=',name))
+            # The =like character will match underscores against any characters
+            # including the special ones that couldn't exist in a FTP/DAV request
+            where.append((self.namefield,'=like',name.replace('\\','\\\\')))
             is_allowed = self.check_perms(1)
         else:
             is_allowed = self.check_perms(5)
@@ -793,12 +860,22 @@ class node_res_dir(node_class):
         for bo in obj.browse(cr, uid, resids, context=ctx):
             if not bo:
                 continue
-            name = getattr(bo, self.namefield)
-            if not name:
+            res_name = getattr(bo, self.namefield)
+            if not res_name:
                 continue
                 # Yes! we can't do better but skip nameless records.
+            
+            # Escape the name for characters not supported in filenames
+            res_name = res_name.replace('/','_') # any other weird char?
+            
+            if name and (res_name != name):
+                # we have matched _ to any character, but we only meant to match
+                # the special ones.
+                # Eg. 'a_c' will find 'abc', 'a/c', 'a_c', may only
+                # return 'a/c' and 'a_c'
+                continue
 
-            res.append(self.res_obj_class(name, self.dir_id, self, self.context, self.res_model, bo))
+            res.append(self.res_obj_class(res_name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
     def _get_ttag(self,cr):
@@ -823,15 +900,18 @@ class node_res_obj(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = parent.write_date
         self.content_length = 0
-        self.unixperms = 040750
         self.uidperms = parent.uidperms & 15
+        self.unixperms = 040000 | _uid2unixperms(self.uidperms, True)
         self.uuser = parent.uuser
         self.ugroup = parent.ugroup
         self.res_model = res_model
         self.domain = parent.domain
         self.displayname = path
         self.dctx_dict = parent.dctx_dict
-        self.res_find_all = parent.res_find_all
+        if isinstance(parent, node_res_dir):
+            self.res_find_all = parent.res_find_all
+        else:
+            self.res_find_all = False
         if res_bo:
             self.res_id = res_bo.id
             dc2 = self.context.context.copy()
@@ -842,7 +922,7 @@ class node_res_obj(node_class):
             for fld,expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
-                except Exception:
+                except Exception,e:
                     print "Cannot eval %s for %s" % (expr, fld)
                     print e
                     pass
@@ -951,37 +1031,49 @@ class node_res_obj(node_class):
         # Directory Structure display in tree structure
         if self.res_id and directory.ressource_tree:
             where1 = []
+            if name:
+                where1.append(('name','=like',name.replace('\\','\\\\')))
             if obj._parent_name in obj.fields_get(cr, uid):
-                where1 = where + [(obj._parent_name, '=', self.res_id)]
+                where1.append((obj._parent_name, '=', self.res_id))
+            namefield = directory.resource_field.name or 'name'
             resids = obj.search(cr, uid, where1, context=ctx)
             for bo in obj.browse(cr, uid, resids, context=ctx):
-                namefield = directory.resource_field.name or 'name'
                 if not bo:
                     continue
                 res_name = getattr(bo, namefield)
                 if not res_name:
                     continue
+                res_name = res_name.replace('/', '_')
+                if name and (res_name != name):
+                    continue
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)
-                res.append(klass(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
+                rnode = klass(res_name, dir_id=self.dir_id, parent=self, context=self.context,
+                                res_model=self.res_model, res_bo=bo)
+                rnode.res_find_all = self.res_find_all
+                res.append(rnode)
 
 
         where2 = where + [('parent_id','=',self.dir_id) ]
         ids = dirobj.search(cr, uid, where2, context=ctx)
+        bo = obj.browse(cr, uid, self.res_id, context=ctx)
+        
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            if name and (name != dirr.name):
+                continue
             if dirr.type == 'directory':
                 klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
                 klass = dirr.get_node_class(dirr, context=ctx)
-                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
+                res.append(klass(dirr.name,self,self.context, dirr, {'active_id': self.res_id})) # bo?
 
         fil_obj = dirobj.pool.get('ir.attachment')
         if self.res_find_all:
             where2 = where
-        where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
-        # print "where clause for dir_obj", where2
+        where3 = where2 + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
+        # print "where clause for dir_obj", where3
         ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
@@ -992,17 +1084,19 @@ class node_res_obj(node_class):
         # Get Child Ressource Directories
         if directory.ressource_type_id and directory.ressource_type_id.id:
             where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
-            where5 = where4 + [('ressource_id','=',0)]
+            where5 = where4 + ['|', ('ressource_id','=',0), ('ressource_id','=',self.res_id)]
             dirids = dirobj.search(cr,uid, where5)
-            where5 = where4 + [('ressource_id','=',self.res_id)]
-            dirids = dirids + dirobj.search(cr,uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
                     klass = dirr.get_node_class(dirr, dynamic=True, context=ctx)
-                    res.append(klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                    rnode = klass(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = bo, res_id = self.res_id)
+                    rnode.res_find_all = dirr.resource_find_all
+                    res.append(rnode)
                 if dirr.type == 'ressource':
                     klass = dirr.get_node_class(dirr, context=ctx)
-                    res.append(klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
+                    rnode = klass(dirr.name, self, self.context, dirr, {'active_id': self.res_id})
+                    rnode.res_find_all = dirr.resource_find_all
+                    res.append(rnode)
         return res
 
     def create_child_collection(self, cr, objname):
@@ -1027,7 +1121,8 @@ class node_res_obj(node_class):
                 'name': objname,
                 'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False,
-                'parent_id' : False
+                'parent_id' : False,
+                'resource_find_all': False,
         }
         if (obj and (obj.type in ('directory'))) or not object2:
             val['parent_id'] =  obj and obj.id or False
@@ -1361,11 +1456,13 @@ class nodefd_content(StringIO, node_descriptor):
     def __init__(self, parent, cr, mode, ctx):
         node_descriptor.__init__(self, parent)
         self._context=ctx
+        self._size = 0L
 
         if mode in ('r', 'r+'):
             cntobj = parent.context._dirobj.pool.get('document.directory.content')
             data = cntobj.process_read(cr, parent.context.uid, parent, ctx)
             if data:
+                self._size = len(data)
                 parent.content_length = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
@@ -1378,6 +1475,9 @@ class nodefd_content(StringIO, node_descriptor):
             logging.getLogger('document.content').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.
@@ -1399,6 +1499,58 @@ class nodefd_content(StringIO, node_descriptor):
             cr.commit()
         except Exception:
             logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
+            raise
+        finally:
+            cr.close()
+        StringIO.close(self)
+
+class nodefd_static(StringIO, node_descriptor):
+    """ A descriptor to nodes with static data.
+    """
+    def __init__(self, parent, cr, mode, ctx=None):
+        node_descriptor.__init__(self, parent)
+        self._context=ctx
+        self._size = 0L
+
+        if mode in ('r', 'r+'):
+            data = parent.get_data(cr)
+            if data:
+                self._size = len(data)
+                parent.content_length = len(data)
+            StringIO.__init__(self, data)
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.nodes').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def size(self):
+        return self._size
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        if self.mode == 'r':
+            StringIO.close(self)
+            return
+
+        par = self._get_parent()
+        # uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode in ('w', 'w+', 'r+'):
+                data = self.getvalue()
+                par.set_data(cr, data)
+            elif self.mode == 'a':
+                raise NotImplementedError
+            cr.commit()
+        except Exception:
+            logging.getLogger('document.nodes').exception('Cannot update db content #%d for close:', par.cnt_id)
             raise
         finally:
             cr.close()

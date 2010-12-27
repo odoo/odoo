@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-29 09:18+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -34,8 +34,7 @@ msgid "The current step for this item has no email or report to preview."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 
@@ -85,11 +84,6 @@ msgstr ""
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
 msgstr "Wyzwalacz"
-
-#. module: marketing_campaign
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -187,6 +181,11 @@ msgid "Reset"
 msgstr ""
 
 #. module: marketing_campaign
+#: help:marketing.campaign,object_id:0
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
 msgstr ""
@@ -195,6 +194,12 @@ msgstr ""
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
 msgstr "Lat"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Sorry, campaign duplication is not supported at the moment."
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -335,6 +340,11 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Related Resource"
+msgstr "Powiązane zasoby"
+
+#. module: marketing_campaign
 #: field:marketing.campaign,name:0
 #: field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
@@ -420,16 +430,6 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
-
-#. module: marketing_campaign
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Nieprawidłowe parametry"
-
-#. module: marketing_campaign
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -543,6 +543,12 @@ msgid "Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "ID zasobu"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
 msgstr ""
@@ -561,9 +567,19 @@ msgid "Campaign Analysis"
 msgstr "Analiza kampanii"
 
 #. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr ""
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
 msgstr "Testowanie w czasie rzeczywistym"
+
+#. module: marketing_campaign
+#: sql_constraint:email.template:0
+msgid "The template name must be unique !"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -576,6 +592,11 @@ msgid "Directory"
 msgstr "Katalog"
 
 #. module: marketing_campaign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: marketing_campaign
 #: view:marketing.campaign:0
 #: selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
@@ -584,27 +605,36 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: marketing_campaign
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#. module: marketing_campaign
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
-
-#. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Preview"
 msgstr "Podgląd"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "Powiązane zasoby"
+#: model:ir.module.module,description:marketing_campaign.module_meta_information
+msgid ""
+"\n"
+"This module provides leads automation through marketing campaigns (campaigns "
+"can in fact be defined on any resource, not just CRM Leads).\n"
+"         The campaigns are dynamic and multi-channels. The process is as "
+"follows:\n"
+"          * Design marketing campaigns like workflows, including email "
+"templates to send, reports to print and send by email, custom actions, etc.\n"
+"          * Define input segments that will select the items that should "
+"enter the campaign (e.g leads from certain countries, etc.)\n"
+"          * Run you campaign in simulation mode to test it real-time or "
+"accelerated, and fine-tune it\n"
+"          * You may also start the real campaign in manual mode, where each "
+"action requires manual validation\n"
+"          * Finally launch your campaign live, and watch the statistics as "
+"the campaign does everything fully automatically. \n"
+"          While the campaign runs you can of course continue to fine-tune "
+"the parameters, input segments, workflow, etc.\n"
+"          \n"
+"          Note: If you need demo data, you can install the "
+"marketing_campaign_crm_demo module, but this will also install the CRM "
+"application as it depends on CRM Leads.\n"
+"    "
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -707,10 +737,9 @@ msgid "Campaign Workitem"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,ir_filter_id:0
-msgid "Filter"
-msgstr "Filtr"
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
@@ -740,11 +769,6 @@ msgstr "Przejście automatyczne"
 #: view:res.partner:0
 msgid "History"
 msgstr "Historia"
-
-#. module: marketing_campaign
-#: help:marketing.campaign,object_id:0
-msgid "Choose the model on which you want this campaign to be run"
-msgstr "Wybierz model, na podstawie którego chcesz uruchomić tę kampanię"
 
 #. module: marketing_campaign
 #: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
@@ -778,6 +802,12 @@ msgid "Done"
 msgstr "Wykonano"
 
 #. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates for Models"
 msgstr ""
@@ -789,8 +819,7 @@ msgid "Close"
 msgstr "Zamknij"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
-#, python-format
+#: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
 
@@ -808,10 +837,14 @@ msgstr ""
 "zostaną wykonane"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
-msgstr "ID zasobu"
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A marketing campaign is an event or activity that will help you manage and "
+"reach your partners with specific messages. A campaign can have many "
+"activities that will be triggered based on a specific situation. One "
+"possible action could be sending an email template that has previously been "
+"created in the system."
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -980,9 +1013,10 @@ msgid "Next Synchronization"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
-msgid "Campaign Activity"
-msgstr ""
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,ir_filter_id:0
+msgid "Filter"
+msgstr "Filtr"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1017,17 +1051,35 @@ msgstr "Koszt"
 msgid "Year"
 msgstr "Rok"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
 #~ msgid "Activity Definition"
 #~ msgstr "Definicja czynności"
 
 #~ msgid "Dates"
 #~ msgstr "Daty"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Nieprawidłowe parametry"
+
 #~ msgid "Run Date"
 #~ msgstr "Data uruchomienia"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
 #~ msgid "Launching Date"
 #~ msgstr "Data uruchomienia"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
 
 #~ msgid "Status"
 #~ msgstr "Stan"
@@ -1041,6 +1093,9 @@ msgstr "Rok"
 #~ msgstr ""
 #~ "Koszt stały kampanii (stosowany do analizy). Patrz również koszt zmienny dla "
 #~ "czynności."
+
+#~ msgid "Choose the model on which you want this campaign to be run"
+#~ msgstr "Wybierz model, na podstawie którego chcesz uruchomić tę kampanię"
 
 #~ msgid "Paper"
 #~ msgstr "Papier"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2009-09-08 12:52+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -22,12 +22,6 @@ msgstr ""
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "구매 주문 라인"
-
-#. module: warning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -40,12 +34,16 @@ msgid "Message for Purchase Order Line"
 msgstr "구매 주문 라인을 위한 메시지"
 
 #. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr ""
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order_line
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "판매 주문 라인"
@@ -64,6 +62,16 @@ msgstr ""
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
+msgstr "경고"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
 msgstr "경고"
 
 #. module: warning
@@ -92,11 +100,6 @@ msgid "No Message"
 msgstr "메시지 없음"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: warning
 #: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
@@ -113,7 +116,6 @@ msgid "Warning when Selling this Product"
 msgstr "이 상품을 판매할 때 경고"
 
 #. module: warning
-#: model:ir.model,name:warning.model_sale_order
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
 msgstr "판매 주문"
@@ -157,6 +159,12 @@ msgstr ""
 "다음 필드에 작성되어야 합니다."
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
+msgstr ""
+
+#. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
 msgstr "인보이스를 위한 메시지"
@@ -188,14 +196,9 @@ msgid "Warning on the Sale Order"
 msgstr "판매 주문에 관한 경고"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "경고"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -205,4 +208,14 @@ msgstr "스톡 피킹에 관한 경고"
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,14 +35,14 @@ class mrp_subproduct(osv.osv):
     _defaults={
         'subproduct_type': lambda *args: 'fixed'
     }
-    
-    def onchange_product_id(self, cr, uid, ids, product_id,context={}):
+
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Changes UoM if product_id changes.
         @param product_id: Changed product_id
         @return: Dictionary of changed values
         """
         if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id)
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
@@ -53,7 +53,7 @@ class mrp_bom(osv.osv):
     _name = 'mrp.bom'
     _description = 'Bill of Material'
     _inherit='mrp.bom'
-    
+
     _columns={
         'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
     }
@@ -62,7 +62,7 @@ mrp_bom()
 class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
-    _inherit= 'mrp.production'   
+    _inherit= 'mrp.production'
 
     def action_confirm(self, cr, uid, ids):
         """ Confirms production order and calculates quantity based on subproduct_type.

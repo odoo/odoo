@@ -6,21 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:28+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-15 12:54+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
 msgid "Delay to Close"
-msgstr ""
+msgstr "Zeit f. Beendigung"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,nbr:0
@@ -32,11 +32,6 @@ msgstr "# Fälle"
 #: view:crm.helpdesk.report:0
 msgid "Group By..."
 msgstr "Gruppierung..."
-
-#. module: crm_helpdesk
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehler in Modellbezeichnung für diese Aktion."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -61,11 +56,6 @@ msgid "Watchers Emails"
 msgstr "Empfänger EMails"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
-msgstr "Fälle"
-
-#. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
 #: selection:crm.helpdesk.report,priority:0
 msgid "Highest"
@@ -80,7 +70,7 @@ msgstr "Tag"
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Add Internal Note"
-msgstr ""
+msgstr "Hinzufügen Anmerkung"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -104,21 +94,20 @@ msgid "Partner Contact"
 msgstr "Partner Kontakt"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
-msgstr "Analyse Kundendienst"
+msgstr "Statistik Kundendienst"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 #: field:crm.helpdesk.report,date_closed:0
 msgid "Close Date"
-msgstr ""
+msgstr "Datum Beendigung"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Monat   "
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref:0
@@ -149,13 +138,6 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Closed"
-msgstr "Beendet"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Estimates"
 msgstr "Planung"
@@ -164,11 +146,6 @@ msgstr "Planung"
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
 msgstr "Sektion"
-
-#. module: crm_helpdesk
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für Ansicht!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -191,7 +168,7 @@ msgstr "Erfolgreich"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_expected:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "Überschrittene Frist"
 
 #. module: crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk_report
@@ -219,7 +196,7 @@ msgstr "Niedrig"
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "# Mails"
-msgstr ""
+msgstr "# Mails"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,create_date:0
@@ -270,6 +247,11 @@ msgstr "Historie Informationen"
 #: view:crm.helpdesk:0
 msgid "Dates"
 msgstr "Daten"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "    Month-1    "
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -326,7 +308,7 @@ msgstr "Abfrage"
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "Salesman"
-msgstr ""
+msgstr "Verkäufer"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref2:0
@@ -342,7 +324,7 @@ msgstr "Kategorie"
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Jahr  "
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -378,9 +360,11 @@ msgid "Low"
 msgstr "Gering"
 
 #. module: crm_helpdesk
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+#: field:crm.helpdesk,date_closed:0
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Closed"
+msgstr "Beendet"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -549,15 +533,8 @@ msgid "Categorization"
 msgstr "Kategorisierung"
 
 #. module: crm_helpdesk
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
-"beinhalten !"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
+#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
 msgid "Helpdesk"
@@ -585,6 +562,15 @@ msgid "Reply"
 msgstr "Antwort"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid ""
+"Create and manage helpdesk categories to better manage and classify your "
+"support request."
+msgstr ""
+"Nutzen Sie die Anwendung für den Kundendienst als Instrument zur Betreuung "
+"Ihrer Kunden in der After-Sales Phase."
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr "Beschreibung"
@@ -595,6 +581,19 @@ msgid "May"
 msgstr "Mai"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"'Helpdesk and Support' allows you to track your interventions. Select a "
+"customer, add notes and categorize interventions with partners if necessary "
+"and assign a priority level. Depending on your need, you may consider using "
+"the issues system of OpenERP to manage your support activities."
+msgstr ""
+"'Kundendienst und Kundensupport' ermöglicht Ihnen eine Rückverfolgung Ihrer "
+"Aktivitäten durch Fokussierung auf einzelne Vorgänge zu Kunden. In "
+"Abhängigkeit Ihres Bedarfs, können Sie natürlich auch entscheiden, die "
+"Erweiterung der Problemverwaltung ergänzend einzusetzen."
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
 msgstr "Wahrscheinl. (%)"
@@ -602,7 +601,20 @@ msgstr "Wahrscheinl. (%)"
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,email:0
 msgid "# Emails"
+msgstr "# EMails"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid ""
+"Have a general overview of all support requests by sorting them with "
+"specific criteria such as the processing time, number of requests answered, "
+"emails sent and costs."
 msgstr ""
+"Sie können schnell einen Überblick über die Effizienz Ihres "
+"Kundenservicebereichs  bekommen, indem Sie mit speziellen "
+"Filtereinstellungen und Gruppierungen Ihre Bearbeitungszeiten, bearbeitete "
+"Fälle, versendete EMails und Bearbeitungskosten\r\n"
+"auswerten."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,canal_id:0
@@ -662,7 +674,7 @@ msgstr "April"
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
 msgid "My Case(s)"
-msgstr ""
+msgstr "Meine Fälle"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,id:0
@@ -697,3 +709,45 @@ msgstr "Jahr"
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "Dauer"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehler in Modellbezeichnung für diese Aktion."
+
+#~ msgid "Delay to close"
+#~ msgstr "Zeit f. Beendigung"
+
+#~ msgid "This Year"
+#~ msgstr "Akt. Jahr"
+
+#~ msgid "Cases"
+#~ msgstr "Fälle"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für Ansicht!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten !"
+
+#~ msgid "This Month"
+#~ msgstr "Akt. Monat"
+
+#~ msgid "Communication history"
+#~ msgstr "Kommunikation Historie"
+
+#~ msgid "Create Date"
+#~ msgstr "Datum Erstellung"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Der Name des Moduls muss eindeutig sein."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die ID für das Zertifikat des Moduls sollte eindeutig sein !"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-01 08:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-26 22:55+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-02 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -30,14 +30,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Objeto"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -58,6 +50,11 @@ msgid "Jobs Hiring Process"
 msgstr "Proceso de selección de personal"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Configurar calendarios para secciones CRM"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Asistencia/Ayuda"
@@ -69,13 +66,17 @@ msgstr "Intervalo en horas"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "asistente"
+msgid "dtstamp"
+msgstr "Marca fecha-hora (dtstamp)"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "¡Error! No puede crear equipos de ventas recursivos."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
+msgstr ""
+"El campo del objeto usado en el nombre de fichero. Debe ser un identificador "
+"único."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -88,9 +89,12 @@ msgid "Calendar of Meetings"
 msgstr "Calendario de reuniones"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Reuniones de calendario compartidas"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
+"OpenERP puede crear y pre-configurar para usted una serie de calendarios "
+"integrados."
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -98,14 +102,14 @@ msgid "Manages an Helpdesk service."
 msgstr "Gestiona un servicio de asistencia/ayuda."
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "fecha-final"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "resumen"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -192,6 +196,15 @@ msgstr ""
 "lista de llamadas telefónicas a procesar."
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+" Le permite sincronizar sus calendarios OpenERP con su teléfono, Outlook, "
+"Sunbird, ical, ..."
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr "Campo OpenERP"
@@ -217,9 +230,9 @@ msgid "location"
 msgstr "ubicación"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "asistente"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -235,6 +248,11 @@ msgstr "Método alternativo para calcular el valor"
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr "Gestiona el calendario de reuniones de los usuarios."
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Dominio"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -284,14 +302,19 @@ msgid "categories"
 msgstr "categorías"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr "Configurar"
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr "Usar el campo"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Dominio"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Crear calendarios pre-configurados"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -332,9 +355,9 @@ msgstr ""
 "Si se indica, se creará una instancia separada por cada registro de objeto."
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "resumen"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contenidos"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -347,9 +370,9 @@ msgid "document.ics.crm.wizard"
 msgstr "documento.ics.crm.asistente"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr "res_config_contenidos"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Reuniones de calendario compartidas"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -371,19 +394,14 @@ msgstr "URL"
 msgid "Business Opportunities"
 msgstr "Oportunidades de negocio"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "Marca fecha-hora (dtstamp)"
+#~ msgid "dt-stamp"
+#~ msgstr "fecha-impresa"
 
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-"El campo del objeto usado en el nombre de fichero. Debe ser un identificador "
-"único."
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "¡Error! No puede crear directorios recursivos."
@@ -391,14 +409,14 @@ msgstr ""
 #~ msgid "Open ERP Field"
 #~ msgstr "Campo OpenERP"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "documento.directorio.ics.campos"
 
 #~ msgid "Error ! You cannot create recursive sections."
 #~ msgstr "¡Error! No puede crear secciones recursivas."
-
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "Configurar calendarios para secciones CRM"
 
 #~ msgid ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
@@ -430,9 +448,6 @@ msgstr ""
 #~ msgid "Prospect"
 #~ msgstr "Prospección"
 
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "Crear calendarios pre-configurados"
-
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"
 
@@ -455,3 +470,21 @@ msgstr ""
 #~ msgstr ""
 #~ "Utilizado por las compañías para el seguimiento de errores y peticiones de "
 #~ "soporte sobre programas informáticos."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
+#~ msgid "Error ! You cannot create recursive Sales team."
+#~ msgstr "¡Error! No puede crear equipos de ventas recursivos."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "¡El código del equipo de ventas debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

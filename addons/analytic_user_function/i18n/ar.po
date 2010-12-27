@@ -6,19 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-02-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
 msgstr ""
 
 #. module: analytic_user_function
@@ -33,28 +33,9 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
-
-#. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                    "
-"'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function
@@ -69,8 +50,31 @@ msgid "User"
 msgstr ""
 
 #. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
 msgid "Relation table between users and products on a analytic account"
+msgstr ""
+
+#. module: analytic_user_function
+#: model:ir.module.module,description:analytic_user_function.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default function of a "
+"specific user on a given account. This is mostly used when a user encodes "
+"his timesheet: the values are retrieved and the fields are auto-filled... "
+"but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the employee data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: analytic_user_function
@@ -79,11 +83,8 @@ msgid "Analytic User Function"
 msgstr ""
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
-#, python-format
-msgid ""
-"There is no expense account define ' \\n                                'for "
-"this product: \"%s\" (id:%d)"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: analytic_user_function

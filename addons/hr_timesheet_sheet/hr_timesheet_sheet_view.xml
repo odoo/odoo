@@ -53,6 +53,7 @@
                         <field name="department_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="employee_id"/>
+                        <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
@@ -67,7 +68,7 @@
                                 <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
                             </group>
 
-                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1">
+                            <field colspan="3" context="{'name':date_current,'user_id':user_id}" height="100" name="attendances_ids" nolabel="1">
                                 <tree string="Attendances" editable="bottom">
                                     <field name="name"/>
                                     <field name="action"/>
@@ -80,7 +81,7 @@
                             </group>
                             <field name="state_attendance"/>
                             <field name="total_attendance_day" widget="float_time"/>
-                            <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
+                            <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet">
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
@@ -131,8 +132,8 @@
                         <field name="state"/>
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-check"/>
                         <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
-                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel"/>
-                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
+                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
+                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_manager"/>
                     </group>
                 </form>
             </field>
@@ -173,7 +174,7 @@
             <field name="view_id" eval="False"/>
             <field name="context">{'search_default_my_timesheet':1, }</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-            <field name="help">Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account.</field>
+            <field name="help">Check your timesheets for a specific period. You can also encode time spent on a project (i.e. an analytic account) thus generating costs in the analytic account concerned.</field>
         </record>
 
         <!--Time Tracking menu in project Management-->

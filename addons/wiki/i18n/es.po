@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-30 10:38+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-11-23 09:37+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -30,20 +31,7 @@ msgstr "Páginas Wiki"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+msgstr "Método de visualización"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -70,12 +58,7 @@ msgstr "Sección"
 #. module: wiki
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
-msgstr ""
-
-#. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "¿Crear sección?"
+msgstr "Indica si estas páginas tienen una tabla de contenidos o no"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -97,18 +80,18 @@ msgstr "Contenido"
 #. module: wiki
 #: field:wiki.wiki,child_ids:0
 msgid "Child Pages"
-msgstr ""
+msgstr "Páginas hijas"
 
 #. module: wiki
 #: field:wiki.wiki,parent_id:0
 msgid "Parent Page"
-msgstr ""
+msgstr "Página padre"
 
 #. module: wiki
 #: view:wiki.wiki:0
 #: field:wiki.wiki,write_uid:0
 msgid "Last Contributor"
-msgstr ""
+msgstr "Último colaborador"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_parent_id:0
@@ -116,9 +99,9 @@ msgid "Parent Menu"
 msgstr "Menú padre"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr "Tema, también denominado Grupo wiki."
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -135,7 +118,7 @@ msgstr "Título"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_create_menu
 msgid "Wizard Create Menu"
-msgstr ""
+msgstr "Asistente crear menú"
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
@@ -145,19 +128,19 @@ msgstr "Líneas historial"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Page Content"
-msgstr ""
+msgstr "Contenido página"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "¡Aviso!"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "There are no changes in revisions"
-msgstr ""
+msgstr "No hay cambios en revisiones"
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
@@ -177,7 +160,7 @@ msgstr "Descripción"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Needs Review"
-msgstr ""
+msgstr "Necesita revisión"
 
 #. module: wiki
 #: help:wiki.wiki,review:0
@@ -185,6 +168,8 @@ msgid ""
 "Indicates that this page should be reviewed, raising the attention of other "
 "contributors"
 msgstr ""
+"Indica que esta página debería ser revisada, captando la atención de otros "
+"colaboradores."
 
 #. module: wiki
 #: view:wiki.create.menu:0
@@ -195,12 +180,12 @@ msgstr "Información del menú"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "Page History"
-msgstr ""
+msgstr "Historial página"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
 msgid "Tree"
-msgstr ""
+msgstr "Árbol"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -210,7 +195,7 @@ msgstr "Plantilla de página"
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Keywords"
-msgstr ""
+msgstr "Palabras clave"
 
 #. module: wiki
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
@@ -219,9 +204,9 @@ msgid "Warning"
 msgstr "Advertencia"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Creado en"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -238,7 +223,7 @@ msgstr "¿Desea crear un índice sobre las páginas seleccionadas? "
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
 #: view:wizard.wiki.history.show_diff:0
 msgid "Difference"
-msgstr ""
+msgstr "Diferencia"
 
 #. module: wiki
 #: field:wiki.groups,page_ids:0
@@ -248,7 +233,7 @@ msgstr "Páginas"
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Group Description"
-msgstr ""
+msgstr "Descripción grupo"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -258,12 +243,12 @@ msgstr "Utilice código de sección de la página, por ejemplo 1.2.1"
 #. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
-msgstr ""
+msgstr "¿Desea abrir una página wiki? "
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "¿Crear sección?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -273,12 +258,17 @@ msgstr "Área de texto"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Meta Information"
-msgstr ""
+msgstr "Meta información"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Creado en"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -287,9 +277,16 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+"Es obligado seleccionar la página de inicio si el método de visualización es "
+"Página de inicio"
+
+#. module: wiki
 #: selection:wiki.groups,method:0
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -315,12 +312,12 @@ msgstr "wiki.wiki"
 #. module: wiki
 #: help:wiki.groups,method:0
 msgid "Define the default behaviour of the menu created on this group"
-msgstr ""
+msgstr "Define el comportamiento por defecto del menú creado en este grupo."
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -336,22 +333,17 @@ msgstr "ID Wiki"
 #: field:wiki.groups,home:0
 #: selection:wiki.groups,method:0
 msgid "Home Page"
-msgstr ""
+msgstr "Página inicio"
 
 #. module: wiki
 #: help:wiki.wiki,parent_id:0
 msgid "Allows you to link with the other page with in the current topic"
-msgstr ""
+msgstr "Le permite enlazar con la otra página dentro del tema actual."
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
-msgstr ""
-
-#. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
+msgstr "Información modificación"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
@@ -387,7 +379,21 @@ msgstr ""
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
+"Las páginas wiki le permite compartir ideas y preguntas con sus compañeros "
+"de trabajo. Puede crear un documento nuevo que se puede vincular a una o "
+"varias aplicaciones (CRM, Ventas, ...). Puede utilizar palabras clave para "
+"facilitar el acceso a las páginas wiki. Se dispone de una edición básica "
+"wiki para dar formato al texto."
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
@@ -414,7 +420,7 @@ msgstr "Grupos Wiki"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Topic"
-msgstr ""
+msgstr "Tema"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -432,12 +438,12 @@ msgstr "Tabla de contenido"
 #: view:wiki.groups:0
 #: view:wiki.wiki.page.open:0
 msgid "Open Wiki Page"
-msgstr ""
+msgstr "Abrir página wiki"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_page_open
 msgid "wiz open page"
-msgstr ""
+msgstr "asistente abrir página"
 
 #. module: wiki
 #: view:wiki.create.menu:0
@@ -459,12 +465,18 @@ msgstr "Necesita revisión"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_review
 msgid "Pages Waiting Review"
-msgstr ""
+msgstr "Páginas esperando revisión"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 msgid "Search Page"
-msgstr ""
+msgstr "Buscar página"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
 
 #~ msgid "Wiki Groups Links"
 #~ msgstr "Enlaces grupos wiki"
@@ -493,11 +505,18 @@ msgstr ""
 #~ msgid "Document Management"
 #~ msgstr "Gestión de documentos"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
 #~ msgid "Parent Group"
 #~ msgstr "Grupo padre"
 
 #~ msgid "Wiki Differance"
 #~ msgstr "Diferencia Wiki"
+
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "No se ha encontrado la acción"
 
 #~ msgid "Modifications"
 #~ msgstr "Modificaciones"
@@ -507,3 +526,18 @@ msgstr ""
 
 #~ msgid "Tags"
 #~ msgstr "Etiquetas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

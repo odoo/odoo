@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-30 14:37+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-21 15:11+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -30,18 +30,7 @@ msgstr "Wiki页"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
-
-#. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须是以x_开头并且不能含有特殊字符"
-
-#. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中无效的模块名"
+msgstr "显示方式"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -71,11 +60,6 @@ msgid "Indicates that this pages have a table of contents or not"
 msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "生成分段?"
-
-#. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
 #: view:wiki.wiki.history:0
 msgid "Wiki History"
@@ -95,18 +79,18 @@ msgstr "内容"
 #. module: wiki
 #: field:wiki.wiki,child_ids:0
 msgid "Child Pages"
-msgstr ""
+msgstr "子页面"
 
 #. module: wiki
 #: field:wiki.wiki,parent_id:0
 msgid "Parent Page"
-msgstr ""
+msgstr "上级页面"
 
 #. module: wiki
 #: view:wiki.wiki:0
 #: field:wiki.wiki,write_uid:0
 msgid "Last Contributor"
-msgstr ""
+msgstr "最近的贡献者"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_parent_id:0
@@ -114,9 +98,9 @@ msgid "Parent Menu"
 msgstr "上级菜单"
 
 #. module: wiki
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr "主题，也叫做维基组"
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -133,7 +117,7 @@ msgstr "标题"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_create_menu
 msgid "Wizard Create Menu"
-msgstr ""
+msgstr "向导创建菜单"
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
@@ -143,13 +127,13 @@ msgstr "日志明细"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Page Content"
-msgstr ""
+msgstr "页面内容"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "警告 !"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:0
@@ -175,7 +159,7 @@ msgstr "描述"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Needs Review"
-msgstr ""
+msgstr "需要复审"
 
 #. module: wiki
 #: help:wiki.wiki,review:0
@@ -193,12 +177,12 @@ msgstr "菜单信息"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "Page History"
-msgstr ""
+msgstr "页面编辑历史"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
 msgid "Tree"
-msgstr ""
+msgstr "树形列表"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -208,7 +192,7 @@ msgstr "页模板"
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Keywords"
-msgstr ""
+msgstr "关键字"
 
 #. module: wiki
 #: code:addons/wiki/wizard/wiki_show_diff.py:0
@@ -217,9 +201,9 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "创建在"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -236,7 +220,7 @@ msgstr "想在选择的页创建一索引? "
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
 #: view:wizard.wiki.history.show_diff:0
 msgid "Difference"
-msgstr ""
+msgstr "差异"
 
 #. module: wiki
 #: field:wiki.groups,page_ids:0
@@ -246,7 +230,7 @@ msgstr "页"
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Group Description"
-msgstr ""
+msgstr "组描述"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -256,12 +240,12 @@ msgstr "用户页段代码如1.2.1"
 #. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
-msgstr ""
+msgstr "想打开一个维基页面？ "
 
 #. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件"
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "生成分段?"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -271,12 +255,17 @@ msgstr "文本区"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Meta Information"
-msgstr ""
+msgstr "元信息"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "创建在"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -285,9 +274,14 @@ msgid "Notes"
 msgstr "备注"
 
 #. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+
+#. module: wiki
 #: selection:wiki.groups,method:0
 msgid "List"
-msgstr ""
+msgstr "列表"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -313,12 +307,12 @@ msgstr "wiki.wiki"
 #. module: wiki
 #: help:wiki.groups,method:0
 msgid "Define the default behaviour of the menu created on this group"
-msgstr ""
+msgstr "定义组菜单创建后的默认行为"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -334,22 +328,17 @@ msgstr "维基页标识符"
 #: field:wiki.groups,home:0
 #: selection:wiki.groups,method:0
 msgid "Home Page"
-msgstr ""
+msgstr "主页"
 
 #. module: wiki
 #: help:wiki.wiki,parent_id:0
 msgid "Allows you to link with the other page with in the current topic"
-msgstr ""
+msgstr "允许您链接其他页面到本主题"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
-msgstr ""
-
-#. module: wiki
-#: help:wiki.wiki,group_id:0
-msgid "Topic, also called Wiki Group"
-msgstr ""
+msgstr "修改信息"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
@@ -384,6 +373,15 @@ msgstr "您因该选定最少一个或最多两个历史差异！"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
+msgstr "分组于"
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
 msgstr ""
 
 #. module: wiki
@@ -411,7 +409,7 @@ msgstr "Wiki组"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Topic"
-msgstr ""
+msgstr "主题"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -429,7 +427,7 @@ msgstr "目录"
 #: view:wiki.groups:0
 #: view:wiki.wiki.page.open:0
 msgid "Open Wiki Page"
-msgstr ""
+msgstr "打开维基页面"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_page_open
@@ -456,18 +454,26 @@ msgstr "需要预览"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_review
 msgid "Pages Waiting Review"
-msgstr ""
+msgstr "正在等待复审的页面"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 msgid "Search Page"
-msgstr ""
+msgstr "搜索页面"
 
 #~ msgid "Document Management"
 #~ msgstr "文档管理"
 
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "找不到动作"
+
 #~ msgid "Modifications"
 #~ msgstr "修改"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须是以x_开头并且不能含有特殊字符"
 
 #~ msgid "Wiki Groups Links"
 #~ msgstr "Wiki组链接"
@@ -477,6 +483,9 @@ msgstr ""
 
 #~ msgid "Wiki Configuration"
 #~ msgstr "Wiki设置"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中无效的模块名"
 
 #~ msgid "Create a Menu"
 #~ msgstr "创建一菜单"
@@ -492,6 +501,9 @@ msgstr ""
 
 #~ msgid "Differences"
 #~ msgstr "分歧"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件"
 
 #~ msgid "Parent Group"
 #~ msgstr "父组"

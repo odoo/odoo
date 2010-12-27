@@ -40,6 +40,8 @@ class pos_open_statement(osv.osv_memory):
         statement_obj = self.pool.get('account.bank.statement')
         sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
+        if context is None:
+            context = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
                     "WHERE user_id = %s ORDER BY journal_id"% (uid, ))
@@ -49,7 +51,7 @@ class pos_open_statement(osv.osv_memory):
         for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
             if len(ids):
-                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related cash register.' %(journal.name)))
+                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related cash register.') %(journal.name))
 
             number = ''
             if journal.sequence_id:
@@ -65,23 +67,20 @@ class pos_open_statement(osv.osv_memory):
             statement_id = statement_obj.create(cr, uid, data, context=context)
             statement_obj.button_open(cr, uid, [statement_id], context)
 
-        id2 = mod_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
-        id3 = mod_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
-        result = mod_obj._get_id(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
-        search_id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-        if id2:
-            id2 = mod_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = mod_obj.browse(cr, uid, id3, context=context).res_id
+        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
+        tree_id = tree_res and tree_res[1] or False
+        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
+        form_id = form_res and form_res[1] or False
+        search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
 
         return {
             'domain': "[('state', '=', 'open'),('user_id', '=', "+ str(uid) +")]",
             'name': 'Open Statement',
             'view_type': 'form',
             'view_mode': 'tree, form',
-            'search_view_id': search_id['res_id'],
+            'search_view_id': search_id and search_id[1] or False ,
             'res_model': 'account.bank.statement',
-            'views': [(id2, 'tree'), (id3, 'form')],
+            'views': [(tree_id, 'tree'), (form_id, 'form')],
             'context': {'search_default_open': 1},
             'type': 'ir.actions.act_window'
         }

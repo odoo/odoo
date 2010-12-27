@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 13:47+0000\n"
-"Last-Translator: zmmaj <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-04 08:51+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -44,20 +44,15 @@ msgid "Group By..."
 msgstr "Grupisano po..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Planiranje"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Nema definisanog dobavljaca za ovaj proizvod,"
-
-#. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravmo ime modela u definiciji akcije."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -79,6 +74,17 @@ msgstr "Adresa za ovog dobavljaca nije definisana"
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
 msgstr "Izracunaj Lager koriscenjem minimalnh pravila"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+msgid ""
+"A procurement order is used to record a need in a specific product at a "
+"specific location. They are usually created automatically by the sales "
+"orders, the Pull Logistics rules or the minimum stock rules. When the "
+"procurement order is confirmed, it creates automatically the necessary "
+"operations to fullfil the need: purchase order proposition, manufacturing "
+"order, etc."
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -172,6 +178,11 @@ msgid "Stock Move"
 msgstr "Pomeri Lager"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Planiranje"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Spreman"
@@ -217,9 +228,14 @@ msgstr ""
 "Ovo je automatski zavrseno od strane OpenERP-a."
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr "Pravila Minimalnog Inventara"
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
+
+#. module: procurement
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -250,6 +266,17 @@ msgstr "Izborna Lista"
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
 msgstr "Skladiste"
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"You can define your minimum stock rules, so that OpenERP will trigger "
+"automatically the propositions of manufacturing or purchase orders according "
+"to the stock level. Once the virtual stock of a product (=stock on hand "
+"minus all confirmed orders and reservations) is bellow the minimum quantity, "
+"OpenERP will generate a procurement request in order to fullfil the stock up "
+"to the maximum quantity."
+msgstr ""
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -321,14 +348,9 @@ msgid "Configuration"
 msgstr "Konfiguracija"
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Neispravni argumenti"
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za pregled arhitekture!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "Kol Umnozeno"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -338,11 +360,6 @@ msgid ""
 msgstr ""
 "Ako rucno radite nabavku, verovatno ce te koristiti metod NAPRAVI da "
 "napravite nalog"
-
-#. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistic Scheduler"
-msgstr "MRP & Zakazivanje Logistike"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -408,6 +425,19 @@ msgid "Service"
 msgstr "Usluga"
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Min Kolicina"
@@ -431,6 +461,13 @@ msgid ""
 msgstr ""
 "Molim proveri kolicinu u zahtevu za nabavku, trebalo bi da je NIJE manje od "
 "1 !"
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"orderpoint without removing it."
+msgstr ""
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -480,16 +517,24 @@ msgid "Draft"
 msgstr "U Pripremi"
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
+msgstr "Ovaj Carobnjak ce zakazati nabavke"
 
 #. module: procurement
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"Procurement Orders represent the need for a certain quantity of products, at "
+"a given time, in a given location. Sale Orders are one typical source of "
+"Procurement Orders (but these are distinct documents). Depending on the "
+"procurement parameters and the products configuration, the procurement "
+"engine will attempt to satisfy the need by reserving products from stock, or "
+"ordering products from a supplier, or passing a manufacturing order, etc. A "
+"Procurement Exception occurs when the system cannot find a way to fulfill a "
+"procurement. Some exceptions will resolve themselves automatically, but "
+"others require manual intervention (those are identified by a specific error "
+"message)"
 msgstr ""
-"Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -513,18 +558,9 @@ msgid "Normal"
 msgstr "Normalno"
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr "Ovaj Carobnjak ce zakazati nabavke"
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the orderpoint "
-"without removing it."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
-"Ako je aktivno polje postavljeno na ISTINA, omogucava ti da sakrijes tacku "
-"Narucivanja bez uklanjanja."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -558,9 +594,9 @@ msgid "Automatic Order Point"
 msgstr "Automatska Tacka narucivanja"
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
-msgstr "Kol Umnozeno"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Pravila Minimalnog Inventara"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -578,13 +614,17 @@ msgid "Procurement name."
 msgstr "Ime Nabavke"
 
 #. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Reason"
 msgstr "Razlog Nabavke"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
+#: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than zero."
 msgstr "Umnozena kolicina mora biti veca od  nula"
 
@@ -694,12 +734,16 @@ msgid "Current"
 msgstr "Trenutni"
 
 #. module: procurement
+#: view:board.board:0
+msgid "Procurements in Exception"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Details"
 msgstr "Detalji"
 
 #. module: procurement
-#: view:board.board:0
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
@@ -806,6 +850,11 @@ msgstr ""
 "zadatak, proizvodni nalog, ili nalog za kupovinu."
 
 #. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -868,12 +917,37 @@ msgid "Procurement Details"
 msgstr "detalji Nabavke"
 
 #. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Pravila nisu podrzana od strane osv_memory objekta !"
-
-#. module: procurement
 #: code:addons/procurement/schedulers.py:0
 #, python-format
 msgid "SCHEDULER"
 msgstr "ROKOVNIK ( Scheduler)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravmo ime modela u definiciji akcije."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za pregled arhitekture!"
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "MRP & Zakazivanje Logistike"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Neispravni argumenti"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora poceti sa x_ i ne sme sadrzavati specijalne karaktere !"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the orderpoint "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Ako je aktivno polje postavljeno na ISTINA, omogucava ti da sakrijes tacku "
+#~ "Narucivanja bez uklanjanja."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Pravila nisu podrzana od strane osv_memory objekta !"

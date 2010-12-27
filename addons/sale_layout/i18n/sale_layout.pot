@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47:00+0000\n"
-"PO-Revision-Date: 2010-10-18 17:47:00+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:10+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,16 @@ msgid "Sub Total"
 msgstr ""
 
 #. module: sale_layout
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.module.module,description:sale_layout.module_meta_information
+msgid "\n"
+"    This module provides features to improve the layout of the Sales Order.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of a sales order\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: sale_layout
@@ -66,13 +74,13 @@ msgid "Layout Type"
 msgstr ""
 
 #. module: sale_layout
-#: model:ir.model,name:sale_layout.model_sale_order_line
-msgid "Sale Order Line"
+#: view:sale.order:0
+msgid "Seq."
 msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
-msgid "Seq."
+msgid "UoM"
 msgstr ""
 
 #. module: sale_layout
@@ -141,16 +149,6 @@ msgid "Sale Order Layout"
 msgstr ""
 
 #. module: sale_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: sale_layout
-#: model:ir.model,name:sale_layout.model_sale_order
-msgid "Sale Order"
-msgstr ""
-
-#. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Page Break"
 msgstr ""
@@ -216,8 +214,13 @@ msgid "Your Reference"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr ""
+
+#. module: sale_layout
+#: report:sale.order.layout:0
+msgid "TVA :"
 msgstr ""
 
 #. module: sale_layout
@@ -231,8 +234,8 @@ msgid "States"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "TVA :"
+#: view:sale.order:0
+msgid "Sales order lines"
 msgstr ""
 
 #. module: sale_layout
@@ -246,13 +249,18 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
+#: report:sale.order.layout:0
+msgid "Taxes :"
 msgstr ""
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Fax :"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.model,name:sale_layout.model_sale_order
+msgid "Sales Order"
 msgstr ""
 
 #. module: sale_layout
@@ -266,8 +274,8 @@ msgid "Price"
 msgstr ""
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Taxes :"
+#: model:ir.model,name:sale_layout.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_layout

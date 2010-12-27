@@ -127,6 +127,32 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="255.0,57.0,57.0,57.0,57.0,57.0" style="Table7">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+          <para style="terp_default_1">[[repeatIn(get_titles(data['form']), 'k')]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty1') and k['qty1']) or '' ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty2') and k['qty2']) or '' ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty3') and k['qty3']) or '' ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty4') and k['qty4']) or '' ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_Right_9_Bold">[[ (k.has_key('qty5') and k['qty5']) or '' ]] </para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -235,5 +261,6 @@
         </para>
       </section>
     </section>
+  </pto>
   </story>
 </document>

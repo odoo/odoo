@@ -8,16 +8,16 @@
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -28,23 +28,22 @@ import datetime
 from report import report_sxw
 import time
 import pooler
-import rml_parse
 
-class employees_salary_report(rml_parse.rml_parse):
+class employees_salary_report(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(employees_salary_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
-            'get_employee' : self.get_employee,
-            'get_employee_detail' : self.get_employee_detail,
-            'cal_monthly_amt':self.cal_monthly_amt,
-            'get_periods'  : self.get_periods,
-            'get_total' : self.get_total,
-            'get_allow':self.get_allow,
-            'get_deduct':self.get_deduct,
-            'get_other':self.get_other,
-            'get_monthly_total':self.get_monthly_total,
+            'get_employee': self.get_employee,
+            'get_employee_detail': self.get_employee_detail,
+            'cal_monthly_amt': self.cal_monthly_amt,
+            'get_periods': self.get_periods,
+            'get_total': self.get_total,
+            'get_allow': self.get_allow,
+            'get_deduct': self.get_deduct,
+            'get_other': self.get_other,
+            'get_monthly_total': self.get_monthly_total,
         })
 
         self.mnths =[]

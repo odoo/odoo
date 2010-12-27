@@ -30,8 +30,6 @@ import tools
 
 class one2many_mod3(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = context
         res = {}
         for obj in obj.browse(cr, user, ids, context=context):
             res[obj.id] = []
@@ -52,8 +50,6 @@ class report_account_analytic_planning(osv.osv):
     _description = "Planning"
 
     def _child_compute(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         obj_dept = self.pool.get('hr.department')
         obj_user = self.pool.get('res.users')
         result = {}
@@ -82,7 +78,7 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_planned(self, cr, uid, ids, name, args, context=None):
         result = {}
-        for plan in self.browse(cr, uid, ids, context):
+        for plan in self.browse(cr, uid, ids, context=context):
             plan_hrs=0.0
             for p in plan.planning_user_ids:
                 if not p.plan_open : p.plan_open = 0.0
@@ -93,7 +89,7 @@ class report_account_analytic_planning(osv.osv):
 
     def _get_total_free(self, cr, uid, ids, name, args, context=None):
         result = {}
-        for plan in self.browse(cr, uid, ids, context):
+        for plan in self.browse(cr, uid, ids, context=context):
             total_free = 0.0
             for p in plan.planning_user_ids:
                 if  p.free:
@@ -102,8 +98,6 @@ class report_account_analytic_planning(osv.osv):
         return result
 
     def _check_planning_responsible(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for obj_plan in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT id FROM report_account_analytic_planning plan
@@ -138,8 +132,8 @@ class report_account_analytic_planning(osv.osv):
         'total_free': fields.function(_get_total_free, method=True, string='Total Free'),
     }
     _defaults = {
-        'date_from': time.strftime('%Y-%m-01'),
-        'date_to': (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-%m-01'),
+        'date_to': lambda *a: (datetime.now()+relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'),
         'user_id': lambda self, cr, uid, c: uid,
         'state': 'draft',
         'business_days': 20,
@@ -151,26 +145,18 @@ class report_account_analytic_planning(osv.osv):
     ]
 
     def action_open(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'open'}, context=context)
         return True
 
     def action_cancel(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'cancel'}, context=context)
         return True
 
     def action_draft(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'draft'}, context=context)
         return True
 
     def action_done(self, cr, uid, id, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, id, {'state' : 'done'}, context=context)
         return True
 
@@ -182,11 +168,9 @@ class report_account_analytic_planning_line(osv.osv):
     _rec_name = 'user_id'
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['user_id', 'planning_id', 'note'], context)
+        reads = self.read(cr, uid, ids, ['user_id', 'planning_id', 'note'], context=context)
         res = []
         for record in reads:
             name = '['+record['planning_id'][1]
@@ -200,16 +184,14 @@ class report_account_analytic_planning_line(osv.osv):
         return res
 
     def _amount_base_uom(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             result[line.id] = line.amount / line.amount_unit.factor * div
         return result
 
@@ -244,7 +226,7 @@ class project_task(osv.osv):
     }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        if not context:
+        if context is None:
             context = {}
         if not context.get('planning', False):
             return super(project_task,self).search(cr, user, args, offset, limit, order, context)
@@ -264,8 +246,6 @@ class report_account_analytic_planning_user(osv.osv):
     _auto = False
 
     def _get_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
         tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
@@ -278,7 +258,7 @@ class report_account_analytic_planning_user(osv.osv):
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.user_id:
                 cr.execute("""select COALESCE(sum(tasks.remaining_hours),0) from project_task tasks \
                                where  tasks.planning_line_id IN (select id from report_account_analytic_planning_line\
@@ -290,10 +270,8 @@ class report_account_analytic_planning_user(osv.osv):
         return result
 
     def _get_free(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         result = {}
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.user_id:
                 result[line.id] = line.planning_id.business_days - line.plan_tasks - line.plan_open - line.holiday
             else:
@@ -301,16 +279,14 @@ class report_account_analytic_planning_user(osv.osv):
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.user_id:
                 cr.execute("""
                 SELECT sum(unit_amount/uom.factor) FROM account_analytic_line acc
@@ -412,21 +388,19 @@ class report_account_analytic_planning_account(osv.osv):
     _auto = False
 
     def _get_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT COALESCE(sum(tasks.remaining_hours),0)
                 FROM project_task tasks
@@ -434,25 +408,23 @@ class report_account_analytic_planning_account(osv.osv):
                     SELECT id
                     FROM report_account_analytic_planning_line
                     WHERE planning_id = %s AND account_id=%s
-                )""", (line.planning_id.id,line.account_id.id ))
+                )""", (line.planning_id.id, line.account_id and line.account_id.id or None))
             result[line.id] = cr.fetchall()[0][0] / div * div2
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT SUM(unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id.id, ))
+                WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id and line.account_id.id or None))
             res = cr.fetchall()[0][0]
             if res:
                 result[line.id] = res * div2
@@ -513,22 +485,20 @@ class report_account_analytic_planning_stat(osv.osv):
     _order = 'planning_id,user_id'
 
     def _sum_amount_real(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.user_id:
                 cr.execute('''SELECT sum(acc.unit_amount/uom.factor) FROM account_analytic_line acc
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
-WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
             else:
-                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
+                cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id and line.account_id.id or None, line.planning_id.date_from, line.planning_id.date_to))
 
         sum = cr.fetchone()
         if sum and sum[0]:
@@ -536,21 +506,19 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         return result
 
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         users_obj = self.pool.get('res.users')
         result = {}
-        tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
             div2 = 1.0
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             where = ''
             if line.user_id:
                 where = 'user_id=' + str(line.user_id.id) + ' and '
@@ -563,7 +531,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                     project_id IN (select id from project_project where analytic_account_id=%s) AND
                     date_end>=%s AND
                     date_end<=%s''', (
-                line.account_id.id,
+                line.account_id and line.account_id.id or None,
                 line.planning_id.date_from,
                 line.planning_id.date_to)
             )

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-27 08:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -27,13 +27,6 @@ msgstr "Subtotal"
 #: report:notify_account.invoice:0
 msgid "Note:"
 msgstr "Napomena:"
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -82,19 +75,30 @@ msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: account_invoice_layout
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska! Ne mozete kreirati rekursivni meni."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr "Budite Expert sa Expertima..."
-
-#. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešno ime modela u definiciji akcije."
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr "PDV :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -129,6 +133,11 @@ msgid "Product"
 msgstr "Proizvod"
 
 #. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Napisi Poruke"
+
+#. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr "poredja sekvence pri prikazu liste faktura."
@@ -157,9 +166,9 @@ msgid "Source Account"
 msgstr "Изворни налог"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Napisi Poruke"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Otkaži"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -194,11 +203,6 @@ msgstr "Količina"
 #: report:notify_account.invoice:0
 msgid "Partner Ref."
 msgstr "Vezani partner"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -297,12 +301,6 @@ msgstr "Štampaj"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "VAT :"
-msgstr "PDV :"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "Porez"
 
@@ -329,9 +327,9 @@ msgid "Fax :"
 msgstr "Faks :"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Otkaži"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr "Budite Expert sa Expertima..."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -352,6 +350,11 @@ msgstr "Sve Napomene"
 #~ msgid "Invoice Date:"
 #~ msgstr "Datum fakture:"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
 #~ msgid "(Incl. taxes):"
 #~ msgstr "Urac.porezi"
 
@@ -360,6 +363,9 @@ msgstr "Sve Napomene"
 
 #~ msgid ")"
 #~ msgstr ")"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
 
 #~ msgid "/ ("
 #~ msgstr "/("
@@ -372,6 +378,9 @@ msgstr "Sve Napomene"
 
 #~ msgid "Tel. :"
 #~ msgstr "Tel. :"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
 
 #~ msgid "VAT :"
 #~ msgstr "PDV :"
@@ -390,3 +399,6 @@ msgstr "Sve Napomene"
 
 #~ msgid "account_invoice_layout"
 #~ msgstr "izgled_fakture_naloga"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."

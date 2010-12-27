@@ -45,7 +45,7 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="5"/>
+        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance" sequence="6"/>
         <menuitem id="next_id_pos" name="Budgets" parent="account.menu_finance_configuration" sequence="20"/>
         <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_pos" sequence="20"/>
 
@@ -131,7 +131,6 @@
                                     <field name="date_to"/>
                                     <field name="paid_date" select="1"/>
                                     <field name="planned_amount" select="1"/>
-                                    <field name="analytic_account_id"/>
                                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </form>
                             </field>
@@ -172,7 +171,7 @@
            <field name="arch" type="xml">
                <search string="Budget">
                    <group col="20" colspan="4">
-                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
+                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>
                        <field name="name" select="1"/>
@@ -192,7 +191,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crossovered_budget_view_tree"/>
             <field name="search_view_id" ref="view_crossovered_budget_search"/>
-            <field name="help">A budget is a forecast of your company's income and expenses expected for a period in the future. With a budget, a company is able to carefully look at how much money they are taking in during a given period, and figure out the best way to divide it among various categories. By keeping  track of where your money goes, you may be less likely to overspend, and more likely to meet your financial goals. Forecast a budget by detailing the expected revenue per analytic account and monitor its evolution based on the actuals realised during that period.</field>
+            <field name="help">A budget is a forecast of your company's income and expenses expected for a period in the future. With a budget, a company is able to carefully look at how much money they are taking in during a given period, and figure out the best way to divide it among various categories. By keeping track of where your money goes, you may be less likely to overspend, and more likely to meet your financial goals. Forecast a budget by detailing the expected revenue per analytic account and monitor its evolution based on the actuals realised during that period.</field>
         </record>
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"

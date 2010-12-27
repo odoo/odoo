@@ -9,9 +9,8 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"
-                            default="context.get('report', False)"/> 
-                        <separator orientation="vertical"/>                    
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
                         <separator orientation="vertical"/>
@@ -38,12 +37,11 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>                        
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>                        
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
                         <separator orientation="vertical"/>
-                        <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"
-                            default="context.get('report', False)"/>
-                        <separator orientation="vertical"/>                   
+                        <filter name="group_type" string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -128,7 +126,7 @@
                 <notebook colspan="4">
                     <page string="General">
                         <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}" />
-                        <field name="department_id"/>                    
+                        <field name="department_id"/>
                         <field name="number_of_days_temp"/>
                         <newline/>
                         <field name="manager_id"/>
@@ -139,10 +137,10 @@
                         <field name="state" colspan="2"/>
                         <group colspan="2" col="6">
                             <button string="Cancel" name="cancel" states="validate,refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
+                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes" groups="base.group_hr_user,base.group_hr_manager"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
-                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
                             <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" groups="base.group_hr_manager"/>
                         </group>
                     </page>
@@ -160,18 +158,14 @@
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
-                    <field name="name"/>                     
+                    <field name="name"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
                     <field name="state"/>
-                    <button string="Cancel" name="cancel" states="validate,refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes" groups="base.group_hr_user,base.group_hr_manager"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
                     <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
-                    <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" groups="base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -217,8 +211,8 @@
                 <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1');gray:state in ('cancel')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
-                    <field name="type"/>  
-                    <field name="name"/>                    
+                    <field name="type"/>
+                    <field name="name"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -253,11 +247,8 @@
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
                     <field name="state"/>
-                    <button string="Cancel" name="cancel" states="validate,refuse,validate1" type="workflow" icon="gtk-cancel" groups="base.group_hr_manager"/>
-                    <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes" groups="base.group_hr_user,base.group_hr_manager"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
-                    <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
-                    <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" groups="base.group_hr_manager"/>
+                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_manager"/>
                 </tree>
             </field>
         </record>
@@ -277,7 +268,7 @@
             <field name="context">{"search_default_department_id": department_id, "search_default_my_leaves": 1}</field>
             <field name="domain">[('type','=','remove')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
-            <field name="help">Leaves requests can be recorded by employees and validated by their managers. Once a leave request is validated it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc) and manage allowances per type.</field>
+            <field name="help">Leave requests can be recorded by employees and validated by their managers. Once a leave request is validated, it appears automatically in the agenda of the employee. You can define several allowance types (paid holidays, sickness, etc.) and manage allowances per type.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
@@ -348,6 +339,22 @@
             sequence="40"/>
 
         <!-- holidays status -->
+        <record id="view_holidays_status_filter" model="ir.ui.view">
+            <field name="name">hr.holidays.status.filter</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Leave Type">
+                    <field name="name"/>
+                    <field name="categ_id" widget="selection"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Meeting Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="edit_holiday_status_form">
             <field name="name">hr.holidays.status.form</field>
             <field name="model">hr.holidays.status</field>
@@ -366,7 +373,7 @@
 							<separator string="Validation" />
 								<newline/>
 							<field name="active" />
-								<newline/>							
+								<newline/>
 							<field name="double_validation"/>
 								<newline/>
 							<field name="limit"/>
@@ -388,6 +395,7 @@
                     <field name="name"/>
                     <field name="remaining_leaves"/>
                     <field name="limit" />
+                     <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -436,10 +444,10 @@
     <!--  Shortcuts -->
         <act_window name="Holidays"
             domain="[('type','=','remove')]"
-            context="{'search_default_employee_id': [active_id]}" 
+            context="{'search_default_employee_id': [active_id]}"
             res_model="hr.holidays"
             src_model="hr.employee"
-            view_id ="eval('edit_holiday_new')"
+            view_id ="edit_holiday_new"
             id="act_hr_employee_holiday_request"/>
 
     </data>

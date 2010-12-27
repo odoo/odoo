@@ -6,25 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 06:33+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:29+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
-
-#. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
-#, python-format
-msgid "Idea must be in \\n'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -65,9 +59,18 @@ msgid "Group By..."
 msgstr ""
 
 #. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
+#: model:ir.module.module,description:idea.module_meta_information
+msgid ""
+"\n"
+"    This module allows your user to easily and efficiently participate in "
+"the innovation of the enterprise.\n"
+"    It allows everybody to express ideas about different subjects.\n"
+"    Then, other users can comment on these ideas and vote for particular "
+"ideas.\n"
+"    Each idea has a score based on the different votes.\n"
+"    The managers can obtain an easy view on best ideas from all the users.\n"
+"    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
+msgstr ""
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
@@ -77,6 +80,12 @@ msgstr "Idee haldur"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
 
 #. module: idea
@@ -200,6 +209,11 @@ msgid "Not Voted"
 msgstr "Pole hääletatud"
 
 #. module: idea
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
+
+#. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
 msgstr ""
@@ -277,11 +291,6 @@ msgstr ""
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
 msgstr "Kategooriad"
-
-#. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: idea
 #: view:report.vote:0
@@ -401,11 +410,6 @@ msgstr "Ideed kategooria järgi"
 #: selection:report.vote,idea_state:0
 msgid "Draft"
 msgstr "Mustand"
-
-#. module: idea
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -543,13 +547,6 @@ msgstr "Sulge"
 #: view:report.vote:0
 msgid "Open"
 msgstr "Ava"
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: idea
 #: view:report.vote:0
@@ -695,6 +692,11 @@ msgstr ""
 #~ msgid "Statistics on Votes"
 #~ msgstr "Hääletuse statistika"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
 #~ msgid "Category for an idea"
 #~ msgstr "Idee kategooria"
 
@@ -710,6 +712,9 @@ msgstr ""
 #~ msgid "Configuration"
 #~ msgstr "Seadistus"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
 #~ msgid "My Draft Ideas"
 #~ msgstr "Minu ideede mustandid"
 
@@ -724,3 +729,6 @@ msgstr ""
 
 #~ msgid "All Votes"
 #~ msgstr "Kõik hääled"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Vigane mudeli nimi toimingu definitsioonis."

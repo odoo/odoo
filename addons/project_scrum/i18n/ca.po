@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-08-02 17:18+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_scrum
@@ -44,6 +44,33 @@ msgid "Author"
 msgstr ""
 
 #. module: project_scrum
+#: model:ir.module.module,description:project_scrum.module_meta_information
+msgid ""
+"\n"
+"    This module implements all concepts defined by the scrum project\n"
+"    management methodology for IT companies:\n"
+"    * Project with sprints, product owner, scrum master\n"
+"    * Sprints with reviews, daily meetings, feedbacks\n"
+"    * Product backlog\n"
+"    * Sprint backlog\n"
+"\n"
+"    It adds some concepts to the project management module:\n"
+"    * Mid-term, long-term road-map\n"
+"    * Customers/functional requests VS technical ones\n"
+"\n"
+"    It also creates a new reporting:\n"
+"    * Burn-down chart\n"
+"\n"
+"    The scrum projects and tasks inherit from the real projects and\n"
+"    tasks, so you can continue working on normal tasks that will also\n"
+"    include tasks from scrum projects.\n"
+"\n"
+"    More information on the methodology:\n"
+"    * http://controlchaos.com\n"
+"    "
+msgstr ""
+
+#. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "What did you do since the last meeting?"
@@ -60,11 +87,6 @@ msgstr ""
 #: model:process.node,note:project_scrum.process_node_productbacklog0
 msgid "Create task from backlogs"
 msgstr "Crea tasca des de backlogs"
-
-#. module: project_scrum
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: project_scrum
 #: model:ir.module.module,shortdesc:project_scrum.module_meta_information
@@ -87,6 +109,11 @@ msgstr "Scrum master"
 #: code:addons/project_scrum/project_scrum.py:0
 #, python-format
 msgid "The sprint '%s' has been opened."
+msgstr ""
+
+#. module: project_scrum
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_scrum
@@ -149,8 +176,8 @@ msgid "project.scrum.email"
 msgstr ""
 
 #. module: project_scrum
-#: help:project.scrum.product.backlog,expected_hours:0
-msgid "Estimated total time to do the Backlog"
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_scrum
@@ -174,9 +201,23 @@ msgid "Spent hours"
 msgstr ""
 
 #. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_meeting_form
+msgid ""
+"The scrum agile methodology is used in software development projects. In "
+"this methodology, a daily meeting is organized by the scrum master with his "
+"team in order to detect the difficulties the team faced/will face."
+msgstr ""
+
+#. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:0
 #, python-format
 msgid "Please provide email address for product owner defined on sprint."
+msgstr ""
+
+#. module: project_scrum
+#: code:addons/project_scrum/project_scrum.py:0
+#, python-format
+msgid "Scrum Meeting of %s"
 msgstr ""
 
 #. module: project_scrum
@@ -202,19 +243,6 @@ msgstr "Projecte"
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Start Task"
-msgstr ""
-
-#. module: project_scrum
-#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:0
-#, python-format
-msgid ""
-"is converted into Task %d.\"%(task_id,))\n"
-"                self.log(cr, uid, backlog.id, message)\n"
-"            if data['state_open'] and backlog.state == \"draft\":\n"
-"                backlog_obj.write(cr, uid, backlog.id, {'state':'open'})\n"
-"            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], "
-"context=context)\n"
-"            message = _('Product Backlog"
 msgstr ""
 
 #. module: project_scrum
@@ -322,14 +350,14 @@ msgid "Sprints"
 msgstr ""
 
 #. module: project_scrum
-#: field:project.scrum.backlog.assign.sprint,convert_to_task:0
-msgid "Convert To Task"
+#: code:addons/project_scrum/project_scrum.py:0
+#, python-format
+msgid "Email notification could not be sent to the product owner %s"
 msgstr ""
 
 #. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:0
-#, python-format
-msgid "Scrum Meeting of"
+#: field:project.scrum.backlog.assign.sprint,convert_to_task:0
+msgid "Convert To Task"
 msgstr ""
 
 #. module: project_scrum
@@ -349,14 +377,6 @@ msgstr ""
 #: field:project.scrum.sprint,state:0
 msgid "State"
 msgstr "Estat"
-
-#. module: project_scrum
-#: code:addons/project_scrum/wizard/project_scrum_email.py:0
-#, python-format
-msgid ""
-"Hello  , \n"
-"I am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
-msgstr ""
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_sprint_task_open
@@ -469,6 +489,14 @@ msgid "View project's tasks"
 msgstr "Vista tasques del projecte"
 
 #. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:0
+#, python-format
+msgid ""
+"Hello  , \n"
+"I am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
+msgstr ""
+
+#. module: project_scrum
 #: view:project.scrum.meeting:0
 msgid "Daily"
 msgstr ""
@@ -482,11 +510,6 @@ msgstr "Sprint backlog"
 #: view:project.scrum.product.backlog:0
 msgid "Delegate"
 msgstr ""
-
-#. module: project_scrum
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #. module: project_scrum
 #: view:board.board:0
@@ -612,11 +635,6 @@ msgid "Draft"
 msgstr "Esborrany"
 
 #. module: project_scrum
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: project_scrum
 #: help:project.task,product_backlog_id:0
 msgid ""
 "Related product backlog that contains this task. Used in SCRUM methodology"
@@ -704,6 +722,11 @@ msgid "Scrum Meetings"
 msgstr ""
 
 #. module: project_scrum
+#: help:project.scrum.product.backlog,expected_hours:0
+msgid "Estimated total time to do the Backlog"
+msgstr ""
+
+#. module: project_scrum
 #: help:project.scrum.backlog.merge,project_id:0
 msgid "Select project for the new product backlog"
 msgstr ""
@@ -711,6 +734,15 @@ msgstr ""
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Merge"
+msgstr ""
+
+#. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_product_backlog_form
+msgid ""
+"The scrum agile methodology is used in software development projects. The "
+"Product Backlog is the list of features to be implemented. A product backlog "
+"can be planified in a sprint of developement and can be split into several "
+"tasks. The product backlog is managed by the product owner of the project."
 msgstr ""
 
 #. module: project_scrum
@@ -763,6 +795,12 @@ msgid "Backlog Progress"
 msgstr ""
 
 #. module: project_scrum
+#: code:addons/project_scrum/project_scrum.py:0
+#, python-format
+msgid "Email notification could not be sent to the scrum master %s"
+msgstr ""
+
+#. module: project_scrum
 #: view:project.scrum.product.backlog:0
 #: selection:project.scrum.product.backlog,state:0
 #: selection:project.scrum.sprint,state:0
@@ -802,37 +840,18 @@ msgid "Information"
 msgstr ""
 
 #. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:0
-#, python-format
+#: model:ir.actions.act_window,help:project_scrum.action_sprint_all_tree
 msgid ""
-" Email Not send to the product owner %s!' % "
-"meeting_id.sprint_id.product_owner_id.name))\n"
-"        else:\n"
-"            raise osv.except_osv(_('Error !"
+"The scrum agile methodology is used in software development projects. In "
+"this methodology, a sprint is a short period of time (one month) on which "
+"the team implement a list of product backlogs. The sprint review is "
+"organized when the team presents his work to the customer and product owner."
 msgstr ""
-
-#. module: project_scrum
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Remaining Hours"
 msgstr "Hores restants"
-
-#. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:0
-#, python-format
-msgid ""
-" Email Not send to the scrum master %s!' % "
-"meeting_id.sprint_id.scrum_master_id.name))\n"
-"        else:\n"
-"            raise osv.except_osv(_('Error !"
-msgstr ""
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -1199,6 +1218,9 @@ msgstr "Revisió del sprint"
 #~ msgid "Projects"
 #~ msgstr "Projectes"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
 #~ msgid "Task Details"
 #~ msgstr "Detalls de tasca"
 
@@ -1317,6 +1339,12 @@ msgstr "Revisió del sprint"
 #~ msgid "In Progress"
 #~ msgstr "En progrés"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
 #~ msgid "Parent Task"
 #~ msgstr "Tasca pare"
 
@@ -1390,6 +1418,9 @@ msgstr "Revisió del sprint"
 
 #~ msgid "Delegated To"
 #~ msgstr "Delegat a"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #~ msgid ""
 #~ "Link this project to an analytic account if you need financial management on "

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 18:39+0000\n"
-"Last-Translator: Andrea Amoroso <andrea.amoroso@alice.it>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-22 07:34+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_record
@@ -33,6 +33,10 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Se pensate che il vostro modulo possa essere utile anche ad altre persone, "
+"gradiremmo che lo pubblicaste su OpenERP.com, nella sezione \"Moduli\". La "
+"pubblicazione è fattibile tramite il sito internet oppure usando le "
+"caratteristiche del modulo: \"base_module_publish'"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
@@ -91,23 +95,10 @@ msgid "Objects Recording"
 msgstr "Registrazione Oggetti"
 
 #. module: base_module_record
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore ! Non puoi creare un Menu ricorsivo."
-
-#. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,init,check_date:0
 #: wizard_field:base_module_record.module_record_objects,init,check_date:0
 msgid "Record from Date"
 msgstr "Registra per Data"
-
-#. module: base_module_record
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,end:0
@@ -171,7 +162,7 @@ msgstr "File YAML creato con successo !"
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Risultato, incolla questo all'XML del modulo"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -205,7 +196,7 @@ msgstr "Registra"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Registra modulo"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -281,6 +272,37 @@ msgstr "Chiudi"
 msgid "Created & Modified"
 msgstr "Creati e modificati"
 
+#. module: base_module_record
+#: model:ir.module.module,description:base_module_record.module_meta_information
+msgid ""
+"\n"
+"This module allows you to create a new module without any development.\n"
+"It records all operations on objects during the recording session and\n"
+"produce a .ZIP module. So you can create your own module directly from\n"
+"the OpenERP client.\n"
+"\n"
+"This version works for creating and updating existing records. It "
+"recomputes\n"
+"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+"It also support workflows and demo/update data.\n"
+"\n"
+"This should help you to easily create reusable and publishable modules\n"
+"for custom configurations and demo/testing data.\n"
+"\n"
+"How to use it:\n"
+"Run Administration/Customization/Module Creation/Export Customizations As a "
+"Module wizard.\n"
+"Select datetime criteria of recording and objects to be recorded and Record "
+"module.\n"
+"    "
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
 #~ msgid "Recording Information"
 #~ msgstr "Informazioni Registrazione"
 
@@ -348,3 +370,12 @@ msgstr "Creati e modificati"
 
 #~ msgid "Stop Recording"
 #~ msgstr "Ferma Registrazione"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore ! Non puoi creare un Menu ricorsivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"

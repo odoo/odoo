@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-17 19:09+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document
@@ -67,11 +67,6 @@ msgid "Group By..."
 msgstr ""
 
 #. module: document
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
-
-#. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
 msgstr "Tipo de contenido del directorio"
@@ -99,6 +94,12 @@ msgid "March"
 msgstr ""
 
 #. module: document
+#: view:document.configuration:0
+msgid "title"
+msgstr ""
+
+#. module: document
+#: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
 msgstr ""
@@ -210,6 +211,11 @@ msgid "Modified Date"
 msgstr "Fecha modificación"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Knowledge Application Configuration"
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
 #: field:report.files.partner,partner:0
@@ -247,11 +253,6 @@ msgid "Documents"
 msgstr ""
 
 #. module: document
-#: field:ir.actions.report.xml,model_id:0
-msgid "Model Id"
-msgstr "ID modelo"
-
-#. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "¡Error! No puede crear directorios recursivos."
@@ -263,8 +264,8 @@ msgid "Storage"
 msgstr ""
 
 #. module: document
-#: field:document.directory,ressource_type_id:0
-msgid "Resource model"
+#: view:document.configuration:0
+msgid "Configure Resource Directory"
 msgstr ""
 
 #. module: document
@@ -320,6 +321,11 @@ msgid "Stored Filename"
 msgstr "Nombre del archivo guardado"
 
 #. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:report.document.user,type:0
 msgid "Directory Type"
@@ -335,11 +341,6 @@ msgstr "Informe"
 #: selection:report.files.partner,month:0
 msgid "July"
 msgstr ""
-
-#. module: document
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -531,6 +532,11 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Auto Configure Directory"
+msgstr "Auto configurar directorio"
+
+#. module: document
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Incluir nombre de registro"
@@ -541,9 +547,9 @@ msgid "Attachment"
 msgstr "Adjunto"
 
 #. module: document
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID modelo"
 
 #. module: document
 #: field:document.storage,online:0
@@ -565,9 +571,21 @@ msgid "Security"
 msgstr "Seguridad"
 
 #. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
+msgstr ""
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
 msgstr ""
 
 #. module: document
@@ -606,6 +624,15 @@ msgid "Data"
 msgstr "Datos"
 
 #. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of "
+"these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Definition"
 msgstr "Definición"
@@ -642,6 +669,11 @@ msgid "Integrated Document Management System"
 msgstr "Sistema de gestión integrada de documentos"
 
 #. module: document
+#: view:document.configuration:0
+msgid "Choose the following Resouces to auto directory configuration."
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Adjuntado a"
@@ -667,20 +699,15 @@ msgid "Expression"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Autor"
-
-#. module: document
-#: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Si aquí introduce un objeto, esta plantilla de directorio aparecerá debajo "
-"de todos estos objetos. No ponga un directorio padre si selecciona un modelo "
-"padre."
 
 #. module: document
 #: view:board.board:0
@@ -711,6 +738,11 @@ msgid "File Name"
 msgstr "Nombre del archivo"
 
 #. module: document
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
+
+#. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
 msgstr "ID recurso"
@@ -719,14 +751,6 @@ msgstr "ID recurso"
 #: selection:document.storage,type:0
 msgid "External file storage"
 msgstr ""
-
-#. module: document
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: document
 #: view:board.board:0
@@ -804,6 +828,13 @@ msgstr "Archivos de todos los usuarios"
 #: model:ir.model,name:document.model_report_document_wall
 msgid "Users that did not inserted documents since one month"
 msgstr "Usuarios que no han insertado documentos desde hace un mes"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"The Documents repository gives you access to all attachments, such as mails, "
+"project documents, invoices etc."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -888,6 +919,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: document
+#: sql_constraint:document.storage:0
+msgid "The storage path must be unique!"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 msgid "Fields"
 msgstr ""
@@ -904,6 +940,7 @@ msgid "April"
 msgstr ""
 
 #. module: document
+#: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
 #: field:report.files.partner,nbr:0
 msgid "# of Files"
@@ -950,6 +987,11 @@ msgid "Internal File storage"
 msgstr ""
 
 #. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+
+#. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
@@ -984,3 +1026,165 @@ msgstr ""
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Tipo de documento"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Document Configuration"
+#~ msgstr "Configuración de documentos"
+
+#~ msgid "Preview"
+#~ msgstr "Vista previa"
+
+#~ msgid "Storing Method"
+#~ msgstr "Método almacenaje"
+
+#~ msgid ""
+#~ "Check this field if you want that the name of the file start by the record "
+#~ "name."
+#~ msgstr ""
+#~ "Marque esta opción si desea que el nombre del archivo empiece por el nombre "
+#~ "del registro."
+
+#~ msgid "Other Resources"
+#~ msgstr "Otros recursos"
+
+#~ msgid "Document Management System."
+#~ msgstr "Sistema gestión de documentos."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
+#~ msgid "Directorie's Structure"
+#~ msgstr "Estructura del directorio"
+
+#~ msgid "Parent Item"
+#~ msgstr "Elemento padre"
+
+#~ msgid "File Information"
+#~ msgstr "Información del archivo"
+
+#~ msgid "Configure"
+#~ msgstr "Configurar"
+
+#~ msgid "Resource Title"
+#~ msgstr "Título registro"
+
+#~ msgid ""
+#~ "This wizard will configure the URL of the server of the document management "
+#~ "system."
+#~ msgstr ""
+#~ "Este asistente configurará la dirección URL del servidor del sistema de "
+#~ "gestión de documentos."
+
+#~ msgid ""
+#~ "If you put an object here, this directory template will appear bellow all of "
+#~ "these objects. Don't put a parent directory if you select a parent model."
+#~ msgstr ""
+#~ "Si aquí introduce un objeto, esta plantilla de directorio aparecerá debajo "
+#~ "de todos estos objetos. No ponga un directorio padre si selecciona un modelo "
+#~ "padre."
+
+#~ msgid "Link"
+#~ msgstr "Enlace"
+
+#~ msgid ""
+#~ "Put here the server address or IP. Keep localhost if you don't know what to "
+#~ "write."
+#~ msgstr ""
+#~ "Introduzca aquí la dirección del servidor o IP. Dejar localhost si no sabe "
+#~ "que escribir."
+
+#~ msgid ""
+#~ "This wizard will automatically configure the document management system "
+#~ "according to modules installed on your system."
+#~ msgstr ""
+#~ "Este asistente configurará automáticamente el sistema de gestión de "
+#~ "documentos según los módulos instalados en su sistema."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "    * FTP Interface\n"
+#~ "    * User Authentication\n"
+#~ "    * Document Indexation\n"
+#~ msgstr ""
+#~ "Sistema de gestión de documentos completo:\n"
+#~ "    * Interfaz FTP\n"
+#~ "    * Autenticación de usuarios\n"
+#~ "    * Indexación de documentos\n"
+
+#~ msgid "document.configuration.wizard"
+#~ msgstr "documento.configuracion.asistente"
+
+#~ msgid "Filesystem"
+#~ msgstr "Sistema de archivos"
+
+#~ msgid "Browse Files Using FTP"
+#~ msgstr "Navegar por los archivos usando FTP"
+
+#~ msgid "Directories Mapped to Objects"
+#~ msgstr "Directorios mapeados a objetos"
+
+#~ msgid "History"
+#~ msgstr "Historial"
+
+#~ msgid ""
+#~ "Select an object here and Open ERP will create a mapping for each of these "
+#~ "objects, using the given domain, when browsing through FTP."
+#~ msgstr ""
+#~ "Seleccione aquí un objeto y OpenERP creará un mapeo para cada uno de estos "
+#~ "objetos, utilizando el dominio dado, cuando navegue mediante FTP."
+
+#~ msgid "Others Info"
+#~ msgstr "Otras info."
+
+#~ msgid "Server Address"
+#~ msgstr "Dirección servidor"
+
+#~ msgid "Browse Files"
+#~ msgstr "Navegar por los archivos"
+
+#~ msgid "Auto-Generated Files"
+#~ msgstr "Archivos auto-generados"
+
+#~ msgid "Search a File"
+#~ msgstr "Buscar un archivo"
+
+#~ msgid "Auto Configure"
+#~ msgstr "Configurar automáticamente"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Files Per Month"
+#~ msgstr "Archivos por mes"
+
+#~ msgid "All Months"
+#~ msgstr "Todos los meses"
+
+#~ msgid "My files"
+#~ msgstr "Mis archivos"
+
+#~ msgid "My files (All months)"
+#~ msgstr "Mis archivos (todos los meses)"
+
+#~ msgid "Last Posted File Name"
+#~ msgstr "Último nombre de archivo añadido"
+
+#~ msgid "My files (This months)"
+#~ msgstr "Mis archivos (este mes)"
+
+#~ msgid "Document Management - Reporting"
+#~ msgstr "Informes - Gestión documental"
+
+#~ msgid "All Users files (All months)"
+#~ msgstr "Archivos de todos los usuarios (todos los meses)"
+
+#~ msgid "All Users files (This month)"
+#~ msgstr "Todos los archivos de los usuarios (este mes)"

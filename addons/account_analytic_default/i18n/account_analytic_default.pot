@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:02+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:20+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,16 +18,6 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
 msgid "Account Analytic Default"
-msgstr ""
-
-#. module: account_analytic_default
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: account_analytic_default
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: account_analytic_default
@@ -63,11 +53,6 @@ msgid "Default end date for this Analytical Account"
 msgstr ""
 
 #. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr ""
@@ -80,11 +65,6 @@ msgstr ""
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
 msgid "select a company which will use analytical account specified in analytic default (eg. create new cutomer invoice or Sale order if we select this company, it will automatically take this as an analytical account)"
-msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
 msgstr ""
 
 #. module: account_analytic_default
@@ -126,11 +106,6 @@ msgid "End Date"
 msgstr ""
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid "select a user which will use analytical account specified in analytic default"
 msgstr ""
@@ -140,6 +115,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid "\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
 msgstr ""
 
 #. module: account_analytic_default
@@ -182,5 +169,10 @@ msgstr ""
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid "Gives the sequence order when displaying a list of analytic distribution"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 

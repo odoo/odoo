@@ -45,7 +45,7 @@ class account_installer(osv.osv_memory):
         ids = modules.search(cr, uid, [('category_id', '=', 'Account Charts')], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids)),
+                    for m in modules.browse(cr, uid, ids, context=context)),
                    key=itemgetter(1)))
         charts.insert(0, ('configurable', 'Generic Chart Of Account'))
         return charts
@@ -63,7 +63,7 @@ class account_installer(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts'),
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -95,6 +95,24 @@ class account_installer(osv.osv_memory):
         'bank_accounts_id': _get_default_accounts,
         'charts': _get_default_charts
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        configured_cmp = []
+        unconfigured_cmp = []
+        cmp_select = []
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
+        #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
+        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        configured_cmp = [r[0] for r in cr.fetchall()]
+        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
+        if unconfigured_cmp:
+            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+            for field in res['fields']:
+               if field == 'company_id':
+                   res['fields'][field]['domain'] = unconfigured_cmp
+                   res['fields'][field]['selection'] = cmp_select
+        return res
 
     def on_change_tax(self, cr, uid, id, tax):
         return {'value': {'purchase_tax': tax}}
@@ -125,8 +143,8 @@ class account_installer(osv.osv_memory):
         obj_tax_fp = self.pool.get('account.fiscal.position.tax')
         obj_ac_fp = self.pool.get('account.fiscal.position.account')
 
-        result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
-        id = mod_obj.read(cr, uid, [result], ['res_id'], context=context)[0]['res_id']
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'configurable_chart_template')
+        id = result and result[1] or False
         obj_multi = obj_acc_chart_template.browse(cr, uid, id, context=context)
 
         record = self.browse(cr, uid, ids, context=context)[0]
@@ -188,7 +206,8 @@ class account_installer(osv.osv_memory):
                 'include_base_amount': tax.include_base_amount,
                 'description': tax.description,
                 'company_id': company_id.id,
-                'type_tax_use': tax.type_tax_use
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
             }
             new_tax = obj_acc_tax.create(cr, uid, vals_tax, context=context)
             #as the accounts have not been created yet, we have to wait before filling these fields
@@ -199,7 +218,8 @@ class account_installer(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
-        self.pool._init = True
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id', 'child_of', [obj_acc_root.id]), ('nocreate', '!=', True)], context=context)
         children_acc_template.sort()
@@ -228,7 +248,7 @@ class account_installer(osv.osv_memory):
                 'tax_ids': [(6, 0, tax_ids)],
                 'company_id': company_id.id,
             }
-            new_account = obj_acc.create(cr, uid, vals, context=context)
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
                 b_vals = {
@@ -242,19 +262,19 @@ class account_installer(osv.osv_memory):
                     'tax_ids': [(6,0,tax_ids)],
                     'company_id': company_id.id,
                 }
-                bank_account = obj_acc.create(cr, uid, b_vals, context=context)
+                bank_account = obj_acc.create(cr, uid, b_vals, context=ctx)
 
                 view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #why fixed name here?
                 view_id_cur = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal (Multi-Currency) View')], context=context)[0] #Why Fixed name here?
 
-                cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
-                cash_type_id = mod_obj.read(cr, uid, [cash_result], ['res_id'], context=context)[0]['res_id']
+                cash_result = mod_obj.get_object_reference(cr, uid, 'account', 'conf_account_type_cash')
+                cash_type_id = cash_result and cash_result[1] or False
 
-                bank_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_bnk')
-                bank_type_id = mod_obj.read(cr, uid, [bank_result], ['res_id'], context=context)[0]['res_id']
+                bank_result = mod_obj.get_object_reference(cr, uid, 'account', 'conf_account_type_bnk')
+                bank_type_id = bank_result and bank_result[1] or False
 
-                check_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_chk')
-                check_type_id = mod_obj.read(cr, uid, [check_result], ['res_id'], context=context)[0]['res_id']
+                check_result = mod_obj.get_object_reference(cr, uid, 'account', 'conf_account_type_chk')
+                check_type_id = check_result and check_result[1] or False
 
 #                record = self.browse(cr, uid, ids, context=context)[0]
                 code_cnt = 1
@@ -262,6 +282,7 @@ class account_installer(osv.osv_memory):
                     'name': _('Bank Journal '),
                     'code': 'account.journal',
                     'prefix': 'BNK/%(year)s/',
+                    'company_id': company_id.id,
                     'padding': 5
                 }
                 seq_id = obj_sequence.create(cr, uid, vals_seq, context=context)
@@ -274,6 +295,7 @@ class account_installer(osv.osv_memory):
                     'code': _('BNK'),
                     'sequence_id': seq_id,
                     'type': 'bank',
+                    'company_id': company_id.id,
                     'analytic_journal_id': analitical_journal_bank
                 }
                 if vals.get('currency_id', False):
@@ -310,7 +332,7 @@ class account_installer(osv.osv_memory):
                         'parent_id': bank_account,
                         'company_id': company_id.id
                     }
-                    child_bnk_acc = obj_acc.create(cr, uid, vals_bnk, context=context)
+                    child_bnk_acc = obj_acc.create(cr, uid, vals_bnk, context=ctx)
                     vals_seq_child = {
                         'name': _(vals_bnk['name'] + ' ' + 'Journal'),
                         'code': 'account.journal',
@@ -326,6 +348,7 @@ class account_installer(osv.osv_memory):
                         'code': _(vals_bnk['name'][:3]).upper(),
                         'sequence_id': seq_id,
                         'type': 'cash',
+                        'company_id': company_id.id
                     }
                     if vals.get('currency_id', False):
                         vals_journal.update({
@@ -343,7 +366,6 @@ class account_installer(osv.osv_memory):
                     code_cnt += 1
 
         #reactivate the parent_store functionality on account_account
-        self.pool._init = False
         obj_acc._parent_store_compute(cr)
 
         for key, value in todo_dict.items():
@@ -365,28 +387,32 @@ class account_installer(osv.osv_memory):
                 'name': 'Sale Journal',
                 'code': 'account.journal',
                 'prefix': 'SAJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_sale = obj_sequence.create(cr, uid, seq_sale, context=context)
             seq_purchase = {
                 'name': 'Purchase Journal',
                 'code': 'account.journal',
                 'prefix': 'EXJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_purchase = obj_sequence.create(cr, uid, seq_purchase, context=context)
             seq_refund_sale = {
                 'name': 'Sales Refund Journal',
                 'code': 'account.journal',
                 'prefix': 'SCNJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_sale_refund = obj_sequence.create(cr, uid, seq_refund_sale, context=context)
             seq_refund_purchase = {
                 'name': 'Purchase Refund Journal',
                 'code': 'account.journal',
                 'prefix': 'ECNJ/%(year)s/',
-                'padding': 3
+                'padding': 3,
+                'company_id': company_id.id
             }
             seq_id_purchase_refund = obj_sequence.create(cr, uid, seq_refund_purchase, context=context)
         else:
@@ -406,7 +432,8 @@ class account_installer(osv.osv_memory):
             'type': 'sale',
             'code': _('SAJ'),
             'sequence_id': seq_id_sale,
-            'analytic_journal_id': analitical_journal_sale
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id.id
         })
 
         if obj_multi.property_account_receivable:
@@ -425,7 +452,8 @@ class account_installer(osv.osv_memory):
             'type': 'purchase',
             'code': _('EXJ'),
             'sequence_id': seq_id_purchase,
-            'analytic_journal_id': analitical_journal_purchase
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id.id
         })
 
         if obj_multi.property_account_payable:
@@ -449,7 +477,8 @@ class account_installer(osv.osv_memory):
             'refund_journal': True,
             'code': _('SCNJ'),
             'sequence_id': seq_id_sale_refund,
-            'analytic_journal_id': analitical_journal_sale
+            'analytic_journal_id': analitical_journal_sale,
+            'company_id': company_id.id
         }
         if obj_multi.property_account_receivable:
             vals_journal.update({
@@ -467,7 +496,8 @@ class account_installer(osv.osv_memory):
             'refund_journal': True,
             'code': _('ECNJ'),
             'sequence_id': seq_id_purchase_refund,
-            'analytic_journal_id': analitical_journal_purchase
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id.id
         }
 
         if obj_multi.property_account_payable:
@@ -559,8 +589,9 @@ class account_installer(osv.osv_memory):
                 tax_val = {}
                 default_tax = []
 
-                pur_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_purchases')
-                pur_temp_tax_id = mod_obj.read(cr, uid, [pur_temp_tax], ['res_id'], context=context)[0]['res_id']
+                pur_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_purchases')
+                pur_temp_tax_id = pur_temp_tax and pur_temp_tax[1] or False
+
                 pur_temp_tax_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_id], ['name'], context=context)
                 pur_tax_parent_name = pur_temp_tax_names and pur_temp_tax_names[0]['name'] or False
                 pur_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_parent_name)], context=context)
@@ -568,9 +599,8 @@ class account_installer(osv.osv_memory):
                     pur_taxcode_parent_id = pur_taxcode_parent_id[0]
                 else:
                     pur_taxcode_parent_id = False
-
-                pur_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_input')
-                pur_temp_tax_paid_id = mod_obj.read(cr, uid, [pur_temp_tax_paid], ['res_id'], context=context)[0]['res_id']
+                pur_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_input')
+                pur_temp_tax_paid_id = pur_temp_tax_paid and pur_temp_tax_paid[1] or False
                 pur_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_paid_id], ['name'], context=context)
                 pur_tax_paid_parent_name = pur_temp_tax_names and pur_temp_tax_paid_names[0]['name'] or False
                 pur_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_paid_parent_name)], context=context)
@@ -579,8 +609,8 @@ class account_installer(osv.osv_memory):
                 else:
                     pur_taxcode_paid_parent_id = False
 
-                sale_temp_tax = mod_obj._get_id(cr, uid, 'account', 'tax_code_base_sales')
-                sale_temp_tax_id = mod_obj.read(cr, uid, [sale_temp_tax], ['res_id'], context=context)[0]['res_id']
+                sale_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_sales')
+                sale_temp_tax_id = sale_temp_tax and sale_temp_tax[1] or False
                 sale_temp_tax_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_id], ['name'], context=context)
                 sale_tax_parent_name = sale_temp_tax_names and sale_temp_tax_names[0]['name'] or False
                 sale_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_parent_name)], context=context)
@@ -589,8 +619,8 @@ class account_installer(osv.osv_memory):
                 else:
                     sale_taxcode_parent_id = False
 
-                sale_temp_tax_paid = mod_obj._get_id(cr, uid, 'account', 'tax_code_output')
-                sale_temp_tax_paid_id = mod_obj.read(cr, uid, [sale_temp_tax_paid], ['res_id'], context=context)[0]['res_id']
+                sale_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_output')
+                sale_temp_tax_paid_id = sale_temp_tax_paid and sale_temp_tax_paid[1] or False
                 sale_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_paid_id], ['name'], context=context)
                 sale_tax_paid_parent_name = sale_temp_tax_paid_names and sale_temp_tax_paid_names[0]['name'] or False
                 sale_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_paid_parent_name)], context=context)

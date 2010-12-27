@@ -2,18 +2,20 @@
 # This file contains the translation of the following modules:
 #	* subscription
 #
+# Ferdinand Gassauer <f.gassauer@chricar.at>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-10-30 09:19+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-01 07:32+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
+"Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: subscription
@@ -23,49 +25,19 @@ msgid "Source Document"
 msgstr "Quelle Dokument"
 
 #. module: subscription
-#: help:subscription.document,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the "
-"subscription document without removing it."
-msgstr ""
-
-#. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "Objekt"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Bitte stellen Sie ein anderes Quelldokument bereit\n"
-"Dieses existiert nicht !"
-
-#. module: subscription
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ungültiger Modellname in der Aktionsdefinition."
-
-#. module: subscription
 #: view:subscription.subscription:0
 msgid "This Week"
-msgstr ""
+msgstr "Diese Woche"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Search Subscription"
-msgstr ""
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"You cannot modify the Object linked to the Document Type!\n"
-"Create another Document instead !"
-msgstr ""
+msgstr "Suche Abonnement"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -81,7 +53,7 @@ msgstr "Feld"
 #: view:subscription.subscription:0
 #: field:subscription.subscription,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
@@ -99,19 +71,6 @@ msgid "Current Date"
 msgstr "Aktuelles Datum"
 
 #. module: subscription
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: subscription
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
-
-#. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
 msgstr "Wochen"
@@ -119,13 +78,13 @@ msgstr "Wochen"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Today"
-msgstr ""
+msgstr "Heute"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fehler !"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -188,9 +147,12 @@ msgid "Number of documents"
 msgstr "Anzahl Dokumente"
 
 #. module: subscription
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
+#: help:subscription.document,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription document without removing it."
+msgstr ""
+"Bei Aktivierung können Sie die Abonnements verbergen, ohne sie zu löschen."
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -202,6 +164,16 @@ msgstr "Verkaufsauftrag"
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Bezeichnung"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"You cannot modify the Object linked to the Document Type!\n"
+"Create another Document instead !"
+msgstr ""
+"Das Objekt das mit dem Dokumnet verbunden ist, kann nicht verändert werden \n"
+"Erzeuge ein anderes Dokument!"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -226,16 +198,10 @@ msgid "Days"
 msgstr "Tage"
 
 #. module: subscription
+#: field:subscription.document,active:0
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Aktiv"
-
-#. module: subscription
-#: help:subscription.subscription,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the "
-"subscription without removing it."
-msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -257,13 +223,13 @@ msgstr "Partner"
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
-msgstr ""
+msgstr "Der Auftragsplaner derdie Abonnenemts steuert"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.config_recuuring_event
 #: model:ir.ui.menu,name:subscription.next_id_45
 msgid "Recurring Events"
-msgstr ""
+msgstr "Wiederkehrende Ereignisse"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -273,7 +239,7 @@ msgstr "Abonnierte Daten"
 #. module: subscription
 #: help:subscription.subscription,note:0
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Beschreibung oder Zusammenfassung des Abonements"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -283,9 +249,16 @@ msgid "Subscription Document"
 msgstr "Abonnierte Dokumente"
 
 #. module: subscription
+#: help:subscription.subscription,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"subscription without removing it."
+msgstr ""
+
+#. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
-msgstr ""
+msgstr "Der Standardwert für ein Feld, wenn ein neuese Dokument erzeugt wird"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -295,7 +268,7 @@ msgstr "Falsch"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppiert je..."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -311,7 +284,7 @@ msgstr "Abonnements und wiederkehrende Vorgänge"
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr ""
+msgstr "Benutzer können das Ursprungsdokument für die Erstellung auswählen"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
@@ -343,6 +316,16 @@ msgid "Invoice"
 msgstr "Rechnung"
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist !"
+msgstr ""
+"Bitte stellen Sie ein anderes Quelldokument bereit\n"
+"Dieses existiert nicht !"
+
+#. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
 msgstr "Standard Wert"
@@ -353,6 +336,12 @@ msgstr "Standard Wert"
 msgid "Documents created"
 msgstr "Dokumente erstellt"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten"
+
 #~ msgid "Status"
 #~ msgstr "Status"
 
@@ -362,6 +351,9 @@ msgstr "Dokumente erstellt"
 #~ msgid "Configuration"
 #~ msgstr "Konfiguration"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
 #~ msgid "Subscription document"
 #~ msgstr "Abonniertes Dokument"
 
@@ -370,3 +362,24 @@ msgstr "Dokumente erstellt"
 
 #~ msgid "Tools"
 #~ msgstr "Werkzeuge"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the "
+#~ "subscription without removing it."
+#~ msgstr ""
+#~ "Bei Aktivierung können Sie die Abonnements verbergen, ohne sie zu löschen."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

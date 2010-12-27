@@ -39,7 +39,7 @@ class account_followup_print(osv.osv_memory):
             context = {}
         if context.get('active_model', 'ir.ui.menu') == 'account_followup.followup':
             return context.get('active_id', False)
-        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         followp_id = self.pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)], context=context)
         return followp_id and followp_id[0] or False
 
@@ -48,7 +48,7 @@ class account_followup_print(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'followup_id': data['followup_id'], 'date':data['date']})
@@ -64,7 +64,7 @@ class account_followup_print(osv.osv_memory):
     }
 
     _defaults = {
-         'date': time.strftime('%Y-%m-%d'),
+         'date': lambda *a: time.strftime('%Y-%m-%d'),
          'followup_id': _get_followup,
     }
 account_followup_print()
@@ -97,7 +97,7 @@ class account_followup_stat_by_partner(osv.osv):
                     max(l.followup_date) AS date_followup,
                     max(l.followup_line_id) AS max_followup_id,
                     sum(l.debit - l.credit) AS balance,
-                    l.company_id  company_id
+                    l.company_id as company_id
                 FROM
                     account_move_line l
                     LEFT JOIN account_account a ON (l.account_id = a.id)
@@ -107,7 +107,7 @@ class account_followup_stat_by_partner(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                     GROUP BY
-                    l.partner_id, l.company_id 
+                    l.partner_id, l.company_id
             )""")
 account_followup_stat_by_partner()
 
@@ -146,7 +146,7 @@ class account_followup_print_all(osv.osv_memory):
         if context is None:
             context = {}
         if ids:
-            data = self.read(cr, uid, ids, [])[0]
+            data = self.read(cr, uid, ids, [], context=context)[0]
         cr.execute(
             "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
@@ -208,16 +208,14 @@ class account_followup_print_all(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         if data['email_conf']:
-            mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
-            count = 0
-            data_user = user_obj.browse(cr, uid, uid)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'])
+            data_user = user_obj.browse(cr, uid, uid, context=context)
+            move_lines = line_obj.browse(cr, uid, data['partner_ids'], context=context)
             partners = []
             dict_lines = {}
             for line in move_lines:
@@ -225,7 +223,7 @@ class account_followup_print_all(osv.osv_memory):
                 dict_lines[line.name.id] =line
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
-                data_lines = move_obj.browse(cr, uid, ids_lines)
+                data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
                 followup_data = dict_lines[partner.id]
                 dest = False
                 if partner.address:
@@ -308,7 +306,7 @@ class account_followup_print_all(osv.osv_memory):
     def do_print(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         res = self._get_partners_followp(cr, uid, ids, context)['to_update']
         to_update = res
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
@@ -321,13 +319,12 @@ class account_followup_print_all(osv.osv_memory):
                     "WHERE id=%s",
                     (to_update[id]['level'],
                     date, int(id),))
-
+        data.update({'date': context['date']})
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
              'form': data
         }
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',

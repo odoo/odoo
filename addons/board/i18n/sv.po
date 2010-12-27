@@ -4,44 +4,56 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-04-10 10:16+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-15 01:56+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:40+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: board
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  År  "
 
 #. module: board
 #: model:ir.model,name:board.model_board_menu_create
 msgid "Menu Create"
-msgstr ""
+msgstr "Skapa meny"
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Note Type"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
-msgstr ""
+msgstr "Author"
 
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
+msgstr "Instrumentpanel huvudmodul"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
 msgstr ""
 
 #. module: board
 #: code:addons/board/wizard/board_menu_create.py:0
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "User Error!"
 
 #. module: board
 #: view:board.board:0
@@ -55,12 +67,13 @@ msgstr ""
 #: field:board.note,note:0
 #: model:ir.model,name:board.model_board_note
 msgid "Note"
-msgstr ""
+msgstr "Note"
 
 #. module: board
 #: view:board.note:0
+#: view:res.log.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppera på..."
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -68,82 +81,139 @@ msgid "Board"
 msgstr ""
 
 #. module: board
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
 msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
+msgstr "Title"
+
+#. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
 msgstr ""
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Månad"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "NOte Type"
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Öppna instrumentpanel"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
 msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
+msgstr "Instrumentpanelsdefinition"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "Mars"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "Augusti"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
 msgstr ""
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "Skapad datum"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
 #: model:ir.ui.menu,name:board.menu_view_board_note_form
 msgid "Publish a note"
-msgstr ""
+msgstr "Publicera en anteckning"
 
 #. module: board
 #: view:board.menu.create:0
 msgid "Menu Information"
-msgstr ""
+msgstr "Menu Information"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "Juni"
 
 #. module: board
 #: field:board.note,type:0
 msgid "Note type"
-msgstr ""
+msgstr "Note type"
 
 #. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr ""
+msgstr "Action Views"
+
+#. module: board
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr "Logg rapport"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #. module: board
-#: view:board.note:0
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "Utökat filter..."
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr "Dag"
 
 #. module: board
 #: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
-msgstr ""
+msgstr "Skapa meny för instrumentpanel"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "Februari"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "Oktober"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
@@ -153,12 +223,27 @@ msgstr ""
 #. module: board
 #: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
+msgstr "Parent Menu"
+
+#. module: board
+#: view:res.log.report:0
+msgid "    Month-1    "
 msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "Januari"
 
 #. module: board
 #: view:board.note:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "November"
 
 #. module: board
 #: help:board.board.line,sequence:0
@@ -168,10 +253,9 @@ msgid ""
 msgstr ""
 
 #. module: board
-#: code:addons/board/wizard/board_menu_create.py:0
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "April"
 
 #. module: board
 #: view:board.board:0
@@ -180,90 +264,158 @@ msgstr ""
 #: model:ir.ui.menu,name:board.admin_menu_dasboard
 #: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Instrumentpanel"
 
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
+msgstr "Basmodul för alla instrumentpaneler."
+
+#. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
 msgstr ""
 
 #. module: board
 #: field:board.board.line,position:0
 msgid "Position"
-msgstr ""
+msgstr "Position"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr ""
+#: view:res.log.report:0
+msgid "Model"
+msgstr "Modell"
 
 #. module: board
 #: field:board.menu.create,menu_name:0
 msgid "Menu Name"
-msgstr ""
+msgstr "Menu Name"
 
 #. module: board
 #: view:board.board:0
 #: model:ir.actions.act_window,name:board.action_latest_activities_tree
 msgid "Latest Activities"
-msgstr ""
+msgstr "Senaste aktiviteterna"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
-msgstr ""
+msgstr "Left"
 
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr ""
+msgstr "Board View"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Right"
-msgstr ""
+msgstr "Right"
 
 #. module: board
 #: field:board.board.line,width:0
 msgid "Width"
-msgstr ""
+msgstr "Width"
+
+#. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr "   Månad   "
 
 #. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sequence"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "September"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: board
 #: view:board.board:0
 #: view:board.menu.create:0
 msgid "Create Menu"
-msgstr ""
+msgstr "Create Menu"
 
 #. module: board
 #: field:board.board.line,height:0
 msgid "Height"
-msgstr ""
+msgstr "Height"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
-msgstr ""
+msgstr "Create Board Menu"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr "Maj"
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Objekt"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr "År"
 
 #. module: board
 #: view:board.menu.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
-msgstr ""
+msgstr "Instrumentpanelsvy"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Var vänlig lägg in instrumentpanelsvy(er)!"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Subject"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #~ msgid "Configuration"
 #~ msgstr "Konfiguration"
+
+#~ msgid "board.board"
+#~ msgstr "board.board"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Invalid model name in the action definition."
+
+#~ msgid "board.note"
+#~ msgstr "board.note"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
+#~ msgid "board.note.type"
+#~ msgstr "board.note.type"
+
+#~ msgid "Dashboards"
+#~ msgstr "Instrumentpaneler"
+
+#~ msgid "board.board.line"
+#~ msgstr "board.board.line"

@@ -33,7 +33,7 @@
                 <field name="value"  sum="Total value"/>
                 <field name="day_diff1"/>
                 <field name="day_diff"/>
-                <field name="day_diff2"/>
+                <field name="day_diff2" string="Delay(Days)"/>
            </tree>
         </field>
     </record>
@@ -56,7 +56,7 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="day"/>
-                 <field name="day_diff2" operator="+"/>
+                 <field name="day_diff2" operator="+" string="Delay(Days)"/>
              </graph>
          </field>
     </record>

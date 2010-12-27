@@ -9,10 +9,12 @@
         <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-        <field name="context">{'object_id':'crm.lead'}</field>
-        <field name="help">Create specific stages that will help your sales better organise their sales pipeline by maintaining them to their leads and sales opportunities. It will allow them to easily track how is positioned a specific lead or opportunity in the sales cycle.</field>
+        <field name="domain">[('type', '=', 'lead')]</field>
+        <field name="context">{'type':'lead'}</field>
+        <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
     </record>
+    
+   
 
      <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act" name="Stages"
         groups="base.group_extended" sequence="0"
@@ -28,7 +30,7 @@
             <field name="view_id" ref="crm_case_categ_tree-view"/>
             <field name="context">{'object_id': 'crm.lead'}</field>
             <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-            <field name="help">Create specific categories that fit your company's  activities in order to better classify and analyse them after they have been maintained in your leads and opportunities. You can use categories to reflect your product structure or the different types of sales you do.</field>
+            <field name="help">Create specific categories that fit your company's activities to better classify and analyse your leads and opportunities. Such categories could for instance reflect your product structure or the different types of sales you do.</field>
         </record>
 
         <menuitem action="crm_lead_categ_action"
@@ -57,14 +59,14 @@
                     <newline />
                     <field name="section_id" widget="selection" />
                     <field name="user_id" />
-                    <field name="stage_id" domain="[('object_id.model', '=', 'crm.lead'), ('section_ids', '=', section_id)]"/>
+                    <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
-                            icon="gtk-go-back" />
+                            icon="gtk-go-back" context="{'stage_type': 'lead'}" />
                         <button name="stage_next" string=""
                             states="open,pending,draft" type="object"
-                            icon="gtk-go-forward" />
+                            icon="gtk-go-forward" context="{'stage_type': 'lead'}" />
                     </group>
                     <field name="type" invisible="1"/>
                 </group>
@@ -289,7 +291,7 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    default="1" name="current" help="Draft and Open Leads"
+                    name="current" help="Draft and Open Leads"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
@@ -315,7 +317,7 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
-                <field name="section_id" default="context.get('section_id', False)" widget="selection"
+                <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"
                         context="{'invisible_section': False}"
@@ -329,7 +331,7 @@
                 <newline/>
 
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]"/>
                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="country_id" context="{'invisible_country': False}">

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 06:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-26 22:25+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,17 +36,9 @@ msgid "Partner Category"
 msgstr "Категория партнера"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Отметьте, если вы хотите иметь правило посылки напоминания в виде эл. письма "
-"пользователю."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Получатели копий (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -121,6 +113,15 @@ msgstr ""
 "Отметьте, если вы хотите иметь правило напоминания партнеру по эл. почте."
 
 #. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr ""
@@ -133,7 +134,7 @@ msgstr "Срок"
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_id:0
 msgid "Partner"
-msgstr "Партнет"
+msgstr "Партнер"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -244,11 +245,6 @@ msgid "Delay type"
 msgstr "Тип задержки"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
-
-#. module: base_action_rule
 #: help:base.action.rule,regex_name:0
 msgid ""
 "Regular expression for matching name of the resource\n"
@@ -294,11 +290,6 @@ msgid ""
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
 msgstr "Задержка после даты активации"
@@ -328,7 +319,7 @@ msgstr "Активен"
 #: code:addons/base_action_rule/base_action_rule.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Нет ID эл. почты в адресе вашей компании!"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -382,6 +373,11 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Описание объекта"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Действия эл. почты"
@@ -390,14 +386,6 @@ msgstr "Действия эл. почты"
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Информация эл. почты"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_ и не должно содержать специальных "
-"символов !"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -421,6 +409,11 @@ msgstr "%(partner_email)s = Эл. почта партнера"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+msgid "%(object_date)s = Creation date"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
 msgid "%(object_user_email)s = Responsible Email"
 msgstr "%(object_user_email)s = Эл. почта ответственного"
 
@@ -430,9 +423,12 @@ msgid "Mail body"
 msgstr "Тело письма"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Получатели копий (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Отметьте, если вы хотите иметь правило посылки напоминания в виде эл. письма "
+"пользователю."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -522,3 +518,24 @@ msgstr "Условия по продажам"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Дата активации"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_ и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"

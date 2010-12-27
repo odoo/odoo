@@ -54,7 +54,6 @@ class pos_company_discount(osv.osv):
 
 pos_company_discount()
 
-
 class pos_order(osv.osv):
     """ Point of sale gives business owners a convenient way of checking out customers
         and of recording sales """
@@ -70,10 +69,10 @@ class pos_order(osv.osv):
                     raise osv.except_osv(_('Invalid action !'), _('Cannot delete a point of sale which is closed or contains confirmed cashboxes!'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
-    def onchange_partner_pricelist(self, cr, uid, ids, part, context=None):
+    def onchange_partner_pricelist(self, cr, uid, ids, part=False, context=None):
         """ Changed price list on_change of partner_id"""
         if not part:
-            return {}
+            return {'value': {}}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_product_pricelist.id
         return {'value': {'pricelist_id': pricelist}}
 
@@ -100,14 +99,14 @@ class pos_order(osv.osv):
                 res[rec.id] = res[rec.id] + rec.amount_tax
         return res
 
-    def _get_date_payment2(self, cr, uid, ids, context, *a):
+    def _get_date_payment2(self, cr, uid, ids, context=None, *a):
         # Todo need to check this function
         """ Find payment Date
         @param field_names: Names of fields.
         @return: Dictionary of values """
         res = {}
         val = None
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             cr.execute("SELECT date_payment FROM pos_order WHERE id = %s", (order.id,))
             date_p = cr.fetchone()
             date_p = date_p and date_p[0] or None
@@ -163,12 +162,13 @@ class pos_order(osv.osv):
                 'amount_return':0.0,
                 'amount_tax':0.0,
             }
-            val = 0.0
+            val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for payment in order.statement_ids:
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
+                val1 += line.price_subtotal_incl
                 if order.price_type != 'tax_excluded':
                     res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
                         tax_obj.compute_inv(cr, uid, line.product_id.taxes_id,
@@ -180,7 +180,8 @@ class pos_order(osv.osv):
                                                  line.price_unit * (1-(line.discount or 0.0)/100.0), \
                                                  line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
                         val += c.get('amount', 0.0)
-                    res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_total'] = res[order.id]['amount_tax'] + cur_obj.round(cr, uid, cur, val1)
         return res
 
     def _sale_journal_get(self, cr, uid, context=None):
@@ -259,7 +260,7 @@ class pos_order(osv.osv):
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_total': fields.function(_amount_all, method=True, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
@@ -293,7 +294,6 @@ class pos_order(osv.osv):
         'journal_entry': fields.boolean('Journal Entry'),
     }
 
-
     def _select_pricelist(self, cr, uid, context=None):
         """ To get default pricelist for the order
         @param name: Names of fields.
@@ -317,7 +317,7 @@ class pos_order(osv.osv):
         'state': 'draft',
         'price_type': 'tax_excluded',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
-        'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (datetime.today() + relativedelta(months=+6)).strftime('%Y-%m-%d'),
         'nb_print': 0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -479,7 +479,6 @@ class pos_order(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [picking_id], context)
-
         return True
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -776,6 +775,7 @@ class pos_order(osv.osv):
                     'period_id': period,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
+                    'partner_id': order.partner_id and order.partner_id.id or False
                 }, context=context)
 
                 # For each remaining tax with a code, whe create a move line
@@ -841,6 +841,7 @@ class pos_order(osv.osv):
                     or 0.0,
                 'journal_id': order.sale_journal.id,
                 'period_id': period,
+                'partner_id': order.partner_id and order.partner_id.id or False
             }, context=context))
 
 
@@ -900,7 +901,7 @@ class pos_order(osv.osv):
         self.write(cr, uid, ids, vals, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         if context.get('flag', False):
             self.create_picking(cr, uid, ids, context=None)
@@ -995,12 +996,12 @@ class pos_order_line(osv.osv):
                 res[line.id] = line.price_unit * line.qty
         return res
 
-    def _amount_line_all(self, cr, uid, ids, field_names, arg, context):
+    def _amount_line_all(self, cr, uid, ids, field_names, arg, context=None):
         res = dict([(i, {}) for i in ids])
         account_tax_obj = self.pool.get('account.tax')
 
         self.price_by_product_multi(cr, uid, ids)
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             for f in field_names:
                 if f == 'price_subtotal':
                     if line.discount != 0.0:
@@ -1008,19 +1009,14 @@ class pos_order_line(osv.osv):
                     else:
                         res[line.id][f] = line.price_unit * line.qty
                 elif f == 'price_subtotal_incl':
-                    tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
                         res[line.id][f] = 0.0
                         continue
-                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
-                    for tax in computed_taxes:
-                        tax_amount += tax['amount']
-                    if line.discount!=0.0:
-                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
-                    else:
-                        res[line.id][f] = line.price_unit * line.qty
-                    res[line.id][f] += tax_amount
+                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, price, line.qty)
+                    cur = line.order_id.pricelist_id.currency_id
+                    res[line.id][f] = self.pool.get('res.currency').round(cr, uid, cur, computed_taxes['total'])
         return res
 
     def price_by_product_multi(self, cr, uid, ids, context=None):
@@ -1247,6 +1243,7 @@ class stock_picking(osv.osv):
     _columns = {
         'pos_order': fields.many2one('pos.order', 'Pos order'),
     }
+
 stock_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

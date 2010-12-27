@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 from pychart import *
@@ -31,6 +31,7 @@ class stock_graph(object):
         self._datas = {}
         self._canvas = canvas.init(fname=io, format='pdf')
         self._canvas.set_author("OpenERP")
+        self._canvas.set_title("Stock Level Forecast")
         self._names = {}
         self.val_min = ''
         self.val_max = ''
@@ -91,6 +92,9 @@ class stock_graph(object):
 
         interval = max((val_max-val_min)/15, 86400)
         x_axis = axis.X(format=lambda x:'/a60{}'+time.strftime('%Y-%m-%d',time.gmtime(x)), tic_interval=interval, label=None)
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(300, 500), text="/hL/15/bStock Level Forecast", line_style=None)
+        tb.draw()
         ar = area.T(size = (620,435), x_range=(val_min,val_max+1), y_axis = axis.Y(format="%d", label="Virtual Stock (Unit)"), x_axis=x_axis)
         for plot in plots:
             ar.add_plot(plot)

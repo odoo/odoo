@@ -7,61 +7,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-29 11:30+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-20 16:18+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr "Хот"
+msgstr "Сум/Дүүрэг"
 
 #. module: base_setup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: base_setup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Суулгах"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Компанийн нэр"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr "Хүний нөөц"
 
 #. module: base_setup
 #: field:base.setup.company,email:0
 msgid "E-mail"
-msgstr "И-мэйл"
+msgstr "Э-мэйл"
 
 #. module: base_setup
 #: field:base.setup.company,account_no:0
 msgid "Bank Account No"
-msgstr ""
+msgstr "Банкны дансны дугаар"
 
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr ""
+msgstr "Нэмэлт багаж"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
 msgid "Report Footer 1"
-msgstr "Хөлийн мэдээ 1"
+msgstr "Тайлангийн хөл 1"
 
 #. module: base_setup
 #: help:base.setup.installer,mrp:0
@@ -69,26 +63,28 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Үйлдвэрлэлийн үйл ажиллагааг удирдах, тэдгээр үйл ажиллагааны тайлан "
+"үүсгэхэд туслана."
 
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
+msgstr "Маркетингийн үйл ажиллагааг удирдахад алхам алхамаар туслана."
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr ""
+msgstr "Таний өгөгдлийн сан үүсгэгдсэн."
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "Борлуулалтын цэг"
 
 #. module: base_setup
 #: field:base.setup.installer,association:0
 msgid "Associations"
-msgstr ""
+msgstr "Нийгэмлэг"
 
 #. module: base_setup
 #: help:base.setup.installer,account_accountant:0
@@ -98,22 +94,21 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: view:base.setup.config:0
-msgid ""
-"You can start configuring the system or connect directly to the database as "
-"an administrator."
-msgstr ""
+#: code:addons/base_setup/__init__.py:0
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "Дараагийн хэрэглэгчийн суулгасан байх : \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Тохиргооны явц"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
 msgid "Report Footer 2"
-msgstr "Хөлийн мэдээ 2"
+msgstr "Тайлангийн хөл 2"
 
 #. module: base_setup
 #: field:base.setup.company,currency:0
@@ -124,22 +119,22 @@ msgstr "Валют"
 #. module: base_setup
 #: field:base.setup.company,state_id:0
 msgid "Fed. State"
-msgstr ""
+msgstr "Аймаг/Хот"
 
 #. module: base_setup
 #: field:base.setup.installer,marketing:0
 msgid "Marketing"
-msgstr ""
+msgstr "Маркетинг"
 
 #. module: base_setup
 #: field:base.setup.company,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: base_setup
 #: field:base.setup.installer,sale:0
 msgid "Sales Management"
-msgstr ""
+msgstr "Борлуулалтын менежмент"
 
 #. module: base_setup
 #: help:base.setup.installer,profile_tools:0
@@ -147,11 +142,22 @@ msgid ""
 "Lets you install various interesting but non-essential tools like Survey, "
 "Lunch and Ideas box."
 msgstr ""
+"Асуулга, Үдийн зоог болон Саналын хайрцаг гэх мэт шаардлагатай бус боловч "
+"олон сонирхолтой хэрэгслүүдийг суулгана."
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid ""
+"You can start configuring the system or connect directly to the database as "
+"an administrator."
+msgstr ""
+"Та системд тохиргоо хийх юмуу эсвэл өгөгдмөл тохиргоог ашиглан баазруу шууд "
+"холболт хийж болно."
 
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
 msgid "Advanced Reporting"
-msgstr ""
+msgstr "Дээд төвшний тайлан"
 
 #. module: base_setup
 #: field:base.setup.company,phone:0
@@ -161,21 +167,42 @@ msgstr "Утас"
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "res_config_contents"
+msgstr "res_config_contents"
+
+#. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
 msgstr ""
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr ""
-
-#. module: base_setup
-#: view:base.setup.config:0
-msgid "Use Directly"
-msgstr "Шууд хэрэглэх"
+msgstr "гарчиг"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
+msgstr "Баримтын менежмент"
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
 msgstr ""
 
 #. module: base_setup
@@ -183,7 +210,7 @@ msgstr ""
 msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
-msgstr ""
+msgstr "Таны үйлдвэрлэлд тус болох OpenERP цогц аппликэшнүүдийг суулгана."
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
@@ -193,12 +220,14 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Компаний нэр"
+
+#. module: base_setup
+#: view:base.setup.config:0
+msgid "Skip Configuration Wizards"
+msgstr "Тохиргооны визардыг алгасах"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -215,14 +244,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
-msgstr ""
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -245,12 +269,12 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,street2:0
 msgid "Street 2"
-msgstr ""
+msgstr "Гудамж 2"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_installer
 msgid "base.setup.installer"
-msgstr ""
+msgstr "base.setup.installer"
 
 #. module: base_setup
 #: field:base.setup.company,country_id:0
@@ -260,27 +284,27 @@ msgstr "Улс"
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_base_setup
 msgid "Setup"
-msgstr "Тохируулга"
+msgstr "Тохируулах"
 
 #. module: base_setup
 #: field:base.setup.installer,account_accountant:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "Санхүү"
 
 #. module: base_setup
 #: field:base.setup.installer,auction:0
 msgid "Auction Houses"
-msgstr ""
+msgstr "Үнэ хаялцах худалдаа"
 
 #. module: base_setup
 #: field:base.setup.company,zip:0
 msgid "Zip Code"
-msgstr ""
+msgstr "Зип код"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Start Configuration"
-msgstr "Тохируулж эхлэх"
+msgstr "Тохиргоо эхлэх"
 
 #. module: base_setup
 #: help:base.setup.installer,knowledge:0
@@ -290,9 +314,17 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
-msgstr ""
+msgstr "Компаний тохиоргоо"
 
 #. module: base_setup
 #: field:base.setup.company,logo:0
@@ -300,9 +332,17 @@ msgid "Logo"
 msgstr "Лого"
 
 #. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
+
+#. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
-msgstr ""
+msgstr "Худалдан авалтын менежмент"
 
 #. module: base_setup
 #: help:base.setup.installer,sale:0
@@ -312,27 +352,27 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,stock:0
 msgid "Warehouse Management"
-msgstr ""
+msgstr "Агуулахын менежмент"
 
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr ""
+msgstr "Төслийн менежмент"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
 msgid "Installed Users"
-msgstr ""
+msgstr "Суулгагдсан хэрэглэгч"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "New Database"
-msgstr ""
+msgstr "Шинэ өгөгдлийн сан"
 
 #. module: base_setup
 #: field:base.setup.installer,crm:0
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Үйлчлүүлэгчтэй харилцах менежмент"
 
 #. module: base_setup
 #: help:base.setup.installer,auction:0
@@ -362,34 +402,34 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,rml_header1:0
 msgid "Report Header"
-msgstr "Толгойн мэдээ"
+msgstr "Тайлангийн толгой"
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Information about your new database"
-msgstr ""
+msgstr "Таний шинэ өгөгдлийн сангийн мэдээлэл"
 
 #. module: base_setup
 #: field:base.setup.company,config_logo:0
 #: field:base.setup.config,config_logo:0
 #: field:base.setup.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Зураг"
 
 #. module: base_setup
 #: field:base.setup.installer,product_expiry:0
 msgid "Food Industry"
-msgstr ""
+msgstr "Хоол үйлдвэрлэл"
 
 #. module: base_setup
 #: field:base.setup.installer,mrp:0
 msgid "Manufacturing"
-msgstr ""
+msgstr "Үйлдвэрлэх"
 
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "Your Logo - Use a size of about 450x150 pixels."
-msgstr "Таны лого-450х150 хэмжээтэй"
+msgstr "Таний лого - Хэмжээ нь 450x150 пиксел байна."
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer1:0
@@ -405,7 +445,7 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.company,website:0
 msgid "Company Website"
-msgstr ""
+msgstr "Компаний Вэбсайт"
 
 #. module: base_setup
 #: view:base.setup.installer:0
@@ -418,19 +458,20 @@ msgid "Street"
 msgstr "Гудамж"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
 #: help:base.setup.company,website:0
 msgid "Example: http://openerp.com"
-msgstr ""
+msgstr "Жишээ нь: http://openerp.com"
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
-msgstr ""
+msgstr "Хэрэглээний програм суулгах"
 
 #. module: base_setup
 #: help:base.setup.installer,crm:0
@@ -462,13 +503,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
-msgstr ""
-
-#. module: base_setup
-#: code:addons/base_setup/__init__.py:0
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr ""
+msgstr "base.setup.config"
 
 #~ msgid "State"
 #~ msgstr "Төлөв"
@@ -503,9 +538,6 @@ msgstr ""
 #~ msgid "Summary"
 #~ msgstr "Дүгнэлт"
 
-#~ msgid "Install"
-#~ msgstr "Суулгах"
-
 #~ msgid "Installation Done"
 #~ msgstr "Суулгагдсан"
 
@@ -538,3 +570,27 @@ msgstr ""
 #~ "Тодорхой шаардлагаар модулуудыг урьдчилан сонгон хувийн тохиргоонд "
 #~ "байрлуулдаг. Эдгээр хувийн тохиргоонууд нь OpenERP-н ялгаатай байдлуудыг олж "
 #~ "нээхэд тохируулагдсан. Энэ зөвхөн тойм төдий, өшөө 300+ бэлэн модулиуд бий."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Модулийн сертификат ID давхцах ёсгүй !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Модулийн нэр давхцах ёсгүй !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Use Directly"
+#~ msgstr "Хэрэглэх заавар"

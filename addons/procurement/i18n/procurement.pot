@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:46+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:50+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,19 +36,14 @@ msgid "Group By..."
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
 msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: procurement
@@ -70,6 +65,11 @@ msgstr ""
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.procurement_action
+msgid "A procurement order is used to record a need in a specific product at a specific location. They are usually created automatically by the sales orders, the Pull Logistics rules or the minimum stock rules. When the procurement order is confirmed, it creates automatically the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc."
 msgstr ""
 
 #. module: procurement
@@ -150,6 +150,11 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr ""
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr ""
@@ -192,8 +197,13 @@ msgid "Reference of the document that created this Procurement.\n"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
+
+#. module: procurement
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: procurement
@@ -224,6 +234,11 @@ msgstr ""
 #: view:stock.warehouse.orderpoint:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid "You can define your minimum stock rules, so that OpenERP will trigger automatically the propositions of manufacturing or purchase orders according to the stock level. Once the virtual stock of a product (=stock on hand minus all confirmed orders and reservations) is bellow the minimum quantity, OpenERP will generate a procurement request in order to fullfil the stock up to the maximum quantity."
 msgstr ""
 
 #. module: procurement
@@ -296,23 +311,13 @@ msgid "Configuration"
 msgstr ""
 
 #. module: procurement
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
 msgid "If you encode manually a Procurement, you probably want to use a make to order method."
-msgstr ""
-
-#. module: procurement
-#: view:res.company:0
-msgid "MRP & Logistic Scheduler"
 msgstr ""
 
 #. module: procurement
@@ -379,6 +384,18 @@ msgid "Service"
 msgstr ""
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid "\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr ""
@@ -397,6 +414,11 @@ msgstr ""
 #: code:addons/procurement/procurement.py:0
 #, python-format
 msgid "Please check the Quantity in Procurement Order(s), it should not be less than 1!"
+msgstr ""
+
+#. module: procurement
+#: help:stock.warehouse.orderpoint,active:0
+msgid "If the active field is set to False, it will allow you to hide the orderpoint without removing it."
 msgstr ""
 
 #. module: procurement
@@ -431,13 +453,13 @@ msgid "Draft"
 msgstr ""
 
 #. module: procurement
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:procurement.order.compute:0
+msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: procurement
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: model:ir.actions.act_window,help:procurement.procurement_exceptions
+msgid "Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sale Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the products configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, or ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message)"
 msgstr ""
 
 #. module: procurement
@@ -456,13 +478,8 @@ msgid "Normal"
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order.compute:0
-msgid "This wizard will schedule procurements."
-msgstr ""
-
-#. module: procurement
-#: help:stock.warehouse.orderpoint,active:0
-msgid "If the active field is set to true, it will allow you to hide the orderpoint without removing it."
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
@@ -497,8 +514,8 @@ msgid "Automatic Order Point"
 msgstr ""
 
 #. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
 msgstr ""
 
 #. module: procurement
@@ -517,13 +534,17 @@ msgid "Procurement name."
 msgstr ""
 
 #. module: procurement
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Reason"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
-#, python-format
+#: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than zero."
 msgstr ""
 
@@ -633,12 +654,16 @@ msgid "Current"
 msgstr ""
 
 #. module: procurement
+#: view:board.board:0
+msgid "Procurements in Exception"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Details"
 msgstr ""
 
 #. module: procurement
-#: view:board.board:0
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: model:ir.actions.act_window,name:procurement.procurement_action_board
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
@@ -741,6 +766,11 @@ msgid "This wizard will plan the procurement for this product. This procurement 
 msgstr ""
 
 #. module: procurement
+#: view:res.company:0
+msgid "MRP & Logistics Scheduler"
+msgstr ""
+
+#. module: procurement
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
@@ -797,11 +827,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Details"
-msgstr ""
-
-#. module: procurement
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: procurement

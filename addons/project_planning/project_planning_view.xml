@@ -74,10 +74,9 @@
                                     <field name="task_ids" />
                                     <field name="note" />
                                     <field name="amount_in_base_uom" invisible="1" sum="Total Planned (in Days)"/>
-
                                 </tree>
                                 <form string="Planning Lines">
-                                    <field name="user_id" domain="[('id','child_of',[parent.user_id])]"/>
+                                    <field name="user_id"/>
                                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount" />
                                     <field name="amount_unit" />
@@ -212,7 +211,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account_analytic_planning_view_search"/>
-            <field name="help">With its commun system for scheduling all resources of a company (people and materials), OpenERP allows you to encode then compute automatically tasks and phases scheduling, track resources allocation and availibility.</field>
+            <field name="help">With its global system to schedule all resources of a company (people and material), OpenERP allows you to encode and then automatically compute tasks and phases scheduling, track resource allocation and availability.</field>
         </record>
 <!--        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>-->
         <menuitem id="base.menu_project_long_term" name="Long Term Planning"

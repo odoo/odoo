@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-22 10:42+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-22 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -27,14 +27,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Oggetto"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -55,6 +47,11 @@ msgid "Jobs Hiring Process"
 msgstr "Processo di Assunzioni"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Configura i Calendari per le sezioni CRM"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Helpdesk"
@@ -66,12 +63,14 @@ msgstr "Intervallo in ore"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "partecipante"
+msgid "dtstamp"
+msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -85,9 +84,10 @@ msgid "Calendar of Meetings"
 msgstr "Calendario Riunioni"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Condividi il Calendario Riunioni"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -95,14 +95,14 @@ msgid "Manages an Helpdesk service."
 msgstr "Gestisci un servizio di Helpdesk"
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "dtend"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "sommario"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -181,6 +181,13 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr "Campo OpenERP"
@@ -198,7 +205,7 @@ msgstr "Valore ICS"
 #. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Expression as constant"
-msgstr ""
+msgstr "Espressione come costante"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -206,9 +213,9 @@ msgid "location"
 msgstr "posizione"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "partecipante"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -218,12 +225,17 @@ msgstr "Nome"
 #. module: document_ics
 #: help:document.directory.ics.fields,fn:0
 msgid "Alternate method                 of calculating the value"
-msgstr ""
+msgstr "Metodo alternativo di calcolo del valore"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr "Gestisce il calendario delle riunioni degli utenti."
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Dominio"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -271,14 +283,19 @@ msgid "categories"
 msgstr "categorie"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr "Usa il campo"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Dominio"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Crea i Calendari pre-configurati"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -318,14 +335,14 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "sommario"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
 msgid "Leads"
-msgstr ""
+msgstr "Iniziative"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
@@ -333,9 +350,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Condividi il Calendario Riunioni"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -357,23 +374,17 @@ msgstr "URL"
 msgid "Business Opportunities"
 msgstr "Opportunità"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
 
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
 
 #~ msgid "Next"
 #~ msgstr "Prossimo"
-
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "Configura i Calendari per le sezioni CRM"
 
 #~ msgid "Error! You can not create recursive Directories."
 #~ msgstr "Errore! Non puoi creare Direcroty ricorsive"
@@ -392,6 +403,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Usato dalle aziende per tener traccia di errori e rispondere alle richieste "
 #~ "sui software"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome del modello non valido nella definizione dell'azione."
 
 #~ msgid ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
@@ -429,9 +443,6 @@ msgstr ""
 #~ "Ti aiuta a codificare il risultato di una telefonata oppure a pianificare "
 #~ "una lista di telefonate fare."
 
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "Crea i Calendari pre-configurati"
-
 #~ msgid "Prospect"
 #~ msgstr "Prospetto"
 
@@ -440,3 +451,12 @@ msgstr ""
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "Copy text   \t document.directory.ics.fields"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"

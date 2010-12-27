@@ -239,7 +239,7 @@
                               domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
-                        <field name="section_id" default="context.get('section_id', False)" widget="selection" groups="base.group_extended">
+                        <field name="section_id" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
                                   domain="[('section_id.user_id','=',uid)]"
@@ -271,7 +271,7 @@
            <field name="view_mode">tree,form,calendar,graph</field>
            <field name="context">{"search_default_draft": "1", "search_default_section_id": section_id}</field>
            <field name="search_view_id" ref="view_event_search"/>
-           <field name="help">Event is the low-level object used by meeting and others documents that have to be synchronized with mobile or calendar applications through caldav. Most of the users should work on the Calendar menu, and not on the list of events.</field>
+           <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
 
       <act_window

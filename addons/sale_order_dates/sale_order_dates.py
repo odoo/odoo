@@ -30,7 +30,7 @@ class sale_order_dates(osv.osv):
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for pick in order.picking_ids:
                 dates_list.append(pick.date)
@@ -43,7 +43,7 @@ class sale_order_dates(osv.osv):
     def _get_commitment_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         dates_list = []
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
             for line in order.order_line:
                 dt = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
@@ -54,9 +54,9 @@ class sale_order_dates(osv.osv):
         return res
 
     _columns = {
-        'commitment_date': fields.function(_get_commitment_date, method=True, store=True, type='date', string='Commitment Date', help="Date on which delivery of products is to be made"),
-        'requested_date': fields.date('Requested Date', help="Date on which customer has requested for sales"),
-        'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True, string='Effective Date',help="Date on which picking is created"),
+        'commitment_date': fields.function(_get_commitment_date, method=True, store=True, type='date', string='Commitment Date', help="Date on which delivery of products is to be made."),
+        'requested_date': fields.date('Requested Date', help="Date on which customer has requested for sales."),
+        'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True, string='Effective Date',help="Date on which picking is created."),
     }
 
 sale_order_dates()

@@ -22,7 +22,6 @@
 import string
 
 from osv import osv, fields
-from tools.func import partial
 from tools.translate import _
 
 _ref_vat = {
@@ -53,12 +52,12 @@ class res_partner(osv.osv):
         vat_country, vat_number = vat[:2].lower(), vat[2:].replace(' ', '')
         return vat_country, vat_number
 
-    def check_vat(self, cr, uid, ids):
+    def check_vat(self, cr, uid, ids, context=None):
         '''
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
-        for partner in self.browse(cr, uid, ids):
+        for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
@@ -76,13 +75,12 @@ class res_partner(osv.osv):
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
 
-    def _construct_constraint_msg(self, cr, uid, ids):
+    def _construct_constraint_msg(self, cr, uid, ids, context=None):
         def default_vat_check(cn, vn):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
             #  has more than 3 characters
             return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
-
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         if default_vat_check(vat_country, vat_number):
             vat_no = vat_country in _ref_vat and _ref_vat[vat_country] or 'Country Code + Vat Number'
@@ -709,8 +707,6 @@ class res_partner(osv.osv):
             return False
         if int(vat[7:10]) > 100 and int(vat[7:10]) < 120:
             return False
-        if int(vat[7:10]) > 121:
-            return False
 
         sum = int(vat[0]) + mult_add(2, int(vat[1])) + int(vat[2]) + \
                 mult_add(2, int(vat[3])) + int(vat[4]) + \
@@ -1032,7 +1028,7 @@ class res_partner(osv.osv):
         if len(vat) not in(9, 10):
             return False
 
-        if int(vat[0:2]) == 0 and len(vat) == 10:
+        if int(vat[0:2]) in (0, 10, 20) and len(vat) == 10:
             return True
 
         if len(vat) == 10:

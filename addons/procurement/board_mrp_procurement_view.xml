@@ -8,16 +8,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
-			<field name="view_id" ref="procurement.procurement_tree_view_board"/>            
+			<field name="view_id" ref="procurement.procurement_tree_view_board"/>
         </record>
         <record id="board_mrp_procurement_form" model="ir.ui.view">
             <field name="name">board.mrp.procurement.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="stock.board_warehouse_form"/>              
+			<field name="inherit_id" ref="stock.board_warehouse_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-      		<xpath expr="/form/hpaned/child1" position="inside"> 
-				<action colspan="4" name="%(procurement_action_board)d" string="Procurement Exceptions" width="510" />
+      		<xpath expr="/form/hpaned/child1/action[@string='Incoming Product']" position="before">
+				<action colspan="4" name="%(procurement_action_board)d" string="Procurements in Exception" width="510" />
 			</xpath>
             </field>
         </record>

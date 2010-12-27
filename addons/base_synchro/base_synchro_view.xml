@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+	<menuitem id="synch_config" name="Synchronization" parent="base.menu_config" sequence="30"/>
         <record id="view_transfer_line_tree" model="ir.ui.view">
             <field name="name">base.synchro.obj.line.tree</field>
             <field name="model">base.synchro.obj.line</field>
@@ -190,13 +190,13 @@
         </record>
 
         <record id="action_base_synchro_server_tree" model="ir.actions.act_window">
-            <field name="name">Synchronized Servers</field>
+            <field name="name">Servers to be synchronized</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.synchro.server</field>
             <field name="view_type">form</field>
         </record>
 
-        <menuitem action="action_base_synchro_server_tree" id="synchro_server_tree_menu_id" parent="base_synchro.next_id_63"/>
+        <menuitem action="action_base_synchro_server_tree" id="synchro_server_tree_menu_id" parent="base_synchro.synch_config"/>
 
 <!--view_base_synchro_server end -->
 

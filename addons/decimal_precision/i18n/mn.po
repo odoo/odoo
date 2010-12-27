@@ -7,52 +7,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-09-29 11:26+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-02 09:20+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,digits:0
 msgid "Digits"
-msgstr "Нэг оронтой тоо"
+msgstr "Оронгууд"
 
 #. module: decimal_precision
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Архитектур харахад зориулсан алдаатай XML"
-
-#. module: decimal_precision
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Объектын нэр нь х_ болон онцгой тэмдэгтийн хослол байх ёстой"
-
-#. module: decimal_precision
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Алдаатай моделийн нэр дэх үйлдлийн тодорхойлолт"
-
-#. module: decimal_precision
-#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
-msgid "Decimal Precision Configuration"
-msgstr "Аравтын нарийвчлалын тохируулгууд"
+#: view:decimal.precision:0
+msgid "Decimal Precision"
+msgstr "Оронгийн нарийвчлал"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
-msgid "Decimal Accuracy"
-msgstr ""
+msgid "Decimal Accuracy Definitions"
+msgstr "Аравтын нарийвчлалын тодорхойлолт"
 
 #. module: decimal_precision
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Та рекурсив цэс үүсгэхгүй."
+#: model:ir.module.module,description:decimal_precision.module_meta_information
+msgid ""
+"\n"
+"This module allows to configure the price accuracy you need for different "
+"kind\n"
+"of usage: accounting, sales, purchases, ...\n"
+"\n"
+"The decimal precision is configured per company.\n"
+msgstr ""
+"\n"
+"Үнийн нарийвчлалын өөр төрөл таньд хэрэгтэй болвол энэ модул нь тохируулна\n"
+"жишээлбэл: accounting, sales, purchases, ...\n"
+"\n"
+"Аравтын нарийвчлал нь компани бүрт тохируулагдсан байдаг.\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,name:0
@@ -60,14 +55,41 @@ msgid "Usage"
 msgstr "Хэрэглээ"
 
 #. module: decimal_precision
-#: view:decimal.precision:0
-msgid "Decimal Precision"
-msgstr "Аравтын нарийвчлал"
+#: sql_constraint:decimal.precision:0
+msgid "Only one value can be defined for each given usage!"
+msgstr ""
+
+#. module: decimal_precision
+#: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
+msgid "Decimal Precision Configuration"
+msgstr "Бутархай тоон оронгийн нарийвчлалын тохиргоо"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
-msgstr "Аравтын нарийвчлал"
+msgstr "оронгийн нарийвчлал"
 
-#~ msgid "Decimal Accuracy Definitions"
-#~ msgstr "Аравтын нарийвчлалын тодорхойлолт"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Дэлгэцийн үйлдэл дэх моделийн нэр алдаатай байна."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж болохгүй."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Обьектын нэр нь x_-ээр эхэлж ямар ч тусгай тэмдэгт агуулах ёсгүй."
+
+#~ msgid "Decimal Accuracy"
+#~ msgstr "Бутархай тоон оронгийн нарийвчлал"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Модулийн нэр давхардах ёсгүй !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Модулын сертификат ID давхардах ёсгүй !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"

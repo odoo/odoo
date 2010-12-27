@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 09:11+0000\n"
-"Last-Translator: zmmaj <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-04 08:57+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -34,9 +34,12 @@ msgid "From"
 msgstr "Od"
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravno ime modela u definiciji akcije."
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+"Suma mnozenja kataloške cene proizvoda sa količinama proizvoda na fakturama "
+"kupca"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -59,30 +62,10 @@ msgid "From Date"
 msgstr "Od datuma"
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Greska ! Ne mozes kreirati rekursivni meni."
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "Pripremljeno, Otvoreno i Plaćeno"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere"
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr ""
-"Suma mnozenja kataloške cene proizvoda sa količinama proizvoda na fakturama "
-"kupca"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -117,9 +100,13 @@ msgid "Expected Sale - Turn Over"
 msgstr "Ocekivana Prodaja  - Obrt"
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Očekivana prodaja"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -127,9 +114,9 @@ msgid "Standard Price"
 msgstr "Standardna cena"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Suma količina na dobavljačevim fakturama"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Očekivana prodaja"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -142,21 +129,15 @@ msgid "Expected Sale - Normal Cost"
 msgstr "Ocekivana Prodaja - Normalni Troskovi"
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Fakturisano"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Kriterijum Analize"
 
 #. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Ukupni trošak"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za pregled arhitekture"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -228,6 +209,11 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Srednja cena u fakturama dobavljača "
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Suma količina na dobavljačevim fakturama"
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr "Kategorije Osobina"
@@ -238,9 +224,10 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Ukupna marža * 100 / Zarada"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Kriterijum Analize"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Fakturisano"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -266,6 +253,11 @@ msgstr "Marže proizvoda"
 #: view:product.margin:0
 msgid "General Information"
 msgstr "Generalne Informacije"
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -308,6 +300,9 @@ msgstr "Marza Proizvoda"
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "Očekivana prodaja - Zarada"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Očekivana prodaja - Normalan trošak"
 
@@ -319,3 +314,14 @@ msgstr "Marza Proizvoda"
 
 #~ msgid "View Stock of Products"
 #~ msgstr "Pogledaj zalihu proizvoda"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora zapoceti sa x_ i ne sme sadrzavati specijalne karaktere"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravno ime modela u definiciji akcije."

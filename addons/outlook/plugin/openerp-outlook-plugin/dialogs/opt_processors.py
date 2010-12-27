@@ -227,10 +227,10 @@ class CSComboProcessor(ComboProcessor):
             objlist = conn.GetAllObjects()
 #            if 'crm.claim' in objlist:
 #                list.append('CRM Claim')
-            if 'crm.helpdesk' in objlist:
-                list.append('CRM Helpdesk')
-            if 'crm.fundraising' in objlist:
-                list.append('CRM Fundraising')
+#            if 'crm.helpdesk' in objlist:
+#                list.append('CRM Helpdesk')
+#            if 'crm.fundraising' in objlist:
+#                list.append('CRM Fundraising')
             if'hr.applicant' in objlist:
                 list.append('HR Applicant')
             if'project.issue' in objlist:

@@ -57,18 +57,16 @@ class auction_dates(osv.osv):
         return res
 
     def name_get(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
+        reads = self.read(cr, uid, ids, ['name', 'auction1'], context=context)
         name = [(r['id'], '['+r['auction1']+'] '+ r['name']) for r in reads]
         return name
 
-    def _get_invoice(self, cr, uid, ids, name, arg, context={}):
+    def _get_invoice(self, cr, uid, ids, name, arg, context=None):
         lots_obj = self.pool.get('auction.lots')
         result = {}
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             buyer_inv_ids = []
             seller_inv_ids = []
             result[data.id] = {
@@ -76,7 +74,7 @@ class auction_dates(osv.osv):
                 'buyer_invoice_history': seller_inv_ids,
             }
             lots_ids = lots_obj.search(cr, uid, [('auction_id','=',data.id)])
-            for lot in lots_obj.browse(cr, uid, lots_ids):
+            for lot in lots_obj.browse(cr, uid, lots_ids, context=context):
                 if lot.ach_inv_id:
                     buyer_inv_ids.append(lot.ach_inv_id.id)
                 if lot.sel_inv_id:
@@ -120,8 +118,6 @@ class auction_dates(osv.osv):
 
         RETURN: True
         """
-        if not context:
-            context={}
         lots_obj = self.pool.get('auction.lots')
         lots_ids = lots_obj.search(cr, uid, [('auction_id', 'in', ids), ('state', '=', 'draft'), ('obj_price', '>', 0)])
         lots_obj.lots_invoice(cr, uid, lots_ids, {}, None)
@@ -194,12 +190,10 @@ class aie_category(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         res = []
         if not ids:
             return res
-        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         for record in reads:
             name = record['name']
             if record['parent_id']:
@@ -217,7 +211,7 @@ class auction_lot_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
+        'active' : fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the auction lot category without removing it."),
         'aie_categ': fields.many2one('aie.category', 'Category', ondelete='cascade'),
     }
     _defaults = {
@@ -229,8 +223,6 @@ auction_lot_category()
 # Lots
 #----------------------------------------------------------
 def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
     obj = self.pool.get('auction.lot.category')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)
@@ -245,23 +237,15 @@ class auction_lots(osv.osv):
     _description=__doc__
 
     def button_not_bought(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         return self.write(cr, uid, ids, {'state':'unsold'})
 
     def button_taken_away(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         return self.write(cr, uid, ids, {'state':'taken_away', 'ach_emp': True})
 
     def button_unpaid(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         return self.write(cr, uid, ids, {'state':'draft'})
 
     def button_bought(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         return self.write(cr, uid, ids, {'state':'sold'})
 
     def _getprice(self, cr, uid, ids, fields, args, context=None):
@@ -271,12 +255,10 @@ class auction_lots(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value.
         """
-        if not context:
-            context = {}
 
         res = {}
         account_analytic_line_obj = self.pool.get('account.analytic.line')
-        lots = self.browse(cr, uid, ids, context)
+        lots = self.browse(cr, uid, ids, context=context)
         pt_tax = self.pool.get('account.tax')
         for lot in lots:
             taxes = []
@@ -362,8 +344,6 @@ class auction_lots(osv.osv):
         return res
 
     def onchange_obj_ret(self, cr, uid, ids, obj_ret, context=None):
-        if not context:
-            context={}
         if obj_ret:
             return {'value': {'obj_price': 0}}
         return {}
@@ -430,16 +410,12 @@ class auction_lots(osv.osv):
     }
 
     def name_get(self, cr, user, ids, context=None):
-        if not context:
-            context={}
         if not ids:
             return []
         result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name', 'obj_num'])]
         return result
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None):
-        if not context:
-            context={}
         if not args:
             args = []
         ids = []
@@ -583,14 +559,12 @@ class auction_lots(osv.osv):
 
     def buyer_proforma(self, cr, uid, ids, context=None):
 
-        if not context:
-            context={}
         invoices = {}
         inv_ref = self.pool.get('account.invoice')
         res_obj = self.pool.get('res.partner')
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
-        for lot in self.browse(cr, uid, ids, context):
+        for lot in self.browse(cr, uid, ids, context=context):
             if not lot.obj_price>0:
                 continue
             if not lot.ach_uid.id:
@@ -643,12 +617,10 @@ class auction_lots(osv.osv):
         """
         # use each list of object in turn
         invoices = {}
-        if not context:
-            context={}
         inv_ref=self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
         wf_service = netsvc.LocalService('workflow')
-        for lot in self.browse(cr, uid, ids, context):
+        for lot in self.browse(cr, uid, ids, context=context):
             if not lot.auction_id.id:
                 continue
             if lot.bord_vnd_id.id in invoices:
@@ -684,7 +656,7 @@ class auction_lots(osv.osv):
             }
             inv_line_obj.create(cr, uid, inv_line, context)
             inv_ref.button_compute(cr, uid, invoices.values())
-        for inv in inv_ref.browse(cr, uid, invoices.values(), context):
+        for inv in inv_ref.browse(cr, uid, invoices.values(), context=context):
             inv_ref.write(cr, uid, [inv.id], {
                 'check_total': inv.amount_total
             })

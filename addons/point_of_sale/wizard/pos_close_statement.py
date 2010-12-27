@@ -50,22 +50,20 @@ class pos_close_statement(osv.osv_memory):
                 if not journal.check_dtls:
                     statement_obj.button_confirm_cash(cr, uid, ids, context=context)
 
-        id2 = mod_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
-        id3 = mod_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
-        result = mod_obj._get_id(cr, uid, 'point_of_sale', 'view_pos_confirm_cash_statement_filter')
-        search_id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-        if id2:
-            id2 = mod_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = mod_obj.browse(cr, uid, id3, context=context).res_id
+        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
+        tree_id = tree_res and tree_res[1] or False
+        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
+        form_id = form_res and form_res[1] or False
+        search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_confirm_cash_statement_filter')
+        
         return {
             'domain': "[('id', 'in', " + str(ids) + ")]",
             'name': 'Close Statements',
             'view_type': 'form',
             'view_mode': 'tree, form',
-            'search_view_id': search_id['res_id'],
+            'search_view_id': search_id and search_id[1] or False,
             'res_model': 'account.bank.statement',
-            'views': [(id2, 'tree'), (id3, 'form')],
+            'views': [(tree_id, 'tree'), (form_id, 'form')],
             'type': 'ir.actions.act_window'
         }
 

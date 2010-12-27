@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:30+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-01 07:12+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_helpdesk
@@ -32,11 +32,6 @@ msgstr "# Aanvragen"
 #: view:crm.helpdesk.report:0
 msgid "Group By..."
 msgstr "Groepeer op.."
-
-#. module: crm_helpdesk
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -59,11 +54,6 @@ msgstr "Bedrijf"
 #: field:crm.helpdesk,email_cc:0
 msgid "Watchers Emails"
 msgstr "Emails toeschouwers"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Cases"
-msgstr "Aanvragen"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
@@ -104,7 +94,6 @@ msgid "Partner Contact"
 msgstr "Contactpersoon relatie"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
 msgstr "Helpdesk Analyse"
@@ -149,13 +138,6 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,date_closed:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Closed"
-msgstr "Gesloten"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 msgid "Estimates"
 msgstr "Schattingen"
@@ -164,11 +146,6 @@ msgstr "Schattingen"
 #: field:crm.helpdesk.report,section_id:0
 msgid "Section"
 msgstr "Afdeling"
-
-#. module: crm_helpdesk
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave opbouw!"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -270,6 +247,11 @@ msgstr "Historie informatie"
 #: view:crm.helpdesk:0
 msgid "Dates"
 msgstr "Data"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "    Month-1    "
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -378,9 +360,11 @@ msgid "Low"
 msgstr "Laag"
 
 #. module: crm_helpdesk
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: field:crm.helpdesk,date_closed:0
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Closed"
+msgstr "Gesloten"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -549,14 +533,8 @@ msgid "Categorization"
 msgstr "Classificatie"
 
 #. module: crm_helpdesk
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
+#: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.model,name:crm_helpdesk.model_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_config_helpdesk
 msgid "Helpdesk"
@@ -584,6 +562,15 @@ msgid "Reply"
 msgstr "Beantwoorden"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
+msgid ""
+"Create and manage helpdesk categories to better manage and classify your "
+"support request."
+msgstr ""
+"Maak en beheer helpdesk categorieën om uw support aanvragen beter te "
+"classificeren en beheren."
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,description:0
 msgid "Description"
 msgstr "Omschrijving"
@@ -594,6 +581,19 @@ msgid "May"
 msgstr "Mei"
 
 #. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"'Helpdesk and Support' allows you to track your interventions. Select a "
+"customer, add notes and categorize interventions with partners if necessary "
+"and assign a priority level. Depending on your need, you may consider using "
+"the issues system of OpenERP to manage your support activities."
+msgstr ""
+"'Helpdesk ondersteuning' laat u storingen volgen. Selecteer een klant, voeg "
+"notieties toe en categoriseer storingen eventueel met relaties en ken een "
+"prioriteitsniveau toe. Afhankelijk van uw behoefte kunt u overwegen het "
+"helpdesk systeem te gebruiken om uw OpenERP ondersteuning te beheren."
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,probability:0
 msgid "Probability (%)"
 msgstr "Waarschijnlijkheid (%)"
@@ -602,6 +602,17 @@ msgstr "Waarschijnlijkheid (%)"
 #: field:crm.helpdesk.report,email:0
 msgid "# Emails"
 msgstr "# Emails"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.action_report_crm_helpdesk
+msgid ""
+"Have a general overview of all support requests by sorting them with "
+"specific criteria such as the processing time, number of requests answered, "
+"emails sent and costs."
+msgstr ""
+"Geeft een algemeen overzicht van alle ondersteuning aanvragen door ze te "
+"sorteren met specifieke criteria zoals behandeltijd, aantal beantwoorde "
+"aanvragen, verstuurde emails en kosten."
 
 #. module: crm_helpdesk
 #: help:crm.helpdesk,canal_id:0
@@ -696,11 +707,19 @@ msgstr "Jaar"
 msgid "Duration"
 msgstr "Duur"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
 #~ msgid "This Year"
 #~ msgstr "Dit jaar"
 
 #~ msgid "Delay to close"
 #~ msgstr "Vertraging tot sluiting"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #~ msgid "Communication history"
 #~ msgstr "Communicatiegeschiedenis"
@@ -710,3 +729,21 @@ msgstr "Duur"
 
 #~ msgid "Create Date"
 #~ msgstr "Aanmaakdatum"
+
+#~ msgid "Cases"
+#~ msgstr "Aanvragen"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave opbouw!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:57+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 13:58+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -25,16 +25,16 @@ msgstr "DDR 512MB PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Αριθμός στρώσεων"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
 #: constraint:product.pricelist.item:0
-#, python-format
 msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Σφάλμα ! Δεν μπορείς να αντιστοιχείσεις τον Κύριο Τιμοκατάλογο σαν Άλλο "
+"Τιμοκατάλογο σε Είδος Τιμοκαταλόγου!"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -44,11 +44,6 @@ msgid ""
 msgstr ""
 "Καθορίστε ένα πρότυπο εάν αυτός ο κανόνας εφαρμόζεται σε ένα πρότυπο ενός "
 "προϊόντος. Κρατήστε κενό εάν πρόκειται για όλα τα προϊόντα"
-
-#. module: product
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -64,16 +59,18 @@ msgstr "Mainboard ASUStek A7V8X-X"
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
+"Αυτή είναι η ελάχιστη ποσότητα που επιτρέπεται να αγοραστεί από τον Κύριο "
+"Προμηθευτή."
 
 #. module: product
 #: model:product.uom,name:product.uom_day
 msgid "Day"
-msgstr ""
+msgstr "Ημέρα"
 
 #. module: product
 #: view:product.product:0
 msgid "UoM"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -96,6 +93,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Αυτός ο τιμοκατάλογος θα χρησιμοποιηθεί, αντί του προεπιλεγμένου , για "
+"πωλήσεις στον τρέχον συνεργάτη"
 
 #. module: product
 #: constraint:product.supplierinfo:0
@@ -103,11 +102,13 @@ msgid ""
 "Error: The default UOM and the Supplier Product UOM must be in the same "
 "category."
 msgstr ""
+"Λάθος: Η προεπιλεγμένη Μονάδα Μέτρησης και η Μονάδα Μέτρησης του προϊόντος "
+"του Προμηθευτή πρέπει να είναι στην ίδια κατηγορία."
 
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Ποσότητα προμηθευτή"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -144,12 +145,19 @@ msgstr "Ονομασία Κανόνα"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr ""
+msgstr "Αναφορά"
 
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
 msgstr "Σφάλμα! Δεν μπορείτε να δημιουργήσετε επαναλαμβανόμενες κατηγορίες"
+
+#. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -202,10 +210,9 @@ msgid "PriceList"
 msgstr "Τιμοκατάλογος"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
-msgstr "ΜΜ"
+msgstr "Μονάδα Μέτρησης"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -220,7 +227,7 @@ msgstr "Διάφορα"
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr ""
+msgstr "Εργάτης"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -263,12 +270,6 @@ msgid "Products: "
 msgstr "Προϊόντα: "
 
 #. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Σφάλμα: 2η ΜΜ πρέπει να είναι σε διαφορετική κατηγορία απο την πρώτη ΜΜ"
-
-#. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
 msgstr "Γονική Κατηγορία"
@@ -296,7 +297,7 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr ""
+msgstr "Όνομα Προμηθευτή, τιμή, κωδικός προϊόντος,..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -311,7 +312,7 @@ msgstr "EAN13"
 #. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
-msgstr ""
+msgstr "Κύριος Προμηθευτής"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -340,7 +341,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Ξύλο 2χιλ"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -350,21 +351,12 @@ msgstr "Ποσότητα-1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr ""
+msgstr "Αριθμός πακέτων ανά στρώση"
 
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
 msgstr "Ποσότητα κατα συσκευασία"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"Could not resolve product category, ' \\n                                    "
-"'you have defined cyclic categories ' \\n                                    "
-"'of products!"
-msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -376,7 +368,7 @@ msgstr "Κατάσταση"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Επιλέξτε κατηγορία για το τρέχον προϊόν"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -386,10 +378,11 @@ msgstr "Εξερχόμενο"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "Αναφορά Μ.Μ. για αυτήν την κατηγορία"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
+#: field:product.product,lst_price:0
 msgid "Public Price"
 msgstr "Λιανική Τιμή"
 
@@ -411,7 +404,7 @@ msgstr "Διαχειριστής Προϊόντων"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Όνομα Προϊόντος Προμηθευτή"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
@@ -421,7 +414,7 @@ msgstr "Medium PC"
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr ""
+msgstr "Αναζήτηση Τιμών Προϊόντων"
 
 #. module: product
 #: view:product.product:0
@@ -493,6 +486,13 @@ msgid "Codes"
 msgstr "Κωδικοί"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Ποσότητα-4"
@@ -505,17 +505,32 @@ msgstr "Πωλήσεις & Αγορές"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
+msgstr "Εργάσιμες Ώρες"
+
+#. module: product
+#: help:product.product,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the product "
+"without removing it."
 msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
+msgstr "Μεταλικά Στηρίγματα"
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"No active version for the selected pricelist !\n"
+"Please create or activate one."
 msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "Κατηγορία ΜΜ Προϊόντος"
+msgstr "Κατηγορία μονάδας μέτρησης προϊόντος"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_box
@@ -543,6 +558,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
+"Ένας ή περισσότεροι προμηθευτές μπορούν να συνδεθούν με το προϊόν. Όλες οι "
+"πληροφορίες εμφανίζονται στην φόρμα προϊόντος."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -564,19 +581,20 @@ msgstr "Εικονικό Απόθεμα"
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Προβολή"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr ""
+msgstr "Πρότηπα Προϊόντων"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Έξοδα εστιατορίου"
 
 #. module: product
+#: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Σφάλμα: Λανθασμένος κωδικός ΕΑΝ"
@@ -589,7 +607,7 @@ msgstr "Ελάχιστη Ποσότητα"
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price Type"
-msgstr ""
+msgstr "Τύπος Τιμής"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -625,17 +643,17 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
 msgid "KIT Shelf of 100cm"
-msgstr ""
+msgstr "ΚΙΤ Ραφιού των 100εκ."
 
 #. module: product
 #: field:product.supplierinfo,name:0
 msgid "Supplier"
-msgstr ""
+msgstr "Προμηθευτής"
 
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
 msgid "Side Panel"
-msgstr ""
+msgstr "Πλάγιος Πίνακας"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -646,13 +664,6 @@ msgstr "Kit Keyboard + Mouse"
 #: field:product.price.type,name:0
 msgid "Price Name"
 msgstr "Ονομασία Τιμής"
-
-#. module: product
-#: help:product.pricelist,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the pricelist "
-"without removing it."
-msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -672,11 +683,24 @@ msgstr "Τιμοκατάλογος"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Προμηθευτές"
 
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
+msgstr "Επιτρέπεται η αγορά"
+
+#. module: product
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Mainboard ASUStek A7N8X"
+
+#. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
 msgstr ""
 
 #. module: product
@@ -685,8 +709,10 @@ msgid "New Price ="
 msgstr "Νέα Τιμή ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -702,7 +728,7 @@ msgstr "Προηγμένος χρόνος πελάτη"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr ""
+msgstr "Προμηθευτής του προϊόντος"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -753,7 +779,7 @@ msgstr "Σχετ. Πελάτη"
 #. module: product
 #: view:product.product:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Διάφορα"
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -777,17 +803,12 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
-
-#. module: product
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
+msgstr "Έργο Σχεδιαμού Κουζίνας"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
 msgid "Hour"
-msgstr ""
+msgstr "Ώρα"
 
 #. module: product
 #: selection:product.template,state:0
@@ -797,17 +818,17 @@ msgstr "Σε Εξέλιξη"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "Ράφι των 200εκ."
 
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Αναλογία & Ακρίβεια"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
 msgid "g"
-msgstr ""
+msgstr "γ"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
@@ -818,7 +839,7 @@ msgstr "IT components kits"
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Κανονικό"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -894,7 +915,7 @@ msgstr "Πληροφορίες για έναν προμηθευτή προϊόν
 #. module: product
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Εκτεταμένα Φίλτα.."
 
 #. module: product
 #: view:product.product:0
@@ -918,6 +939,16 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A pricelist contains rules to be evaluated in order to compute the purchase "
+"or sale price for all the partners assigned to a pricelist. Pricelists have "
+"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
+"version has several rules. Example: the customer price of this category of "
+"product will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
 msgstr "Προϊόν Αποθήκευσης"
@@ -935,7 +966,7 @@ msgstr "Ακολουθία"
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
+msgstr "Υπολογισμός Τιμής Προϊόντος ανά μονάδα βάση έκδοσης τιμοκαταλόγου"
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -946,6 +977,15 @@ msgstr "Μονάδα Μεταφοράς"
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
 msgstr "Πληροφορίες Συνεργάτη"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. They can be raw "
+"materials, stockable products, consumables or services. The Product form "
+"contains a detailed information of your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_res_users
@@ -982,7 +1022,7 @@ msgstr "Εϊδη Τιμοκαταλόγου"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Μεγαλύτερο από την αναφερόμενη Μονάδα Μέτρησης"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -992,7 +1032,7 @@ msgstr "Προϊόντα και Τιμοκατάλογοι"
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
-msgstr ""
+msgstr "Επιτρέπεται η πώληση"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1005,9 +1045,12 @@ msgid "Price Surcharge"
 msgstr "Τιμή Προσαύξησης"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Mainboard ASUStek A7N8X"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate to be used between the several Unit of "
+"Measure within the same category."
+msgstr ""
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1028,32 +1071,24 @@ msgid "Name"
 msgstr "Όνομα"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"' \\n                                'Please create or activate one."
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Αποθηκεύσιμα"
+
+#. module: product
+#: model:product.template,name:product.product_product_woodlintelm0_product_template
+msgid "Wood Lintel 4m"
+msgstr "Ξύλινο Ανώφλιο 4μ"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
-
-#. module: product
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "κιλά"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
 msgid "m"
-msgstr ""
+msgstr "μ"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1063,7 +1098,7 @@ msgstr "Απαρχαιωμένο"
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "χλμ"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1086,7 +1121,7 @@ msgstr ""
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "Αναλογία"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1115,22 +1150,46 @@ msgstr "Σχετιζόμενο πεδίο στην φόρμα προϊόντων
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Μέθοδος Προμήθειας"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Ημερομηνία εκτύπωσης"
 
 #. module: product
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
 msgstr "Μονάδα Πωλήσεων"
+
+#. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1148,6 +1207,7 @@ msgstr ""
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
+"Κύριος Προμηθευτής που έχει υψηλή προτεραιότητα στην Λίστα Προμηθευτών"
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -1172,7 +1232,7 @@ msgstr "Προϊόντα"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "Ο αριθμός στρώσεων της παλέτας ή του κιβωτίου"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1189,12 +1249,17 @@ msgstr "Διαστάσεις παλέτας"
 #: code:addons/product/product.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (αντίγραφο)"
 
 #. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Συνεργάτες"
+
+#. module: product
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα χρήστη!"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1205,15 +1270,25 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measures are in the same category, they can "
+"be converted within each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
-msgstr "Δεύτερη ΜΜ"
+msgstr "Δεύτερη Μονάδα Μέτρησης"
 
 #. module: product
-#: model:product.template,name:product.product_product_woodlintelm0_product_template
-msgid "Wood Lintel 4m"
-msgstr ""
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Error !"
+msgstr "Σφάλμα!"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1251,6 +1326,14 @@ msgid "Price List Version"
 msgstr "Έκδοση Τιμοκαταλόγου"
 
 #. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Αναλώσιμο"
@@ -1274,7 +1357,7 @@ msgstr "Προμήθεια"
 #. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
-msgstr "Κατηγορία ΜΜ"
+msgstr "Κατηγορία Μονάδα Μέτρησης"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1284,7 +1367,18 @@ msgstr "Rack"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
+msgstr "Μ.Μ Αγοράς"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click on "
+"a category to get the list of all products linked to this category or to a "
+"child of this category."
 msgstr ""
+"Εδώ είναι μια λίστα όλων των προϊόντων ταξινομιμένα κατά κατηγορία. Μπορείτε "
+"να κάνετε κλικ σε μια κατηγορία για να πάρετε μια λίστα όλων των προϊόντων "
+"συνδεδεμένα με αυτή την κατηγορία ή την υπο-κατηγορία"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1294,12 +1388,20 @@ msgstr "Μέθοδος απόκτησης"
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Ομαδοποίηση κατά..."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
 msgstr "Regular processor config"
+
+#. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid ""
+"Conversion from Product UoM m to Default UoM PCE is not possible as they "
+"both belong to different Category!."
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1330,6 +1432,13 @@ msgid "Basic PC"
 msgstr "Βασικός Η/Υ"
 
 #. module: product
+#: help:product.pricelist,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the pricelist "
+"without removing it."
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Πραγματικό Απόθεμα"
@@ -1337,7 +1446,7 @@ msgstr "Πραγματικό Απόθεμα"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "εκ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1353,19 +1462,26 @@ msgstr ""
 "κατηγορία."
 
 #. module: product
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Η επιλεγμένη εταιρία δεν είναι στις επιτρεπόμενες εταιρίες γι' αυτόν τον "
+"χρήστη"
+
+#. module: product
+#: field:product.uom,rounding:0
+msgid "Rounding Precision"
+msgstr "Ακρίβεια στρογγυλοποίησης"
 
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Ιδιότητες Μονάδων Μέτρησης"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
 msgid "Rack 200cm"
-msgstr ""
+msgstr "σχάρα 200εκ"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1385,7 +1501,7 @@ msgstr "The weight of the empty UL"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
-msgstr ""
+msgstr "Μικρότερο απο την αναφερόμενη Μονάδα Μέτρησης"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1400,6 +1516,11 @@ msgstr "Ενεργό"
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
 msgstr "Περιθώριο τιμής μεταβλητής"
+
+#. module: product
+#: sql_constraint:product.uom:0
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1427,6 +1548,8 @@ msgid ""
 "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Πόσες φορές αυτή η Μ.Μ. είναι μικρότερη από την αναφερόμενη στην κατηγορία:\n"
+"1*(αναφερόμενη μονάδα)= αναλογία*(τρέχουσα μονάδα)"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1438,7 +1561,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_misc0
 msgid "Misc"
-msgstr ""
+msgstr "Διαφ."
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
@@ -1449,6 +1572,15 @@ msgstr "Customizable PC"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains a detailed "
+"information on your  products related to procurement logistics, sales price, "
+"product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1469,20 +1601,12 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
-
-#. module: product
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να αρχίζει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
+msgstr "Κωδικός Προϊόντος Προμηθευτή"
 
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1523,6 +1647,12 @@ msgid "Make to Order"
 msgstr "Προς Παραγγελία"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+"Ο συνολικός αριθμός προϊόντων που μπορείς να τοποθετήσεις σε παλέτα ή κουτί"
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Μεταβλητές"
@@ -1552,12 +1682,17 @@ msgstr ""
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr ""
+msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
 msgstr "ATX Mid-size Tower"
+
+#. module: product
+#: field:product.packaging,ean:0
+msgid "EAN"
+msgstr "EAN"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1599,11 +1734,6 @@ msgid "Company"
 msgstr "Εταιρία"
 
 #. module: product
-#: field:product.product,lst_price:0
-msgid "List Price"
-msgstr "Τιμή τιμοκαταλόγου"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
 msgid "Prices Types"
 msgstr "Τύποι Τιμών"
@@ -1629,8 +1759,8 @@ msgid "Name of this kind of price."
 msgstr "Ονομασά για αυτόν τον τύπο τιμής."
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1644,6 +1774,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Προεπιλεγμένη Μονάδα Μέτρησης για Παραγγελίες Αγορών. Θα πρέπει να είναι "
+"στην ίδια κατηγορία με την προεπιλεγμένη μονάδα μέτρησης."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1658,7 +1790,7 @@ msgstr "Μήκος"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Μήκος/Απόσταση"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
@@ -1675,17 +1807,17 @@ msgstr "Τύπος Τιμοκαταλόγου"
 #. module: product
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
-msgstr ""
+msgstr "Άλλα Προϊόντα"
 
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Χαρακτηριστικά"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Μπορεί να πουληθεί"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1705,7 +1837,7 @@ msgstr "Βασισμένο στο"
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
 msgid "Raw Materials"
-msgstr ""
+msgstr "Ακατέργαστα Υλικά"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -1719,16 +1851,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Ονομασία Τιμοκαταλόγου"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr ""
-
-#. module: product
-#: field:product.uom,rounding:0
-msgid "Rounding Precision"
-msgstr "Ακρίβεια στρογγυλοποίησης"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1745,7 +1867,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "Το  βάρος του συνολικού πακέτου, παλέτας ή κουτιού"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -1755,12 +1877,12 @@ msgstr "HDD Seagate 7200.8 120GB"
 #. module: product
 #: model:product.template,name:product.product_product_employee0_product_template
 msgid "Employee"
-msgstr ""
+msgstr "Υπάλληλος"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
 msgid "Shelf of 100cm"
-msgstr ""
+msgstr "Ράφι των 100εκ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1771,7 +1893,7 @@ msgstr "Κατηγορία Προϊόντος"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Όνομα Τιμοκαταλόγου"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -1791,21 +1913,21 @@ msgid "Supplier Lead Time"
 msgstr "Προηγμένος χρόνος προμηθευτή"
 
 #. module: product
-#: help:product.product,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the product "
-"without removing it."
-msgstr ""
-
-#. module: product
 #: selection:product.ul,type:0
 msgid "Box"
 msgstr "Κουτί"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_ul_form_action
+msgid ""
+"Create and manage your packaging dimensions and types you want to be "
+"maintained in your system."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
 msgid "Rear Panel SHE200"
-msgstr ""
+msgstr "Οπίσθιο Πάνελ SHE200"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -1825,6 +1947,7 @@ msgstr "HDD Seagate 7200.8 80GB"
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
 msgstr ""
+"Αυτή είναι ποσότητα που μετατράπηκε στην προεπιλεγμένη Μονάδα Μέτρησης."
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -1859,7 +1982,7 @@ msgstr "Ποντίκι"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Τύπος Μονάδας Μέτρησης"
 
 #. module: product
 #: help:product.template,product_manager:0
@@ -1872,6 +1995,9 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
 "that cannot be further split, such as a piece."
 msgstr ""
+"Η υπολογιζόμενη ποσότητα θα είναι πολλαπλάσιο της τιμής αυτής. "
+"Χρησιμοποιήστε 1,0 για Μονάδα Μέτρησης που δεν μπορεί να χωριστεί περαιτέρω, "
+"όπως ένα τεμάχιο."
 
 #. module: product
 #: view:product.product:0
@@ -1887,7 +2013,7 @@ msgstr "Σειρά"
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm0_product_template
 msgid "Rear Panel SHE100"
-msgstr ""
+msgstr "Οπίσθιο Πάνελ SHE100"
 
 #. module: product
 #: model:product.template,name:product.product_product_23_product_template
@@ -1901,9 +2027,14 @@ msgid "Weigths"
 msgstr "Βάρη"
 
 #. module: product
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Σφάλμα! Δεν επιτρέπεται η δημιουργία μελών σε κυκλικό συσχετισμό"
+
+#. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Έξοδα ξενοδοχείου"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -1911,16 +2042,19 @@ msgid ""
 "How many times this UoM is bigger than the reference UoM in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Πόσες φορές αυτή η Μ.Μ είναι μεγαλύτερη από την αναφερόμενη Μ.Μ. στην "
+"κατηγορία:\n"
+"1 * (τρέχουσα μονάδα)=αναλογία*(αναφερόμενη μονάδα)"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
 msgid "Rack 100cm"
-msgstr ""
+msgstr "Σχάρα 100εκ"
 
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "Δίνει την διάταξη ότα εμφανίζονται λίστες συσκευασίας"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -1940,13 +2074,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
-msgstr ""
-
-#. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
 msgstr "Μεταβλητή"
@@ -1954,7 +2081,7 @@ msgstr "Μεταβλητή"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Μπορεί να Ενοικιαστεί"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -2003,7 +2130,7 @@ msgstr ""
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "Κλείνω"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2023,7 +2150,7 @@ msgstr "Ιδιότητες Πωλήσεων"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "τόνος"
 
 #. module: product
 #: view:product.product:0
@@ -2034,7 +2161,7 @@ msgstr "Καθυστερήσεις"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Δημιουργία του προϊόντος"
 
 #. module: product
 #: help:product.template,type:0
@@ -2058,9 +2185,12 @@ msgid "Description"
 msgstr "Περιγραφή"
 
 #. module: product
-#: field:product.packaging,ean:0
-msgid "EAN"
-msgstr "EAN"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid ""
+"Could not resolve product category, you have defined cyclic categories of "
+"products!"
+msgstr ""
 
 #. module: product
 #: view:product.template:0
@@ -2099,7 +2229,7 @@ msgstr "Μεταβλητή Προϊόντος"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Ράφια"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -2161,7 +2291,7 @@ msgstr "Τιμή Λιανικής"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Τύπος Κατηγορίας"
 
 #. module: product
 #: model:product.category,name:product.cat2
@@ -2184,6 +2314,14 @@ msgstr "Έκπτωση Τιμής"
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Ο όγκος σε m3."
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action
+msgid ""
+"There can be more than one version of a pricelist. If you need to create new "
+"versions of a pricelist, you can do it and manage them from here. Some "
+"examples of versions: 2010, 2011, Promotion of February 2010, etc."
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
@@ -2213,6 +2351,9 @@ msgstr ""
 
 #~ msgid "Product Process"
 #~ msgstr "Επεξεργασία Προϊόντος"
+
+#~ msgid "List Price"
+#~ msgstr "Τιμή τιμοκαταλόγου"
 
 #~ msgid "Customer Price"
 #~ msgstr "Τιμή Πελάτη"
@@ -2458,11 +2599,20 @@ msgstr ""
 #~ msgstr "Βαθμός"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου θα πρέπει να αρχίζει με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"
+
+#~ msgid ""
 #~ "Default Unit of Measure used for purchase orders. It must in the same "
 #~ "category than the default unit of measure."
 #~ msgstr ""
 #~ "Προκαθορισμένη Μονάδα Μέτρησης που χρησιμοποιείται στις εντολές αγοράς. Θα "
 #~ "πρέπει να είναι στην ίδια κατηγορια με την προκαθορισμένη μονάδα μέτρησης."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 
 #~ msgid ""
 #~ "Coefficient to convert UOM to UOS\n"
@@ -2484,6 +2634,10 @@ msgstr ""
 #~ msgstr ""
 #~ "Ο συντελεστής για αυτήν την φόρμουλα:\n"
 #~ "1 (βασική μονάδα) = συντ (αυτή η μονάδα)"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Σφάλμα: 2η ΜΜ πρέπει να είναι σε διαφορετική κατηγορία απο την πρώτη ΜΜ"
 
 #~ msgid ""
 #~ "Delay in days between the confirmation of the purchase order and the "
@@ -2515,6 +2669,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Το κόστος του προϊόντος για την λογιστική αποτίμηση. Μπορεί να "
 #~ "χρησιμοποιηθεί και σαν βασική τιμή του προμηθευτή."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #~ msgid "Suppliers of Product"
 #~ msgstr "Προμηθευτές του προϊόντος"
@@ -2564,3 +2721,36 @@ msgstr ""
 #~ "Αυτός είναι ο μέσος χρόνος μεταξύ της επιβεβαίωσης της παραγγελίας του "
 #~ "πελάτη και την παράδοση των έτοιμων προϊόντων. Είναι ο χρόνος που υπόσχεστε "
 #~ "στους πελάτες σας."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Εάν το ενεργό πεδίο είναι επιλεγμένο, επιτέπεται να κρύψετε τον τιμοκατάλογο "
+#~ "χωρίς να τον αφαιρέσετε."
+
+#~ msgid ""
+#~ "The minimal quantity to purchase to this supplier, expressed in the default "
+#~ "unit of measure."
+#~ msgstr ""
+#~ "Η ελάχιστη ποσότητα προς αγορά από τον προμηθευτή, εκφραζόμενο στην "
+#~ "προεπιλεγμένη μονάδα μέτρησης."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the product "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Εάν το ενεργό πεδίο είναι επιλεγμένο, επιτρέπετε να αποκρήψετε το προϊόν "
+#~ "χωρίς να το αφαιρέσετε."
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Το όνομα του πακέτου πρέπει να είναι μοναδικό!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Το όνομα του στοιχείου πρέπει να είναι μοναδικό !"
+
+#~ msgid "Supplier Product UoM."
+#~ msgstr "Μονάδα Μέτρησης Προϊόντος Προμηθευτή"

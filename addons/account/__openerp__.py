@@ -48,7 +48,6 @@ module named account_voucher.
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
-        'account_wizard.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
@@ -119,7 +118,7 @@ module named account_voucher.
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        #'account_unit_test.xml',
+#        'account_unit_test.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',

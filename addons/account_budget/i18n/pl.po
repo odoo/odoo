@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-30 15:59+0000\n"
-"Last-Translator: Jarosław Ogrodnik <nobodythere@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-19 09:32+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -33,15 +33,22 @@ msgid "Budgetary Positions"
 msgstr "Pozycje budżetowe"
 
 #. module: account_budget
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Ten kreator jest stosowany do drukowania podsumowania budżetu."
 
 #. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "Printed at:"
-msgstr "Drukowane na:"
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and expenses expected for a "
+"period in the future. With a budget, a company is able to carefully look at "
+"how much money they are taking in during a given period, and figure out the "
+"best way to divide it among various categories. By keeping  track of where "
+"your money goes, you may be less likely to overspend, and more likely to "
+"meet your financial goals. Forecast a budget by detailing the expected "
+"revenue per analytic account and monitor its evolution based on the actuals "
+"realised during that period."
+msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -51,12 +58,12 @@ msgstr "Zatwierdź"
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr "Waliduj użytkownika"
+msgstr "Zatwierdź użytkownika"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Drukuj podsumowanie"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -79,28 +86,20 @@ msgstr "Projekt"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "at"
 msgstr "na"
 
 #. module: account_budget
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: view:account.budget.report:0
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Drukuj budżety"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Currency:"
 msgstr "Waluta:"
-
-#. module: account_budget
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
@@ -110,7 +109,7 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr "Zatwierdzony"
+msgstr "Zatwierdzone"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
@@ -118,16 +117,17 @@ msgid "Percentage"
 msgstr "Procentowo"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "do"
+
+#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Stan"
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr ""
-
-#. module: account_budget
+#: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "%"
 msgstr "%"
@@ -139,16 +139,31 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_budget
+#: report:crossovered.budget.report:0
+msgid "Total :"
+msgstr "Suma :"
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Do aprobaty"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Przywróć do projektu"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -173,7 +188,7 @@ msgstr "Wykonano"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Kwota w praktyce"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -187,11 +202,6 @@ msgstr "Kwota w praktyce"
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
 msgstr "Data końcowa"
-
-#. module: account_budget
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_analytic
@@ -215,7 +225,7 @@ msgstr "Nazwa"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Pozycja budżetu"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -234,6 +244,11 @@ msgid "Budget"
 msgstr "Budżet"
 
 #. module: account_budget
+#: report:account.budget:0
+msgid "Printed at:"
+msgstr "Drukowane na:"
+
+#. module: account_budget
 #: code:addons/account_budget/account_budget.py:0
 #, python-format
 msgid "Error!"
@@ -249,7 +264,7 @@ msgstr "Kod"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Ten kreator jest stosowany do druku budżetu"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -277,12 +292,13 @@ msgstr "Anulowano"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprobuj"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr ""
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Data początkowa"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -300,13 +316,6 @@ msgid "Start of period"
 msgstr "Początek okresu"
 
 #. module: account_budget
-#: view:account.budget.report:0
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-msgid "Print Budgets"
-msgstr "Drukuj budżety"
-
-#. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
 msgstr ""
@@ -315,11 +324,6 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
-
-#. module: account_budget
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
 msgstr ""
 
 #. module: account_budget
@@ -375,7 +379,6 @@ msgstr "Konto analityczne"
 
 #. module: account_budget
 #: report:account.budget:0
-#: report:crossovered.budget.report:0
 msgid "Budget :"
 msgstr "Budżet :"
 
@@ -420,16 +423,28 @@ msgid "Budget Management"
 msgstr "Zarządzanie budżetem"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Data początkowa"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "Analiza od"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+
+#, python-format
+#~ msgid "Insufficient Data!"
+#~ msgstr "Zbyt mało danych!"
 
 #~ msgid "% performance"
 #~ msgstr "% zaawansowania"
@@ -446,23 +461,24 @@ msgstr "Analiza od"
 #~ msgid "Printing date:"
 #~ msgstr "Data wydruku:"
 
+#~ msgid "Period"
+#~ msgstr "Okres"
+
 #~ msgid "A/c No."
 #~ msgstr "Nr konta"
 
 #~ msgid "Analytic Account :"
 #~ msgstr "Konto analityczne :"
 
-#~ msgid "to"
-#~ msgstr "do"
-
 #~ msgid "Results"
 #~ msgstr "Wyniki"
 
-#~ msgid "Total :"
-#~ msgstr "Suma :"
-
 #~ msgid "Select Options"
 #~ msgstr "Opcje selekcji"
+
+#, python-format
+#~ msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
+#~ msgstr "Brak dotacji lub funduszu wydatków budżetu głównego w budżecie %s!"
 
 #~ msgid "Period Budget"
 #~ msgstr "Budżet okresowy"
@@ -470,14 +486,26 @@ msgstr "Analiza od"
 #~ msgid "Budget Analysis"
 #~ msgstr "Analiza budżetu"
 
+#~ msgid "Amount"
+#~ msgstr "Kwota"
+
 #~ msgid "Print Summary of Budgets"
 #~ msgstr "Drukuj podsumowanie budżetów"
 
 #~ msgid "Spread amount"
 #~ msgstr "Kwota odchylenia"
 
+#~ msgid "Total Planned Amount"
+#~ msgstr "Suma planowanych kwot"
+
+#~ msgid "Budget Dotation"
+#~ msgstr "Dotacja budżetu"
+
 #~ msgid "Budget Item Detail"
 #~ msgstr "Szczegóły elementu budżetu"
+
+#~ msgid "Budget Dotations"
+#~ msgstr "Dotacje budżetu"
 
 #~ msgid "Spread"
 #~ msgstr "Odchylenie"
@@ -490,6 +518,9 @@ msgstr "Analiza od"
 
 #~ msgid "Theoretical Amount"
 #~ msgstr "Kwota teoretyczna"
+
+#~ msgid "Item"
+#~ msgstr "Element"
 
 #~ msgid "Fiscal Year"
 #~ msgstr "Rok podatkowy"
@@ -549,3 +580,12 @@ msgstr "Analiza od"
 
 #~ msgid "Validate"
 #~ msgstr "Zatwierdź"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Reguły nie są obsługiwane dla obiektów osv_memory !"

@@ -30,16 +30,16 @@
 #    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
@@ -192,6 +192,10 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         Change(aVal,url)
         if aVal[1]== -1:
            self.win.getEditText("lstDatabase")
+           self.win.removeListBoxItems("lstDatabase", 0, self.win.getListBoxItemCount("lstDatabase"))
+           self.win.setEditText("txtHost",aVal[0])
+           for i in range(len(aVal[1])):
+                self.lstDatabase.addItem(aVal[1][i],i)
         elif aVal[1]==0:
             ErrorDialog(aVal[0],"")
         else:

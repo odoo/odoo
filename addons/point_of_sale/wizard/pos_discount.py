@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
-
 
 class pos_discount(osv.osv_memory):
     _name = 'pos.discount'
@@ -45,12 +43,15 @@ class pos_discount(osv.osv_memory):
          @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
-        res = super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
+        if context is None:
+            context = {}
+        super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False
         order = self.pool.get('pos.order').browse(cr, uid, record_id, context=context)
         if not order.lines:
-                raise osv.except_osv('Error!','No Order Lines ')
+                raise osv.except_osv(_('Error!'), _('No Order Lines'))
         True
+
     def apply_discount(self, cr, uid, ids, context=None):
         """
          To give the discount of  product and check the.

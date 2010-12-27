@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-09 17:47+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-04 08:28+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_be
@@ -31,11 +32,6 @@ msgstr ""
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
 msgid "Régime Intra-Communautaire"
 msgstr "Régime Intra-Communautaire"
-
-#. module: l10n_be
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_intra
@@ -128,13 +124,12 @@ msgstr "Taxe"
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:0
 #, python-format
 msgid "No VAT Number Associated with Main Company!"
-msgstr ""
+msgstr "Aucun numéro de TVA associé avec la société principale !"
 
 #. module: l10n_be
-#: help:partner.vat.intra,period_ids:0
-msgid ""
-"Select here the period(s) you want to include in your intracom declaration"
-msgstr ""
+#: view:partner.vat.list:0
+msgid "XML File has been Created."
+msgstr "Le Fichier XML a été créé."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -158,21 +153,22 @@ msgid "Régime National"
 msgstr "Régime National"
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
-msgid "Régime Extra-Communautaire"
-msgstr "Régime Extra-Communautaire"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_view
-msgid "Vue"
-msgstr "Vue"
+#: help:partner.vat,test_xml:0
+#: help:partner.vat.intra,test_xml:0
+msgid "Sets the XML output as test file"
+msgstr ""
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:0
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:0
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Données insuffisantes !"
 
 #. module: l10n_be
 #: help:partner.vat.list,partner_ids:0
@@ -184,11 +180,6 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:0
 #, python-format
 msgid "Save"
-msgstr ""
-
-#. module: l10n_be
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
 msgstr ""
 
 #. module: l10n_be
@@ -209,13 +200,9 @@ msgid "Select Fiscal Year"
 msgstr "Sélectionnez l'Année Fiscale"
 
 #. module: l10n_be
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
-
-#. module: l10n_be
-#: field:partner.vat.intra,period_code:0
-msgid "Period Code"
+#: help:partner.vat.intra,period_ids:0
+msgid ""
+"Select here the period(s) you want to include in your intracom declaration"
 msgstr ""
 
 #. module: l10n_be
@@ -237,8 +224,9 @@ msgid ""
 msgstr ""
 
 #. module: l10n_be
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:partner.vat.list:0
+#: field:partner.vat.list,partner_ids:0
+msgid "Clients"
 msgstr ""
 
 #. module: l10n_be
@@ -267,11 +255,6 @@ msgstr ""
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
 msgstr "Numéro de TVA Intra du Partenaire"
-
-#. module: l10n_be
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
@@ -325,6 +308,11 @@ msgstr "Montant Limite"
 #: model:ir.model,name:l10n_be.model_res_company
 msgid "Companies"
 msgstr ""
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
+msgid "Régime Extra-Communautaire"
+msgstr "Régime Extra-Communautaire"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_intra
@@ -393,22 +381,11 @@ msgid "Client Name"
 msgstr ""
 
 #. module: l10n_be
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-msgid "XML File has been Created."
-msgstr "Le Fichier XML a été créé."
-
-#. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:0
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "Aucun partenaire n'a de numéro de TVA associé."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
@@ -471,16 +448,9 @@ msgid "Periodical VAT Declaration"
 msgstr "Déclaration de TVA Périodique"
 
 #. module: l10n_be
-#: help:partner.vat,test_xml:0
-#: help:partner.vat.intra,test_xml:0
-msgid "Sets the XML output as test file"
-msgstr ""
-
-#. module: l10n_be
-#: view:partner.vat.list:0
-#: field:partner.vat.list,partner_ids:0
-msgid "Clients"
-msgstr ""
+#: model:account.account.type,name:l10n_be.user_type_view
+msgid "Vue"
+msgstr "Vue"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
@@ -508,7 +478,7 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:0
 #, python-format
 msgid "Data Insufficient"
-msgstr ""
+msgstr "Données insuffisantes"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
@@ -533,6 +503,11 @@ msgid "File Name"
 msgstr ""
 
 #. module: l10n_be
+#: field:partner.vat.intra,period_code:0
+msgid "Period Code"
+msgstr ""
+
+#. module: l10n_be
 #: view:partner.vat:0
 msgid ""
 "This wizard will create an XML file for Vat details and total invoiced "
@@ -542,9 +517,52 @@ msgstr ""
 "totaux facturés par Partenaire."
 
 #. module: l10n_be
+#: model:ir.module.module,description:l10n_be.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the accounting chart for Belgium in "
+"OpenERP.\n"
+"\n"
+"    After Installing this module,The Configuration wizard for accounting is "
+"launched.\n"
+"    * We have the account templates which can be helpful to generate Charts "
+"of Accounts.\n"
+"    * On that particular wizard,You will be asked to pass the name of the "
+"company,the chart template to follow,the no. of digits to generate the code "
+"for your account and Bank account,currency to create Journals.\n"
+"        Thus,the pure copy of Chart Template is generated.\n"
+"    * This is the same wizard that runs from Financial "
+"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
+"Chart of Accounts from a Chart Template.\n"
+"\n"
+"    Wizards provided by this module:\n"
+"    * Partner VAT Intra: Enlist the partners with their related VAT and "
+"invoiced amounts.Prepares an XML file format.\n"
+"                           Path to access : Financial "
+"Management/Reporting//Legal Statements/Belgium Statements/Partner VAT "
+"Listing\n"
+"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
+"of the Main company of the User currently Logged in.\n"
+"                           Path to access : Financial "
+"Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT "
+"Declaration\n"
+"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+"Vat Declaration of the Main company of the User currently Logged in.Based on "
+"Fiscal year\n"
+"                           Path to access : Financial "
+"Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of "
+"VAT-Subjected Customers\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: l10n_be
 #: help:l1on_be.vat.declaration,ask_payment:0
 msgid "It indicates whether a payment is to made or not?"
 msgstr ""
+
+#~ msgid "Error ! You can not create recursive Tax Codes."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de codes de taxe récursifs"
 
 #~ msgid "Oct/Nov/Dec"
 #~ msgstr "Oct/Nov/Déc"
@@ -593,3 +611,6 @@ msgstr ""
 
 #~ msgid "Jan/Feb/Mar"
 #~ msgstr "Jan/Fév/Mar"
+
+#~ msgid "Error ! You can not create recursive account templates."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de modèle de compte récursif."

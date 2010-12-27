@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-03 08:03+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-02 07:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -28,11 +28,6 @@ msgstr "Wacht op vorige stadia"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Groepeer op..."
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -98,11 +93,6 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_date:0
-msgid "Next Evaluation"
-msgstr "Volgende beoordeling"
-
-#. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Evaluation Interviews"
 msgstr "Beoordelingsgesprekken"
@@ -124,6 +114,13 @@ msgid "Send an anonymous summary to the employee"
 msgstr "Verstuur een anonieme samenvatting naar de medewerker"
 
 #. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "Notities"
@@ -132,6 +129,12 @@ msgstr "Notities"
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
 msgstr "Aanvraag gesprek"
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -174,6 +177,11 @@ msgid "July"
 msgstr "July"
 
 #. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Evaluations (months)"
+msgstr ""
+
+#. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid ""
@@ -189,9 +197,60 @@ msgid "Ending Date"
 msgstr "Einddatum"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
-msgstr "Na de startdaum"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Evaluation in (months)"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee can be assigned to an evaluation plan. These plans define the "
+"frequency and the way you manage your periodic personnal evaluation. You "
+"will be able to define steps and attach interview forms to each step. "
+"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
+"evaluation and final evaluation by the manager."
+msgstr ""
+"Elke medewerker kan worden toegewezen aan een beoordelingsplan. Deze plannen "
+"definiëren de frequentie en manier waarop periodieke beoordelingen "
+"plaatsvinden. U kunt stappen definiëren en vragenformulieren toewijzen aan "
+"elke stap. OpenERP beheert allerlei soorten beoordelingen: bottom-up, top-"
+"down, zelfbeoordeling en eindbeoordeling door manager."
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr ""
+"\n"
+"Datem: %(date)s\n"
+"\n"
+"Beste %(employee_name)s,\n"
+"\n"
+"Ik ben bezig met een beoordeling van %(eval_name)s.\n"
+"\n"
+"Wil je de antwoorden indienen.\n"
+"\n"
+"\n"
+"Bedankt,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -209,14 +268,11 @@ msgid " Month "
 msgstr " Maand "
 
 #. module: hr_evaluation
-#: help:hr.employee,evaluation_date:0
-msgid "Date of the next evaluation"
-msgstr "Datum volgende beoordeling"
-
-#. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_survey_request
-msgid "survey.request"
-msgstr "survey.request"
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr ""
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
@@ -224,25 +280,38 @@ msgid "Periodic Evaluations"
 msgstr "Periodieke beoordelingen"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''Regarding ''"
-msgstr "\"Betreft\""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
 msgid "Send evaluation reminder"
 msgstr "Versturen beoordeling herinnering"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.evaluation,note_summary:0
-msgid "Evaluation Summary"
-msgstr "Samenvatting beoordeling"
+#: model:ir.module.module,description:hr_evaluation.module_meta_information
+msgid ""
+"\n"
+"          Ability to create employees evaluation.\n"
+"          An evaluation can be created by employee for subordinates,\n"
+"          juniors as well as his manager.The evaluation is done under a "
+"plan\n"
+"          in which various surveys can be created and it can be defined "
+"which\n"
+"          level of employee hierarchy fills what and final review and "
+"evaluation\n"
+"          is done by the manager.Every evaluation filled by the employees "
+"can be viewed\n"
+"          in the form of.Implements a dashboard for My Current Evaluations\n"
+"         "
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
 msgstr "(date)s: Actuele datum"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "Regarding "
+msgstr "Betreffend "
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -341,16 +410,6 @@ msgid "Evaluations"
 msgstr "Beoordelingen"
 
 #. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Ongeldige argumenten"
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "    Month-1    "
 msgstr "    Maand-1    "
@@ -391,11 +450,6 @@ msgstr "Loopt"
 #: field:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "All Answers"
 msgstr "Alle antwoorden"
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "Next Evaluation After"
-msgstr "Volgende beoordeling na"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -444,6 +498,11 @@ msgid "Is Evaluation?"
 msgstr "Is beoordeling?"
 
 #. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr "survey.request"
+
+#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
@@ -451,6 +510,18 @@ msgid ""
 msgstr ""
 "Vink aan als u wilt dat alle voorgaande stadia zijn afgesloten voordat dit "
 "stadium start."
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to "
+"employees evaluation plan. Each user receives automatic emails and requests "
+"to perform evaluation of their collegues periodically."
+msgstr ""
+"Gespreksaanvragen worden automatisch door OpenERP gegenereerd volgens het "
+"beoordelingsplan van de medewerker. Elke gebruiker ontvangt automatisch e-"
+"mails en aanvragen om periodiek beoordelingen  van hun collega's uit te "
+"voeren."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -473,9 +544,9 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Evaluation Summary"
+msgstr "Samenvatting beoordeling"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -549,45 +620,14 @@ msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
 
 #. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
 msgid "October"
 msgstr "October"
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"''\n"
-"Date : %(date)s\n"
-"\n"
-"Dear %(employee_name)s,\n"
-"\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
-"\n"
-"Kindly submit your response.\n"
-"\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
-msgstr ""
-"''\n"
-"Datum : %(date)s\n"
-"\n"
-"Beste %(employee_name)s,\n"
-"\n"
-"Ik ben bezig met een beoordeling betreffende %(eval_name)s.\n"
-"\n"
-"Graag ontvang ik je reactie.\n"
-"\n"
-"\n"
-"Bedankt,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -693,6 +733,11 @@ msgid "Send all answers to the employee"
 msgstr "Alle antwoorden naar de medewerker versturen"
 
 #. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Evaluation Date"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: selection:hr.evaluation.report,state:0
 #: view:hr_evaluation.evaluation:0
@@ -715,13 +760,6 @@ msgstr "Annuleren"
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "Loopt"
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -851,11 +889,6 @@ msgid "(months)"
 msgstr "(maanden)"
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr "Volgorde"
@@ -882,8 +915,20 @@ msgstr "Datum gemaakt"
 msgid "Year"
 msgstr "Jaar"
 
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next evaluation is computed by the evaluation plan's dates "
+"(first evaluation + periodicity)."
+msgstr ""
+
 #~ msgid "Information"
 #~ msgstr "Informatie"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
 
 #~ msgid "My Next Evaluation"
 #~ msgstr "Mijn volgende evaluatie"
@@ -939,6 +984,9 @@ msgstr "Jaar"
 #~ msgid "Ability to create employees evaluation."
 #~ msgstr "Mogelijkheid om werknemersevaluatie aan te maken"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
 #~ msgid "Informal Data"
 #~ msgstr "Informele gegevens"
 
@@ -953,6 +1001,9 @@ msgstr "Jaar"
 
 #~ msgid "My Preceeding Evaluations"
 #~ msgstr "Mijn vorige evaluaties"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
 
 #~ msgid "Evaluation Criterions"
 #~ msgstr "Evaluatiecriteria"
@@ -983,3 +1034,74 @@ msgstr "Jaar"
 
 #~ msgid "Employee Evaluation Quote"
 #~ msgstr "Citaat evaluatie werknemer"
+
+#~ msgid "Next Evaluation"
+#~ msgstr "Volgende beoordeling"
+
+#~ msgid "After the Date of Start"
+#~ msgstr "Na de startdaum"
+
+#~ msgid "Date of the next evaluation"
+#~ msgstr "Datum volgende beoordeling"
+
+#, python-format
+#~ msgid "''Regarding ''"
+#~ msgstr "\"Betreft\""
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Ongeldige argumenten"
+
+#~ msgid "Next Evaluation After"
+#~ msgstr "Volgende beoordeling na"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#, python-format
+#~ msgid ""
+#~ "''\n"
+#~ "Date : %(date)s\n"
+#~ "\n"
+#~ "Dear %(employee_name)s,\n"
+#~ "\n"
+#~ "I am doing an evaluation regarding %(eval_name)s.\n"
+#~ "\n"
+#~ "Kindly submit your response.\n"
+#~ "\n"
+#~ "\n"
+#~ "Thanks,\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "\n"
+#~ "        ''"
+#~ msgstr ""
+#~ "''\n"
+#~ "Datum : %(date)s\n"
+#~ "\n"
+#~ "Beste %(employee_name)s,\n"
+#~ "\n"
+#~ "Ik ben bezig met een beoordeling betreffende %(eval_name)s.\n"
+#~ "\n"
+#~ "Graag ontvang ik je reactie.\n"
+#~ "\n"
+#~ "\n"
+#~ "Bedankt,\n"
+#~ "--\n"
+#~ "%(user_signature)s\n"
+#~ "\n"
+#~ "        ''"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Regels worden niet ondersteund bij osv_memory objecten !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"

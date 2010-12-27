@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 08:49+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -24,35 +24,16 @@ msgid "Process Node"
 msgstr "Nó do processo"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação."
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "URL de ajuda"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Menu relacionado"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -76,9 +57,9 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "URL de ajuda"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -168,9 +149,10 @@ msgid "Dummy"
 msgstr "Imitação"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -222,11 +204,6 @@ msgid "Associated Groups"
 msgstr ""
 
 #. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Menu relacionado"
-
-#. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
 msgstr "Expressão de estado"
@@ -240,6 +217,20 @@ msgstr "Ação"
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
 msgstr "Inciando fluxo"
+
+#. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -335,11 +326,20 @@ msgstr "Transições"
 msgid "Object Method"
 msgstr "Método objeto"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "Papéis de Workflow"
 
 #~ msgid "Details"
 #~ msgstr "Detalhes"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
 
 #~ msgid "Roles"
 #~ msgstr "Papéis"
@@ -352,3 +352,6 @@ msgstr "Método objeto"
 
 #~ msgid "Enterprise Processes"
 #~ msgstr "Processos empresariais"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação."

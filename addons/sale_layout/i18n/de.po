@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
-"PO-Revision-Date: 2010-08-23 06:41+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-01 09:32+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
@@ -23,9 +24,17 @@ msgid "Sub Total"
 msgstr "Zwischensumme"
 
 #. module: sale_layout
-#: constraint:ir.model:0
+#: model:ir.module.module,description:sale_layout.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    This module provides features to improve the layout of the Sales Order.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of a sales order\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: sale_layout
@@ -69,14 +78,14 @@ msgid "Layout Type"
 msgstr "Layout Typ"
 
 #. module: sale_layout
-#: model:ir.model,name:sale_layout.model_sale_order_line
-msgid "Sale Order Line"
-msgstr ""
-
-#. module: sale_layout
 #: view:sale.order:0
 msgid "Seq."
 msgstr "Seq."
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "UoM"
+msgstr "ME"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -111,7 +120,7 @@ msgstr "Rechnungszeilen"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quantity"
-msgstr "Menge"
+msgstr "Anzahl"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -141,17 +150,7 @@ msgstr "Rechnungsanschrift:"
 #. module: sale_layout
 #: model:ir.module.module,shortdesc:sale_layout.module_meta_information
 msgid "Sale Order Layout"
-msgstr ""
-
-#. module: sale_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML-Code für diese Ansicht!"
-
-#. module: sale_layout
-#: model:ir.model,name:sale_layout.model_sale_order
-msgid "Sale Order"
-msgstr ""
+msgstr "Verkaufsauftrag Layout"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -176,12 +175,12 @@ msgstr "Lieferanschrift:"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Taxes"
-msgstr "Steuern"
+msgstr "Umsatzsteuer"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Net Total :"
-msgstr "Gesamt Netto:"
+msgstr "Nettobetrag:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -191,7 +190,7 @@ msgstr "Tel.:"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Total :"
-msgstr "Summe :"
+msgstr "Bruttobetrag:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
@@ -201,7 +200,7 @@ msgstr "Zahlungsbedingungen"
 #. module: sale_layout
 #: view:sale.order:0
 msgid "History"
-msgstr "Verlauf"
+msgstr "Historie"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -219,24 +218,29 @@ msgid "Your Reference"
 msgstr "Ihre Referenz"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
-msgstr "Auftragspositionen"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "Qty"
-msgstr "Menge"
-
-#. module: sale_layout
-#: view:sale.order:0
-msgid "States"
-msgstr "Zustände"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr "Datum Angebot"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "TVA :"
 msgstr "USt.:"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "Qty"
+msgstr "Anzahl"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "States"
+msgstr "Status"
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "Sales order lines"
+msgstr "Auftragspositionen"
 
 #. module: sale_layout
 #: model:ir.actions.report.xml,name:sale_layout.sale_order_1
@@ -249,14 +253,19 @@ msgid "Extra Info"
 msgstr "Zusatzinfo"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
-msgstr "ME"
+#: report:sale.order.layout:0
+msgid "Taxes :"
+msgstr "Umsatzsteuer:"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Fax :"
 msgstr "Fax:"
+
+#. module: sale_layout
+#: model:ir.model,name:sale_layout.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -269,14 +278,38 @@ msgid "Price"
 msgstr "Preis"
 
 #. module: sale_layout
-#: report:sale.order.layout:0
-msgid "Taxes :"
-msgstr "Steuern:"
+#: model:ir.model,name:sale_layout.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Stock Moves"
-msgstr "Lagerbuchungen"
+msgstr "Lieferaufträge"
 
 #~ msgid "sale_layout"
 #~ msgstr "sale_layout"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+
+#~ msgid "Sale Order"
+#~ msgstr "Verkaufsauftrag"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+#~ "beinhalten."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Verkaufsauftragsposition"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

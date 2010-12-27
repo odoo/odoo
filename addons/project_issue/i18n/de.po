@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:24+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-28 11:40+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_issue
@@ -34,13 +33,8 @@ msgid "Working Hours to Open the Issue"
 msgstr "Arbeitszeit für Eröffnung"
 
 #. module: project_issue
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung für diese Aktion."
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Today"
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_issue
@@ -61,7 +55,7 @@ msgstr "März"
 #. module: project_issue
 #: field:project.issue,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Fortschritt (%)"
 
 #. module: project_issue
 #: field:project.issue,company_id:0
@@ -91,6 +85,22 @@ msgid "Days to Open"
 msgstr "Tage bis Eröffnung"
 
 #. module: project_issue
+#: code:addons/project_issue/project_issue.py:0
+#, python-format
+msgid ""
+"You cannot escalate this issue.\n"
+"The relevant Project has not configured the Escalation Project!"
+msgstr ""
+"Sie können das Problem nicht eskalieren.\n"
+"Für das entsprechende Projekt wurde kein Projekt definiert, in das eskaliert "
+"werden kann !"
+
+#. module: project_issue
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue.report:0
 msgid "Date Closed"
 msgstr "Datum Beendet"
@@ -104,7 +114,7 @@ msgstr "Tag"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add Internal Note"
-msgstr ""
+msgstr "Hinzufügen Anmerkung"
 
 #. module: project_issue
 #: field:project.issue,task_id:0
@@ -140,7 +150,7 @@ msgstr "Projekt"
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_open_project_issue_tree
 msgid "My Open Project issues"
-msgstr ""
+msgstr "Meine offenen Probleme"
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -184,9 +194,23 @@ msgstr ""
 "bei diesem hier ausgewählten Projekt angezeigt."
 
 #. module: project_issue
-#: field:project.issue,date_deadline:0
-msgid "Deadline"
-msgstr "Frist"
+#: view:project.issue:0
+msgid "Extra Info"
+msgstr "Weitere Information"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Dieser Bericht ermöglicht Ihnen eine Analyse hinsichtlich der Qualität Ihres "
+"Kundensupports oder Kundendienst. Sie können die Problem nach Alter "
+"auswerten oder die Zeit für die Eröffnung der Bearbeitung eines Problems "
+"bzw. die Zeit bis zur Problemlösung. Ausserdem lassen sich die Anzahl Emails "
+"oder durchschnittliche Vorgangszeiten auswerten."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -200,12 +224,27 @@ msgstr "Partner"
 #: code:addons/project_issue/project_issue.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (Kopie)"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Previous"
+msgstr "Vorheriges"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"Issues such as system bugs, client complains, material breakdowns are "
+"collected here. You can define the stages assigned to the resolution of the "
+"issue on the project. (analysis, development, done) Using the mailgateway "
+"module, the issues can be integrated to an email address (example: "
+"support@mycompany.com)"
 msgstr ""
+"Probleme wie Softwarefehler, Beschwerden von Kunden, Materialfehler können "
+"hier zentral gesammelt werden. Sie können Bearbeitungsschritte für die "
+"Bearbeitung der Vorgänge zuweisen (Problemanalyse, Entwicklung, Abschluss "
+"des Vorgangs). Über das Mailgateway, können Sie Probleme fest mit einer "
+"Emailadresse verbinden (z.B. support@mycompany.com)."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -218,28 +257,19 @@ msgid "Convert To Task"
 msgstr "Erzeuge Aufgabe"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0
-#: selection:project.issue,state:0
-#: selection:project.issue.report,state:0
-msgid "Closed"
-msgstr "Beendet"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Statistik Probleme"
 
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr ""
+msgstr "Versionsnummer"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Next"
-msgstr ""
+msgstr "Nächstes"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -316,6 +346,11 @@ msgid "Reset to Draft"
 msgstr "Zurücksetzen"
 
 #. module: project_issue
+#: view:project.issue:0
+msgid "Today"
+msgstr "Heute"
+
+#. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.open_board_project_issue
 #: model:ir.ui.menu,name:project_issue.menu_deshboard_project_issue
 msgid "Project Issue Dashboard"
@@ -335,7 +370,7 @@ msgstr "Juli"
 #. module: project_issue
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -350,11 +385,6 @@ msgid "History Information"
 msgstr "Information Historie"
 
 #. module: project_issue
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_current_project_issue_tree
 #: model:ir.actions.act_window,name:project_issue.action_view_pending_project_issue_tree
 msgid "Project issues"
@@ -364,17 +394,17 @@ msgstr "Projekt Probleme"
 #: model:ir.actions.act_window,name:project_issue.project_issue_version_action
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
 msgid "Versions"
-msgstr ""
+msgstr "Versionen"
 
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "My Open Project Issue"
-msgstr ""
+msgstr "Meine offenen Projektprobleme"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
 msgid "My Project Issues"
-msgstr ""
+msgstr "Meine Projektprobleme"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -389,7 +419,7 @@ msgstr "Meine Pinnwand"
 #. module: project_issue
 #: view:board.board:0
 msgid "My Issues"
-msgstr ""
+msgstr "Meine Probleme"
 
 #. module: project_issue
 #: help:project.issue,canal_id:0
@@ -401,6 +431,19 @@ msgstr ""
 "Der Kanal repräsentiert unterschiedliche Kommunikationswege mit dem Kunden. "
 "Bei der Definition von Verkaufschancen, können Sie diesen Kanal explizit "
 "zuweisen."
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_version_action
+msgid ""
+"You can use the issues tracker in OpenERP to handle bugs in the software "
+"development project, to handle claims in after-sales services, etc. Define "
+"here the different versions of your products on which you can work on issues."
+msgstr ""
+"Sie können die Problemverfolgung auch in Projekten gut einsetzen, um "
+"Probleme bei der Entwicklung oder Kundenanfragen sowie Beschwerden nach dem "
+"Verkauf zu bearbeiten. Definieren Sie hier auch unterschiedliche "
+"Versionsstände Ihres Produkts, um die Ursache für das Problem nach Versionen "
+"darzustellen."
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:0
@@ -463,6 +506,18 @@ msgid "Update Date"
 msgstr "Aktualisiere Datum"
 
 #. module: project_issue
+#: model:ir.module.module,description:project_issue.module_meta_information
+msgid ""
+"\n"
+"        This module provide Issues/Bugs Management in Project\n"
+"    "
+msgstr ""
+"\n"
+"        Dieses Modul managt Probleme, Fehler- oder Anfragen mit "
+"Projektbezug\n"
+"    "
+
+#. module: project_issue
 #: view:project.issue:0
 #: field:project.issue,categ_id:0
 #: view:project.issue.report:0
@@ -487,22 +542,6 @@ msgstr ""
 "Komma separierte Auflistung in diesem Feld."
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
-#, python-format
-msgid ""
-"You cannot escalate this issue.\n"
-"The relevant Project has not configured the Escalation Project!"
-msgstr ""
-"Sie können das Problem nicht eskalieren.\n"
-"Für das entsprechende Projekt wurde kein Projekt definiert, in das eskaliert "
-"werden kann !"
-
-#. module: project_issue
 #: selection:project.issue,state:0
 #: selection:project.issue.report,state:0
 msgid "Draft"
@@ -515,9 +554,11 @@ msgid "Low"
 msgstr "Gering"
 
 #. module: project_issue
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
+#: field:project.issue,date_closed:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
+msgid "Closed"
+msgstr "Beendet"
 
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
@@ -567,7 +608,7 @@ msgstr "Allg. EMail (CC)"
 #: view:project.issue:0
 #: selection:project.issue,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Zu erledigen"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -617,9 +658,9 @@ msgid "Feature Tracker Tree"
 msgstr "Feature Anfrage Liste"
 
 #. module: project_issue
-#: help:project.issue,email_from:0
-msgid "These people will receive email."
-msgstr "Diese Personen erhalten EMail Kopie"
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Bugs"
+msgstr "Fehler"
 
 #. module: project_issue
 #: view:board.board:0
@@ -691,7 +732,7 @@ msgstr "Allgemein"
 #. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
-msgstr ""
+msgstr "Version"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -706,7 +747,7 @@ msgstr "Abbrechen"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Close"
-msgstr ""
+msgstr "Beenden"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -721,14 +762,6 @@ msgstr "Offen"
 #: view:project.issue:0
 msgid "Issues"
 msgstr "Probleme"
-
-#. module: project_issue
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Object Bezeichnung muss mit x_ beginnen und darf kein Sonderzeichen "
-"haben !"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
@@ -750,7 +783,7 @@ msgstr "Verantwortlicher"
 #. module: project_issue
 #: help:project.issue,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "Berechnet als:  Gearbeitete Zeit / Gesamtzeit"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -764,6 +797,11 @@ msgid "Details"
 msgstr "Details"
 
 #. module: project_issue
+#: help:project.issue,email_from:0
+msgid "These people will receive email."
+msgstr "Diese Personen erhalten EMail Kopie"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Reply"
 msgstr "Antwort"
@@ -771,7 +809,7 @@ msgstr "Antwort"
 #. module: project_issue
 #: field:project.issue,name:0
 msgid "Issue"
-msgstr ""
+msgstr "Problem"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -785,14 +823,25 @@ msgid "Description"
 msgstr "Beschreibung"
 
 #. module: project_issue
+#: field:project.issue,section_id:0
+msgid "Sales Team"
+msgstr "Verkauf Team"
+
+#. module: project_issue
 #: selection:project.issue.report,month:0
 msgid "May"
 msgstr "Mai"
 
 #. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+msgid "Issue Analysis"
+msgstr "Analyse Probleme"
+
+#. module: project_issue
 #: view:project.issue.report:0
 msgid "Sale Team    "
-msgstr ""
+msgstr "Verkauf Team    "
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -804,11 +853,6 @@ msgstr "# EMails"
 #: field:project.issue,partner_name:0
 msgid "Employee's Name"
 msgstr "Mitarbeiter Name"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Emails"
-msgstr "Emails"
 
 #. module: project_issue
 #: help:project.issue,state:0
@@ -839,7 +883,7 @@ msgstr "Februar"
 #: code:addons/project_issue/project_issue.py:0
 #, python-format
 msgid "Issue '%s' has been opened."
-msgstr ""
+msgstr "Problem '%s' wurde eröffnet"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -863,13 +907,13 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "Monat -1"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:0
 #, python-format
 msgid "Issue '%s' has been closed."
-msgstr ""
+msgstr "Problem '%s' wurde beendet"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -907,7 +951,7 @@ msgstr "Anzahl Tage für Beendigung"
 #: view:project.issue.report:0
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "Verkauf Team"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
@@ -921,9 +965,9 @@ msgid "High"
 msgstr "Hoch"
 
 #. module: project_issue
-#: field:project.issue,section_id:0
-msgid "Sales Team"
-msgstr "Verkauf Team"
+#: field:project.issue,date_deadline:0
+msgid "Deadline"
+msgstr "Frist"
 
 #. module: project_issue
 #: field:project.issue,date_action_last:0
@@ -944,4 +988,144 @@ msgstr "Dauer"
 #. module: project_issue
 #: view:board.board:0
 msgid "My Open Issues by Creation Date"
-msgstr ""
+msgstr "Meine offenen Probleme nach Erstelldatum"
+
+#~ msgid "Severity"
+#~ msgstr "Schwere"
+
+#, python-format
+#~ msgid "is Open."
+#~ msgstr "ist Offen."
+
+#~ msgid "    7 Days    "
+#~ msgstr "    7 Tage    "
+
+#, python-format
+#~ msgid "An Issue created"
+#~ msgstr "Ein Problem erfasst"
+
+#~ msgid "365 Days"
+#~ msgstr "365 Tage"
+
+#~ msgid "Fixed"
+#~ msgstr "Behoben"
+
+#~ msgid "Close Date"
+#~ msgstr "Datum Beendigung"
+
+#~ msgid "Version 4.4"
+#~ msgstr "Version 4.4"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung für diese Aktion."
+
+#~ msgid "Section"
+#~ msgstr "Sektion"
+
+#~ msgid "%Done"
+#~ msgstr "%Erledigt"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#~ msgid "Avg. Answers"
+#~ msgstr "Durch. Antw."
+
+#~ msgid "Won't fix"
+#~ msgstr "Kein Fehler"
+
+#~ msgid "%Cancel"
+#~ msgstr "%Abbrechen"
+
+#~ msgid "Communication history"
+#~ msgstr "Historie Kommunikation"
+
+#~ msgid "Salesman"
+#~ msgstr "Verkäufer"
+
+#~ msgid "Issue Stages"
+#~ msgstr "Problem Stufen"
+
+#~ msgid "Version 4.2"
+#~ msgstr "Version 4.2"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
+
+#~ msgid "Works For Me"
+#~ msgstr "Problem n. reproduzierbar"
+
+#~ msgid "7 Days"
+#~ msgstr "7 Tage"
+
+#, python-format
+#~ msgid "Issue "
+#~ msgstr "Problem "
+
+#~ msgid "30 Days"
+#~ msgstr "30 Tage"
+
+#~ msgid "Awaiting Response"
+#~ msgstr "Warte a. Rückmeldung"
+
+#~ msgid "Stages"
+#~ msgstr "Stufen"
+
+#, python-format
+#~ msgid "from Mailgate."
+#~ msgstr "von Mailgateway"
+
+#~ msgid "   Today   "
+#~ msgstr "   Heute   "
+
+#~ msgid "Accepted as Bug"
+#~ msgstr "Akzeptiert als Fehler"
+
+#~ msgid "Assignee"
+#~ msgstr "Bearbeiter"
+
+#~ msgid "In Progress"
+#~ msgstr "In Bearbeitung"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Object Bezeichnung muss mit x_ beginnen und darf kein Sonderzeichen "
+#~ "haben !"
+
+#~ msgid "Working Time"
+#~ msgstr "Arbeitszeit"
+
+#~ msgid "Invalid"
+#~ msgstr "Fehlerhaft"
+
+#~ msgid "Timetable working hours to adjust the gantt diagram report"
+#~ msgstr "Tabelle der Arbeitszeit als Einstellung für das Gantt Diagramm"
+
+#~ msgid "Emails"
+#~ msgstr "Emails"
+
+#~ msgid "Name"
+#~ msgstr "Bezeichnung"
+
+#, python-format
+#~ msgid "is Closed."
+#~ msgstr "ist Beendet"
+
+#~ msgid "Todo"
+#~ msgstr "Offen"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "Maintenance"
+#~ msgstr "Wartung"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

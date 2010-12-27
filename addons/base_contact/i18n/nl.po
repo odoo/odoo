@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 09:19+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-20 04:24+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:19+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_contact
@@ -25,11 +25,6 @@ msgstr "Categorieën"
 #: field:res.partner.contact,title:0
 msgid "Title"
 msgstr "Titel"
-
-#. module: base_contact
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: base_contact
 #: view:res.partner.address:0
@@ -50,6 +45,11 @@ msgstr "titel"
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
 msgstr "Startdaum dienstbetrekking (datum in dienst)"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Select the Option for Addresses Migration"
+msgstr "Selecteer de optie voor adressen migratie"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
@@ -124,14 +124,42 @@ msgid "Partners"
 msgstr "Relaties"
 
 #. module: base_contact
-#: field:res.partner.job,function:0
-msgid "Partner Function"
-msgstr "Functie"
-
-#. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
 msgstr "Status"
+
+#. module: base_contact
+#: help:res.partner.contact,active:0
+msgid ""
+"If the active field is set to False,                 it will allow you to "
+"hide the partner contact without removing it."
+msgstr ""
+"Als het actief veld uitstaat kunt u de contactpersoon verbergen zonder te "
+"verwijderen."
+
+#. module: base_contact
+#: model:ir.module.module,description:base_contact.module_meta_information
+msgid ""
+"\n"
+"        This module allows you to manage your contacts entirely.\n"
+"\n"
+"    It lets you define\n"
+"        *contacts unrelated to a partner,\n"
+"        *contacts working at several addresses (possibly for different "
+"partners),\n"
+"        *contacts with possibly different functions for each of its job's "
+"addresses\n"
+"\n"
+"    It also adds new menu items located in\n"
+"        Partners \\ Contacts\n"
+"        Partners \\ Functions\n"
+"\n"
+"    Pay attention that this module converts the existing addresses into "
+"\"addresses + contacts\". It means that some fields of the addresses will be "
+"missing (like the contact name), since these are supposed to be defined in "
+"an other object.\n"
+"    "
+msgstr ""
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -157,11 +185,6 @@ msgid ""
 msgstr ""
 "Volgorde van belangrijkheid van deze functie in de functielijst van de "
 "gekoppelde relatie"
-
-#. module: base_contact
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -206,6 +229,11 @@ msgid "Function to address"
 msgstr "Functie naar adres"
 
 #. module: base_contact
+#: field:base.contact.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Configuratievoortgang"
+
+#. module: base_contact
 #: field:res.partner.contact,name:0
 msgid "Last Name"
 msgstr "Achternaam"
@@ -231,6 +259,11 @@ msgstr "Voorgaande"
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
 msgstr "Relatieadressen"
+
+#. module: base_contact
+#: view:base.contact.installer:0
+msgid "Address's Migration to Contacts"
+msgstr "Migratie adressen naar contactpersonen"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -272,16 +305,9 @@ msgid "Address which is linked to the Partner"
 msgstr "Adres dat is gekoppeld aan de relatie"
 
 #. module: base_contact
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: base_contact
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+#: field:res.partner.job,function:0
+msgid "Partner Function"
+msgstr "Functie"
 
 #. module: base_contact
 #: help:res.partner.job,other:0
@@ -299,9 +325,9 @@ msgid "Otherwise these details will not be visible from address/contact."
 msgstr "Anders zijn deze details niet zichtbaar vanuit adres/contactpersoon."
 
 #. module: base_contact
-#: field:base.contact.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Configuratievoortgang"
+#: view:base.contact.installer:0
+msgid "Configure"
+msgstr "Configureren"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -313,15 +339,6 @@ msgstr "E-mail"
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
 msgstr "base.contact.installer"
-
-#. module: base_contact
-#: help:res.partner.contact,active:0
-msgid ""
-"If the active field is set to true,                 it will allow you to "
-"hide the partner contact without removing it."
-msgstr ""
-"Als het actief veld is aangezet, kunt u de relatie verbergen zonder deze te "
-"verwijderen."
 
 #. module: base_contact
 #: view:res.partner.job:0
@@ -461,6 +478,12 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: base_contact
+#: view:base.contact.installer:0
+msgid "You can migrate Partner's current addresses to the contact."
+msgstr ""
+"U kunt de huidige adressen van de relatie migreren naar de contactpersoon."
+
+#. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
 msgstr "Hoofdwerkgever"
@@ -507,6 +530,11 @@ msgstr ""
 #~ msgstr "Basis contactpersoon proces"
 
 #~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid ""
 #~ "Order of importance of this job title in the list of job title of the linked "
 #~ "partner"
 #~ msgstr ""
@@ -523,5 +551,30 @@ msgstr ""
 #~ msgid "General Information"
 #~ msgstr "Algemene informatie"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid "Partner Contacts"
 #~ msgstr "Contactpersonen relatie"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid ""
+#~ "If the active field is set to true,                 it will allow you to "
+#~ "hide the partner contact without removing it."
+#~ msgstr ""
+#~ "Als het actief veld is aangezet, kunt u de relatie verbergen zonder deze te "
+#~ "verwijderen."
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"

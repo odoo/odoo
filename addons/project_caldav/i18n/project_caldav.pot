@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:49+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:49+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:56+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,11 @@ msgstr ""
 #. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "March"
+msgstr ""
+
+#. module: project_caldav
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_caldav
@@ -223,11 +228,6 @@ msgid "Thu"
 msgstr ""
 
 #. module: project_caldav
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: project_caldav
 #: selection:project.task,rrule_type:0
 msgid "Daily"
 msgstr ""
@@ -245,6 +245,12 @@ msgstr ""
 #. module: project_caldav
 #: selection:project.task,byday:0
 msgid "First"
+msgstr ""
+
+#. module: project_caldav
+#: code:addons/project_caldav/project_caldav.py:0
+#, python-format
+msgid "Tasks"
 msgstr ""
 
 #. module: project_caldav
@@ -315,6 +321,11 @@ msgstr ""
 #. module: project_caldav
 #: view:project.task:0
 msgid "Reminder"
+msgstr ""
+
+#. module: project_caldav
+#: model:ir.module.module,description:project_caldav.module_meta_information
+msgid " Synchronize between Project task and Caldav Vtodo."
 msgstr ""
 
 #. module: project_caldav
@@ -400,11 +411,6 @@ msgstr ""
 #. module: project_caldav
 #: selection:project.task,show_as:0
 msgid "Busy"
-msgstr ""
-
-#. module: project_caldav
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: project_caldav

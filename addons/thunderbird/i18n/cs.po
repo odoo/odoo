@@ -7,27 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-01-25 11:49+0000\n"
 "Last-Translator: Kuvaly [LCT] <kuvaly@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: thunderbird
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
-
-#. module: thunderbird
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: thunderbird
 #: field:thunderbird.installer,plugin_file:0
@@ -52,11 +40,6 @@ msgstr ""
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
 msgid "The documentation file :- how to install Thunderbird Plug-in."
-msgstr ""
-
-#. module: thunderbird
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: thunderbird
@@ -85,24 +68,39 @@ msgid "title"
 msgstr ""
 
 #. module: thunderbird
-#: model:ir.model,name:thunderbird.model_thunderbird_partner
-msgid "Thunderbid mails"
-msgstr "Maily Thunderbid"
+#: model:ir.module.module,description:thunderbird.module_meta_information
+msgid ""
+"\n"
+"      This module is required for the thuderbird plug-in to work\n"
+"      properly.\n"
+"      The Plugin allows you archive email and its attachments to the "
+"selected \n"
+"      OpenERP objects. You can select a partner, a task, a project, an "
+"analytical\n"
+"      account,or any other object and attach selected mail as .eml file in \n"
+"      attachment of selected record. You can create Documents for crm Lead,\n"
+"      HR Applicant and project issue from selected mails.\n"
+"\n"
+"      "
+msgstr ""
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In"
+msgstr ""
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid ""
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
 
 #. module: thunderbird
 #: model:ir.module.module,shortdesc:thunderbird.module_meta_information
 msgid "Thunderbird Interface"
 msgstr "Rozhraní Thunderbird"
-
-#. module: thunderbird
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
 
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_thunderbird_installer
@@ -133,7 +131,13 @@ msgstr "Popis"
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_wizard
+#: view:thunderbird.installer:0
 msgid "Thunderbird Plug-In Configuration"
+msgstr ""
+
+#. module: thunderbird
+#: model:ir.model,name:thunderbird.model_thunderbird_partner
+msgid "Thunderbid Plugin Tools"
 msgstr ""
 
 #. module: thunderbird
@@ -148,6 +152,11 @@ msgstr ""
 
 #~ msgid "Copy To"
 #~ msgstr "Kopírovat do"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
 
 #~ msgid "Reference"
 #~ msgstr "Reference"
@@ -166,6 +175,9 @@ msgstr ""
 
 #~ msgid "Attached Files"
 #~ msgstr "Přiložené soubory"
+
+#~ msgid "Thunderbid mails"
+#~ msgstr "Maily Thunderbid"
 
 #~ msgid "Sender"
 #~ msgstr "Odesílatel"

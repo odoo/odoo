@@ -196,7 +196,7 @@
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
                     <group col='6' colspan='4'>
-                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-check" help="Analytic Journal Items related to a sale journal."/>
+                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
                         <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
@@ -337,7 +337,7 @@
             <field name="name">Analytic Journals</field>
             <field name="res_model">account.analytic.journal</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_analytic_journal_search" />
         </record>
         <menuitem groups="analytic.group_analytic_accounting,group_account_manager" action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>

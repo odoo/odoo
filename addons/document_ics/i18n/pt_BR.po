@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-09-16 15:43+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -27,14 +27,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr ""
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -53,6 +45,11 @@ msgid "Jobs Hiring Process"
 msgstr ""
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr ""
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr ""
@@ -64,12 +61,14 @@ msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
+msgid "dtstamp"
 msgstr ""
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
@@ -83,8 +82,9 @@ msgid "Calendar of Meetings"
 msgstr ""
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
 msgstr ""
 
 #. module: document_ics
@@ -93,13 +93,13 @@ msgid "Manages an Helpdesk service."
 msgstr ""
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: selection:document.directory.ics.fields,name:0
+msgid "dtend"
 msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "dtend"
+msgid "summary"
 msgstr ""
 
 #. module: document_ics
@@ -179,6 +179,13 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr ""
@@ -204,9 +211,9 @@ msgid "location"
 msgstr ""
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -221,6 +228,11 @@ msgstr ""
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
+msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
 msgstr ""
 
 #. module: document_ics
@@ -269,13 +281,18 @@ msgid "categories"
 msgstr ""
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
 msgstr ""
 
 #. module: document_ics
@@ -316,8 +333,8 @@ msgid ""
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
 msgstr ""
 
 #. module: document_ics
@@ -331,8 +348,8 @@ msgid "document.ics.crm.wizard"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
 msgstr ""
 
 #. module: document_ics
@@ -355,14 +372,14 @@ msgstr ""
 msgid "Business Opportunities"
 msgstr ""
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
 
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
+
+#~ msgid "dt-stamp"
+#~ msgstr "dt-stamp"

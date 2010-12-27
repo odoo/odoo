@@ -88,6 +88,37 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+      <blockTable colWidths="26.0,106.0,66.0,66.0,66.0,66.0,66.0,66.0" style="Table6">
+        <tr>
+          <td>
+            <para style="terp_tblheader_details_center">#</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_details">Employee Name</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Basic</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Others </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Allowances </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Gross Sal.</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Deduction </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Net Sal.</para>
+          </td>
+        </tr>
+      </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
     <para style="terp_header_center">Salary Payment Register</para>
     <para style="terp_default_9_bold_center">[[o.name]]</para>
@@ -226,5 +257,6 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

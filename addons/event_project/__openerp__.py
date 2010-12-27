@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Event Project - Create Retro-Planning to manage your Events',
     'version': '0.1',
@@ -31,10 +30,11 @@
     'author': 'OpenERP SA',
     'depends': ['project_retro_planning', 'event'],
     'init_xml': [],
-    'update_xml': ['wizard/event_project_view.xml', 'event_view.xml'],
+    'update_xml': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '0069726863885',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

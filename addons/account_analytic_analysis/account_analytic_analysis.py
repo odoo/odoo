@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from osv.orm import intersect
+from osv.orm import intersect, except_orm
 import tools.sql
 from tools.translate import _
 from decimal_precision import decimal_precision as dp
@@ -35,6 +35,7 @@ class account_analytic_account(osv.osv):
         res = dict([(i, {}) for i in ids])
 
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+        res.update(dict([(i, {}) for i in parent_ids]))
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
@@ -269,7 +270,7 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id", (child_ids,))
             for account_id, sum in cr.fetchall():
                 res[account_id][name] = round(sum,2)
-        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context)
+        data = self._compute_level_tree(cr, uid, ids, child_ids, res, [name], context=context)
         for i in data:
             res_final[i] = data[i][name]
         return res_final
@@ -324,7 +325,7 @@ class account_analytic_account(osv.osv):
 
     def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             if account.hours_qtt_invoiced == 0:
                 res[account.id]=0.0
             else:
@@ -335,7 +336,7 @@ class account_analytic_account(osv.osv):
 
     def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
             elif account.total_cost != 0.0:
@@ -348,7 +349,7 @@ class account_analytic_account(osv.osv):
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             if account.amount_max != 0:
                 res[account.id] = account.amount_max - account.ca_invoiced
             else:
@@ -359,7 +360,7 @@ class account_analytic_account(osv.osv):
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_invoiced + account.total_cost
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
@@ -367,7 +368,7 @@ class account_analytic_account(osv.osv):
 
     def _theorical_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for account in self.browse(cr, uid, ids):
+        for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = account.ca_theorical + account.total_cost
         for id in ids:
             res[id] = round(res.get(id, 0.0),2)
@@ -497,7 +498,7 @@ class account_analytic_account_summary_user(osv.osv):
                 ')')
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if not context:
+        if context is None:
             context = {}
         if not ids:
             return []
@@ -671,7 +672,7 @@ class account_analytic_account_summary_month(osv.osv):
                 ')')
 
     def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-        if not context:
+        if context is None:
             context = {}
         if not ids:
             return []

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-09-17 19:07+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:38+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -40,11 +40,6 @@ msgstr "Cambiar a borrador"
 #: field:report.auction,seller:0
 msgid "Seller"
 msgstr "Vendedor"
-
-#. module: auction
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: auction
 #: field:auction.lots,name:0
@@ -213,6 +208,13 @@ msgid "January"
 msgstr ""
 
 #. module: auction
+#: help:auction.lot.category,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the auction "
+"lot category without removing it."
+msgstr ""
+
+#. module: auction
 #: view:auction.lots:0
 msgid "Ref"
 msgstr "Ref."
@@ -221,13 +223,6 @@ msgstr "Ref."
 #: field:report.auction,total_price:0
 msgid "Total Price"
 msgstr ""
-
-#. module: auction
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Error: Registro de entrada (resp. Registro de salida) debe seguir al "
-"Registro de salida (resp. Registro de entrada)"
 
 #. module: auction
 #: view:auction.lots:0
@@ -260,11 +255,6 @@ msgstr ""
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
 msgstr ""
-
-#. module: auction
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -308,6 +298,12 @@ msgid "Object Image"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#, python-format
+msgid "No buyer is set for this lot."
+msgstr ""
+
+#. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
@@ -336,13 +332,6 @@ msgstr ""
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
-
-#. module: auction
-#: help:auction.lot.category,active:0
-msgid ""
-"If the active field is set to true, it will allow you to hide the auction "
-"lot category without removing it."
 msgstr ""
 
 #. module: auction
@@ -390,9 +379,10 @@ msgid "June"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#, python-format
+msgid "No Lots belong to this Auction Date"
+msgstr ""
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -432,14 +422,6 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
-
-#. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
-#, python-format
-msgid ""
-"Two different buyers for the same invoice !\n"
-"Please correct this problem before invoicing"
 msgstr ""
 
 #. module: auction
@@ -541,9 +523,9 @@ msgid "Last Auction Date"
 msgstr ""
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-msgid "# of Encoded obj."
-msgstr "Nº de obj. codificados"
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -669,15 +651,10 @@ msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "UserError"
 msgstr ""
-
-#. module: auction
-#: constraint:account.account:0
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "¡Error! No se pueden crear cuentas recursivas."
 
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
@@ -752,11 +729,6 @@ msgid "Object Categories"
 msgstr "Categorías de objetos"
 
 #. module: auction
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: auction
 #: field:auction.lots.sms.send,app_id:0
 msgid "API ID"
 msgstr "ID API"
@@ -788,6 +760,11 @@ msgid "Net limit ?"
 msgstr "¿Límite neto?"
 
 #. module: auction
+#: field:aie.category,child_ids:0
+msgid "unknown"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of commissions:"
 msgstr "Nº de comisiones:"
@@ -799,9 +776,9 @@ msgid "Auction Name"
 msgstr "Nombre subasta"
 
 #. module: auction
-#: model:account.tax,name:auction.tax_seller
-msgid "Seller Costs (12%)"
-msgstr ""
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "Nº de obj. codificados"
 
 #. module: auction
 #: field:aie.category,parent_id:0
@@ -831,8 +808,9 @@ msgid "Bailiffs Listing"
 msgstr ""
 
 #. module: auction
-#: field:aie.category,child_ids:0
-msgid "unknown"
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This record does not exist !"
 msgstr ""
 
 #. module: auction
@@ -1082,9 +1060,11 @@ msgid "Invoice Number"
 msgstr "Número factura"
 
 #. module: auction
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Código EAN erróneo"
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "Active IDs not Found"
+msgstr ""
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
@@ -1238,12 +1218,6 @@ msgid "Notes"
 msgstr ""
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid ""
-"Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: auction
 #: view:auction.lots.auction.move:0
 msgid "Move to Auction date"
 msgstr "Mover hasta fecha de subasta"
@@ -1337,6 +1311,12 @@ msgid "Deposit Date"
 msgstr ""
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This lot does not exist !"
+msgstr "¡Este lote no existe!"
+
+#. module: auction
 #: selection:report.auction,month:0
 msgid "July"
 msgstr ""
@@ -1356,12 +1336,6 @@ msgstr "Mín est/Adj/Máx est"
 #: field:auction.lots,lot_est1:0
 msgid "Minimum Estimation"
 msgstr "Estimación mínima"
-
-#. module: auction
-#: selection:auction.dates,state:0
-#: selection:report.auction.adjudication,state:0
-msgid "Closed"
-msgstr "Cerrado"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_sms_send
@@ -1394,6 +1368,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Payment aborted !"
 msgstr ""
 
 #. module: auction
@@ -1453,14 +1433,6 @@ msgstr ""
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr "Crear facturas"
-
-#. module: auction
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
-"categoría."
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
@@ -1583,6 +1555,14 @@ msgid "Auction manager "
 msgstr "Gestor de subastas "
 
 #. module: auction
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#, python-format
+msgid ""
+"Two different buyers for the same invoice !\n"
+"Please correct this problem before invoicing"
+msgstr ""
+
+#. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
 msgstr ""
@@ -1591,14 +1571,6 @@ msgstr ""
 #: field:auction.lots,vnd_lim:0
 msgid "Seller limit"
 msgstr "Límite vendedor"
-
-#. module: auction
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1712,13 +1684,6 @@ msgid "Names"
 msgstr "Nombres"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
-#, python-format
-msgid "Active IDs not Found"
-msgstr ""
-
-#. module: auction
 #: view:auction.artists:0
 #: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Artists"
@@ -1822,6 +1787,13 @@ msgid "Net revenue"
 msgstr "Ingreso neto"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: auction
 #: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "Nº de artículos:"
@@ -1835,6 +1807,25 @@ msgstr ""
 #: field:report.object.encoded,estimation:0
 msgid "Estimation"
 msgstr "Estimación"
+
+#. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid ""
+"\n"
+"     This module manages the records of the artists,\n"
+"     the articles to be put up for auction,the buyers and\n"
+"     sellers.\n"
+"\n"
+"     It completely manages an auction such as managing bids,\n"
+"     keeping track of the sold articles along with the paid\n"
+"     and unpaid objects including delivery of the articles.\n"
+"     Dashboards for auction that includes:\n"
+"       * My Latest Objects (list)\n"
+"       * My Latest Deposits (list)\n"
+"       * Objects Statistics (list)\n"
+"       * My Objects By Day (list)\n"
+"    "
+msgstr ""
 
 #. module: auction
 #: view:auction.taken:0
@@ -1868,9 +1859,10 @@ msgid "Gross Margin (%)"
 msgstr "Margen bruto (%)"
 
 #. module: auction
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
+msgstr "Cerrado"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1931,6 +1923,13 @@ msgstr "Cuenta de destino"
 #: model:ir.ui.menu,name:auction.auction_config_menu
 msgid "Configuration"
 msgstr "Configuración"
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid ""
+"You should pay all the total: \"%.2f\" are missing to accomplish the payment."
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
@@ -2013,11 +2012,6 @@ msgstr "Lista vendedor"
 #: view:auction.deposit:0
 msgid "Deposit Costs"
 msgstr "Costes de depósito"
-
-#. module: auction
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: auction
 #: field:auction.lot.category,name:0
@@ -2104,6 +2098,8 @@ msgstr "Fecha subasta:"
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
 #: code:addons/auction/wizard/auction_aie_send_result.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "Error"
 msgstr ""
@@ -2183,6 +2179,12 @@ msgstr "Último día de subasta"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Objects Description"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "No auction date for \"%s\": Please set one."
 msgstr ""
 
 #. module: auction
@@ -2282,3 +2284,738 @@ msgstr ""
 #: field:auction.lots,history_ids:0
 msgid "Auction history"
 msgstr "Historial subasta"
+
+#~ msgid "Total margin"
+#~ msgstr "Margen total"
+
+#~ msgid "SMS - Gateway: clickatell"
+#~ msgstr "Puerta de enlace SMS vía clickatell"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Provisoire"
+#~ msgstr "Provisional"
+
+#~ msgid "Definitive (ordre catalogue)"
+#~ msgstr "Definitivo (orden catálogo)"
+
+#~ msgid "My Encoded Objects Per Day"
+#~ msgstr "Mis objetos codificados por día"
+
+#~ msgid "Lot history"
+#~ msgstr "Historial de lotes"
+
+#~ msgid "Bids line"
+#~ msgstr "Línea de apuestas"
+
+#~ msgid "Deposit Form"
+#~ msgstr "Formulario de depósito"
+
+#~ msgid "Adjudication by Auction"
+#~ msgstr "Adjudicación por subasta"
+
+#~ msgid "Numerotation (per lot)"
+#~ msgstr "Numeración (por lote)"
+
+#~ msgid "Antique/Books, manuscripts, eso."
+#~ msgstr "Antigüedades / Libros, manuscritos, etc."
+
+#~ msgid "Antique/Tin / Copper wares"
+#~ msgstr "Antigüedades / Metal / Objetos de cobre"
+
+#~ msgid "Buyer invoice reconciled"
+#~ msgstr "Factura comprador reconciliada"
+
+#~ msgid "Mark as taken away"
+#~ msgstr "Marcar como para llevar"
+
+#~ msgid "Inv."
+#~ msgstr "Fact."
+
+#~ msgid "VAT"
+#~ msgstr "IVA"
+
+#~ msgid "Statements"
+#~ msgstr "Extractos"
+
+#~ msgid "Adjudication"
+#~ msgstr "Adjudicación"
+
+#~ msgid "Unclassifieds"
+#~ msgstr "No clasificados"
+
+#~ msgid "Objects by Auction"
+#~ msgstr "Objetos por subasta"
+
+#~ msgid "Antiques"
+#~ msgstr "Antigüedades"
+
+#~ msgid "Object Type"
+#~ msgstr "Tipo de objeto"
+
+#~ msgid "Contemporary Art"
+#~ msgstr "Arte contemporáneo"
+
+#~ msgid "No of sellers"
+#~ msgstr "Núm. de vendedores"
+
+#~ msgid "ned"
+#~ msgstr "Holandés"
+
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Error: Registro de entrada (resp. Registro de salida) debe seguir al "
+#~ "Registro de salida (resp. Registro de entrada)"
+
+#~ msgid "Net margin (%)"
+#~ msgstr "Margen neto (%)"
+
+#~ msgid "Dates"
+#~ msgstr "Fechas"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
+
+#~ msgid "All objects"
+#~ msgstr "Todos los objetos"
+
+#~ msgid "Buyer's auction for all months"
+#~ msgstr "Subasta del comprador para todos los meses"
+
+#~ msgid "Contact"
+#~ msgstr "Contacto"
+
+#~ msgid "Cont. Art/Painting"
+#~ msgstr "Arte cont. / Pintura"
+
+#~ msgid "Back"
+#~ msgstr "Anterior"
+
+#~ msgid "Unsold objects"
+#~ msgstr "Objetos sin vender"
+
+#~ msgid "Sold Objects"
+#~ msgstr "Objetos vendidos"
+
+#~ msgid "Sum net margin"
+#~ msgstr "Suma margen neto"
+
+#~ msgid "Langage"
+#~ msgstr "Idioma"
+
+#~ msgid "Inventory Number"
+#~ msgstr "Número de inventario"
+
+#~ msgid "Exit"
+#~ msgstr "Salir"
+
+#~ msgid "Auction buyer reporting form view"
+#~ msgstr "Informe comprador de subastas vista formulario"
+
+#~ msgid "Antique/Cartoons"
+#~ msgstr "Antigüedades / Tebeos"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
+
+#~ msgid "Auction Objects"
+#~ msgstr "Objetos de subasta"
+
+#~ msgid "Auction reporting2 form view"
+#~ msgstr "Informe2 subastas vista formulario"
+
+#~ msgid "Depositer's statistics"
+#~ msgstr "Estadísticas del depositario"
+
+#~ msgid "Buyer information"
+#~ msgstr "Información del comprador"
+
+#~ msgid "Auction Reporting on seller view"
+#~ msgstr "Informe subastas según vista vendedor"
+
+#~ msgid "auction.dates"
+#~ msgstr "subasta.fechas"
+
+#~ msgid "Amount paid"
+#~ msgstr "Importe pagado"
+
+#~ msgid "My Latest Deposits"
+#~ msgstr "Mis últimos depósitos"
+
+#~ msgid "Buyer's Revenues"
+#~ msgstr "Ingresos del comprador"
+
+#~ msgid "eng"
+#~ msgstr "Inglés"
+
+#~ msgid "Auction buyer reporting tree view2"
+#~ msgstr "Informe comprador de subastas vista2 árbol"
+
+#~ msgid "Bulk SMS send"
+#~ msgstr "SMS enviado"
+
+#~ msgid "fr"
+#~ msgstr "Francés"
+
+#~ msgid "Antique/Old weapons and militaria"
+#~ msgstr "Antigüedades / Armas antiguas y militares"
+
+#~ msgid "Antique/Oriental Arts/Chineese furnitures"
+#~ msgstr "Antigüedades / Arte oriental / Muebles chinos"
+
+#~ msgid "Continue"
+#~ msgstr "Continuar"
+
+#~ msgid "List N."
+#~ msgstr "N. lista"
+
+#~ msgid "Avg. Est"
+#~ msgstr "Est. promedio"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Código EAN erróneo"
+
+#~ msgid ""
+#~ "This module provides functionality to \n"
+#~ "     manage artists, articles, sellers, buyers and auction.\n"
+#~ "     Manage bids, track of sold, paid and unpaid objects.\n"
+#~ "     Delivery Management. \n"
+#~ "    "
+#~ msgstr ""
+#~ "Este módulo proporciona funcionalidad para \n"
+#~ "     gestionar artistas, artículos, vendedores, compradores y subastas.\n"
+#~ "     Gestionar pujas, rastreo de ventas y objetos pagados y no pagados.\n"
+#~ "     Gestión de la distribución. \n"
+#~ "    "
+
+#~ msgid "Confirmation set taken away"
+#~ msgstr "Fijar confirmación para llevar"
+
+#~ msgid "Mark as paid for seller"
+#~ msgstr "Marcar como pagado para vendedor"
+
+#~ msgid "Close + Create all invoices"
+#~ msgstr "Cerrar + Crear todas las facturas"
+
+#~ msgid "Antique/Verreries"
+#~ msgstr "Antigüedades / Vidrierías"
+
+#~ msgid "Antique/Toys"
+#~ msgstr "Antigüedades / Juguetes"
+
+#~ msgid "Buyer form"
+#~ msgstr "Formulario comprador"
+
+#~ msgid "Estimate"
+#~ msgstr "Estimado"
+
+#~ msgid "Cat"
+#~ msgstr "Cat."
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "¡Error! No se pueden crear cuentas recursivas."
+
+#~ msgid "Auction buyer reporting tree view"
+#~ msgstr "Informe comprador de subastas vista árbol"
+
+#~ msgid "Define Artists"
+#~ msgstr "Definir artistas"
+
+#~ msgid "Comparison of estimations"
+#~ msgstr "Comparación de estimaciones"
+
+#~ msgid "Code barres du lot"
+#~ msgstr "Código de barras del lote"
+
+#~ msgid "Retry"
+#~ msgstr "Reintentar"
+
+#~ msgid "Birth / Death dates"
+#~ msgstr "Fechas nacimiento / defunción"
+
+#~ msgid "Antique/Jewelry"
+#~ msgstr "Antigüedades / Joyas"
+
+#~ msgid "Unclassified objects "
+#~ msgstr "Objetos no clasificados "
+
+#~ msgid "Numerotation"
+#~ msgstr "Numeración"
+
+#~ msgid "Bordereau de dépôt"
+#~ msgstr "Justificante de depósito"
+
+#~ msgid "Document type"
+#~ msgstr "Tipo de documento"
+
+#~ msgid "comparaison estimate/adjudication "
+#~ msgstr "comparación estimado/adjudicado "
+
+#~ msgid "Adj(EUR)"
+#~ msgstr "Adj(EUR)"
+
+#~ msgid "Cont. Art/Other Media"
+#~ msgstr "Arte cont. / Otro media"
+
+#~ msgid "Cat. N."
+#~ msgstr "Cat. N."
+
+#~ msgid "Send Image also ?"
+#~ msgstr "¿Enviar imagen también?"
+
+#~ msgid "General Informations"
+#~ msgstr "Información general"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Auctions results"
+#~ msgstr "Resultados subastas"
+
+#~ msgid "Unclassified objects"
+#~ msgstr "Objetos sin clasificar"
+
+#~ msgid "Antique/Carpet and textilles"
+#~ msgstr "Antigüedades / Alfombras y textiles"
+
+#~ msgid "New Auction Dates"
+#~ msgstr "Nuevas fechas de subasta"
+
+#~ msgid "Sum adj"
+#~ msgstr "Suma adj"
+
+#~ msgid "No of Objects"
+#~ msgstr "Núm. de objetos"
+
+#~ msgid "Antique/Painting"
+#~ msgstr "Antigüedades / Pinturas"
+
+#~ msgid "Aie Category"
+#~ msgstr "Categoria encontrada"
+
+#~ msgid "Check payment for seller"
+#~ msgstr "Comprobar pago para vendedor"
+
+#~ msgid "Detailed lots"
+#~ msgstr "Lotes detallados"
+
+#~ msgid "Send results to Auction-in-europe.com"
+#~ msgstr "Enviar resultados a Auction-in-europe.com"
+
+#~ msgid "Seller's auction"
+#~ msgstr "Subasta del vendedor"
+
+#~ msgid "Seller's Revenues"
+#~ msgstr "Ingresos del vendedor"
+
+#~ msgid "Subtotal:"
+#~ msgstr "Subtotal:"
+
+#~ msgid "Buyer's Summary"
+#~ msgstr "Resumen del comprador"
+
+#~ msgid "Customer Reference"
+#~ msgstr "Referencia cliente"
+
+#~ msgid "Depositer's Statistics"
+#~ msgstr "Estadísticas del depositario"
+
+#~ msgid "To pay"
+#~ msgstr "Para pagar"
+
+#~ msgid "Enable Taken away"
+#~ msgstr "Activar para llevar"
+
+#~ msgid "Antique/Others"
+#~ msgstr "Antigüedades / Otros"
+
+#~ msgid "Auction Reporting tree view2"
+#~ msgstr "Informe subastas vista2 árbol"
+
+#~ msgid "Auction buyer reporting form view2"
+#~ msgstr "Informe comprador de subastas vista2 formulario"
+
+#~ msgid "Auction dates"
+#~ msgstr "Fechas subastas"
+
+#~ msgid "Auction seller reporting2 graph view"
+#~ msgstr "Informe2 vendedor de subastas vista gráfico"
+
+#~ msgid "Encoded Objects Per Day"
+#~ msgstr "Objetos codificados por día"
+
+#~ msgid "Auction Reporting on buyer view"
+#~ msgstr "Informe subastas según vista comprador"
+
+#~ msgid "Payment's history"
+#~ msgstr "Historial de pagos"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
+
+#~ msgid ", TEL:"
+#~ msgstr ", TEL:"
+
+#~ msgid "Auction results"
+#~ msgstr "Resultados de subastas"
+
+#~ msgid "Auction's Revenues"
+#~ msgstr "Ingresos de la subasta"
+
+#~ msgid "Antique/Metal Ware"
+#~ msgstr "Antigüedades / Objetos de metal"
+
+#~ msgid "de"
+#~ msgstr "Alemán"
+
+#~ msgid "Old Auctions"
+#~ msgstr "Subastas anteriores"
+
+#~ msgid "Cont. Art/Curiosa"
+#~ msgstr "Arte cont. / Curiosidades"
+
+#~ msgid "Auction module"
+#~ msgstr "Módulo de subastas"
+
+#~ msgid "Attendance"
+#~ msgstr "Servicio"
+
+#~ msgid "Seller information"
+#~ msgstr "Información vendedor"
+
+#~ msgid "Cont. Art/Jewelry"
+#~ msgstr "Arte cont. / Joyas"
+
+#~ msgid "Next Auctions"
+#~ msgstr "Próximas subastas"
+
+#~ msgid "#"
+#~ msgstr "Nº"
+
+#~ msgid "Antique/Miniatures / Collections"
+#~ msgstr "Antigüedades / Miniaturas / Colecciones"
+
+#~ msgid "Auction reporting tree view"
+#~ msgstr "Informe subastas vista árbol"
+
+#~ msgid "Cont. Art/Photo"
+#~ msgstr "Arte cont. / Fotografía"
+
+#~ msgid "Bid auctions"
+#~ msgstr "Apuesta subastas"
+
+#~ msgid "Avg margin"
+#~ msgstr "Margen promedio"
+
+#~ msgid "Antique/Art from the Ivory Coast"
+#~ msgstr "Antigüedades / Arte de la Costa de Marfil"
+
+#~ msgid "Antique/Religiosa"
+#~ msgstr "Antigüedades / Religioso"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Error: La UdM por defecto y la UdM de compra deben estar en la misma "
+#~ "categoría."
+
+#~ msgid "Unplanned objects"
+#~ msgstr "Objetos no planificados"
+
+#~ msgid "Cont. Art/Sculpture"
+#~ msgstr "Arte cont. / Escultura"
+
+#~ msgid "Antique/Argenterie"
+#~ msgstr "Antigüedades / Monedas"
+
+#~ msgid "Antique/Lightings"
+#~ msgstr "Antigüedades / Lámparas"
+
+#~ msgid "Antique/Sculpture, bronze, eso."
+#~ msgstr "Antigüedades / Escultura, bronze, etc."
+
+#~ msgid "Document Number"
+#~ msgstr "Número documento"
+
+#~ msgid "Numerotate"
+#~ msgstr "Enumeración"
+
+#~ msgid "Buyer, Price"
+#~ msgstr "Comprador, Precio"
+
+#~ msgid "Listing Huissiers"
+#~ msgstr "Listado"
+
+#~ msgid "All objects are assigned to buyers !"
+#~ msgstr "¡Todos los objetos han sido asignados a compradores!"
+
+#~ msgid "Able Taken away"
+#~ msgstr "Habilitar para llevar"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Artist/Author 2"
+#~ msgstr "Artista / Autor 2"
+
+#~ msgid "Seller's Summary"
+#~ msgstr "Resumen del vendedor"
+
+#~ msgid "Auction reporting graph view"
+#~ msgstr "Informe subastas vista gráfico"
+
+#~ msgid "Send on your website"
+#~ msgstr "Enviar a su sitio web"
+
+#~ msgid "Simplified lots for adjudication"
+#~ msgstr "Lotes simplificados para adjudicación"
+
+#~ msgid "Auction Reporting on view1"
+#~ msgstr "Informe subastas según vista1"
+
+#~ msgid "Sum Adjustication"
+#~ msgstr "Suma adjudicación"
+
+#~ msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
+#~ msgstr "Antigüedades / Porcelana, cerámica, vidrio, ..."
+
+#~ msgid "Plate Number:"
+#~ msgstr "Número placa:"
+
+#~ msgid "Object Reference"
+#~ msgstr "Referencia objeto"
+
+#~ msgid "Cont. Art/Shows"
+#~ msgstr "Arte cont. / Espectáculos"
+
+#~ msgid "Unsold Objects"
+#~ msgstr "Objetos no vendidos"
+
+#~ msgid "Avg Adj."
+#~ msgstr "Adj. promedio"
+
+#~ msgid "auction.deposit.cost"
+#~ msgstr "subasta.depósito.coste"
+
+#~ msgid "Object Inventory"
+#~ msgstr "Inventario de objetos"
+
+#~ msgid "Antique/Art from the Ivory Coast/African Arts"
+#~ msgstr "Antigüedades / Arte de la Costa de Marfil / Arte africano"
+
+#~ msgid "User's pointing"
+#~ msgstr "Puntuación del usuario"
+
+#~ msgid "Lot Category"
+#~ msgstr "Categoría lote"
+
+#~ msgid "Manager"
+#~ msgstr "Responsable"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "Auction reporting form view"
+#~ msgstr "Informe subastas vista formulario"
+
+#~ msgid "Send to website"
+#~ msgstr "Enviar al sitio web"
+
+#~ msgid "Old Auction Dates"
+#~ msgstr "Fechas subastas anteriores"
+
+#~ msgid "Auction Reporting on seller view2"
+#~ msgstr "Informe subastas según vista2 vendedor"
+
+#~ msgid "Antique/Engravings"
+#~ msgstr "Antigüedades / Grabados"
+
+#~ msgid "First Number"
+#~ msgstr "Primer número"
+
+#~ msgid "Auction Reporting on  view2"
+#~ msgstr "Informe subastas según vista2"
+
+#~ msgid ""
+#~ "Warning, this will erase the object adjudication price and its buyer !"
+#~ msgstr ""
+#~ "¡Atención, ésto eliminará el precio de adjudicación del objeto y su "
+#~ "comprador!"
+
+#~ msgid "Bid information"
+#~ msgstr "Información apuesta"
+
+#~ msgid "TEL:"
+#~ msgstr "TEL:"
+
+#~ msgid "Limit"
+#~ msgstr "Límite"
+
+#~ msgid "Latest Deposits"
+#~ msgstr "Últimos depósitos"
+
+#~ msgid "Antique/Musical Instruments"
+#~ msgstr "Antigüedades / Instrumentos musicales"
+
+#~ msgid "Antique/Graphic Arts"
+#~ msgstr "Antigüedades / Arte gráfico"
+
+#~ msgid "Antique/Oriental Arts"
+#~ msgstr "Antigüedades / Arte oriental"
+
+#~ msgid "Sum of adjudication"
+#~ msgstr "Suma de adjudicación"
+
+#~ msgid "Unmark as taken away"
+#~ msgstr "Desmarcar como para llevar"
+
+#~ msgid "Lot Number"
+#~ msgstr "Número de lote"
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "El CIF/NIF no parece estar correcto."
+
+#~ msgid "Employee"
+#~ msgstr "Empleado"
+
+#~ msgid "Adj.(EUR)"
+#~ msgstr "Adj.(EUR)"
+
+#~ msgid "Est."
+#~ msgstr "Est."
+
+#~ msgid "Report deposit border"
+#~ msgstr "Informe justificante de depósito"
+
+#~ msgid "Auction report"
+#~ msgstr "Informe subasta"
+
+#~ msgid "auction.lot.category"
+#~ msgstr "subasta.lote.categoría"
+
+#~ msgid "Antique/Collectible & art objects"
+#~ msgstr "Antigüedades / Coleccionables y objetos de arte"
+
+#~ msgid "BID:"
+#~ msgstr "APUESTA:"
+
+#~ msgid "Buyer's auction"
+#~ msgstr "Subasta del comprador"
+
+#~ msgid "Auction reporting2 tree view"
+#~ msgstr "Informe2 subastas vista árbol"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#~ msgid "Buyer Cost:"
+#~ msgstr "Coste comprador:"
+
+#~ msgid "NET"
+#~ msgstr "NETO"
+
+#~ msgid "Antique/Furnitures"
+#~ msgstr "Antigüedades / Muebles"
+
+#~ msgid "Customer Contact"
+#~ msgstr "Contacto cliente"
+
+#~ msgid "Inv, Name"
+#~ msgstr "Inv, Nombre"
+
+#~ msgid "Unplanned Objects"
+#~ msgstr "Objetos no planificados"
+
+#~ msgid "Numerotation (automatic)"
+#~ msgstr "Enumeración (automático)"
+
+#~ msgid "Amount to paid"
+#~ msgstr "Importe a pagar"
+
+#~ msgid "No of buyers"
+#~ msgstr "Nº de compradores"
+
+#~ msgid "Avg adjudication"
+#~ msgstr "Adjudicación promedio"
+
+#~ msgid "Next Auction Dates"
+#~ msgstr "Próximas fechas de subasta"
+
+#~ msgid "Report Sign In/Out"
+#~ msgstr "Informe registro entrada/salida"
+
+#~ msgid "Cont. Art/Arts"
+#~ msgstr "Arte cont. / Artes"
+
+#~ msgid "Objects to sell"
+#~ msgstr "Objetos para vender"
+
+#~ msgid "Ref."
+#~ msgstr "Ref."
+
+#~ msgid "Short Description"
+#~ msgstr "Descripción breve"
+
+#~ msgid "Employees"
+#~ msgstr "Empleados"
+
+#~ msgid "Antique/Clocks and watches"
+#~ msgstr "Antigüedades / Relojes"
+
+#~ msgid "Antique/Scientific Instruments"
+#~ msgstr "Antigüedades / Instrumentos científicos"
+
+#~ msgid "Confirmation enable taken away"
+#~ msgstr "Habilitar confirmación para llevar"
+
+#~ msgid "Sum of adjustication"
+#~ msgstr "Suma de adjudicación"
+
+#~ msgid "Antique/Wine"
+#~ msgstr "Antigüedades / Vino"
+
+#~ msgid "Antique/African Arts"
+#~ msgstr "Antigüedades / Arte africano"
+
+#~ msgid "Antique/Posters"
+#~ msgstr "Antigüedades / Posters"
+
+#~ msgid "Orders"
+#~ msgstr "Pedidos"
+
+#~ msgid "Auction Manager"
+#~ msgstr "Gestor de subastas"
+
+#~ msgid "Summary pointing by user"
+#~ msgstr "Resumen aportado por el usuario"
+
+#~ msgid "Auction Member"
+#~ msgstr "Miembro de subastas"
+
+#~ msgid "Auction member board"
+#~ msgstr "Tablero miembro subastas"
+
+#~ msgid "Board for Auction"
+#~ msgstr "Tablero para subastas"
+
+#~ msgid "Estimations/Adjudication"
+#~ msgstr "Estimaciones/Adjudicación"
+
+#~ msgid "Menu"
+#~ msgstr "Menú"
+
+#~ msgid "My objects By Day"
+#~ msgstr "Mis objetos por día"
+
+#~ msgid "My board"
+#~ msgstr "Mi tablero"
+
+#~ msgid "Auction manager board"
+#~ msgstr "Tablero gestor de subastas"
+
+#~ msgid "My Latest Objects"
+#~ msgstr "Mis últimos objetos"

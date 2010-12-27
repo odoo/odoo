@@ -7,25 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-06-25 18:04+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Production lot"
-msgstr ""
-
-#. module: product_expiry
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: product_expiry
@@ -44,15 +38,14 @@ msgid "Products date of expiry"
 msgstr "Kõlblik kuni"
 
 #. module: product_expiry
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
-
-#. module: product_expiry
 #: field:product.product,life_time:0
 msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
 
 #. module: product_expiry
@@ -61,8 +54,14 @@ msgid "Product Use Time"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid "The date signifying an alert to notify about the production lot."
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
 msgstr ""
 
 #. module: product_expiry
@@ -71,10 +70,11 @@ msgid "Product"
 msgstr ""
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
-msgid "The date the lot may become dangerous and should not be consumed."
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
 msgstr ""
-"Kuupäev, millal toode võib muutuda ohtlikuks ning neid ei tohiks tarbida."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -84,6 +84,12 @@ msgstr ""
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
 msgstr ""
 
 #. module: product_expiry
@@ -115,18 +121,6 @@ msgid "Dates"
 msgstr "Kuupäevad"
 
 #. module: product_expiry
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
-
-#. module: product_expiry
-#: help:product.product,alert_time:0
-msgid ""
-"The number of days after which, needs an alert to notify about the "
-"production lot."
-msgstr ""
-
-#. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
 msgstr "Kõlblik kuni kuupäev"
@@ -135,11 +129,6 @@ msgstr "Kõlblik kuni kuupäev"
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
 msgstr "Parim enne kuupäev"
-
-#. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid "The date the lot starts deteriorating without becoming dangerous."
-msgstr ""
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
@@ -152,9 +141,9 @@ msgid "The number of days before a production lot should be removed."
 msgstr "Päevade arv ennem mida tootepartii tuleb eemaldada."
 
 #. module: product_expiry
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Häire kuupäev"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -178,20 +167,36 @@ msgstr ""
 "tarbida."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date the lot should be removed."
-msgstr "Kuupäeva millal toode tuleks kõrvaldada."
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr ""
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product Alert Time"
 msgstr ""
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
+
+#~ msgid "The date the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "Kuupäev, millal toode võib muutuda ohtlikuks ning neid ei tohiks tarbida."
+
 #~ msgid "Product usetime"
 #~ msgstr "Toote kasutamise aeg"
 
-#~ msgid "Alert Date"
-#~ msgstr "Häire kuupäev"
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
+
+#~ msgid "The date the lot should be removed."
+#~ msgstr "Kuupäeva millal toode tuleks kõrvaldada."
 
 #~ msgid "Product removal time"
 #~ msgstr "Toote eemaldamise aeg"

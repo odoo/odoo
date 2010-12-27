@@ -3,9 +3,12 @@
     <data>
 
         <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" 
-            groups="base.group_sale_manager,base.group_sale_salesman"/>
+            groups="base.group_sale_manager,base.group_sale_salesman,base.group_partner_manager"/>
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
+            parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
+        
+        <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
 
         <menuitem id="base.menu_sale_config_sales" name="Sales"
@@ -86,7 +89,7 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
-            <field name="help">Sales team allows you to organize your different salesmen or departments into separate teams. Each team will work in his own list of opportunities, sales orders, eso. Each user can set a team by default in his preferences. The opportunities and sales order he will see, will be automatically filtered according to his team.</field>
+            <field name="help">Define a Sales Team to organize your different salesmen or sales departments into separate teams. Each team will work in its own list of opportunities, sales orders, etc. Each user can set a default team in his user preferences. The opportunities and sales order displayed, will automatically be filtered according to his team.</field>
         </record>
 
         <menuitem action="crm_case_section_act"
@@ -105,6 +108,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
+                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -115,16 +119,19 @@
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
             <field name="type">form</field>
+            <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                    <field name="object_id" invisible="1" />
+                    <field name="type" invisible="1" />
+                     
                     <field name="sequence"/>
                     <field name="probability"/>
                     <field name="on_change"/>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
+            <field name="section_ids" invisible="1" />
                 </form>
             </field>
         </record>
@@ -137,6 +144,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
+       
 
  <!-- Case Categories Form View -->
 
@@ -326,7 +334,7 @@
             <field name="res_model">crm.segmentation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create specific partner categories that you will then be able to assign to your partners to better manage your interactions with them. The segmentation tool will assign categories to partners based on defined criteria.</field>
+            <field name="help">Create specific partner categories which you can assign to your partners to better manage your interactions with them. The segmentation tool is able to assign categories to partners according to criteria you set.</field>
         </record>
 
        <menuitem action="crm_segmentation_tree-act"
@@ -371,7 +379,7 @@
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <field name="parent_id" position="after">
+                    <field name="user_id" position="after">
                         <field name="section_id" completion="1" widget="selection"
                             groups="base.group_extended"/>
                     </field>

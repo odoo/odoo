@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-13 10:58+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -24,35 +24,16 @@ msgid "Process Node"
 msgstr "Node procés"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "URL d'ajuda"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Menú relacionat"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -76,9 +57,9 @@ msgid "Kind Of Node"
 msgstr ""
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "URL d'ajuda"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -168,9 +149,10 @@ msgid "Dummy"
 msgstr "Fictici"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr ""
 
 #. module: process
 #: field:process.condition,name:0
@@ -222,11 +204,6 @@ msgid "Associated Groups"
 msgstr ""
 
 #. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Menú relacionat"
-
-#. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
 msgstr "Expressió dels estats"
@@ -240,6 +217,20 @@ msgstr "Acció"
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
 msgstr "Inici fluxe de treball"
+
+#. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: process
 #: field:process.condition,model_states:0
@@ -335,11 +326,20 @@ msgstr "Transicions"
 msgid "Object Method"
 msgstr "Mètode objecte"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+#~ "especial!"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "Rols des de flux"
 
 #~ msgid "Details"
 #~ msgstr "Detalls"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
 
 #~ msgid "Roles"
 #~ msgstr "Rols"
@@ -352,3 +352,6 @@ msgstr "Mètode objecte"
 
 #~ msgid "Enterprise Processes"
 #~ msgstr "Processos d'empresa"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de model no vàlid en la definició de l'acció."

@@ -63,7 +63,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         data = self.read(cr, uid, ids, [], context=context)[0]
 
         account_ids = {}
@@ -92,7 +91,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     date_due = pterm_list[-1]
 
             curr_invoice = {
-                'name': time.strftime('%D')+' - '+account.name,
+                'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
                 'address_contact_id': res_partner_obj.address_get(cr, uid,
                     [account.partner_id.id], adr_pref=['contact'])['contact'],
@@ -176,7 +175,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id, tuple(context['active_ids'])))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(context['active_ids'])))
 
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
 

@@ -74,7 +74,7 @@ class report_graph(report.interface.report_int):
         input.close()
         return output.read()
 
-    def create(self, cr, uid, ids, data, context={}):
+    def create(self, cr, uid, ids, data, context=None):
         pdf_string = self.get_proximity_graph(cr, uid, data['id'])
         return (pdf_string, 'pdf')
 

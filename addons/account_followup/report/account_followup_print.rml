@@ -117,7 +117,7 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">Document : Customer account statement</para>
-    <para style="terp_default_9">Date : [[ formatLang(time.strftime('%Y-%m-%d'),date = True) ]]</para>
+    <para style="terp_default_9">Date : [[ formatLang(data['form']['date'],date=True) ]]</para>
     <para style="terp_default_9">Customer Ref : [[ o.ref or '' ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>

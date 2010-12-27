@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -27,16 +27,15 @@ class sale_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
         return res
-    
-    def invoice_line_create(self, cr, uid, ids, context={}):
+
+    def invoice_line_create(self, cr, uid, ids, context=None):
         new_ids = []
         list_seq = []
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 new_ids.append(line.id)
                 list_seq.append(line.sequence)
@@ -98,11 +97,11 @@ class sale_order_line(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default['layout_type'] = self.browse(cr, uid, id).layout_type
+        default['layout_type'] = self.browse(cr, uid, id, context=context).layout_type
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
     _order = "order_id, sequence asc"
-    _description = "Sale Order line"
+    _description = "Sales Order line"
     _inherit = "sale.order.line"
     _columns = {
         'layout_type': fields.selection([
@@ -113,7 +112,7 @@ class sale_order_line(osv.osv):
                 ('line', 'Separator Line'),
                 ('break', 'Page Break'),]
             ,'Layout Type', select=True, required=True),
-        'sequence': fields.integer('Sequence Number'),
+        'sequence': fields.integer('Layout Sequence'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),
@@ -127,8 +126,6 @@ sale_order_line()
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
         if not values:
             values = {}
         res = {}

@@ -6,27 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-09-16 16:16+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-09 10:37+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_receivable
 msgid "Receivable"
 msgstr ""
-
-#. module: l10n_fr
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_income
@@ -44,23 +37,18 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_immobilisations
 msgid "Immobilisations"
-msgstr ""
+msgstr "Imobilizado"
 
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_1
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_5
 msgid "France"
-msgstr ""
+msgstr "França"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_asset
 msgid "Asset"
 msgstr "Activo"
-
-#. module: l10n_fr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_equity
@@ -71,17 +59,22 @@ msgstr "Situação liquida"
 #: view:account.bilan.report:0
 #: view:account.cdr.report:0
 msgid "Print"
+msgstr "Imprimir"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_account_bilan_report
+msgid "Account Bilan Report"
 msgstr ""
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_l10n_fr_report
 msgid "Report for l10n_fr"
-msgstr ""
+msgstr "Relatório para l10n_fr"
 
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_2
 msgid "Zone Euro"
-msgstr ""
+msgstr "Zona Euro"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_expense
@@ -94,14 +87,14 @@ msgid "Account CDR Report"
 msgstr ""
 
 #. module: l10n_fr
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_provision
+msgid "Provisions"
+msgstr "Provisões"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_payable
 msgid "Payable"
-msgstr ""
+msgstr "Pagável"
 
 #. module: l10n_fr
 #: view:account.cdr.report:0
@@ -111,11 +104,11 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,report_id:0
 msgid "Report"
-msgstr ""
+msgstr "Relatório"
 
 #. module: l10n_fr
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
+#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
+msgid "Hors Euro"
 msgstr ""
 
 #. module: l10n_fr
@@ -126,7 +119,7 @@ msgstr ""
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_l10n_fr_line
 msgid "Report Lines for l10n_fr"
-msgstr ""
+msgstr "Relatório de Linhas para l10n_fr"
 
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_7
@@ -136,18 +129,13 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
-msgstr ""
-
-#. module: l10n_fr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Definição"
 
 #. module: l10n_fr
 #: field:l10n.fr.line,name:0
 #: field:l10n.fr.report,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: l10n_fr
 #: model:ir.actions.act_window,name:l10n_fr.action_account_cdr_report
@@ -157,12 +145,12 @@ msgstr ""
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_stock
 msgid "Stocks"
-msgstr ""
+msgstr "Stocks"
 
 #. module: l10n_fr
 #: field:l10n.fr.report,line_ids:0
 msgid "Lines"
-msgstr ""
+msgstr "Linhas"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_cash
@@ -175,15 +163,20 @@ msgid "Comptes spéciaux"
 msgstr ""
 
 #. module: l10n_fr
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
+msgstr ""
+
+#. module: l10n_fr
 #: field:account.bilan.report,fiscalyear_id:0
 #: field:account.cdr.report,fiscalyear_id:0
 msgid "Fiscal Year"
-msgstr ""
+msgstr "Ano fiscal"
 
 #. module: l10n_fr
 #: field:l10n.fr.report,code:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_dettes
@@ -191,18 +184,18 @@ msgid "Dettes long terme"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
-msgid "Hors Euro"
-msgstr ""
+#: model:account.account.type,name:l10n_fr.account_type_view
+msgid "View"
+msgstr "Vista"
+
+#. module: l10n_fr
+#: sql_constraint:l10n.fr.line:0
+msgid "The variable name must be unique !"
+msgstr "O nome da variável deve ser único!"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_stocks
 msgid "Actif circulant"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
 msgstr ""
 
 #. module: l10n_fr
@@ -219,22 +212,17 @@ msgstr ""
 #. module: l10n_fr
 #: model:ir.module.module,shortdesc:l10n_fr.module_meta_information
 msgid "France - Plan Comptable Général"
-msgstr ""
+msgstr "França - Plano de contas geral"
 
 #. module: l10n_fr
 #: model:account.account.type,name:l10n_fr.account_type_tax
 msgid "Tax"
-msgstr ""
+msgstr "Imposto"
 
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_3
 msgid "DOM-TOM"
 msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
-msgstr "Ecrã"
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
@@ -250,7 +238,95 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,code:0
 msgid "Variable Name"
-msgstr ""
+msgstr "Nome da Variável"
 
 #~ msgid "Fiscal year"
 #~ msgstr "Ano fiscal"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+
+#~ msgid "TOTAL III"
+#~ msgstr "TOTAL III"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "+ IV+ V+ VI"
+#~ msgstr "+ IV+ V+ VI"
+
+#~ msgid "TOTAL IV"
+#~ msgstr "TOTAL IV"
+
+#~ msgid "P"
+#~ msgstr "P"
+
+#~ msgid "T"
+#~ msgstr "T"
+
+#~ msgid "( VI )"
+#~ msgstr "( VI )"
+
+#~ msgid "C"
+#~ msgstr "C"
+
+#~ msgid "M"
+#~ msgstr "M"
+
+#~ msgid "TOTAL II"
+#~ msgstr "TOTAL II"
+
+#~ msgid "I + II + III + IV + V"
+#~ msgstr "I + II + III + IV + V"
+
+#~ msgid "( V )"
+#~ msgstr "( V )"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "A"
+#~ msgstr "A"
+
+#~ msgid "E"
+#~ msgstr "E"
+
+#~ msgid ""
+#~ "Generate Chart of Accounts from a Chart Template. You will be asked to pass "
+#~ "the name of the company, the chart template to follow, the no. of digits to "
+#~ "generate the code for your accounts and Bank account, currency to create "
+#~ "Journals. Thus,the pure copy of chart Template is generated.\n"
+#~ "\tThis is the same wizard that runs from Financial "
+#~ "Management/Configuration/Financial Accounting/Financial Accounts/Generate "
+#~ "Chart of Accounts from a Chart Template."
+#~ msgstr ""
+#~ "Gerar Plano de Contas a partir de um Plano de Modelo. Vai lhe ser solicitado "
+#~ "para passar o nome da empresa, o plano de modelo a seguir, o número de "
+#~ "dígitos para gerar o código para as suas contas e conta bancária, moeda para "
+#~ "criar os diários. Assim, a cópia pura do plano do Modelo é gerada.\n"
+#~ "\tEste é o mesmo assistente que é executado a partir da Gestão "
+#~ "Financeira/Configuração/Contabilidade Financeira/Contas Financeira/Gerar "
+#~ "Plano de Contas a partir de um Plano de Modelo."
+
+#~ msgid "Select year"
+#~ msgstr "Selecionar ano"
+
+#~ msgid "( IV )"
+#~ msgstr "( IV )"
+
+#~ msgid "TOTAL I"
+#~ msgstr "TOTAL I"
+
+#~ msgid "TOTAL I ( A + B )"
+#~ msgstr "TOTAL I ( A + B )"
+
+#~ msgid "Error ! You can not create recursive account templates."
+#~ msgstr "Erro ! Não pode criar modelos de conta recursivo."
+
+#~ msgid "Error ! You can not create recursive Tax Codes."
+#~ msgstr "Erro ! Não pode criar Códigos de Impostos recursivos"
+
+#~ msgid "I"
+#~ msgstr "I"

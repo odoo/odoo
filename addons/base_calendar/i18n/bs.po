@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-09-29 09:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: BOSNIA AND HERZEGOVINA\n"
 "Language: hr\n"
@@ -44,9 +44,8 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: base_calendar
@@ -186,8 +185,8 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
 msgstr ""
 
 #. module: base_calendar
@@ -221,16 +220,15 @@ msgid "Tue"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -259,10 +257,9 @@ msgid "Days"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
 msgstr ""
 
 #. module: base_calendar
@@ -323,10 +320,9 @@ msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -435,11 +431,6 @@ msgstr ""
 #: field:calendar.todo,attendee_ids:0
 msgid "Attendees"
 msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nepravilno ime modela u definiciji radnje."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -582,19 +573,9 @@ msgid "Delegrated To"
 msgstr ""
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nepravilan XML format za Arhitekturu Prikaza!"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -605,11 +586,6 @@ msgstr ""
 #: field:calendar.event,create_date:0
 #: field:calendar.todo,create_date:0
 msgid "Created"
-msgstr ""
-
-#. module: base_calendar
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
-msgid "Set Exclude range"
 msgstr ""
 
 #. module: base_calendar
@@ -683,6 +659,12 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Privacy"
+msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
 msgstr ""
 
 #. module: base_calendar
@@ -801,9 +783,9 @@ msgid "Fri"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
 msgstr ""
 
 #. module: base_calendar
@@ -834,21 +816,9 @@ msgid "Attachment"
 msgstr ""
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr ""
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -858,6 +828,7 @@ msgstr ""
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -922,8 +893,10 @@ msgid "June"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
 msgstr ""
 
 #. module: base_calendar
@@ -944,12 +917,10 @@ msgid "User"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
-msgstr "Aktivan"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
+msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -980,6 +951,13 @@ msgstr ""
 #: field:calendar.event,count:0
 #: field:calendar.todo,count:0
 msgid "Count"
+msgstr ""
+
+#. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
 msgstr ""
 
 #. module: base_calendar
@@ -1036,16 +1014,24 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
 msgid "Summary"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
-msgstr ""
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
+msgstr "Aktivan"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1116,6 +1102,11 @@ msgstr ""
 #: field:calendar.event,recurrent_id:0
 #: field:calendar.todo,recurrent_id:0
 msgid "Recurrent ID date"
+msgstr ""
+
+#. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: base_calendar
@@ -1286,9 +1277,8 @@ msgid "Month"
 msgstr ""
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
 msgstr ""
 
 #. module: base_calendar
@@ -1347,6 +1337,12 @@ msgstr ""
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
+msgstr ""
+
+#. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
 msgstr ""
 
 #. module: base_calendar
@@ -1539,6 +1535,13 @@ msgid "Accept"
 msgstr ""
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
 msgstr ""
@@ -1568,8 +1571,10 @@ msgid "Duration"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that can be assigned to calendar events or "
+"meetings."
 msgstr ""
 
 #. module: base_calendar
@@ -1578,10 +1583,14 @@ msgid "Trigger Date"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
+#: help:calendar.alarm,attach:0
+msgid ""
+"* Points to a sound resource,                     which is rendered when the "
+"alarm is triggered for audio,\n"
+"                    * File which is intended to be sent as message "
+"attachments for email,\n"
+"                    * Points to a procedure resource, which is invoked when  "
+"                    the alarm is triggered for procedure."
 msgstr ""
 
 #. module: base_calendar
@@ -1590,3 +1599,179 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr ""
+
+#~ msgid "Contact Seq."
+#~ msgstr "Seq. Osobe"
+
+#~ msgid "res.partner.contact"
+#~ msgstr "res.partner.contact"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#~ msgid "Partner Function"
+#~ msgstr "Funkcija Partnera"
+
+#~ msgid "Partner Seq."
+#~ msgstr "Partner Seq."
+
+#~ msgid "Current"
+#~ msgstr "Tekući"
+
+#~ msgid "First Name"
+#~ msgstr "Ime osobe"
+
+#~ msgid "Contact Partner Function"
+#~ msgstr "Funkcija Osobe Partnera - Contact Partner Function"
+
+#~ msgid "Other"
+#~ msgstr "Drugi"
+
+#~ msgid "Contact to function"
+#~ msgstr "Osoba na Funkciju - Contact to Function"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nepravilno ime modela u definiciji radnje."
+
+#~ msgid "Partner to address"
+#~ msgstr "Partner na Adresu"
+
+#~ msgid "# of Contacts"
+#~ msgstr "# Osoba"
+
+#~ msgid "Additional phone field"
+#~ msgstr "Dodatno polje za tel. broj"
+
+#~ msgid "Function"
+#~ msgstr "Funkcija"
+
+#~ msgid "Fax"
+#~ msgstr "Fax"
+
+#~ msgid "Phone"
+#~ msgstr "Telefon"
+
+#~ msgid "Defines contacts and functions."
+#~ msgstr "Određuje Osobe i Funkcije"
+
+#~ msgid "Contact Functions"
+#~ msgstr "Funkcije Osoba"
+
+#~ msgid "Base Contact"
+#~ msgstr "Osnovna Osoba"
+
+#~ msgid ""
+#~ "Order of importance of this job title in the list of job title of the linked "
+#~ "partner"
+#~ msgstr ""
+#~ "redoslijed važnosti ovog naziva Posla-Radnog mjesta u listi naziva Poslova-"
+#~ "Radnih mjesta povezanog Partnera"
+
+#~ msgid "E-Mail"
+#~ msgstr "E-Mail"
+
+#~ msgid "Date Stop"
+#~ msgstr "Datum Završetka"
+
+#~ msgid "Address"
+#~ msgstr "Adresa"
+
+#~ msgid "Contact's Jobs"
+#~ msgstr "Poslovi Osobe"
+
+#~ msgid "Nationality"
+#~ msgstr "Državljanstvo"
+
+#~ msgid ""
+#~ "Order of importance of this address in the list of addresses of the linked "
+#~ "contact"
+#~ msgstr "redoslijed važnosti ove Adrese u listi Adresa povezanog Partnera"
+
+#~ msgid "Main Job"
+#~ msgstr "Glavni Posao"
+
+#~ msgid "Categories"
+#~ msgstr "Kategorije"
+
+#~ msgid "Main Function"
+#~ msgstr "Glavna funkcija"
+
+#~ msgid "Define partners and their addresses."
+#~ msgstr "Definiraj Partnere i njihove Adrese"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nepravilan XML format za Arhitekturu Prikaza!"
+
+#~ msgid "Base Contact Process"
+#~ msgstr "Proces Osnovne Osobe za kontakt"
+
+#~ msgid "Seq."
+#~ msgstr "Seq."
+
+#~ msgid "Extension"
+#~ msgstr "Ekstenzija"
+
+#~ msgid "Mobile"
+#~ msgstr "Mobitel"
+
+#~ msgid "Internal/External extension phone number"
+#~ msgstr "Unutarnja/Vanjska Ekstenzija Tel. broja"
+
+#~ msgid "People you work with."
+#~ msgstr "Ljudi s kojima radite."
+
+#~ msgid "Extra Information"
+#~ msgstr "Dodatni Podaci"
+
+#~ msgid "Functions and Addresses"
+#~ msgstr "Funkcije i Adrese"
+
+#~ msgid "Companies you work with."
+#~ msgstr "Tvrtke s kojima radite."
+
+#~ msgid "Main Employer"
+#~ msgstr "Glavni Poslodavac."
+
+#~ msgid "Function to address"
+#~ msgstr "Funkcija na Adresu - Function to address"
+
+#~ msgid "Partner Contact"
+#~ msgstr "Osoba kod Partnera"
+
+#~ msgid "Partners"
+#~ msgstr "Partneri"
+
+#~ msgid "Addresses"
+#~ msgstr "Adrese"
+
+#~ msgid "Working and private addresses."
+#~ msgstr "Poslovne i Privatne Adrese"
+
+#~ msgid "Last Name"
+#~ msgstr "Prezime osobe"
+
+#~ msgid "General"
+#~ msgstr "Općenit"
+
+#~ msgid "Past"
+#~ msgstr "Prošli"
+
+#~ msgid "General Information"
+#~ msgstr "Opća Informacija"
+
+#~ msgid "Jobs at a same partner address."
+#~ msgstr "Poslovi na istoj Adresi Partnera"
+
+#~ msgid "Date Start"
+#~ msgstr "Datum Početka"
+
+#~ msgid "Define functions and address."
+#~ msgstr "Definiraj Funkcije i Adrese"
+
+#~ msgid "Website"
+#~ msgstr "Web stranica"
+
+#~ msgid "Birth Date"
+#~ msgstr "Datum rođenja"

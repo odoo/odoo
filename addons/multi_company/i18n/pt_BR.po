@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-20 07:23+0000\n"
-"Last-Translator: Douglas Morato <dfamorato@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-27 00:49+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -40,17 +40,21 @@ msgid ""
 "%(company_name)s\n"
 "        "
 msgstr ""
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erro: Unidade de venda deve ser de categoria diferente da unidade de medida"
+"\n"
+"Data: %(date)s\n"
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Em anexo encontra-se  um lembrete de todas suas  faturas à pagar, por um "
+"montante total devido de;\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Obrigado,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 
 #. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
@@ -58,68 +62,31 @@ msgid "Odoo Offers"
 msgstr "Promoções Odoo (On Demand Open Object)"
 
 #. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Erro!  Você não pode criar categorias recursivas."
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Você não pode criar empresas recursivas."
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para Arquitetura da View"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Retornando"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
 msgid "Multi-Companies"
-msgstr ""
+msgstr "Multi-Empresas"
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
 #: view:multi_company.default:0
 msgid "Multi Company"
-msgstr "Empresa Múltipla"
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código EAN inválido"
-
-#. module: multi_company
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
-msgstr ""
+msgstr "Multi-Empresa"
 
 #. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Empresa Padrão por Objeto"
+
+#. module: multi_company
+#: model:product.template,name:multi_company.product_product_odoo1_product_template
+msgid "Odoo Offer"
+msgstr "Promoções Odoo (On Demand Open Object)"
 
 #. module: multi_company
 #: view:multi_company.default:0
@@ -132,9 +99,13 @@ msgid "Condition"
 msgstr "Condição"
 
 #. module: multi_company
-#: model:product.template,name:multi_company.product_product_odoo1_product_template
-msgid "Odoo Offer"
-msgstr "Promoções Odoo (On Demand Open Object)"
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
 
 #~ msgid "Default Company"
 #~ msgstr "Empresa Padrão"
@@ -142,8 +113,16 @@ msgstr "Promoções Odoo (On Demand Open Object)"
 #~ msgid "Object"
 #~ msgstr "Objeto"
 
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
+
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "O imposto não parece estar correto."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
 
 #~ msgid "Object affect by this rules"
 #~ msgstr "Objeto afetado por esta regra"
@@ -154,8 +133,18 @@ msgstr "Promoções Odoo (On Demand Open Object)"
 #~ msgid "Main Company"
 #~ msgstr "Empresa principal"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Erro: Unidade de venda deve ser de categoria diferente da unidade de medida"
+
 #~ msgid "Name"
 #~ msgstr "Nome"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erro! Você não pode criar empresas recursivas."
 
 #~ msgid "Company where the user is connected"
 #~ msgstr "Empresa onde o usuário está conectado"
@@ -165,6 +154,12 @@ msgstr "Promoções Odoo (On Demand Open Object)"
 
 #~ msgid "Expression"
 #~ msgstr "Expressão"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Erro!  Você não pode criar categorias recursivas."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erro: Código EAN inválido"
 
 #~ msgid "Default company per Object"
 #~ msgstr "Empresa padrão por Objeto"
@@ -207,3 +202,25 @@ msgstr "Promoções Odoo (On Demand Open Object)"
 #~ "Este módulo acrescenta a possibilidade de se gerenciar facilmente \n"
 #~ "    o valor padrão para cada objeto\n"
 #~ "    "
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "A empresa escolhida não está entre as empresas habilitadas para este usuário"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Não é permitido criar dois usuários com o mesmo login!"
+
+#~ msgid "Cash Journal - (OpenERP IN)"
+#~ msgstr "Livro Caixa - (OpenERP IN)"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Erro! Você não pode criar membros recursivos associados."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar Menu recursivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"

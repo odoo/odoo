@@ -68,13 +68,11 @@ class partner_vat_intra(osv.osv_memory):
 
     def create_xml(self, cursor, user, ids, context=None):
         obj_user = self.pool.get('res.users')
-        obj_fyear = self.pool.get('account.fiscalyear')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
         mod_obj = self.pool.get('ir.model.data')
         street = zip_city = country = p_list = data_clientinfo = ''
-        error_message = list_partner = []
         seq = amount_sum = 0
 
         if context is None:
@@ -138,7 +136,7 @@ class partner_vat_intra(osv.osv_memory):
                 continue
             seq += 1
             amt = row['amount'] or 0
-            amt = int(amt * 100)
+            amt = int(round(amt * 100))
             amount_sum += amt
             intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
             data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:] +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'

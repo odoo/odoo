@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 07:25+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -34,19 +34,9 @@ msgid "Paid Member"
 msgstr "Membru cotizant"
 
 #. module: membership
-#: help:product.product,membership_date_from:0
-msgid "Active Membership since this date"
-msgstr ""
-
-#. module: membership
 #: view:report.membership:0
 msgid "Group By..."
 msgstr ""
-
-#. module: membership
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acțiunii"
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -152,6 +142,11 @@ msgid "# Invoiced"
 msgstr ""
 
 #. module: membership
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr ""
+
+#. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
 msgstr ""
@@ -189,14 +184,32 @@ msgid "From"
 msgstr "De la"
 
 #. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "Eroare, această apartenenţă este expirată"
+
+#. module: membership
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A member who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+
+#. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
 msgstr "Creare"
-
-#. module: membership
-#: model:process.transition,note:membership.process_transition_invoicetoassociate0
-msgid "Invoiced member may be Associated member."
-msgstr "Membrul facturat poate fi membru asociat"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -260,8 +273,10 @@ msgid "Golden Membership"
 msgstr ""
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Members Analysis"
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
 msgstr ""
 
 #. module: membership
@@ -277,9 +292,9 @@ msgid "Define product for membership."
 msgstr "Definire apartenenţă ca produs"
 
 #. module: membership
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr "Membrul facturat poate fi membru asociat"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -287,15 +302,10 @@ msgid "Join"
 msgstr ""
 
 #. module: membership
-#: model:ir.model,name:membership.model_account_invoice
-#: field:membership.membership_line,account_invoice_id:0
-msgid "Invoice"
+#: help:product.product,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
 msgstr ""
-
-#. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Eroare: UV  trebuie să fie întro altă categorie decât UM"
 
 #. module: membership
 #: view:product.product:0
@@ -305,6 +315,11 @@ msgstr "Produse tip apartenenţă"
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
+msgstr ""
+
+#. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give membership free of cost."
 msgstr ""
 
 #. module: membership
@@ -323,6 +338,11 @@ msgid "Memberships"
 msgstr ""
 
 #. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
+msgstr "Cotizaţia de membru plătită"
+
+#. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
 msgstr ""
@@ -333,13 +353,43 @@ msgid "September"
 msgstr ""
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid ""
+"\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership state.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
 msgstr ""
 
 #. module: membership
@@ -371,6 +421,12 @@ msgid "Associate Member"
 msgstr ""
 
 #. module: membership
+#: help:product.product,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr ""
+
+#. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
 msgstr ""
@@ -399,6 +455,12 @@ msgid "Category"
 msgstr ""
 
 #. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr ""
+
+#. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -411,22 +473,12 @@ msgid "Member Sale Pricelist Version"
 msgstr "Versiune listă de preţuri membri"
 
 #. module: membership
-#: help:product.product,membership_date_to:0
-msgid "Expired date of Membership"
-msgstr ""
-
-#. module: membership
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 "Eroare: UM implictă şi UM la aprovizionare trebuie să fie în aceeaşi "
 "categorie."
-
-#. module: membership
-#: help:res.partner,membership_amount:0
-msgid "The price negociated by the partner"
-msgstr "Preţul negociat de partener"
 
 #. module: membership
 #: view:report.membership:0
@@ -439,13 +491,13 @@ msgid "Member"
 msgstr ""
 
 #. module: membership
-#: view:product.product:0
-msgid "Date From"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: membership
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:product.product:0
+msgid "Date From"
 msgstr ""
 
 #. module: membership
@@ -486,18 +538,6 @@ msgid "June"
 msgstr ""
 
 #. module: membership
-#: model:process.node,note:membership.process_node_paidmember0
-msgid "Membership invoice paid."
-msgstr "Cotizaţia de membru plătită"
-
-#. module: membership
-#: selection:membership.membership_line,state:0
-#: selection:report.membership,membership_state:0
-#: selection:res.partner,membership_state:0
-msgid "Invoiced Member"
-msgstr "Membru Facturat"
-
-#. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
 #: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
@@ -510,9 +550,16 @@ msgid "Membership"
 msgstr "Apartenenţă"
 
 #. module: membership
-#: help:product.product,membership:0
-msgid "Specify if this product is a membership product"
-msgstr "Specificare dacă produsul este de tip apartenenţă"
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "Membru Facturat"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -562,20 +609,23 @@ msgid "Membership Fee"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.item:0
-msgid ""
-"Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
-"Item!"
-msgstr ""
-
-#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "Cotizaţie de membru"
 
 #. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr ""
+
+#. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
+msgstr ""
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Select if a product is a membership product."
 msgstr ""
 
 #. module: membership
@@ -623,6 +673,11 @@ msgid "Last 30 Days"
 msgstr ""
 
 #. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr ""
+
+#. module: membership
 #: view:membership.invoice:0
 msgid "Close"
 msgstr ""
@@ -646,14 +701,6 @@ msgstr "Rând facturare cont"
 #: view:product.product:0
 msgid "Categorization"
 msgstr ""
-
-#. module: membership
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ și să nu conțină nici un caracter "
-"special !"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -694,11 +741,6 @@ msgid "May"
 msgstr ""
 
 #. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "Nu puteţi avea două liste de preţuri care se suprapun"
-
-#. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
 msgstr ""
@@ -730,6 +772,11 @@ msgid "April"
 msgstr ""
 
 #. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr ""
+
+#. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
 msgstr "Data revocării"
@@ -749,6 +796,11 @@ msgstr ""
 #: model:process.node,name:membership.process_node_membershipproduct0
 msgid "Membership product"
 msgstr "Produs apartenenţă"
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr ""
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -773,6 +825,9 @@ msgstr "Anul"
 msgid "Revenue Done"
 msgstr ""
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acțiunii"
+
 #~ msgid "Currency"
 #~ msgstr "Valută"
 
@@ -785,17 +840,20 @@ msgstr ""
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "Eroare: referinţa BVR este obligatorie."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
 #~ msgid "State"
 #~ msgstr "Stare"
 
 #~ msgid "Confirm"
 #~ msgstr "Confirmare"
 
-#~ msgid "Error, this membership product is out of date"
-#~ msgstr "Eroare, această apartenenţă este expirată"
-
 #~ msgid "Configuration"
 #~ msgstr "Configurare"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Eroare: UV  trebuie să fie întro altă categorie decât UM"
 
 #~ msgid "Membership by Years"
 #~ msgstr "Apartenenţa pe ani"
@@ -806,14 +864,23 @@ msgstr ""
 #~ msgid "Error: Invalid Bvr Number (wrong checksum)."
 #~ msgstr "Eroare: Număr BVR invalid (suma de control eronată)."
 
+#~ msgid "The price negociated by the partner"
+#~ msgstr "Preţul negociat de partener"
+
 #~ msgid "Paid"
 #~ msgstr "Plătit"
+
+#~ msgid "Specify if this product is a membership product"
+#~ msgstr "Specificare dacă produsul este de tip apartenenţă"
 
 #~ msgid "Waiting"
 #~ msgstr "În așteptare"
 
 #~ msgid "Invoiced members"
 #~ msgstr "Membri facturaţi"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Nu puteţi avea două liste de preţuri care se suprapun"
 
 #~ msgid "Choose invoice details"
 #~ msgstr "Alegere detalii facturare"
@@ -832,6 +899,12 @@ msgstr ""
 
 #~ msgid "Associated members"
 #~ msgstr "Membri asociaţi"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ și să nu conțină nici un caracter "
+#~ "special !"
 
 #~ msgid "Canceled Member"
 #~ msgstr "Membru suspendat"

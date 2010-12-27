@@ -2,20 +2,24 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
+        </record>
+    
     <!--Resource: purchase.order-->
 
         <record id="order_purchase1" model="purchase.order">
-            <field model="stock.location" name="location_id" search="[]"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field model="res.partner" name="partner_id" search="[('supplier','=','True')]" />
-            <field model="res.partner.address" name="partner_address_id" search="[]"/>
+            <field name="partner_id" ref="base.res_partner_asus"/>
+            <field name="partner_address_id" ref="base.res_partner_address_tang"/>
         </record>
 
         <record id="order_purchase2" model="purchase.order">
-            <field model="stock.location" name="location_id" search="[]"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field model="res.partner" name="partner_id" search="[('supplier','=','True')]" />
-            <field model="res.partner.address" name="partner_address_id" search="[]"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_address_id" ref="base.res_partner_address_zen"/>
         </record>
 
         <!--Resource: purchase.order.line-->
@@ -52,6 +56,10 @@
 
         <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
 
+        <record id="stock.res_company_tinyshop0" model="res.company">
+            <field eval="1.0" name="po_lead"/>
+            <field eval="80.0" name="schedule_range"/>
+        </record>
     </data>
 </openerp>
 

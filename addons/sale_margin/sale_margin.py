@@ -36,7 +36,7 @@ class sale_order_line(osv.osv):
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = 0
             if line.product_id:
                 if line.purchase_price:
@@ -64,7 +64,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price"),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()
@@ -76,16 +76,16 @@ class stock_picking(osv.osv):
         'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type', '=', 'out_invoice')]),
     }
 
-    def create_invoice(self, cr, uid, ids, *args):
+    def action_invoice_create(self, cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None):
         # need to carify with new requirement
         invoice_ids = []
-        margin_deduce = 0.0
         picking_obj = self.pool.get('stock.picking')
-        picking_obj.write(cr, uid, ids, {'invoice_state': '2binvoiced'})
-        res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
+        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None)
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
-        return True
+        return res
 
 stock_picking()
 
@@ -94,13 +94,13 @@ class account_invoice_line(osv.osv):
     _columns = {
         'cost_price': fields.float('Cost Price', digits=(16, 2)),
     }
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if vals.get('product_id', False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).write(cr, uid, ids, vals, context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         if vals.get('product_id',False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']

@@ -218,7 +218,6 @@
                <filter icon="terp-check" string="Current"
                    domain="[('state','in',('draft','open'))]"
                    help="All new and in progress jobs"
-                   default="1"
                    name="current"
                />
                <filter icon="terp-document-new" string="New"
@@ -243,7 +242,7 @@
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
                    <filter icon="terp-personal+" context="{'invisible_department': False}"

@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_user_product(report_sxw.rml_parse):
 
@@ -33,8 +33,9 @@ class pos_user_product(report_sxw.rml_parse):
             'get_total':self._get_total,
 
         })
+
     def _get_data(self,o):
-        self.total = 0.0        
+        self.total = 0.0
         data={}
         sql1=""" SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state='paid' and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d"""%(o.id)
         self.cr.execute(sql1)
@@ -51,14 +52,17 @@ class pos_user_product(report_sxw.rml_parse):
         return data
 
     def _get_user(self,object):
-        for o in object :
+        for o in object:
             sql = """select ru.name from account_bank_statement as abs,res_users ru
                                     where abs.user_id = ru.id
                                     and abs.id = %d"""%(o.id)
             self.cr.execute(sql)
             data = self.cr.fetchone()
             return data[0]
+
     def _get_total(self,o):
         return self.total
 
 report_sxw.report_sxw('report.pos.user.product', 'account.bank.statement', 'addons/statement/report/pos_users_product.rml', parser=pos_user_product,header='internal')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

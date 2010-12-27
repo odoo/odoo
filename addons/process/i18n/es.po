@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-17 06:56+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-09 10:58+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -25,35 +25,17 @@ msgid "Process Node"
 msgstr "Nodo proceso"
 
 #. module: process
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
-#: model:ir.ui.menu,name:process.menu_process_form
-msgid "Processes"
-msgstr ""
-
-#. module: process
-#: field:process.node,help_url:0
-msgid "Help URL"
-msgstr "URL de ayuda"
-
-#. module: process
 #: help:process.process,active:0
 msgid ""
-"If the active field is set to true, it will allow you to hide the process "
+"If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar el proceso sin eliminarlo."
+
+#. module: process
+#: field:process.node,menu_id:0
+msgid "Related Menu"
+msgstr "Menú relacionado"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -64,7 +46,7 @@ msgstr "Botones"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar por..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -74,12 +56,12 @@ msgstr "Estado"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "Tipo de nodo"
 
 #. module: process
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+#: field:process.node,help_url:0
+msgid "Help URL"
+msgstr "URL de ayuda"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -105,7 +87,7 @@ msgstr "Condiciones"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Buscar transición proceso"
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -169,9 +151,10 @@ msgid "Dummy"
 msgstr "De relleno"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr "Procesos"
 
 #. module: process
 #: field:process.condition,name:0
@@ -204,7 +187,7 @@ msgstr "Transición"
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
+msgstr "Buscar proceso"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -220,12 +203,7 @@ msgstr "Activo"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
-
-#. module: process
-#: field:process.node,menu_id:0
-msgid "Related Menu"
-msgstr "Menú relacionado"
+msgstr "Grupos asociados"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -243,6 +221,20 @@ msgid "Starting Flow"
 msgstr "Inicio flujo de trabajo"
 
 #. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: process
 #: field:process.condition,model_states:0
 msgid "Expression"
 msgstr "Expresión"
@@ -250,13 +242,13 @@ msgstr "Expresión"
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Grupos requeridos"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Transiciones entrantes"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -278,13 +270,13 @@ msgstr "Proceso"
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "Buscar nodo proceso"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Otras condiciones"
 
 #. module: process
 #: model:ir.module.module,shortdesc:process.module_meta_information
@@ -301,7 +293,7 @@ msgstr "Acciones"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Propiedades"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -336,11 +328,20 @@ msgstr "Transiciones"
 msgid "Object Method"
 msgstr "Método objeto"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
 #~ msgid "Roles from Workflow"
 #~ msgstr "Roles desde flujo"
 
 #~ msgid "Details"
 #~ msgstr "Detalles"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
 
 #~ msgid "Roles"
 #~ msgstr "Roles"
@@ -353,3 +354,24 @@ msgstr "Método objeto"
 
 #~ msgid "Enterprise Processes"
 #~ msgstr "Procesos de empresa"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the process "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Si el campo activo se desmarca, permite ocultar el proceso sin eliminarlo."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"

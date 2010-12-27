@@ -6,25 +6,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:47+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2009-09-08 13:13+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_no_autopicking
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
+msgstr ""
 
 #. module: stock_no_autopicking
-#: constraint:ir.model:0
+#: model:ir.module.module,description:stock_no_autopicking.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    This module allows an intermediate picking process to provide raw "
+"materials\n"
+"    to production orders.\n"
+"\n"
+"    One example of usage of this module is to manage production made by "
+"your\n"
+"    suppliers (sub-contracting). To achieve this, set the assembled product\n"
+"    which is sub-contracted to \"No Auto-Picking\" and put the location of "
+"the\n"
+"    supplier in the routing of the assembly operation.\n"
+"    "
 msgstr ""
 
 #. module: stock_no_autopicking
@@ -38,16 +49,24 @@ msgid "Auto Picking"
 msgstr ""
 
 #. module: stock_no_autopicking
-#: model:ir.model,name:stock_no_autopicking.model_product_product
-msgid "Product"
+#: help:product.product,auto_pick:0
+msgid "Auto picking for raw materials of production orders."
 msgstr ""
 
 #. module: stock_no_autopicking
-#: help:product.product,auto_pick:0
-msgid "Auto picking for raw materials of production orders."
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: stock_no_autopicking
 #: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
 msgid "Stock No Auto-Picking"
 msgstr ""
+
+#. module: stock_no_autopicking
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"

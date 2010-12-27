@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-09-08 16:38+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -34,9 +34,10 @@ msgid "From"
 msgstr ""
 
 #. module: product_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+msgstr "판매 카타로그 가격과 고객 인보이스 수량을 곱한 액수"
 
 #. module: product_margin
 #: help:product.product,total_margin:0
@@ -59,27 +60,10 @@ msgid "From Date"
 msgstr ""
 
 #. module: product_margin
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
-
-#. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
 msgstr "초안, 오픈 그리고 결제됨"
-
-#. module: product_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: product_margin
-#: help:product.product,sale_expected:0
-msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr "판매 카타로그 가격과 고객 인보이스 수량을 곱한 액수"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -114,9 +98,13 @@ msgid "Expected Sale - Turn Over"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "예상 판매"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -124,9 +112,9 @@ msgid "Standard Price"
 msgstr "표준 가격"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "공급자 인보이스에서 수량 합계"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "예상 판매"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -139,21 +127,15 @@ msgid "Expected Sale - Normal Cost"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# 인보이스됨"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "분석 범주"
 
 #. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "총 원가"
-
-#. module: product_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -225,6 +207,11 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "공급자 인보이스의 평균 가격 "
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "공급자 인보이스에서 수량 합계"
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr ""
@@ -235,9 +222,10 @@ msgid "Total margin * 100 / Turnover"
 msgstr "총 마진 * 100 / 회전율"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "분석 범주"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "# 인보이스됨"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -262,6 +250,11 @@ msgstr "상품 마진"
 #. module: product_margin
 #: view:product.margin:0
 msgid "General Information"
+msgstr ""
+
+#. module: product_margin
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: product_margin

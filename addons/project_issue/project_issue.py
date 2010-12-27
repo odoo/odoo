@@ -78,8 +78,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        if context is None:
-            context = {}
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -143,8 +141,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def _get_issue_task(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         issues = []
         issue_pool = self.pool.get('project.issue')
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
@@ -152,8 +148,6 @@ class project_issue(crm.crm_case, osv.osv):
         return issues
 
     def _get_issue_work(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         issues = []
         issue_pool = self.pool.get('project.issue')
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
@@ -230,7 +224,7 @@ class project_issue(crm.crm_case, osv.osv):
             }),
     }
 
-    def _get_project(self, cr, uid, context):
+    def _get_project(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.context_project_id:
             return user.context_project_id.id
@@ -339,12 +333,10 @@ class project_issue(crm.crm_case, osv.osv):
 
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        if context is None:
-            context = {}
         result = {}
         if not task_id:
             return {'value':{}}
-        task = self.pool.get('project.task').browse(cr, uid, task_id, context)
+        task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value':{'assigned_to': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
@@ -370,7 +362,7 @@ class project_issue(crm.crm_case, osv.osv):
         self._history(cr, uid, cases, _('Escalate'))
         return True
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
 
@@ -378,7 +370,8 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
+        if context is None: 
+            context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject') or _('No Title')
@@ -400,7 +393,7 @@ class project_issue(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
-        res = self.create(cr, uid, vals, context)
+        res = self.create(cr, uid, vals, context=context)
         self.convert_to_bug(cr, uid, [res], context=context)
 
         attachents = msg.get('attachments', [])
@@ -418,8 +411,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        if context is None:
-            context = {}
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -466,8 +457,6 @@ class project_issue(crm.crm_case, osv.osv):
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context={}
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
             default = {}
@@ -486,8 +475,8 @@ class project(osv.osv):
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
 
-    def _check_escalation(self, cr, uid, ids):
-         project_obj = self.browse(cr, uid, ids[0])
+    def _check_escalation(self, cr, uid, ids, context=None):
+         project_obj = self.browse(cr, uid, ids[0], context=context)
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:
                  return False

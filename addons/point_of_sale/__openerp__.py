@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,7 +64,7 @@ Main features :
         'wizard/pos_return_view.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
-        'report/report_pos_order_view.xml',
+        'report/pos_order_report_view.xml',
         'report/report_cash_register_view.xml',
         'point_of_sale_sequence.xml',
         'point_of_sale_workflow.xml',

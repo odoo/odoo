@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2009-11-17 08:50+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-30 11:39+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_vat
@@ -23,21 +24,33 @@ msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
 msgstr ""
+"Die UID (Umsatzsteueridentifikationsnummer) ist anscheinend nicht korrekt. "
+"Sie sollten in etwa eine Eingabe vornehmen, wie %s"
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: base_vat
-#: constraint:ir.model:0
+#: model:ir.module.module,description:base_vat.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    Enable the VAT Number for the partner. Check the validity of that VAT "
+"Number.\n"
+"\n"
+"    This module follows the methods stated at http://sima-pc.com/nif.php "
+"for\n"
+"    checking the validity of VAT Number assigned to partners in European "
+"countries.\n"
+"    "
 msgstr ""
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
+msgstr ""
+"Erlaubt die UID (Umsatzsteueridentifikationsnummer) des Partners und prüft "
+"diese."
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: base_vat
@@ -45,6 +58,8 @@ msgstr ""
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
 msgstr ""
+"Die UID (Umsatzsteueridentifikationsnummer) ist ungültig. Sie sollte immer "
+"mit dem Landescode (z.B. DE ...) beginnen."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -52,16 +67,22 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Markieren Sie dieses Kästchen, wenn der Partner der Umsatzsteuer unterworfen "
+"wird. Die UID (Umsatzsteueridentifikationsnummer) wird in diesem Fall im "
+"Rahmen der Umsatzsteuermeldung verwendet werden."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "USt Voranmeldung"
+msgstr "Umsatzsteuermeldung"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid ""
 #~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
@@ -71,3 +92,18 @@ msgstr "USt Voranmeldung"
 
 #~ msgid "VAT"
 #~ msgstr "UID"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
+#~ "Sonderzeichen haben !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-28 08:59+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll
@@ -42,15 +42,6 @@ msgid "Recompute Sheet"
 msgstr "Цалингийн хуудсыг дахин тооцоолох"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error : %s ' % (e)))\n"
-"\n"
-"                if sal_type in ('gross', 'net"
-msgstr "Хувьсагчийн алдаа : %s ' % (e)))"
-
-#. module: hr_payroll
 #: report:employees.salary:0
 msgid "Employees Salary Details"
 msgstr ""
@@ -59,11 +50,6 @@ msgstr ""
 #: report:employees.salary:0
 msgid "Allowances with Basic:"
 msgstr "Үндсэн цалингаас тооцсон олголтууд"
-
-#. module: hr_payroll
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -159,6 +145,12 @@ msgid "Set to Draft"
 msgstr "Ноороглох"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Variable Error: %s "
+msgstr ""
+
+#. module: hr_payroll
 #: view:hr.passport:0
 msgid "Expire"
 msgstr "Дуусах огноо"
@@ -167,83 +159,6 @@ msgstr "Дуусах огноо"
 #: selection:hr.holidays.status,type:0
 msgid "Half-Pay Holiday"
 msgstr "Хагас цалинтай амралт, чөлөө"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Please check configuration of %s, payroll head is missing' % "
-"(hday.holiday_status_id.name)))\n"
-"                    \n"
-"                res = {\n"
-"                    'slip_id':slip.id,\n"
-"                    'name':hday.holiday_status_id.name + '-%s' % "
-"(hday.number_of_days),\n"
-"                    'code':hday.holiday_status_id.code,\n"
-"                    'amount_type':'fix',\n"
-"                    'category_id':hday.holiday_status_id.head_id.id,\n"
-"                    'sequence':hday.holiday_status_id.head_id.sequence\n"
-"                }\n"
-"                days = hday.number_of_days\n"
-"                if hday.number_of_days < 0:\n"
-"                    days = hday.number_of_days * -1\n"
-"                total_leave += days\n"
-"                if hday.holiday_status_id.type == 'paid':\n"
-"                    paid_leave += days\n"
-"                    continue\n"
-"#                    res['name'] = hday.holiday_status_id.name + '-%s' % "
-"(days)\n"
-"#                    res['amount'] = perday * days\n"
-"#                    res['type'] = 'allowance'\n"
-"#                    leave += days\n"
-"#                    total += perday * days\n"
-"                \n"
-"                elif hday.holiday_status_id.type == 'halfpaid':\n"
-"                    paid_leave += (days / 2)\n"
-"                    res['name'] = hday.holiday_status_id.name + '-%s/2' % "
-"(days)\n"
-"                    res['amount'] = perday * (days/2)\n"
-"                    total += perday * (days/2)\n"
-"                    leave += days / 2\n"
-"                    res['type'] = 'deduction'\n"
-"                else:\n"
-"                    res['name'] = hday.holiday_status_id.name + '-%s' % "
-"(days)\n"
-"                    res['amount'] = perday * days\n"
-"                    res['type'] = 'deduction'\n"
-"                    leave += days\n"
-"                    total += perday * days\n"
-"\n"
-"                slip_line_pool.create(cr, uid, res, context=context)\n"
-"            basic = basic - total\n"
-"            leaves = total\n"
-"            update.update({\n"
-"                'basic':basic,\n"
-"                'basic_before_leaves': round(basic_before_leaves),\n"
-"                'leaves':total,\n"
-"                'holiday_days':leave,\n"
-"                'worked_days':working_day - leave,\n"
-"                'working_days':working_day,\n"
-"            })\n"
-"            self.write(cr, uid, [slip.id], update, context=context)\n"
-"        return True\n"
-"hr_payslip()\n"
-"\n"
-"class hr_payslip_line(osv.osv):\n"
-"    '''\n"
-"    Payslip Line\n"
-"    '''\n"
-"    \n"
-"    _name = 'hr.payslip.line'\n"
-"    _description = 'Payslip Line'\n"
-"\n"
-"    def onchange_category(self, cr, uid, ids, category_id):\n"
-"        seq = 0\n"
-"        res = {\n"
-"        }\n"
-"        if category_id:\n"
-"            category = self.pool.get('hr.allounce.deduction.categoty"
-msgstr ""
 
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
@@ -341,6 +256,12 @@ msgstr "Цалингин тооцоолол"
 #: report:salary.structure:0
 msgid "Amount"
 msgstr "Дүн"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Please check configuration of %s, payroll head is missing"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:company.contribution,amount_type:0
@@ -533,40 +454,6 @@ msgid "Employee PaySlip"
 msgstr "Ажилтны цалингийн хуудас"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error : %s ' % (e)))\n"
-"                amount = 0.0\n"
-"                if line.amount_type == 'per':\n"
-"                    amount = amt * line.amount\n"
-"                elif line.amount_type == 'func':\n"
-"                    amount = slip_line_pool.execute_function(cr, uid, "
-"line.id, amt, context)\n"
-"                elif line.amount_type == 'fix':\n"
-"                    amount = line.amount\n"
-"                \n"
-"                if line.type == 'allowance':\n"
-"                    allowance += amount\n"
-"                elif line.type == 'deduction':\n"
-"                    deduction += amount\n"
-"            \n"
-"            vals[employee.id] = {\n"
-"                'basic':basic, \n"
-"                'advantages_gross':allowance, \n"
-"                'gross':basic + allowance, \n"
-"                'advantages_net':deduction,\n"
-"                'net':basic + allowance - deduction\n"
-"            }\n"
-"        return vals\n"
-"    \n"
-"    _columns = {\n"
-"        'passport_id':fields.many2one('hr.passport', 'Passport', "
-"required=False, domain=\"[('employee_id','=',active_id), "
-"('address_id','=',address_home_id)]\", help=\"Employee Passport Information"
-msgstr ""
-
-#. module: hr_payroll
 #: field:hr.payslip,leaves:0
 msgid "Leave Deductions"
 msgstr "Амралт, чөлөөний суутгал"
@@ -659,6 +546,11 @@ msgid "Email"
 msgstr "Э-мэйл"
 
 #. module: hr_payroll
+#: report:hr.payroll.register.sheet:0
+msgid "#"
+msgstr "#"
+
+#. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
 #, python-format
 msgid "Error !"
@@ -674,14 +566,6 @@ msgstr "Хуудсыг шалгах"
 #: help:hr.contract,working_days_per_week:0
 msgid "No of Working days / week for an employee"
 msgstr "Ажилтны долоо хоногт ажиллах хоногийн тоо"
-
-#. module: hr_payroll
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
@@ -762,25 +646,12 @@ msgid "Fixed Amount"
 msgstr "Тогтмол дүн"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error : %s ' % (e)))\n"
-"                elif line.amount_type in ('fix', 'func"
-msgstr ""
-
-#. module: hr_payroll
 #: field:company.contribution.line,to_val:0
 #: report:employees.salary:0
 #: field:hr.payslip.line.line,to_val:0
 #: report:year.salary:0
 msgid "To"
 msgstr "Хэмжээ хүртэл"
-
-#. module: hr_payroll
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Харагдацын архитектурын xml буруу байна"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:0
@@ -798,28 +669,6 @@ msgstr "Ажилчдын цалингийн дэлгэрэнгүй"
 #: view:hr.payslip:0
 msgid "Pay Salary"
 msgstr "Цалингийн хуудас"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Please define bank account for the %s employee' % (slip.employee_id.name)))\n"
-"                pline = {\n"
-"                    'advice_id':pid,\n"
-"                    'name':slip.employee_id.bank_account_id.acc_number,\n"
-"                    'employee_id':slip.employee_id.id,\n"
-"                    'amount':slip.other_pay + slip.net,\n"
-"                    'bysal':slip.net\n"
-"                }\n"
-"                id = advice_line_pool.create(cr, uid, pline, "
-"context=context)\n"
-"\n"
-"        self.write(cr, uid, ids, {'state':'confirm'}, context=context)\n"
-"        return True\n"
-"\n"
-"    def process_sheet(self, cr, uid, ids, context=None):\n"
-"        slip_pool = self.pool.get('hr.payslip"
-msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,name:0
@@ -996,11 +845,6 @@ msgstr "Ноорог"
 #: report:payslip.pdf:0
 msgid "Earnings"
 msgstr "Цалингийн орлого"
-
-#. module: hr_payroll
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"
 
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
@@ -1249,28 +1093,6 @@ msgid "Label"
 msgstr "Шошго"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
-#, python-format
-msgid ""
-"Variable Error : %s ' % (e)))\n"
-"\n"
-"                if not calculate:\n"
-"                    continue\n"
-"\n"
-"                percent = 0.0\n"
-"                value = 0.0\n"
-"                base = False\n"
-"                company_contrib = 0.0\n"
-"                base = line.category_id.base\n"
-"\n"
-"                try:\n"
-"                    #Please have a look at the configuration guide.\n"
-"                    amt = eval(base, obj)\n"
-"                except Exception, e:\n"
-"                    raise osv.except_osv(_('Variable Error !"
-msgstr ""
-
-#. module: hr_payroll
 #: view:hr.payroll.structure:0
 #: view:hr.payslip:0
 #: view:hr.payslip.line:0
@@ -1387,12 +1209,12 @@ msgid "Salary"
 msgstr "Цалин"
 
 #. module: hr_payroll
+#: field:hr.contract,passport_id:0
 #: field:hr.passport,name:0
 msgid "Passport No"
 msgstr "Пасспортын дугаар"
 
 #. module: hr_payroll
-#: field:hr.contract,passport_id:0
 #: view:hr.passport:0
 msgid "Passport"
 msgstr "Пасспорт"
@@ -1571,10 +1393,9 @@ msgid "Net Sal."
 msgstr "Цэвэр уалин."
 
 #. module: hr_payroll
-#: view:hr.payroll.employees.detail:0
-#: view:hr.payroll.year.salary:0
-msgid "Year Salary"
-msgstr "Жилийн цалин"
+#: sql_constraint:hr.passport:0
+msgid "The Passport No must be unique !"
+msgstr ""
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,name:0
@@ -1707,6 +1528,12 @@ msgid "Payroll Configurtion"
 msgstr "Цалингийн тохиргоо"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/hr_payroll.py:0
+#, python-format
+msgid "Please define bank account for the %s employee"
+msgstr ""
+
+#. module: hr_payroll
 #: field:hr.passport,date_issue:0
 msgid "Passport Issue Date"
 msgstr "Паспорт олгосон огноо"
@@ -1760,6 +1587,12 @@ msgid "Letter Content"
 msgstr "Захидлын агуулга"
 
 #. module: hr_payroll
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
+msgid "Year Salary"
+msgstr "Жилийн цалин"
+
+#. module: hr_payroll
 #: view:hr.payroll.register:0
 msgid "Allowance / Deduction"
 msgstr "Олголт / Суутгал"
@@ -1787,6 +1620,9 @@ msgstr "Нийт"
 #: field:hr.allounce.deduction.categoty,contribute_ids:0
 msgid "Contributions"
 msgstr "Ажил олгогчийн даах суутгал"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #~ msgid "Calculations Rules"
 #~ msgstr "Тооцоолох дүрмүүд"
@@ -1823,9 +1659,6 @@ msgstr "Ажил олгогчийн даах суутгал"
 #~ msgid "Miscelleanous"
 #~ msgstr "Бусад"
 
-#~ msgid "#"
-#~ msgstr "#"
-
 #~ msgid "Basic Salary - Leaves"
 #~ msgstr "Үндсэн цалин - Чөлөө"
 
@@ -1846,6 +1679,12 @@ msgstr "Ажил олгогчийн даах суутгал"
 
 #~ msgid "Total SAL"
 #~ msgstr "Нийт цалин"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
 
 #~ msgid "Bank Journal"
 #~ msgstr "Банкны журнал"
@@ -1926,3 +1765,31 @@ msgstr "Ажил олгогчийн даах суутгал"
 
 #~ msgid "Employee Payable Account"
 #~ msgstr "Ажилтны өглөгийн данс"
+
+#~ msgid "Payment From"
+#~ msgstr "Төлөгч"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Аналитик данс"
+
+#~ msgid "Expanse Entries"
+#~ msgstr "Бичлэгүүдийг задлах"
+
+#~ msgid "ESI Account"
+#~ msgstr "ESI данс"
+
+#~ msgid "Unite"
+#~ msgstr "Нэгтгэх"
+
+#, python-format
+#~ msgid ""
+#~ "Variable Error : %s ' % (e)))\n"
+#~ "\n"
+#~ "                if sal_type in ('gross', 'net"
+#~ msgstr "Хувьсагчийн алдаа : %s ' % (e)))"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Харагдацын архитектурын xml буруу байна"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэс үүсгэж болохгүй"

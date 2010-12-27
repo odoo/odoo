@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46:55+0000\n"
-"PO-Revision-Date: 2010-10-18 17:46:55+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:04+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,13 +22,9 @@ msgid "In Progress"
 msgstr ""
 
 #. module: purchase_requisition
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: purchase_requisition
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "No Product in Tender"
 msgstr ""
 
 #. module: purchase_requisition
@@ -40,6 +36,11 @@ msgstr ""
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid "A purchase requisition is a step before the request for quotation. In a purchase requisition (or purchase tender), you can record the products you need to buy and trigger the creation of RfQs to supplier. After the negotiation, once you have reviewed all the supplier's offers, you can validate some and cancel others."
 msgstr ""
 
 #. module: purchase_requisition
@@ -57,11 +58,6 @@ msgstr ""
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr ""
-
-#. module: purchase_requisition
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
 msgstr ""
 
 #. module: purchase_requisition
@@ -141,8 +137,8 @@ msgid "Request a Quotation"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.requisition.partner:0
-msgid "Create Quotation"
+#: selection:purchase.requisition,exclusive:0
+msgid "Multiple Requisitions"
 msgstr ""
 
 #. module: purchase_requisition
@@ -153,6 +149,15 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reset to Draft"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.module.module,description:purchase_requisition.module_meta_information
+msgid "\n"
+"    This module allows you to manage your Purchase Requisition.\n"
+"    When a purchase order is created, you now have the opportunity to save the related requisition.\n"
+"    This new object will regroup and will allow you to easily keep track and order all your purchase orders.\n"
+""
 msgstr ""
 
 #. module: purchase_requisition
@@ -184,11 +189,6 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
-msgstr ""
-
-#. module: purchase_requisition
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: purchase_requisition
@@ -240,8 +240,9 @@ msgid "Purchase Order"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_procurement_order
-msgid "Procurement"
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: purchase_requisition
@@ -308,6 +309,11 @@ msgid "Reference"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_procurement_order
+msgid "Procurement"
+msgstr ""
+
+#. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
 msgid "Warehouse"
 msgstr ""
@@ -328,13 +334,13 @@ msgid "Purchase Requisition (exclusive)"
 msgstr ""
 
 #. module: purchase_requisition
-#: selection:purchase.requisition,exclusive:0
-msgid "Multiple Requisitions"
+#: view:purchase.requisition.partner:0
+msgid "Create Quotation"
 msgstr ""
 
 #. module: purchase_requisition
-#: view:purchase.order:0
-msgid "Requisition"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: purchase_requisition
@@ -371,6 +377,11 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned"
+msgstr ""
+
+#. module: purchase_requisition
+#: view:purchase.order:0
+msgid "Requisition"
 msgstr ""
 
 #. module: purchase_requisition

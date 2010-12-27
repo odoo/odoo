@@ -126,6 +126,31 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="202.0,94.0,68.0,59.0,50.0,63.0" repeatRows="1" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">VAT</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Quantity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Disc.(%)</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <blockTable colWidths="265.0,51.0,225.0" style="Table1">
@@ -190,10 +215,10 @@
           <para style="terp_tblheader_General_Centre">[[ o.state &lt;&gt; 'draft' and removeParentNode('para') ]] Quotation Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Our Salesman </para>
+          <para style="terp_tblheader_General_Centre">Salesman</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Payment Terms</para>
+          <para style="terp_tblheader_General_Centre">Payment Term</para>
         </td>
       </tr>
     </blockTable>
@@ -360,5 +385,6 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

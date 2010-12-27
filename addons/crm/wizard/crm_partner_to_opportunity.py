@@ -57,7 +57,7 @@ class crm_partner2opportunity(osv.osv_memory):
                 res.update({'partner_id': data and data[0] or False})
         return res
 
-    def make_opportunity(self, cr, uid, ids, context):
+    def make_opportunity(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -67,7 +67,7 @@ class crm_partner2opportunity(osv.osv_memory):
 
         data = context and context.get('active_ids', []) or []
         make_opportunity = self.pool.get('crm.partner2opportunity')
-        for make_opportunity_obj in make_opportunity.browse(cr,uid,ids):
+        for make_opportunity_obj in make_opportunity.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
@@ -84,7 +84,7 @@ class crm_partner2opportunity(osv.osv_memory):
 
 
             categ_obj = self.pool.get('crm.case.categ')
-            categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
+            categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
 
             case_obj = self.pool.get('crm.lead')
             opp_id = case_obj.create(cr, uid, {
@@ -93,7 +93,7 @@ class crm_partner2opportunity(osv.osv_memory):
                 'probability' : make_opportunity_obj.probability,
                 'partner_id' : make_opportunity_obj.partner_id.id,
                 'partner_address_id' : address['default'],
-                'categ_id' : categ_ids[0],
+                'categ_id' : categ_ids and categ_ids[0] or '',
                 'state' :'draft',
                 'type': 'opportunity'
             })

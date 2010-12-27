@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 06:50+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:31+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -48,9 +48,13 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -103,10 +107,13 @@ msgid "Sign in"
 msgstr "Προσέλευση"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "Απρίλιος"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -119,14 +126,15 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Προσέλευση / Αναχώρηση"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Δεδουλευμένα της τελευταίας περιοδου"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -207,15 +215,16 @@ msgid "Sun"
 msgstr "Κυρ"
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Εκτύπωση"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -252,20 +261,26 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalid XML for View Architecture!"
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: UOS must be in a different category than the UOM"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
 msgstr "Νοέμβριος"
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -293,11 +308,9 @@ msgid "September"
 msgstr "Σεπτέμβριος"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "Δεκέμβριος"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Γραμμή Φύλλου Xρόνου Eργασίας"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -346,11 +359,17 @@ msgid "Fri"
 msgstr "Παρ"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Προσέλευση / Αναχώρηση"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
-"Error: The default UOM and the purchase UOM must be in the same category."
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -361,11 +380,6 @@ msgstr "(Μη συμπληρώσετε το πεδίο αυτό)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Φύλλα Xρόνου Eργασίας"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -416,6 +430,11 @@ msgid "November"
 msgstr "Νοέμβριος"
 
 #. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
 msgstr "Ημερ/νία Κλεισίματος"
@@ -426,16 +445,6 @@ msgstr "Ημερ/νία Κλεισίματος"
 #, python-format
 msgid "October"
 msgstr "Οκτώβριος"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
-"Δεν έχει οριστεί Αναλυτικός Λογαριασμός για το έργο.\n"
-"Παρακαλώ ορίστε έναν για να συμπληρωθεί το Φύλλο Xρόνου Eργασίας αυτόματα."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -488,6 +497,13 @@ msgid "Analysis summary"
 msgstr "Ανάλυση Συνοπτικά"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "Δεκέμβριος"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -515,17 +531,16 @@ msgid "Information"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
-
-#. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
 msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "Απρίλιος"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -537,11 +552,6 @@ msgstr "Τρέχουσα Ημερ/νία"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Γραμμή Φύλλου Xρόνου Eργασίας"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -607,21 +617,13 @@ msgid "Analytic line"
 msgstr "Αναλυτική Γραμμή"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -636,6 +638,16 @@ msgstr "Οκτώβριος"
 #, python-format
 msgid "April"
 msgstr "Απρίλιος"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
+msgstr ""
+"Δεν έχει οριστεί Αναλυτικός Λογαριασμός για το έργο.\n"
+"Παρακαλώ ορίστε έναν για να συμπληρωθεί το Φύλλο Xρόνου Eργασίας αυτόματα."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -653,11 +665,6 @@ msgstr "Χρήστες"
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Έναρξη Εργασίας"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Σφάλμα: Άκυρος Κωδικός ΕΑΝ"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -731,6 +738,12 @@ msgstr "Σεπτέμβριος"
 #~ msgid "Hour"
 #~ msgstr "Ώρα"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalid XML for View Architecture!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: UOS must be in a different category than the UOM"
+
 #~ msgid "Choose Users"
 #~ msgstr "Επιλογή Χρηστών"
 
@@ -739,6 +752,11 @@ msgstr "Σεπτέμβριος"
 
 #~ msgid "My Working Hours of The Day"
 #~ msgstr "Το Ημερήσιο Ωράριό μου"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
 
 #~ msgid "Sign in status"
 #~ msgstr "Κατάσταση Προσέλευσης"
@@ -758,11 +776,22 @@ msgstr "Σεπτέμβριος"
 #~ msgid "Choose your month"
 #~ msgstr "Επιλογή Μήνα"
 
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα πρέπει να ξεκινάει με x_ και να μην περιέχει ειδικούς χαρακτήρες!"
+
 #~ msgid "Working Time"
 #~ msgstr "Χρόνος Εργασίας"
 
 #~ msgid "Current Server Date"
 #~ msgstr "Τρέχουσα Ημερ/νία Server"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Σφάλμα: Άκυρος Κωδικός ΕΑΝ"
+
 #~ msgid "Total"
 #~ msgstr "Σύνολο"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"

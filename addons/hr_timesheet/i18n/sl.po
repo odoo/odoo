@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 09:11+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-31 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
@@ -45,9 +45,13 @@ msgid "Group By..."
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Napačno ime modela v definiciji dejanja."
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
+msgid ""
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -100,10 +104,13 @@ msgid "Sign in"
 msgstr "Prijavi"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-msgid "avril"
-msgstr "april"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -116,14 +123,15 @@ msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "Sign in / Sign out"
-msgstr "Prijava/Odjava"
-
-#. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "Opravljeno delo v zadnjem obdobju"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -204,15 +212,16 @@ msgid "Sun"
 msgstr "ned"
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 msgid "Print"
 msgstr "Natisni"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -249,20 +258,26 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
-
-#. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
 msgstr "november"
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -290,11 +305,9 @@ msgid "September"
 msgstr "september"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "december"
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Linija časovne tabele"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -343,10 +356,17 @@ msgid "Fri"
 msgstr "pet"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "Prijava/Odjava"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Napaka: Privzeta EM in nabavna EM morata biti v isti kategoriji."
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -357,11 +377,6 @@ msgstr "(v tem trenutku pusti prazno)"
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr "Časovnice"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
@@ -412,6 +427,11 @@ msgid "November"
 msgstr "november"
 
 #. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
 msgstr "Zaključni datum"
@@ -422,16 +442,6 @@ msgstr "Zaključni datum"
 #, python-format
 msgid "October"
 msgstr "oktober"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
-"Na tem projektu ni določen analitični račun.\n"
-"Prosim pripravite ga, drugače se časovna tabela ne da napolniti.."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -484,6 +494,13 @@ msgid "Analysis summary"
 msgstr "Povzetek analize"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "december"
+
+#. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 #: view:hr.analytical.timesheet.users:0
 #: view:hr.sign.in.project:0
@@ -511,17 +528,16 @@ msgid "Information"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
 msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr "april"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -533,11 +549,6 @@ msgstr "Trenutni datum"
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Linija časovne tabele"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -603,21 +614,13 @@ msgid "Analytic line"
 msgstr "Analitična postavka"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:0
-msgid "This Wizard will make Sign In/Out By Project"
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
-#, python-format
-msgid ""
-"Analytic journal is not defined for employee %s \n"
-"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
 
 #. module: hr_timesheet
@@ -632,6 +635,16 @@ msgstr "oktober"
 #, python-format
 msgid "April"
 msgstr "april"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
+msgstr ""
+"Na tem projektu ni določen analitični račun.\n"
+"Prosim pripravite ga, drugače se časovna tabela ne da napolniti.."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -649,11 +662,6 @@ msgstr "Uporabniki"
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr "Začni z delom"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Napaka: neveljavna EAN črtna koda"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -693,8 +701,30 @@ msgstr "Spremeni delo"
 msgid "septembre"
 msgstr "september"
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Napaka: Prodajna EM mora biti v drugi kategoriji, kot je EM"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Napaka: Privzeta EM in nabavna EM morata biti v isti kategoriji."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Napaka: neveljavna EAN črtna koda"
+
 #~ msgid "Day"
 #~ msgstr "dan"
+
+#, python-format
+#~ msgid "ValidateError"
+#~ msgstr "Napaka preverjanja"
 
 #~ msgid "Sum"
 #~ msgstr "Vsota"
@@ -714,6 +744,9 @@ msgstr "september"
 #~ msgid "Total"
 #~ msgstr "Skupaj"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Napačno ime modela v definiciji dejanja."
+
 #~ msgid "Choose your month"
 #~ msgstr "Izberite mesec"
 
@@ -728,6 +761,18 @@ msgstr "september"
 
 #~ msgid "Timesheet Process"
 #~ msgstr "Proces časovne tabele"
+
+#, python-format
+#~ msgid "UnknownError"
+#~ msgstr "NeznanaNapaka"
+
+#, python-format
+#~ msgid ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+#~ msgstr ""
+#~ "Ne najdem analitični dnevnik za tega zaposlenega.\n"
+#~ "Določi zaposlenega za izbranega uporabnika in mu priredi nalatični dnevnik."
 
 #~ msgid "Sign in status"
 #~ msgstr "Stanje prijave"

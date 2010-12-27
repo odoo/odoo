@@ -135,7 +135,6 @@
 	                       <filter icon="terp-document-new" string="Draft"
 	                           domain="[('state','=','draft')]"/>
 	                       <filter icon="terp-check" string="In Progress" name="Current"
-	                           default="1"
 	                           domain="[('state','=','startworking')]"/>
 	                       <filter icon="terp-gtk-media-pause" string="Pending"
 	                           domain="[('state','=','pause')]"/>
@@ -211,7 +210,7 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
         <field name="view_mode">gantt,tree,form,graph,calendar</field>
-        <field name="help">To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload.</field>
+        <field name="help">To manufacture or assemble products, and use raw materials and finished products you must also handle manufacturing operations. Manufacturing operations are often called Work Orders. The various operations will have different impacts on the costs of manufacturing and planning depending on the available workload.</field>
     </record>
 
 

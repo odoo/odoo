@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-19 00:01+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -29,11 +29,6 @@ msgstr ""
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -99,11 +94,6 @@ msgid "Company"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr.employee,evaluation_date:0
-msgid "Next Evaluation"
-msgstr ""
-
-#. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Evaluation Interviews"
 msgstr ""
@@ -125,6 +115,13 @@ msgid "Send an anonymous summary to the employee"
 msgstr ""
 
 #. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.employee:0
 msgid "Notes"
 msgstr "Notas"
@@ -132,6 +129,12 @@ msgstr "Notas"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
+msgstr ""
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
 
 #. module: hr_evaluation
@@ -174,6 +177,11 @@ msgid "July"
 msgstr ""
 
 #. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Evaluations (months)"
+msgstr ""
+
+#. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:0
 #, python-format
 msgid ""
@@ -187,8 +195,39 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_next:0
-msgid "After the Date of Start"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Evaluation in (months)"
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee can be assigned to an evaluation plan. These plans define the "
+"frequency and the way you manage your periodic personnal evaluation. You "
+"will be able to define steps and attach interview forms to each step. "
+"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
+"evaluation and final evaluation by the manager."
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 msgstr ""
 
 #. module: hr_evaluation
@@ -207,13 +246,10 @@ msgid " Month "
 msgstr ""
 
 #. module: hr_evaluation
-#: help:hr.employee,evaluation_date:0
-msgid "Date of the next evaluation"
-msgstr ""
-
-#. module: hr_evaluation
-#: model:ir.model,name:hr_evaluation.model_survey_request
-msgid "survey.request"
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
 msgstr ""
 
 #. module: hr_evaluation
@@ -222,24 +258,37 @@ msgid "Periodic Evaluations"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid "''Regarding ''"
-msgstr ""
-
-#. module: hr_evaluation
 #: view:hr.evaluation.reminder:0
 msgid "Send evaluation reminder"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr_evaluation.evaluation,note_summary:0
-msgid "Evaluation Summary"
+#: model:ir.module.module,description:hr_evaluation.module_meta_information
+msgid ""
+"\n"
+"          Ability to create employees evaluation.\n"
+"          An evaluation can be created by employee for subordinates,\n"
+"          juniors as well as his manager.The evaluation is done under a "
+"plan\n"
+"          in which various surveys can be created and it can be defined "
+"which\n"
+"          level of employee hierarchy fills what and final review and "
+"evaluation\n"
+"          is done by the manager.Every evaluation filled by the employees "
+"can be viewed\n"
+"          in the form of.Implements a dashboard for My Current Evaluations\n"
+"         "
 msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
+msgstr ""
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:0
+#, python-format
+msgid "Regarding "
 msgstr ""
 
 #. module: hr_evaluation
@@ -338,16 +387,6 @@ msgid "Evaluations"
 msgstr "Evaluaciones"
 
 #. module: hr_evaluation
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la estructura de la vista!"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "    Month-1    "
 msgstr ""
@@ -387,11 +426,6 @@ msgstr ""
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
 #: field:hr_evaluation.plan.phase,send_answer_manager:0
 msgid "All Answers"
-msgstr ""
-
-#. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "Next Evaluation After"
 msgstr ""
 
 #. module: hr_evaluation
@@ -441,10 +475,23 @@ msgid "Is Evaluation?"
 msgstr ""
 
 #. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr ""
+
+#. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,wait:0
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
+msgstr ""
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to "
+"employees evaluation plan. Each user receives automatic emails and requests "
+"to perform evaluation of their collegues periodically."
 msgstr ""
 
 #. module: hr_evaluation
@@ -466,8 +513,8 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: hr_evaluation
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Evaluation Summary"
 msgstr ""
 
 #. module: hr_evaluation
@@ -542,29 +589,13 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,month:0
-msgid "October"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
-#, python-format
-msgid ""
-"''\n"
-"Date : %(date)s\n"
-"\n"
-"Dear %(employee_name)s,\n"
-"\n"
-"I am doing an evaluation regarding %(eval_name)s.\n"
-"\n"
-"Kindly submit your response.\n"
-"\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"\n"
-"        ''"
+#: selection:hr.evaluation.report,month:0
+msgid "October"
 msgstr ""
 
 #. module: hr_evaluation
@@ -671,6 +702,11 @@ msgid "Send all answers to the employee"
 msgstr ""
 
 #. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Evaluation Date"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: selection:hr.evaluation.report,state:0
 #: view:hr_evaluation.evaluation:0
@@ -693,14 +729,6 @@ msgstr ""
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr ""
-
-#. module: hr_evaluation
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con  x_ y no puede contener ningún "
-"carácter especial!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -830,11 +858,6 @@ msgid "(months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
-
-#. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -860,3 +883,100 @@ msgstr ""
 #: field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr ""
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next evaluation is computed by the evaluation plan's dates "
+"(first evaluation + periodicity)."
+msgstr ""
+
+#~ msgid "Information"
+#~ msgstr "Información"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con  x_ y no puede contener ningún "
+#~ "carácter especial!"
+
+#~ msgid "Schedule next evaluation"
+#~ msgstr "Programar siguiente evaluación"
+
+#~ msgid "Bad Points"
+#~ msgstr "Puntos malos"
+
+#~ msgid "My Next Evaluation"
+#~ msgstr "Mi siguiente evaluación"
+
+#~ msgid "Values"
+#~ msgstr "Valores"
+
+#~ msgid "Good Points"
+#~ msgstr "Puntos buenos"
+
+#~ msgid "Score"
+#~ msgstr "Puntuación"
+
+#~ msgid "Informal Data"
+#~ msgstr "Datos informales"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
+#~ msgid "To Improve"
+#~ msgstr "A mejorar"
+
+#~ msgid "Status"
+#~ msgstr "Estado"
+
+#~ msgid "Apply to categories"
+#~ msgstr "Aplicar a categorias"
+
+#~ msgid "Ability to create employees evaluation."
+#~ msgstr "Capacidad de crear evaluaciones de empleados"
+
+#~ msgid "Quote"
+#~ msgstr "Cita"
+
+#~ msgid "Evaluation User"
+#~ msgstr "Usuario evaluación"
+
+#~ msgid "Choices Results"
+#~ msgstr "Resultados elecciones"
+
+#~ msgid "Configuration"
+#~ msgstr "Configuración"
+
+#~ msgid "Next Evaluations"
+#~ msgstr "Siguientes evaluaciones"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la estructura de la vista!"
+
+#~ msgid "Evaluation Criterions"
+#~ msgstr "Criterios de evaluación"
+
+#~ msgid "My Preceeding Evaluations"
+#~ msgstr "Mis evaluaciones previas"
+
+#~ msgid "HR Responsible"
+#~ msgstr "Responsable RRHH"
+
+#~ msgid "Value"
+#~ msgstr "Valor"
+
+#~ msgid "Summary"
+#~ msgstr "Resúmen"
+
+#~ msgid "Employee Evaluation Type"
+#~ msgstr "Tipo evaluación empleado"
+
+#~ msgid "Quotations"
+#~ msgstr "Citas"
+
+#~ msgid "Next Employee Evaluation"
+#~ msgstr "Siguiente evaluación empleado"
+
+#~ msgid "Type"
+#~ msgstr "Tipo"

@@ -7,33 +7,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 13:49+0000\n"
 "Last-Translator: Makis Nicolaou <mark.nicolaou@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_journal_billing_rate
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default invoicing rate for "
+"a specific journal on a given account. This is mostly used when a user "
+"encodes his timesheet: the values are retrieved and the fields are auto-"
+"filled... but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the account data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
 msgid "Analytic Journal"
 msgstr "Ημερολόγιο Αναλυτικής"
-
-#. module: analytic_journal_billing_rate
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
-"ειδικούς χαρακτήρες!"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -75,9 +79,23 @@ msgid "Invoicing Rate"
 msgstr "Ποσό Τιμολόγησης"
 
 #. module: analytic_journal_billing_rate
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr ""
 
 #~ msgid "Analytic Journal Billing Rate"
 #~ msgstr "Ποσό Τιμολόγησης Ημερολόγιου Αναλυτικής"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του αντικειμένου θα πρέπει να ξεκινάει με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες!"

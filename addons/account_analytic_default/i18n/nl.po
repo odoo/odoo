@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-28 14:30+0000\n"
-"Last-Translator: Sam_inv <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-27 01:56+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
@@ -22,24 +22,15 @@ msgid "Account Analytic Default"
 msgstr "Standaard kostenplaats"
 
 #. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#. module: account_analytic_default
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fout ! U kunt geen recursief menu maken."
-
-#. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
 msgid ""
 "select a partner which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"selecteer een relatie die een kostenplaats gebruikt in standaard "
+"kostenplaats (bijv. maak nieuw factuur of verkooporder; als we deze relatie "
+"selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -69,11 +60,6 @@ msgid "Default end date for this Analytical Account"
 msgstr "Standaard einddatum voor deze kostenplaats"
 
 #. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
 msgstr "Piklijst"
@@ -90,11 +76,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Verkooporderregel"
+"selecteer een bedrijf die een kostenplaats gebruikt in standaard "
+"kostenplaats (bijv. maak nieuw factuur of verkooporder; als we dit bedrijf "
+"selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -135,15 +119,11 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML, kan overzicht niet weergeven!"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"selecteer een gebruiker die kostenplaats gebruikt in standaard kostenplaats"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -153,12 +133,28 @@ msgid "Analytic Defaults"
 msgstr "Analytische standaarden"
 
 #. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
 msgid ""
 "select a product which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"selecteer een product die een kostenplaats gebruikt in standaard "
+"kostenplaats (bijv. maak nieuw factuur of verkooporder; als we dit product "
+"selecteren, wordt dit als kostenplaats gebruikt)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -198,8 +194,39 @@ msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
 
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
+
 #~ msgid "Seq"
 #~ msgstr "Volgorde"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "Analytische verdelingen"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Verkooporderregel"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

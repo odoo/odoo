@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-10-29 09:36+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-01 07:01+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-10-30 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
@@ -29,13 +29,6 @@ msgstr ""
 #: field:document.directory.content,object_id:0
 msgid "Object"
 msgstr "Object"
-
-#. module: document_ics
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -54,6 +47,11 @@ msgid "Jobs Hiring Process"
 msgstr "Werving & selectieproces"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure Calendars for CRM Sections"
+msgstr "Configureer agenda's voor CRM-secties"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
 msgstr "Helpdesk"
@@ -65,13 +63,17 @@ msgstr "Interval in uren"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr "deelnemer"
+msgid "dtstamp"
+msgstr "datum/tijd"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive Sales team."
-msgstr "Fout ! U kunt geen recursief verkoopteam maken."
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
+msgstr ""
+"Het veld van het object wordt gebruikt als bestandsnaam. Moet een unieke "
+"identifier zijn."
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -84,9 +86,10 @@ msgid "Calendar of Meetings"
 msgstr "Afsprakenagenda"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr "Gedeelde agenda vergaderingen"
+#: view:document.ics.crm.wizard:0
+msgid ""
+"OpenERP can create and pre-configure a series of integrated calendar for you."
+msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
@@ -94,14 +97,14 @@ msgid "Manages an Helpdesk service."
 msgstr "Beheert een helpdesk-dienst."
 
 #. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
 msgstr "Einddatum"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "samenvatting"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_crm_meeting
@@ -186,6 +189,13 @@ msgstr ""
 "plannen van een lijst van af te handelen telefoongesprekken."
 
 #. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "OpenERP Field"
 msgstr "OpenERP veld"
@@ -211,9 +221,9 @@ msgid "location"
 msgstr "locatie"
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor weergave!"
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "deelnemer"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
@@ -229,6 +239,11 @@ msgstr "Alternatieve manier om de waarde te berekenen"
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
 msgstr "Beheert de vergader-/contactagenda van de gebruikers"
+
+#. module: document_ics
+#: field:document.directory.content,ics_domain:0
+msgid "Domain"
+msgstr "Domein"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -278,14 +293,19 @@ msgid "categories"
 msgstr "categorieën"
 
 #. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr ""
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,fn:0
 msgid "Use the field"
 msgstr "Gebruik het veld"
 
 #. module: document_ics
-#: field:document.directory.content,ics_domain:0
-msgid "Domain"
-msgstr "Domein"
+#: view:document.ics.crm.wizard:0
+msgid "Create Pre-Configured Calendars"
+msgstr "Maak voorgeconfigureerde agenda's"
 
 #. module: document_ics
 #: field:document.directory.content,fname_field:0
@@ -328,9 +348,9 @@ msgstr ""
 "gemaakt."
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr "samenvatting"
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -343,9 +363,9 @@ msgid "document.ics.crm.wizard"
 msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
+msgstr "Gedeelde agenda vergaderingen"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
@@ -367,19 +387,8 @@ msgstr "url"
 msgid "Business Opportunities"
 msgstr "Zakelijke kansen"
 
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr "datum/tijd"
-
-#. module: document_ics
-#: help:document.directory.content,fname_field:0
-msgid ""
-"The field of the                         object used in the filename. Has to "
-"be a unique identifier."
-msgstr ""
-"Het veld van het object wordt gebruikt als bestandsnaam. Moet een unieke "
-"identifier zijn."
+#~ msgid "dt-stamp"
+#~ msgstr "datum-stempel"
 
 #~ msgid "Open ERP Field"
 #~ msgstr "OpenERP veld"
@@ -387,13 +396,18 @@ msgstr ""
 #~ msgid "Next"
 #~ msgstr "Volgende"
 
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "Configureer agenda's voor CRM-secties"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #~ msgid "Used by companies to track bugs and support requests on softwares"
 #~ msgstr ""
 #~ "Gebruikt door bedrijven om foutrapporten en ondersteuningsverzoeken op "
 #~ "software te volgen."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #~ msgid ""
 #~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
@@ -419,6 +433,9 @@ msgstr ""
 #~ "Beheert de claims van leveranciers en klanten, inclusief uw corrigerende of "
 #~ "preventieve acties."
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
 #~ msgid "Duration(In Hour)"
 #~ msgstr "Duur (in uren)"
 
@@ -428,9 +445,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Helpt u de resultaten van telefoongesprekken te registreren of om een lijst "
 #~ "van te voeren telefoongesprekken te plannen."
-
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "Maak voorgeconfigureerde agenda's"
 
 #~ msgid "Prospect"
 #~ msgstr "Prospect"
@@ -450,3 +464,18 @@ msgstr ""
 
 #~ msgid "document.directory.ics.fields"
 #~ msgstr "document.directory.ics.fields"
+
+#~ msgid "Error ! You cannot create recursive Sales team."
+#~ msgstr "Fout ! U kunt geen recursief verkoopteam maken."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
+
+#~ msgid "The code of the sales team must be unique !"
+#~ msgstr "De verkoopteam code moet uniek zijn!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "De modulenaam moet uniek zijn !"

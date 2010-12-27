@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -38,11 +38,11 @@ class base_report_sxw(osv.osv_memory):
     }
 
 
-    def get_report(self, cr, uid, ids, context):
-        data=self.read(cr,uid,ids)[0]
+    def get_report(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, context=context)[0]
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_sxw')
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         return {
@@ -74,12 +74,11 @@ class base_report_file_sxw(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-
         res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
         report_id1 = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data=self.pool.get('base.report.sxw').read(cr,uid,report_id1)[0]
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
-        if not context:
+        data = self.pool.get('base.report.sxw').read(cr, uid, report_id1, context=context)[0]
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        if context is None:
             context={}
         if 'report_id' in fields:
             res['report_id'] = data['report_id']
@@ -92,7 +91,7 @@ class base_report_file_sxw(osv.osv_memory):
         'file_sxw_upload':fields.binary('Your .SXW file',required=True)
     }
 
-    def upload_report(self, cr, uid, ids, context):
+    def upload_report(self, cr, uid, ids, context=None):
         from base_report_designer import  openerp_sxw2rml
         import StringIO
         data=self.read(cr,uid,ids)[0]
@@ -106,7 +105,7 @@ class base_report_file_sxw(osv.osv_memory):
         cr.commit()
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_rml')
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         return {
@@ -135,12 +134,12 @@ class base_report_rml_save(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
+        
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
         report_id = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data=self.pool.get('base.report.file.sxw').read(cr,uid,report_id)[0]
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context)
-        if not context:
-            context={}
+        data = self.pool.get('base.report.file.sxw').read(cr, uid, report_id, context=context)[0]
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        
         if 'file_rml' in fields:
             res['file_rml'] =  base64.encodestring(report.report_rml_content)
         return res

@@ -6,29 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-02 07:28+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-30 14:53+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-03 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: knowledge
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Die Objektbezeichnung muss mit x_ starten und darf keine Sonderzeichen haben "
-"!"
-
-#. module: knowledge
-#: field:knowledge.installer,wiki:0
-msgid "Collaborative Content (Wiki)"
-msgstr "Wikipedia"
+#: model:ir.ui.menu,name:knowledge.menu_document
+msgid "Knowledge"
+msgstr "Knowledge"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki_quality_manual:0
@@ -36,6 +28,11 @@ msgid "Creates an example skeleton for a standard quality manual."
 msgstr ""
 "Erzeugt als Beispiel ein Grundgerüst für eine Dokumentation zum "
 "Qualitätsmanagement"
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Share information within the company with these specific Addons."
+msgstr ""
 
 #. module: knowledge
 #: field:knowledge.installer,document_ftp:0
@@ -48,19 +45,9 @@ msgid "Knowledge Management System"
 msgstr "Knowledge Management System"
 
 #. module: knowledge
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
-
-#. module: knowledge
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Fehlerhafte Modellbezeichnung in der Aktion"
-
-#. module: knowledge
-#: model:ir.ui.menu,name:knowledge.menu_document
-msgid "Knowledge"
-msgstr "Knowledge"
+#: field:knowledge.installer,wiki:0
+msgid "Collaborative Content (Wiki)"
+msgstr "Wikipedia"
 
 #. module: knowledge
 #: help:knowledge.installer,document_ftp:0
@@ -68,6 +55,8 @@ msgid ""
 "Provides an FTP access to your OpenERP's Document Management System. It lets "
 "you access attachments and virtual documents through a standard FTP client."
 msgstr ""
+"Bietet einen FTP Zugang zu OpenERP Dokumentenmanagement. Es erlaubt Ihnen "
+"Anhänge und virtuelle Dokumente über einen Standard FTP Client  hinzuzufügen."
 
 #. module: knowledge
 #: help:knowledge.installer,document_webdav:0
@@ -82,9 +71,9 @@ msgstr ""
 "zugreifen."
 
 #. module: knowledge
-#: field:knowledge.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Abfolge Konfiguration"
+#: view:knowledge.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: knowledge
 #: view:knowledge.installer:0
@@ -106,9 +95,9 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: knowledge
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML Quellcode für die Ansicht!"
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+msgid "Knowledge Modules Installation"
+msgstr "Knowledge Module Installation"
 
 #. module: knowledge
 #: field:knowledge.installer,wiki_quality_manual:0
@@ -119,6 +108,11 @@ msgstr "Qualitätshandbuch"
 #: field:knowledge.installer,document_webdav:0
 msgid "Shared Repositories (WebDAV)"
 msgstr "Gemeinsame Verzeichnisse (WebDav)"
+
+#. module: knowledge
+#: field:knowledge.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Abfolge Konfiguration"
 
 #. module: knowledge
 #: help:knowledge.installer,wiki_faq:0
@@ -135,18 +129,28 @@ msgid "Internal FAQ"
 msgstr "Internes FAQ"
 
 #. module: knowledge
+#: model:ir.ui.menu,name:knowledge.menu_document2
+msgid "Collaborative Content"
+msgstr "Wikipedia"
+
+#. module: knowledge
 #: field:knowledge.installer,config_logo:0
 msgid "Image"
 msgstr "Bild"
 
 #. module: knowledge
-#: model:ir.actions.act_window,name:knowledge.action_knowledge_installer
+#: view:knowledge.installer:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Konfiguration Knowledge"
 
 #. module: knowledge
 #: model:ir.model,name:knowledge.model_knowledge_installer
 msgid "knowledge.installer"
+msgstr ""
+
+#. module: knowledge
+#: view:knowledge.installer:0
+msgid "Configure Your Knowledge Application"
 msgstr ""
 
 #. module: knowledge
@@ -162,4 +166,42 @@ msgstr ""
 #. module: knowledge
 #: view:knowledge.installer:0
 msgid "Content templates"
-msgstr ""
+msgstr "Inhaltsvorlagen"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit x_ starten und darf keine Sonderzeichen haben "
+#~ "!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Fehlerhafte Modellbezeichnung in der Aktion"
+
+#~ msgid ""
+#~ "Provides an FTP access to your OpenERP's Document Management System. Lets "
+#~ "you access attachments and virtual documents through a standard FTP client."
+#~ msgstr ""
+#~ "Bietet einen FTP Zugriff zum OpenERP Dokumenten Management. Hierdurch können "
+#~ "Sie auf Dateianhänge sowie Dokumente über einen klassischen FTP Client Ihres "
+#~ "Betriebssystems, wie z.B. Putty oder ssh zugreifen."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML Quellcode für die Ansicht!"
+
+#~ msgid "Launch"
+#~ msgstr "Veröffentlichung"
+
+#~ msgid "Templates of Content"
+#~ msgstr "Vorlagen für Inhalte"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

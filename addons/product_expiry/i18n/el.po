@@ -1,0 +1,216 @@
+# Greek translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-12 08:45+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"Language-Team: Greek <el@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr "Παρτίδα Παραγωγής"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ζαμπόν"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Γάλα Αγελάδας"
+
+#. module: product_expiry
+#: model:ir.module.module,shortdesc:product_expiry.module_meta_information
+msgid "Products date of expiry"
+msgstr "Ημερομηνία Λήξης Προϊόντων"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "Διάρκει Ζωής του προϊόντος"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "Χρόνος Χρήσης Προϊόντος"
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Προϊόν"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "Χρόνος απομάκρυνσης Προϊόντος"
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "Ημερομηνία Απομάκρυνσης"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.module.module,description:product_expiry.module_meta_information
+msgid ""
+"Track different dates on products and production lots:\n"
+" - end of life\n"
+" - best before date\n"
+" - removal date\n"
+" - alert date\n"
+"Used, for example, in food industries."
+msgstr ""
+"Παρακολούθηση διαφορετικών ημερομηνιών σε προϊόντα και παρτίδες:\n"
+" - τέλος ζωής\n"
+" - κατάλληλο πριν την ημερομηνία\n"
+" - ημερομηνία απομάκρυνσης\n"
+" - ημερομηνία υπενθύμισης"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Ψωμί"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr ""
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "Ημερομηνίες"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Ημερομηνία Λήξης Ζωής"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Ανάλωση κατά προτίμηση πριν την ημερομηνία"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "Γαλλικό τυρί Camenbert"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr "Ο αριθμός ημερών πριν χρειαστεί να απομακρυνθεί η παρτίδα"
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr "Ο αριθμός ημερών πριν η παρτίδα χαλάσει χωρίς να γίνει επικίνδυνη"
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid ""
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
+msgstr ""
+"Αριθμός ημερών πριν η  παρτίδα αρχίζει να  γίνεται επικίνδυνη και δεν πρέπει "
+"να καταναλωθεί"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product Alert Time"
+msgstr "Ύπενθύμιση Προϊόντος"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Το όνομα του Αντικειμένου θα πρέπει να ξεκινά με x_ και να μην περιέχει "
+#~ "ειδικούς χαρακτήρες !"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Λάθος: Η προεπιλεγμένη Μ.Μ και η Μ.Μ αγοράς θα πρέπει να είναι στην ίδια "
+#~ "κατηγορία"
+
+#~ msgid ""
+#~ "The number of days after which, needs an alert to notify about the "
+#~ "production lot."
+#~ msgstr ""
+#~ "Ο αριθμός ημερών που θα χρειαστεί να γίνει υπενθήμιση για την παρτίδα."
+
+#~ msgid "The date the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "Η ημερομηνία που η παρτίδα μπορεί να είναι επικίνδυνη και δεν θα πρέπει να "
+#~ "καταναλωθεί"
+
+#~ msgid "The date the lot should be removed."
+#~ msgstr "Η ημερομηνία που η παρτίδα πρέπει να απομακρυνθεί."
+
+#~ msgid "The date signifying an alert to notify about the production lot."
+#~ msgstr "Η ημερομηνία δήλωσης υπενθύμισης για την παρτίδα παραγωγής."
+
+#~ msgid "The date the lot starts deteriorating without becoming dangerous."
+#~ msgstr ""
+#~ "Η ημερομηνία που η παρτίδα αρχίζει να χαλάει χωρίς να γίνεται επικίνδυνη"

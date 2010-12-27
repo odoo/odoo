@@ -21,7 +21,7 @@
 
 from lxml import etree
 
-from osv import osv
+from osv import osv, fields
 from tools.translate import _
 import tools
 
@@ -29,6 +29,15 @@ class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
     _description = "Move journal"
 
+    _columns = {
+       'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                        ('all', 'All Entries'),
+                                        ], 'Target Moves', required=True),
+    }
+
+    _defaults = {
+        'target_move': 'posted'
+    }
     def _get_period(self, cr, uid, context={}):
         """
         Return  default account period value
@@ -40,7 +49,7 @@ class account_move_journal(osv.osv_memory):
             period_id = ids[0]
         return period_id
 
-    def _get_journal(self, cr, uid, context={}):
+    def _get_journal(self, cr, uid, context=None):
         """
         Return journal based on the journal type
         """
@@ -51,7 +60,7 @@ class account_move_journal(osv.osv_memory):
         if context.get('journal_type', False):
             jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
             if not jids:
-                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.' % (context.get('journal_type'))))
+                raise osv.except_osv(_('Configuration Error !'), _('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Financial Accounting/Accounts/Journals.') % context.get('journal_type'))
             journal_id = jids[0]
 
         return journal_id
@@ -93,6 +102,8 @@ class account_move_journal(osv.osv_memory):
         view = """<?xml version="1.0" encoding="utf-8"?>
         <form string="Standard entries">
             <separator string="Open Journal Items !" colspan="4"/>
+            <field name="target_move" />
+            <newline/>
             <group colspan="4" >
                 <label width="300" string="Journal: %s"/>
                 <newline/>
@@ -132,14 +143,15 @@ class account_move_journal(osv.osv_memory):
 
         journal_id = self._get_journal(cr, uid, context)
         period_id = self._get_period(cr, uid, context)
+        target_move = self.read(cr, uid, ids, [])[0]['target_move']
 
         name = _("Journal Items")
         if journal_id:
             ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)], context=context)
 
             if not ids:
-                journal = journal_pool.browse(cr, uid, journal_id)
-                period = account_period_obj.browse(cr, uid, period_id)
+                journal = journal_pool.browse(cr, uid, journal_id, context=context)
+                period = account_period_obj.browse(cr, uid, period_id, context=context)
 
                 name = journal.name
                 state = period.state
@@ -156,20 +168,22 @@ class account_move_journal(osv.osv_memory):
                 }
                 period_pool.create(cr, uid, res,context=context)
 
-            ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
+            ids = period_pool.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)], context=context)
             period = period_pool.browse(cr, uid, ids[0], context=context)
             name = (period.journal_id.code or '') + ':' + (period.period_id.code or '')
 
-        result = data_pool._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-        res_id = data_pool.browse(cr, uid, result, context=context).res_id
-
+        result = data_pool.get_object_reference(cr, uid, 'account', 'view_account_move_line_filter')
+        res_id = result and result[1] or False
+        move = 0
+        if target_move == 'posted':
+            move = 1
         return {
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,graph,form',
             'res_model': 'account.move.line',
             'view_id': False,
-            'context': "{'visible_id':%s, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (journal_id, journal_id, period_id),
+            'context': "{'search_default_posted': %d, 'visible_id':%s, 'search_default_journal_id':%d, 'search_default_period_id':%d}" % (move, journal_id, journal_id, period_id),
             'type': 'ir.actions.act_window',
             'search_view_id': res_id
         }
