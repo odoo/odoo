@@ -28,8 +28,6 @@ from common_report_header import common_report_header
 class partner_balance(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
-        if context is None:
-            context = {}
         super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.account_ids = []
         self.localcontext.update( {
@@ -276,6 +274,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _sum_litige(self):
+        # TODO docstring, explain me!
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
@@ -296,12 +295,15 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _get_partners(self):
+        cr, uid = self.cr, self.uid
+        context = self.localcontext # all of it?
+
         if self.result_selection == 'customer':
-            return 'Receivable Accounts'
+            return _('Receivable Accounts')
         elif self.result_selection == 'supplier':
-            return 'Payable Accounts'
+            return _('Payable Accounts')
         elif self.result_selection == 'customer_supplier':
-            return 'Receivable and Payable Accounts'
+            return _('Receivable and Payable Accounts')
         return ''
 
 report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/account_partner_balance.rml',parser=partner_balance, header="internal")
