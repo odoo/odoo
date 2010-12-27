@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-04 08:53+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_default
@@ -84,11 +84,6 @@ msgstr ""
 "sélectionné sera utilisé automatiquement)"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Ligne de commande de vente"
-
-#. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
 msgstr "Date de début par défaut pour ce compte analytique"
@@ -142,6 +137,19 @@ msgid "Analytic Defaults"
 msgstr "Analytique par défaut"
 
 #. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
 msgid ""
 "select a product which will use analytical account specified in analytic "
@@ -193,6 +201,11 @@ msgstr ""
 "Donne la séquence d'ordre lors de l'affichage d'une liste de distribution "
 "analytique"
 
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"
 
@@ -210,3 +223,6 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom du Modèle non valide dans la définition de l'action."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Ligne de commande de vente"

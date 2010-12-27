@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 13:24+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -43,9 +43,9 @@ msgid "Group By..."
 msgstr "Бүлэглэх..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Төлөвлөлт"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -178,6 +178,11 @@ msgid "Stock Move"
 msgstr "Барааны хөдөлгөөн"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Төлөвлөлт"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Бэлэн"
@@ -221,6 +226,11 @@ msgid ""
 msgstr ""
 "Татан авалтын үүсгэсэн баримтын дугаар. Үүнийг OpenERP автоматаар "
 "гүйцэтгэдэг."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
 
 #. module: procurement
 #: constraint:res.company:0
@@ -415,6 +425,22 @@ msgid "Service"
 msgstr "Үйлчилгээ"
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+"\n"
+"    Татан авалтын тооцооллын модуль.\n"
+"    "
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Доод тоо"
@@ -597,9 +623,7 @@ msgid "Procurement Reason"
 msgstr "Татан авах шалтгаан"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Үржвэр тоо тэгээс их байх ёстой."
 
@@ -928,18 +952,12 @@ msgstr "ТӨЛӨВЛӨГЧ"
 #~ msgid "is done."
 #~ msgstr "дууссан."
 
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "Үйлдвэрлэл & Логистик"
+
 #, python-format
 #~ msgid "has an exception."
 #~ msgstr "алдаатай."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This is the module for computing Procurements.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Татан авалтын тооцооллын модуль.\n"
-#~ "    "
 
 #, python-format
 #~ msgid "is running."
