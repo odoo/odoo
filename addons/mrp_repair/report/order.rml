@@ -278,16 +278,17 @@
     </blockTable>
     <section>
       <para style="P30"><font color="white">[[ repeatIn(o.operations,'line') ]] </font></para>
-      <para style="P30"><font color="white">[[ line or removeParentNode('section')]]</font></para>
-      <para style="P29">Operation Line(s)</para>
+      <para style="P30"><font color="white">[[ (line or removeParentNode('section')) and '' ]]</font></para>
+      <para style="P29">[[ ( (not line.to_invoice) and removeParentNode('para')) or 'Operation Line(s)' ]]</para>
       <blockTable colWidths="28.0,145.0,150.0,96.0,51.0,69.0" style="Table5">
         <tr>
           <td>
+            <para style="P4"> [[ ( (not line.to_invoice) and removeParentNode('blockTable')) or '' ]]</para>
             <para style="P4">Add [[ ((line.type == 'add') or removeParentNode('para')) and '' ]] </para>
             <para style="P4">Remove [[ ((line.type == 'remove') or removeParentNode('para')) and '' ]]</para>
           </td>
           <td>
-            <para style="P3"><font>[[ line.name ]]</font><font>[[ (line.to_invoice==True) or removeParentNode('blockTable') ]]</font></para>
+            <para style="P3"><font>[[ line.name ]]</font></para>
           </td>
           <td>
             <para style="P6">[[ ','.join(map( lambda x: x.name, line.tax_id)) ]]</para>
@@ -307,15 +308,15 @@
     </section>
     <section>
     <para style="P30"><font color="white">[[ repeatIn(o.fees_lines,'fees') ]]</font></para>
-    <para style="P30"><font color="white">[[ fees or removeParentNode('section')]]</font></para>
-   	<para style="P23">Fees Line(s) [[ (o.fees_lines ==[] and  removeParentNode('para') )  ]]</para>
+    <para style="P30"><font color="white">[[ (fees or removeParentNode('section')) and '']]</font></para>
+    <para style="P23">[[ ( (not fees.to_invoice) and removeParentNode('para')) or 'Fees Line(s)' ]]</para>
     <blockTable colWidths="28.0,145.0,150.0,96.0,51.0,69.0" style="Table6">
       <tr>
         <td>
-          <para style="P21"></para>
+          <para style="P21">[[ ( (not fees.to_invoice) and removeParentNode('blockTable')) or '' ]]</para>
         </td>
         <td>
-          <para style="P3"><font>[[ fees.name ]]</font><font>[[ (fees.to_invoice==True) or removeParentNode('blockTable') ]]</font></para>
+          <para style="P3"><font>[[ fees.name ]]</font></para>
         </td>
         <td>
           <para style="P6">[[ ','.join(map( lambda x: x.name, fees.tax_id)) ]]</para>
