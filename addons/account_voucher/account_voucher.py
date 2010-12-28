@@ -847,7 +847,7 @@ class account_voucher_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
-        'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Originial Amount', store=True),
+        'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Original Amount', store=True),
         'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True),
     }

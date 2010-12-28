@@ -44,16 +44,6 @@ class account_aged_trial_balance(osv.osv_memory):
         'direction_selection': 'past',
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(account_aged_trial_balance, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//field[@name='journal_ids']")
-        for node in nodes:
-            node.set('invisible', '1')
-            node.set('required', '0')
-        res['arch'] = etree.tostring(doc)
-        return res
-
     def _print_report(self, cr, uid, ids, data, context=None):
         res = {}
         if context is None:
