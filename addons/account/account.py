@@ -285,6 +285,7 @@ class account_account(osv.osv):
             children_and_consolidated.reverse()
             brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
             sums = {}
+            currency_obj = self.pool.get('res.currency')
             while brs:
                 current = brs[0]
 #                can_compute = True
@@ -299,8 +300,11 @@ class account_account(osv.osv):
                 brs.pop(0)
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                    if current.child_id:
-                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
+                    for child in current.child_id:
+                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
+                            sums[current.id][fn] += sums[child.id][fn]
+                        else:
+                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
