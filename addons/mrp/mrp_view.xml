@@ -747,7 +747,7 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8">
+                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
@@ -909,7 +909,7 @@
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="mrp.group_mrp_user"/>
 
         <act_window
             domain="[('bom_id','=',False)]"
@@ -917,7 +917,8 @@
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="mrp.group_mrp_user"/>
 
         <!-- Menu for Resource for MRP-->
 

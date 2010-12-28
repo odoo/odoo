@@ -245,9 +245,10 @@
         <act_window
         context="{'search_default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules"
-        res_model="stock.warehouse.orderpoint"
-        src_model="stock.warehouse"/>
+        name="Minimum Stock Rules" 
+        res_model="stock.warehouse.orderpoint" 
+        src_model="stock.warehouse"
+        groups="stock.group_stock_user"/>
 
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
         <act_window
@@ -255,7 +256,8 @@
             id="act_product_product_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="stock.group_stock_user"/>
 
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id}"
@@ -263,7 +265,8 @@
             id="act_procurement_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
-            src_model="procurement.order"/>
+            src_model="procurement.order"
+            groups="stock.group_stock_user"/>
 
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4"/>
