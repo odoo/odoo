@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-12-29 16:51+0000\n"
 "Last-Translator: Carlo - didotech.com <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_margin
@@ -99,9 +99,13 @@ msgid "Expected Sale - Turn Over"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,sale_expected:0
-msgid "Expected Sale"
-msgstr "Vendita attesa"
+#: model:ir.module.module,description:product_margin.module_meta_information
+msgid ""
+"\n"
+"Adds a reporting menu in products that computes sales, purchases, margins\n"
+"and other interesting indicators based on invoices. The wizard to launch\n"
+"the report has several options to help you get the data you need.\n"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -109,9 +113,9 @@ msgid "Standard Price"
 msgstr "Prezzo Standard"
 
 #. module: product_margin
-#: help:product.product,purchase_num_invoiced:0
-msgid "Sum of Quantity in Supplier Invoices"
-msgstr "Somma della quantità nelle fatture fornitori"
+#: field:product.product,sale_expected:0
+msgid "Expected Sale"
+msgstr "Vendita attesa"
 
 #. module: product_margin
 #: help:product.product,normal_cost:0
@@ -126,10 +130,9 @@ msgid "Expected Sale - Normal Cost"
 msgstr ""
 
 #. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Fatturato"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Critreri di analisi"
 
 #. module: product_margin
 #: view:product.product:0
@@ -211,6 +214,11 @@ msgid "Avg. Price in Supplier Invoices "
 msgstr "Prezzo medio nelle fatture fornitori "
 
 #. module: product_margin
+#: help:product.product,purchase_num_invoiced:0
+msgid "Sum of Quantity in Supplier Invoices"
+msgstr "Somma della quantità nelle fatture fornitori"
+
+#. module: product_margin
 #: view:product.margin:0
 msgid "Properties categories"
 msgstr ""
@@ -221,9 +229,10 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Margine totale * 100 / rotazione"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Critreri di analisi"
+#: field:product.product,purchase_num_invoiced:0
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Fatturato"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0

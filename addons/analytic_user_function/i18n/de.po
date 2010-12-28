@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
-"PO-Revision-Date: 2010-11-30 17:41+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-27 09:08+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:40+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
@@ -62,14 +62,47 @@ msgid "Relation table between users and products on a analytic account"
 msgstr "Relation zwischen Benutzern und Produkten"
 
 #. module: analytic_user_function
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
+#: model:ir.module.module,description:analytic_user_function.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default function of a "
+"specific user on a given account. This is mostly used when a user encodes "
+"his timesheet: the values are retrieved and the fields are auto-filled... "
+"but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the employee data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
 msgstr ""
+"\n"
+"\n"
+"    Dieses Modul ermöglicht die Definition einer benutzerbezogenen Zuordnung "
+"von  Dienstleistungsprodukten zu analytischen Konten. Die Funktion dieses "
+"Moduls wird vor allem dann eingesetzt, wenn ein Benutzer seine "
+"Arbeitszeiterfassung vornimmt: Die Konten werden automatisch durch das "
+"System ermittelt, damit die entsprechenden Felder bei der Erfassung "
+"automatisch ausgefüllt werden ... dennoch besteht jederzeit die Möglichkeit, "
+"diese Werte bei Bedarf abzuändern.\n"
+"\n"
+"     Wenn offensichtlich keine besondere Zuordnung für diese Konten "
+"hinterlegt wurde , wird der Standardwert wie gewohnt über die "
+"Kontenzuordnung beim Mitarbeiter ermittelt, so dass dieses Modul auch "
+"weiterhin kompatibel mit älteren Konfigurationen ist.\n"
+"\n"
+"    "
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
 msgstr "Analytische Benutzer Funktion"
+
+#. module: analytic_user_function
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0

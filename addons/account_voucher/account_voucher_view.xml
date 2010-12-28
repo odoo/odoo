@@ -29,9 +29,10 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
-                        <field name="name" colspan="4"/>
+                        <field name="name" colspan="2"/>
                         <field name="reference" select="1"/>
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>
@@ -54,7 +55,6 @@
                                 <group col="2" colspan="1" >
                                     <separator string="Other Information" colspan="2"/>
                                     <field name="number"/>
-                                    <field name="date" on_change="onchange_date(date)"/>
                                     <field name="currency_id" invisible="True"/>
                                 </group>
                                 <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">

@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-17 22:02+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-27 18:12+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -44,9 +45,11 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Planificación"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
+"Abastecimiento borrador del producto y ubicación para esta regla de stock "
+"mínimo"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -85,6 +88,12 @@ msgid ""
 "operations to fullfil the need: purchase order proposition, manufacturing "
 "order, etc."
 msgstr ""
+"Una orden de abastecimiento se utiliza para registrar una necesidad de un "
+"producto específico en una ubicación específica. Normalmente son creadas "
+"automáticamente por los pedidos de venta, las reglas de abastecimiento o "
+"reglas de stock mínimo. Cuando la orden de abastecimiento es confirmada, se "
+"crean automáticamente las operaciones necesarias para satisfacer dicha "
+"necesidad: proposición de compra, orden de fabricación, etc."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -146,6 +155,14 @@ msgid ""
 " It is in 'Waiting'. state when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Cuando una orden de abastecimiento es creada, su estado es 'Borrador'. \n"
+" Si el abastecimiento se confirma, el estado cambia a 'Confirmado'.          "
+"  \n"
+"Después de confirmar el estado se establece como 'En curso'.\n"
+" Si surge cualquier excepción con la orden, el estado pasa a 'Excepción'.\n"
+" Una vez la excepción es solucionada, el estado cambia a 'Listo'.\n"
+" Está en estado 'En espera' cuando está esperando a que acabe otro "
+"abastecimiento."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -172,6 +189,11 @@ msgid "Stock Move"
 msgstr "Moviemiento de stock"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Planificación"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Preparado"
@@ -179,7 +201,7 @@ msgstr "Preparado"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr "Pedido automático"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -215,6 +237,11 @@ msgid ""
 msgstr ""
 "Referencia del documento que ha creado este abastecimiento.\n"
 "OpenERP lo completa automáticamente."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr "Órdenes de abastecimiento a procesar"
 
 #. module: procurement
 #: constraint:res.company:0
@@ -261,6 +288,12 @@ msgid ""
 "OpenERP will generate a procurement request in order to fullfil the stock up "
 "to the maximum quantity."
 msgstr ""
+"Puede definir sus reglas de stock mínimo, de forma que OpenERP lance "
+"automáticamente propuestas de órdenes de fabricación o de compra en función "
+"de los niveles de stock. Una vez que el stock virtual de un producto (= "
+"stock disponible menos todas las órdenes confirmadas y reservas) esté debajo "
+"de la cantidad mínima, OpenERP generará una solicitud de abastecimiento para "
+"satisfacer el stock hasta la cantidad máxima establecida para dicho producto."
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -410,6 +443,22 @@ msgid "Service"
 msgstr "Servicio"
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+"\n"
+"    Este es el módulo para calcular abastecimientos.\n"
+"    "
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr "Órdenes de abastecimiento relacionadas"
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Cantidad mín"
@@ -440,8 +489,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Si el campo activo es falso, le permitirá ocultar el punto de pedido sin "
-"eliminarlo."
+"Si el campo activo se desmarca, permite ocultar la regla de stock mínimo sin "
+"eliminarla."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -474,6 +523,12 @@ msgid ""
 "background, you may have to wait for a few minutes until it has finished "
 "computing."
 msgstr ""
+"Este asistente le permite ejecutar todos los abastecimientos, órdenes de "
+"producción y/o compra que deben de ser procesadas en función de su "
+"configuración. Por defecto, el planificador es ejecutado automáticamente "
+"cada noche por OpenERP. Puede utilizar este menú para ejecutarlo ahora. "
+"Tenga en cuenta que, como se ejecuta en segundo plano, puede que tenga que "
+"esperar unos minutos hasta que termine el proceso."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -505,6 +560,17 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)"
 msgstr ""
+"Las órdenes de abastecimiento representan la necesidad de una determinada "
+"cantidad de productos, en un momento dado, en una ubicación determinada. Los "
+"pedidos de venta son una fuente típica de las órdenes de abastecimiento "
+"(pero estos son documentos distintos). Dependiendo de los parámetros de "
+"abastecimiento y la configuración de productos, el motor de abastecimientos "
+"tratará de satisfacer la necesidad de reservar los productos del stock, u "
+"ordenar productos de un proveedor, o crear una orden de producción, etc. Se "
+"produce una excepción de abastecimiento cuando el sistema no puede encontrar "
+"una manera de cumplir un abastecimiento. Algunas excepciones se resolverán "
+"de forma automática, pero otras requieren intervención manual (las que se "
+"identifican con un mensaje de error específico)."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -561,7 +627,7 @@ msgstr "Ord. abastecimiento automática: %s"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
 msgid "Automatic Order Point"
-msgstr "Orden automática"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -594,9 +660,7 @@ msgid "Procurement Reason"
 msgstr "Motivo del abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "El múltiplo de la cantidad debe ser más grande que cero."
 
@@ -883,7 +947,7 @@ msgstr "Muy urgente"
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr "Punto de pedido automático"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: view:procurement.order:0
